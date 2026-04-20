@@ -17,7 +17,11 @@ def rank_ic(factor_frame: pd.DataFrame, future_returns: pd.DataFrame) -> pd.Seri
         current_factor = aligned_factor.loc[ts]
         current_future = aligned_future.loc[ts]
         pair = pd.concat([current_factor, current_future], axis=1, keys=["factor", "future"]).dropna()
-        values.append(pair["factor"].corr(pair["future"], method="spearman"))
+        ranked = pair.rank()
+        if ranked["factor"].nunique() < 2 or ranked["future"].nunique() < 2:
+            values.append(float("nan"))
+        else:
+            values.append(ranked["factor"].corr(ranked["future"]))
     return pd.Series(values, index=index, name="rank_ic")
 
 
