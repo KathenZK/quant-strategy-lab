@@ -16,6 +16,7 @@
 - 组合回测引擎：手续费、滑点、资金费率、风控约束
 - `PaperBroker`、风险管理与模拟交易会话
 - Markdown 报告输出：因子报告、回测报告、模拟盘报告
+- 配置驱动的一键策略编排、运行清单与增量刷新状态
 
 ## 项目结构
 
@@ -77,6 +78,24 @@ pip install -e ".[dev]"
 
 ```bash
 ./.venv/bin/signal-lab paper-trade --exchange binance --symbols BTC/USDT,ETH/USDT,SOL/USDT --factor ret_24 --market-type spot
+```
+
+9. 直接按策略工作流配置跑整条链路
+
+```bash
+./.venv/bin/signal-lab run-strategy --workflow-config configs/strategy.example.yaml
+```
+
+10. 查看特征产物清单和版本指纹
+
+```bash
+./.venv/bin/signal-lab feature-manifests --factor ret_24
+```
+
+11. 查看增量刷新状态
+
+```bash
+./.venv/bin/signal-lab refresh-state
 ```
 
 ## 文档

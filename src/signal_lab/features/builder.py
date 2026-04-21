@@ -6,6 +6,7 @@ import pandas as pd
 
 from signal_lab.data import DuckDBWarehouse, MarketType
 from signal_lab.factors import FactorRegistry, compute_factor_bundle, default_registry
+from signal_lab.features.manifest import FactorArtifactManifest
 from signal_lab.features.store import FeatureStore
 
 
@@ -66,12 +67,38 @@ class FeatureBuilder:
             ]
         return compute_factor_bundle(frame, self.registry, factor_names=selected)
 
-    def persist_bundle(self, factor_bundle: pd.DataFrame) -> dict[str, str]:
-        saved: dict[str, str] = {}
-        base_columns = {"ts", "exchange", "symbol", "market_type"}
+    def persist_bundle(
+        self,
+        factor_bundle: pd.DataFrame,
+        *,
+        exchange: str,
+        symbol: str,
+        market_type: MarketType,
+        benchmark_symbol: str | None = None,
+    ) -> dict[str, dict[str, str]]:
+        saved: dict[str, dict[str, str]] = {}
+        base_columns = ("ts", "exchange", "symbol", "market_type")
         for column in factor_bundle.columns:
             if column in base_columns:
                 continue
-            path = self.store.write_factor_frame(column, factor_bundle[[*base_columns, column]])
-            saved[column] = str(path)
+            factor = self.registry.get(column)
+            frame = factor_bundle[[*base_columns, column]]
+            path = self.store.write_factor_frame(column, frame)
+            manifest = FactorArtifactManifest.create(
+                factor_name=column,
+                factor_version=factor.version(),
+                factor_category=factor.metadata.category,
+                exchange=exchange,
+                symbol=symbol,
+                market_type=market_type.value,
+                frame=frame,
+                feature_path=path,
+                benchmark_symbol=benchmark_symbol,
+            )
+            manifest_path = self.store.write_manifest(manifest)
+            saved[column] = {
+                "feature_path": str(path),
+                "manifest_path": str(manifest_path),
+                "factor_version": factor.version(),
+            }
         return saved

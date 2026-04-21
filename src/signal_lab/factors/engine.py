@@ -22,10 +22,13 @@ def compute_factor_frame(
         raise ValueError(f"missing inputs for {factor.metadata.name}: {required}")
 
     if group_column in working.columns and not factor.metadata.cross_sectional:
-        values = working.groupby(group_column, group_keys=False, sort=False).apply(factor.compute)
-        if isinstance(values.index, pd.MultiIndex):
-            values = values.reset_index(level=0, drop=True)
-        working[factor.metadata.name] = values.sort_index()
+        parts = []
+        for _, group in working.groupby(group_column, sort=False):
+            result = factor.compute(group)
+            result.index = group.index
+            parts.append(result)
+        values = pd.concat(parts).sort_index() if parts else pd.Series(dtype=float)
+        working[factor.metadata.name] = values.reindex(working.index)
     else:
         working[factor.metadata.name] = factor.compute(working)
 

@@ -3,7 +3,6 @@ from __future__ import annotations
 from datetime import datetime
 from pathlib import Path
 
-import pandas as pd
 import typer
 
 from signal_lab.config import load_settings
@@ -12,6 +11,7 @@ from signal_lab.data import DataIngestionService, DataLakeLayout, DuckDBWarehous
 from signal_lab.execution import PaperBroker, PaperTradingSession
 from signal_lab.factors import default_registry
 from signal_lab.features import FeatureBuilder, FeatureStore
+from signal_lab.orchestration import IncrementalStateStore, StrategyRunner, load_strategy_workflow, load_universe_panels
 from signal_lab.portfolio import RiskLimits, RiskManager
 from signal_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
 from signal_lab.research import FactorResearchLab
@@ -34,69 +34,6 @@ def _runtime(config: Path | None) -> tuple[DataLakeLayout, DuckDBWarehouse, Feat
     warehouse = DuckDBWarehouse(lake)
     builder = FeatureBuilder(warehouse=warehouse, store=FeatureStore(lake), registry=default_registry())
     return lake, warehouse, builder
-
-
-def _load_universe_panels(
-    *,
-    builder: FeatureBuilder,
-    exchange: str,
-    symbols: list[str],
-    market_type: MarketType,
-    factor_name: str,
-    benchmark_symbol: str | None,
-) -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame | None, pd.DataFrame | None]:
-    factor_series: dict[str, pd.Series] = {}
-    price_series: dict[str, pd.Series] = {}
-    dollar_volume_series: dict[str, pd.Series] = {}
-    funding_series: dict[str, pd.Series] = {}
-
-    for symbol in symbols:
-        market = builder.load_symbol_frame(
-            exchange=exchange,
-            symbol=symbol,
-            market_type=market_type,
-            benchmark_symbol=benchmark_symbol,
-        )
-        if market.empty:
-            raise ValueError(f"no normalized market data found for {symbol} on {exchange}/{market_type.value}")
-
-        bundle = builder.build_symbol_features(
-            exchange=exchange,
-            symbol=symbol,
-            market_type=market_type,
-            benchmark_symbol=benchmark_symbol,
-            factor_names=[factor_name],
-        )
-        if bundle.empty or factor_name not in bundle.columns:
-            raise ValueError(f"factor {factor_name} could not be computed for {symbol}")
-
-        index = pd.to_datetime(market["ts"], utc=True)
-        price_series[symbol] = pd.Series(market["close"].to_numpy(), index=index)
-        dollar_volume_series[symbol] = pd.Series((market["close"] * market["volume"]).to_numpy(), index=index)
-        if "funding_rate" in market.columns:
-            funding_series[symbol] = pd.Series(market["funding_rate"].to_numpy(), index=index)
-
-        factor_index = pd.to_datetime(bundle["ts"], utc=True)
-        factor_series[symbol] = pd.Series(bundle[factor_name].to_numpy(), index=factor_index)
-
-    factor_panel = pd.DataFrame(factor_series).sort_index()
-    price_panel = pd.DataFrame(price_series).sort_index()
-    dollar_volume_panel = pd.DataFrame(dollar_volume_series).sort_index() if dollar_volume_series else None
-    funding_panel = pd.DataFrame(funding_series).sort_index() if funding_series else None
-
-    aligned_index = factor_panel.index.intersection(price_panel.index)
-    if dollar_volume_panel is not None:
-        aligned_index = aligned_index.intersection(dollar_volume_panel.index)
-    if funding_panel is not None:
-        aligned_index = aligned_index.intersection(funding_panel.index)
-
-    factor_panel = factor_panel.loc[aligned_index]
-    price_panel = price_panel.loc[aligned_index]
-    if dollar_volume_panel is not None:
-        dollar_volume_panel = dollar_volume_panel.loc[aligned_index]
-    if funding_panel is not None:
-        funding_panel = funding_panel.loc[aligned_index]
-    return factor_panel, price_panel, dollar_volume_panel, funding_panel
 
 
 @app.command()
@@ -184,10 +121,16 @@ def build_features(
     )
     if bundle.empty:
         raise typer.BadParameter("no normalized data found for the requested symbol")
-    saved = builder.persist_bundle(bundle)
+    saved = builder.persist_bundle(
+        bundle,
+        exchange=exchange,
+        symbol=symbol,
+        market_type=MarketType(market_type),
+        benchmark_symbol=benchmark_symbol,
+    )
     typer.echo(f"saved {len(saved)} factor files")
     for name, path in sorted(saved.items()):
-        typer.echo(f"{name}: {path}")
+        typer.echo(f"{name}: {path['feature_path']} ({path['factor_version']})")
 
 
 @app.command()
@@ -201,7 +144,7 @@ def factor_report(
 ) -> None:
     """Generate a markdown factor report for a symbol universe."""
     lake, _, builder = _runtime(config)
-    factor_panel, price_panel, _, _ = _load_universe_panels(
+    panels = load_universe_panels(
         builder=builder,
         exchange=exchange,
         symbols=_parse_symbols(symbols),
@@ -209,7 +152,7 @@ def factor_report(
         factor_name=factor_name,
         benchmark_symbol=benchmark_symbol,
     )
-    diagnostics = FactorResearchLab().evaluate(factor_panel, price_panel)
+    diagnostics = FactorResearchLab().evaluate(panels.factor, panels.price)
     report = render_factor_report(factor_name, diagnostics)
     report_path = lake.reports_dir / "factors" / f"{factor_name}.md"
     report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -232,7 +175,7 @@ def backtest_factor(
 ) -> None:
     """Run a cross-sectional factor backtest and save a report."""
     lake, _, builder = _runtime(config)
-    factor_panel, price_panel, dollar_volume, funding_panel = _load_universe_panels(
+    panels = load_universe_panels(
         builder=builder,
         exchange=exchange,
         symbols=_parse_symbols(symbols),
@@ -249,10 +192,10 @@ def backtest_factor(
         )
     )
     result = backtester.run(
-        factor_frame=factor_panel,
-        price_frame=price_panel,
-        dollar_volume=dollar_volume,
-        funding_rate=funding_panel,
+        factor_frame=panels.factor,
+        price_frame=panels.price,
+        dollar_volume=panels.dollar_volume,
+        funding_rate=panels.funding_rate,
     )
     report = render_backtest_report(factor_name, result)
     report_path = lake.reports_dir / "backtests" / f"{factor_name}.md"
@@ -279,7 +222,7 @@ def paper_trade(
 ) -> None:
     """Run a paper trading loop with the factor strategy weights."""
     lake, _, builder = _runtime(config)
-    factor_panel, price_panel, dollar_volume, funding_panel = _load_universe_panels(
+    panels = load_universe_panels(
         builder=builder,
         exchange=exchange,
         symbols=_parse_symbols(symbols),
@@ -295,7 +238,7 @@ def paper_trade(
             max_gross_leverage=max_gross_leverage,
         )
     )
-    target_weights = strategy.build_weights(factor_panel)
+    target_weights = strategy.build_weights(panels.factor)
     session = PaperTradingSession(
         broker=PaperBroker(starting_cash=starting_cash, fee_bps=fee_bps, slippage_bps=slippage_bps),
         risk_manager=RiskManager(
@@ -307,9 +250,9 @@ def paper_trade(
     )
     result = session.run(
         target_weights=target_weights,
-        price_frame=price_panel,
-        dollar_volume=dollar_volume,
-        funding_rate=funding_panel,
+        price_frame=panels.price,
+        dollar_volume=panels.dollar_volume,
+        funding_rate=panels.funding_rate,
     )
     report = render_paper_trading_report(factor_name, result)
     report_path = lake.reports_dir / "paper" / f"{factor_name}.md"
@@ -318,6 +261,53 @@ def paper_trade(
     typer.echo(str(report_path))
     typer.echo(f"final_equity: {result.equity_curve.iloc[-1]:.6f}")
     typer.echo(f"fills: {len(result.fills)}")
+
+
+@app.command()
+def run_strategy(
+    workflow_config: Path = typer.Option(..., "--workflow-config", help="Path to a strategy workflow YAML."),
+    config: Path | None = typer.Option(None, "--config", "-c"),
+) -> None:
+    """Run the full configured workflow and persist artifacts."""
+    lake, _, builder = _runtime(config)
+    workflow = load_strategy_workflow(workflow_config)
+    artifacts = StrategyRunner(layout=lake, builder=builder).run(workflow)
+    typer.echo(f"run_id: {artifacts.run_id}")
+    if artifacts.factor_report_path:
+        typer.echo(f"factor_report: {artifacts.factor_report_path}")
+    if artifacts.backtest_report_path:
+        typer.echo(f"backtest_report: {artifacts.backtest_report_path}")
+    if artifacts.paper_report_path:
+        typer.echo(f"paper_report: {artifacts.paper_report_path}")
+    if artifacts.manifest_path:
+        typer.echo(f"manifest: {artifacts.manifest_path}")
+
+
+@app.command()
+def feature_manifests(
+    factor_name: str | None = typer.Option(None, "--factor", help="Optional factor filter."),
+    config: Path | None = typer.Option(None, "--config", "-c"),
+) -> None:
+    """List stored feature manifests."""
+    lake, _, builder = _runtime(config)
+    manifests = builder.store.load_manifests(factor_name)
+    typer.echo(f"manifests: {len(manifests)}")
+    for item in manifests:
+        typer.echo(
+            f"{item['factor_name']}\t{item['symbol']}\t{item['factor_version']}\t{item['feature_path']}"
+        )
+
+
+@app.command()
+def refresh_state(config: Path | None = typer.Option(None, "--config", "-c")) -> None:
+    """Print incremental refresh checkpoints."""
+    lake, _, _ = _runtime(config)
+    checkpoints = IncrementalStateStore(lake.root_dir).list_checkpoints()
+    typer.echo(f"checkpoints: {len(checkpoints)}")
+    for item in checkpoints:
+        typer.echo(
+            f"{item.dataset}\t{item.exchange}\t{item.symbol}\t{item.market_type}\t{item.last_ts}\trows={item.rows}"
+        )
 
 
 @app.command()
