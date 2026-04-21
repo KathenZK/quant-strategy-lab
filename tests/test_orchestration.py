@@ -45,6 +45,157 @@ def _normalized_ohlcv(symbol: str) -> pd.DataFrame:
     return frame
 
 
+def _trend_ohlcv(symbol: str) -> pd.DataFrame:
+    index = pd.date_range("2024-01-01", periods=80, freq="h", tz="UTC")
+    if symbol == "BTC/USDT":
+        closes = [100 + i * 0.8 for i in range(len(index))]
+    elif symbol == "ETH/USDT":
+        closes = [200 - i * 0.7 for i in range(len(index))]
+    else:
+        closes = [50 + ((-1) ** i) * 0.1 for i in range(len(index))]
+    frame = pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": [symbol] * len(index),
+            "market_type": ["perp"] * len(index),
+            "base_asset": [symbol.split("/")[0]] * len(index),
+            "quote_asset": [symbol.split("/")[1]] * len(index),
+            "open": closes,
+            "high": [value * 1.01 for value in closes],
+            "low": [value * 0.99 for value in closes],
+            "close": closes,
+            "volume": [2_000_000.0] * len(index),
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+    return frame
+
+
+def _trend_funding(symbol: str) -> pd.DataFrame:
+    index = pd.date_range("2024-01-01", periods=80, freq="h", tz="UTC")
+    base_rate = 0.0003 if symbol == "BTC/USDT" else (-0.0002 if symbol == "ETH/USDT" else 0.003)
+    values = [base_rate + i * 0.00001 for i in range(len(index))]
+    return pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": [symbol] * len(index),
+            "market_type": ["perp"] * len(index),
+            "base_asset": [symbol.split("/")[0]] * len(index),
+            "quote_asset": [symbol.split("/")[1]] * len(index),
+            "funding_rate": values,
+            "next_funding_ts": index + pd.Timedelta(hours=8),
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+
+
+def _trend_open_interest(symbol: str) -> pd.DataFrame:
+    index = pd.date_range("2024-01-01", periods=80, freq="h", tz="UTC")
+    if symbol == "BTC/USDT":
+        values = [10_000 + i * 120 for i in range(len(index))]
+    elif symbol == "ETH/USDT":
+        values = [12_000 + i * 110 for i in range(len(index))]
+    else:
+        values = [8_000 - i * 5 for i in range(len(index))]
+    return pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": [symbol] * len(index),
+            "market_type": ["perp"] * len(index),
+            "base_asset": [symbol.split("/")[0]] * len(index),
+            "quote_asset": [symbol.split("/")[1]] * len(index),
+            "open_interest": values,
+            "open_interest_value": values,
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+
+
+def _trend_basis(symbol: str) -> pd.DataFrame:
+    index = pd.date_range("2024-01-01", periods=80, freq="h", tz="UTC")
+    if symbol == "BTC/USDT":
+        basis = [10 + i * 0.4 for i in range(len(index))]
+    elif symbol == "ETH/USDT":
+        basis = [8 - i * 0.3 for i in range(len(index))]
+    else:
+        basis = [1 + ((-1) ** i) * 0.05 for i in range(len(index))]
+    return pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": [symbol] * len(index),
+            "market_type": ["perp"] * len(index),
+            "base_asset": [symbol.split("/")[0]] * len(index),
+            "quote_asset": [symbol.split("/")[1]] * len(index),
+            "basis": basis,
+            "basis_rate": [value / 10_000 for value in basis],
+            "annualized_basis": [value / 100 for value in basis],
+            "futures_price": [100 + value for value in basis],
+            "index_price": [100.0] * len(index),
+            "mark_price": [100 + value * 0.9 for value in basis],
+            "premium_index": [value / 100_000 for value in basis],
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+
+
+def _trend_liquidations(symbol: str) -> pd.DataFrame:
+    if symbol == "BTC/USDT":
+        return pd.DataFrame(
+            {
+                "ts": pd.to_datetime(["2024-01-04T06:10:00Z", "2024-01-04T07:15:00Z"]),
+                "exchange": ["binance", "binance"],
+                "symbol": [symbol, symbol],
+                "market_type": ["perp", "perp"],
+                "base_asset": ["BTC", "BTC"],
+                "quote_asset": ["USDT", "USDT"],
+                "side": ["sell", "sell"],
+                "price": [45000.0, 45200.0],
+                "size": [0.40, 0.50],
+                "notional": [18000.0, 22600.0],
+                "source": ["test", "test"],
+            }
+        )
+    if symbol == "ETH/USDT":
+        return pd.DataFrame(
+            {
+                "ts": pd.to_datetime(["2024-01-04T06:10:00Z"]),
+                "exchange": ["binance"],
+                "symbol": [symbol],
+                "market_type": ["perp"],
+                "base_asset": ["ETH"],
+                "quote_asset": ["USDT"],
+                "side": ["buy"],
+                "price": [2500.0],
+                "size": [0.10],
+                "notional": [250.0],
+                "source": ["test"],
+            }
+        )
+    return pd.DataFrame(
+        {
+            "ts": pd.to_datetime(["2024-01-04T06:10:00Z"]),
+            "exchange": ["binance"],
+            "symbol": [symbol],
+            "market_type": ["perp"],
+            "base_asset": ["SOL"],
+            "quote_asset": ["USDT"],
+            "side": ["sell"],
+            "price": [100.0],
+            "size": [0.01],
+            "notional": [1.0],
+            "source": ["test"],
+        }
+    )
+
+
 def test_incremental_state_store_tracks_checkpoints(tmp_path: Path) -> None:
     store = IncrementalStateStore(tmp_path)
     checkpoint = store.update_checkpoint(
@@ -146,3 +297,69 @@ workflow:
     assert artifacts.backtest_report_path is not None and Path(artifacts.backtest_report_path).exists()
     assert artifacts.paper_report_path is not None and Path(artifacts.paper_report_path).exists()
     assert len(manifests) >= 3
+
+
+def test_strategy_runner_supports_trend_confirmation_workflow(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+    for symbol in ("BTC/USDT", "ETH/USDT", "SOL/USDT"):
+        for dataset_kind, frame in (
+            (DatasetKind.OHLCV, _trend_ohlcv(symbol)),
+            (DatasetKind.FUNDING_RATES, _trend_funding(symbol)),
+            (DatasetKind.OPEN_INTEREST, _trend_open_interest(symbol)),
+            (DatasetKind.BASIS, _trend_basis(symbol)),
+            (DatasetKind.LIQUIDATIONS, _trend_liquidations(symbol)),
+        ):
+            write_dataframe(
+                frame,
+                layout=layout,
+                layer="normalized",
+                kind=dataset_kind,
+                exchange="binance",
+                market_type=MarketType.PERP,
+                symbol=symbol,
+                partition_date=frame["ts"].max().date(),
+            )
+
+    config_path = tmp_path / "trend-workflow.yaml"
+    config_path.write_text(
+        """
+strategy:
+  name: trend_demo
+  signal_type: trend_confirmation
+  exchange: binance
+  market_type: perp
+  symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
+  strategy_options:
+    max_long_positions: 1
+    max_short_positions: 1
+refresh:
+  enabled: false
+workflow:
+  run_factor_report: true
+  run_backtest: true
+  run_paper_trade: true
+""".strip(),
+        encoding="utf-8",
+    )
+
+    builder = FeatureBuilder(
+        warehouse=DuckDBWarehouse(layout),
+        store=FeatureStore(layout),
+        registry=default_registry(),
+    )
+    workflow = load_strategy_workflow(config_path)
+    runner = StrategyRunner(layout=layout, builder=builder)
+    signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
+    artifacts = runner.run(workflow)
+    manifest = Path(artifacts.manifest_path).read_text(encoding="utf-8")
+
+    assert signal_name == "trend_confirmation"
+    assert signal_version
+    assert panels.liquidation_features is not None
+    assert target_weights.loc[target_weights.index[-1], "BTC/USDT"] == 0.0
+    assert artifacts.manifest_path is not None and Path(artifacts.manifest_path).exists()
+    assert artifacts.factor_report_path is not None and Path(artifacts.factor_report_path).exists()
+    assert artifacts.backtest_report_path is not None and Path(artifacts.backtest_report_path).exists()
+    assert artifacts.paper_report_path is not None and Path(artifacts.paper_report_path).exists()
+    assert "trend_confirmation" in manifest

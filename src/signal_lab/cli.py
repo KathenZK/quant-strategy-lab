@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import asyncio
 from datetime import datetime
 from pathlib import Path
 
@@ -15,6 +16,7 @@ from signal_lab.orchestration import IncrementalStateStore, StrategyRunner, load
 from signal_lab.portfolio import RiskLimits, RiskManager
 from signal_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
 from signal_lab.research import FactorResearchLab
+from signal_lab.scenarios import seed_trend_mvp_data
 
 app = typer.Typer(add_completion=False, help="Signal Lab research platform CLI.")
 
@@ -102,6 +104,40 @@ def refresh_symbol(
                 typer.echo(f"{name} normalized={paths['normalized']}")
             except NotImplementedError as exc:
                 typer.echo(f"{name} skipped: {exc}")
+
+
+@app.command()
+def collect_liquidations(
+    duration_seconds: int = typer.Option(60, "--duration-seconds", min=1, help="How long to collect liquidation events."),
+    max_events: int | None = typer.Option(None, "--max-events", min=1, help="Optional maximum number of websocket messages."),
+    symbol: str | None = typer.Option(None, "--symbol", help="Optional symbol filter, for example BTC/USDT:USDT."),
+    config: Path | None = typer.Option(None, "--config", "-c"),
+) -> None:
+    """Collect Binance liquidation stream events and store them into the lake."""
+    lake, _, _ = _runtime(config)
+    service = DataIngestionService(lake)
+    frame = asyncio.run(service.collect_liquidations(duration_seconds=duration_seconds, max_events=max_events))
+    if frame.empty:
+        typer.echo("no liquidation events collected")
+        return
+
+    working = frame
+    if symbol:
+        working = working[working["symbol"] == symbol.upper()]
+        if working.empty:
+            typer.echo("no events matched the requested symbol")
+            return
+
+    typer.echo(f"collected {len(working)} liquidation events")
+    for current_symbol, group in working.groupby("symbol"):
+        result = service.write_liquidation_events(
+            group.reset_index(drop=True),
+            exchange=str(group["exchange"].iloc[0]),
+            symbol=current_symbol,
+            market_type=MarketType(str(group["market_type"].iloc[0])),
+        )
+        typer.echo(f"{current_symbol} raw={result['raw']}")
+        typer.echo(f"{current_symbol} normalized={result['normalized']}")
 
 
 @app.command()
@@ -309,6 +345,20 @@ def refresh_state(config: Path | None = typer.Option(None, "--config", "-c")) ->
         typer.echo(
             f"{item.dataset}\t{item.exchange}\t{item.symbol}\t{item.market_type}\t{item.last_ts}\trows={item.rows}"
         )
+
+
+@app.command()
+def seed_trend_mvp(
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+) -> None:
+    """Seed deterministic MVP perp data for baseline reports."""
+    lake, _, _ = _runtime(config)
+    written = seed_trend_mvp_data(lake)
+    typer.echo(f"seeded {len(written)} symbols")
+    for symbol, datasets in sorted(written.items()):
+        typer.echo(symbol)
+        for dataset, path in sorted(datasets.items()):
+            typer.echo(f"  {dataset}: {path}")
 
 
 @app.command()

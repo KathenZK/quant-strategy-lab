@@ -27,11 +27,13 @@ def load_strategy_workflow(path: str | Path) -> StrategyWorkflowConfig:
 
     spec = StrategyWorkflowSpec(
         name=strategy["name"],
-        factor=strategy["factor"],
         exchange=strategy["exchange"],
         market_type=MarketType(strategy.get("market_type", "spot")),
         symbols=[symbol.upper() for symbol in strategy.get("symbols", [])],
         benchmark_symbol=strategy.get("benchmark_symbol", None),
+        signal_type=strategy.get("signal_type", "factor"),
+        factor=strategy.get("factor"),
+        strategy_options=strategy.get("strategy_options", {}),
     )
 
     return StrategyWorkflowConfig(

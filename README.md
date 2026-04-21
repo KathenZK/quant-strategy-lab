@@ -98,12 +98,38 @@ pip install -e ".[dev]"
 ./.venv/bin/signal-lab refresh-state
 ```
 
+12. 采集 liquidation 实时事件并写入数据湖
+
+```bash
+./.venv/bin/signal-lab collect-liquidations --duration-seconds 60
+```
+
+13. 写入隔离的 `MVP` 基准场景数据
+
+```bash
+./.venv/bin/signal-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
+```
+
+14. 运行正式 `MVP` 趋势主线配置
+
+```bash
+./.venv/bin/signal-lab run-strategy --workflow-config configs/trend_confirmation.mvp.yaml
+```
+
+15. 运行基准回测工作流
+
+```bash
+./.venv/bin/signal-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+```
+
 ## 文档
 
 - 平台路线图：`docs/platform-roadmap.md`
 - 中低频永续合约数据与策略决策：`docs/midfreq-perp-data-strategy-guide.md`
 - 数据源与表结构规范：`docs/data-source-spec.md`
 - MVP 实施计划：`docs/mvp-implementation-plan.md`
+- 趋势确认主线 MVP：`docs/trend-confirmation-mvp.md`
+- 趋势确认主线基准报告：`docs/trend-confirmation-mvp-baseline.md`
 - 策略配置示例：`configs/strategy.example.yaml`
 
 ## 下一步

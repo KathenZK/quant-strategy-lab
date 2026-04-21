@@ -5,16 +5,17 @@ from datetime import datetime, timezone
 from pathlib import Path
 import json
 
-from signal_lab.backtest import CrossSectionalBacktester
+from signal_lab.backtest import CrossSectionalBacktester, PortfolioBacktester
 from signal_lab.data import DataIngestionService, DataLakeLayout, DatasetKind
 from signal_lab.execution import PaperBroker, PaperTradingSession
 from signal_lab.features import FeatureBuilder
 from signal_lab.orchestration.models import StrategyRunArtifacts, StrategyWorkflowConfig
-from signal_lab.orchestration.panels import load_universe_panels
+from signal_lab.orchestration.panels import load_multi_factor_panels, load_universe_panels
 from signal_lab.orchestration.state import IncrementalStateStore
 from signal_lab.portfolio import RiskManager
 from signal_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
 from signal_lab.research import FactorResearchLab
+from signal_lab.strategies import TrendConfirmationStrategy
 
 
 @dataclass(slots=True)
@@ -107,12 +108,18 @@ class StrategyRunner:
 
     def build_features(self, config: StrategyWorkflowConfig) -> dict[str, dict[str, dict[str, str]]]:
         artifacts: dict[str, dict[str, dict[str, str]]] = {}
+        factor_names: list[str] | None = None
+        if config.strategy.signal_type == "trend_confirmation":
+            factor_names = TrendConfirmationStrategy.from_options(config.strategy.strategy_options).required_factors()
+        elif config.strategy.factor is not None:
+            factor_names = [config.strategy.factor]
         for symbol in config.strategy.symbols:
             bundle = self.builder.build_symbol_features(
                 exchange=config.strategy.exchange,
                 symbol=symbol,
                 market_type=config.strategy.market_type,
                 benchmark_symbol=config.strategy.benchmark_symbol,
+                factor_names=factor_names,
             )
             if bundle.empty:
                 continue
@@ -125,18 +132,39 @@ class StrategyRunner:
             )
         return artifacts
 
-    def run(self, config: StrategyWorkflowConfig) -> StrategyRunArtifacts:
-        run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        refresh_artifacts = self.refresh_data(config)
-        feature_artifacts = self.build_features(config)
+    def _prepare_signal_inputs(
+        self,
+        config: StrategyWorkflowConfig,
+    ) -> tuple[str, str, object, object, object]:
+        if config.strategy.signal_type == "trend_confirmation":
+            strategy = TrendConfirmationStrategy.from_options(config.strategy.strategy_options)
+            panels = load_multi_factor_panels(
+                builder=self.builder,
+                exchange=config.strategy.exchange,
+                symbols=config.strategy.symbols,
+                market_type=config.strategy.market_type,
+                factor_names=strategy.required_factors(),
+                benchmark_symbol=config.strategy.benchmark_symbol,
+            )
+            signal_frame = strategy.build_signal_frame(panels.factors)
+            target_weights = strategy.build_weights(signal_frame, panels.liquidation_features)
+            return strategy.signal_name, strategy.version(), panels, signal_frame, target_weights
+
         panels = load_universe_panels(
             builder=self.builder,
             exchange=config.strategy.exchange,
             symbols=config.strategy.symbols,
             market_type=config.strategy.market_type,
-            factor_name=config.strategy.factor,
+            factor_name=config.strategy.signal_name,
             benchmark_symbol=config.strategy.benchmark_symbol,
         )
+        return config.strategy.signal_name, self.builder.registry.get(config.strategy.signal_name).version(), panels, panels.factor, None
+
+    def run(self, config: StrategyWorkflowConfig) -> StrategyRunArtifacts:
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        refresh_artifacts = self.refresh_data(config)
+        feature_artifacts = self.build_features(config)
+        signal_name, signal_version, panels, signal_frame, target_weights = self._prepare_signal_inputs(config)
 
         factor_report_path: Path | None = None
         backtest_report_path: Path | None = None
@@ -145,29 +173,39 @@ class StrategyRunner:
         paper_summary: dict[str, float] = {}
 
         if config.run_factor_report:
-            diagnostics = FactorResearchLab().evaluate(panels.factor, panels.price)
-            report = render_factor_report(config.strategy.factor, diagnostics)
+            diagnostics = FactorResearchLab().evaluate(signal_frame, panels.price)
+            report = render_factor_report(signal_name, diagnostics)
             factor_report_path = self.layout.reports_dir / "runs" / config.strategy.name / run_id / "factor_report.md"
             factor_report_path.parent.mkdir(parents=True, exist_ok=True)
             factor_report_path.write_text(report, encoding="utf-8")
 
         if config.run_backtest:
-            backtester = CrossSectionalBacktester(assumptions=config.execution)
-            backtest = backtester.run(
-                factor_frame=panels.factor,
-                price_frame=panels.price,
-                dollar_volume=panels.dollar_volume,
-                funding_rate=panels.funding_rate,
-            )
+            if target_weights is None:
+                backtester = CrossSectionalBacktester(assumptions=config.execution)
+                backtest = backtester.run(
+                    factor_frame=signal_frame,
+                    price_frame=panels.price,
+                    dollar_volume=panels.dollar_volume,
+                    funding_rate=panels.funding_rate,
+                )
+            else:
+                backtest = PortfolioBacktester(assumptions=config.execution).run(
+                    target_weights=target_weights,
+                    price_frame=panels.price,
+                    dollar_volume=panels.dollar_volume,
+                    funding_rate=panels.funding_rate,
+                )
             backtest_metrics = backtest.metrics
-            report = render_backtest_report(config.strategy.factor, backtest)
+            report = render_backtest_report(signal_name, backtest)
             backtest_report_path = self.layout.reports_dir / "runs" / config.strategy.name / run_id / "backtest_report.md"
             backtest_report_path.parent.mkdir(parents=True, exist_ok=True)
             backtest_report_path.write_text(report, encoding="utf-8")
 
         if config.run_paper_trade:
-            strategy = CrossSectionalBacktester(assumptions=config.execution)
-            target_weights = strategy.build_weights(panels.factor)
+            paper_target_weights = target_weights
+            if paper_target_weights is None:
+                strategy = CrossSectionalBacktester(assumptions=config.execution)
+                paper_target_weights = strategy.build_weights(signal_frame)
             session = PaperTradingSession(
                 broker=PaperBroker(
                     starting_cash=config.execution.starting_cash,
@@ -177,7 +215,7 @@ class StrategyRunner:
                 risk_manager=RiskManager(config.risk),
             )
             paper = session.run(
-                target_weights=target_weights,
+                target_weights=paper_target_weights,
                 price_frame=panels.price,
                 dollar_volume=panels.dollar_volume,
                 funding_rate=panels.funding_rate,
@@ -187,7 +225,7 @@ class StrategyRunner:
                 "fill_count": float(len(paper.fills)),
                 "funding_cashflow": float(paper.funding_cashflows.sum()) if not paper.funding_cashflows.empty else 0.0,
             }
-            report = render_paper_trading_report(config.strategy.factor, paper)
+            report = render_paper_trading_report(signal_name, paper)
             paper_report_path = self.layout.reports_dir / "runs" / config.strategy.name / run_id / "paper_report.md"
             paper_report_path.parent.mkdir(parents=True, exist_ok=True)
             paper_report_path.write_text(report, encoding="utf-8")
@@ -201,7 +239,9 @@ class StrategyRunner:
             "schedule": asdict(config.schedule),
             "refresh_artifacts": refresh_artifacts,
             "feature_artifacts": feature_artifacts,
-            "factor_version": self.builder.registry.get(config.strategy.factor).version(),
+            "signal_name": signal_name,
+            "signal_type": config.strategy.signal_type,
+            "signal_version": signal_version,
             "factor_report_path": str(factor_report_path) if factor_report_path else None,
             "backtest_report_path": str(backtest_report_path) if backtest_report_path else None,
             "paper_report_path": str(paper_report_path) if paper_report_path else None,

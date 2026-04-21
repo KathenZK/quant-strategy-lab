@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, field
+from typing import Any
 
 from signal_lab.backtest import ExecutionAssumptions
 from signal_lab.data import MarketType
@@ -28,11 +29,21 @@ class ScheduleOptions:
 @dataclass(frozen=True, slots=True)
 class StrategyWorkflowSpec:
     name: str
-    factor: str
     exchange: str
     market_type: MarketType
     symbols: list[str]
     benchmark_symbol: str | None = None
+    signal_type: str = "factor"
+    factor: str | None = None
+    strategy_options: dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def signal_name(self) -> str:
+        if self.signal_type == "factor":
+            if self.factor is None:
+                raise ValueError("factor strategy requires factor name")
+            return self.factor
+        return self.name
 
 
 @dataclass(frozen=True, slots=True)

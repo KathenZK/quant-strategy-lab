@@ -15,7 +15,13 @@ def _series_to_bullets(series: pd.Series, *, precision: int = 4) -> str:
 def render_factor_report(name: str, diagnostics: FactorDiagnostics) -> str:
     summary = diagnostics.summary
     quantile_table = diagnostics.quantile_returns.round(6).to_string() if not diagnostics.quantile_returns.empty else "No quantile returns available."
-    walk_forward = diagnostics.walk_forward.round(6).to_string(index=False) if not diagnostics.walk_forward.empty else "No walk-forward windows available."
+    if diagnostics.walk_forward.empty:
+        walk_forward = "No walk-forward windows available."
+    else:
+        walk_forward_frame = diagnostics.walk_forward.copy()
+        numeric_columns = walk_forward_frame.select_dtypes(include="number").columns
+        walk_forward_frame[numeric_columns] = walk_forward_frame[numeric_columns].round(6)
+        walk_forward = walk_forward_frame.to_string(index=False)
     turnover_mean = float(diagnostics.turnover.mean()) if not diagnostics.turnover.empty else 0.0
     return f"""# Factor Report: {name}
 

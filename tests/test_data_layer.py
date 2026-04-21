@@ -1,6 +1,7 @@
 from pathlib import Path
 
 import pandas as pd
+import pytest
 
 from signal_lab.data import CCXTDataClient, DataIngestionService, DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType, normalize_dataset, write_dataframe
 from signal_lab.features import FeatureBuilder, FeatureStore
@@ -276,3 +277,76 @@ def test_feature_builder_forward_fills_perp_fields(tmp_path: Path) -> None:
         market_type=MarketType.PERP,
     )
     assert frame["funding_rate"].tolist() == [0.001, 0.001, 0.002, 0.002]
+
+
+def test_warehouse_load_liquidation_features(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+    ohlcv = pd.DataFrame(
+        {
+            "ts": pd.date_range("2024-01-01", periods=3, freq="h", tz="UTC"),
+            "exchange": ["binance"] * 3,
+            "symbol": ["BTC/USDT:USDT"] * 3,
+            "market_type": ["perp"] * 3,
+            "base_asset": ["BTC"] * 3,
+            "quote_asset": ["USDT"] * 3,
+            "open": [100.0, 101.0, 102.0],
+            "high": [101.0, 102.0, 103.0],
+            "low": [99.0, 100.0, 101.0],
+            "close": [100.0, 101.0, 102.0],
+            "volume": [1_000_000.0] * 3,
+            "source": ["test"] * 3,
+        }
+    )
+    liqs = pd.DataFrame(
+        {
+            "ts": pd.to_datetime(
+                [
+                    "2024-01-01T00:10:00Z",
+                    "2024-01-01T01:15:00Z",
+                ]
+            ),
+            "exchange": ["binance", "binance"],
+            "symbol": ["BTC/USDT:USDT", "BTC/USDT:USDT"],
+            "market_type": ["perp", "perp"],
+            "base_asset": ["BTC", "BTC"],
+            "quote_asset": ["USDT", "USDT"],
+            "side": ["sell", "buy"],
+            "price": [43000.0, 43200.0],
+            "size": [0.01, 0.02],
+            "notional": [430.0, 864.0],
+            "source": ["test", "test"],
+        }
+    )
+    write_dataframe(
+        ohlcv,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="BTC/USDT:USDT",
+        partition_date=ohlcv["ts"].max().date(),
+    )
+    write_dataframe(
+        liqs,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.LIQUIDATIONS,
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="BTC/USDT:USDT",
+        partition_date=pd.Timestamp("2024-01-01T01:15:00Z").date(),
+    )
+    features = DuckDBWarehouse(layout).load_liquidation_features(
+        exchange="binance",
+        symbol="BTC/USDT:USDT",
+        market_type=MarketType.PERP,
+        spike_window=2,
+        cooldown_bars=2,
+        spike_threshold=0.1,
+        notional_ratio_threshold=0.0001,
+    )
+    assert len(features) == 3
+    assert "event_cooldown_flag" in features.columns
+    assert features["liquidation_total_notional"].sum() == pytest.approx(1294.0)
