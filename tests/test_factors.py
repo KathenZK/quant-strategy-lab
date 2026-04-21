@@ -3,6 +3,10 @@ import pytest
 
 from signal_lab.factors import (
     AmihudIlliquidityFactor,
+    BasisChangeFactor,
+    BasisZScoreFactor,
+    FundingRateZScoreFactor,
+    OpenInterestZScoreFactor,
     RelativeStrengthFactor,
     OpenInterestChangeFactor,
     PriceOpenInterestRegimeFactor,
@@ -15,9 +19,13 @@ from signal_lab.factors import (
 def test_default_registry_contains_expected_factors() -> None:
     registry = default_registry()
     names = registry.names()
-    assert len(names) >= 12
+    assert len(names) >= 16
     assert "ret_1" in names
     assert "funding_rate" in names
+    assert "funding_zscore_72" in names
+    assert "oi_zscore_72" in names
+    assert "basis_change_4" in names
+    assert "basis_zscore_72" in names
     assert "price_oi_regime_4" in names
     assert "relative_strength_24" in names
 
@@ -39,6 +47,15 @@ def test_open_interest_change_factor() -> None:
     assert result.iloc[3] == pytest.approx(0.44)
 
 
+def test_open_interest_zscore_factor() -> None:
+    frame = pd.DataFrame({"open_interest": [100.0, 110.0, 120.0, 130.0]})
+    result = OpenInterestZScoreFactor(window=3).compute(frame)
+    assert pd.isna(result.iloc[0])
+    assert pd.isna(result.iloc[1])
+    assert result.iloc[2] == pytest.approx(1.0)
+    assert result.iloc[3] == pytest.approx(1.0)
+
+
 def test_price_open_interest_regime_factor() -> None:
     frame = pd.DataFrame(
         {
@@ -52,6 +69,32 @@ def test_price_open_interest_regime_factor() -> None:
     assert result.iloc[1] == 2.0
     assert result.iloc[2] == -2.0
     assert result.iloc[3] == -1.0
+
+
+def test_basis_change_factor_uses_pct_change() -> None:
+    frame = pd.DataFrame({"basis": [10.0, 12.0, 15.0]})
+    result = BasisChangeFactor(periods=1).compute(frame)
+    assert pd.isna(result.iloc[0])
+    assert result.iloc[1] == pytest.approx(0.20)
+    assert result.iloc[2] == pytest.approx(0.25)
+
+
+def test_basis_zscore_factor_uses_rolling_window() -> None:
+    frame = pd.DataFrame({"basis": [10.0, 11.0, 12.0, 13.0]})
+    result = BasisZScoreFactor(window=3).compute(frame)
+    assert pd.isna(result.iloc[0])
+    assert pd.isna(result.iloc[1])
+    assert result.iloc[2] == pytest.approx(1.0)
+    assert result.iloc[3] == pytest.approx(1.0)
+
+
+def test_funding_rate_zscore_factor_uses_rolling_window() -> None:
+    frame = pd.DataFrame({"funding_rate": [0.001, 0.002, 0.003, 0.004]})
+    result = FundingRateZScoreFactor(window=3).compute(frame)
+    assert pd.isna(result.iloc[0])
+    assert pd.isna(result.iloc[1])
+    assert result.iloc[2] == pytest.approx(1.0)
+    assert result.iloc[3] == pytest.approx(1.0)
 
 
 def test_relative_strength_factor_uses_benchmark() -> None:

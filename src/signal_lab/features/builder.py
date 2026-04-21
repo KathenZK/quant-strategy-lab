@@ -28,7 +28,24 @@ class FeatureBuilder:
         if frame.empty:
             return frame
 
-        enriched = frame.copy()
+        enriched = frame.copy().sort_values("ts").reset_index(drop=True)
+        perp_fill_columns = (
+            "funding_rate",
+            "next_funding_ts",
+            "open_interest",
+            "open_interest_value",
+            "basis",
+            "basis_rate",
+            "annualized_basis",
+            "futures_price",
+            "index_price",
+            "mark_price",
+            "premium_index",
+        )
+        for column in perp_fill_columns:
+            if column in enriched.columns:
+                enriched[column] = enriched[column].ffill()
+
         enriched["vwap"] = (enriched["high"] + enriched["low"] + enriched["close"]) / 3.0
         if benchmark_symbol:
             benchmark = self.warehouse.merged_market_frame(exchange=exchange, symbol=benchmark_symbol, market_type=market_type)

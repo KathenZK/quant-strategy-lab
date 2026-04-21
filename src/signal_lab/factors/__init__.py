@@ -1,6 +1,15 @@
 from .base import FactorMetadata, FactorRegistry, PandasFactor
 from .cross_sectional import RelativeStrengthFactor
-from .derivatives import FundingRateFactor, OpenInterestChangeFactor, PriceOpenInterestRegimeFactor
+from .derivatives import (
+    BasisChangeFactor,
+    BasisFactor,
+    BasisZScoreFactor,
+    FundingRateFactor,
+    FundingRateZScoreFactor,
+    OpenInterestChangeFactor,
+    OpenInterestZScoreFactor,
+    PriceOpenInterestRegimeFactor,
+)
 from .engine import compute_factor_bundle, compute_factor_frame
 from .liquidity import AmihudIlliquidityFactor, VWAPDistanceFactor, VolumeSurgeFactor
 from .mean_reversion import BollingerDistanceFactor, ZScoreFactor
@@ -22,7 +31,12 @@ def default_registry() -> FactorRegistry:
         AmihudIlliquidityFactor(),
         VWAPDistanceFactor(),
         FundingRateFactor(),
+        FundingRateZScoreFactor(window=72),
         OpenInterestChangeFactor(periods=4),
+        OpenInterestZScoreFactor(window=72),
+        BasisFactor(),
+        BasisChangeFactor(periods=4),
+        BasisZScoreFactor(window=72),
         PriceOpenInterestRegimeFactor(periods=4),
         RelativeStrengthFactor(periods=24),
     ):
@@ -32,6 +46,9 @@ def default_registry() -> FactorRegistry:
 
 __all__ = [
     "AmihudIlliquidityFactor",
+    "BasisChangeFactor",
+    "BasisFactor",
+    "BasisZScoreFactor",
     "BollingerDistanceFactor",
     "BreakoutFactor",
     "compute_factor_bundle",
@@ -39,8 +56,10 @@ __all__ = [
     "FactorMetadata",
     "FactorRegistry",
     "FundingRateFactor",
+    "FundingRateZScoreFactor",
     "MovingAverageDistanceFactor",
     "OpenInterestChangeFactor",
+    "OpenInterestZScoreFactor",
     "PandasFactor",
     "PriceOpenInterestRegimeFactor",
     "RelativeStrengthFactor",

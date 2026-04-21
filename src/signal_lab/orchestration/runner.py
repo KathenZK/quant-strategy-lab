@@ -88,10 +88,19 @@ class StrategyRunner:
                     since=self._resolve_since(config, dataset=DatasetKind.OPEN_INTEREST, symbol=symbol),
                     limit=config.refresh.limit,
                 )
+                basis = self.ingestion.refresh_basis_or_premium(
+                    exchange=config.strategy.exchange,
+                    symbol=symbol,
+                    timeframe=config.refresh.timeframe,
+                    since=self._resolve_since(config, dataset=DatasetKind.BASIS, symbol=symbol),
+                    limit=config.refresh.limit,
+                )
                 symbol_artifacts["funding_rates"] = funding
                 symbol_artifacts["open_interest"] = open_interest
+                symbol_artifacts["basis_or_premium"] = basis
                 self._record_refresh(config=config, dataset=DatasetKind.FUNDING_RATES, symbol=symbol, result=funding)
                 self._record_refresh(config=config, dataset=DatasetKind.OPEN_INTEREST, symbol=symbol, result=open_interest)
+                self._record_refresh(config=config, dataset=DatasetKind.BASIS, symbol=symbol, result=basis)
 
             artifacts[symbol] = symbol_artifacts
         return artifacts
