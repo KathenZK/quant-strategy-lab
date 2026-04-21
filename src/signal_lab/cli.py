@@ -8,6 +8,7 @@ import typer
 
 from signal_lab.config import load_settings
 from signal_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions
+from signal_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
 from signal_lab.data import DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
 from signal_lab.execution import PaperBroker, PaperTradingSession
 from signal_lab.factors import default_registry
@@ -16,7 +17,7 @@ from signal_lab.orchestration import IncrementalStateStore, StrategyRunner, load
 from signal_lab.portfolio import RiskLimits, RiskManager
 from signal_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
 from signal_lab.research import FactorResearchLab
-from signal_lab.scenarios import seed_trend_mvp_data
+from signal_lab.scenarios import seed_crowding_mvp_data, seed_shared_comparison_mvp_data, seed_trend_mvp_data
 
 app = typer.Typer(add_completion=False, help="Signal Lab research platform CLI.")
 
@@ -359,6 +360,47 @@ def seed_trend_mvp(
         typer.echo(symbol)
         for dataset, path in sorted(datasets.items()):
             typer.echo(f"  {dataset}: {path}")
+
+
+@app.command()
+def seed_crowding_mvp(
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+) -> None:
+    """Seed deterministic crowding reversal MVP data for baseline reports."""
+    lake, _, _ = _runtime(config)
+    written = seed_crowding_mvp_data(lake)
+    typer.echo(f"seeded {len(written)} symbols")
+    for symbol, datasets in sorted(written.items()):
+        typer.echo(symbol)
+        for dataset, path in sorted(datasets.items()):
+            typer.echo(f"  {dataset}: {path}")
+
+
+@app.command()
+def seed_shared_comparison_mvp(
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+) -> None:
+    """Seed deterministic shared comparison baseline data."""
+    lake, _, _ = _runtime(config)
+    written = seed_shared_comparison_mvp_data(lake)
+    typer.echo(f"seeded {len(written)} symbols")
+    for symbol, datasets in sorted(written.items()):
+        typer.echo(symbol)
+        for dataset, path in sorted(datasets.items()):
+            typer.echo(f"  {dataset}: {path}")
+
+
+@app.command()
+def compare_strategies(
+    comparison_config: Path = typer.Option(..., "--comparison-config", help="Path to strategy comparison YAML."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+) -> None:
+    """Run a side-by-side strategy comparison report."""
+    comparison = load_strategy_comparison(comparison_config)
+    artifacts = StrategyComparisonRunner(workspace_root=Path.cwd(), app_config_path=config).compare(comparison)
+    typer.echo(f"run_id: {artifacts.run_id}")
+    typer.echo(f"report: {artifacts.report_path}")
+    typer.echo(f"manifest: {artifacts.manifest_path}")
 
 
 @app.command()

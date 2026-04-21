@@ -1,7 +1,12 @@
 import pandas as pd
 import pytest
 
-from signal_lab.strategies import TrendConfirmationConfig, TrendConfirmationStrategy
+from signal_lab.strategies import (
+    CrowdingReversalConfig,
+    CrowdingReversalStrategy,
+    TrendConfirmationConfig,
+    TrendConfirmationStrategy,
+)
 
 
 def test_trend_confirmation_strategy_builds_signal_and_weights() -> None:
@@ -66,3 +71,55 @@ def test_trend_confirmation_strategy_applies_liquidation_overlay() -> None:
     assert weights.loc[index[0], "BTC"] == pytest.approx(0.05)
     assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)
     assert weights.loc[index[0], "SOL"] == pytest.approx(0.05)
+
+
+def test_crowding_reversal_strategy_builds_signal_and_weights() -> None:
+    index = pd.date_range("2024-01-01", periods=1, freq="D", tz="UTC")
+    factors = {
+        "ret_24": pd.DataFrame({"BTC": [0.08], "ETH": [-0.07], "SOL": [0.01]}, index=index),
+        "ret_4": pd.DataFrame({"BTC": [-0.02], "ETH": [0.03], "SOL": [0.00]}, index=index),
+        "funding_zscore_72": pd.DataFrame({"BTC": [2.2], "ETH": [-2.4], "SOL": [0.1]}, index=index),
+        "basis_zscore_72": pd.DataFrame({"BTC": [1.8], "ETH": [-1.7], "SOL": [0.1]}, index=index),
+        "oi_zscore_72": pd.DataFrame({"BTC": [1.6], "ETH": [1.7], "SOL": [0.2]}, index=index),
+        "price_oi_regime_4": pd.DataFrame({"BTC": [-2.0], "ETH": [2.0], "SOL": [1.0]}, index=index),
+    }
+    strategy = CrowdingReversalStrategy(
+        CrowdingReversalConfig(
+            max_long_positions=1,
+            max_short_positions=1,
+            long_allocation=0.5,
+            short_allocation=0.5,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal)
+
+    assert signal.loc[index[0], "BTC"] < 0
+    assert signal.loc[index[0], "ETH"] > 0
+    assert pd.isna(signal.loc[index[0], "SOL"])
+    assert weights.loc[index[0], "BTC"] == pytest.approx(-0.5)
+    assert weights.loc[index[0], "ETH"] == pytest.approx(0.5)
+    assert weights.loc[index[0], "SOL"] == pytest.approx(0.0)
+
+
+def test_crowding_reversal_strategy_applies_liquidation_overlay() -> None:
+    index = pd.date_range("2024-01-01", periods=1, freq="D", tz="UTC")
+    signal = pd.DataFrame({"BTC": [-1.0], "ETH": [1.0]}, index=index)
+    strategy = CrowdingReversalStrategy(
+        CrowdingReversalConfig(
+            max_long_positions=1,
+            max_short_positions=1,
+            long_allocation=0.5,
+            short_allocation=0.5,
+            liquidation_weight_scale=0.1,
+        )
+    )
+    liquidation_features = {
+        "liq_spike_zscore": pd.DataFrame({"BTC": [3.0], "ETH": [0.0]}, index=index),
+        "liq_notional_vs_dollar_volume": pd.DataFrame({"BTC": [0.0], "ETH": [0.0]}, index=index),
+        "event_cooldown_flag": pd.DataFrame({"BTC": [0], "ETH": [1]}, index=index),
+    }
+    weights = strategy.build_weights(signal, liquidation_features)
+    assert weights.loc[index[0], "BTC"] == pytest.approx(-0.05)
+    assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)

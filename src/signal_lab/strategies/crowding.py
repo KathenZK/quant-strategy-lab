@@ -11,27 +11,27 @@ from signal_lab.strategies.common import apply_liquidation_risk_overlay, cross_s
 
 
 @dataclass(frozen=True, slots=True)
-class TrendConfirmationConfig:
-    momentum_factor: str = "ret_24"
-    breakout_factor: str = "breakout_20"
-    oi_change_factor: str = "oi_change_4"
-    basis_change_factor: str = "basis_change_4"
+class CrowdingReversalConfig:
+    long_term_momentum_factor: str = "ret_24"
+    short_term_momentum_factor: str = "ret_4"
     funding_zscore_factor: str = "funding_zscore_72"
-    volume_factor: str = "volume_surge_20"
-    min_momentum: float = 0.0
-    min_oi_change: float = 0.0
-    min_basis_change: float = 0.0
-    breakout_floor: float = -0.02
-    min_volume_surge: float = -1.0
-    max_abs_funding_zscore: float = 2.5
-    momentum_weight: float = 1.0
-    breakout_weight: float = 1.0
-    oi_weight: float = 1.0
+    basis_zscore_factor: str = "basis_zscore_72"
+    oi_zscore_factor: str = "oi_zscore_72"
+    price_oi_regime_factor: str = "price_oi_regime_4"
+    min_abs_funding_zscore: float = 1.5
+    min_abs_basis_zscore: float = 1.0
+    min_oi_zscore: float = 1.0
+    min_long_term_trend: float = 0.01
+    short_term_reversal_floor: float = 0.0
+    require_regime_confirmation: bool = True
+    funding_weight: float = 1.0
     basis_weight: float = 1.0
-    volume_weight: float = 0.5
-    funding_penalty_weight: float = 0.5
-    max_long_positions: int = 3
-    max_short_positions: int = 3
+    oi_weight: float = 0.75
+    long_term_weight: float = 0.75
+    short_term_weight: float = 1.0
+    regime_weight: float = 0.5
+    max_long_positions: int = 2
+    max_short_positions: int = 2
     long_allocation: float = 0.5
     short_allocation: float = 0.5
     market_neutral: bool = True
@@ -45,17 +45,17 @@ class TrendConfirmationConfig:
 
 
 @dataclass(slots=True)
-class TrendConfirmationStrategy:
-    config: TrendConfirmationConfig
+class CrowdingReversalStrategy:
+    config: CrowdingReversalConfig
 
     @classmethod
-    def from_options(cls, options: dict[str, object] | None = None) -> "TrendConfirmationStrategy":
+    def from_options(cls, options: dict[str, object] | None = None) -> "CrowdingReversalStrategy":
         payload = options or {}
-        return cls(config=TrendConfirmationConfig(**payload))
+        return cls(config=CrowdingReversalConfig(**payload))
 
     @property
     def signal_name(self) -> str:
-        return "trend_confirmation"
+        return "crowding_reversal"
 
     def spec(self) -> dict[str, object]:
         return {
@@ -69,12 +69,12 @@ class TrendConfirmationStrategy:
 
     def required_factors(self) -> list[str]:
         return [
-            self.config.momentum_factor,
-            self.config.breakout_factor,
-            self.config.oi_change_factor,
-            self.config.basis_change_factor,
+            self.config.long_term_momentum_factor,
+            self.config.short_term_momentum_factor,
             self.config.funding_zscore_factor,
-            self.config.volume_factor,
+            self.config.basis_zscore_factor,
+            self.config.oi_zscore_factor,
+            self.config.price_oi_regime_factor,
         ]
 
     def required_liquidation_features(self) -> list[str]:
@@ -88,59 +88,61 @@ class TrendConfirmationStrategy:
         required = self.required_factors()
         missing = [name for name in required if name not in factors]
         if missing:
-            raise ValueError(f"missing factors for trend strategy: {missing}")
+            raise ValueError(f"missing factors for crowding strategy: {missing}")
 
-        momentum = factors[self.config.momentum_factor]
-        breakout = factors[self.config.breakout_factor]
-        oi_change = factors[self.config.oi_change_factor]
-        basis_change = factors[self.config.basis_change_factor]
-        funding_zscore = factors[self.config.funding_zscore_factor]
-        volume_surge = factors[self.config.volume_factor]
+        long_term = factors[self.config.long_term_momentum_factor]
+        short_term = factors[self.config.short_term_momentum_factor]
+        funding = factors[self.config.funding_zscore_factor]
+        basis = factors[self.config.basis_zscore_factor]
+        oi = factors[self.config.oi_zscore_factor]
+        regime = factors[self.config.price_oi_regime_factor]
 
-        z_momentum = cross_section_zscore(momentum)
-        z_breakout = cross_section_zscore(breakout)
-        z_oi = cross_section_zscore(oi_change)
-        z_basis = cross_section_zscore(basis_change)
-        z_volume = cross_section_zscore(volume_surge)
-        z_funding_penalty = cross_section_zscore(funding_zscore.abs()).fillna(0.0)
+        z_long_term = cross_section_zscore(long_term)
+        z_short_term = cross_section_zscore(short_term)
+        z_funding = cross_section_zscore(funding)
+        z_basis = cross_section_zscore(basis)
+        z_oi = cross_section_zscore(oi)
+        z_regime = cross_section_zscore(regime.fillna(0.0))
 
-        bullish_score = (
-            self.config.momentum_weight * z_momentum
-            + self.config.breakout_weight * z_breakout
-            + self.config.oi_weight * z_oi
+        short_score = (
+            self.config.funding_weight * z_funding
             + self.config.basis_weight * z_basis
-            + self.config.volume_weight * z_volume
-            - self.config.funding_penalty_weight * z_funding_penalty
-        )
-        bearish_score = (
-            self.config.momentum_weight * (-z_momentum)
-            + self.config.breakout_weight * (-z_breakout)
             + self.config.oi_weight * z_oi
-            + self.config.basis_weight * (-z_basis)
-            + self.config.volume_weight * z_volume
-            - self.config.funding_penalty_weight * z_funding_penalty
+            + self.config.long_term_weight * z_long_term
+            - self.config.short_term_weight * z_short_term
+            - self.config.regime_weight * z_regime
+        )
+        long_score = (
+            -self.config.funding_weight * z_funding
+            - self.config.basis_weight * z_basis
+            + self.config.oi_weight * z_oi
+            - self.config.long_term_weight * z_long_term
+            + self.config.short_term_weight * z_short_term
+            + self.config.regime_weight * z_regime
         )
 
-        long_mask = (
-            (momentum > self.config.min_momentum)
-            & (breakout > self.config.breakout_floor)
-            & (oi_change > self.config.min_oi_change)
-            & (basis_change > self.config.min_basis_change)
-            & (volume_surge >= self.config.min_volume_surge)
-            & (funding_zscore.abs() <= self.config.max_abs_funding_zscore)
+        crowded_long_mask = (
+            (funding >= self.config.min_abs_funding_zscore)
+            & (basis >= self.config.min_abs_basis_zscore)
+            & (oi >= self.config.min_oi_zscore)
+            & (long_term >= self.config.min_long_term_trend)
+            & (short_term <= self.config.short_term_reversal_floor)
         )
-        short_mask = (
-            (momentum < -self.config.min_momentum)
-            & (breakout < -self.config.breakout_floor)
-            & (oi_change > self.config.min_oi_change)
-            & (basis_change < -self.config.min_basis_change)
-            & (volume_surge >= self.config.min_volume_surge)
-            & (funding_zscore.abs() <= self.config.max_abs_funding_zscore)
+        crowded_short_mask = (
+            (funding <= -self.config.min_abs_funding_zscore)
+            & (basis <= -self.config.min_abs_basis_zscore)
+            & (oi >= self.config.min_oi_zscore)
+            & (long_term <= -self.config.min_long_term_trend)
+            & (short_term >= self.config.short_term_reversal_floor)
         )
 
-        signal = pd.DataFrame(np.nan, index=momentum.index, columns=momentum.columns, dtype="float64")
-        signal = signal.where(~long_mask, bullish_score)
-        signal = signal.where(~short_mask, -bearish_score.abs())
+        if self.config.require_regime_confirmation:
+            crowded_long_mask &= regime <= 0
+            crowded_short_mask &= regime >= 0
+
+        signal = pd.DataFrame(np.nan, index=long_term.index, columns=long_term.columns, dtype="float64")
+        signal = signal.where(~crowded_short_mask, long_score.abs())
+        signal = signal.where(~crowded_long_mask, -short_score.abs())
         return signal
 
     def build_weights(

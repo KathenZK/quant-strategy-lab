@@ -15,7 +15,7 @@ from signal_lab.orchestration.state import IncrementalStateStore
 from signal_lab.portfolio import RiskManager
 from signal_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
 from signal_lab.research import FactorResearchLab
-from signal_lab.strategies import TrendConfirmationStrategy
+from signal_lab.strategies import create_strategy
 
 
 @dataclass(slots=True)
@@ -109,8 +109,8 @@ class StrategyRunner:
     def build_features(self, config: StrategyWorkflowConfig) -> dict[str, dict[str, dict[str, str]]]:
         artifacts: dict[str, dict[str, dict[str, str]]] = {}
         factor_names: list[str] | None = None
-        if config.strategy.signal_type == "trend_confirmation":
-            factor_names = TrendConfirmationStrategy.from_options(config.strategy.strategy_options).required_factors()
+        if config.strategy.signal_type != "factor":
+            factor_names = create_strategy(config.strategy.signal_type, config.strategy.strategy_options).required_factors()
         elif config.strategy.factor is not None:
             factor_names = [config.strategy.factor]
         for symbol in config.strategy.symbols:
@@ -136,8 +136,8 @@ class StrategyRunner:
         self,
         config: StrategyWorkflowConfig,
     ) -> tuple[str, str, object, object, object]:
-        if config.strategy.signal_type == "trend_confirmation":
-            strategy = TrendConfirmationStrategy.from_options(config.strategy.strategy_options)
+        if config.strategy.signal_type != "factor":
+            strategy = create_strategy(config.strategy.signal_type, config.strategy.strategy_options)
             panels = load_multi_factor_panels(
                 builder=self.builder,
                 exchange=config.strategy.exchange,

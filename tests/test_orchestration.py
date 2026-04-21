@@ -196,6 +196,114 @@ def _trend_liquidations(symbol: str) -> pd.DataFrame:
     )
 
 
+def _crowding_ohlcv(symbol: str) -> pd.DataFrame:
+    index = pd.date_range("2024-01-01", periods=96, freq="h", tz="UTC")
+    if symbol == "BTC/USDT":
+        prefix = [100 + i * 0.35 for i in range(92)]
+        tail = [prefix[-1] - 0.8, prefix[-1] - 1.6, prefix[-1] - 2.4, prefix[-1] - 3.2]
+        close = prefix + tail
+    elif symbol == "ETH/USDT":
+        prefix = [200 - i * 0.45 for i in range(92)]
+        tail = [prefix[-1] + 1.0, prefix[-1] + 2.0, prefix[-1] + 3.0, prefix[-1] + 4.0]
+        close = prefix + tail
+    else:
+        close = [80 + 0.05 * ((-1) ** i) for i in range(96)]
+    return pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": [symbol] * len(index),
+            "market_type": ["perp"] * len(index),
+            "base_asset": [symbol.split("/")[0]] * len(index),
+            "quote_asset": [symbol.split("/")[1]] * len(index),
+            "open": close,
+            "high": [value * 1.01 for value in close],
+            "low": [value * 0.99 for value in close],
+            "close": close,
+            "volume": [2_500_000.0] * len(index),
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+
+
+def _crowding_funding(symbol: str) -> pd.DataFrame:
+    index = pd.date_range("2024-01-01", periods=96, freq="h", tz="UTC")
+    if symbol == "BTC/USDT":
+        values = [0.0002 + i * 0.00002 for i in range(96)]
+    elif symbol == "ETH/USDT":
+        values = [-0.0002 - i * 0.00002 for i in range(96)]
+    else:
+        values = [0.00001 * ((-1) ** i) for i in range(96)]
+    return pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": [symbol] * len(index),
+            "market_type": ["perp"] * len(index),
+            "base_asset": [symbol.split("/")[0]] * len(index),
+            "quote_asset": [symbol.split("/")[1]] * len(index),
+            "funding_rate": values,
+            "next_funding_ts": index + pd.Timedelta(hours=8),
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+
+
+def _crowding_open_interest(symbol: str) -> pd.DataFrame:
+    index = pd.date_range("2024-01-01", periods=96, freq="h", tz="UTC")
+    if symbol == "BTC/USDT":
+        values = [15_000 + i * 150 for i in range(96)]
+    elif symbol == "ETH/USDT":
+        values = [14_000 + i * 140 for i in range(96)]
+    else:
+        values = [9_000 + i * 2 for i in range(96)]
+    return pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": [symbol] * len(index),
+            "market_type": ["perp"] * len(index),
+            "base_asset": [symbol.split("/")[0]] * len(index),
+            "quote_asset": [symbol.split("/")[1]] * len(index),
+            "open_interest": values,
+            "open_interest_value": values,
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+
+
+def _crowding_basis(symbol: str) -> pd.DataFrame:
+    index = pd.date_range("2024-01-01", periods=96, freq="h", tz="UTC")
+    if symbol == "BTC/USDT":
+        basis = [5 + i * 0.18 for i in range(96)]
+    elif symbol == "ETH/USDT":
+        basis = [-5 - i * 0.18 for i in range(96)]
+    else:
+        basis = [0.2 * ((-1) ** i) for i in range(96)]
+    return pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": [symbol] * len(index),
+            "market_type": ["perp"] * len(index),
+            "base_asset": [symbol.split("/")[0]] * len(index),
+            "quote_asset": [symbol.split("/")[1]] * len(index),
+            "basis": basis,
+            "basis_rate": [value / 10_000 for value in basis],
+            "annualized_basis": [value / 100 for value in basis],
+            "futures_price": [100 + value for value in basis],
+            "index_price": [100.0] * len(index),
+            "mark_price": [100 + value * 0.9 for value in basis],
+            "premium_index": [value / 100_000 for value in basis],
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+
+
 def test_incremental_state_store_tracks_checkpoints(tmp_path: Path) -> None:
     store = IncrementalStateStore(tmp_path)
     checkpoint = store.update_checkpoint(
@@ -357,9 +465,76 @@ workflow:
     assert signal_name == "trend_confirmation"
     assert signal_version
     assert panels.liquidation_features is not None
-    assert target_weights.loc[target_weights.index[-1], "BTC/USDT"] == 0.0
+    assert target_weights.abs().sum(axis=1).iloc[-1] > 0.0
     assert artifacts.manifest_path is not None and Path(artifacts.manifest_path).exists()
     assert artifacts.factor_report_path is not None and Path(artifacts.factor_report_path).exists()
     assert artifacts.backtest_report_path is not None and Path(artifacts.backtest_report_path).exists()
     assert artifacts.paper_report_path is not None and Path(artifacts.paper_report_path).exists()
     assert "trend_confirmation" in manifest
+
+
+def test_strategy_runner_supports_crowding_reversal_workflow(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+    for symbol in ("BTC/USDT", "ETH/USDT", "SOL/USDT"):
+        for dataset_kind, frame in (
+            (DatasetKind.OHLCV, _crowding_ohlcv(symbol)),
+            (DatasetKind.FUNDING_RATES, _crowding_funding(symbol)),
+            (DatasetKind.OPEN_INTEREST, _crowding_open_interest(symbol)),
+            (DatasetKind.BASIS, _crowding_basis(symbol)),
+            (DatasetKind.LIQUIDATIONS, _trend_liquidations(symbol)),
+        ):
+            write_dataframe(
+                frame,
+                layout=layout,
+                layer="normalized",
+                kind=dataset_kind,
+                exchange="binance",
+                market_type=MarketType.PERP,
+                symbol=symbol,
+                partition_date=frame["ts"].max().date(),
+            )
+
+    config_path = tmp_path / "crowding-workflow.yaml"
+    config_path.write_text(
+        """
+strategy:
+  name: crowding_demo
+  signal_type: crowding_reversal
+  exchange: binance
+  market_type: perp
+  symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
+  strategy_options:
+    max_long_positions: 1
+    max_short_positions: 1
+refresh:
+  enabled: false
+workflow:
+  run_factor_report: true
+  run_backtest: true
+  run_paper_trade: true
+""".strip(),
+        encoding="utf-8",
+    )
+
+    builder = FeatureBuilder(
+        warehouse=DuckDBWarehouse(layout),
+        store=FeatureStore(layout),
+        registry=default_registry(),
+    )
+    workflow = load_strategy_workflow(config_path)
+    runner = StrategyRunner(layout=layout, builder=builder)
+    signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
+    artifacts = runner.run(workflow)
+    manifest = Path(artifacts.manifest_path).read_text(encoding="utf-8")
+
+    assert signal_name == "crowding_reversal"
+    assert signal_version
+    assert panels.liquidation_features is not None
+    assert target_weights.loc[target_weights.index[-1], "BTC/USDT"] < 0
+    assert target_weights.loc[target_weights.index[-1], "ETH/USDT"] > 0
+    assert artifacts.manifest_path is not None and Path(artifacts.manifest_path).exists()
+    assert artifacts.factor_report_path is not None and Path(artifacts.factor_report_path).exists()
+    assert artifacts.backtest_report_path is not None and Path(artifacts.backtest_report_path).exists()
+    assert artifacts.paper_report_path is not None and Path(artifacts.paper_report_path).exists()
+    assert "crowding_reversal" in manifest

@@ -122,6 +122,42 @@ pip install -e ".[dev]"
 ./.venv/bin/signal-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
 ```
 
+16. 运行拥挤度反转策略工作流
+
+```bash
+./.venv/bin/signal-lab run-strategy --workflow-config configs/crowding_reversal.mvp.yaml
+```
+
+17. 写入拥挤度反转 baseline 数据
+
+```bash
+./.venv/bin/signal-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
+```
+
+18. 运行拥挤度反转 baseline 回测
+
+```bash
+./.venv/bin/signal-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
+```
+
+19. 运行统一策略对比
+
+```bash
+./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+```
+
+20. 写入共享比较 baseline 数据
+
+```bash
+./.venv/bin/signal-lab seed-shared-comparison-mvp -c configs/app.shared-comparison-baseline.yaml
+```
+
+21. 运行共享 baseline 策略对比
+
+```bash
+./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+```
+
 ## 文档
 
 - 平台路线图：`docs/platform-roadmap.md`
@@ -131,6 +167,13 @@ pip install -e ".[dev]"
 - 趋势确认主线 MVP：`docs/trend-confirmation-mvp.md`
 - 趋势确认主线基准报告：`docs/trend-confirmation-mvp-baseline.md`
 - 策略配置示例：`configs/strategy.example.yaml`
+- 趋势确认正式配置：`configs/trend_confirmation.mvp.yaml`
+- 拥挤度反转正式配置：`configs/crowding_reversal.mvp.yaml`
+- 拥挤度反转 MVP：`docs/crowding-reversal-mvp.md`
+- 拥挤度反转基准报告：`docs/crowding-reversal-mvp-baseline.md`
+- 策略对比框架：`docs/strategy-comparison-framework.md`
+- 趋势 vs 拥挤度反转基准对比：`docs/trend-vs-crowding-baseline.md`
+- 趋势 vs 拥挤度反转共享基准对比：`docs/trend-vs-crowding-shared-baseline.md`
 
 ## 下一步
 

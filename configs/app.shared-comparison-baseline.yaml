@@ -1,0 +1,23 @@
+project:
+  name: signal-lab-shared-comparison-baseline
+  timezone: UTC
+
+storage:
+  root_dir: data/shared-comparison-baseline
+  raw_dir: data/shared-comparison-baseline/raw
+  normalized_dir: data/shared-comparison-baseline/normalized
+  features_dir: data/shared-comparison-baseline/features
+  reports_dir: reports/shared-comparison-baseline
+
+exchanges:
+  - name: binance
+    enabled: true
+    market_types: [perp]
+    quote_assets: [USDT]
+
+research:
+  bar_frequencies: [1h, 4h, 1d]
+  benchmark_symbols: [BTC/USDT:USDT, ETH/USDT:USDT]
+  universe_filters:
+    min_avg_dollar_volume: 1000000
+    exclude_stablecoins: true
