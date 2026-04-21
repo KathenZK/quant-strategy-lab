@@ -1,32 +1,17 @@
----
-
-name: 加密量化平台路线
-overview: 从零搭建一个以研究优先为核心的加密因子发现、回测、交易平台，第一版覆盖中低频现货选币与永续合约因子研究。默认采用 Python 技术栈，先打通数据、因子、评估、回测闭环，再逐步接入模拟盘与实盘。
-todos:
-
-- id: bootstrap_repo
-content: 定义研究优先的平台边界，搭建 Python 项目骨架、配置系统与目录结构。
-status: pending
-- id: build_data_layer
-content: 设计统一数据模型，先用 Parquet + DuckDB 落地现货与永续合约数据湖。
-status: pending
-- id: implement_factors
-content: 实现首批 10-15 个高质量因子，并建立因子注册、元数据与可复用计算接口。
-status: pending
-- id: build_research_lab
-content: 实现因子评估模块，包括 IC、分层收益、衰减、冗余与稳健性分析。
-status: pending
-- id: build_backtest_engine
-content: 实现带手续费、滑点、资金费率和仓位约束的组合回测引擎。
-status: pending
-- id: paper_trade_loop
-content: 预留 Broker 抽象并接入模拟盘，把研究、回测、下单、风控闭环跑通。
-status: pending
-isProject: false
-
----
-
 # 加密量化平台路线图
+
+> 文档名称：加密量化平台路线
+>
+> 文档概述：从零搭建一个以研究优先为核心的加密因子发现、回测、交易平台。第一版覆盖中低频现货选币与永续合约因子研究，默认采用 Python 技术栈，先打通数据、因子、评估、回测闭环，再逐步接入模拟盘与实盘。
+
+## 当前待办
+
+- 定义研究优先的平台边界，搭建 Python 项目骨架、配置系统与目录结构。
+- 设计统一数据模型，先用 `Parquet + DuckDB` 落地现货与永续合约数据湖。
+- 实现首批 `10-15` 个高质量因子，并建立因子注册、元数据与可复用计算接口。
+- 实现因子评估模块，包括 IC、分层收益、衰减、冗余与稳健性分析。
+- 实现带手续费、滑点、资金费率和仓位约束的组合回测引擎。
+- 预留 `Broker` 抽象并接入模拟盘，把研究、回测、下单、风控闭环跑通。
 
 ## 阅读导航
 

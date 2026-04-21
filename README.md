@@ -101,6 +101,9 @@ pip install -e ".[dev]"
 ## 文档
 
 - 平台路线图：`docs/platform-roadmap.md`
+- 中低频永续合约数据与策略决策：`docs/midfreq-perp-data-strategy-guide.md`
+- 数据源与表结构规范：`docs/data-source-spec.md`
+- MVP 实施计划：`docs/mvp-implementation-plan.md`
 - 策略配置示例：`configs/strategy.example.yaml`
 
 ## 下一步
