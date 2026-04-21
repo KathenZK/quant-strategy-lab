@@ -1,0 +1,71 @@
+strategy:
+  name: trend_confirmation_no_liq_gate_recent3m
+  signal_type: trend_confirmation
+  exchange: gateio
+  market_type: perp
+  symbols:
+    - BTC/USDT:USDT
+    - ETH/USDT:USDT
+    - SOL/USDT:USDT
+  strategy_options:
+    momentum_factor: ret_24
+    breakout_factor: breakout_20
+    oi_change_factor: oi_change_4
+    basis_change_factor: basis_change_4
+    funding_zscore_factor: funding_zscore_72
+    volume_factor: volume_surge_20
+    max_long_positions: 2
+    max_short_positions: 2
+    long_allocation: 0.5
+    short_allocation: 0.5
+    market_neutral: true
+    min_momentum: 0.0
+    min_oi_change: 0.0
+    min_basis_change: 0.0
+    breakout_floor: -0.02
+    min_volume_surge: -0.5
+    max_abs_funding_zscore: 2.5
+    momentum_weight: 1.0
+    breakout_weight: 1.0
+    oi_weight: 1.0
+    basis_weight: 1.0
+    volume_weight: 0.5
+    funding_penalty_weight: 0.5
+    liquidation_weight_scale: 1.0
+    stop_on_event_cooldown: false
+
+execution:
+  fee_bps: 5.0
+  slippage_bps: 2.0
+  starting_cash: 100000.0
+  max_abs_weight: 0.2
+  max_gross_leverage: 1.0
+  max_net_exposure: 1.0
+  min_dollar_volume: 1000000.0
+  max_funding_rate_abs: 2.5
+
+risk:
+  max_abs_weight: 0.2
+  max_gross_leverage: 1.0
+  max_net_exposure: 1.0
+  min_dollar_volume: 1000000.0
+  max_funding_rate_abs: 2.5
+  max_drawdown: 0.20
+
+refresh:
+  enabled: false
+  incremental: false
+  include_derivatives: true
+  timeframe: 1h
+  limit: 1000
+  overlap_bars: 0
+
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+
+schedule:
+  enabled: false
+  sleep_seconds: 0
+  max_runs: 1

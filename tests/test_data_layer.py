@@ -112,6 +112,43 @@ def test_fetch_basis_or_premium_merges_basis_and_premium_rows() -> None:
     assert frame["quote_asset"].iloc[0] == "USDT"
 
 
+def test_fetch_historical_liquidations_from_gate_contract_stats() -> None:
+    class FakeExchange:
+        markets = {
+            "BTC/USDT:USDT": {
+                "id": "BTC_USDT",
+                "settleId": "usdt",
+            }
+        }
+
+        def market(self, symbol):
+            return self.markets[symbol]
+
+        def publicFuturesGetSettleContractStats(self, params):
+            assert params["contract"] == "BTC_USDT"
+            return [
+                {
+                    "time": "1704067200",
+                    "mark_price": "43000",
+                    "long_liq_usd_new": "12000",
+                    "short_liq_usd_new": "5000",
+                }
+            ]
+
+    class FakeClient(CCXTDataClient):
+        def _build_exchange(self):
+            return FakeExchange()
+
+    frame = FakeClient(exchange_name="gateio", market_type=MarketType.PERP).fetch_historical_liquidations(
+        symbol="BTC/USDT:USDT",
+        timeframe="4h",
+        limit=100,
+    )
+    assert len(frame) == 2
+    assert set(frame["side"]) == {"buy", "sell"}
+    assert frame["notional"].sum() == pytest.approx(17000.0)
+
+
 def test_refresh_basis_or_premium_writes_raw_and_normalized(tmp_path: Path, monkeypatch) -> None:
     layout = _layout(tmp_path)
     layout.ensure_directories()

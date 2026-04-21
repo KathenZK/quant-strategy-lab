@@ -98,9 +98,13 @@ def refresh_symbol(
             ("funding", lambda: service.refresh_funding_rates(exchange=exchange, symbol=symbol, since=since_dt, limit=limit)),
             ("open_interest", lambda: service.refresh_open_interest(exchange=exchange, symbol=symbol, timeframe=timeframe, since=since_dt, limit=limit)),
             ("basis_or_premium", lambda: service.refresh_basis_or_premium(exchange=exchange, symbol=symbol, timeframe=timeframe, since=since_dt, limit=limit)),
+            ("historical_liquidations", lambda: service.refresh_historical_liquidations(exchange=exchange, symbol=symbol, timeframe='4h', since=since_dt, limit=1000)),
         ):
             try:
                 paths = action()
+                if not paths.get("rows"):
+                    typer.echo(f"{name} skipped: no rows returned")
+                    continue
                 typer.echo(f"{name} raw={paths['raw']}")
                 typer.echo(f"{name} normalized={paths['normalized']}")
             except NotImplementedError as exc:

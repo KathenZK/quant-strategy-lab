@@ -96,12 +96,22 @@ class StrategyRunner:
                     since=self._resolve_since(config, dataset=DatasetKind.BASIS, symbol=symbol),
                     limit=config.refresh.limit,
                 )
+                liquidations = self.ingestion.refresh_historical_liquidations(
+                    exchange=config.strategy.exchange,
+                    symbol=symbol,
+                    timeframe="4h",
+                    since=self._resolve_since(config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol),
+                    limit=1000,
+                )
                 symbol_artifacts["funding_rates"] = funding
                 symbol_artifacts["open_interest"] = open_interest
                 symbol_artifacts["basis_or_premium"] = basis
+                symbol_artifacts["historical_liquidations"] = liquidations
                 self._record_refresh(config=config, dataset=DatasetKind.FUNDING_RATES, symbol=symbol, result=funding)
                 self._record_refresh(config=config, dataset=DatasetKind.OPEN_INTEREST, symbol=symbol, result=open_interest)
                 self._record_refresh(config=config, dataset=DatasetKind.BASIS, symbol=symbol, result=basis)
+                if liquidations.get("rows"):
+                    self._record_refresh(config=config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol, result=liquidations)
 
             artifacts[symbol] = symbol_artifacts
         return artifacts
