@@ -1,5 +1,5 @@
 project:
-  name: signal-lab-mvp-baseline
+  name: quant-strategy-lab-mvp-baseline
   timezone: UTC
 
 storage:

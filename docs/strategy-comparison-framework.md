@@ -1,6 +1,6 @@
 # 策略对比框架说明
 
-这份文档定义 `Signal Lab` 当前的统一策略对比框架，用于在同一份数据、同一套执行假设下并行比较多条策略。
+这份文档定义 `Quant Strategy Lab` 当前的统一策略对比框架，用于在同一份数据、同一套执行假设下并行比较多条策略。
 
 > 状态说明：当前 comparison 已经不再维护独立的 workflow 执行骨架，而是建立在共享的 `batches` / `experiments` 结果收集层之上。文档中的命令与配置格式仍然可用，同时也支持统一的 `run-batch --mode comparison` 入口。
 
@@ -42,8 +42,8 @@
 
 CLI 入口：
 
-- `signal-lab compare-strategies`
-- `signal-lab run-batch --mode comparison`
+- `quant-strategy-lab compare-strategies`
+- `quant-strategy-lab run-batch --mode comparison`
 
 ## 3. 对比配置文件
 
@@ -86,19 +86,19 @@ batch:
 当前更推荐直接使用 shared comparison baseline，而不是单独的 trend-only baseline。
 
 ```bash
-./.venv/bin/signal-lab seed-shared-comparison-mvp -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-shared-comparison-mvp -c configs/app.shared-comparison-baseline.yaml
 ```
 
 ### 再运行统一策略比较
 
 ```bash
-./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
 ```
 
 等价的统一 batch 入口：
 
 ```bash
-./.venv/bin/signal-lab run-batch --mode comparison --batch-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab run-batch --mode comparison --batch-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
 ```
 
 ## 5. 兼容性要求

@@ -1,6 +1,6 @@
 # 趋势确认主线 MVP 说明
 
-这份文档定义 `Signal Lab` 当前阶段的正式 `MVP` 主线策略：`trend_confirmation`。
+这份文档定义 `Quant Strategy Lab` 当前阶段的正式 `MVP` 主线策略：`trend_confirmation`。
 
 目标：
 
@@ -131,7 +131,7 @@
 ### 跑正式 MVP 工作流
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/trend_confirmation.mvp.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/trend_confirmation.mvp.yaml
 ```
 
 ### 跑基准场景
@@ -139,13 +139,13 @@
 先写入隔离的基准数据：
 
 ```bash
-./.venv/bin/signal-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
 ```
 
 再运行基准策略：
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
 ```
 
 ## 6. 这份 MVP 配置的作用

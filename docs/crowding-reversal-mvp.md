@@ -1,6 +1,6 @@
 # 拥挤度反转策略 MVP 说明
 
-这份文档定义 `Signal Lab` 当前阶段的第二条正式策略：`crowding_reversal`。
+这份文档定义 `Quant Strategy Lab` 当前阶段的第二条正式策略：`crowding_reversal`。
 
 目标：
 
@@ -133,7 +133,7 @@
 ### 跑正式 `MVP` 工作流
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/crowding_reversal.mvp.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/crowding_reversal.mvp.yaml
 ```
 
 ### 跑基准场景
@@ -141,13 +141,13 @@
 先写入隔离的基准数据：
 
 ```bash
-./.venv/bin/signal-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
 ```
 
 再运行基准策略：
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
 ```
 
 ## 6. 这份 MVP 配置的作用

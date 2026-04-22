@@ -4,7 +4,7 @@
 >
 > 文档概述：从零搭建一个以研究优先为核心的加密因子发现、回测、交易平台。第一版覆盖中低频现货选币与永续合约因子研究，默认采用 Python 技术栈，先打通数据、因子、评估、回测闭环，再逐步接入模拟盘与实盘。
 
-> 状态说明：这份文档写于项目早期蓝图阶段，保留作为总体设计参考。项目当前已经不是空仓库，且已落地 `data / factors / features / research / backtest / execution / reporting / strategies / signals / allocators / orchestration / batches / experiments / comparison / registry` 等主干能力。当前实现状态请同时参考代码和 `docs/signal-lab-architecture-refactor.md`。
+> 状态说明：这份文档写于项目早期蓝图阶段，保留作为总体设计参考。项目当前已经不是空仓库，且已落地 `data / factors / features / research / backtest / execution / reporting / strategies / signals / allocators / orchestration / batches / experiments / comparison / registry` 等主干能力。当前实现状态请同时参考代码和 `docs/quant-strategy-lab-architecture-refactor.md`。
 
 ## 当前状态
 

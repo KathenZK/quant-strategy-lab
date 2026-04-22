@@ -16,7 +16,7 @@
 - 数据种子命令：
 
 ```bash
-./.venv/bin/signal-lab seed-shared-comparison-mvp -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-shared-comparison-mvp -c configs/app.shared-comparison-baseline.yaml
 ```
 
 说明：
@@ -32,13 +32,13 @@
 运行命令：
 
 ```bash
-./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
 ```
 
 或者使用统一 batch 入口：
 
 ```bash
-./.venv/bin/signal-lab run-batch --mode comparison --batch-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab run-batch --mode comparison --batch-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
 ```
 
 ## 3. 本次比较运行

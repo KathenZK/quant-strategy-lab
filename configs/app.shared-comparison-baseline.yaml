@@ -1,5 +1,5 @@
 project:
-  name: signal-lab-shared-comparison-baseline
+  name: quant-strategy-lab-shared-comparison-baseline
   timezone: UTC
 
 storage:

@@ -1,5 +1,5 @@
 project:
-  name: signal-lab-binance-recent4y
+  name: quant-strategy-lab-binance-recent4y
   timezone: UTC
 
 storage:

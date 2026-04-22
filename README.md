@@ -1,6 +1,6 @@
-# Signal Lab
+# Quant Strategy Lab
 
-`Signal Lab` 是一个面向加密量化研究的研究优先平台，第一阶段聚焦两类场景：
+`Quant Strategy Lab` 是一个面向加密量化研究的研究优先平台，第一阶段聚焦两类场景：
 
 - 中低频现货选币与轮动
 - 永续合约因子研究与组合回测
@@ -41,121 +41,121 @@ pip install -e ".[dev]"
 2. 查看默认目录布局
 
 ```bash
-./.venv/bin/signal-lab layout
+./.venv/bin/quant-strategy-lab layout
 ```
 
 3. 查看内置因子目录
 
 ```bash
-./.venv/bin/signal-lab factors
+./.venv/bin/quant-strategy-lab factors
 ```
 
 4. 刷新一个交易对的现货或永续数据
 
 ```bash
-./.venv/bin/signal-lab refresh-symbol --exchange binance --symbol BTC/USDT --timeframe 1h --market-type spot --limit 200
+./.venv/bin/quant-strategy-lab refresh-symbol --exchange binance --symbol BTC/USDT --timeframe 1h --market-type spot --limit 200
 ```
 
 5. 计算一个交易对的全部可用因子
 
 ```bash
-./.venv/bin/signal-lab build-features --exchange binance --symbol BTC/USDT --market-type spot
+./.venv/bin/quant-strategy-lab build-features --exchange binance --symbol BTC/USDT --market-type spot
 ```
 
 6. 对一个 symbol universe 生成因子报告
 
 ```bash
-./.venv/bin/signal-lab factor-report --exchange binance --symbols BTC/USDT,ETH/USDT,SOL/USDT --factor ret_24 --market-type spot --benchmark-symbol BTC/USDT
+./.venv/bin/quant-strategy-lab factor-report --exchange binance --symbols BTC/USDT,ETH/USDT,SOL/USDT --factor ret_24 --market-type spot --benchmark-symbol BTC/USDT
 ```
 
 7. 跑回测
 
 ```bash
-./.venv/bin/signal-lab backtest-factor --exchange binance --symbols BTC/USDT,ETH/USDT,SOL/USDT --factor ret_24 --market-type spot
+./.venv/bin/quant-strategy-lab backtest-factor --exchange binance --symbols BTC/USDT,ETH/USDT,SOL/USDT --factor ret_24 --market-type spot
 ```
 
 8. 跑模拟交易
 
 ```bash
-./.venv/bin/signal-lab paper-trade --exchange binance --symbols BTC/USDT,ETH/USDT,SOL/USDT --factor ret_24 --market-type spot
+./.venv/bin/quant-strategy-lab paper-trade --exchange binance --symbols BTC/USDT,ETH/USDT,SOL/USDT --factor ret_24 --market-type spot
 ```
 
 9. 直接按策略工作流配置跑整条链路
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/strategy.example.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/strategy.example.yaml
 ```
 
 10. 查看特征产物清单和版本指纹
 
 ```bash
-./.venv/bin/signal-lab feature-manifests --factor ret_24
+./.venv/bin/quant-strategy-lab feature-manifests --factor ret_24
 ```
 
 11. 查看增量刷新状态
 
 ```bash
-./.venv/bin/signal-lab refresh-state
+./.venv/bin/quant-strategy-lab refresh-state
 ```
 
 12. 采集 liquidation 实时事件并写入数据湖
 
 ```bash
-./.venv/bin/signal-lab collect-liquidations --duration-seconds 60
+./.venv/bin/quant-strategy-lab collect-liquidations --duration-seconds 60
 ```
 
 13. 写入隔离的 `MVP` 基准场景数据
 
 ```bash
-./.venv/bin/signal-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
 ```
 
 14. 运行正式 `MVP` 趋势主线配置
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/trend_confirmation.mvp.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/trend_confirmation.mvp.yaml
 ```
 
 15. 运行基准回测工作流
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
 ```
 
 16. 运行拥挤度反转策略工作流
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/crowding_reversal.mvp.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/crowding_reversal.mvp.yaml
 ```
 
 17. 写入拥挤度反转 baseline 数据
 
 ```bash
-./.venv/bin/signal-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
 ```
 
 18. 运行拥挤度反转 baseline 回测
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
 ```
 
 19. 运行统一策略对比
 
 ```bash
-./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/strategy_comparison.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
 ```
 
 20. 写入共享比较 baseline 数据
 
 ```bash
-./.venv/bin/signal-lab seed-shared-comparison-mvp -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-shared-comparison-mvp -c configs/app.shared-comparison-baseline.yaml
 ```
 
 21. 运行共享 baseline 策略对比
 
 ```bash
-./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
 ```
 
 ## 文档

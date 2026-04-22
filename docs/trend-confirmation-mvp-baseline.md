@@ -33,13 +33,13 @@
 - 数据种子命令：
 
 ```bash
-./.venv/bin/signal-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
 ```
 
 - 回测命令：
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
 ```
 
 ## 3. 本次基准运行

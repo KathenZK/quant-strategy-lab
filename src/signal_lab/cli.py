@@ -21,7 +21,7 @@ from signal_lab.reporting import render_backtest_report, render_factor_report, r
 from signal_lab.research import FactorResearchLab
 from signal_lab.scenarios import seed_crowding_mvp_data, seed_shared_comparison_mvp_data, seed_trend_mvp_data
 
-app = typer.Typer(add_completion=False, help="Signal Lab research platform CLI.")
+app = typer.Typer(add_completion=False, help="Quant Strategy Lab research platform CLI.")
 
 
 def _parse_since(value: str | None) -> datetime | None:

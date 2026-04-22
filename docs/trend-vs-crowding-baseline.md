@@ -17,7 +17,7 @@
 - 数据种子命令：
 
 ```bash
-./.venv/bin/signal-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
 ```
 
 说明：
@@ -33,7 +33,7 @@
 运行命令：
 
 ```bash
-./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/strategy_comparison.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
 ```
 
 ## 3. 本次比较运行

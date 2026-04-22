@@ -1,5 +1,5 @@
 project:
-  name: signal-lab-gate-recent3m
+  name: quant-strategy-lab-gate-recent3m
   timezone: UTC
 
 storage:

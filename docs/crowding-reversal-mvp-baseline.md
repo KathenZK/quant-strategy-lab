@@ -33,13 +33,13 @@
 - 数据种子命令：
 
 ```bash
-./.venv/bin/signal-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
 ```
 
 - 回测命令：
 
 ```bash
-./.venv/bin/signal-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
 ```
 
 ## 3. 本次基准运行

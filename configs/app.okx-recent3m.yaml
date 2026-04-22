@@ -1,5 +1,5 @@
 project:
-  name: signal-lab-okx-recent3m
+  name: quant-strategy-lab-okx-recent3m
   timezone: UTC
 
 storage:
