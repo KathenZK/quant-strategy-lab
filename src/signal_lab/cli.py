@@ -6,11 +6,13 @@ from pathlib import Path
 
 import typer
 
+from signal_lab.batches import BatchRunMode
+from signal_lab.batches.service import load_batch_for_mode, run_workflow_batch
 from signal_lab.config import load_settings
 from signal_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions
-from signal_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
 from signal_lab.data import DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
 from signal_lab.execution import PaperBroker, PaperTradingSession
+from signal_lab.experiments import RunRegistry
 from signal_lab.factors import default_registry
 from signal_lab.features import FeatureBuilder, FeatureStore
 from signal_lab.orchestration import IncrementalStateStore, StrategyRunner, load_strategy_workflow, load_universe_panels
@@ -37,6 +39,19 @@ def _runtime(config: Path | None) -> tuple[DataLakeLayout, DuckDBWarehouse, Feat
     warehouse = DuckDBWarehouse(lake)
     builder = FeatureBuilder(warehouse=warehouse, store=FeatureStore(lake), registry=default_registry())
     return lake, warehouse, builder
+
+
+def _run_batch_command(mode: BatchRunMode, batch_config: Path, config: Path | None) -> None:
+    batch = load_batch_for_mode(batch_config, mode)
+    artifacts = run_workflow_batch(
+        mode,
+        batch,
+        workspace_root=Path.cwd(),
+        app_config_path=config,
+    )
+    typer.echo(f"run_id: {artifacts.run_id}")
+    typer.echo(f"report: {artifacts.report_path}")
+    typer.echo(f"manifest: {artifacts.manifest_path}")
 
 
 @app.command()
@@ -341,6 +356,27 @@ def feature_manifests(
 
 
 @app.command()
+def run_registry(
+    kind: str | None = typer.Option(None, "--kind", help="Optional registry kind filter."),
+    limit: int = typer.Option(20, "--limit", min=1, help="How many recent entries to show."),
+    config: Path | None = typer.Option(None, "--config", "-c"),
+) -> None:
+    """List recent workflow, experiment, and comparison runs."""
+    lake, _, _ = _runtime(config)
+    records = RunRegistry(lake.reports_dir).load(kind=kind)
+    if not records:
+        typer.echo("registry: 0")
+        return
+
+    recent = records[-limit:]
+    typer.echo(f"registry: {len(records)}")
+    for item in reversed(recent):
+        typer.echo(
+            f"{item['kind']}\t{item['name']}\t{item['run_id']}\t{item['manifest_path']}"
+        )
+
+
+@app.command()
 def refresh_state(config: Path | None = typer.Option(None, "--config", "-c")) -> None:
     """Print incremental refresh checkpoints."""
     lake, _, _ = _runtime(config)
@@ -400,11 +436,26 @@ def compare_strategies(
     config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
 ) -> None:
     """Run a side-by-side strategy comparison report."""
-    comparison = load_strategy_comparison(comparison_config)
-    artifacts = StrategyComparisonRunner(workspace_root=Path.cwd(), app_config_path=config).compare(comparison)
-    typer.echo(f"run_id: {artifacts.run_id}")
-    typer.echo(f"report: {artifacts.report_path}")
-    typer.echo(f"manifest: {artifacts.manifest_path}")
+    _run_batch_command(BatchRunMode.COMPARISON, comparison_config, config)
+
+
+@app.command()
+def run_experiment(
+    experiment_config: Path = typer.Option(..., "--experiment-config", help="Path to experiment YAML."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+) -> None:
+    """Run a batch of workflows and persist an experiment summary."""
+    _run_batch_command(BatchRunMode.EXPERIMENT, experiment_config, config)
+
+
+@app.command()
+def run_batch(
+    mode: BatchRunMode = typer.Option(..., "--mode", help="Batch run mode: experiment or comparison."),
+    batch_config: Path = typer.Option(..., "--batch-config", help="Path to batch YAML."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+) -> None:
+    """Run a workflow batch through a unified batch entrypoint."""
+    _run_batch_command(mode, batch_config, config)
 
 
 @app.command()

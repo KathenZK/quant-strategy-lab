@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from signal_lab.factors.base import FactorMetadata, PandasFactor
+from signal_lab.factors.base import FactorMetadata, PandasFactor, register_factor_provider
 
 
 class VolumeSurgeFactor(PandasFactor):
@@ -60,3 +60,12 @@ class VWAPDistanceFactor(PandasFactor):
 
     def compute(self, frame: pd.DataFrame) -> pd.Series:
         return frame[self.close_column] / frame[self.vwap_column] - 1.0
+
+
+@register_factor_provider()
+def builtin_liquidity_factors() -> list[PandasFactor]:
+    return [
+        VolumeSurgeFactor(window=20),
+        AmihudIlliquidityFactor(),
+        VWAPDistanceFactor(),
+    ]

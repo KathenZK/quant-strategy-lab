@@ -1,4 +1,11 @@
-from .base import FactorMetadata, FactorRegistry, PandasFactor
+from .base import (
+    FactorMetadata,
+    FactorRegistry,
+    PandasFactor,
+    build_registered_factors,
+    list_registered_factor_providers,
+    register_factor_provider,
+)
 from .cross_sectional import RelativeStrengthFactor
 from .derivatives import (
     BasisChangeFactor,
@@ -18,30 +25,7 @@ from .momentum import BreakoutFactor, MovingAverageDistanceFactor, RSIFactor, Tr
 
 def default_registry() -> FactorRegistry:
     registry = FactorRegistry()
-    for factor in (
-        TrailingReturnFactor(periods=1),
-        TrailingReturnFactor(periods=4),
-        TrailingReturnFactor(periods=24),
-        BreakoutFactor(window=20),
-        MovingAverageDistanceFactor(window=20),
-        MovingAverageDistanceFactor(window=30),
-        MovingAverageDistanceFactor(window=120),
-        RSIFactor(window=14),
-        ZScoreFactor(window=20),
-        BollingerDistanceFactor(window=20),
-        VolumeSurgeFactor(window=20),
-        AmihudIlliquidityFactor(),
-        VWAPDistanceFactor(),
-        FundingRateFactor(),
-        FundingRateZScoreFactor(window=72),
-        OpenInterestChangeFactor(periods=4),
-        OpenInterestZScoreFactor(window=72),
-        BasisFactor(),
-        BasisChangeFactor(periods=4),
-        BasisZScoreFactor(window=72),
-        PriceOpenInterestRegimeFactor(periods=4),
-        RelativeStrengthFactor(periods=24),
-    ):
+    for factor in build_registered_factors():
         registry.register(factor)
     return registry
 
@@ -59,11 +43,13 @@ __all__ = [
     "FactorRegistry",
     "FundingRateFactor",
     "FundingRateZScoreFactor",
+    "list_registered_factor_providers",
     "MovingAverageDistanceFactor",
     "OpenInterestChangeFactor",
     "OpenInterestZScoreFactor",
     "PandasFactor",
     "PriceOpenInterestRegimeFactor",
+    "register_factor_provider",
     "RelativeStrengthFactor",
     "RSIFactor",
     "TrailingReturnFactor",

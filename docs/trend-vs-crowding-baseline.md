@@ -2,6 +2,8 @@
 
 这份文档记录 `trend_confirmation` 和 `crowding_reversal` 在同一份 shared baseline 数据上的统一比较结果。
 
+> 状态说明：这是一份偏趋势环境的历史比较记录。当前如果要看更具代表性的主参考结果，应优先看 `docs/trend-vs-crowding-shared-baseline.md` 对应的 shared comparison baseline。
+
 目的：
 
 - 不再各看各的 baseline
@@ -106,9 +108,9 @@
 
 ## 7. 下一步建议
 
-如果要让这份对比更有决策价值，下一步最合适的是：
+如果要让这份对比更有决策价值，当前最合适的是：
 
-1. 做一个 shared comparison baseline 场景
-   - 同时包含趋势段和拥挤反转段
-2. 在同一份 shared comparison baseline 上重跑两条策略
+1. 直接切到已经存在的 shared comparison baseline
+   - 参考：`docs/trend-vs-crowding-shared-baseline.md`
+2. 在 shared baseline 上做策略间相关性与互补性分析
 3. 再进入多策略组合层

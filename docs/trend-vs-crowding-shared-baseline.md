@@ -35,6 +35,12 @@
 ./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
 ```
 
+或者使用统一 batch 入口：
+
+```bash
+./.venv/bin/signal-lab run-batch --mode comparison --batch-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+```
+
 ## 3. 本次比较运行
 
 - `run_id`: `20260421T083145Z`
@@ -42,6 +48,8 @@
   - `reports/shared-comparison-baseline/comparisons/trend_vs_crowding_on_shared_baseline/20260421T083145Z/comparison_report.md`
 - 比较清单：
   - `reports/shared-comparison-baseline/comparisons/trend_vs_crowding_on_shared_baseline/20260421T083145Z/comparison_manifest.json`
+- registry 索引：
+  - `reports/shared-comparison-baseline/_registry/runs.jsonl`
 
 ## 4. 当前结果摘要
 

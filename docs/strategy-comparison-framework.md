@@ -2,6 +2,8 @@
 
 这份文档定义 `Signal Lab` 当前的统一策略对比框架，用于在同一份数据、同一套执行假设下并行比较多条策略。
 
+> 状态说明：当前 comparison 已经不再维护独立的 workflow 执行骨架，而是建立在共享的 `batches` / `experiments` 结果收集层之上。文档中的命令与配置格式仍然可用，同时也支持统一的 `run-batch --mode comparison` 入口。
+
 当前支持的典型对比对象：
 
 - `trend_confirmation`
@@ -30,6 +32,10 @@
 
 代码模块：
 
+- `src/signal_lab/batches/config.py`
+- `src/signal_lab/batches/runner.py`
+- `src/signal_lab/batches/service.py`
+- `src/signal_lab/experiments/runner.py`
 - `src/signal_lab/comparison/config.py`
 - `src/signal_lab/comparison/models.py`
 - `src/signal_lab/comparison/runner.py`
@@ -37,10 +43,11 @@
 CLI 入口：
 
 - `signal-lab compare-strategies`
+- `signal-lab run-batch --mode comparison`
 
 ## 3. 对比配置文件
 
-当前推荐使用比较配置文件来驱动统一对比。
+当前推荐使用比较配置文件来驱动统一对比。当前支持两种顶层格式：
 
 示例：
 
@@ -52,6 +59,16 @@ CLI 入口：
 comparison:
   name: trend_vs_crowding_on_trend_baseline
   description: Compare trend confirmation and crowding reversal on the shared trend MVP baseline dataset.
+  workflow_configs:
+    - trend_confirmation.mvp.baseline.yaml
+    - crowding_reversal.mvp.baseline.yaml
+```
+
+或者：
+
+```yaml
+batch:
+  name: trend_vs_crowding_on_trend_baseline
   workflow_configs:
     - trend_confirmation.mvp.baseline.yaml
     - crowding_reversal.mvp.baseline.yaml
@@ -78,6 +95,12 @@ comparison:
 ./.venv/bin/signal-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
 ```
 
+等价的统一 batch 入口：
+
+```bash
+./.venv/bin/signal-lab run-batch --mode comparison --batch-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+```
+
 ## 5. 兼容性要求
 
 为了保证比较公平，当前框架会强制检查：
@@ -96,6 +119,7 @@ comparison:
 - 一份比较报告：`comparison_report.md`
 - 一份比较清单：`comparison_manifest.json`
 - 每条策略单独的回测报告副本
+- 一条写入 `reports/_registry/runs.jsonl` 的 comparison 索引记录
 
 当前比较报告会输出：
 
@@ -109,6 +133,8 @@ comparison:
 - 最差贡献标的
 - 最大交易成本来源标的
 - 最大资金费率成本来源标的
+
+这些 attribution 字段来自共享的 workflow backtest attribution 结果，而不是 comparison 层单独重复计算。
 
 ## 7. 当前限制
 
@@ -133,7 +159,7 @@ comparison:
 
 这套对比框架后续最自然的升级方向是：
 
-1. 加入共同的 shared comparison baseline 场景
+1. 补充统一 `batch:` 示例与 `run-batch` 使用方式
 2. 增加月度 / regime attribution
 3. 计算策略间相关性与互补性
 4. 在此基础上进入“多策略组合层”

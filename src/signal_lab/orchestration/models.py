@@ -65,3 +65,4 @@ class StrategyRunArtifacts:
     backtest_report_path: str | None = None
     paper_report_path: str | None = None
     manifest_path: str | None = None
+    backtest_attribution: dict[str, float | str | None] | None = None

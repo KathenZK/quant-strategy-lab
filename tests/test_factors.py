@@ -13,6 +13,7 @@ from signal_lab.factors import (
     TrailingReturnFactor,
     compute_factor_bundle,
     default_registry,
+    list_registered_factor_providers,
 )
 
 
@@ -30,6 +31,15 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "ma_distance_120" in names
     assert "price_oi_regime_4" in names
     assert "relative_strength_24" in names
+
+
+def test_builtin_factor_providers_are_discovered() -> None:
+    providers = list_registered_factor_providers()
+    assert "builtin_cross_sectional_factors" in providers
+    assert "builtin_derivatives_factors" in providers
+    assert "builtin_liquidity_factors" in providers
+    assert "builtin_mean_reversion_factors" in providers
+    assert "builtin_momentum_factors" in providers
 
 
 def test_trailing_return_factor_uses_pct_change() -> None:

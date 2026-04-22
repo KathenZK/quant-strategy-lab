@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from signal_lab.factors.base import FactorMetadata, PandasFactor
+from signal_lab.factors.base import FactorMetadata, PandasFactor, register_factor_provider
 
 
 class RelativeStrengthFactor(PandasFactor):
@@ -30,3 +30,10 @@ class RelativeStrengthFactor(PandasFactor):
         asset_return = frame[self.price_column].pct_change(self.periods)
         benchmark_return = frame[self.benchmark_column].pct_change(self.periods)
         return asset_return - benchmark_return
+
+
+@register_factor_provider()
+def builtin_cross_sectional_factors() -> list[PandasFactor]:
+    return [
+        RelativeStrengthFactor(periods=24),
+    ]

@@ -5,69 +5,10 @@ from datetime import datetime, timezone
 from pathlib import Path
 import json
 
-import pandas as pd
-
-from signal_lab.backtest import CrossSectionalBacktester, PortfolioBacktester
+from signal_lab.batches import WorkflowBatchRunner
 from signal_lab.comparison.models import StrategyComparisonArtifacts, StrategyComparisonConfig, StrategyComparisonEntry
-from signal_lab.config import load_settings
-from signal_lab.features import FeatureBuilder, FeatureStore
+from signal_lab.experiments.registry import RunRegistry, RunRegistryEntry
 from signal_lab.orchestration import load_strategy_workflow
-from signal_lab.orchestration.runner import StrategyRunner
-
-
-def _compute_attribution(
-    *,
-    weights: pd.DataFrame,
-    price_frame: pd.DataFrame,
-    funding_rate: pd.DataFrame | None,
-    fee_bps: float,
-    slippage_bps: float,
-) -> dict[str, float | str | None]:
-    executed = weights.shift(1).fillna(0.0)
-    asset_returns = price_frame.pct_change().fillna(0.0)
-    gross_contribution = executed * asset_returns
-    contribution_by_symbol = gross_contribution.sum(axis=0).sort_values(ascending=False)
-
-    turnover_by_symbol = weights.diff().abs().fillna(weights.abs()).sum(axis=0)
-    trading_cost_by_symbol = turnover_by_symbol * ((fee_bps + slippage_bps) / 10_000.0)
-
-    funding_cost_by_symbol = pd.Series(0.0, index=weights.columns)
-    if funding_rate is not None:
-        aligned_funding = funding_rate.reindex_like(price_frame).fillna(0.0)
-        funding_cost_by_symbol = -(executed * aligned_funding).sum(axis=0)
-
-    gross_exposure = weights.abs().sum(axis=1)
-    net_exposure = weights.sum(axis=1)
-
-    def _pick(series: pd.Series, *, descending: bool) -> tuple[str | None, float]:
-        if series.empty:
-            return None, 0.0
-        ranked = series.sort_values(ascending=not descending)
-        return str(ranked.index[0]), float(ranked.iloc[0])
-
-    top_symbol, top_contribution = _pick(contribution_by_symbol, descending=True)
-    worst_symbol, worst_contribution = _pick(contribution_by_symbol, descending=False)
-    top_trading_symbol, top_trading_cost = _pick(trading_cost_by_symbol, descending=True)
-    top_funding_symbol, top_funding_cost = _pick(funding_cost_by_symbol, descending=True)
-
-    return {
-        "gross_return_sum": float(gross_contribution.sum(axis=1).sum()),
-        "trading_cost_sum": float(trading_cost_by_symbol.sum()),
-        "funding_cost_sum": float(funding_cost_by_symbol.sum()),
-        "active_period_ratio": float((gross_exposure > 0).mean()),
-        "avg_gross_exposure": float(gross_exposure.mean()),
-        "avg_net_exposure": float(net_exposure.mean()),
-        "avg_long_count": float((weights > 0).sum(axis=1).mean()),
-        "avg_short_count": float((weights < 0).sum(axis=1).mean()),
-        "top_symbol": top_symbol,
-        "top_symbol_contribution": top_contribution,
-        "worst_symbol": worst_symbol,
-        "worst_symbol_contribution": worst_contribution,
-        "top_trading_cost_symbol": top_trading_symbol,
-        "top_trading_cost": top_trading_cost,
-        "top_funding_cost_symbol": top_funding_symbol,
-        "top_funding_cost": top_funding_cost,
-    }
 
 
 def _render_report(name: str, entries: list[StrategyComparisonEntry], description: str | None = None) -> str:
@@ -123,23 +64,10 @@ class StrategyComparisonRunner:
     workspace_root: Path
     app_config_path: Path | None = None
 
-    def _runtime(self) -> tuple[StrategyRunner, FeatureBuilder]:
-        settings = load_settings(self.app_config_path)
-        from signal_lab.data import DataLakeLayout, DuckDBWarehouse
-
-        layout = DataLakeLayout.from_settings(settings)
-        layout.ensure_directories()
-        builder = FeatureBuilder(
-            warehouse=DuckDBWarehouse(layout),
-            store=FeatureStore(layout),
-        )
-        return StrategyRunner(layout=layout, builder=builder), builder
-
     def compare(self, config: StrategyComparisonConfig) -> StrategyComparisonArtifacts:
         if len(config.workflow_configs) < 2:
             raise ValueError("strategy comparison requires at least two workflow configs")
 
-        runner, _ = self._runtime()
         workflow_configs = [load_strategy_workflow(path) for path in config.workflow_configs]
         reference = workflow_configs[0]
 
@@ -153,53 +81,36 @@ class StrategyComparisonRunner:
             if asdict(current.execution) != asdict(reference.execution):
                 raise ValueError("all compared strategies must share the same execution assumptions")
 
-        if reference.refresh.enabled:
-            runner.refresh_data(reference)
-
+        batch_runner = WorkflowBatchRunner(workspace_root=self.workspace_root, app_config_path=self.app_config_path)
+        runtime_runner = batch_runner.create_strategy_runner()
+        source_entries = batch_runner.collect_entries_from_workflows(
+            workflow_configs,
+            runner=runtime_runner,
+            shared_refresh=True,
+        )
         entries: list[StrategyComparisonEntry] = []
         run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
-        comparison_dir = runner.layout.reports_dir / "comparisons" / config.name / run_id
+        comparison_dir = runtime_runner.layout.reports_dir / "comparisons" / config.name / run_id
         comparison_dir.mkdir(parents=True, exist_ok=True)
 
-        for workflow in workflow_configs:
-            runner.build_features(workflow)
-            signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
-
-            if target_weights is None:
-                backtest = CrossSectionalBacktester(assumptions=workflow.execution).run(
-                    factor_frame=signal_frame,
-                    price_frame=panels.price,
-                    dollar_volume=panels.dollar_volume,
-                    funding_rate=panels.funding_rate,
+        for source in source_entries:
+            copied_report_path: str | None = None
+            if source.backtest_report_path:
+                backtest_report_path = comparison_dir / f"{source.strategy_name}.backtest.md"
+                backtest_report_path.write_text(
+                    Path(source.backtest_report_path).read_text(encoding="utf-8"),
+                    encoding="utf-8",
                 )
-            else:
-                backtest = PortfolioBacktester(assumptions=workflow.execution).run(
-                    target_weights=target_weights,
-                    price_frame=panels.price,
-                    dollar_volume=panels.dollar_volume,
-                    funding_rate=panels.funding_rate,
-                )
-
-            backtest_report_path = comparison_dir / f"{workflow.strategy.name}.backtest.md"
-            from signal_lab.reporting import render_backtest_report
-
-            backtest_report_path.write_text(render_backtest_report(signal_name, backtest), encoding="utf-8")
-            attribution = _compute_attribution(
-                weights=backtest.weights,
-                price_frame=panels.price,
-                funding_rate=panels.funding_rate,
-                fee_bps=workflow.execution.fee_bps,
-                slippage_bps=workflow.execution.slippage_bps,
-            )
+                copied_report_path = str(backtest_report_path)
             entries.append(
                 StrategyComparisonEntry(
-                    strategy_name=workflow.strategy.name,
-                    signal_name=signal_name,
-                    signal_type=workflow.strategy.signal_type,
-                    signal_version=signal_version,
-                    metrics=backtest.metrics,
-                    attribution=attribution,
-                    backtest_report_path=str(backtest_report_path),
+                    strategy_name=source.strategy_name,
+                    signal_name=source.signal_name,
+                    signal_type=source.signal_type,
+                    signal_version=source.signal_version,
+                    metrics=source.backtest_metrics,
+                    attribution=source.backtest_attribution,
+                    backtest_report_path=copied_report_path,
                 )
             )
 
@@ -226,6 +137,18 @@ class StrategyComparisonRunner:
         }
         manifest_path = comparison_dir / "comparison_manifest.json"
         manifest_path.write_text(json.dumps(manifest_payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+        RunRegistry(runtime_runner.layout.reports_dir).append(
+            RunRegistryEntry(
+                kind="comparison_run",
+                name=config.name,
+                run_id=run_id,
+                generated_at=str(manifest_payload["generated_at"]),
+                manifest_path=str(manifest_path),
+                app_config_path=str(self.app_config_path) if self.app_config_path else None,
+                primary_report_path=str(report_path),
+                child_manifest_paths=[entry.run_manifest_path for entry in source_entries if entry.run_manifest_path],
+            )
+        )
 
         return StrategyComparisonArtifacts(
             run_id=run_id,

@@ -4,14 +4,15 @@
 >
 > 文档概述：从零搭建一个以研究优先为核心的加密因子发现、回测、交易平台。第一版覆盖中低频现货选币与永续合约因子研究，默认采用 Python 技术栈，先打通数据、因子、评估、回测闭环，再逐步接入模拟盘与实盘。
 
-## 当前待办
+> 状态说明：这份文档写于项目早期蓝图阶段，保留作为总体设计参考。项目当前已经不是空仓库，且已落地 `data / factors / features / research / backtest / execution / reporting / strategies / signals / allocators / orchestration / batches / experiments / comparison / registry` 等主干能力。当前实现状态请同时参考代码和 `docs/signal-lab-architecture-refactor.md`。
 
-- 定义研究优先的平台边界，搭建 Python 项目骨架、配置系统与目录结构。
-- 设计统一数据模型，先用 `Parquet + DuckDB` 落地现货与永续合约数据湖。
-- 实现首批 `10-15` 个高质量因子，并建立因子注册、元数据与可复用计算接口。
-- 实现因子评估模块，包括 IC、分层收益、衰减、冗余与稳健性分析。
-- 实现带手续费、滑点、资金费率和仓位约束的组合回测引擎。
-- 预留 `Broker` 抽象并接入模拟盘，把研究、回测、下单、风控闭环跑通。
+## 当前状态
+
+- 已实现本地 `Parquet + DuckDB` 数据湖，以及 `raw / normalized / features / reports` 目录结构。
+- 已实现因子注册、特征构建、因子报告、组合回测、模拟盘和工作流运行。
+- 已实现 `signals + allocators + strategies facade` 的策略分层。
+- 已实现 `experiments`、`comparison`、`batches` 与 `run registry`，支持单策略、批量实验和策略比较。
+- 当前更值得继续补强的是：多策略组合层、参数矩阵 / sweep、配置分层、以及更强的运行结果查询面。
 
 ## 阅读导航
 
@@ -40,7 +41,7 @@
 - 覆盖两类核心场景：
   - 中低频现货选币/轮动：`1h`、`4h`、`1d`
   - 永续合约研究：`funding rate`、`open interest`、`basis`、`liquidations`
-- 当前工作区是空仓库，适合直接按新项目方式搭建。
+- 当前仓库已经有可运行实现，这一节更适合作为设计假设而不是搭建说明。
 
 ### 默认技术栈
 
@@ -102,13 +103,21 @@ flowchart LR
 - `pyproject.toml`：项目依赖与入口
 - `src/signal_lab/config/`：环境配置、交易所配置、路径配置
 - `src/signal_lab/data/`：数据采集、标准化、落盘、校验
-- `src/signal_lab/features/`：基础特征与因子计算
+- `src/signal_lab/features/`：特征构建、因子产物与 manifest
 - `src/signal_lab/factors/`：按类别组织的因子实现与注册表
+- `src/signal_lab/signals/`：信号模型
+- `src/signal_lab/allocators/`：权重分配器
+- `src/signal_lab/strategies/`：策略 facade 与注册
 - `src/signal_lab/research/`：IC、分层收益、相关性聚类、参数扫描
 - `src/signal_lab/backtest/`：组合构建、撮合、成本模型、资金费率结算
 - `src/signal_lab/portfolio/`：仓位、杠杆、风险约束、净值计算
 - `src/signal_lab/execution/`：模拟盘/实盘 broker 抽象与交易所适配
 - `src/signal_lab/reporting/`：回测报告、因子报告、绩效归因
+- `src/signal_lab/orchestration/`：单 workflow 运行入口
+- `src/signal_lab/batches/`：通用 batch 配置与执行骨架
+- `src/signal_lab/experiments/`：批量实验层
+- `src/signal_lab/comparison/`：批量结果比较视图
+- `src/signal_lab/scenarios/`：可重复的 deterministic baseline 场景
 - `configs/`：因子、策略、数据源、风控参数
 - `research/notebooks/`：探索式研究 notebook
 - `tests/`：核心模块测试

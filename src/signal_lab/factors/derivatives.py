@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from signal_lab.factors.base import FactorMetadata, PandasFactor
+from signal_lab.factors.base import FactorMetadata, PandasFactor, register_factor_provider
 
 
 def _rolling_zscore(series: pd.Series, window: int) -> pd.Series:
@@ -168,3 +168,17 @@ class PriceOpenInterestRegimeFactor(PandasFactor):
         values = [2.0, 1.0, -2.0, -1.0]
         regime = np.select(conditions, values, default=np.nan)
         return pd.Series(regime, index=frame.index, name=self.metadata.name)
+
+
+@register_factor_provider()
+def builtin_derivatives_factors() -> list[PandasFactor]:
+    return [
+        FundingRateFactor(),
+        FundingRateZScoreFactor(window=72),
+        OpenInterestChangeFactor(periods=4),
+        OpenInterestZScoreFactor(window=72),
+        BasisFactor(),
+        BasisChangeFactor(periods=4),
+        BasisZScoreFactor(window=72),
+        PriceOpenInterestRegimeFactor(periods=4),
+    ]

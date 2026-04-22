@@ -459,6 +459,12 @@ workflow:
     workflow = load_strategy_workflow(config_path)
     runner = StrategyRunner(layout=layout, builder=builder)
     signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
+    backtest = runner.run_backtest(
+        workflow,
+        panels=panels,
+        signal_frame=signal_frame,
+        target_weights=target_weights,
+    )
     artifacts = runner.run(workflow)
     manifest = Path(artifacts.manifest_path).read_text(encoding="utf-8")
 
@@ -466,6 +472,7 @@ workflow:
     assert signal_version
     assert panels.liquidation_features is not None
     assert target_weights.abs().sum(axis=1).iloc[-1] > 0.0
+    assert backtest.metrics
     assert artifacts.manifest_path is not None and Path(artifacts.manifest_path).exists()
     assert artifacts.factor_report_path is not None and Path(artifacts.factor_report_path).exists()
     assert artifacts.backtest_report_path is not None and Path(artifacts.backtest_report_path).exists()
@@ -525,6 +532,12 @@ workflow:
     workflow = load_strategy_workflow(config_path)
     runner = StrategyRunner(layout=layout, builder=builder)
     signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
+    backtest = runner.run_backtest(
+        workflow,
+        panels=panels,
+        signal_frame=signal_frame,
+        target_weights=target_weights,
+    )
     artifacts = runner.run(workflow)
     manifest = Path(artifacts.manifest_path).read_text(encoding="utf-8")
 
@@ -533,6 +546,7 @@ workflow:
     assert panels.liquidation_features is not None
     assert target_weights.loc[target_weights.index[-1], "BTC/USDT"] < 0
     assert target_weights.loc[target_weights.index[-1], "ETH/USDT"] > 0
+    assert backtest.metrics
     assert artifacts.manifest_path is not None and Path(artifacts.manifest_path).exists()
     assert artifacts.factor_report_path is not None and Path(artifacts.factor_report_path).exists()
     assert artifacts.backtest_report_path is not None and Path(artifacts.backtest_report_path).exists()

@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import pandas as pd
 
-from signal_lab.factors.base import FactorMetadata, PandasFactor
+from signal_lab.factors.base import FactorMetadata, PandasFactor, register_factor_provider
 
 
 class ZScoreFactor(PandasFactor):
@@ -45,3 +45,11 @@ class BollingerDistanceFactor(PandasFactor):
         rolling_std = frame[self.price_column].rolling(self.window, min_periods=self.window).std()
         band_width = self.num_std * rolling_std
         return (frame[self.price_column] - rolling_mean) / band_width
+
+
+@register_factor_provider()
+def builtin_mean_reversion_factors() -> list[PandasFactor]:
+    return [
+        ZScoreFactor(window=20),
+        BollingerDistanceFactor(window=20),
+    ]

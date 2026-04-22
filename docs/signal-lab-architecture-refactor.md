@@ -2,6 +2,22 @@
 
 这份文档针对当前仓库提出下一阶段架构改造方案，目标不是推翻现有实现，而是在保留现有 `data / factors / features / research / backtest` 骨架的前提下，把项目从“能研究单策略和做同场比较”的平台，演进成“能持续接入因子、批量孵化策略、并支持多策略同时运行”的信号实验室。
 
+## 0. 当前实施状态
+
+相对本文最初写作时，下面这些事项已经落地：
+
+- `signals/` 与 `allocators/` 已拆出，策略层已变成 facade。
+- 因子默认注册已经从手工清单过渡到 provider discovery。
+- `experiments/`、`batches/`、`comparison/`、`run registry` 已经存在并可运行。
+- `run-batch`、`run-experiment`、`compare-strategies` 已共用同一套 batch 入口骨架。
+
+当前仍然没有完成的主要部分：
+
+- 多策略组合层 `strategy_portfolios/`
+- 参数矩阵 / sweep / variant 管理
+- 更完整的配置分层
+- 更丰富的 registry metadata，如 `config_hash / git_sha / data_snapshot_id`
+
 ## 1. 改造目标
 
 当前项目已经具备研究平台骨架，但还没有完全长成目标中的“策略实验室”。这次改造希望明确解决下面 5 件事：
@@ -23,17 +39,18 @@
 - `data`、`factors`、`features`、`research`、`backtest`、`execution` 这些核心层已经分开。
 - `FeatureBuilder`、`FactorResearchLab`、`PortfolioBacktester`、`StrategyRunner` 形成了完整闭环。
 - 策略已经支持注册与发现，说明项目意图并不是写死一两条策略。
+- `signals`、`allocators`、`strategies` 三层已经拆开。
 - `comparison` 模块已经解决了“同条件下比较多条策略”的问题。
+- `experiments`、`batches`、`registry` 已经把批量执行与运行追溯补出来了。
 - 每次运行会产出 `run_manifest.json`，已经有实验追溯意识。
 
 当前最主要的结构缺口：
 
-- 因子注册仍然是手工装配，扩展性不对称。
-- `Strategy` 抽象同时承担“信号逻辑”和“仓位逻辑”，对多策略扩展不友好。
-- `StrategyRunner` 对 `factor` 与 `strategy` 走两套主分支，后续容易继续膨胀。
-- `comparison` 只解决横向比较，没有进入多策略组合层。
-- `configs/` 已经开始扁平化膨胀，继续扩展会越来越依赖命名约定而不是结构约定。
-- 当前没有实验索引层，只有运行目录和 manifest，缺少批量检索能力。
+- 还没有真正的多策略组合层。
+- `configs/` 仍偏扁平，batch 入口统一了，但策略 / allocator / signal 配置还没彻底分层。
+- `StrategyRunner` 仍保留 `factor` 与策略对象两条主分支。
+- `comparison` 已经更像视图层，但分析能力仍偏报告化，缺少更通用的结果查询与排序能力。
+- registry 已经存在，但 metadata 维度还不够丰富。
 
 所以目前的准确定位是：
 
@@ -163,9 +180,9 @@ flowchart LR
 - 允许按配置加载一组 factor modules
 - `default_registry()` 从“手工清单”升级成“默认加载器”
 
-### 5.2 新增 `signals/`
+### 5.2 `signals/` 已落地
 
-新增 `signals/`，专门放“信号生成逻辑”。
+当前已经有独立的 `signals/`，专门放“信号生成逻辑”。
 
 典型职责：
 
@@ -180,9 +197,9 @@ flowchart LR
 - `ma_cross_signal`
 - `breakout_confirmation_signal`
 
-### 5.3 新增 `allocators/`
+### 5.3 `allocators/` 已落地
 
-新增 `allocators/`，专门负责把信号变成目标权重。
+当前已经有独立的 `allocators/`，专门负责把信号变成目标权重。
 
 典型职责：
 
@@ -228,9 +245,9 @@ flowchart LR
 - `risk_budget_strategy_portfolio`
 - `correlation_capped_strategy_portfolio`
 
-### 5.6 新增 `experiments/`
+### 5.6 `experiments/` 已落地基础能力
 
-新增 `experiments/`，把“批量实验”和“参数扫描”从 `comparison` 与 `orchestration` 中独立出来。
+当前已经有独立的 `experiments/`，把“批量实验”和“参数扫描”从 `comparison` 与 `orchestration` 中独立出来。
 
 这层负责：
 
@@ -241,17 +258,31 @@ flowchart LR
 - 写入实验清单
 - 为后续自动选优、walk-forward、regime 分层提供入口
 
-### 5.7 收敛 `comparison/`
+### 5.7 `comparison/` 已部分收敛
 
 `comparison/` 不必消失，但应该逐步从“独立 runner”收敛成“实验结果视图”。
 
-建议定位改成：
+当前更接近下面这个定位：
 
 - 比较报告渲染
 - 共享假设校验
 - 策略间指标对齐展示
 
-而不是继续单独持有自己的运行主逻辑。
+它已经不再自己持有完整 workflow 执行逻辑，而是消费共享 batch 运行结果。
+
+### 5.8 `batches/` 已落地
+
+为了避免 `comparison` 和 `experiment` 各自再维护一套重复配置和执行骨架，当前已经新增：
+
+- `batches/config.py`
+- `batches/runner.py`
+- `batches/service.py`
+
+这层现在负责：
+
+- 统一 batch 配置解析
+- 统一 workflow batch runtime
+- 为 `run-experiment` / `compare-strategies` / `run-batch` 提供共享执行骨架
 
 ## 6. 关键运行时抽象
 
@@ -453,10 +484,10 @@ experiment:
 - `strategy_config_path`
 - `portfolio_config_path`
 
-同时建议新增一个轻量 `run registry`，形式可以先从简单方案开始：
+当前已经新增一个轻量 `run registry`，第一阶段采用 `JSONL`：
 
-1. 第一阶段用 `JSONL` 或 `SQLite`
-2. 后续有需要再接更完整的实验管理工具
+1. 当前：`reports/_registry/runs.jsonl`
+2. 后续：可继续升级到 `SQLite` 或更完整的实验管理工具
 
 这个 registry 主要解决下面几个问题：
 
@@ -467,9 +498,9 @@ experiment:
 
 ## 9. 迁移路径
 
-建议按 4 个阶段推进，而不是一次性大改。
+建议按 4 个阶段推进，而不是一次性大改。按当前代码状态看，前 3 个阶段已经部分或大部分落地，第 4 阶段仍未开始。
 
-### 阶段 1：补注册与元数据，不改用户心智
+### 阶段 1：补注册与元数据，不改用户心智（大部分已完成）
 
 目标：
 
@@ -479,7 +510,7 @@ experiment:
 
 这一阶段不要求用户改变 `run-strategy` 的习惯。
 
-### 阶段 2：拆分 signal 与 allocator
+### 阶段 2：拆分 signal 与 allocator（已完成）
 
 目标：
 
@@ -490,7 +521,7 @@ experiment:
 
 这一阶段完成后，新策略就不应该继续直接写成“一个类里又出信号又出权重”的模式。
 
-### 阶段 3：引入 experiments 与 batch runner
+### 阶段 3：引入 experiments 与 batch runner（大部分已完成）
 
 目标：
 
@@ -500,7 +531,7 @@ experiment:
 
 这一阶段完成后，实验规模可以从“手工几份 YAML”提升到“可维护的实验矩阵”。
 
-### 阶段 4：引入多策略组合层
+### 阶段 4：引入多策略组合层（未完成）
 
 目标：
 

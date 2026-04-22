@@ -11,6 +11,7 @@ strategy:
     long_allocation: 1.0
     short_allocation: 1.0
     stop_loss_pct: 0.12
+    take_profit_pct: 0.40
     min_ma_gap_ratio: 0.01
     min_slow_ma_slope: 0.0
     slope_lookback: 10

@@ -5,12 +5,15 @@ from datetime import datetime, timezone
 from pathlib import Path
 import json
 
-from signal_lab.backtest import CrossSectionalBacktester, PortfolioBacktester
+import pandas as pd
+
+from signal_lab.backtest import CrossSectionalBacktester, PortfolioBacktester, compute_backtest_attribution
 from signal_lab.data import DataIngestionService, DataLakeLayout, DatasetKind
 from signal_lab.execution import PaperBroker, PaperTradingSession
+from signal_lab.experiments.registry import RunRegistry, RunRegistryEntry
 from signal_lab.features import FeatureBuilder
 from signal_lab.orchestration.models import StrategyRunArtifacts, StrategyWorkflowConfig
-from signal_lab.orchestration.panels import load_multi_factor_panels, load_universe_panels
+from signal_lab.orchestration.panels import MultiFactorUniversePanels, UniversePanels, load_multi_factor_panels, load_universe_panels
 from signal_lab.orchestration.state import IncrementalStateStore
 from signal_lab.portfolio import RiskManager
 from signal_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
@@ -175,6 +178,28 @@ class StrategyRunner:
         )
         return config.strategy.signal_name, self.builder.registry.get(config.strategy.signal_name).version(), panels, panels.factor, None
 
+    def run_backtest(
+        self,
+        config: StrategyWorkflowConfig,
+        *,
+        panels: UniversePanels | MultiFactorUniversePanels,
+        signal_frame: pd.DataFrame,
+        target_weights: pd.DataFrame | None,
+    ):
+        if target_weights is None:
+            return CrossSectionalBacktester(assumptions=config.execution).run(
+                factor_frame=signal_frame,
+                price_frame=panels.price,
+                dollar_volume=panels.dollar_volume,
+                funding_rate=panels.funding_rate,
+            )
+        return PortfolioBacktester(assumptions=config.execution).run(
+            target_weights=target_weights,
+            price_frame=panels.price,
+            dollar_volume=panels.dollar_volume,
+            funding_rate=panels.funding_rate,
+        )
+
     def run(self, config: StrategyWorkflowConfig) -> StrategyRunArtifacts:
         run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
         refresh_artifacts = self.refresh_data(config)
@@ -185,6 +210,7 @@ class StrategyRunner:
         backtest_report_path: Path | None = None
         paper_report_path: Path | None = None
         backtest_metrics: dict[str, float] = {}
+        backtest_attribution: dict[str, float | str | None] = {}
         paper_summary: dict[str, float] = {}
 
         if config.run_factor_report:
@@ -195,22 +221,20 @@ class StrategyRunner:
             factor_report_path.write_text(report, encoding="utf-8")
 
         if config.run_backtest:
-            if target_weights is None:
-                backtester = CrossSectionalBacktester(assumptions=config.execution)
-                backtest = backtester.run(
-                    factor_frame=signal_frame,
-                    price_frame=panels.price,
-                    dollar_volume=panels.dollar_volume,
-                    funding_rate=panels.funding_rate,
-                )
-            else:
-                backtest = PortfolioBacktester(assumptions=config.execution).run(
-                    target_weights=target_weights,
-                    price_frame=panels.price,
-                    dollar_volume=panels.dollar_volume,
-                    funding_rate=panels.funding_rate,
-                )
+            backtest = self.run_backtest(
+                config,
+                panels=panels,
+                signal_frame=signal_frame,
+                target_weights=target_weights,
+            )
             backtest_metrics = backtest.metrics
+            backtest_attribution = compute_backtest_attribution(
+                weights=backtest.weights,
+                price_frame=panels.price,
+                funding_rate=panels.funding_rate,
+                fee_bps=config.execution.fee_bps,
+                slippage_bps=config.execution.slippage_bps,
+            )
             report = render_backtest_report(signal_name, backtest)
             backtest_report_path = self.layout.reports_dir / "runs" / config.strategy.name / run_id / "backtest_report.md"
             backtest_report_path.parent.mkdir(parents=True, exist_ok=True)
@@ -261,12 +285,32 @@ class StrategyRunner:
             "backtest_report_path": str(backtest_report_path) if backtest_report_path else None,
             "paper_report_path": str(paper_report_path) if paper_report_path else None,
             "backtest_metrics": backtest_metrics,
+            "backtest_attribution": backtest_attribution,
             "paper_summary": paper_summary,
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
         manifest_path = self.layout.reports_dir / "runs" / config.strategy.name / run_id / "run_manifest.json"
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
         manifest_path.write_text(json.dumps(manifest_payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+        RunRegistry(self.layout.reports_dir).append(
+            RunRegistryEntry(
+                kind="workflow_run",
+                name=config.strategy.name,
+                run_id=run_id,
+                generated_at=str(manifest_payload["generated_at"]),
+                manifest_path=str(manifest_path),
+                primary_report_path=str(backtest_report_path or factor_report_path or paper_report_path) if (backtest_report_path or factor_report_path or paper_report_path) else None,
+                factor_report_path=str(factor_report_path) if factor_report_path else None,
+                backtest_report_path=str(backtest_report_path) if backtest_report_path else None,
+                paper_report_path=str(paper_report_path) if paper_report_path else None,
+                strategy_name=config.strategy.name,
+                signal_name=signal_name,
+                signal_type=config.strategy.signal_type,
+                backtest_metrics=backtest_metrics,
+                backtest_attribution=backtest_attribution,
+                paper_summary=paper_summary,
+            )
+        )
 
         return StrategyRunArtifacts(
             run_id=run_id,
@@ -274,4 +318,5 @@ class StrategyRunner:
             backtest_report_path=str(backtest_report_path) if backtest_report_path else None,
             paper_report_path=str(paper_report_path) if paper_report_path else None,
             manifest_path=str(manifest_path),
+            backtest_attribution=backtest_attribution or None,
         )
