@@ -1,12 +1,11 @@
 from __future__ import annotations
 
-from signal_lab.strategies.crowding import CrowdingReversalStrategy
-from signal_lab.strategies.trend import TrendConfirmationStrategy
+from signal_lab.strategies.registry import create_registered_strategy, list_registered_strategies
 
 
 def create_strategy(signal_type: str, strategy_options: dict[str, object] | None = None):
-    if signal_type == "trend_confirmation":
-        return TrendConfirmationStrategy.from_options(strategy_options)
-    if signal_type == "crowding_reversal":
-        return CrowdingReversalStrategy.from_options(strategy_options)
-    raise ValueError(f"unsupported strategy signal_type: {signal_type}")
+    return create_registered_strategy(signal_type, strategy_options)
+
+
+def list_strategies() -> list[str]:
+    return list_registered_strategies()

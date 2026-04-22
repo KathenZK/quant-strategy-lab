@@ -6,6 +6,9 @@ from signal_lab.strategies import (
     CrowdingReversalStrategy,
     TrendConfirmationConfig,
     TrendConfirmationStrategy,
+    create_strategy,
+    list_registered_strategies,
+    register_strategy,
 )
 
 
@@ -123,3 +126,34 @@ def test_crowding_reversal_strategy_applies_liquidation_overlay() -> None:
     weights = strategy.build_weights(signal, liquidation_features)
     assert weights.loc[index[0], "BTC"] == pytest.approx(-0.05)
     assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)
+
+
+def test_strategy_registry_lists_builtin_strategies() -> None:
+    names = list_registered_strategies()
+    assert "trend_confirmation" in names
+    assert "crowding_reversal" in names
+
+
+def test_create_strategy_uses_registry() -> None:
+    trend = create_strategy("trend_confirmation", {"max_long_positions": 1})
+    crowding = create_strategy("crowding_reversal", {"max_short_positions": 1})
+    assert isinstance(trend, TrendConfirmationStrategy)
+    assert isinstance(crowding, CrowdingReversalStrategy)
+
+
+def test_register_strategy_decorator_supports_new_strategy_types() -> None:
+    @register_strategy("unit_test_strategy")
+    class UnitTestStrategy:
+        @classmethod
+        def from_options(cls, options: dict[str, object] | None = None):
+            instance = cls()
+            instance.options = options or {}
+            return instance
+
+        @property
+        def signal_name(self) -> str:
+            return "unit_test_strategy"
+
+    instance = create_strategy("unit_test_strategy", {"foo": "bar"})
+    assert instance.signal_name == "unit_test_strategy"
+    assert instance.options["foo"] == "bar"

@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from signal_lab.strategies.common import apply_liquidation_risk_overlay, cross_section_zscore
+from signal_lab.strategies.registry import register_strategy
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +45,7 @@ class TrendConfirmationConfig:
     stop_on_event_cooldown: bool = True
 
 
+@register_strategy("trend_confirmation")
 @dataclass(slots=True)
 class TrendConfirmationStrategy:
     config: TrendConfirmationConfig
@@ -55,7 +57,7 @@ class TrendConfirmationStrategy:
 
     @property
     def signal_name(self) -> str:
-        return "trend_confirmation"
+        return self.SIGNAL_TYPE
 
     def spec(self) -> dict[str, object]:
         return {

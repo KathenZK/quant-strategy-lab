@@ -8,6 +8,7 @@ import numpy as np
 import pandas as pd
 
 from signal_lab.strategies.common import apply_liquidation_risk_overlay, cross_section_zscore
+from signal_lab.strategies.registry import register_strategy
 
 
 @dataclass(frozen=True, slots=True)
@@ -44,6 +45,7 @@ class CrowdingReversalConfig:
     stop_on_event_cooldown: bool = True
 
 
+@register_strategy("crowding_reversal")
 @dataclass(slots=True)
 class CrowdingReversalStrategy:
     config: CrowdingReversalConfig
@@ -55,7 +57,7 @@ class CrowdingReversalStrategy:
 
     @property
     def signal_name(self) -> str:
-        return "crowding_reversal"
+        return self.SIGNAL_TYPE
 
     def spec(self) -> dict[str, object]:
         return {
