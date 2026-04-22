@@ -1,46 +1,55 @@
----
-
-name: 加密量化平台路线
-overview: 从零搭建一个以研究优先为核心的加密因子发现、回测、交易平台，第一版覆盖中低频现货选币与永续合约因子研究。默认采用 Python 技术栈，先打通数据、因子、评估、回测闭环，再逐步接入模拟盘与实盘。
-todos:
-
-- id: bootstrap_repo
-content: 定义研究优先的平台边界，搭建 Python 项目骨架、配置系统与目录结构。
-status: pending
-- id: build_data_layer
-content: 设计统一数据模型，先用 Parquet + DuckDB 落地现货与永续合约数据湖。
-status: pending
-- id: implement_factors
-content: 实现首批 10-15 个高质量因子，并建立因子注册、元数据与可复用计算接口。
-status: pending
-- id: build_research_lab
-content: 实现因子评估模块，包括 IC、分层收益、衰减、冗余与稳健性分析。
-status: pending
-- id: build_backtest_engine
-content: 实现带手续费、滑点、资金费率和仓位约束的组合回测引擎。
-status: pending
-- id: paper_trade_loop
-content: 预留 Broker 抽象并接入模拟盘，把研究、回测、下单、风控闭环跑通。
-status: pending
-isProject: false
-
----
-
 # 加密量化平台路线图
 
+> 文档名称：加密量化平台路线
+>
+> 文档概述：从零搭建一个以研究优先为核心的加密因子发现、回测、交易平台。第一版覆盖中低频现货选币与永续合约因子研究，默认采用 Python 技术栈，先打通数据、因子、评估、回测闭环，再逐步接入模拟盘与实盘。
+
+> 状态说明：这份文档写于项目早期蓝图阶段，保留作为总体设计参考。项目当前已经不是空仓库，且已落地 `data / factors / features / research / backtest / execution / reporting / strategies / signals / allocators / orchestration / batches / experiments / comparison / registry` 等主干能力。当前实现状态请同时参考代码和 `docs/quant-strategy-lab-architecture-refactor.md`。
+
+## 当前状态
+
+- 已实现本地 `Parquet + DuckDB` 数据湖，以及 `raw / normalized / features / reports` 目录结构。
+- 已实现因子注册、特征构建、因子报告、组合回测、模拟盘和工作流运行。
+- 已实现 `signals + allocators + strategies facade` 的策略分层。
+- 已实现 `experiments`、`comparison`、`batches` 与 `run registry`，支持单策略、批量实验和策略比较。
+- 当前更值得继续补强的是：多策略组合层、参数矩阵 / sweep、配置分层、以及更强的运行结果查询面。
+
+## 阅读导航
+
+- 目标与默认假设
+- 为什么这样起步
+- 第一版总体架构
+- 推荐目录骨架
+- 数据层设计
+- 因子层设计
+- 因子评估模块设计
+- 回测引擎设计
+- 交易执行层规划
+- 风控与组合层设计
+- 报告与监控层设计
+- 最小可用版本（MVP）
+- 第二阶段扩展
+- 实现原则
+- 推荐的落地顺序
+- 交付标准
+
 ## 目标与默认假设
+
+### 聚焦范围
 
 - 第一版优先解决“因子发现 + 回测研究”问题，而不是一上来做高频或复杂实盘执行。
 - 覆盖两类核心场景：
   - 中低频现货选币/轮动：`1h`、`4h`、`1d`
   - 永续合约研究：`funding rate`、`open interest`、`basis`、`liquidations`
-- 当前工作区是空仓库，适合直接按新项目方式搭建。
-- 默认技术栈：
-  - 研究层：`Python` + `pandas/polars` + `numpy`
-  - 本地数据层：`Parquet` + `DuckDB`
-  - 交易所接入：`ccxt`（REST），后续可补 `ccxt.pro` 或其他 WebSocket 接入
-  - 快速原型回测：可借助 `vectorbt` 做验证；正式平台仍建议自建回测与执行抽象
-  - 若后续需要更完整的衍生品/盘口历史数据，可评估 `Tardis.dev` 这类专业数据源
+- 当前仓库已经有可运行实现，这一节更适合作为设计假设而不是搭建说明。
+
+### 默认技术栈
+
+- 研究层：`Python` + `pandas/polars` + `numpy`
+- 本地数据层：`Parquet` + `DuckDB`
+- 交易所接入：`ccxt`（REST），后续可补 `ccxt.pro` 或其他 WebSocket 接入
+- 快速原型回测：可借助 `vectorbt` 做验证；正式平台仍建议自建回测与执行抽象
+- 若后续需要更完整的衍生品/盘口历史数据，可评估 `Tardis.dev` 这类专业数据源
 
 ## 为什么这样起步
 
@@ -94,22 +103,30 @@ flowchart LR
 - `pyproject.toml`：项目依赖与入口
 - `src/signal_lab/config/`：环境配置、交易所配置、路径配置
 - `src/signal_lab/data/`：数据采集、标准化、落盘、校验
-- `src/signal_lab/features/`：基础特征与因子计算
+- `src/signal_lab/features/`：特征构建、因子产物与 manifest
 - `src/signal_lab/factors/`：按类别组织的因子实现与注册表
+- `src/signal_lab/signals/`：信号模型
+- `src/signal_lab/allocators/`：权重分配器
+- `src/signal_lab/strategies/`：策略 facade 与注册
 - `src/signal_lab/research/`：IC、分层收益、相关性聚类、参数扫描
 - `src/signal_lab/backtest/`：组合构建、撮合、成本模型、资金费率结算
 - `src/signal_lab/portfolio/`：仓位、杠杆、风险约束、净值计算
 - `src/signal_lab/execution/`：模拟盘/实盘 broker 抽象与交易所适配
 - `src/signal_lab/reporting/`：回测报告、因子报告、绩效归因
+- `src/signal_lab/orchestration/`：单 workflow 运行入口
+- `src/signal_lab/batches/`：通用 batch 配置与执行骨架
+- `src/signal_lab/experiments/`：批量实验层
+- `src/signal_lab/comparison/`：批量结果比较视图
+- `src/signal_lab/scenarios/`：可重复的 deterministic baseline 场景
 - `configs/`：因子、策略、数据源、风控参数
 - `research/notebooks/`：探索式研究 notebook
 - `tests/`：核心模块测试
 
-## 数据层先怎么做
+## 数据层设计
 
-### 1. 先定义统一数据模型
+### 1. 统一数据模型
 
-第一版建议至少标准化这些表/数据集：
+第一版建议至少标准化以下表或数据集：
 
 - `ohlcv`
 - `funding_rates`
@@ -155,9 +172,9 @@ flowchart LR
 
 不要一开始接太多交易所。第一版只做 `1-2` 家主流所，更容易把数据质量打磨好。
 
-## 因子层怎么设计
+## 因子层设计
 
-### 因子实现要标准化
+### 因子实现标准化
 
 每个因子不要写成散落 notebook 里的脚本，应该有统一契约：
 
@@ -172,7 +189,7 @@ flowchart LR
   - 可交易 universe 过滤条件
   - 适用品类（spot/perp）
 
-### 第一版建议先做的因子篮子
+### 第一版建议的因子篮子
 
 先做少量但信息互补的因子，而不是一次做几十个：
 
@@ -184,7 +201,9 @@ flowchart LR
 
 建议先做 `10-15` 个高质量因子，把评估体系跑顺，再扩展。
 
-## 因子发现与评估模块怎么做
+## 因子评估模块设计
+
+### 第一版重点能力
 
 平台价值不在“算出指标”，而在“知道哪些因子真有用”。第一版要重点建设以下评估能力：
 
@@ -205,9 +224,9 @@ flowchart LR
 
 这里的目标不是找“历史最强因子”，而是找“在不同区间都还能活下来的因子”。
 
-## 回测引擎怎么设计
+## 回测引擎设计
 
-### 第一版不要直接做全事件驱动大系统
+### 双层回测架构
 
 对你的当前目标，更合适的是“双层回测”架构：
 
@@ -220,7 +239,7 @@ flowchart LR
   - 支持手续费、滑点、调仓、杠杆、资金费率
   - 更贴近未来模拟盘/实盘执行
 
-### 回测中必须显式建模的东西
+### 回测中必须显式建模的约束
 
 - 手续费
 - 滑点
@@ -234,11 +253,11 @@ flowchart LR
 
 很多因子研究死在这里：研究时赚钱，回测时不赚钱，本质上是没有把交易摩擦和可成交性建进去。
 
-## 交易执行层怎么规划
+## 交易执行层规划
 
 虽然你当前选的是研究优先，但平台从第一天就要预留执行抽象，否则后面会推倒重来。
 
-### 执行层至少要有这些抽象
+### 执行层核心抽象
 
 - `Broker`：统一下单/撤单/查询持仓接口
 - `ExchangeAdapter`：不同交易所 API 适配
@@ -254,7 +273,9 @@ flowchart LR
 
 不要反过来。先打通模拟盘，会让你更早发现策略与回测的偏差。
 
-## 风控与组合层怎么做
+## 风控与组合层设计
+
+### 第一版风险约束
 
 第一版至少要实现这些风险约束：
 
@@ -269,7 +290,9 @@ flowchart LR
 
 如果你后面做永续合约，这一层的重要性几乎和 alpha 一样高。
 
-## 报告与监控层怎么做
+## 报告与监控层设计
+
+### 平台需要回答的问题
 
 平台必须能回答这几类问题：
 
@@ -278,6 +301,8 @@ flowchart LR
 - 是价格趋势赚的，还是 funding carry 赚的？
 - 最近失效是因子衰减，还是交易成本变差？
 
+### 第一版至少包含的报告
+
 所以第一版报告至少包括：
 
 - 因子报告：IC、分层收益、相关性、稳定性
@@ -285,7 +310,7 @@ flowchart LR
 - 成本归因：手续费、滑点、funding
 - 风险暴露：BTC beta、行业暴露、交易所暴露
 
-## 最小可用版本（MVP）建议
+## 最小可用版本（MVP）
 
 如果你现在就开工，最合理的 MVP 不是“全能平台”，而是下面这一版：
 
@@ -302,7 +327,7 @@ flowchart LR
 
 这版做出来，你就已经拥有真正可用的研究平台了。
 
-## 第二阶段再补什么
+## 第二阶段扩展
 
 当 MVP 稳定后，再按收益/复杂度比去扩：
 
@@ -316,7 +341,7 @@ flowchart LR
 - 模型训练与机器学习因子
 - 更细粒度盘口回测
 
-## 很重要的实现原则
+## 实现原则
 
 - 先保证“可重复研究”，再追求“更复杂 alpha”。
 - 先做“少量高质量因子”，不要一开始堆几百个指标。

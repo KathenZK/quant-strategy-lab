@@ -1,5 +1,5 @@
 project:
-  name: signal-lab
+  name: quant-strategy-lab
   timezone: UTC
 
 storage:

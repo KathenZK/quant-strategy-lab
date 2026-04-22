@@ -1,4 +1,4 @@
-"""Signal Lab research platform."""
+"""Quant Strategy Lab research platform."""
 
 __all__ = ["__version__"]
 

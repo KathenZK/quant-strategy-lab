@@ -1,0 +1,165 @@
+from __future__ import annotations
+
+from dataclasses import dataclass, field
+
+import numpy as np
+import pandas as pd
+
+from signal_lab.backtest.models import BacktestResult, ExecutionAssumptions
+from signal_lab.portfolio.risk import RiskManager, RiskLimits
+
+
+def _max_drawdown(equity_curve: pd.Series) -> float:
+    running_max = equity_curve.cummax()
+    drawdown = equity_curve / running_max - 1.0
+    return float(drawdown.min())
+
+
+def _periods_per_year(index: pd.Index) -> float:
+    if not isinstance(index, pd.DatetimeIndex) or len(index) < 2:
+        return 252.0
+    deltas = index.to_series().diff().dropna()
+    if deltas.empty:
+        return 252.0
+    seconds = deltas.dt.total_seconds().median()
+    if pd.isna(seconds) or seconds <= 0:
+        return 252.0
+    return float((365.0 * 24.0 * 60.0 * 60.0) / seconds)
+
+
+def _result_metrics(period_returns: pd.Series, equity_curve: pd.Series, turnover: pd.Series) -> dict[str, float]:
+    periods_per_year = _periods_per_year(period_returns.index)
+    mean_return = float(period_returns.mean())
+    volatility = float(period_returns.std(ddof=0))
+    downside = period_returns[period_returns < 0]
+    downside_vol = float(downside.std(ddof=0)) if not downside.empty else 0.0
+    sharpe = 0.0 if volatility == 0 else mean_return / volatility * np.sqrt(periods_per_year)
+    sortino = 0.0 if downside_vol == 0 else mean_return / downside_vol * np.sqrt(periods_per_year)
+    max_dd = _max_drawdown(equity_curve)
+    annualized_return = (
+        float((equity_curve.iloc[-1] ** (periods_per_year / max(len(equity_curve), 1))) - 1.0)
+        if not equity_curve.empty
+        else 0.0
+    )
+    calmar = 0.0 if max_dd == 0 else annualized_return / abs(max_dd)
+    return {
+        "cumulative_return": float(equity_curve.iloc[-1] - 1.0) if not equity_curve.empty else 0.0,
+        "annualized_return": annualized_return,
+        "volatility": volatility * np.sqrt(periods_per_year),
+        "sharpe": sharpe,
+        "sortino": sortino,
+        "max_drawdown": max_dd,
+        "calmar": calmar,
+        "avg_turnover": float(turnover.mean()) if not turnover.empty else 0.0,
+    }
+
+
+@dataclass(slots=True)
+class PortfolioBacktester:
+    assumptions: ExecutionAssumptions = ExecutionAssumptions()
+    risk_manager: RiskManager = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.risk_manager = RiskManager(
+            RiskLimits(
+                max_abs_weight=self.assumptions.max_abs_weight,
+                max_gross_leverage=self.assumptions.max_gross_leverage,
+                max_net_exposure=self.assumptions.max_net_exposure,
+                min_dollar_volume=self.assumptions.min_dollar_volume,
+                max_funding_rate_abs=self.assumptions.max_funding_rate_abs,
+            )
+        )
+
+    def run(
+        self,
+        *,
+        target_weights: pd.DataFrame,
+        price_frame: pd.DataFrame,
+        dollar_volume: pd.DataFrame | None = None,
+        funding_rate: pd.DataFrame | None = None,
+    ) -> BacktestResult:
+        weights = target_weights.reindex_like(price_frame).fillna(0.0)
+        constrained_rows = []
+        for ts in weights.index:
+            constrained = self.risk_manager.apply_weights(
+                weights.loc[ts],
+                dollar_volume_row=None if dollar_volume is None else dollar_volume.loc[ts],
+                funding_rate_row=None if funding_rate is None else funding_rate.loc[ts],
+            )
+            constrained_rows.append(constrained.rename(ts))
+        constrained_weights = pd.DataFrame(constrained_rows).reindex_like(weights).fillna(0.0)
+
+        executed_weights = constrained_weights.shift(1).fillna(0.0)
+        asset_returns = price_frame.pct_change().fillna(0.0)
+        previous_weights = constrained_weights.shift(1).fillna(0.0)
+        turnover = (constrained_weights - previous_weights).abs().sum(axis=1)
+        cost_rate = (self.assumptions.fee_bps + self.assumptions.slippage_bps) / 10_000.0
+        trading_costs = turnover * cost_rate
+
+        funding_costs = pd.Series(0.0, index=price_frame.index, name="funding_costs")
+        if funding_rate is not None:
+            aligned = funding_rate.reindex_like(price_frame).fillna(0.0)
+            funding_costs = (executed_weights * aligned).sum(axis=1) * -1.0
+            funding_costs.name = "funding_costs"
+
+        gross_returns = (executed_weights * asset_returns).sum(axis=1)
+        period_returns = gross_returns - trading_costs - funding_costs
+        equity_curve = (1.0 + period_returns).cumprod()
+        equity_curve.name = "equity"
+
+        return BacktestResult(
+            equity_curve=equity_curve,
+            period_returns=period_returns.rename("returns"),
+            weights=constrained_weights,
+            turnover=turnover.rename("turnover"),
+            trading_costs=trading_costs.rename("trading_costs"),
+            funding_costs=funding_costs,
+            metrics=_result_metrics(period_returns, equity_curve, turnover),
+        )
+
+
+@dataclass(slots=True)
+class CrossSectionalBacktester:
+    assumptions: ExecutionAssumptions = ExecutionAssumptions()
+    long_quantile: float = 0.8
+    short_quantile: float = 0.2
+    market_neutral: bool = True
+
+    def build_weights(self, factor_frame: pd.DataFrame) -> pd.DataFrame:
+        weights = pd.DataFrame(0.0, index=factor_frame.index, columns=factor_frame.columns)
+        for ts in factor_frame.index:
+            row = factor_frame.loc[ts].dropna()
+            if row.empty:
+                continue
+            long_cutoff = row.quantile(self.long_quantile)
+            short_cutoff = row.quantile(self.short_quantile)
+            longs = row[row >= long_cutoff].index.tolist()
+            shorts = row[row <= short_cutoff].index.tolist()
+
+            if longs:
+                weights.loc[ts, longs] = 1.0 / len(longs)
+            if shorts:
+                short_weight = -1.0 / len(shorts)
+                weights.loc[ts, shorts] = short_weight
+
+            if not self.market_neutral and longs:
+                weights.loc[ts, shorts] = 0.0
+                weights.loc[ts, longs] = 1.0 / len(longs)
+        return weights
+
+    def run(
+        self,
+        *,
+        factor_frame: pd.DataFrame,
+        price_frame: pd.DataFrame,
+        dollar_volume: pd.DataFrame | None = None,
+        funding_rate: pd.DataFrame | None = None,
+    ) -> BacktestResult:
+        weights = self.build_weights(factor_frame)
+        backtester = PortfolioBacktester(assumptions=self.assumptions)
+        return backtester.run(
+            target_weights=weights,
+            price_frame=price_frame,
+            dollar_volume=dollar_volume,
+            funding_rate=funding_rate,
+        )

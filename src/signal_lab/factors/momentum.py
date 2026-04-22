@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from signal_lab.factors.base import FactorMetadata, PandasFactor
+from signal_lab.factors.base import FactorMetadata, PandasFactor, register_factor_provider
 
 
 class TrailingReturnFactor(PandasFactor):
@@ -84,3 +84,17 @@ class RSIFactor(PandasFactor):
         avg_loss = loss.ewm(alpha=1 / self.window, adjust=False, min_periods=self.window).mean()
         relative_strength = avg_gain / avg_loss.replace(0.0, np.nan)
         return 100.0 - (100.0 / (1.0 + relative_strength))
+
+
+@register_factor_provider()
+def builtin_momentum_factors() -> list[PandasFactor]:
+    return [
+        TrailingReturnFactor(periods=1),
+        TrailingReturnFactor(periods=4),
+        TrailingReturnFactor(periods=24),
+        BreakoutFactor(window=20),
+        MovingAverageDistanceFactor(window=20),
+        MovingAverageDistanceFactor(window=30),
+        MovingAverageDistanceFactor(window=120),
+        RSIFactor(window=14),
+    ]
