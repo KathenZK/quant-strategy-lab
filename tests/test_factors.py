@@ -19,13 +19,15 @@ from signal_lab.factors import (
 def test_default_registry_contains_expected_factors() -> None:
     registry = default_registry()
     names = registry.names()
-    assert len(names) >= 16
+    assert len(names) >= 18
     assert "ret_1" in names
     assert "funding_rate" in names
     assert "funding_zscore_72" in names
     assert "oi_zscore_72" in names
     assert "basis_change_4" in names
     assert "basis_zscore_72" in names
+    assert "ma_distance_30" in names
+    assert "ma_distance_120" in names
     assert "price_oi_regime_4" in names
     assert "relative_strength_24" in names
 

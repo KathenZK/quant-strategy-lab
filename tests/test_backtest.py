@@ -1,6 +1,7 @@
 import pandas as pd
 
 from signal_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions, PortfolioBacktester
+from signal_lab.backtest.engine import _periods_per_year
 
 
 def _frames() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -55,3 +56,8 @@ def test_cross_sectional_backtester_builds_weights_from_factor_panel() -> None:
     )
     assert len(result.equity_curve) == len(price_frame)
     assert not result.weights.empty
+
+
+def test_periods_per_year_uses_crypto_calendar_for_hourly_data() -> None:
+    index = pd.date_range("2024-01-01", periods=4, freq="h", tz="UTC")
+    assert _periods_per_year(index) == 24 * 365

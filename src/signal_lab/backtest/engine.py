@@ -15,20 +15,37 @@ def _max_drawdown(equity_curve: pd.Series) -> float:
     return float(drawdown.min())
 
 
+def _periods_per_year(index: pd.Index) -> float:
+    if not isinstance(index, pd.DatetimeIndex) or len(index) < 2:
+        return 252.0
+    deltas = index.to_series().diff().dropna()
+    if deltas.empty:
+        return 252.0
+    seconds = deltas.dt.total_seconds().median()
+    if pd.isna(seconds) or seconds <= 0:
+        return 252.0
+    return float((365.0 * 24.0 * 60.0 * 60.0) / seconds)
+
+
 def _result_metrics(period_returns: pd.Series, equity_curve: pd.Series, turnover: pd.Series) -> dict[str, float]:
+    periods_per_year = _periods_per_year(period_returns.index)
     mean_return = float(period_returns.mean())
     volatility = float(period_returns.std(ddof=0))
     downside = period_returns[period_returns < 0]
     downside_vol = float(downside.std(ddof=0)) if not downside.empty else 0.0
-    sharpe = 0.0 if volatility == 0 else mean_return / volatility * np.sqrt(252)
-    sortino = 0.0 if downside_vol == 0 else mean_return / downside_vol * np.sqrt(252)
+    sharpe = 0.0 if volatility == 0 else mean_return / volatility * np.sqrt(periods_per_year)
+    sortino = 0.0 if downside_vol == 0 else mean_return / downside_vol * np.sqrt(periods_per_year)
     max_dd = _max_drawdown(equity_curve)
-    annualized_return = float((equity_curve.iloc[-1] ** (252 / max(len(equity_curve), 1))) - 1.0) if not equity_curve.empty else 0.0
+    annualized_return = (
+        float((equity_curve.iloc[-1] ** (periods_per_year / max(len(equity_curve), 1))) - 1.0)
+        if not equity_curve.empty
+        else 0.0
+    )
     calmar = 0.0 if max_dd == 0 else annualized_return / abs(max_dd)
     return {
         "cumulative_return": float(equity_curve.iloc[-1] - 1.0) if not equity_curve.empty else 0.0,
         "annualized_return": annualized_return,
-        "volatility": volatility * np.sqrt(252),
+        "volatility": volatility * np.sqrt(periods_per_year),
         "sharpe": sharpe,
         "sortino": sortino,
         "max_drawdown": max_dd,

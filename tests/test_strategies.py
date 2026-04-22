@@ -4,6 +4,8 @@ import pytest
 from signal_lab.strategies import (
     CrowdingReversalConfig,
     CrowdingReversalStrategy,
+    MovingAverageCrossoverConfig,
+    MovingAverageCrossoverStrategy,
     TrendConfirmationConfig,
     TrendConfirmationStrategy,
     create_strategy,
@@ -128,17 +130,48 @@ def test_crowding_reversal_strategy_applies_liquidation_overlay() -> None:
     assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)
 
 
+def test_moving_average_crossover_strategy_tracks_regime_until_next_cross() -> None:
+    index = pd.date_range("2024-01-01", periods=5, freq="D", tz="UTC")
+    factors = {
+        "ma_distance_30": pd.DataFrame({"BTC": [0.04, 0.03, 0.01, 0.02, 0.05]}, index=index),
+        "ma_distance_120": pd.DataFrame({"BTC": [0.03, 0.04, 0.05, 0.01, 0.02]}, index=index),
+    }
+    strategy = MovingAverageCrossoverStrategy(
+        MovingAverageCrossoverConfig(
+            long_allocation=1.0,
+            short_allocation=1.0,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal)
+
+    assert signal.loc[index[0], "BTC"] == pytest.approx(-1.0)
+    assert signal.loc[index[1], "BTC"] == pytest.approx(1.0)
+    assert pd.isna(signal.loc[index[2], "BTC"])
+    assert signal.loc[index[3], "BTC"] == pytest.approx(-1.0)
+    assert pd.isna(signal.loc[index[4], "BTC"])
+    assert weights.loc[index[0], "BTC"] == pytest.approx(-1.0)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(1.0)
+    assert weights.loc[index[2], "BTC"] == pytest.approx(1.0)
+    assert weights.loc[index[3], "BTC"] == pytest.approx(-1.0)
+    assert weights.loc[index[4], "BTC"] == pytest.approx(-1.0)
+
+
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
     assert "trend_confirmation" in names
     assert "crowding_reversal" in names
+    assert "ma_crossover" in names
 
 
 def test_create_strategy_uses_registry() -> None:
     trend = create_strategy("trend_confirmation", {"max_long_positions": 1})
     crowding = create_strategy("crowding_reversal", {"max_short_positions": 1})
+    crossover = create_strategy("ma_crossover", {"long_allocation": 0.75})
     assert isinstance(trend, TrendConfirmationStrategy)
     assert isinstance(crowding, CrowdingReversalStrategy)
+    assert isinstance(crossover, MovingAverageCrossoverStrategy)
 
 
 def test_register_strategy_decorator_supports_new_strategy_types() -> None:

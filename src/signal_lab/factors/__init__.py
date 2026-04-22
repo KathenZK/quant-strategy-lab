@@ -24,6 +24,8 @@ def default_registry() -> FactorRegistry:
         TrailingReturnFactor(periods=24),
         BreakoutFactor(window=20),
         MovingAverageDistanceFactor(window=20),
+        MovingAverageDistanceFactor(window=30),
+        MovingAverageDistanceFactor(window=120),
         RSIFactor(window=14),
         ZScoreFactor(window=20),
         BollingerDistanceFactor(window=20),
