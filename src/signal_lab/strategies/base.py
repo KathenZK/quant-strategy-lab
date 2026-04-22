@@ -4,10 +4,21 @@ from typing import Protocol
 
 import pandas as pd
 
+from signal_lab.allocators.base import Allocator
+from signal_lab.signals.base import SignalModel
+
 
 class Strategy(Protocol):
     @classmethod
     def from_options(cls, options: dict[str, object] | None = None) -> "Strategy":
+        ...
+
+    @property
+    def signal_model(self) -> SignalModel:
+        ...
+
+    @property
+    def allocator(self) -> Allocator:
         ...
 
     @property

@@ -538,3 +538,79 @@ workflow:
     assert artifacts.backtest_report_path is not None and Path(artifacts.backtest_report_path).exists()
     assert artifacts.paper_report_path is not None and Path(artifacts.paper_report_path).exists()
     assert "crowding_reversal" in manifest
+
+
+def test_strategy_runner_passes_price_and_factors_to_ma_crossover_allocator(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+
+    index = pd.date_range("2024-01-01", periods=180, freq="D", tz="UTC")
+    close = pd.Series([100.0 + i * 0.8 for i in range(len(index))], index=index)
+    frame = pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": ["BTC/USDT"] * len(index),
+            "market_type": ["spot"] * len(index),
+            "base_asset": ["BTC"] * len(index),
+            "quote_asset": ["USDT"] * len(index),
+            "open": close.to_numpy(),
+            "high": (close * 1.01).to_numpy(),
+            "low": (close * 0.99).to_numpy(),
+            "close": close.to_numpy(),
+            "volume": [1_000_000.0] * len(index),
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+    write_dataframe(
+        frame,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        partition_date=frame["ts"].max().date(),
+    )
+
+    config_path = tmp_path / "ma-workflow.yaml"
+    config_path.write_text(
+        """
+strategy:
+  name: ma_demo
+  signal_type: ma_crossover
+  exchange: binance
+  market_type: spot
+  symbols: [BTC/USDT]
+  strategy_options:
+    long_allocation: 1.0
+    short_allocation: 1.0
+    take_profit_pct: 0.20
+    min_ma_gap_ratio: 0.0001
+refresh:
+  enabled: false
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+""".strip(),
+        encoding="utf-8",
+    )
+
+    builder = FeatureBuilder(
+        warehouse=DuckDBWarehouse(layout),
+        store=FeatureStore(layout),
+        registry=default_registry(),
+    )
+    workflow = load_strategy_workflow(config_path)
+    runner = StrategyRunner(layout=layout, builder=builder)
+
+    signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
+
+    assert signal_name == "ma_crossover"
+    assert signal_version
+    assert not signal_frame.dropna(how="all").empty
+    assert target_weights is not None
+    assert target_weights.abs().sum().sum() > 0.0
+    assert panels.price is not None

@@ -1,13 +1,13 @@
 from __future__ import annotations
 
-from dataclasses import asdict, dataclass
+from dataclasses import dataclass, field
 import hashlib
 import json
 
-import numpy as np
 import pandas as pd
 
-from signal_lab.strategies.common import apply_liquidation_risk_overlay, cross_section_zscore
+from signal_lab.allocators import RankedCrossSectionalAllocator, RankedCrossSectionalAllocatorConfig
+from signal_lab.signals import TrendConfirmationSignalConfig, TrendConfirmationSignalModel
 from signal_lab.strategies.registry import register_strategy
 
 
@@ -44,16 +44,63 @@ class TrendConfirmationConfig:
     liquidation_weight_scale: float = 0.25
     stop_on_event_cooldown: bool = True
 
+    def signal_options(self) -> dict[str, object]:
+        return {
+            "momentum_factor": self.momentum_factor,
+            "breakout_factor": self.breakout_factor,
+            "oi_change_factor": self.oi_change_factor,
+            "basis_change_factor": self.basis_change_factor,
+            "funding_zscore_factor": self.funding_zscore_factor,
+            "volume_factor": self.volume_factor,
+            "min_momentum": self.min_momentum,
+            "min_oi_change": self.min_oi_change,
+            "min_basis_change": self.min_basis_change,
+            "breakout_floor": self.breakout_floor,
+            "min_volume_surge": self.min_volume_surge,
+            "max_abs_funding_zscore": self.max_abs_funding_zscore,
+            "momentum_weight": self.momentum_weight,
+            "breakout_weight": self.breakout_weight,
+            "oi_weight": self.oi_weight,
+            "basis_weight": self.basis_weight,
+            "volume_weight": self.volume_weight,
+            "funding_penalty_weight": self.funding_penalty_weight,
+        }
+
+    def allocator_options(self) -> dict[str, object]:
+        return {
+            "max_long_positions": self.max_long_positions,
+            "max_short_positions": self.max_short_positions,
+            "long_allocation": self.long_allocation,
+            "short_allocation": self.short_allocation,
+            "market_neutral": self.market_neutral,
+            "liquidation_spike_factor": self.liquidation_spike_factor,
+            "liquidation_ratio_factor": self.liquidation_ratio_factor,
+            "liquidation_cooldown_factor": self.liquidation_cooldown_factor,
+            "max_liquidation_spike_zscore": self.max_liquidation_spike_zscore,
+            "max_liquidation_notional_ratio": self.max_liquidation_notional_ratio,
+            "liquidation_weight_scale": self.liquidation_weight_scale,
+            "stop_on_event_cooldown": self.stop_on_event_cooldown,
+        }
+
 
 @register_strategy("trend_confirmation")
 @dataclass(slots=True)
 class TrendConfirmationStrategy:
     config: TrendConfirmationConfig
+    signal_model: TrendConfirmationSignalModel = field(init=False)
+    allocator: RankedCrossSectionalAllocator = field(init=False)
+
+    def __post_init__(self) -> None:
+        self.signal_model = TrendConfirmationSignalModel(
+            config=TrendConfirmationSignalConfig(**self.config.signal_options())
+        )
+        self.allocator = RankedCrossSectionalAllocator(
+            config=RankedCrossSectionalAllocatorConfig(**self.config.allocator_options())
+        )
 
     @classmethod
     def from_options(cls, options: dict[str, object] | None = None) -> "TrendConfirmationStrategy":
-        payload = options or {}
-        return cls(config=TrendConfirmationConfig(**payload))
+        return cls(config=TrendConfirmationConfig(**(options or {})))
 
     @property
     def signal_name(self) -> str:
@@ -62,7 +109,8 @@ class TrendConfirmationStrategy:
     def spec(self) -> dict[str, object]:
         return {
             "class_name": type(self).__name__,
-            "config": asdict(self.config),
+            "signal_model": self.signal_model.spec(),
+            "allocator": self.allocator.spec(),
         }
 
     def version(self) -> str:
@@ -70,80 +118,13 @@ class TrendConfirmationStrategy:
         return hashlib.sha256(encoded).hexdigest()[:16]
 
     def required_factors(self) -> list[str]:
-        return [
-            self.config.momentum_factor,
-            self.config.breakout_factor,
-            self.config.oi_change_factor,
-            self.config.basis_change_factor,
-            self.config.funding_zscore_factor,
-            self.config.volume_factor,
-        ]
+        return self.signal_model.required_factors()
 
     def required_liquidation_features(self) -> list[str]:
-        return [
-            self.config.liquidation_spike_factor,
-            self.config.liquidation_ratio_factor,
-            self.config.liquidation_cooldown_factor,
-        ]
+        return self.allocator.required_risk_features()
 
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
-        required = self.required_factors()
-        missing = [name for name in required if name not in factors]
-        if missing:
-            raise ValueError(f"missing factors for trend strategy: {missing}")
-
-        momentum = factors[self.config.momentum_factor]
-        breakout = factors[self.config.breakout_factor]
-        oi_change = factors[self.config.oi_change_factor]
-        basis_change = factors[self.config.basis_change_factor]
-        funding_zscore = factors[self.config.funding_zscore_factor]
-        volume_surge = factors[self.config.volume_factor]
-
-        z_momentum = cross_section_zscore(momentum)
-        z_breakout = cross_section_zscore(breakout)
-        z_oi = cross_section_zscore(oi_change)
-        z_basis = cross_section_zscore(basis_change)
-        z_volume = cross_section_zscore(volume_surge)
-        z_funding_penalty = cross_section_zscore(funding_zscore.abs()).fillna(0.0)
-
-        bullish_score = (
-            self.config.momentum_weight * z_momentum
-            + self.config.breakout_weight * z_breakout
-            + self.config.oi_weight * z_oi
-            + self.config.basis_weight * z_basis
-            + self.config.volume_weight * z_volume
-            - self.config.funding_penalty_weight * z_funding_penalty
-        )
-        bearish_score = (
-            self.config.momentum_weight * (-z_momentum)
-            + self.config.breakout_weight * (-z_breakout)
-            + self.config.oi_weight * z_oi
-            + self.config.basis_weight * (-z_basis)
-            + self.config.volume_weight * z_volume
-            - self.config.funding_penalty_weight * z_funding_penalty
-        )
-
-        long_mask = (
-            (momentum > self.config.min_momentum)
-            & (breakout > self.config.breakout_floor)
-            & (oi_change > self.config.min_oi_change)
-            & (basis_change > self.config.min_basis_change)
-            & (volume_surge >= self.config.min_volume_surge)
-            & (funding_zscore.abs() <= self.config.max_abs_funding_zscore)
-        )
-        short_mask = (
-            (momentum < -self.config.min_momentum)
-            & (breakout < -self.config.breakout_floor)
-            & (oi_change > self.config.min_oi_change)
-            & (basis_change < -self.config.min_basis_change)
-            & (volume_surge >= self.config.min_volume_surge)
-            & (funding_zscore.abs() <= self.config.max_abs_funding_zscore)
-        )
-
-        signal = pd.DataFrame(np.nan, index=momentum.index, columns=momentum.columns, dtype="float64")
-        signal = signal.where(~long_mask, bullish_score)
-        signal = signal.where(~short_mask, -bearish_score.abs())
-        return signal
+        return self.signal_model.build_signal_frame(factors)
 
     def build_weights(
         self,
@@ -152,51 +133,9 @@ class TrendConfirmationStrategy:
         price_frame: pd.DataFrame | None = None,
         factors: dict[str, pd.DataFrame] | None = None,
     ) -> pd.DataFrame:
-        del price_frame, factors
-        weights = pd.DataFrame(0.0, index=signal_frame.index, columns=signal_frame.columns)
-        for ts in signal_frame.index:
-            row = signal_frame.loc[ts].dropna()
-            if row.empty:
-                continue
-
-            long_candidates = row[row > 0].sort_values(ascending=False)
-            short_candidates = row[row < 0].sort_values(ascending=True)
-
-            if self.config.max_long_positions > 0:
-                long_candidates = long_candidates.head(self.config.max_long_positions)
-            else:
-                long_candidates = long_candidates.iloc[0:0]
-
-            if self.config.market_neutral and self.config.max_short_positions > 0:
-                short_candidates = short_candidates.head(self.config.max_short_positions)
-            else:
-                short_candidates = short_candidates.iloc[0:0]
-
-            if not self.config.market_neutral:
-                short_candidates = short_candidates.iloc[0:0]
-
-            if not long_candidates.empty:
-                weights.loc[ts, long_candidates.index] = self.config.long_allocation / len(long_candidates)
-            if not short_candidates.empty:
-                weights.loc[ts, short_candidates.index] = -self.config.short_allocation / len(short_candidates)
-
-        if liquidation_features:
-            weights = self.apply_liquidation_risk_overlay(weights, liquidation_features)
-        return weights
-
-    def apply_liquidation_risk_overlay(
-        self,
-        weights: pd.DataFrame,
-        liquidation_features: dict[str, pd.DataFrame],
-    ) -> pd.DataFrame:
-        return apply_liquidation_risk_overlay(
-            weights,
-            liquidation_features=liquidation_features,
-            spike_factor=self.config.liquidation_spike_factor,
-            ratio_factor=self.config.liquidation_ratio_factor,
-            cooldown_factor=self.config.liquidation_cooldown_factor,
-            max_spike_zscore=self.config.max_liquidation_spike_zscore,
-            max_notional_ratio=self.config.max_liquidation_notional_ratio,
-            weight_scale=self.config.liquidation_weight_scale,
-            stop_on_event_cooldown=self.config.stop_on_event_cooldown,
+        return self.allocator.build_weights(
+            signal_frame,
+            risk_features=liquidation_features,
+            price_frame=price_frame,
+            factor_frames=factors,
         )
