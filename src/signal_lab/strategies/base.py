@@ -30,5 +30,7 @@ class Strategy(Protocol):
         self,
         signal_frame: pd.DataFrame,
         liquidation_features: dict[str, pd.DataFrame] | None = None,
+        price_frame: pd.DataFrame | None = None,
+        factors: dict[str, pd.DataFrame] | None = None,
     ) -> pd.DataFrame:
         ...

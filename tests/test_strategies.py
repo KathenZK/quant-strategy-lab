@@ -158,6 +158,55 @@ def test_moving_average_crossover_strategy_tracks_regime_until_next_cross() -> N
     assert weights.loc[index[4], "BTC"] == pytest.approx(-1.0)
 
 
+def test_moving_average_crossover_strategy_applies_take_profit_and_stop_loss() -> None:
+    index = pd.date_range("2024-01-01", periods=4, freq="D", tz="UTC")
+    price_frame = pd.DataFrame({"BTC": [100.0, 112.0, 110.0, 121.0]}, index=index)
+    factors = {
+        "ma_distance_30": pd.DataFrame({"BTC": [0.01, 0.01, 0.04, 0.04]}, index=index),
+        "ma_distance_120": pd.DataFrame({"BTC": [0.03, 0.03, 0.02, 0.02]}, index=index),
+    }
+    strategy = MovingAverageCrossoverStrategy(
+        MovingAverageCrossoverConfig(
+            long_allocation=1.0,
+            short_allocation=1.0,
+            take_profit_pct=0.10,
+            stop_loss_pct=0.08,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame, factors=factors)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(1.0)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(0.0)
+    assert weights.loc[index[2], "BTC"] == pytest.approx(-1.0)
+    assert weights.loc[index[3], "BTC"] == pytest.approx(0.0)
+
+
+def test_moving_average_crossover_strategy_filters_choppy_entries() -> None:
+    index = pd.date_range("2024-01-01", periods=3, freq="D", tz="UTC")
+    price_frame = pd.DataFrame({"BTC": [100.0, 101.0, 102.0]}, index=index)
+    factors = {
+        "ma_distance_30": pd.DataFrame({"BTC": [0.010, 0.011, 0.012]}, index=index),
+        "ma_distance_120": pd.DataFrame({"BTC": [0.020, 0.021, 0.022]}, index=index),
+    }
+    strategy = MovingAverageCrossoverStrategy(
+        MovingAverageCrossoverConfig(
+            long_allocation=1.0,
+            short_allocation=1.0,
+            min_ma_gap_ratio=0.03,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame, factors=factors)
+
+    assert signal.loc[index[0], "BTC"] == pytest.approx(1.0)
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.0)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(0.0)
+    assert weights.loc[index[2], "BTC"] == pytest.approx(0.0)
+
+
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
     assert "trend_confirmation" in names

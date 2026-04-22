@@ -157,7 +157,12 @@ class StrategyRunner:
                 benchmark_symbol=config.strategy.benchmark_symbol,
             )
             signal_frame = strategy.build_signal_frame(panels.factors)
-            target_weights = strategy.build_weights(signal_frame, panels.liquidation_features)
+            target_weights = strategy.build_weights(
+                signal_frame,
+                panels.liquidation_features,
+                price_frame=panels.price,
+                factors=panels.factors,
+            )
             return strategy.signal_name, strategy.version(), panels, signal_frame, target_weights
 
         panels = load_universe_panels(

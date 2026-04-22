@@ -149,7 +149,10 @@ class TrendConfirmationStrategy:
         self,
         signal_frame: pd.DataFrame,
         liquidation_features: dict[str, pd.DataFrame] | None = None,
+        price_frame: pd.DataFrame | None = None,
+        factors: dict[str, pd.DataFrame] | None = None,
     ) -> pd.DataFrame:
+        del price_frame, factors
         weights = pd.DataFrame(0.0, index=signal_frame.index, columns=signal_frame.columns)
         for ts in signal_frame.index:
             row = signal_frame.loc[ts].dropna()
