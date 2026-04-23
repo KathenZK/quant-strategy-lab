@@ -5,6 +5,7 @@ from signal_lab.factors import (
     AmihudIlliquidityFactor,
     BasisChangeFactor,
     BasisZScoreFactor,
+    DonchianBreakoutFactor,
     FundingRateZScoreFactor,
     OpenInterestZScoreFactor,
     RelativeStrengthFactor,
@@ -31,6 +32,8 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "ma_distance_120" in names
     assert "price_oi_regime_4" in names
     assert "relative_strength_24" in names
+    assert "donchian_breakout_10" in names
+    assert "donchian_breakout_14" in names
 
 
 def test_builtin_factor_providers_are_discovered() -> None:
@@ -119,6 +122,26 @@ def test_relative_strength_factor_uses_benchmark() -> None:
     result = RelativeStrengthFactor(periods=1).compute(frame)
     assert pd.isna(result.iloc[0])
     assert result.iloc[1] == pytest.approx((110.0 / 100.0 - 1.0) - (105.0 / 100.0 - 1.0))
+
+
+def test_donchian_breakout_factor_signals_on_new_extremes() -> None:
+    closes = [100.0, 101.0, 99.0, 102.0, 98.0, 105.0, 96.0]
+    frame = pd.DataFrame({"close": closes})
+    result = DonchianBreakoutFactor(window=3).compute(frame)
+
+    assert pd.isna(result.iloc[0])
+    assert pd.isna(result.iloc[1])
+    assert pd.isna(result.iloc[2])
+    assert result.iloc[3] == pytest.approx(1.0)
+    assert result.iloc[4] == pytest.approx(-1.0)
+    assert result.iloc[5] == pytest.approx(1.0)
+    assert result.iloc[6] == pytest.approx(-1.0)
+
+
+def test_donchian_breakout_factor_holds_when_inside_range() -> None:
+    frame = pd.DataFrame({"close": [100.0, 101.0, 99.0, 100.5]})
+    result = DonchianBreakoutFactor(window=3).compute(frame)
+    assert pd.isna(result.iloc[3])
 
 
 def test_amihud_illiquidity_factor_is_positive() -> None:

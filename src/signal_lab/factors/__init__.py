@@ -20,7 +20,13 @@ from .derivatives import (
 from .engine import compute_factor_bundle, compute_factor_frame
 from .liquidity import AmihudIlliquidityFactor, VWAPDistanceFactor, VolumeSurgeFactor
 from .mean_reversion import BollingerDistanceFactor, ZScoreFactor
-from .momentum import BreakoutFactor, MovingAverageDistanceFactor, RSIFactor, TrailingReturnFactor
+from .momentum import (
+    BreakoutFactor,
+    DonchianBreakoutFactor,
+    MovingAverageDistanceFactor,
+    RSIFactor,
+    TrailingReturnFactor,
+)
 
 
 def default_registry() -> FactorRegistry:
@@ -37,6 +43,7 @@ __all__ = [
     "BasisZScoreFactor",
     "BollingerDistanceFactor",
     "BreakoutFactor",
+    "DonchianBreakoutFactor",
     "compute_factor_bundle",
     "compute_factor_frame",
     "FactorMetadata",
