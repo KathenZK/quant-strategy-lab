@@ -1,14 +1,17 @@
 import pandas as pd
 
-from signal_lab.allocators import PersistentSignalAllocator, RankedCrossSectionalAllocator
+from signal_lab.allocators import DonchianBreakoutAllocator, PersistentSignalAllocator, RankedCrossSectionalAllocator
 from signal_lab.signals import (
     CrowdingReversalSignalModel,
+    DonchianBreakoutSignalModel,
     MovingAverageCrossoverSignalModel,
     TrendConfirmationSignalModel,
 )
 from signal_lab.strategies import (
     CrowdingReversalConfig,
     CrowdingReversalStrategy,
+    DonchianBreakoutConfig,
+    DonchianBreakoutStrategy,
     MovingAverageCrossoverConfig,
     MovingAverageCrossoverStrategy,
     TrendConfirmationConfig,
@@ -54,6 +57,21 @@ def test_ma_crossover_strategy_exposes_signal_and_allocator_components() -> None
 
     assert isinstance(strategy.signal_model, MovingAverageCrossoverSignalModel)
     assert isinstance(strategy.allocator, PersistentSignalAllocator)
+    assert strategy.required_factors() == strategy.signal_model.required_factors()
+    assert strategy.required_liquidation_features() == []
+
+
+def test_donchian_breakout_strategy_exposes_signal_and_allocator_components() -> None:
+    strategy = DonchianBreakoutStrategy(
+        DonchianBreakoutConfig(
+            risk_budget_pct=0.01,
+            stop_loss_pct=0.05,
+            max_pyramids=2,
+        )
+    )
+
+    assert isinstance(strategy.signal_model, DonchianBreakoutSignalModel)
+    assert isinstance(strategy.allocator, DonchianBreakoutAllocator)
     assert strategy.required_factors() == strategy.signal_model.required_factors()
     assert strategy.required_liquidation_features() == []
 

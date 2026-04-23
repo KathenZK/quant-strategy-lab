@@ -249,6 +249,53 @@ def test_donchian_breakout_strategy_requires_configured_factor() -> None:
         strategy.build_signal_frame(factors)
 
 
+def test_donchian_breakout_strategy_supports_risk_budget_pyramids_and_trailing_stop() -> None:
+    index = pd.date_range("2024-01-01", periods=5, freq="D", tz="UTC")
+    factors = {
+        "donchian_breakout_14": pd.DataFrame(
+            {"BTC": [float("nan"), 1.0, float("nan"), float("nan"), float("nan")]},
+            index=index,
+        )
+    }
+    price_frame = pd.DataFrame({"BTC": [100.0, 100.0, 110.0, 121.0, 114.0]}, index=index)
+    strategy = DonchianBreakoutStrategy(
+        DonchianBreakoutConfig(
+            long_allocation=1.0,
+            short_allocation=1.0,
+            stop_loss_pct=0.10,
+            trailing_stop_pct=0.05,
+            risk_budget_pct=0.02,
+            max_pyramids=2,
+            pyramid_step_pct=0.10,
+            pyramid_unit_scale=0.5,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.0)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(0.2)
+    assert weights.loc[index[2], "BTC"] == pytest.approx(0.3)
+    assert weights.loc[index[3], "BTC"] == pytest.approx(0.4)
+    assert weights.loc[index[4], "BTC"] == pytest.approx(0.0)
+
+
+def test_donchian_breakout_strategy_requires_price_frame_for_stop_or_pyramiding_rules() -> None:
+    strategy = DonchianBreakoutStrategy(
+        DonchianBreakoutConfig(
+            stop_loss_pct=0.08,
+            risk_budget_pct=0.01,
+            max_pyramids=1,
+        )
+    )
+    index = pd.date_range("2024-01-01", periods=2, freq="D", tz="UTC")
+    signal = pd.DataFrame({"BTC": [1.0, float("nan")]}, index=index)
+
+    with pytest.raises(ValueError):
+        strategy.build_weights(signal)
+
+
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
     assert "trend_confirmation" in names

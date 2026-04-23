@@ -1,4 +1,3 @@
-from .config import load_experiment_config
 from .models import ExperimentArtifacts, ExperimentConfig, ExperimentEntry
 from .registry import RunRegistry, RunRegistryEntry
 
@@ -14,6 +13,10 @@ __all__ = [
 
 
 def __getattr__(name: str):
+    if name == "load_experiment_config":
+        from .config import load_experiment_config
+
+        return load_experiment_config
     if name == "ExperimentRunner":
         from .runner import ExperimentRunner
 

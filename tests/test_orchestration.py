@@ -628,3 +628,84 @@ workflow:
     assert target_weights is not None
     assert target_weights.abs().sum().sum() > 0.0
     assert panels.price is not None
+
+
+def test_strategy_runner_supports_donchian_breakout_pyramiding_workflow(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+
+    index = pd.date_range("2024-01-01", periods=40, freq="D", tz="UTC")
+    close = pd.Series([100.0 + i * 2.0 for i in range(len(index))], index=index)
+    frame = pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * len(index),
+            "symbol": ["BTC/USDT"] * len(index),
+            "market_type": ["spot"] * len(index),
+            "base_asset": ["BTC"] * len(index),
+            "quote_asset": ["USDT"] * len(index),
+            "open": close.to_numpy(),
+            "high": (close * 1.01).to_numpy(),
+            "low": (close * 0.99).to_numpy(),
+            "close": close.to_numpy(),
+            "volume": [1_500_000.0] * len(index),
+            "source": ["test"] * len(index),
+            "date": [item.date().isoformat() for item in index],
+        }
+    )
+    write_dataframe(
+        frame,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        partition_date=frame["ts"].max().date(),
+    )
+
+    config_path = tmp_path / "donchian-workflow.yaml"
+    config_path.write_text(
+        """
+strategy:
+  name: donchian_demo
+  signal_type: donchian_breakout
+  exchange: binance
+  market_type: spot
+  symbols: [BTC/USDT]
+  strategy_options:
+    breakout_factor: donchian_breakout_14
+    long_allocation: 1.0
+    short_allocation: 1.0
+    stop_loss_pct: 0.05
+    trailing_stop_pct: 0.05
+    risk_budget_pct: 0.02
+    max_pyramids: 2
+    pyramid_step_pct: 0.05
+    pyramid_unit_scale: 0.5
+refresh:
+  enabled: false
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+""".strip(),
+        encoding="utf-8",
+    )
+
+    builder = FeatureBuilder(
+        warehouse=DuckDBWarehouse(layout),
+        store=FeatureStore(layout),
+        registry=default_registry(),
+    )
+    workflow = load_strategy_workflow(config_path)
+    runner = StrategyRunner(layout=layout, builder=builder)
+
+    signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
+
+    assert signal_name == "donchian_breakout"
+    assert signal_version
+    assert not signal_frame.dropna(how="all").empty
+    assert target_weights is not None
+    assert target_weights.max().max() > 0.4
+    assert panels.price is not None

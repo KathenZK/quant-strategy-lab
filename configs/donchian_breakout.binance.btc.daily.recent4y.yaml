@@ -1,5 +1,5 @@
 strategy:
-  name: donchian_breakout_binance_btc_recent1y_daily
+  name: donchian_breakout_binance_btc_daily_recent4y
   signal_type: donchian_breakout
   exchange: binance
   market_type: perp
@@ -9,12 +9,6 @@ strategy:
     breakout_factor: donchian_breakout_14
     long_allocation: 1.0
     short_allocation: 1.0
-    stop_loss_pct: 0.08
-    trailing_stop_pct: 0.06
-    risk_budget_pct: 0.02
-    max_pyramids: 2
-    pyramid_step_pct: 0.05
-    pyramid_unit_scale: 0.5
 
 execution:
   fee_bps: 5.0

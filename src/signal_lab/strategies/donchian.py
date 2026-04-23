@@ -6,7 +6,7 @@ import json
 
 import pandas as pd
 
-from signal_lab.allocators import PersistentSignalAllocator, PersistentSignalAllocatorConfig
+from signal_lab.allocators import DonchianBreakoutAllocator, DonchianBreakoutAllocatorConfig
 from signal_lab.signals import DonchianBreakoutSignalConfig, DonchianBreakoutSignalModel
 from signal_lab.strategies.registry import register_strategy
 
@@ -18,14 +18,24 @@ class DonchianBreakoutConfig:
     The default ``donchian_breakout_14`` factor mirrors Richard Donchian's 1960
     rule on crypto daily bars (two calendar weeks). Use ``donchian_breakout_10``
     for the classic futures version based on ten trading days.
+
+    ``risk_budget_pct`` converts the strategy from a fixed-weight breakout into a
+    volatility-aware trend follower: the initial unit size becomes
+    ``risk_budget_pct / stop_loss_pct`` and can be increased with fixed-step
+    pyramiding while ``long_allocation`` / ``short_allocation`` stay as hard caps.
     """
 
     breakout_factor: str = "donchian_breakout_14"
     long_allocation: float = 1.0
     short_allocation: float = 1.0
     stop_loss_pct: float | None = None
+    trailing_stop_pct: float | None = None
     take_profit_pct: float | None = None
     cooldown_bars: int = 0
+    risk_budget_pct: float | None = None
+    max_pyramids: int = 0
+    pyramid_step_pct: float = 0.05
+    pyramid_unit_scale: float = 0.5
 
     def signal_options(self) -> dict[str, object]:
         return {
@@ -37,8 +47,13 @@ class DonchianBreakoutConfig:
             "long_allocation": self.long_allocation,
             "short_allocation": self.short_allocation,
             "stop_loss_pct": self.stop_loss_pct,
+            "trailing_stop_pct": self.trailing_stop_pct,
             "take_profit_pct": self.take_profit_pct,
             "cooldown_bars": self.cooldown_bars,
+            "risk_budget_pct": self.risk_budget_pct,
+            "max_pyramids": self.max_pyramids,
+            "pyramid_step_pct": self.pyramid_step_pct,
+            "pyramid_unit_scale": self.pyramid_unit_scale,
         }
 
 
@@ -47,14 +62,14 @@ class DonchianBreakoutConfig:
 class DonchianBreakoutStrategy:
     config: DonchianBreakoutConfig
     signal_model: DonchianBreakoutSignalModel = field(init=False)
-    allocator: PersistentSignalAllocator = field(init=False)
+    allocator: DonchianBreakoutAllocator = field(init=False)
 
     def __post_init__(self) -> None:
         self.signal_model = DonchianBreakoutSignalModel(
             config=DonchianBreakoutSignalConfig(**self.config.signal_options())
         )
-        self.allocator = PersistentSignalAllocator(
-            config=PersistentSignalAllocatorConfig(**self.config.allocator_options())
+        self.allocator = DonchianBreakoutAllocator(
+            config=DonchianBreakoutAllocatorConfig(**self.config.allocator_options())
         )
 
     @classmethod
