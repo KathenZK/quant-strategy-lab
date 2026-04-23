@@ -249,6 +249,64 @@ def test_donchian_breakout_strategy_requires_configured_factor() -> None:
         strategy.build_signal_frame(factors)
 
 
+def test_donchian_breakout_strategy_filters_countertrend_breakouts() -> None:
+    index = pd.date_range("2024-01-01", periods=4, freq="D", tz="UTC")
+    factors = {
+        "donchian_breakout_14": pd.DataFrame(
+            {"BTC": [1.0, 1.0, -1.0, -1.0]},
+            index=index,
+        ),
+        "ma_distance_120": pd.DataFrame(
+            {"BTC": [-0.02, 0.03, 0.02, -0.04]},
+            index=index,
+        ),
+    }
+    strategy = DonchianBreakoutStrategy(
+        DonchianBreakoutConfig(
+            breakout_factor="donchian_breakout_14",
+            trend_factor="ma_distance_120",
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+
+    assert pd.isna(signal.loc[index[0], "BTC"])
+    assert signal.loc[index[1], "BTC"] == pytest.approx(1.0)
+    assert pd.isna(signal.loc[index[2], "BTC"])
+    assert signal.loc[index[3], "BTC"] == pytest.approx(-1.0)
+
+
+def test_donchian_breakout_strategy_exits_when_trend_reverses() -> None:
+    index = pd.date_range("2024-01-01", periods=4, freq="D", tz="UTC")
+    factors = {
+        "donchian_breakout_14": pd.DataFrame(
+            {"BTC": [float("nan"), 1.0, float("nan"), float("nan")]},
+            index=index,
+        ),
+        "ma_distance_120": pd.DataFrame(
+            {"BTC": [0.02, 0.03, -0.01, -0.02]},
+            index=index,
+        ),
+    }
+    price_frame = pd.DataFrame({"BTC": [100.0, 102.0, 101.0, 100.0]}, index=index)
+    strategy = DonchianBreakoutStrategy(
+        DonchianBreakoutConfig(
+            trend_factor="ma_distance_120",
+            exit_on_trend_reversal=True,
+            long_allocation=1.0,
+            short_allocation=1.0,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame, factors=factors)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.0)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(1.0)
+    assert weights.loc[index[2], "BTC"] == pytest.approx(0.0)
+    assert weights.loc[index[3], "BTC"] == pytest.approx(0.0)
+
+
 def test_donchian_breakout_strategy_supports_risk_budget_pyramids_and_trailing_stop() -> None:
     index = pd.date_range("2024-01-01", periods=5, freq="D", tz="UTC")
     factors = {
@@ -294,6 +352,22 @@ def test_donchian_breakout_strategy_requires_price_frame_for_stop_or_pyramiding_
 
     with pytest.raises(ValueError):
         strategy.build_weights(signal)
+
+
+def test_donchian_breakout_strategy_requires_factor_frames_for_trend_filter() -> None:
+    strategy = DonchianBreakoutStrategy(
+        DonchianBreakoutConfig(
+            trend_factor="ma_distance_120",
+            long_allocation=1.0,
+            short_allocation=1.0,
+        )
+    )
+    index = pd.date_range("2024-01-01", periods=2, freq="D", tz="UTC")
+    signal = pd.DataFrame({"BTC": [1.0, float("nan")]}, index=index)
+    price_frame = pd.DataFrame({"BTC": [100.0, 101.0]}, index=index)
+
+    with pytest.raises(ValueError):
+        strategy.build_weights(signal, price_frame=price_frame)
 
 
 def test_strategy_registry_lists_builtin_strategies() -> None:

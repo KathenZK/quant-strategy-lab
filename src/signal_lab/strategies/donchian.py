@@ -23,11 +23,18 @@ class DonchianBreakoutConfig:
     volatility-aware trend follower: the initial unit size becomes
     ``risk_budget_pct / stop_loss_pct`` and can be increased with fixed-step
     pyramiding while ``long_allocation`` / ``short_allocation`` stay as hard caps.
+
+    ``trend_factor`` lets the strategy separate trend identification from trade
+    triggering: for example, ``ma_distance_120`` can define the long-term regime
+    while the Donchian breakout remains the entry and add-on trigger.
     """
 
     breakout_factor: str = "donchian_breakout_14"
     long_allocation: float = 1.0
     short_allocation: float = 1.0
+    trend_factor: str | None = None
+    trend_tolerance: float = 0.0
+    exit_on_trend_reversal: bool = True
     stop_loss_pct: float | None = None
     trailing_stop_pct: float | None = None
     take_profit_pct: float | None = None
@@ -40,12 +47,17 @@ class DonchianBreakoutConfig:
     def signal_options(self) -> dict[str, object]:
         return {
             "breakout_factor": self.breakout_factor,
+            "trend_factor": self.trend_factor,
+            "trend_tolerance": self.trend_tolerance,
         }
 
     def allocator_options(self) -> dict[str, object]:
         return {
             "long_allocation": self.long_allocation,
             "short_allocation": self.short_allocation,
+            "trend_factor": self.trend_factor,
+            "trend_tolerance": self.trend_tolerance,
+            "exit_on_trend_reversal": self.exit_on_trend_reversal,
             "stop_loss_pct": self.stop_loss_pct,
             "trailing_stop_pct": self.trailing_stop_pct,
             "take_profit_pct": self.take_profit_pct,

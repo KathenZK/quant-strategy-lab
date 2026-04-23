@@ -4,12 +4,15 @@ from dataclasses import asdict, dataclass
 import hashlib
 import json
 
+import numpy as np
 import pandas as pd
 
 
 @dataclass(frozen=True, slots=True)
 class DonchianBreakoutSignalConfig:
     breakout_factor: str = "donchian_breakout_14"
+    trend_factor: str | None = None
+    trend_tolerance: float = 0.0
 
 
 @dataclass(slots=True)
@@ -17,8 +20,9 @@ class DonchianBreakoutSignalModel:
     """Donchian Commodity Trend Timing signal.
 
     Consumes a pre-computed ``donchian_breakout_*`` factor that already encodes
-    +1 / -1 / NaN for long / short / hold. The signal model is intentionally
-    thin so it can be paired with the :class:`PersistentSignalAllocator`.
+    +1 / -1 / NaN for long / short / hold. When ``trend_factor`` is configured,
+    breakouts are only allowed in the direction of the long-term trend, where
+    positive values mean bullish regime and negative values mean bearish regime.
     """
 
     config: DonchianBreakoutSignalConfig
@@ -42,10 +46,30 @@ class DonchianBreakoutSignalModel:
         return hashlib.sha256(encoded).hexdigest()[:16]
 
     def required_factors(self) -> list[str]:
-        return [self.config.breakout_factor]
+        factors = [self.config.breakout_factor]
+        if self.config.trend_factor:
+            factors.append(self.config.trend_factor)
+        return factors
 
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
         factor_name = self.config.breakout_factor
         if factor_name not in factors:
             raise ValueError(f"missing factor for donchian breakout strategy: {factor_name}")
-        return factors[factor_name].astype("float64").copy()
+        breakout = factors[factor_name].astype("float64").copy()
+        trend_factor = self.config.trend_factor
+        if trend_factor is None:
+            return breakout
+        if self.config.trend_tolerance < 0.0:
+            raise ValueError("trend_tolerance must be non-negative")
+        if trend_factor not in factors:
+            raise ValueError(f"missing trend factor for donchian breakout strategy: {trend_factor}")
+
+        trend = factors[trend_factor].reindex(index=breakout.index, columns=breakout.columns).astype("float64")
+        tolerance = abs(self.config.trend_tolerance)
+
+        signal = pd.DataFrame(np.nan, index=breakout.index, columns=breakout.columns, dtype="float64")
+        long_allowed = breakout.gt(0.0) & trend.gt(tolerance)
+        short_allowed = breakout.lt(0.0) & trend.lt(-tolerance)
+        signal = signal.where(~long_allowed, 1.0)
+        signal = signal.where(~short_allowed, -1.0)
+        return signal

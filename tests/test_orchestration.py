@@ -634,8 +634,8 @@ def test_strategy_runner_supports_donchian_breakout_pyramiding_workflow(tmp_path
     layout = _layout(tmp_path)
     layout.ensure_directories()
 
-    index = pd.date_range("2024-01-01", periods=40, freq="D", tz="UTC")
-    close = pd.Series([100.0 + i * 2.0 for i in range(len(index))], index=index)
+    index = pd.date_range("2024-01-01", periods=180, freq="D", tz="UTC")
+    close = pd.Series([100.0 + i * 0.8 for i in range(len(index))], index=index)
     frame = pd.DataFrame(
         {
             "ts": index,
@@ -675,10 +675,12 @@ strategy:
   symbols: [BTC/USDT]
   strategy_options:
     breakout_factor: donchian_breakout_14
+    trend_factor: ma_distance_120
     long_allocation: 1.0
     short_allocation: 1.0
     stop_loss_pct: 0.05
     trailing_stop_pct: 0.05
+    exit_on_trend_reversal: true
     risk_budget_pct: 0.02
     max_pyramids: 2
     pyramid_step_pct: 0.05

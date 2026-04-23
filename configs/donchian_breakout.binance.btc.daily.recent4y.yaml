@@ -7,8 +7,16 @@ strategy:
     - BTC/USDT:USDT
   strategy_options:
     breakout_factor: donchian_breakout_14
+    trend_factor: ma_distance_120
     long_allocation: 1.0
     short_allocation: 1.0
+    exit_on_trend_reversal: true
+    stop_loss_pct: 0.08
+    trailing_stop_pct: 0.06
+    risk_budget_pct: 0.02
+    max_pyramids: 2
+    pyramid_step_pct: 0.05
+    pyramid_unit_scale: 0.5
 
 execution:
   fee_bps: 5.0

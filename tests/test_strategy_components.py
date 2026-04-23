@@ -64,6 +64,7 @@ def test_ma_crossover_strategy_exposes_signal_and_allocator_components() -> None
 def test_donchian_breakout_strategy_exposes_signal_and_allocator_components() -> None:
     strategy = DonchianBreakoutStrategy(
         DonchianBreakoutConfig(
+            trend_factor="ma_distance_120",
             risk_budget_pct=0.01,
             stop_loss_pct=0.05,
             max_pyramids=2,
@@ -73,6 +74,7 @@ def test_donchian_breakout_strategy_exposes_signal_and_allocator_components() ->
     assert isinstance(strategy.signal_model, DonchianBreakoutSignalModel)
     assert isinstance(strategy.allocator, DonchianBreakoutAllocator)
     assert strategy.required_factors() == strategy.signal_model.required_factors()
+    assert set(strategy.required_factors()) == {"donchian_breakout_14", "ma_distance_120"}
     assert strategy.required_liquidation_features() == []
 
 

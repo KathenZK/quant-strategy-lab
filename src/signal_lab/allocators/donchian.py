@@ -11,6 +11,9 @@ import pandas as pd
 class DonchianBreakoutAllocatorConfig:
     long_allocation: float = 1.0
     short_allocation: float = 1.0
+    trend_factor: str | None = None
+    trend_tolerance: float = 0.0
+    exit_on_trend_reversal: bool = True
     stop_loss_pct: float | None = None
     trailing_stop_pct: float | None = None
     take_profit_pct: float | None = None
@@ -49,13 +52,14 @@ class DonchianBreakoutAllocator:
         price_frame: pd.DataFrame | None = None,
         factor_frames: dict[str, pd.DataFrame] | None = None,
     ) -> pd.DataFrame:
-        del risk_features, factor_frames
+        del risk_features
         self._validate()
 
         if price_frame is None and self._uses_price_context():
             raise ValueError("price_frame is required when donchian stops or pyramiding are enabled")
 
         close = self._build_close_frame(signal_frame, price_frame=price_frame)
+        trend = self._build_trend_frame(signal_frame, factor_frames=factor_frames)
         weights = pd.DataFrame(0.0, index=signal_frame.index, columns=signal_frame.columns)
         direction = pd.Series(0, index=signal_frame.columns, dtype="int64")
         entry_prices = pd.Series(float("nan"), index=signal_frame.columns, dtype="float64")
@@ -68,6 +72,7 @@ class DonchianBreakoutAllocator:
             cooldown_at_start = cooldown_remaining.copy()
             signal_row = signal_frame.loc[ts]
             price_row = close.loc[ts]
+            trend_row = trend.loc[ts]
 
             for symbol in signal_frame.columns:
                 price = price_row.loc[symbol]
@@ -75,13 +80,25 @@ class DonchianBreakoutAllocator:
                     continue
 
                 current_direction = int(direction.loc[symbol])
+                trend_value = trend_row.loc[symbol]
                 if current_direction != 0:
                     trail_reference.loc[symbol] = self._updated_trail_reference(
                         current_direction=current_direction,
                         price=float(price),
                         current_reference=trail_reference.loc[symbol],
                     )
-                    if self._should_exit(
+                    if self._trend_reversal_detected(
+                        current_direction=current_direction,
+                        trend_value=trend_value,
+                    ):
+                        current_direction = 0
+                        direction.loc[symbol] = 0
+                        entry_prices.loc[symbol] = float("nan")
+                        trail_reference.loc[symbol] = float("nan")
+                        last_add_prices.loc[symbol] = float("nan")
+                        pyramid_counts.loc[symbol] = 0
+                        cooldown_remaining.loc[symbol] = self.config.cooldown_bars
+                    if current_direction != 0 and self._should_exit(
                         current_direction=current_direction,
                         price=float(price),
                         entry_price=entry_prices.loc[symbol],
@@ -97,7 +114,10 @@ class DonchianBreakoutAllocator:
 
                 signal = signal_row.loc[symbol]
                 desired_direction = self._desired_direction(signal)
-                entry_allowed = cooldown_remaining.loc[symbol] == 0
+                entry_allowed = cooldown_remaining.loc[symbol] == 0 and self._trend_allows_direction(
+                    desired_direction,
+                    trend_value=trend_value,
+                )
 
                 if desired_direction != 0 and desired_direction != current_direction:
                     if entry_allowed:
@@ -138,7 +158,24 @@ class DonchianBreakoutAllocator:
             return pd.DataFrame(1.0, index=signal_frame.index, columns=signal_frame.columns, dtype="float64")
         return price_frame.reindex(index=signal_frame.index, columns=signal_frame.columns)
 
+    def _build_trend_frame(
+        self,
+        signal_frame: pd.DataFrame,
+        *,
+        factor_frames: dict[str, pd.DataFrame] | None,
+    ) -> pd.DataFrame:
+        if not self._uses_trend_filter():
+            return pd.DataFrame(float("nan"), index=signal_frame.index, columns=signal_frame.columns, dtype="float64")
+        if factor_frames is None:
+            raise ValueError("factor_frames are required when donchian trend filtering is enabled")
+        trend_factor = self.config.trend_factor
+        if trend_factor is None or trend_factor not in factor_frames:
+            raise ValueError(f"missing trend factor for donchian allocator: {trend_factor}")
+        return factor_frames[trend_factor].reindex(index=signal_frame.index, columns=signal_frame.columns).astype("float64")
+
     def _validate(self) -> None:
+        if self.config.trend_tolerance < 0.0:
+            raise ValueError("trend_tolerance must be non-negative")
         if self.config.cooldown_bars < 0:
             raise ValueError("cooldown_bars must be non-negative")
         if self.config.max_pyramids < 0:
@@ -174,6 +211,9 @@ class DonchianBreakoutAllocator:
             or self.config.max_pyramids > 0
         )
 
+    def _uses_trend_filter(self) -> bool:
+        return self.config.trend_factor is not None
+
     def _desired_direction(self, signal: object) -> int:
         if pd.isna(signal):
             return 0
@@ -196,6 +236,32 @@ class DonchianBreakoutAllocator:
         if current_direction > 0:
             return max(float(current_reference), price)
         return min(float(current_reference), price)
+
+    def _trend_allows_direction(
+        self,
+        direction: int,
+        *,
+        trend_value: float,
+    ) -> bool:
+        if direction == 0 or not self._uses_trend_filter():
+            return True
+        if pd.isna(trend_value):
+            return False
+        tolerance = abs(self.config.trend_tolerance)
+        if direction > 0:
+            return float(trend_value) > tolerance
+        return float(trend_value) < -tolerance
+
+    def _trend_reversal_detected(
+        self,
+        *,
+        current_direction: int,
+        trend_value: float,
+    ) -> bool:
+        return self.config.exit_on_trend_reversal and not self._trend_allows_direction(
+            current_direction,
+            trend_value=trend_value,
+        )
 
     def _should_exit(
         self,
