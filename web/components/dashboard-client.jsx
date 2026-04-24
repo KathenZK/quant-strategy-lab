@@ -192,7 +192,10 @@ function useSelectedDetail(run) {
 
 function Card({ children, className = "" }) {
   return (
-    <section className={`rounded-lg border border-zinc-200 bg-white shadow-[0_18px_40px_-28px_rgba(24,24,27,0.35)] ${className}`}>
+    <section
+      className={`relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 shadow-[0_28px_80px_-42px_rgba(37,61,56,0.28)] backdrop-blur-xl ${className}`}
+    >
+      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-80" />
       {children}
     </section>
   );
@@ -200,23 +203,61 @@ function Card({ children, className = "" }) {
 
 function Skeleton() {
   return (
-    <div className="space-y-3 p-5">
-      <div className="h-4 w-2/5 animate-pulse rounded bg-zinc-200" />
-      <div className="h-24 animate-pulse rounded-md bg-zinc-100" />
-      <div className="h-4 w-4/5 animate-pulse rounded bg-zinc-200" />
+    <div className="space-y-4 p-6">
+      <div className="h-3 w-28 animate-pulse rounded-full bg-zinc-200/80" />
+      <div className="h-10 w-3/4 animate-pulse rounded-2xl bg-zinc-200/70" />
+      <div className="grid gap-3 sm:grid-cols-3">
+        <div className="h-24 animate-pulse rounded-[1.4rem] bg-zinc-100" />
+        <div className="h-24 animate-pulse rounded-[1.4rem] bg-zinc-100" />
+        <div className="h-24 animate-pulse rounded-[1.4rem] bg-zinc-100" />
+      </div>
+      <div className="h-40 animate-pulse rounded-[1.6rem] bg-zinc-100" />
+      <div className="h-4 w-2/3 animate-pulse rounded-full bg-zinc-200/80" />
     </div>
   );
 }
 
 function EmptyState() {
   return (
-    <div className="grid min-h-[420px] place-items-center rounded-lg border border-dashed border-zinc-300 bg-zinc-50 p-8 text-center">
-      <div>
-        <Database className="mx-auto mb-4 text-zinc-500" size={32} weight="duotone" />
-        <h2 className="text-xl font-semibold text-zinc-900">还没有可展示的运行结果</h2>
-        <p className="mt-2 max-w-xl text-sm leading-6 text-zinc-600">
-          先运行一次策略或实验，dashboard 会读取 reports registry，并自动展示排名、权益曲线、价格线和买卖点。
-        </p>
+    <div className="grid min-h-[520px] gap-5 rounded-[2rem] border border-dashed border-zinc-300/80 bg-white/70 p-8 lg:grid-cols-[0.95fr_0.75fr] lg:items-end">
+      <div className="flex flex-col justify-between gap-10">
+        <div>
+          <div className="inline-flex items-center gap-2 rounded-full border border-zinc-200 bg-white px-3 py-1 text-[11px] tracking-[0.16em] text-zinc-500">
+            <Database size={14} />
+            Results center
+          </div>
+          <h2 className="mt-5 max-w-xl text-4xl font-semibold tracking-[-0.04em] text-zinc-950 md:text-5xl">
+            还没有可展示的运行结果
+          </h2>
+          <p className="mt-4 max-w-[58ch] text-sm leading-7 text-zinc-600">
+            先跑一条策略、一次实验，或者导入已有回测记录。面板会自动读取结果索引，展示排序、批次关系、权益曲线和交易轨迹。
+          </p>
+        </div>
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-[1.5rem] border border-zinc-200 bg-white px-4 py-4">
+            <div className="text-xs tracking-[0.14em] text-zinc-500">1</div>
+            <div className="mt-2 text-sm font-medium text-zinc-950">运行 workflow</div>
+            <div className="mt-1 text-xs leading-6 text-zinc-500">写入回测记录、指标和工件引用</div>
+          </div>
+          <div className="rounded-[1.5rem] border border-zinc-200 bg-white px-4 py-4">
+            <div className="text-xs tracking-[0.14em] text-zinc-500">2</div>
+            <div className="mt-2 text-sm font-medium text-zinc-950">生成 experiment</div>
+            <div className="mt-1 text-xs leading-6 text-zinc-500">批量变体、自动选优和子运行关系会一起入库</div>
+          </div>
+          <div className="rounded-[1.5rem] border border-zinc-200 bg-white px-4 py-4">
+            <div className="text-xs tracking-[0.14em] text-zinc-500">3</div>
+            <div className="mt-2 text-sm font-medium text-zinc-950">在 dashboard 下钻</div>
+            <div className="mt-1 text-xs leading-6 text-zinc-500">从批次到单条策略，一路查看指标和明细</div>
+          </div>
+        </div>
+      </div>
+      <div className="rounded-[1.8rem] border border-zinc-200/80 bg-zinc-950 p-5 text-white shadow-[0_24px_60px_-30px_rgba(15,23,42,0.45)]">
+        <div className="text-xs tracking-[0.16em] text-zinc-400">Waiting for first run</div>
+        <div className="mt-5 space-y-3">
+          <div className="h-14 animate-pulse rounded-[1.2rem] bg-white/10" />
+          <div className="h-14 animate-pulse rounded-[1.2rem] bg-white/10" />
+          <div className="h-36 animate-pulse rounded-[1.4rem] bg-white/10" />
+        </div>
       </div>
     </div>
   );
@@ -226,9 +267,50 @@ function Stat({ label, value, tone = "neutral" }) {
   const color = tone === "good" ? "text-teal-700" : tone === "bad" ? "text-rose-700" : "text-zinc-950";
 
   return (
-    <div className="border-t border-zinc-200 pt-3">
-      <div className="text-xs uppercase tracking-[0.12em] text-zinc-500">{label}</div>
-      <div className={`mt-1 font-mono text-2xl font-semibold ${color}`}>{value}</div>
+    <div className="rounded-[1.35rem] border border-zinc-200/80 bg-zinc-50/70 px-4 py-4">
+      <div className="text-[11px] tracking-[0.16em] text-zinc-500">{label}</div>
+      <div className={`mt-2 font-mono text-2xl font-semibold tracking-[-0.03em] ${color}`}>{value}</div>
+    </div>
+  );
+}
+
+function OverviewDeck({ runs, selected }) {
+  const workflowRuns = runs.filter((run) => run.kind === "workflow_run");
+  const experimentRuns = runs.filter((run) => run.kind === "experiment_run");
+  const comparisonRuns = runs.filter((run) => run.kind === "comparison_run");
+  const bestSharpeRun = workflowRuns.length
+    ? [...workflowRuns].sort((left, right) => compareRunsByMetric(left, right, "sharpe", "max"))[0]
+    : null;
+
+  return (
+    <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
+      <Card className="p-5">
+        <div className="text-[11px] tracking-[0.16em] text-zinc-500">Workflow runs</div>
+        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950">{workflowRuns.length}</div>
+        <div className="mt-2 text-xs text-zinc-500">当前结果库中的可下钻回测记录</div>
+      </Card>
+      <Card className="p-5">
+        <div className="text-[11px] tracking-[0.16em] text-zinc-500">Experiment runs</div>
+        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950">{experimentRuns.length}</div>
+        <div className="mt-2 text-xs text-zinc-500">批量实验、变体和 winner 记录</div>
+      </Card>
+      <Card className="p-5">
+        <div className="text-[11px] tracking-[0.16em] text-zinc-500">Comparison runs</div>
+        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950">{comparisonRuns.length}</div>
+        <div className="mt-2 text-xs text-zinc-500">策略对比批次与子运行关系</div>
+      </Card>
+      <Card className="bg-zinc-950 p-5 text-white shadow-[0_28px_70px_-34px_rgba(15,23,42,0.5)]">
+        <div className="text-[11px] tracking-[0.16em] text-zinc-400">Best sharpe</div>
+        <div className="mt-3 text-lg font-semibold tracking-[-0.03em] text-white">
+          {bestSharpeRun?.strategy_name || bestSharpeRun?.name || "No workflow runs"}
+        </div>
+        <div className="mt-2 font-mono text-2xl font-semibold text-teal-300">
+          {bestSharpeRun ? fmt(metricOf(bestSharpeRun, "sharpe")) : "-"}
+        </div>
+        <div className="mt-2 text-xs text-zinc-400">
+          当前选中: {selected?.strategy_name || selected?.name || "none"}
+        </div>
+      </Card>
     </div>
   );
 }
@@ -244,29 +326,38 @@ function Leaderboard({ runs, selected, onSelect }) {
 
   return (
     <Card className="overflow-hidden">
-      <div className="flex items-center justify-between border-b border-zinc-200 px-5 py-4">
+      <div className="flex items-center justify-between border-b border-zinc-200/80 px-5 py-4">
         <div>
           <div className="text-sm font-semibold text-zinc-950">策略排行</div>
-          <div className="text-xs text-zinc-500">按 Sharpe 自动排序</div>
+          <div className="text-xs text-zinc-500">当前按 Sharpe 排序，点击切到单条 workflow 明细</div>
         </div>
         <Trophy size={22} className="text-teal-700" weight="duotone" />
       </div>
-      <div className="divide-y divide-zinc-100">
+      <div className="divide-y divide-zinc-100/90">
         {workflowRuns.slice(0, 12).map((run, index) => (
           <button
             key={`${run.run_id}-${run.manifest_path}`}
             type="button"
             onClick={() => onSelect(run)}
-            className={`grid w-full grid-cols-[2rem_1fr_auto] items-center gap-3 px-5 py-3 text-left transition hover:bg-zinc-50 active:translate-y-px ${
-              selected?.manifest_path === run.manifest_path ? "bg-teal-50" : ""
+            className={`grid w-full grid-cols-[2.2rem_1fr_auto_auto] items-center gap-3 px-5 py-3 text-left transition hover:bg-zinc-50 active:translate-y-px ${
+              selected?.manifest_path === run.manifest_path ? "bg-teal-50/70" : ""
             }`}
           >
-            <span className="font-mono text-xs text-zinc-500">{String(index + 1).padStart(2, "0")}</span>
+            <span className="grid h-9 w-9 place-items-center rounded-full border border-zinc-200 bg-white font-mono text-xs text-zinc-500">
+              {String(index + 1).padStart(2, "0")}
+            </span>
             <span className="min-w-0">
               <span className="block truncate text-sm font-medium text-zinc-950">{run.strategy_name || run.name}</span>
-              <span className="block truncate text-xs text-zinc-500">{runTypeLabel(run)}</span>
+              <span className="mt-1 block truncate text-xs text-zinc-500">{runTypeLabel(run)}</span>
             </span>
-            <span className="font-mono text-sm font-semibold text-zinc-900">{fmt(metricOf(run, "sharpe"))}</span>
+            <span className="text-right text-xs text-zinc-500">
+              <span className="block">Sharpe</span>
+              <span className="font-mono text-sm font-semibold text-zinc-900">{fmt(metricOf(run, "sharpe"))}</span>
+            </span>
+            <span className="text-right text-xs text-zinc-500">
+              <span className="block">Return</span>
+              <span className="font-mono text-sm font-semibold text-zinc-900">{pct(metricOf(run, "cumulative_return"))}</span>
+            </span>
           </button>
         ))}
       </div>
@@ -389,6 +480,14 @@ function FilterPanel({ query, onChange, onApply, onReset, strategyTypes, loading
             <option value="final_equity">按最终权益排序</option>
           </select>
         </div>
+        <select
+          value={query.sortOrder}
+          onChange={(event) => onChange("sortOrder", event.target.value)}
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+        >
+          <option value="desc">降序</option>
+          <option value="asc">升序</option>
+        </select>
         <div className="flex gap-3">
           <button
             type="button"
@@ -1072,22 +1171,43 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
   const detailState = useSelectedDetail(selected);
 
   return (
-    <main className="min-h-[100dvh] bg-[#f7f7f5] text-zinc-950">
-      <div className="mx-auto grid max-w-[1500px] gap-6 px-4 py-5 md:px-6 xl:grid-cols-[390px_1fr]">
+    <main id="main-content" className="min-h-[100dvh] bg-[#f7f7f5] text-zinc-950">
+      <div className="mx-auto max-w-[1500px] px-4 py-5 md:px-6">
+        <div className="mb-6">
+          <Card className="overflow-hidden bg-zinc-950 text-white shadow-[0_36px_90px_-42px_rgba(15,23,42,0.6)]">
+            <div className="grid gap-8 px-6 py-7 lg:grid-cols-[0.92fr_1.08fr] lg:items-end lg:px-8">
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] tracking-[0.18em] text-zinc-300">
+                  <ListChecks size={14} />
+                  Quant Strategy Lab
+                </div>
+                <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.05em] text-white md:text-5xl">
+                  结果中心
+                </h1>
+                <p className="mt-4 max-w-[60ch] text-sm leading-7 text-zinc-300">
+                  从实验矩阵筛候选策略，再沿着 comparison、experiment 和 workflow 结果一路下钻到权益曲线、交易事件与运行指纹。
+                </p>
+                <div className="mt-5 flex flex-wrap gap-3">
+                  <button
+                    type="button"
+                    onClick={() => reload(query)}
+                    disabled={loading}
+                    className="inline-flex rounded-full border border-teal-400/40 bg-teal-400/10 px-4 py-2 text-sm text-teal-100 transition hover:border-teal-300 hover:bg-teal-400/15 disabled:cursor-not-allowed disabled:opacity-60"
+                  >
+                    {loading ? "刷新中..." : "刷新结果索引"}
+                  </button>
+                  <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
+                    SQLite-powered dashboard
+                  </span>
+                </div>
+              </div>
+              <OverviewDeck runs={runs} selected={selected} />
+            </div>
+          </Card>
+        </div>
+
+        <div className="grid gap-6 xl:grid-cols-[390px_1fr]">
         <aside className="space-y-5 xl:sticky xl:top-5 xl:self-start">
-          <div className="rounded-lg border border-zinc-200 bg-zinc-950 p-5 text-white">
-            <div className="text-xs uppercase tracking-[0.16em] text-zinc-400">Quant Strategy Lab</div>
-            <h1 className="mt-3 text-3xl font-semibold tracking-tight">策略实验台</h1>
-            <p className="mt-3 text-sm leading-6 text-zinc-300">从实验矩阵里选出候选策略，再下钻到买卖点、权益曲线和运行指纹。</p>
-            <button
-              type="button"
-              onClick={() => reload(query)}
-              disabled={loading}
-              className="mt-4 inline-flex rounded-md border border-zinc-700 px-3 py-2 text-sm text-zinc-100 transition hover:border-teal-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
-            >
-              {loading ? "刷新中..." : "刷新运行列表"}
-            </button>
-          </div>
           <FilterPanel
             query={query}
             onChange={updateQuery}
@@ -1112,6 +1232,7 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
             <ComparisonDetail run={selected} detailState={detailState} onSelectRun={setSelected} />
           ) : null}
         </section>
+        </div>
       </div>
     </main>
   );
