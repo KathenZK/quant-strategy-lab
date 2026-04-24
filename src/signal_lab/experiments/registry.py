@@ -4,6 +4,8 @@ from dataclasses import asdict, dataclass, field
 from pathlib import Path
 import json
 
+from signal_lab.fs import append_text_locked
+
 
 @dataclass(frozen=True, slots=True)
 class RunRegistryEntry:
@@ -20,9 +22,14 @@ class RunRegistryEntry:
     strategy_name: str | None = None
     signal_name: str | None = None
     signal_type: str | None = None
+    variant_id: str | None = None
+    config_hash: str | None = None
+    git_sha: str | None = None
+    data_snapshot_id: str | None = None
     backtest_metrics: dict[str, float] = field(default_factory=dict)
     backtest_attribution: dict[str, float | str | None] = field(default_factory=dict)
     paper_summary: dict[str, float] = field(default_factory=dict)
+    structured_artifact_paths: dict[str, str] = field(default_factory=dict)
     child_manifest_paths: list[str] = field(default_factory=list)
 
     def to_dict(self) -> dict:
@@ -38,11 +45,11 @@ class RunRegistry:
         return self.reports_dir / "_registry" / "runs.jsonl"
 
     def append(self, entry: RunRegistryEntry) -> Path:
-        self.path.parent.mkdir(parents=True, exist_ok=True)
-        with self.path.open("a", encoding="utf-8") as handle:
-            handle.write(json.dumps(entry.to_dict(), sort_keys=True, default=str))
-            handle.write("\n")
-        return self.path
+        return append_text_locked(
+            self.path,
+            json.dumps(entry.to_dict(), sort_keys=True, default=str) + "\n",
+            encoding="utf-8",
+        )
 
     def load(self, kind: str | None = None) -> list[dict]:
         if not self.path.exists():

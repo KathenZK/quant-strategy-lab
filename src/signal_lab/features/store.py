@@ -8,6 +8,7 @@ import pandas as pd
 
 from signal_lab.data.lake import DataLakeLayout
 from signal_lab.features.manifest import FactorArtifactManifest
+from signal_lab.fs import atomic_write_path
 
 
 @dataclass(slots=True)
@@ -25,9 +26,7 @@ class FeatureStore:
             raise ValueError("factor frame must include ts column")
         partition_date = pd.to_datetime(frame["ts"], utc=True).max().date().isoformat()
         path = self.feature_root(factor_name) / f"date={partition_date}" / f"{file_stem}.parquet"
-        path.parent.mkdir(parents=True, exist_ok=True)
-        frame.to_parquet(path, index=False)
-        return path
+        return atomic_write_path(path, lambda temp_path: frame.to_parquet(temp_path, index=False))
 
     def load_factor_frame(self, factor_name: str) -> pd.DataFrame:
         root = self.feature_root(factor_name)

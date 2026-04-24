@@ -15,11 +15,13 @@ authors = [
 dependencies = [
   "ccxt>=4.4.0",
   "duckdb>=1.2.0",
+  "fastapi>=0.115.0",
   "numpy>=2.2.0",
   "pandas>=2.2.0",
   "pyarrow>=18.0.0",
   "pyyaml>=6.0.2",
   "typer>=0.12.5",
+  "uvicorn[standard]>=0.34.0",
 ]
 
 [project.optional-dependencies]

@@ -3,7 +3,9 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 from pathlib import Path
+import hashlib
 import json
+import subprocess
 
 import pandas as pd
 
@@ -19,6 +21,139 @@ from signal_lab.portfolio import RiskManager
 from signal_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
 from signal_lab.research import FactorResearchLab
 from signal_lab.strategies import create_strategy
+
+
+def _hash_payload(payload: object) -> str:
+    encoded = json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
+    return hashlib.sha256(encoded).hexdigest()[:16]
+
+
+def _git_sha() -> str | None:
+    try:
+        result = subprocess.run(
+            ["git", "rev-parse", "HEAD"],
+            cwd=Path.cwd(),
+            check=True,
+            capture_output=True,
+            text=True,
+        )
+    except (OSError, subprocess.CalledProcessError):
+        return None
+    return result.stdout.strip() or None
+
+
+def _frame_with_ts(frame: pd.DataFrame | pd.Series, value_name: str | None = None) -> pd.DataFrame:
+    if isinstance(frame, pd.Series):
+        output = frame.rename(value_name or frame.name or "value").to_frame()
+    else:
+        output = frame.copy()
+    index_name = output.index.name or "ts"
+    return output.reset_index().rename(columns={index_name: "ts"})
+
+
+def _build_trade_events(
+    *,
+    weights: pd.DataFrame,
+    price_frame: pd.DataFrame,
+    signal_frame: pd.DataFrame,
+) -> pd.DataFrame:
+    if weights.empty:
+        return pd.DataFrame(
+            columns=[
+                "ts",
+                "symbol",
+                "side",
+                "previous_weight",
+                "target_weight",
+                "delta_weight",
+                "price",
+                "signal",
+                "reason",
+            ]
+        )
+
+    aligned_prices = price_frame.reindex_like(weights)
+    aligned_signals = signal_frame.reindex_like(weights)
+    previous = weights.shift(1).fillna(0.0)
+    delta = weights.fillna(0.0) - previous
+    rows: list[dict[str, object]] = []
+    for ts in delta.index:
+        for symbol, delta_weight in delta.loc[ts].dropna().items():
+            if abs(float(delta_weight)) < 1e-12:
+                continue
+            prior = float(previous.loc[ts, symbol])
+            target = float(weights.loc[ts, symbol])
+            if delta_weight > 0:
+                reason = "increase_long" if target > 0 else "reduce_short"
+                side = "buy"
+            else:
+                reason = "increase_short" if target < 0 else "reduce_long"
+                side = "sell"
+            rows.append(
+                {
+                    "ts": ts,
+                    "symbol": symbol,
+                    "side": side,
+                    "previous_weight": prior,
+                    "target_weight": target,
+                    "delta_weight": float(delta_weight),
+                    "price": float(aligned_prices.loc[ts, symbol]) if pd.notna(aligned_prices.loc[ts, symbol]) else None,
+                    "signal": float(aligned_signals.loc[ts, symbol]) if pd.notna(aligned_signals.loc[ts, symbol]) else None,
+                    "reason": reason,
+                }
+            )
+    return pd.DataFrame(rows)
+
+
+def _write_structured_artifacts(
+    *,
+    artifacts_dir: Path,
+    signal_frame: pd.DataFrame,
+    price_frame: pd.DataFrame,
+    weights: pd.DataFrame | None,
+    backtest,
+    backtest_metrics: dict[str, float],
+    backtest_attribution: dict[str, float | str | None],
+) -> dict[str, str]:
+    artifacts_dir.mkdir(parents=True, exist_ok=True)
+    paths: dict[str, str] = {}
+
+    def _write_parquet(name: str, frame: pd.DataFrame | pd.Series, value_name: str | None = None) -> None:
+        path = artifacts_dir / f"{name}.parquet"
+        _frame_with_ts(frame, value_name=value_name).to_parquet(path, index=False)
+        paths[name] = str(path)
+
+    _write_parquet("signals", signal_frame)
+    _write_parquet("prices", price_frame)
+    if weights is not None:
+        _write_parquet("weights", weights)
+        trades = _build_trade_events(weights=weights, price_frame=price_frame, signal_frame=signal_frame)
+        trade_path = artifacts_dir / "trades.parquet"
+        trades.to_parquet(trade_path, index=False)
+        paths["trades"] = str(trade_path)
+
+    if backtest is not None:
+        _write_parquet("equity_curve", backtest.equity_curve, value_name="equity")
+        _write_parquet("period_returns", backtest.period_returns, value_name="returns")
+        _write_parquet("turnover", backtest.turnover, value_name="turnover")
+        _write_parquet("trading_costs", backtest.trading_costs, value_name="trading_costs")
+        _write_parquet("funding_costs", backtest.funding_costs, value_name="funding_costs")
+
+    metrics_path = artifacts_dir / "metrics.json"
+    metrics_path.write_text(
+        json.dumps(
+            {
+                "backtest_metrics": backtest_metrics,
+                "backtest_attribution": backtest_attribution,
+            },
+            indent=2,
+            sort_keys=True,
+            default=str,
+        ),
+        encoding="utf-8",
+    )
+    paths["metrics"] = str(metrics_path)
+    return paths
 
 
 @dataclass(slots=True)
@@ -201,7 +336,7 @@ class StrategyRunner:
         )
 
     def run(self, config: StrategyWorkflowConfig) -> StrategyRunArtifacts:
-        run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%SZ")
+        run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         refresh_artifacts = self.refresh_data(config)
         feature_artifacts = self.build_features(config)
         signal_name, signal_version, panels, signal_frame, target_weights = self._prepare_signal_inputs(config)
@@ -212,6 +347,8 @@ class StrategyRunner:
         backtest_metrics: dict[str, float] = {}
         backtest_attribution: dict[str, float | str | None] = {}
         paper_summary: dict[str, float] = {}
+        backtest = None
+        effective_weights = target_weights
 
         if config.run_factor_report:
             diagnostics = FactorResearchLab().evaluate(signal_frame, panels.price)
@@ -227,6 +364,7 @@ class StrategyRunner:
                 signal_frame=signal_frame,
                 target_weights=target_weights,
             )
+            effective_weights = backtest.weights
             backtest_metrics = backtest.metrics
             backtest_attribution = compute_backtest_attribution(
                 weights=backtest.weights,
@@ -239,6 +377,16 @@ class StrategyRunner:
             backtest_report_path = self.layout.reports_dir / "runs" / config.strategy.name / run_id / "backtest_report.md"
             backtest_report_path.parent.mkdir(parents=True, exist_ok=True)
             backtest_report_path.write_text(report, encoding="utf-8")
+
+        structured_artifacts = _write_structured_artifacts(
+            artifacts_dir=self.layout.reports_dir / "runs" / config.strategy.name / run_id / "artifacts",
+            signal_frame=signal_frame,
+            price_frame=panels.price,
+            weights=effective_weights,
+            backtest=backtest,
+            backtest_metrics=backtest_metrics,
+            backtest_attribution=backtest_attribution,
+        )
 
         if config.run_paper_trade:
             paper_target_weights = target_weights
@@ -276,8 +424,13 @@ class StrategyRunner:
             "execution": asdict(config.execution),
             "risk": asdict(config.risk),
             "schedule": asdict(config.schedule),
+            "metadata": config.metadata,
+            "config_hash": config.metadata.get("config_hash") or _hash_payload(asdict(config)),
+            "git_sha": _git_sha(),
+            "data_snapshot_id": _hash_payload({"refresh": refresh_artifacts, "features": feature_artifacts}),
             "refresh_artifacts": refresh_artifacts,
             "feature_artifacts": feature_artifacts,
+            "structured_artifacts": structured_artifacts,
             "signal_name": signal_name,
             "signal_type": config.strategy.signal_type,
             "signal_version": signal_version,
@@ -306,9 +459,14 @@ class StrategyRunner:
                 strategy_name=config.strategy.name,
                 signal_name=signal_name,
                 signal_type=config.strategy.signal_type,
+                variant_id=config.metadata.get("variant_id"),
+                config_hash=str(manifest_payload["config_hash"]),
+                git_sha=manifest_payload["git_sha"],
+                data_snapshot_id=str(manifest_payload["data_snapshot_id"]),
                 backtest_metrics=backtest_metrics,
                 backtest_attribution=backtest_attribution,
                 paper_summary=paper_summary,
+                structured_artifact_paths=structured_artifacts,
             )
         )
 

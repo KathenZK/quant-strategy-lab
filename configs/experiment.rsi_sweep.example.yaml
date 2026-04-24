@@ -1,0 +1,14 @@
+experiment:
+  name: rsi_window_sweep_example
+  description: Sweep RSI windows from one base factor workflow and select the best Sharpe result.
+  base_workflow: factor_rsi.binance.btc.daily.recent1y.yaml
+  max_workers: 2
+  objective:
+    metric: sharpe
+    direction: max
+  sweep:
+    strategy.factor:
+      - rsi_6
+      - rsi_12
+      - rsi_14
+      - rsi_21

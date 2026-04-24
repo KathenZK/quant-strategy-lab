@@ -24,6 +24,7 @@ def load_strategy_workflow(path: str | Path) -> StrategyWorkflowConfig:
     risk = payload.get("risk", {})
     schedule = payload.get("schedule", {})
     workflow = payload.get("workflow", {})
+    metadata = payload.get("metadata", {})
 
     spec = StrategyWorkflowSpec(
         name=strategy["name"],
@@ -70,6 +71,7 @@ def load_strategy_workflow(path: str | Path) -> StrategyWorkflowConfig:
             sleep_seconds=schedule.get("sleep_seconds", 0),
             max_runs=schedule.get("max_runs", 1),
         ),
+        metadata=metadata,
         run_factor_report=workflow.get("run_factor_report", True),
         run_backtest=workflow.get("run_backtest", True),
         run_paper_trade=workflow.get("run_paper_trade", True),

@@ -136,5 +136,8 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         MovingAverageDistanceFactor(window=20),
         MovingAverageDistanceFactor(window=30),
         MovingAverageDistanceFactor(window=120),
+        RSIFactor(window=6),
+        RSIFactor(window=12),
         RSIFactor(window=14),
+        RSIFactor(window=21),
     ]

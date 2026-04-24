@@ -7,6 +7,8 @@ import json
 
 import pandas as pd
 
+from signal_lab.fs import atomic_write_text
+
 
 def fingerprint_payload(payload: dict) -> str:
     encoded = json.dumps(payload, sort_keys=True, default=str).encode("utf-8")
@@ -68,6 +70,4 @@ class FactorArtifactManifest:
         return asdict(self)
 
     def write(self, path: Path) -> Path:
-        path.parent.mkdir(parents=True, exist_ok=True)
-        path.write_text(json.dumps(self.to_dict(), indent=2, sort_keys=True), encoding="utf-8")
-        return path
+        return atomic_write_text(path, json.dumps(self.to_dict(), indent=2, sort_keys=True), encoding="utf-8")

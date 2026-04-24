@@ -9,6 +9,10 @@ __pycache__/
 .ruff_cache/
 build/
 dist/
+node_modules/
+web/node_modules/
+.next/
+web/.next/
 *.egg-info/
 data/
 reports/

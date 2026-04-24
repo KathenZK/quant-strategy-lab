@@ -1,7 +1,10 @@
 from pathlib import Path
+import json
 
+from signal_lab.batches.models import WorkflowBatchEntry
 from signal_lab.data import DataLakeLayout
 from signal_lab.experiments import ExperimentRunner, load_experiment_config
+from signal_lab.experiments.runner import _pick_winner, _render_report
 from signal_lab.scenarios import seed_trend_mvp_data
 
 
@@ -36,6 +39,28 @@ strategy:
   symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
   strategy_options:
 {strategy_options}
+refresh:
+  enabled: false
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+""".strip(),
+        encoding="utf-8",
+    )
+    return path
+
+
+def _write_factor_workflow(path: Path, name: str, factor: str) -> Path:
+    path.write_text(
+        f"""
+strategy:
+  name: {name}
+  signal_type: factor
+  factor: {factor}
+  exchange: binance
+  market_type: perp
+  symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
 refresh:
   enabled: false
 workflow:
@@ -126,3 +151,80 @@ batch:
 
     assert config.name == "experiment_via_batch"
     assert len(config.workflow_configs) == 2
+
+
+def test_experiment_runner_supports_sweep_variants_and_structured_artifacts(tmp_path: Path) -> None:
+    layout = DataLakeLayout(
+        root_dir=tmp_path / "data",
+        raw_dir=tmp_path / "data" / "raw",
+        normalized_dir=tmp_path / "data" / "normalized",
+        features_dir=tmp_path / "data" / "features",
+        reports_dir=tmp_path / "reports",
+    )
+    seed_trend_mvp_data(layout)
+
+    app_config = _write_app_config(tmp_path)
+    base_workflow = _write_factor_workflow(tmp_path / "factor-base.yaml", "factor_probe", "ret_1")
+    experiment_config = tmp_path / "factor-sweep.yaml"
+    experiment_config.write_text(
+        f"""
+experiment:
+  name: factor_sweep
+  base_workflow: {base_workflow.name}
+  max_workers: 2
+  objective:
+    metric: sharpe
+    direction: max
+  sweep:
+    strategy.factor: [ret_1, ret_4]
+""".strip(),
+        encoding="utf-8",
+    )
+
+    experiment = load_experiment_config(experiment_config)
+    artifacts = ExperimentRunner(workspace_root=tmp_path, app_config_path=app_config).run(experiment)
+
+    assert len(artifacts.entries) == 2
+    assert artifacts.winner is not None
+    assert {entry.variant_id for entry in artifacts.entries} == {"factor_ret_1", "factor_ret_4"}
+    manifest = json.loads(Path(artifacts.manifest_path).read_text(encoding="utf-8"))
+    assert manifest["winner"]
+    for entry in artifacts.entries:
+        assert entry.structured_artifact_paths["prices"]
+        assert entry.structured_artifact_paths["signals"]
+        assert entry.structured_artifact_paths["weights"]
+        assert entry.structured_artifact_paths["trades"]
+        assert Path(entry.structured_artifact_paths["equity_curve"]).exists()
+
+
+def test_experiment_report_keeps_missing_metrics_at_bottom_for_min_objective() -> None:
+    complete = WorkflowBatchEntry(
+        workflow_name="has_metric",
+        strategy_name="has_metric",
+        signal_name="ret_1",
+        signal_type="factor",
+        signal_version="v1",
+        run_id="run-complete",
+        backtest_metrics={"max_drawdown": 0.12},
+    )
+    missing = WorkflowBatchEntry(
+        workflow_name="missing_metric",
+        strategy_name="missing_metric",
+        signal_name="ret_4",
+        signal_type="factor",
+        signal_version="v1",
+        run_id="run-missing",
+        backtest_metrics={},
+    )
+
+    winner = _pick_winner([missing, complete], "max_drawdown", "min")
+    report = _render_report(
+        "drawdown_min",
+        [missing, complete],
+        objective_metric="max_drawdown",
+        objective_direction="min",
+        winner=winner,
+    )
+
+    assert winner is complete
+    assert report.index("## has_metric") < report.index("## missing_metric")

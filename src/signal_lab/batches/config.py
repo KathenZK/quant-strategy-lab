@@ -48,4 +48,5 @@ def load_workflow_batch_config(
         name=name,
         workflow_configs=workflow_configs,
         description=batch_payload.get("description"),
+        max_workers=int(batch_payload.get("max_workers", 1)),
     )

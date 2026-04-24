@@ -12,7 +12,7 @@ from signal_lab.config import load_settings
 from signal_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions
 from signal_lab.data import DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
 from signal_lab.execution import PaperBroker, PaperTradingSession
-from signal_lab.experiments import RunRegistry
+from signal_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
 from signal_lab.factors import default_registry
 from signal_lab.features import FeatureBuilder, FeatureStore
 from signal_lab.orchestration import IncrementalStateStore, StrategyRunner, load_strategy_workflow, load_universe_panels
@@ -445,7 +445,13 @@ def run_experiment(
     config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
 ) -> None:
     """Run a batch of workflows and persist an experiment summary."""
-    _run_batch_command(BatchRunMode.EXPERIMENT, experiment_config, config)
+    experiment = load_experiment_config(experiment_config)
+    artifacts = ExperimentRunner(workspace_root=Path.cwd(), app_config_path=config).run(experiment)
+    typer.echo(f"run_id: {artifacts.run_id}")
+    typer.echo(f"report: {artifacts.report_path}")
+    typer.echo(f"manifest: {artifacts.manifest_path}")
+    if artifacts.winner:
+        typer.echo(f"winner: {artifacts.winner.strategy_name}")
 
 
 @app.command()
@@ -456,6 +462,20 @@ def run_batch(
 ) -> None:
     """Run a workflow batch through a unified batch entrypoint."""
     _run_batch_command(mode, batch_config, config)
+
+
+@app.command()
+def dashboard(
+    host: str = typer.Option("127.0.0.1", "--host", help="Dashboard host."),
+    port: int = typer.Option(8000, "--port", help="Dashboard port."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+) -> None:
+    """Serve the dashboard JSON API backend."""
+    import uvicorn
+
+    from signal_lab.api import create_app
+
+    uvicorn.run(create_app(config), host=host, port=port)
 
 
 @app.command()

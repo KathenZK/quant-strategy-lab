@@ -53,6 +53,7 @@ class StrategyWorkflowConfig:
     execution: ExecutionAssumptions = field(default_factory=ExecutionAssumptions)
     risk: RiskLimits = field(default_factory=RiskLimits)
     schedule: ScheduleOptions = field(default_factory=ScheduleOptions)
+    metadata: dict[str, Any] = field(default_factory=dict)
     run_factor_report: bool = True
     run_backtest: bool = True
     run_paper_trade: bool = True
