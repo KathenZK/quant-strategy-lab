@@ -166,7 +166,25 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
 
     @app.get("/api/experiment-detail")
     def experiment_detail(manifest_path: str = Query(...)) -> dict:
-        return {"manifest": registry.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)}
+        run_row = registry.load_run(manifest_path)
+        manifest = registry.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)
+        children = [_enrich_run(layout.reports_dir, child) for child in registry.load_child_runs(manifest_path)]
+        return {
+            "run": _enrich_run(layout.reports_dir, run_row) if run_row else None,
+            "manifest": manifest,
+            "children": children,
+        }
+
+    @app.get("/api/comparison-detail")
+    def comparison_detail(manifest_path: str = Query(...)) -> dict:
+        run_row = registry.load_run(manifest_path)
+        manifest = registry.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)
+        children = [_enrich_run(layout.reports_dir, child) for child in registry.load_child_runs(manifest_path)]
+        return {
+            "run": _enrich_run(layout.reports_dir, run_row) if run_row else None,
+            "manifest": manifest,
+            "children": children,
+        }
 
     return app
 

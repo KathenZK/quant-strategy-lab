@@ -7,6 +7,8 @@ export const SIGNAL_LAB_ENDPOINTS = Object.freeze({
   health: "/api/health",
   runs: "/api/runs",
   runDetail: "/api/run-detail",
+  experimentDetail: "/api/experiment-detail",
+  comparisonDetail: "/api/comparison-detail",
 });
 
 function normalizeSearchParams(searchParams) {

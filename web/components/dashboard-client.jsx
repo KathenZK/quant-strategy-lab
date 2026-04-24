@@ -40,6 +40,37 @@ function runTypeLabel(run) {
   return run?.variant_id || run?.strategy_type || run?.signal_type || "-";
 }
 
+function metricLabel(key) {
+  const labels = {
+    sharpe: "Sharpe",
+    cumulative_return: "Cumulative",
+    annualized_return: "Annualized",
+    max_drawdown: "Max DD",
+    avg_turnover: "Turnover",
+    final_equity: "Final equity",
+  };
+  return labels[key] || key;
+}
+
+function isPercentMetric(key) {
+  return ["cumulative_return", "annualized_return", "max_drawdown"].includes(key);
+}
+
+function formatMetricValue(value, key) {
+  return isPercentMetric(key) ? pct(value) : fmt(value);
+}
+
+function compareRunsByMetric(left, right, key, direction = "max") {
+  const leftValue = Number(metricOf(left, key));
+  const rightValue = Number(metricOf(right, key));
+  const normalizedLeft = Number.isFinite(leftValue) ? leftValue : direction === "min" ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+  const normalizedRight = Number.isFinite(rightValue) ? rightValue : direction === "min" ? Number.POSITIVE_INFINITY : Number.NEGATIVE_INFINITY;
+  if (direction === "min") {
+    return normalizedLeft - normalizedRight;
+  }
+  return normalizedRight - normalizedLeft;
+}
+
 function buildRunsSearchParams(query = {}) {
   const searchParams = new URLSearchParams();
   if (query.search) {
@@ -64,6 +95,14 @@ function pickBestWorkflowRun(runs) {
     return null;
   }
   return [...workflowRuns].sort((a, b) => metricOf(b, "sharpe") - metricOf(a, "sharpe"))[0];
+}
+
+function pickInitialRun(runs) {
+  const bestWorkflow = pickBestWorkflowRun(runs);
+  if (bestWorkflow) {
+    return bestWorkflow;
+  }
+  return runs.find((run) => ["experiment_run", "comparison_run"].includes(run.kind)) ?? null;
 }
 
 function useRuns(initialRuns = [], initialError = "") {
@@ -103,18 +142,31 @@ function useRuns(initialRuns = [], initialError = "") {
   };
 }
 
-function useRunDetail(run) {
+function useSelectedDetail(run) {
   const [state, setState] = useState({ loading: false, error: "", detail: null });
 
   useEffect(() => {
-    if (!run?.manifest_path || run.kind !== "workflow_run") {
+    if (!run?.manifest_path) {
+      setState({ loading: false, error: "", detail: null });
+      return;
+    }
+
+    const endpoint =
+      run.kind === "workflow_run"
+        ? SIGNAL_LAB_ENDPOINTS.runDetail
+        : run.kind === "experiment_run"
+          ? SIGNAL_LAB_ENDPOINTS.experimentDetail
+          : run.kind === "comparison_run"
+            ? SIGNAL_LAB_ENDPOINTS.comparisonDetail
+            : null;
+    if (!endpoint) {
       setState({ loading: false, error: "", detail: null });
       return;
     }
 
     let cancelled = false;
     setState({ loading: true, error: "", detail: null });
-    fetchSignalLabAppJson(SIGNAL_LAB_ENDPOINTS.runDetail, {
+    fetchSignalLabAppJson(endpoint, {
       searchParams: new URLSearchParams({
         manifest_path: run.manifest_path,
       }),
@@ -222,7 +274,7 @@ function Leaderboard({ runs, selected, onSelect }) {
   );
 }
 
-function Experiments({ runs }) {
+function Experiments({ runs, selected, onSelect }) {
   const experiments = runs.filter((run) => run.kind === "experiment_run").slice(0, 8);
 
   return (
@@ -239,13 +291,20 @@ function Experiments({ runs }) {
           <div className="px-5 py-6 text-sm text-zinc-500">暂无 experiment run。</div>
         ) : (
           experiments.map((run) => (
-            <div key={`${run.run_id}-${run.manifest_path}`} className="px-5 py-3">
+            <button
+              key={`${run.run_id}-${run.manifest_path}`}
+              type="button"
+              onClick={() => onSelect(run)}
+              className={`w-full px-5 py-3 text-left transition hover:bg-zinc-50 ${
+                selected?.manifest_path === run.manifest_path ? "bg-teal-50" : ""
+              }`}
+            >
               <div className="truncate text-sm font-medium text-zinc-950">{run.name}</div>
               <div className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
                 <span className="font-mono">{run.run_id}</span>
                 <span>{run.child_run_count || 0} runs</span>
               </div>
-            </div>
+            </button>
           ))
         )}
       </div>
@@ -253,7 +312,7 @@ function Experiments({ runs }) {
   );
 }
 
-function Comparisons({ runs }) {
+function Comparisons({ runs, selected, onSelect }) {
   const comparisons = runs.filter((run) => run.kind === "comparison_run").slice(0, 8);
 
   return (
@@ -270,13 +329,20 @@ function Comparisons({ runs }) {
           <div className="px-5 py-6 text-sm text-zinc-500">暂无 comparison run。</div>
         ) : (
           comparisons.map((run) => (
-            <div key={`${run.run_id}-${run.manifest_path}`} className="px-5 py-3">
+            <button
+              key={`${run.run_id}-${run.manifest_path}`}
+              type="button"
+              onClick={() => onSelect(run)}
+              className={`w-full px-5 py-3 text-left transition hover:bg-zinc-50 ${
+                selected?.manifest_path === run.manifest_path ? "bg-teal-50" : ""
+              }`}
+            >
               <div className="truncate text-sm font-medium text-zinc-950">{run.name}</div>
               <div className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
                 <span className="font-mono">{run.run_id}</span>
                 <span>{run.child_run_count || 0} runs</span>
               </div>
-            </div>
+            </button>
           ))
         )}
       </div>
@@ -468,6 +534,350 @@ function PriceTradeChart({ detail }) {
   );
 }
 
+function DetailField({ label, value, mono = false }) {
+  return (
+    <div>
+      <div className="text-zinc-500">{label}</div>
+      <div className={`${mono ? "font-mono " : ""}text-zinc-900 break-all`}>{value === null || value === undefined || value === "" ? "-" : value}</div>
+    </div>
+  );
+}
+
+function ChildRunList({
+  title,
+  description,
+  rows,
+  onSelectRun,
+  emptyLabel = "暂无子运行。",
+  primaryMetricKey = "sharpe",
+  primaryMetricLabel,
+  secondaryMetricKey = "cumulative_return",
+  secondaryMetricLabel,
+  highlightManifestPath = "",
+}) {
+  return (
+    <Card className="overflow-hidden">
+      <div className="border-b border-zinc-200 px-5 py-4">
+        <div className="text-sm font-semibold text-zinc-950">{title}</div>
+        <div className="text-xs text-zinc-500">{description}</div>
+      </div>
+      <div className="divide-y divide-zinc-100">
+        {rows.length === 0 ? (
+          <div className="px-5 py-6 text-sm text-zinc-500">{emptyLabel}</div>
+        ) : (
+          rows.map((row) => (
+            <button
+              key={`${row.run_id}-${row.manifest_path}`}
+              type="button"
+              onClick={() => onSelectRun(row)}
+              className={`grid w-full grid-cols-[1fr_auto_auto] gap-3 px-5 py-3 text-left transition hover:bg-zinc-50 ${
+                highlightManifestPath && row.manifest_path === highlightManifestPath ? "bg-teal-50/70" : ""
+              }`}
+            >
+              <span className="min-w-0">
+                <span className="block truncate text-sm font-medium text-zinc-950">{row.strategy_name || row.name}</span>
+                <span className="block truncate text-xs text-zinc-500">
+                  {runTypeLabel(row)} · {row.run_id}
+                </span>
+              </span>
+              <span className="text-right text-xs text-zinc-500">
+                <span className="block">{primaryMetricLabel || metricLabel(primaryMetricKey)}</span>
+                <span className="font-mono text-sm text-zinc-900">{formatMetricValue(metricOf(row, primaryMetricKey), primaryMetricKey)}</span>
+              </span>
+              <span className="text-right text-xs text-zinc-500">
+                <span className="block">{secondaryMetricLabel || metricLabel(secondaryMetricKey)}</span>
+                <span className="font-mono text-sm text-zinc-900">{formatMetricValue(metricOf(row, secondaryMetricKey), secondaryMetricKey)}</span>
+              </span>
+            </button>
+          ))
+        )}
+      </div>
+    </Card>
+  );
+}
+
+function WinnerHighlight({ run, objectiveMetric, objectiveDirection, onSelectRun }) {
+  if (!run) {
+    return null;
+  }
+
+  return (
+    <Card className="border-teal-200 bg-teal-50/70 p-5">
+      <div className="flex flex-wrap items-start justify-between gap-4">
+        <div>
+          <div className="text-xs uppercase tracking-[0.14em] text-teal-700">Winner</div>
+          <div className="mt-2 text-lg font-semibold text-zinc-950">{run.strategy_name || run.name}</div>
+          <div className="mt-2 text-xs text-zinc-600">
+            {metricLabel(objectiveMetric)} ({objectiveDirection}) · {runTypeLabel(run)}
+          </div>
+          <div className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-500">
+            <span className="rounded border border-teal-200 bg-white px-2 py-1 font-mono">{run.run_id}</span>
+            <span className="rounded border border-teal-200 bg-white px-2 py-1">
+              {metricLabel(objectiveMetric)}: {formatMetricValue(metricOf(run, objectiveMetric), objectiveMetric)}
+            </span>
+            <span className="rounded border border-teal-200 bg-white px-2 py-1">
+              Cumulative: {pct(metricOf(run, "cumulative_return"))}
+            </span>
+          </div>
+        </div>
+        <button
+          type="button"
+          onClick={() => onSelectRun(run)}
+          className="rounded-md border border-teal-300 bg-white px-3 py-2 text-sm text-teal-800 transition hover:border-teal-500"
+        >
+          查看 workflow 详情
+        </button>
+      </div>
+    </Card>
+  );
+}
+
+function ComparisonMetricsTable({ rows, onSelectRun }) {
+  const bestSharpe = rows.length > 0 ? [...rows].sort((left, right) => compareRunsByMetric(left, right, "sharpe", "max"))[0] : null;
+  const bestReturn =
+    rows.length > 0 ? [...rows].sort((left, right) => compareRunsByMetric(left, right, "cumulative_return", "max"))[0] : null;
+  const bestDrawdown =
+    rows.length > 0 ? [...rows].sort((left, right) => compareRunsByMetric(left, right, "max_drawdown", "min"))[0] : null;
+
+  return (
+    <Card className="overflow-hidden">
+      <div className="border-b border-zinc-200 px-5 py-4">
+        <div className="text-sm font-semibold text-zinc-950">指标对比</div>
+        <div className="text-xs text-zinc-500">点击任意行可直接切换到对应 workflow 详情。</div>
+      </div>
+      {rows.length === 0 ? (
+        <div className="px-5 py-6 text-sm text-zinc-500">暂无可展示的对比数据。</div>
+      ) : (
+        <div className="overflow-x-auto">
+          <table className="min-w-full text-left text-sm">
+            <thead className="bg-zinc-50 text-xs uppercase tracking-[0.12em] text-zinc-500">
+              <tr>
+                <th className="px-5 py-3 font-medium">Strategy</th>
+                <th className="px-4 py-3 font-medium">Sharpe</th>
+                <th className="px-4 py-3 font-medium">Cumulative</th>
+                <th className="px-4 py-3 font-medium">Max DD</th>
+                <th className="px-4 py-3 font-medium">Turnover</th>
+              </tr>
+            </thead>
+            <tbody className="divide-y divide-zinc-100">
+              {rows.map((row) => (
+                <tr
+                  key={`${row.run_id}-${row.manifest_path}`}
+                  className="cursor-pointer transition hover:bg-zinc-50"
+                  onClick={() => onSelectRun(row)}
+                >
+                  <td className="px-5 py-3">
+                    <div className="font-medium text-zinc-950">{row.strategy_name || row.name}</div>
+                    <div className="mt-1 text-xs text-zinc-500">{runTypeLabel(row)}</div>
+                  </td>
+                  <td className={`px-4 py-3 font-mono ${bestSharpe?.manifest_path === row.manifest_path ? "text-teal-700" : "text-zinc-900"}`}>
+                    {fmt(metricOf(row, "sharpe"))}
+                  </td>
+                  <td className={`px-4 py-3 font-mono ${bestReturn?.manifest_path === row.manifest_path ? "text-teal-700" : "text-zinc-900"}`}>
+                    {pct(metricOf(row, "cumulative_return"))}
+                  </td>
+                  <td className={`px-4 py-3 font-mono ${bestDrawdown?.manifest_path === row.manifest_path ? "text-teal-700" : "text-zinc-900"}`}>
+                    {pct(metricOf(row, "max_drawdown"))}
+                  </td>
+                  <td className="px-4 py-3 font-mono text-zinc-900">{fmt(metricOf(row, "avg_turnover"))}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
+    </Card>
+  );
+}
+
+function ExperimentDetail({ run, detailState, onSelectRun }) {
+  if (!run) {
+    return <EmptyState />;
+  }
+  if (detailState.loading) {
+    return <Skeleton />;
+  }
+  if (detailState.error) {
+    return <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
+  }
+
+  const detail = detailState.detail;
+  const experiment = detail?.manifest?.experiment ?? {};
+  const winner = detail?.manifest?.winner ?? null;
+  const children = detail?.children ?? [];
+  const objectiveMetric = experiment.objective?.metric || "sharpe";
+  const objectiveDirection = experiment.objective?.direction || "max";
+  const rankedChildren = [...children].sort((left, right) => compareRunsByMetric(left, right, objectiveMetric, objectiveDirection));
+  const winnerManifestPath = winner?.run_manifest_path;
+  const winnerRun = winnerManifestPath
+    ? children.find((child) => child.manifest_path === winnerManifestPath)
+    : rankedChildren[0] || null;
+  const description = experiment.description || run.primary_report_path || "批量实验结果与候选策略列表。";
+
+  return (
+    <div className="space-y-5">
+      <Card className="p-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-zinc-500">
+              <ListChecks size={15} /> Experiment detail
+            </div>
+            <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-tight text-zinc-950">{run.name}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">{description}</p>
+            <div className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-500">
+              <span className="rounded border border-zinc-200 px-2 py-1 font-mono">{run.run_id}</span>
+              <span className="rounded border border-zinc-200 px-2 py-1">{children.length} child runs</span>
+              <span className="rounded border border-zinc-200 px-2 py-1">
+                {metricLabel(objectiveMetric)} ({objectiveDirection})
+              </span>
+            </div>
+          </div>
+          <div className="rounded-md border border-zinc-200 px-3 py-2 text-xs text-zinc-600">
+            <div className="text-zinc-500">Winner</div>
+            <div className="font-mono text-zinc-900">{winnerRun?.strategy_name || winner?.strategy_name || "-"}</div>
+          </div>
+        </div>
+      </Card>
+
+      <WinnerHighlight
+        run={winnerRun}
+        objectiveMetric={objectiveMetric}
+        objectiveDirection={objectiveDirection}
+        onSelectRun={onSelectRun}
+      />
+
+      <div className="grid gap-5 xl:grid-cols-[0.95fr_1.05fr]">
+        <Card className="p-5">
+          <div className="text-sm font-semibold text-zinc-950">实验摘要</div>
+          <div className="mt-4 grid gap-3 text-xs sm:grid-cols-2">
+            <DetailField label="Objective" value={`${metricLabel(objectiveMetric)} (${objectiveDirection})`} />
+            <DetailField label="Max workers" value={String(experiment.max_workers ?? "-")} />
+            <DetailField label="Workflow count" value={String((detail?.manifest?.entries ?? []).length)} />
+            <DetailField label="Winner strategy" value={winnerRun?.strategy_name || winner?.strategy_name || "-"} mono />
+            <DetailField
+              label="Winner metric"
+              value={winnerRun ? formatMetricValue(metricOf(winnerRun, objectiveMetric), objectiveMetric) : "-"}
+              mono
+            />
+            <DetailField label="Manifest" value={run.manifest_path} mono />
+            <DetailField label="Primary report" value={run.primary_report_path || "-"} mono />
+          </div>
+        </Card>
+        <ChildRunList
+          title="子运行"
+          description="按实验 objective 排序，点击任意候选策略可切换到对应 workflow 详情。"
+          rows={rankedChildren}
+          onSelectRun={onSelectRun}
+          primaryMetricKey={objectiveMetric}
+          primaryMetricLabel={metricLabel(objectiveMetric)}
+          highlightManifestPath={winnerRun?.manifest_path || ""}
+          emptyLabel="暂无可展示的子运行。"
+        />
+      </div>
+    </div>
+  );
+}
+
+function ComparisonDetail({ run, detailState, onSelectRun }) {
+  if (!run) {
+    return <EmptyState />;
+  }
+  if (detailState.loading) {
+    return <Skeleton />;
+  }
+  if (detailState.error) {
+    return <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
+  }
+
+  const detail = detailState.detail;
+  const comparison = detail?.manifest?.comparison ?? {};
+  const children = detail?.children ?? [];
+  const bestSharpeRun =
+    children.length > 0 ? [...children].sort((left, right) => metricOf(right, "sharpe") - metricOf(left, "sharpe"))[0] : null;
+  const bestReturnRun =
+    children.length > 0
+      ? [...children].sort((left, right) => metricOf(right, "cumulative_return") - metricOf(left, "cumulative_return"))[0]
+      : null;
+  const lowestDrawdownRun =
+    children.length > 0
+      ? [...children].sort((left, right) => metricOf(left, "max_drawdown") - metricOf(right, "max_drawdown"))[0]
+      : null;
+
+  return (
+    <div className="space-y-5">
+      <Card className="p-5">
+        <div className="flex flex-wrap items-start justify-between gap-4">
+          <div>
+            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-zinc-500">
+              <GitBranch size={15} /> Comparison detail
+            </div>
+            <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-tight text-zinc-950">{run.name}</h1>
+            <p className="mt-3 max-w-3xl text-sm leading-6 text-zinc-600">
+              {comparison.description || "查看策略对比批次与可下钻的 workflow 结果。"}
+            </p>
+            <div className="mt-3 flex flex-wrap gap-2 text-xs text-zinc-500">
+              <span className="rounded border border-zinc-200 px-2 py-1 font-mono">{run.run_id}</span>
+              <span className="rounded border border-zinc-200 px-2 py-1">{children.length} child runs</span>
+            </div>
+          </div>
+          <div className="rounded-md border border-zinc-200 px-3 py-2 text-xs text-zinc-600">
+            <div className="text-zinc-500">Best sharpe</div>
+            <div className="font-mono text-zinc-900">{bestSharpeRun?.strategy_name || "-"}</div>
+          </div>
+        </div>
+      </Card>
+
+      <div className="grid gap-5 xl:grid-cols-3">
+        <Card className="p-5">
+          <div className="text-sm font-semibold text-zinc-950">Best Sharpe</div>
+          <div className="mt-3 text-lg font-semibold text-zinc-950">{bestSharpeRun?.strategy_name || "-"}</div>
+          <div className="mt-1 font-mono text-sm text-teal-700">
+            {bestSharpeRun ? fmt(metricOf(bestSharpeRun, "sharpe")) : "-"}
+          </div>
+        </Card>
+        <Card className="p-5">
+          <div className="text-sm font-semibold text-zinc-950">Best Return</div>
+          <div className="mt-3 text-lg font-semibold text-zinc-950">{bestReturnRun?.strategy_name || "-"}</div>
+          <div className="mt-1 font-mono text-sm text-teal-700">
+            {bestReturnRun ? pct(metricOf(bestReturnRun, "cumulative_return")) : "-"}
+          </div>
+        </Card>
+        <Card className="p-5">
+          <div className="text-sm font-semibold text-zinc-950">Lowest Drawdown</div>
+          <div className="mt-3 text-lg font-semibold text-zinc-950">{lowestDrawdownRun?.strategy_name || "-"}</div>
+          <div className="mt-1 font-mono text-sm text-teal-700">
+            {lowestDrawdownRun ? pct(metricOf(lowestDrawdownRun, "max_drawdown")) : "-"}
+          </div>
+        </Card>
+      </div>
+
+      <div className="grid gap-5 xl:grid-cols-[0.9fr_1.1fr]">
+        <Card className="p-5">
+          <div className="text-sm font-semibold text-zinc-950">对比摘要</div>
+          <div className="mt-4 grid gap-3 text-xs sm:grid-cols-2">
+            <DetailField label="Compared runs" value={String((detail?.manifest?.entries ?? []).length)} />
+            <DetailField label="Best sharpe" value={bestSharpeRun ? `${bestSharpeRun.strategy_name} (${fmt(metricOf(bestSharpeRun, "sharpe"))})` : "-"} />
+            <DetailField label="Best return" value={bestReturnRun ? `${bestReturnRun.strategy_name} (${pct(metricOf(bestReturnRun, "cumulative_return"))})` : "-"} />
+            <DetailField label="Lowest drawdown" value={lowestDrawdownRun ? `${lowestDrawdownRun.strategy_name} (${pct(metricOf(lowestDrawdownRun, "max_drawdown"))})` : "-"} />
+            <DetailField label="Manifest" value={run.manifest_path} mono />
+            <DetailField label="Primary report" value={run.primary_report_path || "-"} mono />
+          </div>
+        </Card>
+        <ChildRunList
+          title="参与策略"
+          description="按 Sharpe 排序，点击任意策略可直接下钻到 workflow 详情。"
+          rows={[...children].sort((left, right) => compareRunsByMetric(left, right, "sharpe", "max"))}
+          onSelectRun={onSelectRun}
+          highlightManifestPath={bestSharpeRun?.manifest_path || ""}
+          emptyLabel="暂无可展示的对比子运行。"
+        />
+      </div>
+
+      <ComparisonMetricsTable rows={children} onSelectRun={onSelectRun} />
+    </div>
+  );
+}
+
 function RunDetail({ run, detailState }) {
   if (!run) {
     return <EmptyState />;
@@ -602,9 +1012,9 @@ function RunDetail({ run, detailState }) {
 
 export default function DashboardClient({ initialRuns = [], initialError = "" }) {
   const { loading, error, runs, reload } = useRuns(initialRuns, initialError);
-  const hasAnyRuns = runs.length > 0;
-  const workflowRuns = runs.filter((run) => run.kind === "workflow_run");
-  const [selected, setSelected] = useState(() => pickBestWorkflowRun(initialRuns));
+  const selectableRuns = runs.filter((run) => ["workflow_run", "experiment_run", "comparison_run"].includes(run.kind));
+  const hasAnyRuns = selectableRuns.length > 0;
+  const [selected, setSelected] = useState(() => pickInitialRun(initialRuns));
   const [query, setQuery] = useState({
     search: "",
     strategyType: "",
@@ -641,14 +1051,14 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
   }, [reload]);
 
   useEffect(() => {
-    if (workflowRuns.length === 0) {
+    if (selectableRuns.length === 0) {
       if (selected !== null) {
         setSelected(null);
       }
       return;
     }
 
-    const currentSelected = selected ? workflowRuns.find((run) => run.manifest_path === selected.manifest_path) : null;
+    const currentSelected = selected ? selectableRuns.find((run) => run.manifest_path === selected.manifest_path) : null;
     if (currentSelected) {
       if (currentSelected !== selected) {
         setSelected(currentSelected);
@@ -656,10 +1066,10 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
       return;
     }
 
-    setSelected(pickBestWorkflowRun(workflowRuns));
-  }, [selected, workflowRuns]);
+    setSelected(pickInitialRun(selectableRuns));
+  }, [selected, selectableRuns]);
 
-  const detailState = useRunDetail(selected);
+  const detailState = useSelectedDetail(selected);
 
   return (
     <main className="min-h-[100dvh] bg-[#f7f7f5] text-zinc-950">
@@ -689,10 +1099,19 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
           {loading ? <Skeleton /> : null}
           {error ? <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{error}</div> : null}
           {!loading && hasAnyRuns ? <Leaderboard runs={runs} selected={selected} onSelect={setSelected} /> : null}
-          {!loading && hasAnyRuns ? <Experiments runs={runs} /> : null}
-          {!loading && hasAnyRuns ? <Comparisons runs={runs} /> : null}
+          {!loading && hasAnyRuns ? <Experiments runs={runs} selected={selected} onSelect={setSelected} /> : null}
+          {!loading && hasAnyRuns ? <Comparisons runs={runs} selected={selected} onSelect={setSelected} /> : null}
         </aside>
-        <section>{!loading && workflowRuns.length === 0 ? <EmptyState /> : <RunDetail run={selected} detailState={detailState} />}</section>
+        <section>
+          {!loading && !selected ? <EmptyState /> : null}
+          {selected?.kind === "workflow_run" ? <RunDetail run={selected} detailState={detailState} /> : null}
+          {selected?.kind === "experiment_run" ? (
+            <ExperimentDetail run={selected} detailState={detailState} onSelectRun={setSelected} />
+          ) : null}
+          {selected?.kind === "comparison_run" ? (
+            <ComparisonDetail run={selected} detailState={detailState} onSelectRun={setSelected} />
+          ) : null}
+        </section>
       </div>
     </main>
   );

@@ -9,8 +9,14 @@ from signal_lab.api import _jsonable_frame, _load_manifest, create_app
 from signal_lab.experiments import RunRegistry, RunRegistryEntry
 
 
-def _write_run_manifest(reports_dir: Path, *, row_count: int) -> Path:
-    run_dir = reports_dir / "runs" / "api_probe" / "run-1"
+def _write_run_manifest(
+    reports_dir: Path,
+    *,
+    row_count: int,
+    strategy_name: str = "api_probe",
+    run_id: str = "run-1",
+) -> Path:
+    run_dir = reports_dir / "runs" / strategy_name / run_id
     artifacts_dir = run_dir / "artifacts"
     artifacts_dir.mkdir(parents=True, exist_ok=True)
 
@@ -55,7 +61,7 @@ def _write_run_manifest(reports_dir: Path, *, row_count: int) -> Path:
     manifest_path.write_text(
         json.dumps(
             {
-                "run_id": "run-1",
+                "run_id": run_id,
                 "generated_at": "2026-01-01T00:00:00+00:00",
                 "strategy_type": "factor",
                 "signal_version": "v1",
@@ -173,3 +179,127 @@ def test_api_prefers_sqlite_for_runs_and_detail(tmp_path: Path) -> None:
     assert payload["metrics"]["backtest_metrics"]["sharpe"] == 1.23
     assert payload["artifacts"]["equity_curve"]
     assert payload["artifacts"]["trades"]
+
+
+def test_api_returns_experiment_and_comparison_details(tmp_path: Path) -> None:
+    reports_dir = tmp_path / "reports"
+    child_one_manifest = _write_run_manifest(reports_dir, row_count=6, strategy_name="child_one", run_id="run-a")
+    child_two_manifest = _write_run_manifest(reports_dir, row_count=6, strategy_name="child_two", run_id="run-b")
+    app_config = _write_app_config(tmp_path, reports_dir)
+
+    child_one = json.loads(child_one_manifest.read_text(encoding="utf-8"))
+    child_two = json.loads(child_two_manifest.read_text(encoding="utf-8"))
+    registry = RunRegistry(reports_dir)
+    registry.append(
+        RunRegistryEntry(
+            kind="workflow_run",
+            name="child_one",
+            run_id="run-a",
+            generated_at="2026-01-01T00:00:00+00:00",
+            manifest_path=str(child_one_manifest),
+            strategy_name="child_one",
+            signal_name="ret_1",
+            strategy_type="factor",
+            backtest_metrics={"sharpe": 1.5, "cumulative_return": 0.12},
+            structured_artifact_paths=dict(child_one["structured_artifacts"]),
+        ),
+        manifest_payload=child_one,
+    )
+    registry.append(
+        RunRegistryEntry(
+            kind="workflow_run",
+            name="child_two",
+            run_id="run-b",
+            generated_at="2026-01-02T00:00:00+00:00",
+            manifest_path=str(child_two_manifest),
+            strategy_name="child_two",
+            signal_name="ret_4",
+            strategy_type="factor",
+            backtest_metrics={"sharpe": 0.9, "cumulative_return": 0.04},
+            structured_artifact_paths=dict(child_two["structured_artifacts"]),
+        ),
+        manifest_payload=child_two,
+    )
+
+    experiment_manifest_path = reports_dir / "experiments" / "exp_demo" / "run-exp" / "experiment_manifest.json"
+    experiment_manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    experiment_manifest = {
+        "run_id": "run-exp",
+        "generated_at": "2026-01-03T00:00:00+00:00",
+        "experiment": {
+            "name": "exp_demo",
+            "description": "experiment detail probe",
+            "objective": {"metric": "sharpe", "direction": "max"},
+        },
+        "entries": [
+            {
+                "strategy_name": "child_one",
+                "workflow_name": "child_one",
+                "run_id": "run-a",
+                "run_manifest_path": str(child_one_manifest),
+            },
+            {
+                "strategy_name": "child_two",
+                "workflow_name": "child_two",
+                "run_id": "run-b",
+                "run_manifest_path": str(child_two_manifest),
+            },
+        ],
+        "winner": {
+            "strategy_name": "child_one",
+            "workflow_name": "child_one",
+            "run_id": "run-a",
+            "run_manifest_path": str(child_one_manifest),
+        },
+    }
+    experiment_manifest_path.write_text(json.dumps(experiment_manifest), encoding="utf-8")
+    registry.append(
+        RunRegistryEntry(
+            kind="experiment_run",
+            name="exp_demo",
+            run_id="run-exp",
+            generated_at="2026-01-03T00:00:00+00:00",
+            manifest_path=str(experiment_manifest_path),
+            child_manifest_paths=[str(child_one_manifest), str(child_two_manifest)],
+        ),
+        manifest_payload=experiment_manifest,
+    )
+
+    comparison_manifest_path = reports_dir / "comparisons" / "cmp_demo" / "run-cmp" / "comparison_manifest.json"
+    comparison_manifest_path.parent.mkdir(parents=True, exist_ok=True)
+    comparison_manifest = {
+        "run_id": "run-cmp",
+        "generated_at": "2026-01-04T00:00:00+00:00",
+        "comparison": {
+            "name": "cmp_demo",
+            "description": "comparison detail probe",
+        },
+        "entries": [
+            {"strategy_name": "child_one"},
+            {"strategy_name": "child_two"},
+        ],
+    }
+    comparison_manifest_path.write_text(json.dumps(comparison_manifest), encoding="utf-8")
+    registry.append(
+        RunRegistryEntry(
+            kind="comparison_run",
+            name="cmp_demo",
+            run_id="run-cmp",
+            generated_at="2026-01-04T00:00:00+00:00",
+            manifest_path=str(comparison_manifest_path),
+            child_manifest_paths=[str(child_one_manifest), str(child_two_manifest)],
+        ),
+        manifest_payload=comparison_manifest,
+    )
+
+    app = create_app(app_config)
+    experiment_detail = _endpoint(app, "/api/experiment-detail")(manifest_path=str(experiment_manifest_path))
+    comparison_detail = _endpoint(app, "/api/comparison-detail")(manifest_path=str(comparison_manifest_path))
+
+    assert experiment_detail["run"]["name"] == "exp_demo"
+    assert len(experiment_detail["children"]) == 2
+    assert experiment_detail["manifest"]["winner"]["run_manifest_path"] == str(child_one_manifest)
+
+    assert comparison_detail["run"]["name"] == "cmp_demo"
+    assert len(comparison_detail["children"]) == 2
+    assert comparison_detail["manifest"]["comparison"]["description"] == "comparison detail probe"

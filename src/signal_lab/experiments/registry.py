@@ -175,7 +175,37 @@ class RunRegistry:
         return self.sqlite_store.load_trades(manifest_path, limit=limit)
 
     def load_children(self, parent_manifest_path: str) -> list[dict[str, Any]]:
-        return self.sqlite_store.load_children(parent_manifest_path)
+        if self.sqlite_store.load_count() > 0:
+            return self.sqlite_store.load_children(parent_manifest_path)
+        parent = self.load_run(parent_manifest_path)
+        if parent is None:
+            return []
+        return [
+            {
+                "child_manifest_path": child_manifest_path,
+                "relation_type": "legacy_child",
+                "ordinal": ordinal,
+            }
+            for ordinal, child_manifest_path in enumerate(parent.get("child_manifest_paths", []))
+        ]
+
+    def load_child_runs(self, parent_manifest_path: str) -> list[dict[str, Any]]:
+        child_rows: list[dict[str, Any]] = []
+        for relation in self.load_children(parent_manifest_path):
+            child_manifest_path = relation.get("child_manifest_path")
+            if not child_manifest_path:
+                continue
+            child = self.load_run(str(child_manifest_path))
+            if child is None:
+                continue
+            child_rows.append(
+                {
+                    **child,
+                    "relation_type": relation.get("relation_type"),
+                    "ordinal": relation.get("ordinal", 0),
+                }
+            )
+        return child_rows
 
     def backfill_from_jsonl(self) -> dict[str, Any]:
         summary = {
