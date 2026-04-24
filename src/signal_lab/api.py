@@ -76,7 +76,9 @@ def _load_manifest(reports_dir: Path, manifest_path: str, *, strict: bool = True
 
 
 def _enrich_run(reports_dir: Path, row: dict) -> dict:
-    manifest = _read_json(reports_dir, row.get("manifest_path"), strict=False)
+    manifest = {}
+    if not row.get("config_hash") or not row.get("git_sha") or not row.get("data_snapshot_id") or not row.get("structured_artifact_paths"):
+        manifest = _read_json(reports_dir, row.get("manifest_path"), strict=False)
     metadata = manifest.get("metadata", {})
     strategy_type = (
         row.get("strategy_type")
@@ -99,7 +101,7 @@ def _enrich_run(reports_dir: Path, row: dict) -> dict:
 def create_app(config_path: str | Path | None = None) -> FastAPI:
     resolved_config = config_path or os.environ.get("SIGNAL_LAB_CONFIG")
     layout = _layout(resolved_config)
-    registry = RunRegistry(layout.reports_dir)
+    registry = RunRegistry(layout.reports_dir, db_path=layout.run_registry_db_path)
     app = FastAPI(title="Quant Strategy Lab API", version="0.1.0")
 
     @app.get("/api/health")
@@ -107,9 +109,27 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         return {"status": "ok", "reports_dir": str(layout.reports_dir)}
 
     @app.get("/api/runs")
-    def runs(kind: str | None = Query(None)) -> dict[str, list[dict]]:
-        rows = [_enrich_run(layout.reports_dir, row) for row in registry.load(kind=kind)]
-        rows.sort(key=lambda item: item.get("generated_at", ""), reverse=True)
+    def runs(
+        kind: str | None = Query(None),
+        search: str | None = Query(None),
+        strategy_type: str | None = Query(None),
+        sort_by: str = Query("generated_at"),
+        sort_order: str = Query("desc"),
+        limit: int = Query(200, ge=1, le=1000),
+        offset: int = Query(0, ge=0),
+    ) -> dict[str, list[dict]]:
+        rows = [
+            _enrich_run(layout.reports_dir, row)
+            for row in registry.load(
+                kind=kind,
+                search=search,
+                strategy_type=strategy_type,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=limit,
+                offset=offset,
+            )
+        ]
         return {"runs": rows}
 
     @app.get("/api/run-detail")
@@ -117,25 +137,36 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         manifest_path: str = Query(...),
         limit: int = Query(1000, ge=1, le=5000),
     ) -> dict:
-        manifest = _load_manifest(layout.reports_dir, manifest_path)
+        run_row = registry.load_run(manifest_path)
+        manifest = registry.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)
         artifacts = manifest.get("structured_artifacts", {})
+        metrics = None
+        if run_row and (run_row.get("backtest_metrics") or run_row.get("backtest_attribution")):
+            metrics = {
+                "backtest_metrics": run_row.get("backtest_metrics", {}),
+                "backtest_attribution": run_row.get("backtest_attribution", {}),
+            }
+        equity_curve = registry.load_series(manifest_path, "equity_curve", limit=limit)
+        period_returns = registry.load_series(manifest_path, "period_returns", limit=limit)
+        trades = registry.load_trades(manifest_path, limit=limit)
         return {
+            "run": _enrich_run(layout.reports_dir, run_row) if run_row else None,
             "manifest": manifest,
             "artifacts": {
                 "prices": _jsonable_frame(layout.reports_dir, artifacts.get("prices"), row_limit=limit),
                 "signals": _jsonable_frame(layout.reports_dir, artifacts.get("signals"), row_limit=limit),
                 "weights": _jsonable_frame(layout.reports_dir, artifacts.get("weights"), row_limit=limit),
-                "trades": _jsonable_frame(layout.reports_dir, artifacts.get("trades"), row_limit=limit),
-                "equity_curve": _jsonable_frame(layout.reports_dir, artifacts.get("equity_curve"), row_limit=limit),
-                "period_returns": _jsonable_frame(layout.reports_dir, artifacts.get("period_returns"), row_limit=limit),
+                "trades": trades or _jsonable_frame(layout.reports_dir, artifacts.get("trades"), row_limit=limit),
+                "equity_curve": equity_curve or _jsonable_frame(layout.reports_dir, artifacts.get("equity_curve"), row_limit=limit),
+                "period_returns": period_returns or _jsonable_frame(layout.reports_dir, artifacts.get("period_returns"), row_limit=limit),
             },
-            "metrics": _read_json(layout.reports_dir, artifacts.get("metrics")),
+            "metrics": metrics or _read_json(layout.reports_dir, artifacts.get("metrics")),
             "row_limit": limit,
         }
 
     @app.get("/api/experiment-detail")
     def experiment_detail(manifest_path: str = Query(...)) -> dict:
-        return {"manifest": _load_manifest(layout.reports_dir, manifest_path)}
+        return {"manifest": registry.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)}
 
     return app
 

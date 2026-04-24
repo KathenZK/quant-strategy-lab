@@ -18,6 +18,7 @@ class StorageConfig:
     normalized_dir: Path
     features_dir: Path
     reports_dir: Path
+    registry_db_path: Path
 
 
 @dataclass(slots=True)
@@ -55,6 +56,7 @@ def default_settings(project_root: Path | None = None) -> AppSettings:
             normalized_dir=root / "data" / "normalized",
             features_dir=root / "data" / "features",
             reports_dir=root / "reports",
+            registry_db_path=root / "reports" / "_registry" / "runs.sqlite",
         ),
         exchanges=[
             ExchangeConfig(name="binance", quote_assets=["USDT", "USDC"]),
@@ -85,16 +87,23 @@ def load_settings(path: str | Path | None = None) -> AppSettings:
     storage = payload.get("storage", {})
     exchanges = payload.get("exchanges", [])
     research = payload.get("research", {})
+    root_dir = Path(storage.get("root_dir", defaults.storage.root_dir))
+    raw_dir = Path(storage.get("raw_dir", defaults.storage.raw_dir))
+    normalized_dir = Path(storage.get("normalized_dir", defaults.storage.normalized_dir))
+    features_dir = Path(storage.get("features_dir", defaults.storage.features_dir))
+    reports_dir = Path(storage.get("reports_dir", defaults.storage.reports_dir))
+    registry_db_default = reports_dir / "_registry" / "runs.sqlite"
 
     return AppSettings(
         name=project.get("name", defaults.name),
         timezone=project.get("timezone", defaults.timezone),
         storage=StorageConfig(
-            root_dir=Path(storage.get("root_dir", defaults.storage.root_dir)),
-            raw_dir=Path(storage.get("raw_dir", defaults.storage.raw_dir)),
-            normalized_dir=Path(storage.get("normalized_dir", defaults.storage.normalized_dir)),
-            features_dir=Path(storage.get("features_dir", defaults.storage.features_dir)),
-            reports_dir=Path(storage.get("reports_dir", defaults.storage.reports_dir)),
+            root_dir=root_dir,
+            raw_dir=raw_dir,
+            normalized_dir=normalized_dir,
+            features_dir=features_dir,
+            reports_dir=reports_dir,
+            registry_db_path=Path(storage.get("registry_db_path", registry_db_default)),
         ),
         exchanges=[
             ExchangeConfig(

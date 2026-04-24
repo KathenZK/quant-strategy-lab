@@ -385,18 +385,24 @@ def feature_manifests(
 def run_registry(
     kind: str | None = typer.Option(None, "--kind", help="Optional registry kind filter."),
     limit: int = typer.Option(20, "--limit", min=1, help="How many recent entries to show."),
+    search: str | None = typer.Option(None, "--search", help="Optional substring filter."),
+    strategy_type: str | None = typer.Option(None, "--strategy-type", help="Optional strategy type filter."),
     config: Path | None = typer.Option(None, "--config", "-c"),
 ) -> None:
     """List recent workflow, experiment, and comparison runs."""
     lake, _, _ = _runtime(config)
-    records = RunRegistry(lake.reports_dir).load(kind=kind)
+    records = RunRegistry(lake.reports_dir, db_path=lake.run_registry_db_path).load(
+        kind=kind,
+        search=search,
+        strategy_type=strategy_type,
+        limit=limit,
+    )
     if not records:
         typer.echo("registry: 0")
         return
 
-    recent = records[-limit:]
     typer.echo(f"registry: {len(records)}")
-    for item in reversed(recent):
+    for item in records:
         typer.echo(
             f"{item['kind']}\t{item['name']}\t{item['run_id']}\t{item['manifest_path']}"
         )
@@ -412,6 +418,21 @@ def refresh_state(config: Path | None = typer.Option(None, "--config", "-c")) ->
         typer.echo(
             f"{item.dataset}\t{item.exchange}\t{item.symbol}\t{item.market_type}\t{item.last_ts}\trows={item.rows}"
         )
+
+
+@app.command()
+def backfill_run_db(config: Path | None = typer.Option(None, "--config", "-c")) -> None:
+    """Backfill the SQLite run registry from historical JSONL entries."""
+    lake, _, _ = _runtime(config)
+    summary = RunRegistry(lake.reports_dir, db_path=lake.run_registry_db_path).backfill_from_jsonl()
+    typer.echo(f"sqlite: {summary['sqlite_path']}")
+    typer.echo(f"processed: {summary['processed']}")
+    typer.echo(f"succeeded: {summary['succeeded']}")
+    typer.echo(f"failed: {summary['failed']}")
+    if summary["failed_manifests"]:
+        for manifest_path in summary["failed_manifests"]:
+            typer.echo(f"failed_manifest: {manifest_path}")
+        raise typer.Exit(code=1)
 
 
 @app.command()

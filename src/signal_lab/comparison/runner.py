@@ -90,7 +90,7 @@ class StrategyComparisonRunner:
         }
         manifest_path = comparison_dir / "comparison_manifest.json"
         manifest_path.write_text(json.dumps(manifest_payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
-        RunRegistry(runtime_runner.layout.reports_dir).append(
+        RunRegistry(runtime_runner.layout.reports_dir, db_path=runtime_runner.layout.run_registry_db_path).append(
             RunRegistryEntry(
                 kind="comparison_run",
                 name=config.name,
@@ -100,7 +100,8 @@ class StrategyComparisonRunner:
                 app_config_path=str(self.app_config_path) if self.app_config_path else None,
                 primary_report_path=str(report_path),
                 child_manifest_paths=[entry.run_manifest_path for entry in source_entries if entry.run_manifest_path],
-            )
+            ),
+            manifest_payload=manifest_payload,
         )
 
         return StrategyComparisonArtifacts(

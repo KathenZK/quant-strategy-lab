@@ -40,6 +40,24 @@ function runTypeLabel(run) {
   return run?.variant_id || run?.strategy_type || run?.signal_type || "-";
 }
 
+function buildRunsSearchParams(query = {}) {
+  const searchParams = new URLSearchParams();
+  if (query.search) {
+    searchParams.set("search", query.search);
+  }
+  if (query.strategyType) {
+    searchParams.set("strategy_type", query.strategyType);
+  }
+  if (query.sortBy) {
+    searchParams.set("sort_by", query.sortBy);
+  }
+  if (query.sortOrder) {
+    searchParams.set("sort_order", query.sortOrder);
+  }
+  searchParams.set("limit", String(query.limit ?? 200));
+  return searchParams;
+}
+
 function pickBestWorkflowRun(runs) {
   const workflowRuns = runs.filter((run) => run.kind === "workflow_run");
   if (workflowRuns.length === 0) {
@@ -55,14 +73,16 @@ function useRuns(initialRuns = [], initialError = "") {
     runs: initialRuns,
   });
 
-  const reload = useCallback(async () => {
+  const reload = useCallback(async (query = {}) => {
     setState((current) => ({
       ...current,
       loading: true,
       error: "",
     }));
     try {
-      const data = await fetchSignalLabAppJson(SIGNAL_LAB_ENDPOINTS.runs);
+      const data = await fetchSignalLabAppJson(SIGNAL_LAB_ENDPOINTS.runs, {
+        searchParams: buildRunsSearchParams(query),
+      });
       setState({
         loading: false,
         error: "",
@@ -223,10 +243,104 @@ function Experiments({ runs }) {
               <div className="truncate text-sm font-medium text-zinc-950">{run.name}</div>
               <div className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
                 <span className="font-mono">{run.run_id}</span>
+                <span>{run.child_run_count || 0} runs</span>
               </div>
             </div>
           ))
         )}
+      </div>
+    </Card>
+  );
+}
+
+function Comparisons({ runs }) {
+  const comparisons = runs.filter((run) => run.kind === "comparison_run").slice(0, 8);
+
+  return (
+    <Card className="overflow-hidden">
+      <div className="flex items-center gap-2 border-b border-zinc-200 px-5 py-4">
+        <GitBranch size={20} className="text-zinc-700" />
+        <div>
+          <div className="text-sm font-semibold text-zinc-950">策略对比</div>
+          <div className="text-xs text-zinc-500">查看对比批次与子运行数量</div>
+        </div>
+      </div>
+      <div className="divide-y divide-zinc-100">
+        {comparisons.length === 0 ? (
+          <div className="px-5 py-6 text-sm text-zinc-500">暂无 comparison run。</div>
+        ) : (
+          comparisons.map((run) => (
+            <div key={`${run.run_id}-${run.manifest_path}`} className="px-5 py-3">
+              <div className="truncate text-sm font-medium text-zinc-950">{run.name}</div>
+              <div className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
+                <span className="font-mono">{run.run_id}</span>
+                <span>{run.child_run_count || 0} runs</span>
+              </div>
+            </div>
+          ))
+        )}
+      </div>
+    </Card>
+  );
+}
+
+function FilterPanel({ query, onChange, onApply, onReset, strategyTypes, loading }) {
+  return (
+    <Card className="p-5">
+      <div className="mb-4">
+        <div className="text-sm font-semibold text-zinc-950">结果筛选</div>
+        <div className="text-xs text-zinc-500">按名称、策略类型和排序方式查询 SQLite 结果索引</div>
+      </div>
+      <div className="space-y-3">
+        <input
+          value={query.search}
+          onChange={(event) => onChange("search", event.target.value)}
+          placeholder="搜索策略名、信号名、变体 ID"
+          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+        />
+        <div className="grid gap-3 sm:grid-cols-2">
+          <select
+            value={query.strategyType}
+            onChange={(event) => onChange("strategyType", event.target.value)}
+            className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+          >
+            <option value="">全部策略类型</option>
+            {strategyTypes.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+          <select
+            value={query.sortBy}
+            onChange={(event) => onChange("sortBy", event.target.value)}
+            className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+          >
+            <option value="generated_at">按时间排序</option>
+            <option value="sharpe">按 Sharpe 排序</option>
+            <option value="cumulative_return">按累计收益排序</option>
+            <option value="max_drawdown">按回撤排序</option>
+            <option value="final_equity">按最终权益排序</option>
+          </select>
+        </div>
+        <div className="flex gap-3">
+          <button
+            type="button"
+            onClick={onApply}
+            disabled={loading}
+            className="inline-flex rounded-md bg-zinc-950 px-3 py-2 text-sm text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            {loading ? "查询中..." : "应用筛选"}
+          </button>
+          <button
+            type="button"
+            onClick={onReset}
+            disabled={loading}
+            className="inline-flex rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-700 transition hover:border-zinc-400 disabled:cursor-not-allowed disabled:opacity-60"
+          >
+            重置
+          </button>
+        </div>
       </div>
     </Card>
   );
@@ -366,8 +480,11 @@ function RunDetail({ run, detailState }) {
   }
 
   const detail = detailState.detail;
-  const metrics = run.backtest_metrics ?? {};
+  const metrics = detail?.metrics?.backtest_metrics ?? run.backtest_metrics ?? {};
+  const attribution = detail?.metrics?.backtest_attribution ?? run.backtest_attribution ?? {};
+  const paperSummary = run.paper_summary ?? {};
   const artifactCount = Object.keys(run.structured_artifact_paths ?? {}).length;
+  const tradeCount = detail?.artifacts?.trades?.length ?? 0;
 
   return (
     <div className="space-y-5">
@@ -430,6 +547,55 @@ function RunDetail({ run, detailState }) {
           </div>
         </Card>
       </div>
+
+      <div className="grid gap-5 xl:grid-cols-2">
+        <Card className="p-5">
+          <div className="text-sm font-semibold text-zinc-950">回测归因</div>
+          <div className="mt-4 grid gap-3 text-xs sm:grid-cols-2">
+            <div>
+              <div className="text-zinc-500">Gross return sum</div>
+              <div className="font-mono text-zinc-900">{fmt(attribution.gross_return_sum)}</div>
+            </div>
+            <div>
+              <div className="text-zinc-500">Trading cost sum</div>
+              <div className="font-mono text-zinc-900">{fmt(attribution.trading_cost_sum)}</div>
+            </div>
+            <div>
+              <div className="text-zinc-500">Funding cost sum</div>
+              <div className="font-mono text-zinc-900">{fmt(attribution.funding_cost_sum)}</div>
+            </div>
+            <div>
+              <div className="text-zinc-500">Trade rows</div>
+              <div className="font-mono text-zinc-900">{fmt(tradeCount, "0")}</div>
+            </div>
+            <div>
+              <div className="text-zinc-500">Top symbol</div>
+              <div className="font-mono text-zinc-900">{attribution.top_symbol || "-"}</div>
+            </div>
+            <div>
+              <div className="text-zinc-500">Worst symbol</div>
+              <div className="font-mono text-zinc-900">{attribution.worst_symbol || "-"}</div>
+            </div>
+          </div>
+        </Card>
+        <Card className="p-5">
+          <div className="text-sm font-semibold text-zinc-950">模拟盘摘要</div>
+          <div className="mt-4 grid gap-3 text-xs sm:grid-cols-2">
+            <div>
+              <div className="text-zinc-500">Final equity</div>
+              <div className="font-mono text-zinc-900">{fmt(paperSummary.final_equity)}</div>
+            </div>
+            <div>
+              <div className="text-zinc-500">Fill count</div>
+              <div className="font-mono text-zinc-900">{fmt(paperSummary.fill_count, "0")}</div>
+            </div>
+            <div>
+              <div className="text-zinc-500">Funding cashflow</div>
+              <div className="font-mono text-zinc-900">{fmt(paperSummary.funding_cashflow)}</div>
+            </div>
+          </div>
+        </Card>
+      </div>
     </div>
   );
 }
@@ -439,6 +605,40 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
   const hasAnyRuns = runs.length > 0;
   const workflowRuns = runs.filter((run) => run.kind === "workflow_run");
   const [selected, setSelected] = useState(() => pickBestWorkflowRun(initialRuns));
+  const [query, setQuery] = useState({
+    search: "",
+    strategyType: "",
+    sortBy: "generated_at",
+    sortOrder: "desc",
+  });
+
+  const strategyTypes = useMemo(
+    () =>
+      [...new Set(runs.map((run) => run.strategy_type).filter(Boolean))].sort((left, right) => left.localeCompare(right)),
+    [runs],
+  );
+
+  const updateQuery = useCallback((key, value) => {
+    setQuery((current) => ({
+      ...current,
+      [key]: value,
+    }));
+  }, []);
+
+  const applyFilters = useCallback(() => {
+    reload(query);
+  }, [query, reload]);
+
+  const resetFilters = useCallback(() => {
+    const next = {
+      search: "",
+      strategyType: "",
+      sortBy: "generated_at",
+      sortOrder: "desc",
+    };
+    setQuery(next);
+    reload(next);
+  }, [reload]);
 
   useEffect(() => {
     if (workflowRuns.length === 0) {
@@ -471,17 +671,26 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
             <p className="mt-3 text-sm leading-6 text-zinc-300">从实验矩阵里选出候选策略，再下钻到买卖点、权益曲线和运行指纹。</p>
             <button
               type="button"
-              onClick={reload}
+              onClick={() => reload(query)}
               disabled={loading}
               className="mt-4 inline-flex rounded-md border border-zinc-700 px-3 py-2 text-sm text-zinc-100 transition hover:border-teal-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
             >
               {loading ? "刷新中..." : "刷新运行列表"}
             </button>
           </div>
+          <FilterPanel
+            query={query}
+            onChange={updateQuery}
+            onApply={applyFilters}
+            onReset={resetFilters}
+            strategyTypes={strategyTypes}
+            loading={loading}
+          />
           {loading ? <Skeleton /> : null}
           {error ? <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{error}</div> : null}
           {!loading && hasAnyRuns ? <Leaderboard runs={runs} selected={selected} onSelect={setSelected} /> : null}
           {!loading && hasAnyRuns ? <Experiments runs={runs} /> : null}
+          {!loading && hasAnyRuns ? <Comparisons runs={runs} /> : null}
         </aside>
         <section>{!loading && workflowRuns.length === 0 ? <EmptyState /> : <RunDetail run={selected} detailState={detailState} />}</section>
       </div>

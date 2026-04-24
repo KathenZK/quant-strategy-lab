@@ -184,7 +184,7 @@ class ExperimentRunner:
         }
         manifest_path = experiment_dir / "experiment_manifest.json"
         manifest_path.write_text(json.dumps(manifest_payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
-        RunRegistry(runner.layout.reports_dir).append(
+        RunRegistry(runner.layout.reports_dir, db_path=runner.layout.run_registry_db_path).append(
             RunRegistryEntry(
                 kind="experiment_run",
                 name=config.name,
@@ -194,7 +194,8 @@ class ExperimentRunner:
                 app_config_path=str(self.app_config_path) if self.app_config_path else None,
                 primary_report_path=str(report_path),
                 child_manifest_paths=[entry.run_manifest_path for entry in entries if entry.run_manifest_path],
-            )
+            ),
+            manifest_payload=manifest_payload,
         )
 
         return ExperimentArtifacts(

@@ -191,7 +191,7 @@ class StrategyRunner:
         manifest_path = run_dir / "run_manifest.json"
         manifest_path.parent.mkdir(parents=True, exist_ok=True)
         manifest_path.write_text(json.dumps(manifest_payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
-        RunRegistry(self.layout.reports_dir).append(
+        RunRegistry(self.layout.reports_dir, db_path=self.layout.run_registry_db_path).append(
             RunRegistryEntry(
                 kind="workflow_run",
                 name=config.strategy.name,
@@ -217,7 +217,8 @@ class StrategyRunner:
                 backtest_attribution=execution_result.backtest_attribution or {},
                 paper_summary=execution_result.paper_summary or {},
                 structured_artifact_paths=execution_result.structured_artifacts or {},
-            )
+            ),
+            manifest_payload=manifest_payload,
         )
 
         return StrategyRunArtifacts(
