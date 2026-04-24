@@ -1,0 +1,6 @@
+comparison:
+  name: trend_vs_crowding_on_trend_baseline
+  description: Compare trend confirmation and crowding reversal on the shared trend MVP baseline dataset.
+  workflow_configs:
+    - ../workflows/strategies/trend_confirmation.mvp.baseline.yaml
+    - ../workflows/strategies/crowding_reversal.mvp.baseline.yaml

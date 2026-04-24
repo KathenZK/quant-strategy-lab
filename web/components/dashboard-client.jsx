@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import {
   ArrowDown,
   ArrowUp,
@@ -11,6 +11,8 @@ import {
   ListChecks,
   Trophy,
 } from "@phosphor-icons/react";
+
+import { fetchSignalLabAppJson, SIGNAL_LAB_ENDPOINTS } from "../lib/signal-lab-api";
 
 const numberFormat = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 4,
@@ -30,21 +32,12 @@ function pct(value) {
   return `${(Number(value) * 100).toFixed(2)}%`;
 }
 
-async function getJson(url) {
-  const response = await fetch(url, {
-    cache: "no-store",
-    headers: {
-      accept: "application/json",
-    },
-  });
-  if (!response.ok) {
-    throw new Error(await response.text());
-  }
-  return response.json();
-}
-
 function metricOf(run, key) {
   return run?.backtest_metrics?.[key] ?? 0;
+}
+
+function runTypeLabel(run) {
+  return run?.variant_id || run?.strategy_type || run?.signal_type || "-";
 }
 
 function pickBestWorkflowRun(runs) {
@@ -62,34 +55,32 @@ function useRuns(initialRuns = [], initialError = "") {
     runs: initialRuns,
   });
 
-  useEffect(() => {
-    let cancelled = false;
-    getJson("/api/runs")
-      .then((data) => {
-        if (!cancelled) {
-          setState({
-            loading: false,
-            error: "",
-            runs: data.runs ?? [],
-          });
-        }
-      })
-      .catch((error) => {
-        if (!cancelled) {
-          setState((current) => ({
-            loading: false,
-            error: error.message,
-            runs: current.runs,
-          }));
-        }
+  const reload = useCallback(async () => {
+    setState((current) => ({
+      ...current,
+      loading: true,
+      error: "",
+    }));
+    try {
+      const data = await fetchSignalLabAppJson(SIGNAL_LAB_ENDPOINTS.runs);
+      setState({
+        loading: false,
+        error: "",
+        runs: data.runs ?? [],
       });
-
-    return () => {
-      cancelled = true;
-    };
+    } catch (error) {
+      setState((current) => ({
+        loading: false,
+        error: error.message,
+        runs: current.runs,
+      }));
+    }
   }, []);
 
-  return state;
+  return {
+    ...state,
+    reload,
+  };
 }
 
 function useRunDetail(run) {
@@ -103,7 +94,11 @@ function useRunDetail(run) {
 
     let cancelled = false;
     setState({ loading: true, error: "", detail: null });
-    getJson(`/api/run-detail?manifest_path=${encodeURIComponent(run.manifest_path)}`)
+    fetchSignalLabAppJson(SIGNAL_LAB_ENDPOINTS.runDetail, {
+      searchParams: new URLSearchParams({
+        manifest_path: run.manifest_path,
+      }),
+    })
       .then((data) => {
         if (!cancelled) {
           setState({ loading: false, error: "", detail: data });
@@ -197,7 +192,7 @@ function Leaderboard({ runs, selected, onSelect }) {
             <span className="font-mono text-xs text-zinc-500">{String(index + 1).padStart(2, "0")}</span>
             <span className="min-w-0">
               <span className="block truncate text-sm font-medium text-zinc-950">{run.strategy_name || run.name}</span>
-              <span className="block truncate text-xs text-zinc-500">{run.variant_id || run.signal_type}</span>
+              <span className="block truncate text-xs text-zinc-500">{runTypeLabel(run)}</span>
             </span>
             <span className="font-mono text-sm font-semibold text-zinc-900">{fmt(metricOf(run, "sharpe"))}</span>
           </button>
@@ -385,7 +380,7 @@ function RunDetail({ run, detailState }) {
             <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-tight text-zinc-950">{run.strategy_name || run.name}</h1>
             <div className="mt-2 flex flex-wrap gap-2 text-xs text-zinc-500">
               <span className="rounded border border-zinc-200 px-2 py-1 font-mono">{run.run_id}</span>
-              <span className="rounded border border-zinc-200 px-2 py-1">{run.variant_id || run.signal_type}</span>
+              <span className="rounded border border-zinc-200 px-2 py-1">{runTypeLabel(run)}</span>
               <span className="rounded border border-zinc-200 px-2 py-1">{artifactCount} artifacts</span>
             </div>
           </div>
@@ -440,7 +435,7 @@ function RunDetail({ run, detailState }) {
 }
 
 export default function DashboardClient({ initialRuns = [], initialError = "" }) {
-  const { loading, error, runs } = useRuns(initialRuns, initialError);
+  const { loading, error, runs, reload } = useRuns(initialRuns, initialError);
   const hasAnyRuns = runs.length > 0;
   const workflowRuns = runs.filter((run) => run.kind === "workflow_run");
   const [selected, setSelected] = useState(() => pickBestWorkflowRun(initialRuns));
@@ -474,6 +469,14 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
             <div className="text-xs uppercase tracking-[0.16em] text-zinc-400">Quant Strategy Lab</div>
             <h1 className="mt-3 text-3xl font-semibold tracking-tight">策略实验台</h1>
             <p className="mt-3 text-sm leading-6 text-zinc-300">从实验矩阵里选出候选策略，再下钻到买卖点、权益曲线和运行指纹。</p>
+            <button
+              type="button"
+              onClick={reload}
+              disabled={loading}
+              className="mt-4 inline-flex rounded-md border border-zinc-700 px-3 py-2 text-sm text-zinc-100 transition hover:border-teal-400 hover:text-white disabled:cursor-not-allowed disabled:opacity-60"
+            >
+              {loading ? "刷新中..." : "刷新运行列表"}
+            </button>
           </div>
           {loading ? <Skeleton /> : null}
           {error ? <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{error}</div> : null}

@@ -21,7 +21,7 @@ class RunRegistryEntry:
     paper_report_path: str | None = None
     strategy_name: str | None = None
     signal_name: str | None = None
-    signal_type: str | None = None
+    strategy_type: str | None = None
     variant_id: str | None = None
     config_hash: str | None = None
     git_sha: str | None = None

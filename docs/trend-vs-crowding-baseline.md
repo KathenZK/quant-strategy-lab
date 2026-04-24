@@ -13,11 +13,11 @@
 
 当前这份对比使用的是趋势主线的 baseline 数据集：
 
-- app 配置：`configs/app.mvp-baseline.yaml`
+- app 配置：`configs/app/mvp-baseline.yaml`
 - 数据种子命令：
 
 ```bash
-./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app/mvp-baseline.yaml
 ```
 
 说明：
@@ -28,12 +28,12 @@
 
 ## 2. 使用的比较配置
 
-- `configs/strategy_comparison.mvp.baseline.yaml`
+- `configs/comparisons/strategy_comparison.mvp.baseline.yaml`
 
 运行命令：
 
 ```bash
-./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/strategy_comparison.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/comparisons/strategy_comparison.mvp.baseline.yaml -c configs/app/mvp-baseline.yaml
 ```
 
 ## 3. 本次比较运行

@@ -14,9 +14,9 @@
 当前仍然没有完成的主要部分：
 
 - 多策略组合层 `strategy_portfolios/`
-- 参数矩阵 / sweep / variant 管理
-- 更完整的配置分层
-- 更丰富的 registry metadata，如 `config_hash / git_sha / data_snapshot_id`
+- 更完整的多策略资金分配与组合约束抽象
+- `base + overlay` 这类更高阶的配置继承机制
+- 更丰富的实验结果查询 / 排序 / 选优能力
 
 ## 1. 改造目标
 
@@ -47,10 +47,10 @@
 当前最主要的结构缺口：
 
 - 还没有真正的多策略组合层。
-- `configs/` 仍偏扁平，batch 入口统一了，但策略 / allocator / signal 配置还没彻底分层。
-- `StrategyRunner` 仍保留 `factor` 与策略对象两条主分支。
+- `configs/` 已经按 `app / workflows / comparisons / examples` 分层，但还没有进一步抽出 `base + overlay` 这类继承结构。
+- `StrategyRunner` 已经把执行细节下沉到 `workflow_service`，但多策略组合层还没有进入统一运行链路。
 - `comparison` 已经更像视图层，但分析能力仍偏报告化，缺少更通用的结果查询与排序能力。
-- registry 已经存在，但 metadata 维度还不够丰富。
+- registry 已经具备 `config_hash / git_sha / data_snapshot_id`，但还缺更高层的实验索引能力。
 
 所以目前的准确定位是：
 
@@ -381,31 +381,29 @@ class Allocator(Protocol):
 
 ## 7. 配置结构改造建议
 
-当前 `configs/` 扁平文件已经开始增多，建议逐步过渡为下面这种结构：
+当前仓库已经落地的 `configs/` 结构如下：
 
 ```text
 configs/
   app/
     binance-recent1y.yaml
     binance-recent4y.yaml
-  strategies/
-    trend-confirmation.yaml
-    crowding-reversal.yaml
-    ma-crossover.yaml
-  portfolios/
-    single-strategy.yaml
-    balanced-multi-strategy.yaml
-  experiments/
-    trend-baseline.yaml
-    crowding-baseline.yaml
-    trend-vs-crowding.yaml
-    ma-crossover-sweep.yaml
-  factor-packs/
-    default.yaml
-    perp-derivatives.yaml
+  workflows/
+    factors/
+      factor_rsi.binance.btc.daily.recent1y.yaml
+    strategies/
+      trend_confirmation.mvp.yaml
+      crowding_reversal.mvp.yaml
+      ma_crossover.binance.btc.daily.recent4y.yaml
+  comparisons/
+    strategy_comparison.mvp.baseline.yaml
+  examples/
+    app.example.yaml
+    strategy.example.yaml
+    experiment.rsi_sweep.example.yaml
 ```
 
-建议同时引入下面 3 个概念：
+下一步建议继续补下面 3 个概念：
 
 ### 7.1 base + overlay
 
@@ -506,7 +504,7 @@ experiment:
 
 - 因子支持 discovery 或 factor pack
 - manifest 增加 `config_hash / git_sha / data_snapshot_id`
-- `configs/` 开始引入子目录，但保留兼容路径
+- `configs/` 引入子目录，并统一文档与示例路径
 
 这一阶段不要求用户改变 `run-strategy` 的习惯。
 
@@ -517,7 +515,7 @@ experiment:
 - 新增 `signals/` 与 `allocators/`
 - 现有 `trend_confirmation`、`crowding_reversal`、`ma_crossover` 先拆成内部组合件
 - `strategies/` 保留兼容 facade
-- `StrategyRunner` 逐步改成统一处理 `SignalSpec`
+- `StrategyRunner` 改成通过 `workflow_service` 统一处理 factor / strategy 运行细节
 
 这一阶段完成后，新策略就不应该继续直接写成“一个类里又出信号又出权重”的模式。
 

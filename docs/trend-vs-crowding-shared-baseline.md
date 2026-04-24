@@ -12,11 +12,11 @@
 
 当前这份对比使用的是共享比较 baseline 数据集：
 
-- app 配置：`configs/app.shared-comparison-baseline.yaml`
+- app 配置：`configs/app/shared-comparison-baseline.yaml`
 - 数据种子命令：
 
 ```bash
-./.venv/bin/quant-strategy-lab seed-shared-comparison-mvp -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-shared-comparison-mvp -c configs/app/shared-comparison-baseline.yaml
 ```
 
 说明：
@@ -27,18 +27,18 @@
 
 ## 2. 使用的比较配置
 
-- `configs/strategy_comparison.shared-baseline.yaml`
+- `configs/comparisons/strategy_comparison.shared-baseline.yaml`
 
 运行命令：
 
 ```bash
-./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/comparisons/strategy_comparison.shared-baseline.yaml -c configs/app/shared-comparison-baseline.yaml
 ```
 
 或者使用统一 batch 入口：
 
 ```bash
-./.venv/bin/quant-strategy-lab run-batch --mode comparison --batch-config configs/strategy_comparison.shared-baseline.yaml -c configs/app.shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab run-batch --mode comparison --batch-config configs/comparisons/strategy_comparison.shared-baseline.yaml -c configs/app/shared-comparison-baseline.yaml
 ```
 
 ## 3. 本次比较运行

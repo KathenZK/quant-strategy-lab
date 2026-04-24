@@ -28,16 +28,16 @@ storage:
     return app_config
 
 
-def _write_workflow(path: Path, name: str, signal_type: str) -> Path:
+def _write_workflow(path: Path, name: str, strategy_type: str) -> Path:
     path.write_text(
         f"""
 strategy:
   name: {name}
-  signal_type: {signal_type}
+  strategy_type: {strategy_type}
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
-  strategy_options:
+  strategy_params:
     max_long_positions: 2
     max_short_positions: 2
 refresh:

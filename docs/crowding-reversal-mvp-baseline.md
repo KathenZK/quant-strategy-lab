@@ -28,25 +28,25 @@
 
 ## 2. 使用的配置
 
-- app 配置：`configs/app.crowding-baseline.yaml`
-- workflow 配置：`configs/crowding_reversal.mvp.baseline.yaml`
+- app 配置：`configs/app/crowding-baseline.yaml`
+- workflow 配置：`configs/workflows/strategies/crowding_reversal.mvp.baseline.yaml`
 - 数据种子命令：
 
 ```bash
-./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/app/crowding-baseline.yaml
 ```
 
 - 回测命令：
 
 ```bash
-./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/crowding_reversal.mvp.baseline.yaml -c configs/app/crowding-baseline.yaml
 ```
 
 ## 3. 本次基准运行
 
 - `run_id`: `20260421T081404Z`
 - `signal_name`: `crowding_reversal`
-- `signal_type`: `crowding_reversal`
+- `strategy_type`: `crowding_reversal`
 - `signal_version`: `2c43882b7954f98f`
 
 ## 4. 回测指标

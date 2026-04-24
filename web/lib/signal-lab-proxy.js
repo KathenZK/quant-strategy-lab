@@ -1,15 +1,11 @@
 import { NextResponse } from "next/server";
 
-import { buildSignalLabApiUrl } from "./signal-lab-api";
+import { fetchSignalLabResponse } from "./signal-lab-api";
 
 export async function proxySignalLabJson(path, request) {
-  const response = await fetch(buildSignalLabApiUrl(path, request.nextUrl.searchParams), {
-    cache: "no-store",
-    headers: {
-      accept: "application/json",
-    },
+  const { response, body } = await fetchSignalLabResponse(path, {
+    searchParams: request.nextUrl.searchParams,
   });
-  const body = await response.text();
   return new NextResponse(body, {
     headers: {
       "cache-control": "no-store",
@@ -17,4 +13,10 @@ export async function proxySignalLabJson(path, request) {
     },
     status: response.status,
   });
+}
+
+export function createSignalLabRoute(path) {
+  return async function GET(request) {
+    return proxySignalLabJson(path, request);
+  };
 }

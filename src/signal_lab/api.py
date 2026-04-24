@@ -78,12 +78,19 @@ def _load_manifest(reports_dir: Path, manifest_path: str, *, strict: bool = True
 def _enrich_run(reports_dir: Path, row: dict) -> dict:
     manifest = _read_json(reports_dir, row.get("manifest_path"), strict=False)
     metadata = manifest.get("metadata", {})
+    strategy_type = (
+        row.get("strategy_type")
+        or manifest.get("strategy_type")
+        or row.get("signal_type")
+        or manifest.get("signal_type")
+    )
     return {
         **row,
         "variant_id": row.get("variant_id") or metadata.get("variant_id"),
         "config_hash": row.get("config_hash") or manifest.get("config_hash"),
         "git_sha": row.get("git_sha") or manifest.get("git_sha"),
         "data_snapshot_id": row.get("data_snapshot_id") or manifest.get("data_snapshot_id"),
+        "strategy_type": strategy_type,
         "structured_artifact_paths": row.get("structured_artifact_paths") or manifest.get("structured_artifacts", {}),
         "generated_at": row.get("generated_at") or manifest.get("generated_at"),
     }

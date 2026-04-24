@@ -33,17 +33,21 @@ class StrategyWorkflowSpec:
     market_type: MarketType
     symbols: list[str]
     benchmark_symbol: str | None = None
-    signal_type: str = "factor"
-    factor: str | None = None
-    strategy_options: dict[str, Any] = field(default_factory=dict)
+    strategy_type: str = "factor"
+    factor_name: str | None = None
+    strategy_params: dict[str, Any] = field(default_factory=dict)
+
+    @property
+    def is_factor_strategy(self) -> bool:
+        return self.strategy_type == "factor"
 
     @property
     def signal_name(self) -> str:
-        if self.signal_type == "factor":
-            if self.factor is None:
+        if self.is_factor_strategy:
+            if self.factor_name is None:
                 raise ValueError("factor strategy requires factor name")
-            return self.factor
-        return self.name
+            return self.factor_name
+        return self.strategy_type
 
 
 @dataclass(frozen=True, slots=True)
@@ -66,4 +70,6 @@ class StrategyRunArtifacts:
     backtest_report_path: str | None = None
     paper_report_path: str | None = None
     manifest_path: str | None = None
+    backtest_metrics: dict[str, float] = field(default_factory=dict)
+    paper_summary: dict[str, float] = field(default_factory=dict)
     backtest_attribution: dict[str, float | str | None] | None = None

@@ -14,7 +14,7 @@ class StrategyComparisonConfig:
 class StrategyComparisonEntry:
     strategy_name: str
     signal_name: str
-    signal_type: str
+    strategy_type: str
     signal_version: str
     metrics: dict[str, float]
     attribution: dict[str, float | str | None]

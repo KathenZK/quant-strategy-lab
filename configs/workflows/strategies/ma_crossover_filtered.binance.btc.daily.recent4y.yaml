@@ -1,0 +1,52 @@
+strategy:
+  name: ma_crossover_filtered_binance_btc_daily_recent4y
+  strategy_type: ma_crossover
+  exchange: binance
+  market_type: perp
+  symbols:
+    - BTC/USDT:USDT
+  strategy_params:
+    fast_ma_factor: ma_distance_30
+    slow_ma_factor: ma_distance_120
+    long_allocation: 1.0
+    short_allocation: 1.0
+    stop_loss_pct: 0.12
+    take_profit_pct: 0.40
+    min_ma_gap_ratio: 0.01
+    min_slow_ma_slope: 0.0
+    slope_lookback: 10
+    cooldown_bars: 0
+    exit_on_choppy: true
+
+execution:
+  fee_bps: 5.0
+  slippage_bps: 2.0
+  starting_cash: 100000.0
+  max_abs_weight: 1.0
+  max_gross_leverage: 1.0
+  max_net_exposure: 1.0
+  min_dollar_volume: 0.0
+
+risk:
+  max_abs_weight: 1.0
+  max_gross_leverage: 1.0
+  max_net_exposure: 1.0
+  min_dollar_volume: 0.0
+
+refresh:
+  enabled: false
+  incremental: false
+  include_derivatives: false
+  timeframe: 1d
+  limit: 500
+  overlap_bars: 0
+
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+
+schedule:
+  enabled: false
+  sleep_seconds: 0
+  max_runs: 1

@@ -11,14 +11,23 @@ import re
 from signal_lab.batches import WorkflowBatchRunner
 from signal_lab.experiments.models import ExperimentArtifacts, ExperimentConfig, ExperimentEntry, ExperimentVariant
 from signal_lab.experiments.registry import RunRegistry, RunRegistryEntry
-from signal_lab.orchestration import StrategyWorkflowConfig
-from signal_lab.orchestration.config import load_strategy_workflow
+from signal_lab.orchestration import StrategyWorkflowConfig, load_strategy_workflow
 from signal_lab.orchestration.runner import StrategyRunner
+from signal_lab.reporting.experiments import render_experiment_report
 
 
 def _slug(value: str) -> str:
     slug = re.sub(r"[^a-zA-Z0-9_.-]+", "_", value.strip()).strip("_")
     return slug or "variant"
+
+
+def _variant_label_key(path: str) -> str:
+    terminal = path.split(".")[-1]
+    if terminal.endswith("_name"):
+        return terminal.removesuffix("_name")
+    if terminal.endswith("_type"):
+        return terminal.removesuffix("_type")
+    return terminal
 
 
 def _config_hash(config: StrategyWorkflowConfig) -> str:
@@ -56,7 +65,7 @@ def _sweep_variants(sweep: dict[str, list[object]]) -> list[ExperimentVariant]:
     variants = []
     for values in product(*(sweep[key] for key in keys)):
         overrides = dict(zip(keys, values, strict=True))
-        label = "__".join(f"{key.split('.')[-1]}={value}" for key, value in overrides.items())
+        label = "__".join(f"{_variant_label_key(key)}={value}" for key, value in overrides.items())
         variants.append(ExperimentVariant(name=_slug(label), overrides=overrides))
     return variants
 
@@ -104,58 +113,6 @@ def _rank_entries(entries: list[ExperimentEntry], metric: str, direction: str) -
 def _pick_winner(entries: list[ExperimentEntry], metric: str, direction: str) -> ExperimentEntry | None:
     ranked = _rank_entries(entries, metric, direction)
     return ranked[0] if ranked else None
-
-
-def _render_report(
-    name: str,
-    entries: list[ExperimentEntry],
-    description: str | None = None,
-    *,
-    objective_metric: str = "sharpe",
-    objective_direction: str = "max",
-    winner: ExperimentEntry | None = None,
-) -> str:
-    lines = [f"# Experiment Run: {name}", ""]
-    if description:
-        lines.extend([description, ""])
-
-    lines.extend(
-        [
-            "## Summary",
-            f"- Workflow count: `{len(entries)}`",
-            f"- Objective: `{objective_metric}` ({objective_direction})",
-        ]
-    )
-    if winner is not None:
-        lines.append(
-            f"- Winner: `{winner.strategy_name}` ({objective_metric}={winner.backtest_metrics.get(objective_metric, 0.0):.4f})"
-        )
-    lines.append("")
-
-    ranked = _rank_entries(entries, objective_metric, objective_direction)
-    for entry in ranked:
-        metrics = entry.backtest_metrics
-        paper = entry.paper_summary
-        lines.extend(
-            [
-                f"## {entry.workflow_name}",
-                f"- Variant: `{entry.variant_id or '-'}`",
-                f"- Strategy: `{entry.strategy_name}`",
-                f"- Signal: `{entry.signal_name}`",
-                f"- Signal type: `{entry.signal_type}`",
-                f"- Signal version: `{entry.signal_version}`",
-                f"- Run id: `{entry.run_id}`",
-                f"- Cumulative return: {metrics.get('cumulative_return', 0.0):.4f}",
-                f"- Sharpe: {metrics.get('sharpe', 0.0):.4f}",
-                f"- Max drawdown: {metrics.get('max_drawdown', 0.0):.4f}",
-                f"- Avg turnover: {metrics.get('avg_turnover', 0.0):.4f}",
-                f"- Final equity: {paper.get('final_equity', 0.0):.4f}",
-                f"- Fill count: {paper.get('fill_count', 0.0):.0f}",
-                "",
-            ]
-        )
-
-    return "\n".join(lines).rstrip() + "\n"
 
 
 class ExperimentRunner:
@@ -206,7 +163,7 @@ class ExperimentRunner:
         winner = _pick_winner(entries, config.objective.metric, config.objective.direction)
         report_path = experiment_dir / "experiment_report.md"
         report_path.write_text(
-            _render_report(
+            render_experiment_report(
                 config.name,
                 entries,
                 config.description,

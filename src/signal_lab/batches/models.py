@@ -22,7 +22,7 @@ class WorkflowBatchEntry:
     workflow_name: str
     strategy_name: str
     signal_name: str
-    signal_type: str
+    strategy_type: str
     signal_version: str
     run_id: str
     variant_id: str | None = None

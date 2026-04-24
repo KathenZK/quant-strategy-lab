@@ -28,25 +28,25 @@
 
 ## 2. 使用的配置
 
-- app 配置：`configs/app.mvp-baseline.yaml`
-- workflow 配置：`configs/trend_confirmation.mvp.baseline.yaml`
+- app 配置：`configs/app/mvp-baseline.yaml`
+- workflow 配置：`configs/workflows/strategies/trend_confirmation.mvp.baseline.yaml`
 - 数据种子命令：
 
 ```bash
-./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app/mvp-baseline.yaml
 ```
 
 - 回测命令：
 
 ```bash
-./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/trend_confirmation.mvp.baseline.yaml -c configs/app.mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/trend_confirmation.mvp.baseline.yaml -c configs/app/mvp-baseline.yaml
 ```
 
 ## 3. 本次基准运行
 
 - `run_id`: `20260421T075426Z`
 - `signal_name`: `trend_confirmation`
-- `signal_type`: `trend_confirmation`
+- `strategy_type`: `trend_confirmation`
 - `signal_version`: `b62ad5a6b3a7c4af`
 
 ## 4. 回测指标

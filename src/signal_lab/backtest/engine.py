@@ -57,18 +57,11 @@ def _result_metrics(period_returns: pd.Series, equity_curve: pd.Series, turnover
 @dataclass(slots=True)
 class PortfolioBacktester:
     assumptions: ExecutionAssumptions = ExecutionAssumptions()
+    risk_limits: RiskLimits = RiskLimits()
     risk_manager: RiskManager = field(init=False)
 
     def __post_init__(self) -> None:
-        self.risk_manager = RiskManager(
-            RiskLimits(
-                max_abs_weight=self.assumptions.max_abs_weight,
-                max_gross_leverage=self.assumptions.max_gross_leverage,
-                max_net_exposure=self.assumptions.max_net_exposure,
-                min_dollar_volume=self.assumptions.min_dollar_volume,
-                max_funding_rate_abs=self.assumptions.max_funding_rate_abs,
-            )
-        )
+        self.risk_manager = RiskManager(self.risk_limits)
 
     def run(
         self,
@@ -121,6 +114,7 @@ class PortfolioBacktester:
 @dataclass(slots=True)
 class CrossSectionalBacktester:
     assumptions: ExecutionAssumptions = ExecutionAssumptions()
+    risk_limits: RiskLimits = RiskLimits()
     long_quantile: float = 0.8
     short_quantile: float = 0.2
     market_neutral: bool = True
@@ -156,7 +150,7 @@ class CrossSectionalBacktester:
         funding_rate: pd.DataFrame | None = None,
     ) -> BacktestResult:
         weights = self.build_weights(factor_frame)
-        backtester = PortfolioBacktester(assumptions=self.assumptions)
+        backtester = PortfolioBacktester(assumptions=self.assumptions, risk_limits=self.risk_limits)
         return backtester.run(
             target_weights=weights,
             price_frame=price_frame,

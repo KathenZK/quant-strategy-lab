@@ -15,23 +15,23 @@ class StrategyRegistry:
         self._strategy_classes: dict[str, type] = {}
         self._discovered = False
 
-    def register(self, signal_type: str, strategy_cls: type) -> None:
-        existing = self._strategy_classes.get(signal_type)
+    def register(self, strategy_type: str, strategy_cls: type) -> None:
+        existing = self._strategy_classes.get(strategy_type)
         if existing is not None and existing is not strategy_cls:
-            raise ValueError(f"strategy already registered for signal_type: {signal_type}")
-        self._strategy_classes[signal_type] = strategy_cls
+            raise ValueError(f"strategy already registered for strategy_type: {strategy_type}")
+        self._strategy_classes[strategy_type] = strategy_cls
 
-    def get(self, signal_type: str) -> type:
+    def get(self, strategy_type: str) -> type:
         self.discover_builtin_strategies()
         try:
-            return self._strategy_classes[signal_type]
+            return self._strategy_classes[strategy_type]
         except KeyError as exc:
             known = ", ".join(sorted(self._strategy_classes)) or "<none>"
-            raise ValueError(f"unsupported strategy signal_type: {signal_type}. known: {known}") from exc
+            raise ValueError(f"unsupported strategy_type: {strategy_type}. known: {known}") from exc
 
-    def create(self, signal_type: str, strategy_options: dict[str, object] | None = None) -> Strategy:
-        strategy_cls = self.get(signal_type)
-        return cast(Strategy, strategy_cls.from_options(strategy_options))
+    def create(self, strategy_type: str, strategy_params: dict[str, object] | None = None) -> Strategy:
+        strategy_cls = self.get(strategy_type)
+        return cast(Strategy, strategy_cls.from_options(strategy_params))
 
     def names(self) -> list[str]:
         self.discover_builtin_strategies()
@@ -53,17 +53,18 @@ class StrategyRegistry:
 strategy_registry = StrategyRegistry()
 
 
-def register_strategy(signal_type: str):
+def register_strategy(strategy_type: str):
     def decorator(strategy_cls: StrategyType) -> StrategyType:
-        strategy_registry.register(signal_type, strategy_cls)
-        setattr(strategy_cls, "SIGNAL_TYPE", signal_type)
+        strategy_registry.register(strategy_type, strategy_cls)
+        setattr(strategy_cls, "STRATEGY_TYPE", strategy_type)
+        setattr(strategy_cls, "SIGNAL_TYPE", strategy_type)
         return strategy_cls
 
     return decorator
 
 
-def create_registered_strategy(signal_type: str, strategy_options: dict[str, object] | None = None) -> Strategy:
-    return strategy_registry.create(signal_type, strategy_options)
+def create_registered_strategy(strategy_type: str, strategy_params: dict[str, object] | None = None) -> Strategy:
+    return strategy_registry.create(strategy_type, strategy_params)
 
 
 def list_registered_strategies() -> list[str]:

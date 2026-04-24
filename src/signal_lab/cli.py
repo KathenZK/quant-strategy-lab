@@ -8,17 +8,14 @@ import typer
 
 from signal_lab.batches import BatchRunMode
 from signal_lab.batches.service import load_batch_for_mode, run_workflow_batch
+from signal_lab.backtest import ExecutionAssumptions
 from signal_lab.config import load_settings
-from signal_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions
 from signal_lab.data import DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
-from signal_lab.execution import PaperBroker, PaperTradingSession
 from signal_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
 from signal_lab.factors import default_registry
 from signal_lab.features import FeatureBuilder, FeatureStore
-from signal_lab.orchestration import IncrementalStateStore, StrategyRunner, load_strategy_workflow, load_universe_panels
-from signal_lab.portfolio import RiskLimits, RiskManager
-from signal_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
-from signal_lab.research import FactorResearchLab
+from signal_lab.orchestration import IncrementalStateStore, RefreshOptions, StrategyRunner, StrategyWorkflowConfig, StrategyWorkflowSpec, load_strategy_workflow
+from signal_lab.portfolio import RiskLimits
 from signal_lab.scenarios import seed_crowding_mvp_data, seed_shared_comparison_mvp_data, seed_trend_mvp_data
 
 app = typer.Typer(add_completion=False, help="Quant Strategy Lab research platform CLI.")
@@ -39,6 +36,48 @@ def _runtime(config: Path | None) -> tuple[DataLakeLayout, DuckDBWarehouse, Feat
     warehouse = DuckDBWarehouse(lake)
     builder = FeatureBuilder(warehouse=warehouse, store=FeatureStore(lake), registry=default_registry())
     return lake, warehouse, builder
+
+
+def _factor_workflow(
+    *,
+    command_name: str,
+    exchange: str,
+    symbols: str,
+    factor_name: str,
+    market_type: str,
+    benchmark_symbol: str | None,
+    execution: ExecutionAssumptions | None = None,
+    risk: RiskLimits | None = None,
+    run_factor_report: bool,
+    run_backtest: bool,
+    run_paper_trade: bool,
+) -> StrategyWorkflowConfig:
+    market = MarketType(market_type)
+    return StrategyWorkflowConfig(
+        strategy=StrategyWorkflowSpec(
+            name=f"{command_name}__{factor_name}",
+            exchange=exchange,
+            market_type=market,
+            symbols=_parse_symbols(symbols),
+            benchmark_symbol=benchmark_symbol,
+            strategy_type="factor",
+            factor_name=factor_name,
+        ),
+        refresh=RefreshOptions(enabled=False),
+        execution=execution or ExecutionAssumptions(),
+        risk=risk or RiskLimits(),
+        run_factor_report=run_factor_report,
+        run_backtest=run_backtest,
+        run_paper_trade=run_paper_trade,
+    )
+
+
+def _print_seeded(written: dict[str, dict[str, str]]) -> None:
+    typer.echo(f"seeded {len(written)} symbols")
+    for symbol, datasets in sorted(written.items()):
+        typer.echo(symbol)
+        for dataset, path in sorted(datasets.items()):
+            typer.echo(f"  {dataset}: {path}")
 
 
 def _run_batch_command(mode: BatchRunMode, batch_config: Path, config: Path | None) -> None:
@@ -201,20 +240,22 @@ def factor_report(
 ) -> None:
     """Generate a markdown factor report for a symbol universe."""
     lake, _, builder = _runtime(config)
-    panels = load_universe_panels(
-        builder=builder,
+    workflow = _factor_workflow(
+        command_name="factor-report",
         exchange=exchange,
-        symbols=_parse_symbols(symbols),
-        market_type=MarketType(market_type),
+        symbols=symbols,
         factor_name=factor_name,
+        market_type=market_type,
         benchmark_symbol=benchmark_symbol,
+        run_factor_report=True,
+        run_backtest=False,
+        run_paper_trade=False,
     )
-    diagnostics = FactorResearchLab().evaluate(panels.factor, panels.price)
-    report = render_factor_report(factor_name, diagnostics)
-    report_path = lake.reports_dir / "factors" / f"{factor_name}.md"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(report, encoding="utf-8")
-    typer.echo(str(report_path))
+    artifacts = StrategyRunner(layout=lake, builder=builder).run(workflow)
+    if artifacts.factor_report_path:
+        typer.echo(artifacts.factor_report_path)
+    if artifacts.manifest_path:
+        typer.echo(f"manifest: {artifacts.manifest_path}")
 
 
 @app.command()
@@ -232,34 +273,31 @@ def backtest_factor(
 ) -> None:
     """Run a cross-sectional factor backtest and save a report."""
     lake, _, builder = _runtime(config)
-    panels = load_universe_panels(
-        builder=builder,
+    workflow = _factor_workflow(
+        command_name="backtest-factor",
         exchange=exchange,
-        symbols=_parse_symbols(symbols),
-        market_type=MarketType(market_type),
+        symbols=symbols,
         factor_name=factor_name,
+        market_type=market_type,
         benchmark_symbol=benchmark_symbol,
-    )
-    backtester = CrossSectionalBacktester(
-        assumptions=ExecutionAssumptions(
+        execution=ExecutionAssumptions(
             fee_bps=fee_bps,
             slippage_bps=slippage_bps,
+        ),
+        risk=RiskLimits(
             max_abs_weight=max_abs_weight,
             max_gross_leverage=max_gross_leverage,
-        )
+        ),
+        run_factor_report=False,
+        run_backtest=True,
+        run_paper_trade=False,
     )
-    result = backtester.run(
-        factor_frame=panels.factor,
-        price_frame=panels.price,
-        dollar_volume=panels.dollar_volume,
-        funding_rate=panels.funding_rate,
-    )
-    report = render_backtest_report(factor_name, result)
-    report_path = lake.reports_dir / "backtests" / f"{factor_name}.md"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(report, encoding="utf-8")
-    typer.echo(str(report_path))
-    for key, value in result.metrics.items():
+    artifacts = StrategyRunner(layout=lake, builder=builder).run(workflow)
+    if artifacts.backtest_report_path:
+        typer.echo(artifacts.backtest_report_path)
+    if artifacts.manifest_path:
+        typer.echo(f"manifest: {artifacts.manifest_path}")
+    for key, value in artifacts.backtest_metrics.items():
         typer.echo(f"{key}: {value:.6f}")
 
 
@@ -279,45 +317,33 @@ def paper_trade(
 ) -> None:
     """Run a paper trading loop with the factor strategy weights."""
     lake, _, builder = _runtime(config)
-    panels = load_universe_panels(
-        builder=builder,
+    workflow = _factor_workflow(
+        command_name="paper-trade",
         exchange=exchange,
-        symbols=_parse_symbols(symbols),
-        market_type=MarketType(market_type),
+        symbols=symbols,
         factor_name=factor_name,
+        market_type=market_type,
         benchmark_symbol=benchmark_symbol,
-    )
-    strategy = CrossSectionalBacktester(
-        assumptions=ExecutionAssumptions(
+        execution=ExecutionAssumptions(
             fee_bps=fee_bps,
             slippage_bps=slippage_bps,
+            starting_cash=starting_cash,
+        ),
+        risk=RiskLimits(
             max_abs_weight=max_abs_weight,
             max_gross_leverage=max_gross_leverage,
-        )
-    )
-    target_weights = strategy.build_weights(panels.factor)
-    session = PaperTradingSession(
-        broker=PaperBroker(starting_cash=starting_cash, fee_bps=fee_bps, slippage_bps=slippage_bps),
-        risk_manager=RiskManager(
-            RiskLimits(
-                max_abs_weight=max_abs_weight,
-                max_gross_leverage=max_gross_leverage,
-            )
         ),
+        run_factor_report=False,
+        run_backtest=False,
+        run_paper_trade=True,
     )
-    result = session.run(
-        target_weights=target_weights,
-        price_frame=panels.price,
-        dollar_volume=panels.dollar_volume,
-        funding_rate=panels.funding_rate,
-    )
-    report = render_paper_trading_report(factor_name, result)
-    report_path = lake.reports_dir / "paper" / f"{factor_name}.md"
-    report_path.parent.mkdir(parents=True, exist_ok=True)
-    report_path.write_text(report, encoding="utf-8")
-    typer.echo(str(report_path))
-    typer.echo(f"final_equity: {result.equity_curve.iloc[-1]:.6f}")
-    typer.echo(f"fills: {len(result.fills)}")
+    artifacts = StrategyRunner(layout=lake, builder=builder).run(workflow)
+    if artifacts.paper_report_path:
+        typer.echo(artifacts.paper_report_path)
+    if artifacts.manifest_path:
+        typer.echo(f"manifest: {artifacts.manifest_path}")
+    typer.echo(f"final_equity: {artifacts.paper_summary.get('final_equity', 0.0):.6f}")
+    typer.echo(f"fills: {int(artifacts.paper_summary.get('fill_count', 0.0))}")
 
 
 @app.command()
@@ -394,12 +420,7 @@ def seed_trend_mvp(
 ) -> None:
     """Seed deterministic MVP perp data for baseline reports."""
     lake, _, _ = _runtime(config)
-    written = seed_trend_mvp_data(lake)
-    typer.echo(f"seeded {len(written)} symbols")
-    for symbol, datasets in sorted(written.items()):
-        typer.echo(symbol)
-        for dataset, path in sorted(datasets.items()):
-            typer.echo(f"  {dataset}: {path}")
+    _print_seeded(seed_trend_mvp_data(lake))
 
 
 @app.command()
@@ -408,12 +429,7 @@ def seed_crowding_mvp(
 ) -> None:
     """Seed deterministic crowding reversal MVP data for baseline reports."""
     lake, _, _ = _runtime(config)
-    written = seed_crowding_mvp_data(lake)
-    typer.echo(f"seeded {len(written)} symbols")
-    for symbol, datasets in sorted(written.items()):
-        typer.echo(symbol)
-        for dataset, path in sorted(datasets.items()):
-            typer.echo(f"  {dataset}: {path}")
+    _print_seeded(seed_crowding_mvp_data(lake))
 
 
 @app.command()
@@ -422,12 +438,7 @@ def seed_shared_comparison_mvp(
 ) -> None:
     """Seed deterministic shared comparison baseline data."""
     lake, _, _ = _runtime(config)
-    written = seed_shared_comparison_mvp_data(lake)
-    typer.echo(f"seeded {len(written)} symbols")
-    for symbol, datasets in sorted(written.items()):
-        typer.echo(symbol)
-        for dataset, path in sorted(datasets.items()):
-            typer.echo(f"  {dataset}: {path}")
+    _print_seeded(seed_shared_comparison_mvp_data(lake))
 
 
 @app.command()

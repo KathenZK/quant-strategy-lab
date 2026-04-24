@@ -10,11 +10,6 @@ class ExecutionAssumptions:
     fee_bps: float = 5.0
     slippage_bps: float = 2.0
     starting_cash: float = 100_000.0
-    max_abs_weight: float = 0.20
-    max_gross_leverage: float = 1.0
-    max_net_exposure: float = 1.0
-    min_dollar_volume: float = 0.0
-    max_funding_rate_abs: float | None = None
 
 
 @dataclass(slots=True)

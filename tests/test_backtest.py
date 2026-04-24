@@ -2,6 +2,7 @@ import pandas as pd
 
 from signal_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions, PortfolioBacktester
 from signal_lab.backtest.engine import _periods_per_year
+from signal_lab.portfolio import RiskLimits
 
 
 def _frames() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
@@ -28,7 +29,8 @@ def _frames() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
 def test_portfolio_backtester_charges_trading_and_funding_costs() -> None:
     price_frame, target_weights, dollar_volume, funding = _frames()
     result = PortfolioBacktester(
-        assumptions=ExecutionAssumptions(fee_bps=10.0, slippage_bps=0.0, max_abs_weight=0.6, max_gross_leverage=1.0)
+        assumptions=ExecutionAssumptions(fee_bps=10.0, slippage_bps=0.0),
+        risk_limits=RiskLimits(max_abs_weight=0.6, max_gross_leverage=1.0),
     ).run(
         target_weights=target_weights,
         price_frame=price_frame,
@@ -49,7 +51,7 @@ def test_cross_sectional_backtester_builds_weights_from_factor_panel() -> None:
         },
         index=price_frame.index,
     )
-    result = CrossSectionalBacktester(assumptions=ExecutionAssumptions(max_abs_weight=1.0)).run(
+    result = CrossSectionalBacktester(risk_limits=RiskLimits(max_abs_weight=1.0)).run(
         factor_frame=factor_frame,
         price_frame=price_frame,
         dollar_volume=dollar_volume,

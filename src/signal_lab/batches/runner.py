@@ -23,7 +23,7 @@ def _entry_from_artifacts(workflow: StrategyWorkflowConfig, artifacts) -> Workfl
         workflow_name=workflow.strategy.name,
         strategy_name=workflow.strategy.name,
         signal_name=str(manifest_payload.get("signal_name", workflow.strategy.signal_name)),
-        signal_type=str(manifest_payload.get("signal_type", workflow.strategy.signal_type)),
+        strategy_type=str(manifest_payload.get("strategy_type", workflow.strategy.strategy_type)),
         signal_version=str(manifest_payload.get("signal_version", "")),
         run_id=str(manifest_payload.get("run_id", artifacts.run_id)),
         variant_id=metadata.get("variant_id"),

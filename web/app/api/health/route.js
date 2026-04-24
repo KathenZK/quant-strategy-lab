@@ -1,5 +1,4 @@
-import { proxySignalLabJson } from "../../../lib/signal-lab-proxy";
+import { SIGNAL_LAB_ENDPOINTS } from "../../../lib/signal-lab-api";
+import { createSignalLabRoute } from "../../../lib/signal-lab-proxy";
 
-export async function GET(request) {
-  return proxySignalLabJson("/api/health", request);
-}
+export const GET = createSignalLabRoute(SIGNAL_LAB_ENDPOINTS.health);

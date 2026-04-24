@@ -4,7 +4,8 @@ import json
 from signal_lab.batches.models import WorkflowBatchEntry
 from signal_lab.data import DataLakeLayout
 from signal_lab.experiments import ExperimentRunner, load_experiment_config
-from signal_lab.experiments.runner import _pick_winner, _render_report
+from signal_lab.experiments.runner import _pick_winner
+from signal_lab.reporting.experiments import render_experiment_report
 from signal_lab.scenarios import seed_trend_mvp_data
 
 
@@ -28,17 +29,17 @@ storage:
     return app_config
 
 
-def _write_workflow(path: Path, name: str, signal_type: str, strategy_options: str) -> Path:
+def _write_workflow(path: Path, name: str, strategy_type: str, strategy_params: str) -> Path:
     path.write_text(
         f"""
 strategy:
   name: {name}
-  signal_type: {signal_type}
+  strategy_type: {strategy_type}
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
-  strategy_options:
-{strategy_options}
+  strategy_params:
+{strategy_params}
 refresh:
   enabled: false
 workflow:
@@ -56,8 +57,8 @@ def _write_factor_workflow(path: Path, name: str, factor: str) -> Path:
         f"""
 strategy:
   name: {name}
-  signal_type: factor
-  factor: {factor}
+  strategy_type: factor
+  factor_name: {factor}
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
@@ -176,7 +177,7 @@ experiment:
     metric: sharpe
     direction: max
   sweep:
-    strategy.factor: [ret_1, ret_4]
+    strategy.factor_name: [ret_1, ret_4]
 """.strip(),
         encoding="utf-8",
     )
@@ -202,7 +203,7 @@ def test_experiment_report_keeps_missing_metrics_at_bottom_for_min_objective() -
         workflow_name="has_metric",
         strategy_name="has_metric",
         signal_name="ret_1",
-        signal_type="factor",
+        strategy_type="factor",
         signal_version="v1",
         run_id="run-complete",
         backtest_metrics={"max_drawdown": 0.12},
@@ -211,14 +212,14 @@ def test_experiment_report_keeps_missing_metrics_at_bottom_for_min_objective() -
         workflow_name="missing_metric",
         strategy_name="missing_metric",
         signal_name="ret_4",
-        signal_type="factor",
+        strategy_type="factor",
         signal_version="v1",
         run_id="run-missing",
         backtest_metrics={},
     )
 
     winner = _pick_winner([missing, complete], "max_drawdown", "min")
-    report = _render_report(
+    report = render_experiment_report(
         "drawdown_min",
         [missing, complete],
         objective_metric="max_drawdown",

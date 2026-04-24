@@ -34,7 +34,7 @@
 
 ### 正式工作流配置
 
-- `configs/crowding_reversal.mvp.yaml`
+- `configs/workflows/strategies/crowding_reversal.mvp.yaml`
 
 用途：
 
@@ -43,7 +43,7 @@
 
 ### 基准场景工作流配置
 
-- `configs/crowding_reversal.mvp.baseline.yaml`
+- `configs/workflows/strategies/crowding_reversal.mvp.baseline.yaml`
 
 用途：
 
@@ -53,7 +53,7 @@
 
 ### 基准场景 app 配置
 
-- `configs/app.crowding-baseline.yaml`
+- `configs/app/crowding-baseline.yaml`
 
 用途：
 
@@ -64,7 +64,7 @@
 
 信号模式：
 
-- `signal_type: crowding_reversal`
+- `strategy_type: crowding_reversal`
 
 使用的核心因子：
 
@@ -133,7 +133,7 @@
 ### 跑正式 `MVP` 工作流
 
 ```bash
-./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/crowding_reversal.mvp.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/crowding_reversal.mvp.yaml
 ```
 
 ### 跑基准场景
@@ -141,13 +141,13 @@
 先写入隔离的基准数据：
 
 ```bash
-./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/app/crowding-baseline.yaml
 ```
 
 再运行基准策略：
 
 ```bash
-./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/crowding_reversal.mvp.baseline.yaml -c configs/app.crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/crowding_reversal.mvp.baseline.yaml -c configs/app/crowding-baseline.yaml
 ```
 
 ## 6. 这份 MVP 配置的作用

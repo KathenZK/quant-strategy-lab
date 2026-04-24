@@ -1,0 +1,73 @@
+strategy:
+  name: crowding_reversal_mvp_shared_baseline
+  strategy_type: crowding_reversal
+  exchange: binance
+  market_type: perp
+  symbols:
+    - BTC/USDT:USDT
+    - ETH/USDT:USDT
+    - SOL/USDT:USDT
+  strategy_params:
+    long_term_momentum_factor: ret_24
+    short_term_momentum_factor: ret_4
+    funding_zscore_factor: funding_zscore_72
+    basis_zscore_factor: basis_zscore_72
+    oi_zscore_factor: oi_zscore_72
+    price_oi_regime_factor: price_oi_regime_4
+    min_abs_funding_zscore: 1.5
+    min_abs_basis_zscore: 1.0
+    min_oi_zscore: 1.0
+    min_long_term_trend: 0.0
+    short_term_reversal_floor: 0.0
+    require_regime_confirmation: true
+    funding_weight: 1.0
+    basis_weight: 1.0
+    oi_weight: 0.75
+    long_term_weight: 0.75
+    short_term_weight: 1.0
+    regime_weight: 0.5
+    max_long_positions: 2
+    max_short_positions: 2
+    long_allocation: 0.5
+    short_allocation: 0.5
+    market_neutral: true
+    max_liquidation_spike_zscore: 2.5
+    max_liquidation_notional_ratio: 0.03
+    liquidation_weight_scale: 0.25
+    stop_on_event_cooldown: true
+
+execution:
+  fee_bps: 5.0
+  slippage_bps: 2.0
+  starting_cash: 100000.0
+  max_abs_weight: 0.2
+  max_gross_leverage: 1.0
+  max_net_exposure: 1.0
+  min_dollar_volume: 1000000.0
+  max_funding_rate_abs: 2.5
+
+risk:
+  max_abs_weight: 0.2
+  max_gross_leverage: 1.0
+  max_net_exposure: 1.0
+  min_dollar_volume: 1000000.0
+  max_funding_rate_abs: 2.5
+  max_drawdown: 0.20
+
+refresh:
+  enabled: false
+  incremental: false
+  include_derivatives: true
+  timeframe: 1h
+  limit: 500
+  overlap_bars: 0
+
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+
+schedule:
+  enabled: false
+  sleep_seconds: 0
+  max_runs: 1

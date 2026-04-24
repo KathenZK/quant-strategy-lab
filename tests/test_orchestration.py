@@ -336,7 +336,7 @@ def test_load_strategy_workflow_reads_defaults(tmp_path: Path) -> None:
         """
 strategy:
   name: demo
-  factor: ret_1
+  factor_name: ret_1
   exchange: binance
   market_type: spot
   symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
@@ -376,7 +376,7 @@ def test_strategy_runner_creates_reports_and_manifests(tmp_path: Path) -> None:
         """
 strategy:
   name: demo
-  factor: ret_1
+  factor_name: ret_1
   exchange: binance
   market_type: spot
   symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
@@ -434,11 +434,11 @@ def test_strategy_runner_supports_trend_confirmation_workflow(tmp_path: Path) ->
         """
 strategy:
   name: trend_demo
-  signal_type: trend_confirmation
+  strategy_type: trend_confirmation
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
-  strategy_options:
+  strategy_params:
     max_long_positions: 1
     max_short_positions: 1
 refresh:
@@ -458,20 +458,16 @@ workflow:
     )
     workflow = load_strategy_workflow(config_path)
     runner = StrategyRunner(layout=layout, builder=builder)
-    signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
-    backtest = runner.run_backtest(
-        workflow,
-        panels=panels,
-        signal_frame=signal_frame,
-        target_weights=target_weights,
-    )
+    prepared = runner.workflow_service.prepare(workflow)
+    backtest = runner.workflow_service.run_backtest(workflow, prepared)
     artifacts = runner.run(workflow)
     manifest = Path(artifacts.manifest_path).read_text(encoding="utf-8")
 
-    assert signal_name == "trend_confirmation"
-    assert signal_version
-    assert panels.liquidation_features is not None
-    assert target_weights.abs().sum(axis=1).iloc[-1] > 0.0
+    assert prepared.signal_name == "trend_confirmation"
+    assert prepared.signal_version
+    assert prepared.panels.liquidation_features is not None
+    assert prepared.target_weights is not None
+    assert prepared.target_weights.abs().sum(axis=1).iloc[-1] > 0.0
     assert backtest.metrics
     assert artifacts.manifest_path is not None and Path(artifacts.manifest_path).exists()
     assert artifacts.factor_report_path is not None and Path(artifacts.factor_report_path).exists()
@@ -507,11 +503,11 @@ def test_strategy_runner_supports_crowding_reversal_workflow(tmp_path: Path) -> 
         """
 strategy:
   name: crowding_demo
-  signal_type: crowding_reversal
+  strategy_type: crowding_reversal
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
-  strategy_options:
+  strategy_params:
     max_long_positions: 1
     max_short_positions: 1
 refresh:
@@ -531,21 +527,17 @@ workflow:
     )
     workflow = load_strategy_workflow(config_path)
     runner = StrategyRunner(layout=layout, builder=builder)
-    signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
-    backtest = runner.run_backtest(
-        workflow,
-        panels=panels,
-        signal_frame=signal_frame,
-        target_weights=target_weights,
-    )
+    prepared = runner.workflow_service.prepare(workflow)
+    backtest = runner.workflow_service.run_backtest(workflow, prepared)
     artifacts = runner.run(workflow)
     manifest = Path(artifacts.manifest_path).read_text(encoding="utf-8")
 
-    assert signal_name == "crowding_reversal"
-    assert signal_version
-    assert panels.liquidation_features is not None
-    assert target_weights.loc[target_weights.index[-1], "BTC/USDT"] < 0
-    assert target_weights.loc[target_weights.index[-1], "ETH/USDT"] > 0
+    assert prepared.signal_name == "crowding_reversal"
+    assert prepared.signal_version
+    assert prepared.panels.liquidation_features is not None
+    assert prepared.target_weights is not None
+    assert prepared.target_weights.loc[prepared.target_weights.index[-1], "BTC/USDT"] < 0
+    assert prepared.target_weights.loc[prepared.target_weights.index[-1], "ETH/USDT"] > 0
     assert backtest.metrics
     assert artifacts.manifest_path is not None and Path(artifacts.manifest_path).exists()
     assert artifacts.factor_report_path is not None and Path(artifacts.factor_report_path).exists()
@@ -593,11 +585,11 @@ def test_strategy_runner_passes_price_and_factors_to_ma_crossover_allocator(tmp_
         """
 strategy:
   name: ma_demo
-  signal_type: ma_crossover
+  strategy_type: ma_crossover
   exchange: binance
   market_type: spot
   symbols: [BTC/USDT]
-  strategy_options:
+  strategy_params:
     long_allocation: 1.0
     short_allocation: 1.0
     take_profit_pct: 0.20
@@ -620,14 +612,14 @@ workflow:
     workflow = load_strategy_workflow(config_path)
     runner = StrategyRunner(layout=layout, builder=builder)
 
-    signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
+    prepared = runner.workflow_service.prepare(workflow)
 
-    assert signal_name == "ma_crossover"
-    assert signal_version
-    assert not signal_frame.dropna(how="all").empty
-    assert target_weights is not None
-    assert target_weights.abs().sum().sum() > 0.0
-    assert panels.price is not None
+    assert prepared.signal_name == "ma_crossover"
+    assert prepared.signal_version
+    assert not prepared.signal_frame.dropna(how="all").empty
+    assert prepared.target_weights is not None
+    assert prepared.target_weights.abs().sum().sum() > 0.0
+    assert prepared.panels.price is not None
 
 
 def test_strategy_runner_supports_donchian_breakout_pyramiding_workflow(tmp_path: Path) -> None:
@@ -669,11 +661,11 @@ def test_strategy_runner_supports_donchian_breakout_pyramiding_workflow(tmp_path
         """
 strategy:
   name: donchian_demo
-  signal_type: donchian_breakout
+  strategy_type: donchian_breakout
   exchange: binance
   market_type: spot
   symbols: [BTC/USDT]
-  strategy_options:
+  strategy_params:
     breakout_factor: donchian_breakout_14
     trend_factor: ma_distance_120
     long_allocation: 1.0
@@ -703,11 +695,11 @@ workflow:
     workflow = load_strategy_workflow(config_path)
     runner = StrategyRunner(layout=layout, builder=builder)
 
-    signal_name, signal_version, panels, signal_frame, target_weights = runner._prepare_signal_inputs(workflow)
+    prepared = runner.workflow_service.prepare(workflow)
 
-    assert signal_name == "donchian_breakout"
-    assert signal_version
-    assert not signal_frame.dropna(how="all").empty
-    assert target_weights is not None
-    assert target_weights.max().max() > 0.4
-    assert panels.price is not None
+    assert prepared.signal_name == "donchian_breakout"
+    assert prepared.signal_version
+    assert not prepared.signal_frame.dropna(how="all").empty
+    assert prepared.target_weights is not None
+    assert prepared.target_weights.max().max() > 0.4
+    assert prepared.panels.price is not None
