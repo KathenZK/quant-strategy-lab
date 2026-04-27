@@ -60,6 +60,11 @@ function formatMetricValue(value, key) {
   return isPercentMetric(key) ? pct(value) : fmt(value);
 }
 
+const fieldClassName = "dashboard-field";
+const primaryButtonClassName = "dashboard-button-primary";
+const secondaryButtonClassName = "dashboard-button-secondary";
+const panelLabelClassName = "text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500";
+
 function compareRunsByMetric(left, right, key, direction = "max") {
   const leftValue = Number(metricOf(left, key));
   const rightValue = Number(metricOf(right, key));
@@ -193,9 +198,8 @@ function useSelectedDetail(run) {
 function Card({ children, className = "" }) {
   return (
     <section
-      className={`relative overflow-hidden rounded-[2rem] border border-white/70 bg-white/88 shadow-[0_28px_80px_-42px_rgba(37,61,56,0.28)] backdrop-blur-xl ${className}`}
+      className={`dashboard-card ${className}`}
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-white to-transparent opacity-80" />
       {children}
     </section>
   );
@@ -205,13 +209,13 @@ function Skeleton() {
   return (
     <div className="space-y-4 p-6">
       <div className="h-3 w-28 animate-pulse rounded-full bg-zinc-200/80" />
-      <div className="h-10 w-3/4 animate-pulse rounded-2xl bg-zinc-200/70" />
+      <div className="h-10 w-3/4 animate-pulse rounded-[1.2rem] bg-zinc-200/70" />
       <div className="grid gap-3 sm:grid-cols-3">
-        <div className="h-24 animate-pulse rounded-[1.4rem] bg-zinc-100" />
-        <div className="h-24 animate-pulse rounded-[1.4rem] bg-zinc-100" />
-        <div className="h-24 animate-pulse rounded-[1.4rem] bg-zinc-100" />
+        <div className="h-24 animate-pulse rounded-[1.25rem] bg-zinc-100" />
+        <div className="h-24 animate-pulse rounded-[1.25rem] bg-zinc-100" />
+        <div className="h-24 animate-pulse rounded-[1.25rem] bg-zinc-100" />
       </div>
-      <div className="h-40 animate-pulse rounded-[1.6rem] bg-zinc-100" />
+      <div className="h-40 animate-pulse rounded-[1.5rem] bg-zinc-100" />
       <div className="h-4 w-2/3 animate-pulse rounded-full bg-zinc-200/80" />
     </div>
   );
@@ -251,12 +255,12 @@ function EmptyState() {
           </div>
         </div>
       </div>
-      <div className="rounded-[1.8rem] border border-zinc-200/80 bg-zinc-950 p-5 text-white shadow-[0_24px_60px_-30px_rgba(15,23,42,0.45)]">
-        <div className="text-xs tracking-[0.16em] text-zinc-400">Waiting for first run</div>
+      <div className="rounded-[1.8rem] border border-zinc-200 bg-zinc-50 p-5 text-zinc-950 shadow-[0_24px_60px_-42px_rgba(37,61,56,0.28)]">
+        <div className="text-xs tracking-[0.16em] text-zinc-500">Waiting for first run</div>
         <div className="mt-5 space-y-3">
-          <div className="h-14 animate-pulse rounded-[1.2rem] bg-white/10" />
-          <div className="h-14 animate-pulse rounded-[1.2rem] bg-white/10" />
-          <div className="h-36 animate-pulse rounded-[1.4rem] bg-white/10" />
+          <div className="h-14 animate-pulse rounded-[1.2rem] bg-zinc-200/80" />
+          <div className="h-14 animate-pulse rounded-[1.2rem] bg-zinc-200/80" />
+          <div className="h-36 animate-pulse rounded-[1.4rem] bg-zinc-200/80" />
         </div>
       </div>
     </div>
@@ -267,9 +271,9 @@ function Stat({ label, value, tone = "neutral" }) {
   const color = tone === "good" ? "text-teal-700" : tone === "bad" ? "text-rose-700" : "text-zinc-950";
 
   return (
-    <div className="rounded-[1.35rem] border border-zinc-200/80 bg-zinc-50/70 px-4 py-4">
-      <div className="text-[11px] tracking-[0.16em] text-zinc-500">{label}</div>
-      <div className={`mt-2 font-mono text-2xl font-semibold tracking-[-0.03em] ${color}`}>{value}</div>
+    <div className="rounded-[1.2rem] bg-[#f5f7f2] px-4 py-4 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.05)]">
+      <div className={panelLabelClassName}>{label}</div>
+      <div className={`mt-2 font-mono text-2xl font-semibold tracking-[-0.03em] tabular-nums ${color}`}>{value}</div>
     </div>
   );
 }
@@ -284,30 +288,30 @@ function OverviewDeck({ runs, selected }) {
 
   return (
     <div className="grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
-      <Card className="p-5">
-        <div className="text-[11px] tracking-[0.16em] text-zinc-500">Workflow runs</div>
-        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950">{workflowRuns.length}</div>
-        <div className="mt-2 text-xs text-zinc-500">当前结果库中的可下钻回测记录</div>
+      <Card className="border-zinc-200 bg-white bg-none p-5 text-zinc-950 shadow-none">
+        <div className="text-[11px] font-semibold tracking-[0.16em] text-zinc-400">Workflow runs</div>
+        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950 tabular-nums">{workflowRuns.length}</div>
+        <div className="mt-2 text-xs leading-5 text-zinc-400">当前结果库中的可下钻回测记录</div>
       </Card>
-      <Card className="p-5">
-        <div className="text-[11px] tracking-[0.16em] text-zinc-500">Experiment runs</div>
-        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950">{experimentRuns.length}</div>
-        <div className="mt-2 text-xs text-zinc-500">批量实验、变体和 winner 记录</div>
+      <Card className="border-zinc-200 bg-white bg-none p-5 text-zinc-950 shadow-none">
+        <div className="text-[11px] font-semibold tracking-[0.16em] text-zinc-400">Experiment runs</div>
+        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950 tabular-nums">{experimentRuns.length}</div>
+        <div className="mt-2 text-xs leading-5 text-zinc-400">批量实验、变体和 winner 记录</div>
       </Card>
-      <Card className="p-5">
-        <div className="text-[11px] tracking-[0.16em] text-zinc-500">Comparison runs</div>
-        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950">{comparisonRuns.length}</div>
-        <div className="mt-2 text-xs text-zinc-500">策略对比批次与子运行关系</div>
+      <Card className="border-zinc-200 bg-white bg-none p-5 text-zinc-950 shadow-none">
+        <div className="text-[11px] font-semibold tracking-[0.16em] text-zinc-400">Comparison runs</div>
+        <div className="mt-3 font-mono text-3xl font-semibold tracking-[-0.05em] text-zinc-950 tabular-nums">{comparisonRuns.length}</div>
+        <div className="mt-2 text-xs leading-5 text-zinc-400">策略对比批次与子运行关系</div>
       </Card>
-      <Card className="bg-zinc-950 p-5 text-white shadow-[0_28px_70px_-34px_rgba(15,23,42,0.5)]">
-        <div className="text-[11px] tracking-[0.16em] text-zinc-400">Best sharpe</div>
-        <div className="mt-3 text-lg font-semibold tracking-[-0.03em] text-white">
+      <Card className="border-teal-200/60 bg-[#d8f3ea] bg-none p-5 text-zinc-950 shadow-[0_26px_70px_-42px_rgba(15,118,110,0.52)]">
+        <div className="text-[11px] font-semibold tracking-[0.16em] text-teal-800/70">Best sharpe</div>
+        <div className="mt-3 text-lg font-semibold tracking-[-0.03em] text-zinc-950">
           {bestSharpeRun?.strategy_name || bestSharpeRun?.name || "No workflow runs"}
         </div>
-        <div className="mt-2 font-mono text-2xl font-semibold text-teal-300">
+        <div className="mt-2 font-mono text-3xl font-semibold text-teal-800 tabular-nums">
           {bestSharpeRun ? fmt(metricOf(bestSharpeRun, "sharpe")) : "-"}
         </div>
-        <div className="mt-2 text-xs text-zinc-400">
+        <div className="mt-2 text-xs leading-5 text-teal-950/65">
           当前选中: {selected?.strategy_name || selected?.name || "none"}
         </div>
       </Card>
@@ -326,10 +330,10 @@ function Leaderboard({ runs, selected, onSelect }) {
 
   return (
     <Card className="overflow-hidden">
-      <div className="flex items-center justify-between border-b border-zinc-200/80 px-5 py-4">
+      <div className="flex items-center justify-between border-b border-zinc-200/70 px-5 py-4">
         <div>
-          <div className="text-sm font-semibold text-zinc-950">策略排行</div>
-          <div className="text-xs text-zinc-500">当前按 Sharpe 排序，点击切到单条 workflow 明细</div>
+          <div className="text-base font-semibold tracking-[-0.02em] text-zinc-950">策略排行</div>
+          <div className="mt-1 text-xs text-zinc-500">当前按 Sharpe 排序，点击切到单条 workflow 明细</div>
         </div>
         <Trophy size={22} className="text-teal-700" weight="duotone" />
       </div>
@@ -339,24 +343,24 @@ function Leaderboard({ runs, selected, onSelect }) {
             key={`${run.run_id}-${run.manifest_path}`}
             type="button"
             onClick={() => onSelect(run)}
-            className={`grid w-full grid-cols-[2.2rem_1fr_auto_auto] items-center gap-3 px-5 py-3 text-left transition hover:bg-zinc-50 active:translate-y-px ${
-              selected?.manifest_path === run.manifest_path ? "bg-teal-50/70" : ""
+            className={`grid w-full grid-cols-[2.2rem_1fr_auto_auto] items-center gap-3 px-5 py-4 text-left transition hover:bg-[#f7fbf7] active:translate-y-px ${
+              selected?.manifest_path === run.manifest_path ? "bg-[#e9f7f2] shadow-[inset_3px_0_0_#0f766e]" : ""
             }`}
           >
-            <span className="grid h-9 w-9 place-items-center rounded-full border border-zinc-200 bg-white font-mono text-xs text-zinc-500">
+            <span className="grid h-9 w-9 place-items-center rounded-xl bg-white font-mono text-xs text-zinc-500 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.08)]">
               {String(index + 1).padStart(2, "0")}
             </span>
             <span className="min-w-0">
-              <span className="block truncate text-sm font-medium text-zinc-950">{run.strategy_name || run.name}</span>
+              <span className="block truncate text-sm font-semibold text-zinc-950">{run.strategy_name || run.name}</span>
               <span className="mt-1 block truncate text-xs text-zinc-500">{runTypeLabel(run)}</span>
             </span>
             <span className="text-right text-xs text-zinc-500">
               <span className="block">Sharpe</span>
-              <span className="font-mono text-sm font-semibold text-zinc-900">{fmt(metricOf(run, "sharpe"))}</span>
+              <span className="font-mono text-sm font-semibold text-zinc-900 tabular-nums">{fmt(metricOf(run, "sharpe"))}</span>
             </span>
             <span className="text-right text-xs text-zinc-500">
               <span className="block">Return</span>
-              <span className="font-mono text-sm font-semibold text-zinc-900">{pct(metricOf(run, "cumulative_return"))}</span>
+              <span className="font-mono text-sm font-semibold text-zinc-900 tabular-nums">{pct(metricOf(run, "cumulative_return"))}</span>
             </span>
           </button>
         ))}
@@ -370,11 +374,11 @@ function Experiments({ runs, selected, onSelect }) {
 
   return (
     <Card className="overflow-hidden">
-      <div className="flex items-center gap-2 border-b border-zinc-200 px-5 py-4">
+      <div className="flex items-center gap-2 border-b border-zinc-200/70 px-5 py-4">
         <ListChecks size={20} className="text-zinc-700" />
         <div>
-          <div className="text-sm font-semibold text-zinc-950">实验批次</div>
-          <div className="text-xs text-zinc-500">包含 sweep 与自动选优结果</div>
+          <div className="text-base font-semibold tracking-[-0.02em] text-zinc-950">实验批次</div>
+          <div className="mt-1 text-xs text-zinc-500">包含 sweep 与自动选优结果</div>
         </div>
       </div>
       <div className="divide-y divide-zinc-100">
@@ -386,11 +390,11 @@ function Experiments({ runs, selected, onSelect }) {
               key={`${run.run_id}-${run.manifest_path}`}
               type="button"
               onClick={() => onSelect(run)}
-              className={`w-full px-5 py-3 text-left transition hover:bg-zinc-50 ${
-                selected?.manifest_path === run.manifest_path ? "bg-teal-50" : ""
+              className={`w-full px-5 py-4 text-left transition hover:bg-[#f7fbf7] ${
+                selected?.manifest_path === run.manifest_path ? "bg-[#e9f7f2] shadow-[inset_3px_0_0_#0f766e]" : ""
               }`}
             >
-              <div className="truncate text-sm font-medium text-zinc-950">{run.name}</div>
+              <div className="truncate text-sm font-semibold text-zinc-950">{run.name}</div>
               <div className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
                 <span className="font-mono">{run.run_id}</span>
                 <span>{run.child_run_count || 0} runs</span>
@@ -408,11 +412,11 @@ function Comparisons({ runs, selected, onSelect }) {
 
   return (
     <Card className="overflow-hidden">
-      <div className="flex items-center gap-2 border-b border-zinc-200 px-5 py-4">
+      <div className="flex items-center gap-2 border-b border-zinc-200/70 px-5 py-4">
         <GitBranch size={20} className="text-zinc-700" />
         <div>
-          <div className="text-sm font-semibold text-zinc-950">策略对比</div>
-          <div className="text-xs text-zinc-500">查看对比批次与子运行数量</div>
+          <div className="text-base font-semibold tracking-[-0.02em] text-zinc-950">策略对比</div>
+          <div className="mt-1 text-xs text-zinc-500">查看对比批次与子运行数量</div>
         </div>
       </div>
       <div className="divide-y divide-zinc-100">
@@ -424,11 +428,11 @@ function Comparisons({ runs, selected, onSelect }) {
               key={`${run.run_id}-${run.manifest_path}`}
               type="button"
               onClick={() => onSelect(run)}
-              className={`w-full px-5 py-3 text-left transition hover:bg-zinc-50 ${
-                selected?.manifest_path === run.manifest_path ? "bg-teal-50" : ""
+              className={`w-full px-5 py-4 text-left transition hover:bg-[#f7fbf7] ${
+                selected?.manifest_path === run.manifest_path ? "bg-[#e9f7f2] shadow-[inset_3px_0_0_#0f766e]" : ""
               }`}
             >
-              <div className="truncate text-sm font-medium text-zinc-950">{run.name}</div>
+              <div className="truncate text-sm font-semibold text-zinc-950">{run.name}</div>
               <div className="mt-1 flex items-center gap-2 text-xs text-zinc-500">
                 <span className="font-mono">{run.run_id}</span>
                 <span>{run.child_run_count || 0} runs</span>
@@ -445,21 +449,21 @@ function FilterPanel({ query, onChange, onApply, onReset, strategyTypes, loading
   return (
     <Card className="p-5">
       <div className="mb-4">
-        <div className="text-sm font-semibold text-zinc-950">结果筛选</div>
-        <div className="text-xs text-zinc-500">按名称、策略类型和排序方式查询 SQLite 结果索引</div>
+        <div className="text-base font-semibold tracking-[-0.02em] text-zinc-950">结果筛选</div>
+        <div className="mt-1 text-xs leading-5 text-zinc-500">按名称、策略类型和排序方式查询 SQLite 结果索引</div>
       </div>
       <div className="space-y-3">
         <input
           value={query.search}
           onChange={(event) => onChange("search", event.target.value)}
           placeholder="搜索策略名、信号名、变体 ID"
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+          className={fieldClassName}
         />
         <div className="grid gap-3 sm:grid-cols-2">
           <select
             value={query.strategyType}
             onChange={(event) => onChange("strategyType", event.target.value)}
-            className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+            className={fieldClassName}
           >
             <option value="">全部策略类型</option>
             {strategyTypes.map((item) => (
@@ -471,7 +475,7 @@ function FilterPanel({ query, onChange, onApply, onReset, strategyTypes, loading
           <select
             value={query.sortBy}
             onChange={(event) => onChange("sortBy", event.target.value)}
-            className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+            className={fieldClassName}
           >
             <option value="generated_at">按时间排序</option>
             <option value="sharpe">按 Sharpe 排序</option>
@@ -483,7 +487,7 @@ function FilterPanel({ query, onChange, onApply, onReset, strategyTypes, loading
         <select
           value={query.sortOrder}
           onChange={(event) => onChange("sortOrder", event.target.value)}
-          className="w-full rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+          className={fieldClassName}
         >
           <option value="desc">降序</option>
           <option value="asc">升序</option>
@@ -493,7 +497,7 @@ function FilterPanel({ query, onChange, onApply, onReset, strategyTypes, loading
             type="button"
             onClick={onApply}
             disabled={loading}
-            className="inline-flex rounded-md bg-zinc-950 px-3 py-2 text-sm text-white transition hover:bg-zinc-800 disabled:cursor-not-allowed disabled:opacity-60"
+            className={primaryButtonClassName}
           >
             {loading ? "查询中..." : "应用筛选"}
           </button>
@@ -501,7 +505,7 @@ function FilterPanel({ query, onChange, onApply, onReset, strategyTypes, loading
             type="button"
             onClick={onReset}
             disabled={loading}
-            className="inline-flex rounded-md border border-zinc-300 px-3 py-2 text-sm text-zinc-700 transition hover:border-zinc-400 disabled:cursor-not-allowed disabled:opacity-60"
+            className={secondaryButtonClassName}
           >
             重置
           </button>
@@ -532,7 +536,7 @@ function LineChart({ rows, yKey, height = 170, color = "#0f766e", label }) {
   }, [rows, yKey, height]);
 
   if (!points) {
-    return <div className="grid h-40 place-items-center rounded-md bg-zinc-50 text-sm text-zinc-500">暂无 {label} 数据</div>;
+    return <div className="grid h-40 place-items-center rounded-[1.25rem] bg-[#f5f7f2] text-sm text-zinc-500">暂无 {label} 数据</div>;
   }
 
   return (
@@ -589,7 +593,7 @@ function PriceTradeChart({ detail }) {
         <select
           value={symbol}
           onChange={(event) => setSymbol(event.target.value)}
-          className="rounded-md border border-zinc-300 bg-white px-3 py-2 text-sm outline-none transition focus:border-teal-700"
+          className={`${fieldClassName} max-w-[220px]`}
         >
           {symbols.map((item) => (
             <option key={item} value={item}>
@@ -598,7 +602,7 @@ function PriceTradeChart({ detail }) {
           ))}
         </select>
       </div>
-      <div className="relative h-[280px] rounded-md border border-zinc-200 bg-zinc-50 p-3">
+      <div className="relative h-[280px] rounded-[1.35rem] bg-[#f5f7f2] p-3 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.06)]">
         <LineChart rows={prices} yKey={symbol} height={250} color="#18181b" label="price" />
         <svg viewBox="0 0 1000 250" className="pointer-events-none absolute inset-3 h-[250px] w-[calc(100%-1.5rem)] overflow-visible">
           {selectedTrades.map((trade, index) => {
@@ -704,7 +708,7 @@ function WinnerHighlight({ run, objectiveMetric, objectiveDirection, onSelectRun
     <Card className="border-teal-200 bg-teal-50/70 p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <div className="text-xs uppercase tracking-[0.14em] text-teal-700">Winner</div>
+          <div className="text-xs font-semibold tracking-[0.14em] text-teal-700">Winner</div>
           <div className="mt-2 text-lg font-semibold text-zinc-950">{run.strategy_name || run.name}</div>
           <div className="mt-2 text-xs text-zinc-600">
             {metricLabel(objectiveMetric)} ({objectiveDirection}) · {runTypeLabel(run)}
@@ -722,7 +726,7 @@ function WinnerHighlight({ run, objectiveMetric, objectiveDirection, onSelectRun
         <button
           type="button"
           onClick={() => onSelectRun(run)}
-          className="rounded-md border border-teal-300 bg-white px-3 py-2 text-sm text-teal-800 transition hover:border-teal-500"
+          className="dashboard-button-secondary border-teal-300 text-teal-800 hover:border-teal-500"
         >
           查看 workflow 详情
         </button>
@@ -797,7 +801,7 @@ function ExperimentDetail({ run, detailState, onSelectRun }) {
     return <Skeleton />;
   }
   if (detailState.error) {
-    return <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
+    return <div className="rounded-[1.25rem] border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
   }
 
   const detail = detailState.detail;
@@ -831,7 +835,7 @@ function ExperimentDetail({ run, detailState, onSelectRun }) {
               </span>
             </div>
           </div>
-          <div className="rounded-md border border-zinc-200 px-3 py-2 text-xs text-zinc-600">
+          <div className="rounded-[1rem] bg-[#f5f7f2] px-3 py-2 text-xs text-zinc-600 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.06)]">
             <div className="text-zinc-500">Winner</div>
             <div className="font-mono text-zinc-900">{winnerRun?.strategy_name || winner?.strategy_name || "-"}</div>
           </div>
@@ -885,7 +889,7 @@ function ComparisonDetail({ run, detailState, onSelectRun }) {
     return <Skeleton />;
   }
   if (detailState.error) {
-    return <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
+    return <div className="rounded-[1.25rem] border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
   }
 
   const detail = detailState.detail;
@@ -919,7 +923,7 @@ function ComparisonDetail({ run, detailState, onSelectRun }) {
               <span className="rounded border border-zinc-200 px-2 py-1">{children.length} child runs</span>
             </div>
           </div>
-          <div className="rounded-md border border-zinc-200 px-3 py-2 text-xs text-zinc-600">
+          <div className="rounded-[1rem] bg-[#f5f7f2] px-3 py-2 text-xs text-zinc-600 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.06)]">
             <div className="text-zinc-500">Best sharpe</div>
             <div className="font-mono text-zinc-900">{bestSharpeRun?.strategy_name || "-"}</div>
           </div>
@@ -985,7 +989,7 @@ function RunDetail({ run, detailState }) {
     return <Skeleton />;
   }
   if (detailState.error) {
-    return <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
+    return <div className="rounded-[1.25rem] border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
   }
 
   const detail = detailState.detail;
@@ -1010,7 +1014,7 @@ function RunDetail({ run, detailState }) {
               <span className="rounded border border-zinc-200 px-2 py-1">{artifactCount} artifacts</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 rounded-md border border-zinc-200 px-3 py-2 text-xs text-zinc-600">
+          <div className="flex items-center gap-2 rounded-[1rem] bg-[#f5f7f2] px-3 py-2 text-xs text-zinc-600 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.06)]">
             <GitBranch size={16} />
             <span className="font-mono">{run.git_sha ? run.git_sha.slice(0, 8) : "no git sha"}</span>
           </div>
@@ -1034,7 +1038,7 @@ function RunDetail({ run, detailState }) {
               <div className="text-xs text-zinc-500">来自结构化 equity_curve artifact</div>
             </div>
           </div>
-          <div className="h-[190px] rounded-md bg-zinc-50 p-3">
+          <div className="h-[190px] rounded-[1.35rem] bg-[#f5f7f2] p-3 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.06)]">
             <LineChart rows={detail?.artifacts?.equity_curve ?? []} yKey="equity" label="equity" />
           </div>
         </Card>
@@ -1171,20 +1175,22 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
   const detailState = useSelectedDetail(selected);
 
   return (
-    <main id="main-content" className="min-h-[100dvh] bg-[#f7f7f5] text-zinc-950">
-      <div className="mx-auto max-w-[1500px] px-4 py-5 md:px-6">
+    <div className="text-zinc-950">
+      <div className="mx-auto max-w-[1440px] pb-12">
         <div className="mb-6">
-          <Card className="overflow-hidden bg-zinc-950 text-white shadow-[0_36px_90px_-42px_rgba(15,23,42,0.6)]">
-            <div className="grid gap-8 px-6 py-7 lg:grid-cols-[0.92fr_1.08fr] lg:items-end lg:px-8">
+          <Card className="border-zinc-200 bg-white bg-none text-zinc-950 shadow-[0_36px_110px_-74px_rgba(37,61,56,0.32)]">
+            <div className="pointer-events-none absolute -right-20 -top-24 h-72 w-72 rounded-full bg-teal-200/40 blur-3xl" />
+            <div className="pointer-events-none absolute bottom-0 left-1/2 h-px w-2/3 -translate-x-1/2 bg-gradient-to-r from-transparent via-zinc-200 to-transparent" />
+            <div className="grid gap-8 px-6 py-8 lg:grid-cols-[0.82fr_1.18fr] lg:items-end lg:px-8 xl:px-9">
               <div>
-                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/5 px-3 py-1 text-[11px] tracking-[0.18em] text-zinc-300">
+                <div className="dashboard-chip border-teal-200 bg-teal-50 text-teal-700">
                   <ListChecks size={14} />
                   Quant Strategy Lab
                 </div>
-                <h1 className="mt-5 max-w-3xl text-4xl font-semibold tracking-[-0.05em] text-white md:text-5xl">
+                <h1 className="mt-5 max-w-3xl text-balance text-5xl font-semibold tracking-[-0.07em] text-zinc-950 md:text-6xl">
                   结果中心
                 </h1>
-                <p className="mt-4 max-w-[60ch] text-sm leading-7 text-zinc-300">
+                <p className="mt-4 max-w-[58ch] text-pretty text-sm leading-7 text-zinc-600">
                   从实验矩阵筛候选策略，再沿着 comparison、experiment 和 workflow 结果一路下钻到权益曲线、交易事件与运行指纹。
                 </p>
                 <div className="mt-5 flex flex-wrap gap-3">
@@ -1192,11 +1198,11 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
                     type="button"
                     onClick={() => reload(query)}
                     disabled={loading}
-                    className="inline-flex rounded-full border border-teal-400/40 bg-teal-400/10 px-4 py-2 text-sm text-teal-100 transition hover:border-teal-300 hover:bg-teal-400/15 disabled:cursor-not-allowed disabled:opacity-60"
+                    className="inline-flex rounded-full border border-teal-200 bg-teal-600 px-4 py-2 text-sm font-semibold text-white transition hover:-translate-y-0.5 hover:border-teal-300 hover:bg-teal-700 disabled:cursor-not-allowed disabled:opacity-60"
                   >
                     {loading ? "刷新中..." : "刷新结果索引"}
                   </button>
-                  <span className="inline-flex items-center rounded-full border border-white/10 bg-white/5 px-4 py-2 text-sm text-zinc-300">
+                  <span className="inline-flex items-center rounded-full border border-zinc-200 bg-zinc-50 px-4 py-2 text-sm text-zinc-600">
                     SQLite-powered dashboard
                   </span>
                 </div>
@@ -1206,34 +1212,34 @@ export default function DashboardClient({ initialRuns = [], initialError = "" })
           </Card>
         </div>
 
-        <div className="grid gap-6 xl:grid-cols-[390px_1fr]">
-        <aside className="space-y-5 xl:sticky xl:top-5 xl:self-start">
-          <FilterPanel
-            query={query}
-            onChange={updateQuery}
-            onApply={applyFilters}
-            onReset={resetFilters}
-            strategyTypes={strategyTypes}
-            loading={loading}
-          />
-          {loading ? <Skeleton /> : null}
-          {error ? <div className="rounded-lg border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{error}</div> : null}
-          {!loading && hasAnyRuns ? <Leaderboard runs={runs} selected={selected} onSelect={setSelected} /> : null}
-          {!loading && hasAnyRuns ? <Experiments runs={runs} selected={selected} onSelect={setSelected} /> : null}
-          {!loading && hasAnyRuns ? <Comparisons runs={runs} selected={selected} onSelect={setSelected} /> : null}
-        </aside>
-        <section>
-          {!loading && !selected ? <EmptyState /> : null}
-          {selected?.kind === "workflow_run" ? <RunDetail run={selected} detailState={detailState} /> : null}
-          {selected?.kind === "experiment_run" ? (
-            <ExperimentDetail run={selected} detailState={detailState} onSelectRun={setSelected} />
-          ) : null}
-          {selected?.kind === "comparison_run" ? (
-            <ComparisonDetail run={selected} detailState={detailState} onSelectRun={setSelected} />
-          ) : null}
-        </section>
+        <div className="grid gap-6 xl:grid-cols-[380px_1fr]">
+          <aside className="space-y-5 xl:sticky xl:top-5 xl:self-start">
+            <FilterPanel
+              query={query}
+              onChange={updateQuery}
+              onApply={applyFilters}
+              onReset={resetFilters}
+              strategyTypes={strategyTypes}
+              loading={loading}
+            />
+            {loading ? <Skeleton /> : null}
+            {error ? <div className="rounded-[1.25rem] border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{error}</div> : null}
+            {!loading && hasAnyRuns ? <Leaderboard runs={runs} selected={selected} onSelect={setSelected} /> : null}
+            {!loading && hasAnyRuns ? <Experiments runs={runs} selected={selected} onSelect={setSelected} /> : null}
+            {!loading && hasAnyRuns ? <Comparisons runs={runs} selected={selected} onSelect={setSelected} /> : null}
+          </aside>
+          <section className="min-w-0">
+            {!loading && !selected ? <EmptyState /> : null}
+            {selected?.kind === "workflow_run" ? <RunDetail run={selected} detailState={detailState} /> : null}
+            {selected?.kind === "experiment_run" ? (
+              <ExperimentDetail run={selected} detailState={detailState} onSelectRun={setSelected} />
+            ) : null}
+            {selected?.kind === "comparison_run" ? (
+              <ComparisonDetail run={selected} detailState={detailState} onSelectRun={setSelected} />
+            ) : null}
+          </section>
         </div>
       </div>
-    </main>
+    </div>
   );
 }

@@ -4,9 +4,9 @@
   "version": "0.1.0",
   "type": "module",
   "scripts": {
-    "dev": "sh -c 'next dev --hostname ${NEXT_HOST:-127.0.0.1} --port ${PORT:-3000}'",
+    "dev": "sh -c 'next dev --hostname ${NEXT_HOST:-127.0.0.1} --port ${PORT:-46923}'",
     "build": "next build",
-    "start": "sh -c 'next start --hostname ${NEXT_HOST:-127.0.0.1} --port ${PORT:-3000}'"
+    "start": "sh -c 'next start --hostname ${NEXT_HOST:-127.0.0.1} --port ${PORT:-46923}'"
   },
   "dependencies": {
     "@phosphor-icons/react": "^2.1.10",

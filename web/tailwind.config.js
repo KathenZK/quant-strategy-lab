@@ -4,7 +4,7 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ["Geist", "Satoshi", "ui-sans-serif", "system-ui", "sans-serif"],
+        sans: ["Outfit", "Satoshi", "ui-sans-serif", "system-ui", "sans-serif"],
         mono: ["JetBrains Mono", "SFMono-Regular", "ui-monospace", "monospace"],
       },
       colors: {

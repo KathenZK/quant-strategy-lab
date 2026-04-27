@@ -499,7 +499,7 @@ def run_batch(
 @app.command()
 def dashboard(
     host: str = typer.Option("127.0.0.1", "--host", help="Dashboard host."),
-    port: int = typer.Option(8000, "--port", help="Dashboard port."),
+    port: int = typer.Option(27098, "--port", help="Dashboard port."),
     config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
 ) -> None:
     """Serve the dashboard JSON API backend."""

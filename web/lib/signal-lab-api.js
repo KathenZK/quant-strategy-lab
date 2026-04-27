@@ -1,4 +1,4 @@
-const DEFAULT_SIGNAL_LAB_API_BASE_URL = "http://127.0.0.1:8000";
+const DEFAULT_SIGNAL_LAB_API_BASE_URL = "http://127.0.0.1:27098";
 const JSON_HEADERS = {
   accept: "application/json",
 };
@@ -9,6 +9,14 @@ export const SIGNAL_LAB_ENDPOINTS = Object.freeze({
   runDetail: "/api/run-detail",
   experimentDetail: "/api/experiment-detail",
   comparisonDetail: "/api/comparison-detail",
+  marketSources: "/api/markets/sources",
+  marketInstruments: "/api/markets/instruments",
+  marketTickers: "/api/markets/tickers",
+  marketOhlcv: "/api/markets/ohlcv",
+  strategyTemplates: "/api/lab/strategy-templates",
+  labBacktests: "/api/lab/backtests",
+  labJob: (jobId) => `/api/lab/jobs/${encodeURIComponent(jobId)}`,
+  newsEvents: "/api/news/events",
 });
 
 function normalizeSearchParams(searchParams) {
@@ -51,28 +59,41 @@ export function buildSignalLabAppUrl(path, searchParams) {
 }
 
 export async function fetchSignalLabResponse(path, options = {}) {
-  const { searchParams, cache = "no-store" } = options;
-  const response = await fetch(buildSignalLabApiUrl(path, searchParams), {
+  const { searchParams, cache = "no-store", method = "GET", body } = options;
+  const requestInit = {
     cache,
-    headers: JSON_HEADERS,
+    headers: body === undefined ? JSON_HEADERS : { ...JSON_HEADERS, "content-type": "application/json" },
+    method,
+  };
+  if (body !== undefined) {
+    requestInit.body = typeof body === "string" ? body : JSON.stringify(body);
+  }
+  const response = await fetch(buildSignalLabApiUrl(path, searchParams), {
+    ...requestInit,
   });
   return { response, body: await response.text() };
 }
 
 export async function fetchSignalLabJson(path, options = {}) {
-  const { searchParams, cache = "no-store" } = options;
-  const response = await fetch(buildSignalLabApiUrl(path, searchParams), {
-    cache,
-    headers: JSON_HEADERS,
-  });
-  return readJson(response);
+  const { response, body } = await fetchSignalLabResponse(path, options);
+  if (!response.ok) {
+    throw new Error(body || `Signal Lab API request failed: ${response.status}`);
+  }
+  return body ? JSON.parse(body) : {};
 }
 
 export async function fetchSignalLabAppJson(path, options = {}) {
-  const { searchParams, cache = "no-store" } = options;
-  const response = await fetch(buildSignalLabAppUrl(path, searchParams), {
+  const { searchParams, cache = "no-store", method = "GET", body } = options;
+  const requestInit = {
     cache,
-    headers: JSON_HEADERS,
+    headers: body === undefined ? JSON_HEADERS : { ...JSON_HEADERS, "content-type": "application/json" },
+    method,
+  };
+  if (body !== undefined) {
+    requestInit.body = typeof body === "string" ? body : JSON.stringify(body);
+  }
+  const response = await fetch(buildSignalLabAppUrl(path, searchParams), {
+    ...requestInit,
   });
   return readJson(response);
 }
