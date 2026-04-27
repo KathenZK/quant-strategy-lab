@@ -37,6 +37,10 @@ class StrategyRegistry:
         self.discover_builtin_strategies()
         return sorted(self._strategy_classes)
 
+    def items(self) -> list[tuple[str, type]]:
+        self.discover_builtin_strategies()
+        return sorted(self._strategy_classes.items())
+
     def discover_builtin_strategies(self) -> None:
         if self._discovered:
             return

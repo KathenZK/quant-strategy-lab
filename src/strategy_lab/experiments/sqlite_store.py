@@ -408,7 +408,12 @@ class RunSqliteStore:
                     SELECT COUNT(*)
                     FROM run_relations rel
                     WHERE rel.parent_manifest_path = r.manifest_path
-                ) AS child_run_count
+                ) AS child_run_count,
+                (
+                    SELECT COUNT(*)
+                    FROM run_trades trade
+                    WHERE trade.manifest_path = r.manifest_path
+                ) AS trade_count
             FROM runs r
             {where_sql}
             ORDER BY {order_column} {order_direction}, r.generated_at DESC
@@ -429,7 +434,12 @@ class RunSqliteStore:
                         SELECT COUNT(*)
                         FROM run_relations rel
                         WHERE rel.parent_manifest_path = r.manifest_path
-                    ) AS child_run_count
+                    ) AS child_run_count,
+                    (
+                        SELECT COUNT(*)
+                        FROM run_trades trade
+                        WHERE trade.manifest_path = r.manifest_path
+                    ) AS trade_count
                 FROM runs r
                 WHERE r.manifest_path = ?
                 """,

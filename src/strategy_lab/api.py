@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from dataclasses import MISSING, fields, is_dataclass
 from datetime import datetime, timedelta, timezone
 import hashlib
 from pathlib import Path
@@ -13,9 +14,10 @@ import uuid
 import pandas as pd
 from fastapi import Body, FastAPI, HTTPException, Query
 
-from strategy_lab.config import load_settings
-from strategy_lab.data import DataLakeLayout
+from strategy_lab.config import AppSettings, load_settings
+from strategy_lab.data import DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType
 from strategy_lab.experiments import RunRegistry
+from strategy_lab.strategies import strategy_registry
 
 
 _MARKET_SOURCES = [
@@ -68,47 +70,84 @@ _INSTRUMENTS = [
     {"symbol": "ETH/USDT:USDT", "base": "ETH", "quote": "USDT", "market_type": "usdt_perp", "sources": ["binance", "okx"], "tags": ["perp", "funding"]},
 ]
 
-_STRATEGY_TEMPLATES = [
-    {
-        "id": "momentum_breakout",
-        "name": "动量突破",
+_STRATEGY_TEMPLATE_METADATA = {
+    "ma_crossover": {
+        "name": "双均线交叉",
         "category": "trend",
-        "description": "用趋势强度、波动过滤和突破确认筛选强势标的。",
+        "description": "基于快慢均线距离判断趋势切换，适合做单标的趋势跟随 baseline。",
         "default_timeframe": "1h",
-        "default_universe": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
-        "parameters": [
-            {"key": "lookback", "label": "回看周期", "type": "number", "default": 48},
-            {"key": "breakout_z", "label": "突破阈值", "type": "number", "default": 1.8},
-            {"key": "risk_budget", "label": "风险预算", "type": "number", "default": 0.35},
-        ],
+        "default_universe": ["BTC/USDT", "ETH/USDT"],
     },
-    {
-        "id": "funding_reversion",
-        "name": "资金费率均值回归",
-        "category": "carry",
-        "description": "观察资金费率、OI 与价格背离，用于衍生品拥挤度实验。",
+    "trend_confirmation": {
+        "name": "趋势确认",
+        "category": "trend",
+        "description": "综合动量、突破、OI、基差、成交量和资金费率过滤强趋势机会。",
+        "default_timeframe": "4h",
+        "default_universe": ["BTC/USDT:USDT", "ETH/USDT:USDT", "SOL/USDT"],
+    },
+    "crowding_reversal": {
+        "name": "拥挤度反转",
+        "category": "reversal",
+        "description": "观察资金费率、基差、OI 与短期动量背离，验证拥挤交易的反转机会。",
         "default_timeframe": "4h",
         "default_universe": ["BTC/USDT:USDT", "ETH/USDT:USDT"],
-        "parameters": [
-            {"key": "funding_window", "label": "资金费率窗口", "type": "number", "default": 21},
-            {"key": "oi_filter", "label": "OI 过滤", "type": "number", "default": 0.12},
-            {"key": "max_leverage", "label": "最大杠杆", "type": "number", "default": 1.0},
-        ],
     },
-    {
-        "id": "event_reaction",
-        "name": "新闻事件反应",
-        "category": "event",
-        "description": "把新闻时间线映射到资产窗口，验证事件后收益与回撤。",
-        "default_timeframe": "15m",
+    "donchian_breakout": {
+        "name": "Donchian 突破",
+        "category": "breakout",
+        "description": "用 Donchian 通道突破识别趋势启动，并支持止损、追踪止损和金字塔加仓参数。",
+        "default_timeframe": "1d",
         "default_universe": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
-        "parameters": [
-            {"key": "event_window_hours", "label": "事件窗口", "type": "number", "default": 12},
-            {"key": "cooldown_hours", "label": "冷却时间", "type": "number", "default": 6},
-            {"key": "sentiment_threshold", "label": "情绪阈值", "type": "number", "default": 0.62},
-        ],
     },
-]
+    "momentum_rotation": {
+        "name": "动量轮动",
+        "category": "momentum",
+        "description": "基于价格动量、突破、RSI 和成交量在多标的之间做相对强弱轮动。",
+        "default_timeframe": "1h",
+        "default_universe": ["BTC/USDT:USDT", "ETH/USDT:USDT", "SOL/USDT:USDT"],
+    },
+}
+
+_PARAMETER_LABELS = {
+    "fast_ma_factor": "快均线因子",
+    "slow_ma_factor": "慢均线因子",
+    "long_allocation": "多头仓位",
+    "short_allocation": "空头仓位",
+    "stop_loss_pct": "止损比例",
+    "take_profit_pct": "止盈比例",
+    "cooldown_bars": "冷却 bar 数",
+    "min_ma_gap_ratio": "最小均线差",
+    "min_slow_ma_slope": "最小慢线斜率",
+    "slope_lookback": "斜率窗口",
+    "exit_on_choppy": "震荡退出",
+    "momentum_factor": "动量因子",
+    "primary_momentum_factor": "主动量因子",
+    "short_momentum_factor": "短周期动量因子",
+    "breakout_factor": "突破因子",
+    "rsi_factor": "RSI 因子",
+    "volume_factor": "成交量因子",
+    "funding_zscore_factor": "资金费率 zscore",
+    "min_momentum": "最小动量",
+    "breakout_floor": "突破下限",
+    "min_volume_surge": "最小放量",
+    "min_long_rsi": "做多 RSI 下限",
+    "max_long_rsi": "做多 RSI 上限",
+    "min_short_rsi": "做空 RSI 下限",
+    "max_short_rsi": "做空 RSI 上限",
+    "max_long_positions": "最大多头数",
+    "max_short_positions": "最大空头数",
+    "market_neutral": "市场中性",
+    "risk_budget_pct": "风险预算",
+    "max_pyramids": "最大加仓次数",
+}
+
+_MARKET_DATASETS = (
+    DatasetKind.OHLCV,
+    DatasetKind.FUNDING_RATES,
+    DatasetKind.OPEN_INTEREST,
+    DatasetKind.BASIS,
+    DatasetKind.LIQUIDATIONS,
+)
 
 
 def _stable_seed(*parts: object) -> int:
@@ -183,8 +222,262 @@ def _ohlcv_rows(source: str, symbol: str, timeframe: str, limit: int) -> list[di
     return rows
 
 
+def _humanize_parameter_key(key: str) -> str:
+    return _PARAMETER_LABELS.get(key, key.replace("_", " "))
+
+
+def _parameter_type(value: object) -> str:
+    if isinstance(value, bool):
+        return "boolean"
+    if isinstance(value, (int, float)):
+        return "number"
+    return "text"
+
+
+def _strategy_template_parameters(strategy_cls: type) -> list[dict[str, Any]]:
+    try:
+        strategy = strategy_cls.from_options({})
+    except Exception:
+        return []
+    config = getattr(strategy, "config", None)
+    if config is None or not is_dataclass(config):
+        return []
+
+    parameters: list[dict[str, Any]] = []
+    for field in fields(config):
+        if field.default is not MISSING:
+            default = field.default
+        elif field.default_factory is not MISSING:  # type: ignore[attr-defined]
+            default = field.default_factory()  # type: ignore[misc]
+        else:
+            default = None
+        parameters.append(
+            {
+                "key": field.name,
+                "label": _humanize_parameter_key(field.name),
+                "type": _parameter_type(default),
+                "default": default,
+                "required": default is None,
+            }
+        )
+    return parameters
+
+
+def _strategy_template(strategy_type: str, strategy_cls: type) -> dict[str, Any]:
+    metadata = _STRATEGY_TEMPLATE_METADATA.get(strategy_type, {})
+    return {
+        "id": strategy_type,
+        "strategy_type": strategy_type,
+        "name": metadata.get("name") or strategy_type.replace("_", " ").title(),
+        "category": metadata.get("category") or "strategy",
+        "description": metadata.get("description") or f"{strategy_type} registered in strategy_lab.strategies.",
+        "default_timeframe": metadata.get("default_timeframe") or "1h",
+        "default_universe": metadata.get("default_universe") or ["BTC/USDT", "ETH/USDT"],
+        "parameters": _strategy_template_parameters(strategy_cls),
+    }
+
+
+def _strategy_templates() -> list[dict[str, Any]]:
+    return [_strategy_template(strategy_type, strategy_cls) for strategy_type, strategy_cls in strategy_registry.items()]
+
+
 def _layout(config_path: str | Path | None = None) -> DataLakeLayout:
     return DataLakeLayout.from_settings(load_settings(config_path))
+
+
+def _dataset_frame(layout: DataLakeLayout, kind: DatasetKind) -> pd.DataFrame:
+    try:
+        return DuckDBWarehouse(layout).load_dataset(layer="normalized", kind=kind)
+    except Exception:
+        return pd.DataFrame()
+
+
+def _iso_or_none(value: object) -> str | None:
+    if value is None or pd.isna(value):
+        return None
+    timestamp = pd.Timestamp(value)
+    if timestamp.tzinfo is None:
+        timestamp = timestamp.tz_localize("UTC")
+    return timestamp.isoformat()
+
+
+def _market_type_from_query(value: str | None) -> MarketType | None:
+    if not value:
+        return None
+    normalized = value.lower()
+    if normalized in {"perp", "swap", "usdt_perp"}:
+        return MarketType.PERP
+    if normalized == "spot":
+        return MarketType.SPOT
+    return None
+
+
+def _real_market_sources(layout: DataLakeLayout, settings: AppSettings) -> list[dict[str, Any]]:
+    exchange_rows: dict[str, dict[str, Any]] = {
+        exchange.name.lower(): {
+            "coverage": set(),
+            "file_count": 0,
+            "row_count": 0,
+            "symbols": set(),
+            "start_ts": None,
+            "end_ts": None,
+        }
+        for exchange in settings.exchanges
+    }
+    lake_coverage: set[str] = set()
+    lake_file_count = 0
+    lake_row_count = 0
+    lake_symbols: set[str] = set()
+    lake_start = None
+    lake_end = None
+
+    warehouse = DuckDBWarehouse(layout)
+    for kind in _MARKET_DATASETS:
+        files = warehouse.dataset_files(layer="normalized", kind=kind)
+        if files:
+            lake_coverage.add(kind.value)
+            lake_file_count += len(files)
+        frame = _dataset_frame(layout, kind)
+        if frame.empty:
+            continue
+
+        lake_row_count += len(frame)
+        if "symbol" in frame.columns:
+            lake_symbols.update(str(symbol) for symbol in frame["symbol"].dropna().unique())
+        if "ts" in frame.columns:
+            start_ts = frame["ts"].min()
+            end_ts = frame["ts"].max()
+            lake_start = start_ts if lake_start is None or start_ts < lake_start else lake_start
+            lake_end = end_ts if lake_end is None or end_ts > lake_end else lake_end
+
+        if "exchange" not in frame.columns:
+            continue
+        for exchange_name, group in frame.groupby("exchange"):
+            key = str(exchange_name).lower()
+            summary = exchange_rows.setdefault(
+                key,
+                {
+                    "coverage": set(),
+                    "file_count": 0,
+                    "row_count": 0,
+                    "symbols": set(),
+                    "start_ts": None,
+                    "end_ts": None,
+                },
+            )
+            summary["coverage"].add(kind.value)
+            summary["file_count"] += len([file for file in files if f"exchange={key}" in file])
+            summary["row_count"] += len(group)
+            if "symbol" in group.columns:
+                summary["symbols"].update(str(symbol) for symbol in group["symbol"].dropna().unique())
+            if "ts" in group.columns:
+                start_ts = group["ts"].min()
+                end_ts = group["ts"].max()
+                summary["start_ts"] = start_ts if summary["start_ts"] is None or start_ts < summary["start_ts"] else summary["start_ts"]
+                summary["end_ts"] = end_ts if summary["end_ts"] is None or end_ts > summary["end_ts"] else summary["end_ts"]
+
+    sources: list[dict[str, Any]] = []
+    for exchange in settings.exchanges:
+        key = exchange.name.lower()
+        summary = exchange_rows.get(key, {})
+        coverage = sorted(summary.get("coverage", set()))
+        sources.append(
+            {
+                "id": key,
+                "name": exchange.name.upper() if exchange.name.lower() != "binance" else "Binance",
+                "type": "crypto_exchange",
+                "status": "ready" if summary.get("row_count", 0) > 0 else "configured",
+                "latency_ms": None,
+                "coverage": coverage,
+                "file_count": int(summary.get("file_count", 0)),
+                "row_count": int(summary.get("row_count", 0)),
+                "symbol_count": len(summary.get("symbols", set())),
+                "from": _iso_or_none(summary.get("start_ts")),
+                "to": _iso_or_none(summary.get("end_ts")),
+                "note": "当前配置的数据湖中检测到真实行情快照。" if coverage else "已配置，但当前数据湖未检测到 normalized 行情文件。",
+            }
+        )
+
+    sources.append(
+        {
+            "id": "data_lake",
+            "name": "Local Data Lake",
+            "type": "warehouse",
+            "status": "ready" if lake_file_count > 0 else "empty",
+            "latency_ms": None,
+            "coverage": sorted(lake_coverage),
+            "file_count": lake_file_count,
+            "row_count": lake_row_count,
+            "symbol_count": len(lake_symbols),
+            "from": _iso_or_none(lake_start),
+            "to": _iso_or_none(lake_end),
+            "note": "从 normalized parquet 和 SQLite run registry 读取真实研究数据。",
+        }
+    )
+    sources.append(
+        {
+            "id": "news_events",
+            "name": "News/Event Stream",
+            "type": "intelligence",
+            "status": "not_configured",
+            "latency_ms": None,
+            "coverage": [],
+            "file_count": 0,
+            "row_count": 0,
+            "symbol_count": 0,
+            "from": None,
+            "to": None,
+            "note": "未检测到真实新闻/事件数据源，总览页不会展示模拟快讯。",
+        }
+    )
+    return sources
+
+
+def _real_market_tickers(
+    layout: DataLakeLayout,
+    *,
+    source: str,
+    market_type: str | None,
+    limit: int,
+) -> list[dict[str, Any]]:
+    selected_market_type = _market_type_from_query(market_type)
+    frame = DuckDBWarehouse(layout).load_dataset(
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange=source,
+        market_type=selected_market_type,
+    )
+    if frame.empty:
+        return []
+
+    frame = frame.sort_values(["exchange", "symbol", "market_type", "ts"])
+    tickers: list[dict[str, Any]] = []
+    for (_, symbol, kind), group in frame.groupby(["exchange", "symbol", "market_type"], sort=False):
+        latest = group.iloc[-1]
+        latest_ts = pd.Timestamp(latest["ts"])
+        comparison = group[group["ts"] <= latest_ts - pd.Timedelta(hours=24)]
+        previous = comparison.iloc[-1] if not comparison.empty else group.iloc[0]
+        previous_close = float(previous["close"])
+        latest_close = float(latest["close"])
+        change_24h = latest_close / previous_close - 1.0 if previous_close else None
+        recent = group[group["ts"] > latest_ts - pd.Timedelta(hours=24)]
+        volume_24h = float(recent["volume"].sum()) if "volume" in recent else None
+        tickers.append(
+            {
+                "source": source,
+                "symbol": str(symbol),
+                "base": latest.get("base_asset"),
+                "quote": latest.get("quote_asset"),
+                "market_type": str(kind),
+                "last": latest_close,
+                "change_24h": change_24h,
+                "volume_24h": volume_24h,
+                "quote_volume_24h": volume_24h * latest_close if volume_24h is not None else None,
+                "updated_at": _iso_or_none(latest_ts),
+            }
+        )
+    tickers.sort(key=lambda row: abs(row["change_24h"] or 0), reverse=True)
+    return tickers[:limit]
 
 
 def _resolve_reports_path(
@@ -196,8 +489,17 @@ def _resolve_reports_path(
     if not value:
         return None
     candidate = Path(value)
-    resolved = candidate.resolve() if candidate.is_absolute() else (reports_dir / candidate).resolve()
     reports_root = reports_dir.resolve()
+    if candidate.is_absolute():
+        resolved = candidate.resolve()
+    else:
+        direct = candidate.resolve()
+        try:
+            direct.relative_to(reports_root)
+        except ValueError:
+            resolved = (reports_dir / candidate).resolve()
+        else:
+            resolved = direct
     try:
         resolved.relative_to(reports_root)
     except ValueError:
@@ -269,9 +571,112 @@ def _enrich_run(reports_dir: Path, row: dict) -> dict:
     }
 
 
+def _run_registry_dirs(reports_dir: Path) -> list[Path]:
+    candidates = [reports_dir]
+    parent = reports_dir.parent
+    if parent.exists():
+        candidates.extend(
+            candidate
+            for candidate in sorted(parent.iterdir())
+            if candidate.is_dir() and (candidate / "_registry" / "runs.sqlite").exists()
+        )
+    if reports_dir.exists():
+        candidates.extend(
+            candidate
+            for candidate in sorted(reports_dir.iterdir())
+            if candidate.is_dir() and (candidate / "_registry" / "runs.sqlite").exists()
+        )
+
+    unique: list[Path] = []
+    seen: set[Path] = set()
+    for candidate in candidates:
+        key = candidate.resolve()
+        if key in seen:
+            continue
+        seen.add(key)
+        unique.append(candidate)
+    return unique
+
+
+def _registry_profile(reports_dir: Path) -> str:
+    return reports_dir.name if reports_dir.name != "reports" else "default"
+
+
+def _sort_run_value(row: dict[str, Any], sort_by: str, *, descending: bool) -> object:
+    metrics = row.get("backtest_metrics") or {}
+    if sort_by in metrics:
+        value = metrics.get(sort_by)
+        return value if value is not None else (float("-inf") if descending else float("inf"))
+    if sort_by == "final_equity":
+        value = (row.get("paper_summary") or {}).get("final_equity")
+        return value if value is not None else (float("-inf") if descending else float("inf"))
+    value = row.get(sort_by)
+    return value if value is not None else ""
+
+
+def _load_runs_across_registries(
+    reports_dir: Path,
+    *,
+    kind: str | None,
+    search: str | None,
+    strategy_type: str | None,
+    sort_by: str,
+    sort_order: str,
+    limit: int,
+    offset: int,
+) -> list[dict[str, Any]]:
+    rows: list[dict[str, Any]] = []
+    seen_manifest_paths: set[str] = set()
+    for registry_dir in _run_registry_dirs(reports_dir):
+        registry = RunRegistry(registry_dir, db_path=registry_dir / "_registry" / "runs.sqlite")
+        try:
+            registry_rows = registry.load(
+                kind=kind,
+                search=search,
+                strategy_type=strategy_type,
+                sort_by=sort_by,
+                sort_order=sort_order,
+                limit=None,
+                offset=0,
+            )
+        except Exception:
+            continue
+        for row in registry_rows:
+            manifest_path = str(row.get("manifest_path") or "")
+            if not manifest_path or manifest_path in seen_manifest_paths:
+                continue
+            seen_manifest_paths.add(manifest_path)
+            rows.append(
+                {
+                    **_enrich_run(registry_dir, row),
+                    "registry_profile": _registry_profile(registry_dir),
+                    "registry_reports_dir": str(registry_dir),
+                }
+            )
+
+    descending = sort_order.lower() != "asc"
+    rows.sort(key=lambda row: _sort_run_value(row, sort_by, descending=descending), reverse=descending)
+    if offset:
+        rows = rows[offset:]
+    return rows[:limit]
+
+
+def _find_registry_for_run(reports_dir: Path, manifest_path: str) -> tuple[Path, RunRegistry, dict[str, Any] | None]:
+    for registry_dir in _run_registry_dirs(reports_dir):
+        registry = RunRegistry(registry_dir, db_path=registry_dir / "_registry" / "runs.sqlite")
+        try:
+            row = registry.load_run(manifest_path)
+        except Exception:
+            row = None
+        if row is not None:
+            return registry_dir, registry, row
+    return reports_dir, RunRegistry(reports_dir, db_path=reports_dir / "_registry" / "runs.sqlite"), None
+
+
 def create_app(config_path: str | Path | None = None) -> FastAPI:
     resolved_config = config_path or os.environ.get("STRATEGY_LAB_CONFIG")
-    layout = _layout(resolved_config)
+    settings = load_settings(resolved_config)
+    layout = DataLakeLayout.from_settings(settings)
     registry = RunRegistry(layout.reports_dir, db_path=layout.run_registry_db_path)
     app = FastAPI(title="Quant Strategy Lab API", version="0.1.0")
     lab_jobs: dict[str, dict[str, Any]] = {}
@@ -283,7 +688,7 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
 
     @app.get("/api/markets/sources")
     def market_sources() -> dict[str, list[dict[str, Any]]]:
-        return {"sources": _MARKET_SOURCES}
+        return {"sources": _real_market_sources(layout, settings)}
 
     @app.get("/api/markets/instruments")
     def market_instruments(
@@ -303,15 +708,9 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         market_type: str | None = Query(None),
         limit: int = Query(80, ge=1, le=500),
     ) -> dict[str, Any]:
-        instruments = [
-            instrument
-            for instrument in _INSTRUMENTS
-            if source in instrument["sources"] and (market_type is None or instrument["market_type"] == market_type)
-        ]
-        now = time.time()
-        tickers = [_market_ticker(source, instrument, now) for instrument in instruments[:limit]]
-        tickers.sort(key=lambda row: abs(row["change_24h"]), reverse=True)
-        return {"source": source, "tickers": tickers, "updated_at": datetime.fromtimestamp(now, tz=timezone.utc).isoformat()}
+        tickers = _real_market_tickers(layout, source=source, market_type=market_type, limit=limit)
+        updated_at = max((ticker["updated_at"] for ticker in tickers if ticker.get("updated_at")), default=None)
+        return {"source": source, "tickers": tickers, "updated_at": updated_at, "source_type": "normalized_data_lake"}
 
     @app.get("/api/markets/ohlcv")
     def market_ohlcv(
@@ -320,22 +719,47 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         timeframe: str = Query("1h"),
         limit: int = Query(120, ge=20, le=500),
     ) -> dict[str, Any]:
+        selected_market_type = MarketType.PERP if ":" in symbol else None
+        frame = DuckDBWarehouse(layout).load_dataset(
+            layer="normalized",
+            kind=DatasetKind.OHLCV,
+            exchange=source,
+            market_type=selected_market_type,
+            symbol=symbol,
+        )
+        if frame.empty:
+            bars: list[dict[str, Any]] = []
+        else:
+            frame = frame.sort_values("ts").tail(limit)
+            bars = [
+                {
+                    "timestamp": _iso_or_none(row["ts"]),
+                    "open": float(row["open"]),
+                    "high": float(row["high"]),
+                    "low": float(row["low"]),
+                    "close": float(row["close"]),
+                    "volume": float(row["volume"]),
+                }
+                for row in frame.to_dict(orient="records")
+            ]
         return {
             "source": source,
             "symbol": symbol,
             "timeframe": timeframe,
-            "bars": _ohlcv_rows(source, symbol, timeframe, limit),
+            "bars": bars,
+            "source_type": "normalized_data_lake",
         }
 
     @app.get("/api/lab/strategy-templates")
     def strategy_templates() -> dict[str, list[dict[str, Any]]]:
-        return {"templates": _STRATEGY_TEMPLATES}
+        return {"templates": _strategy_templates()}
 
     @app.post("/api/lab/backtests")
     def create_backtest_job(payload: dict[str, Any] | None = Body(default=None)) -> dict[str, Any]:
         request_payload = payload or {}
-        template_id = str(request_payload.get("template_id") or "momentum_breakout")
-        template = next((item for item in _STRATEGY_TEMPLATES if item["id"] == template_id), _STRATEGY_TEMPLATES[0])
+        templates = _strategy_templates()
+        template_id = str(request_payload.get("template_id") or templates[0]["id"])
+        template = next((item for item in templates if item["id"] == template_id), templates[0])
         job_id = uuid.uuid4().hex[:12]
         created_at = datetime.now(timezone.utc).isoformat()
         snapshot_id = f"web-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}-{job_id[:6]}"
@@ -375,50 +799,7 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
 
     @app.get("/api/news/events")
     def news_events(limit: int = Query(30, ge=1, le=100)) -> dict[str, list[dict[str, Any]]]:
-        now = datetime.now(timezone.utc).replace(microsecond=0)
-        events = [
-            {
-                "id": "event-etf-flow",
-                "published_at": (now - timedelta(minutes=28)).isoformat(),
-                "source": "ETF flow monitor",
-                "title": "BTC ETF 净流入重新转正，衍生品资金费率同步降温",
-                "summary": "现货买盘恢复但永续未明显拥挤，适合观察趋势延续与回撤买点。",
-                "assets": ["BTC", "ETH"],
-                "sentiment": 0.66,
-                "event_type": "macro_flow",
-            },
-            {
-                "id": "event-sol-ecosystem",
-                "published_at": (now - timedelta(hours=1, minutes=12)).isoformat(),
-                "source": "ecosystem radar",
-                "title": "Solana 生态交易量回升，链上活跃地址连续三日增长",
-                "summary": "事件窗口可用于验证 SOL 高 beta 资产的动量跟随和反转风险。",
-                "assets": ["SOL"],
-                "sentiment": 0.61,
-                "event_type": "onchain_activity",
-            },
-            {
-                "id": "event-okx-listing",
-                "published_at": (now - timedelta(hours=3, minutes=8)).isoformat(),
-                "source": "listing watch",
-                "title": "OKX 新增热门资产交易对，短线成交量出现脉冲",
-                "summary": "上市事件优先进入观察列表，不直接进入自动交易。",
-                "assets": ["ASTER", "DOGE"],
-                "sentiment": 0.54,
-                "event_type": "listing",
-            },
-            {
-                "id": "event-gold-macro",
-                "published_at": (now - timedelta(hours=5, minutes=40)).isoformat(),
-                "source": "macro desk",
-                "title": "避险资产波动抬升，PAXG 与 BTC 相关性短暂下降",
-                "summary": "可作为跨资产因子研究样本，后续扩展到股票和预测市场。",
-                "assets": ["PAXG", "BTC"],
-                "sentiment": 0.48,
-                "event_type": "macro",
-            },
-        ]
-        return {"events": events[:limit]}
+        return {"events": [], "source_status": "not_configured", "message": "未配置真实新闻/事件数据源。"}
 
     @app.get("/api/runs")
     def runs(
@@ -430,18 +811,16 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         limit: int = Query(200, ge=1, le=1000),
         offset: int = Query(0, ge=0),
     ) -> dict[str, list[dict]]:
-        rows = [
-            _enrich_run(layout.reports_dir, row)
-            for row in registry.load(
-                kind=kind,
-                search=search,
-                strategy_type=strategy_type,
-                sort_by=sort_by,
-                sort_order=sort_order,
-                limit=limit,
-                offset=offset,
-            )
-        ]
+        rows = _load_runs_across_registries(
+            layout.reports_dir,
+            kind=kind,
+            search=search,
+            strategy_type=strategy_type,
+            sort_by=sort_by,
+            sort_order=sort_order,
+            limit=limit,
+            offset=offset,
+        )
         return {"runs": rows}
 
     @app.get("/api/run-detail")
@@ -449,8 +828,8 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         manifest_path: str = Query(...),
         limit: int = Query(1000, ge=1, le=5000),
     ) -> dict:
-        run_row = registry.load_run(manifest_path)
-        manifest = registry.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)
+        registry_reports_dir, selected_registry, run_row = _find_registry_for_run(layout.reports_dir, manifest_path)
+        manifest = selected_registry.load_manifest(manifest_path) or _load_manifest(registry_reports_dir, manifest_path)
         artifacts = manifest.get("structured_artifacts", {})
         metrics = None
         if run_row and (run_row.get("backtest_metrics") or run_row.get("backtest_attribution")):
@@ -458,21 +837,21 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
                 "backtest_metrics": run_row.get("backtest_metrics", {}),
                 "backtest_attribution": run_row.get("backtest_attribution", {}),
             }
-        equity_curve = registry.load_series(manifest_path, "equity_curve", limit=limit)
-        period_returns = registry.load_series(manifest_path, "period_returns", limit=limit)
-        trades = registry.load_trades(manifest_path, limit=limit)
+        equity_curve = selected_registry.load_series(manifest_path, "equity_curve", limit=limit)
+        period_returns = selected_registry.load_series(manifest_path, "period_returns", limit=limit)
+        trades = selected_registry.load_trades(manifest_path, limit=limit)
         return {
-            "run": _enrich_run(layout.reports_dir, run_row) if run_row else None,
+            "run": _enrich_run(registry_reports_dir, run_row) if run_row else None,
             "manifest": manifest,
             "artifacts": {
-                "prices": _jsonable_frame(layout.reports_dir, artifacts.get("prices"), row_limit=limit),
-                "signals": _jsonable_frame(layout.reports_dir, artifacts.get("signals"), row_limit=limit),
-                "weights": _jsonable_frame(layout.reports_dir, artifacts.get("weights"), row_limit=limit),
-                "trades": trades or _jsonable_frame(layout.reports_dir, artifacts.get("trades"), row_limit=limit),
-                "equity_curve": equity_curve or _jsonable_frame(layout.reports_dir, artifacts.get("equity_curve"), row_limit=limit),
-                "period_returns": period_returns or _jsonable_frame(layout.reports_dir, artifacts.get("period_returns"), row_limit=limit),
+                "prices": _jsonable_frame(registry_reports_dir, artifacts.get("prices"), row_limit=limit),
+                "signals": _jsonable_frame(registry_reports_dir, artifacts.get("signals"), row_limit=limit),
+                "weights": _jsonable_frame(registry_reports_dir, artifacts.get("weights"), row_limit=limit),
+                "trades": trades or _jsonable_frame(registry_reports_dir, artifacts.get("trades"), row_limit=limit),
+                "equity_curve": equity_curve or _jsonable_frame(registry_reports_dir, artifacts.get("equity_curve"), row_limit=limit),
+                "period_returns": period_returns or _jsonable_frame(registry_reports_dir, artifacts.get("period_returns"), row_limit=limit),
             },
-            "metrics": metrics or _read_json(layout.reports_dir, artifacts.get("metrics")),
+            "metrics": metrics or _read_json(registry_reports_dir, artifacts.get("metrics")),
             "row_limit": limit,
         }
 

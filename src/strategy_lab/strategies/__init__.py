@@ -3,6 +3,7 @@ from .crowding import CrowdingReversalConfig, CrowdingReversalStrategy
 from .donchian import DonchianBreakoutConfig, DonchianBreakoutStrategy
 from .factory import create_strategy, list_strategies
 from .ma_crossover import MovingAverageCrossoverConfig, MovingAverageCrossoverStrategy
+from .momentum import MomentumRotationConfig, MomentumRotationStrategy
 from .registry import list_registered_strategies, register_strategy, strategy_registry
 from .trend import TrendConfirmationConfig, TrendConfirmationStrategy
 
@@ -13,6 +14,8 @@ __all__ = [
     "DonchianBreakoutStrategy",
     "MovingAverageCrossoverConfig",
     "MovingAverageCrossoverStrategy",
+    "MomentumRotationConfig",
+    "MomentumRotationStrategy",
     "Strategy",
     "TrendConfirmationConfig",
     "TrendConfirmationStrategy",

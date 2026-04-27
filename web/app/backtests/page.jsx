@@ -1,23 +1,322 @@
-import DashboardClient from "../../components/dashboard-client";
 import { fetchStrategyLabJson, STRATEGY_LAB_ENDPOINTS } from "../../lib/strategy-lab-api";
 
 export const dynamic = "force-dynamic";
 
 export const metadata = {
   title: "回测记录",
-  description: "查看策略排行、实验批次、权益曲线与运行指纹。",
+  description: "查看策略回测批次、核心指标与运行指纹。",
 };
 
+const strategyLabels = {
+  crowding_reversal: "拥挤度反转",
+  donchian_breakout: "Donchian 突破",
+  ma_crossover: "双均线交叉",
+  momentum_rotation: "动量轮动",
+  trend_confirmation: "趋势确认",
+};
+
+const numberFormat = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 2,
+});
+
+const compactNumberFormat = new Intl.NumberFormat("en-US", {
+  maximumFractionDigits: 4,
+});
+
+const dateFormat = new Intl.DateTimeFormat("zh-CN", {
+  month: "2-digit",
+  day: "2-digit",
+  hour: "2-digit",
+  minute: "2-digit",
+  hour12: false,
+});
+
+function metric(run, key) {
+  const value = run?.backtest_metrics?.[key] ?? run?.[key];
+  const numericValue = Number(value);
+  return Number.isFinite(numericValue) ? numericValue : null;
+}
+
+function formatNumber(value, fallback = "-") {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return fallback;
+  }
+  return numberFormat.format(Number(value));
+}
+
+function formatMetric(value, fallback = "-") {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return fallback;
+  }
+  return compactNumberFormat.format(Number(value));
+}
+
+function formatPercent(value, fallback = "-") {
+  if (value === null || value === undefined || Number.isNaN(Number(value))) {
+    return fallback;
+  }
+  return `${(Number(value) * 100).toFixed(2)}%`;
+}
+
+function formatDate(value) {
+  if (!value) {
+    return "-";
+  }
+  const date = new Date(value);
+  return Number.isNaN(date.getTime()) ? "-" : dateFormat.format(date);
+}
+
+function shortHash(value) {
+  return value ? String(value).slice(0, 10) : "-";
+}
+
+function shortPath(value) {
+  if (!value) {
+    return "-";
+  }
+  const text = String(value);
+  const marker = "/reports/";
+  const index = text.indexOf(marker);
+  return index >= 0 ? `reports/${text.slice(index + marker.length)}` : text;
+}
+
+function strategyLabel(run) {
+  const key = run.strategy_type || run.signal_name || run.name;
+  return strategyLabels[key] || key || "-";
+}
+
+function runSearchText(run) {
+  return [run.name, run.strategy_name, run.backtest_report_path, run.manifest_path, run.registry_profile]
+    .filter(Boolean)
+    .join(" ")
+    .toLowerCase();
+}
+
+function runWindow(run) {
+  const searchable = runSearchText(run);
+  if (searchable.includes("recent1y_daily") || searchable.includes("daily_recent1y") || searchable.includes("recent1y-daily")) {
+    return "1y daily";
+  }
+  if (searchable.includes("recent3m")) {
+    return "3m 1h";
+  }
+  if (searchable.includes("recent1y")) {
+    return "1y";
+  }
+  return run.registry_profile || "registry";
+}
+
+function isTrackedRun(run) {
+  const searchable = runSearchText(run);
+  return searchable.includes("recent3m") || searchable.includes("recent1y_daily") || searchable.includes("daily_recent1y") || searchable.includes("recent1y-daily");
+}
+
+function latestByStrategyAndWindow(records) {
+  const seen = new Set();
+  const latest = [];
+  for (const run of records) {
+    const key = `${run.strategy_type || run.strategy_name || run.name || run.run_id}:${runWindow(run)}`;
+    if (seen.has(key)) {
+      continue;
+    }
+    seen.add(key);
+    latest.push(run);
+  }
+  return latest;
+}
+
+function latestDaily1yRuns(records) {
+  return latestByStrategyAndWindow(records.filter((run) => runWindow(run) === "1y daily"));
+}
+
+function average(records, key) {
+  const values = records.map((run) => metric(run, key)).filter((value) => value !== null);
+  if (values.length === 0) {
+    return null;
+  }
+  return values.reduce((sum, value) => sum + value, 0) / values.length;
+}
+
+function bestBy(records, key) {
+  return records.reduce((best, run) => {
+    if (!best) {
+      return run;
+    }
+    return (metric(run, key) ?? Number.NEGATIVE_INFINITY) > (metric(best, key) ?? Number.NEGATIVE_INFINITY) ? run : best;
+  }, null);
+}
+
+function worstDrawdown(records) {
+  return records.reduce((worst, run) => {
+    if (!worst) {
+      return run;
+    }
+    return (metric(run, "max_drawdown") ?? 0) < (metric(worst, "max_drawdown") ?? 0) ? run : worst;
+  }, null);
+}
+
+function MetricCard({ label, value, note }) {
+  return (
+    <div className="rounded-[1rem] border border-zinc-200 bg-white p-4 shadow-[0_12px_32px_-28px_rgba(15,23,42,0.35)]">
+      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500">{label}</div>
+      <div className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-zinc-950">{value}</div>
+      {note ? <div className="mt-2 text-xs leading-5 text-zinc-500">{note}</div> : null}
+    </div>
+  );
+}
+
+function ReturnValue({ value }) {
+  const tone = Number(value) >= 0 ? "text-emerald-600" : "text-red-600";
+  return <span className={tone}>{formatPercent(value)}</span>;
+}
+
+function BacktestTable({ records }) {
+  if (records.length === 0) {
+    return (
+      <div className="rounded-[1rem] border border-dashed border-zinc-300 bg-white p-8 text-sm text-zinc-500">
+        暂时没有回测记录。运行策略 workflow 后会自动写入这里。
+      </div>
+    );
+  }
+
+  return (
+    <div className="overflow-hidden rounded-[1rem] border border-zinc-200 bg-white shadow-[0_18px_50px_-42px_rgba(15,23,42,0.45)]">
+      <div className="overflow-x-auto">
+        <table className="min-w-[1160px] text-left text-sm">
+          <thead className="border-b border-zinc-200 bg-zinc-50 text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+            <tr>
+              <th className="w-[250px] whitespace-nowrap px-4 py-3 font-semibold">策略</th>
+              <th className="w-[170px] whitespace-nowrap px-4 py-3 font-semibold">运行时间</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">累计收益</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">Sharpe</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">最大回撤</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">换手</th>
+              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">交易</th>
+              <th className="w-[320px] whitespace-nowrap px-4 py-3 font-semibold">运行指纹</th>
+            </tr>
+          </thead>
+          <tbody className="divide-y divide-zinc-100">
+            {records.map((run) => (
+              <tr key={run.manifest_path || run.run_id} className="align-top hover:bg-blue-50/40">
+                <td className="px-4 py-4">
+                  <div className="font-semibold text-zinc-950">{strategyLabel(run)}</div>
+                  <div className="mt-1 text-xs text-zinc-500">{run.name}</div>
+                </td>
+                <td className="whitespace-nowrap px-4 py-4 text-zinc-700">
+                  <div>{formatDate(run.generated_at)}</div>
+                  <div className="mt-1 text-xs text-zinc-500">Binance perp · {runWindow(run)}</div>
+                </td>
+                <td className="whitespace-nowrap px-4 py-4 text-right font-semibold">
+                  <ReturnValue value={metric(run, "cumulative_return")} />
+                </td>
+                <td className="whitespace-nowrap px-4 py-4 text-right text-zinc-800">{formatMetric(metric(run, "sharpe"))}</td>
+                <td className="whitespace-nowrap px-4 py-4 text-right font-semibold text-red-600">
+                  {formatPercent(metric(run, "max_drawdown"))}
+                </td>
+                <td className="whitespace-nowrap px-4 py-4 text-right text-zinc-700">{formatPercent(metric(run, "avg_turnover"))}</td>
+                <td className="whitespace-nowrap px-4 py-4 text-right text-zinc-700">
+                  {formatNumber(run.trade_count ?? run.fill_count)}
+                </td>
+                <td className="px-4 py-4">
+                  <div className="font-mono text-xs text-zinc-800">{shortHash(run.run_id)}</div>
+                  <div className="mt-1 max-w-[260px] truncate font-mono text-[11px] text-zinc-500">
+                    {shortPath(run.backtest_report_path)}
+                  </div>
+                  <div className="mt-1 text-[11px] text-zinc-500">snapshot {shortHash(run.data_snapshot_id)}</div>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </div>
+  );
+}
+
 export default async function BacktestsPage() {
-  let initialRuns = [];
+  let runs = [];
   let initialError = "";
 
   try {
-    const payload = await fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.runs);
-    initialRuns = payload.runs ?? [];
+    const searchParams = new URLSearchParams({
+      kind: "workflow_run",
+      limit: "200",
+      sort_by: "generated_at",
+      sort_order: "desc",
+    });
+    const payload = await fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.runs, { searchParams });
+    runs = payload.runs ?? [];
   } catch (error) {
     initialError = error instanceof Error ? error.message : "Failed to load runs.";
   }
 
-  return <DashboardClient initialRuns={initialRuns} initialError={initialError} />;
+  const trackedRuns = runs.filter(isTrackedRun);
+  const recordsForDisplay = trackedRuns.length > 0 ? trackedRuns : runs;
+  const latestRuns = latestByStrategyAndWindow(recordsForDisplay);
+  const daily1yRuns = latestDaily1yRuns(recordsForDisplay);
+  const bestSharpeRun = bestBy(latestRuns, "sharpe");
+  const worstDrawdownRun = worstDrawdown(latestRuns);
+
+  return (
+    <div className="space-y-4">
+      <section className="rounded-[1.25rem] border border-zinc-200 bg-white p-5 shadow-[0_18px_50px_-44px_rgba(15,23,42,0.35)]">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-600">Backtest Registry</div>
+            <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-zinc-950">回测记录</h1>
+            <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-600">
+              这里会合并读取 reports 下各个 RunRegistry 的 SQLite 表。每次 workflow 跑完后会把 manifest、指标、交易明细和报告路径写入对应回测表，并展示在这里。
+            </p>
+          </div>
+          <div className="rounded-[0.9rem] border border-blue-100 bg-blue-50 px-4 py-3 text-xs leading-5 text-blue-700">
+            数据窗口：Binance perpetual · 3m 1h / 1y daily
+            <br />
+            记录来源：`reports/*/_registry/runs.sqlite`
+          </div>
+        </div>
+      </section>
+
+      {initialError ? (
+        <div className="rounded-[1rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{initialError}</div>
+      ) : null}
+
+      <section className="grid gap-3 md:grid-cols-4">
+        <MetricCard label="已跟踪批次" value={latestRuns.length} note="按 strategy_type + 数据窗口取最新运行" />
+        <MetricCard
+          label="平均累计收益"
+          value={formatPercent(average(latestRuns, "cumulative_return"))}
+          note="当前展示批次平均值"
+        />
+        <MetricCard
+          label="最佳 Sharpe"
+          value={formatMetric(metric(bestSharpeRun, "sharpe"))}
+          note={bestSharpeRun ? strategyLabel(bestSharpeRun) : "暂无记录"}
+        />
+        <MetricCard
+          label="最深回撤"
+          value={formatPercent(metric(worstDrawdownRun, "max_drawdown"))}
+          note={worstDrawdownRun ? strategyLabel(worstDrawdownRun) : "暂无记录"}
+        />
+      </section>
+
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <div>
+            <h2 className="text-base font-semibold text-zinc-950">最新一年日 K 策略回测</h2>
+            <p className="mt-1 text-xs text-zinc-500">覆盖当前注册策略：趋势确认、拥挤度反转、双均线交叉、Donchian 突破。</p>
+          </div>
+          <div className="text-xs text-zinc-500">共 {daily1yRuns.length} 条策略记录</div>
+        </div>
+        <BacktestTable records={daily1yRuns} />
+      </section>
+
+      <section className="space-y-3">
+        <div className="flex items-center justify-between">
+          <h2 className="text-base font-semibold text-zinc-950">全部回测记录</h2>
+          <div className="text-xs text-zinc-500">最近 {recordsForDisplay.length} 条 workflow run</div>
+        </div>
+        <BacktestTable records={recordsForDisplay} />
+      </section>
+    </div>
+  );
 }

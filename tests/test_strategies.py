@@ -8,6 +8,8 @@ from strategy_lab.strategies import (
     DonchianBreakoutStrategy,
     MovingAverageCrossoverConfig,
     MovingAverageCrossoverStrategy,
+    MomentumRotationConfig,
+    MomentumRotationStrategy,
     TrendConfirmationConfig,
     TrendConfirmationStrategy,
     create_strategy,
@@ -370,12 +372,74 @@ def test_donchian_breakout_strategy_requires_factor_frames_for_trend_filter() ->
         strategy.build_weights(signal, price_frame=price_frame)
 
 
+def test_momentum_rotation_strategy_builds_signal_and_weights() -> None:
+    index = pd.date_range("2024-01-01", periods=1, freq="D", tz="UTC")
+    factors = {
+        "ret_24": pd.DataFrame({"BTC": [0.08], "ETH": [-0.06], "SOL": [0.02]}, index=index),
+        "ret_4": pd.DataFrame({"BTC": [0.03], "ETH": [-0.04], "SOL": [0.01]}, index=index),
+        "breakout_20": pd.DataFrame({"BTC": [0.02], "ETH": [-0.03], "SOL": [0.00]}, index=index),
+        "rsi_14": pd.DataFrame({"BTC": [68.0], "ETH": [32.0], "SOL": [48.0]}, index=index),
+        "volume_surge_20": pd.DataFrame({"BTC": [0.4], "ETH": [0.3], "SOL": [-0.8]}, index=index),
+    }
+    strategy = MomentumRotationStrategy(
+        MomentumRotationConfig(
+            max_long_positions=1,
+            max_short_positions=1,
+            long_allocation=0.5,
+            short_allocation=0.5,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal)
+
+    assert signal.loc[index[0], "BTC"] > 0
+    assert signal.loc[index[0], "ETH"] < 0
+    assert pd.isna(signal.loc[index[0], "SOL"])
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.5)
+    assert weights.loc[index[0], "ETH"] == pytest.approx(-0.5)
+    assert weights.loc[index[0], "SOL"] == pytest.approx(0.0)
+
+
+def test_momentum_rotation_strategy_applies_liquidation_overlay() -> None:
+    index = pd.date_range("2024-01-01", periods=1, freq="D", tz="UTC")
+    signal = pd.DataFrame({"BTC": [1.0], "ETH": [-1.0], "SOL": [0.5]}, index=index)
+    strategy = MomentumRotationStrategy(
+        MomentumRotationConfig(
+            max_long_positions=2,
+            max_short_positions=1,
+            long_allocation=0.5,
+            short_allocation=0.5,
+            liquidation_weight_scale=0.2,
+            stop_on_event_cooldown=True,
+        )
+    )
+    liquidation_features = {
+        "liq_spike_zscore": pd.DataFrame({"BTC": [3.0], "ETH": [0.0], "SOL": [0.0]}, index=index),
+        "liq_notional_vs_dollar_volume": pd.DataFrame({"BTC": [0.01], "ETH": [0.0], "SOL": [0.05]}, index=index),
+        "event_cooldown_flag": pd.DataFrame({"BTC": [0], "ETH": [1], "SOL": [0]}, index=index),
+    }
+
+    weights = strategy.build_weights(signal, liquidation_features)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.05)
+    assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)
+    assert weights.loc[index[0], "SOL"] == pytest.approx(0.05)
+
+
+def test_momentum_rotation_strategy_version_changes_with_config() -> None:
+    baseline = MomentumRotationStrategy(MomentumRotationConfig()).version()
+    updated = MomentumRotationStrategy(MomentumRotationConfig(min_momentum=0.01)).version()
+    assert baseline != updated
+
+
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
     assert "trend_confirmation" in names
     assert "crowding_reversal" in names
     assert "ma_crossover" in names
     assert "donchian_breakout" in names
+    assert "momentum_rotation" in names
 
 
 def test_create_strategy_uses_registry() -> None:
@@ -383,10 +447,12 @@ def test_create_strategy_uses_registry() -> None:
     crowding = create_strategy("crowding_reversal", {"max_short_positions": 1})
     crossover = create_strategy("ma_crossover", {"long_allocation": 0.75})
     donchian = create_strategy("donchian_breakout", {"long_allocation": 0.75})
+    momentum = create_strategy("momentum_rotation", {"long_allocation": 0.75})
     assert isinstance(trend, TrendConfirmationStrategy)
     assert isinstance(crowding, CrowdingReversalStrategy)
     assert isinstance(crossover, MovingAverageCrossoverStrategy)
     assert isinstance(donchian, DonchianBreakoutStrategy)
+    assert isinstance(momentum, MomentumRotationStrategy)
 
 
 def test_register_strategy_decorator_supports_new_strategy_types() -> None:

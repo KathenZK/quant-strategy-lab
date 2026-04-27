@@ -5,6 +5,7 @@ from strategy_lab.signals import (
     CrowdingReversalSignalModel,
     DonchianBreakoutSignalModel,
     MovingAverageCrossoverSignalModel,
+    MomentumRotationSignalModel,
     TrendConfirmationSignalModel,
 )
 from strategy_lab.strategies import (
@@ -14,6 +15,8 @@ from strategy_lab.strategies import (
     DonchianBreakoutStrategy,
     MovingAverageCrossoverConfig,
     MovingAverageCrossoverStrategy,
+    MomentumRotationConfig,
+    MomentumRotationStrategy,
     TrendConfirmationConfig,
     TrendConfirmationStrategy,
 )
@@ -76,6 +79,20 @@ def test_donchian_breakout_strategy_exposes_signal_and_allocator_components() ->
     assert strategy.required_factors() == strategy.signal_model.required_factors()
     assert set(strategy.required_factors()) == {"donchian_breakout_14", "ma_distance_120"}
     assert strategy.required_liquidation_features() == []
+
+
+def test_momentum_rotation_strategy_exposes_signal_and_allocator_components() -> None:
+    strategy = MomentumRotationStrategy(
+        MomentumRotationConfig(
+            max_long_positions=1,
+            long_allocation=0.75,
+        )
+    )
+
+    assert isinstance(strategy.signal_model, MomentumRotationSignalModel)
+    assert isinstance(strategy.allocator, RankedCrossSectionalAllocator)
+    assert strategy.required_factors() == strategy.signal_model.required_factors()
+    assert strategy.required_liquidation_features() == strategy.allocator.required_risk_features()
 
 
 def test_strategy_versions_change_when_allocator_configuration_changes() -> None:
