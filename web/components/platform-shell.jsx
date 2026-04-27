@@ -21,12 +21,6 @@ const navItems = [
   { href: "/data-sources", label: "数据源", eyebrow: "Sources", icon: Database },
 ];
 
-const railEvents = [
-  { label: "BTC ETF flow", value: "+$186M", tone: "text-emerald-600" },
-  { label: "OKX symbols", value: "182", tone: "text-zinc-950" },
-  { label: "News latency", value: "8m", tone: "text-amber-600" },
-];
-
 const themeStorageKey = "quant-strategy-lab-theme";
 
 function applyTheme(theme) {
@@ -136,26 +130,10 @@ export default function PlatformShell({ children }) {
           </div>
         </header>
 
-        <div className="grid min-h-[calc(100dvh-65px)] grid-cols-1 2xl:grid-cols-[minmax(0,1fr)_270px]">
+        <div className="grid min-h-[calc(100dvh-65px)] grid-cols-1">
           <main id="main-content" className="relative min-w-0 px-4 py-4 md:px-5 md:py-5">
             {children}
           </main>
-
-          <aside className="hidden border-l border-zinc-200/80 bg-white/70 px-4 py-6 2xl:block">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.2em] text-zinc-500">情报栏</div>
-            <div className="mt-4 space-y-3">
-              {railEvents.map((item) => (
-                <div key={item.label} className="rounded-lg border border-zinc-200 bg-white p-3">
-                  <div className="text-xs text-zinc-500">{item.label}</div>
-                  <div className={`mt-1 font-mono text-lg font-semibold tabular-nums ${item.tone}`}>{item.value}</div>
-                </div>
-              ))}
-            </div>
-            <div className="mt-4 rounded-lg border border-zinc-200 bg-white p-3">
-              <div className="text-xs font-semibold text-zinc-950">下一步</div>
-              <p className="mt-2 text-xs leading-5 text-zinc-500">从策略实验室创建任务，完成后沉淀到回测记录。</p>
-            </div>
-          </aside>
         </div>
       </div>
     </div>
