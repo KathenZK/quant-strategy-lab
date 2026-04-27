@@ -118,14 +118,6 @@ export default function PlatformShell({ children }) {
           })}
         </nav>
 
-        <div className="absolute bottom-3 left-3 right-3 rounded-lg border border-zinc-200 bg-zinc-50 p-3">
-          <div className="flex items-center justify-between text-[11px] uppercase tracking-[0.14em] text-zinc-500">
-            <span>Research mode</span>
-            <span className="size-2 rounded-full bg-emerald-300 shadow-[0_0_18px_rgba(110,231,183,0.9)]" />
-          </div>
-          <div className="mt-3 text-sm font-medium text-zinc-950">个人工作台</div>
-          <p className="mt-1.5 text-xs leading-5 text-zinc-500">先聚焦策略实验、新闻事件和回测记录。</p>
-        </div>
       </aside>
 
       <div className="lg:pl-[224px]">
@@ -134,10 +126,6 @@ export default function PlatformShell({ children }) {
             <div className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-500 dark:border-slate-700 dark:bg-[#111722] dark:text-slate-400">
               <MagnifyingGlass size={18} />
               <span className="truncate text-sm">搜索策略模板、回测记录、新闻事件或数据源</span>
-            </div>
-            <div className="hidden items-center gap-2 rounded-md border border-emerald-200 bg-emerald-50 px-3 py-2 text-xs font-semibold text-emerald-700 md:flex">
-              <Pulse size={16} />
-              API online
             </div>
             <button
               type="button"

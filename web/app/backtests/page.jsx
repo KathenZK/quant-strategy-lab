@@ -106,61 +106,6 @@ function runWindow(run) {
   return run.registry_profile || "registry";
 }
 
-function isTrackedRun(run) {
-  const searchable = runSearchText(run);
-  return searchable.includes("recent3m") || searchable.includes("recent1y_daily") || searchable.includes("daily_recent1y") || searchable.includes("recent1y-daily");
-}
-
-function latestByStrategyAndWindow(records) {
-  const seen = new Set();
-  const latest = [];
-  for (const run of records) {
-    const key = `${run.strategy_type || run.strategy_name || run.name || run.run_id}:${runWindow(run)}`;
-    if (seen.has(key)) {
-      continue;
-    }
-    seen.add(key);
-    latest.push(run);
-  }
-  return latest;
-}
-
-function average(records, key) {
-  const values = records.map((run) => metric(run, key)).filter((value) => value !== null);
-  if (values.length === 0) {
-    return null;
-  }
-  return values.reduce((sum, value) => sum + value, 0) / values.length;
-}
-
-function bestBy(records, key) {
-  return records.reduce((best, run) => {
-    if (!best) {
-      return run;
-    }
-    return (metric(run, key) ?? Number.NEGATIVE_INFINITY) > (metric(best, key) ?? Number.NEGATIVE_INFINITY) ? run : best;
-  }, null);
-}
-
-function worstDrawdown(records) {
-  return records.reduce((worst, run) => {
-    if (!worst) {
-      return run;
-    }
-    return (metric(run, "max_drawdown") ?? 0) < (metric(worst, "max_drawdown") ?? 0) ? run : worst;
-  }, null);
-}
-
-function MetricCard({ label, value, note }) {
-  return (
-    <div className="rounded-[1rem] border border-zinc-200 bg-white p-4 shadow-[0_12px_32px_-28px_rgba(15,23,42,0.35)]">
-      <div className="text-[11px] font-semibold uppercase tracking-[0.16em] text-zinc-500">{label}</div>
-      <div className="mt-3 text-2xl font-semibold tracking-[-0.03em] text-zinc-950">{value}</div>
-      {note ? <div className="mt-2 text-xs leading-5 text-zinc-500">{note}</div> : null}
-    </div>
-  );
-}
-
 function ReturnValue({ value }) {
   const tone = Number(value) >= 0 ? "text-emerald-600" : "text-red-600";
   return <span className={tone}>{formatPercent(value)}</span>;
@@ -246,12 +191,7 @@ export default async function BacktestsPage() {
     initialError = error instanceof Error ? error.message : "Failed to load runs.";
   }
 
-  const trackedRuns = runs.filter(isTrackedRun);
-  const summaryRuns = trackedRuns.length > 0 ? trackedRuns : runs;
   const recordsForDisplay = runs;
-  const latestRuns = latestByStrategyAndWindow(summaryRuns);
-  const bestSharpeRun = bestBy(latestRuns, "sharpe");
-  const worstDrawdownRun = worstDrawdown(latestRuns);
 
   return (
     <div className="space-y-4">
@@ -264,11 +204,6 @@ export default async function BacktestsPage() {
               这里会合并读取 reports 下各个 RunRegistry 的 SQLite 表。每次 workflow 跑完后会把 manifest、指标、交易明细和报告路径写入对应回测表，并展示在这里。
             </p>
           </div>
-          <div className="rounded-[0.9rem] border border-blue-100 bg-blue-50 px-4 py-3 text-xs leading-5 text-blue-700">
-            数据窗口：Binance perpetual · 3m 1h / 1y daily
-            <br />
-            记录来源：`reports/*/_registry/runs.sqlite`
-          </div>
         </div>
       </section>
 
@@ -276,30 +211,8 @@ export default async function BacktestsPage() {
         <div className="rounded-[1rem] border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">{initialError}</div>
       ) : null}
 
-      <section className="grid gap-3 md:grid-cols-4">
-        <MetricCard label="已跟踪批次" value={latestRuns.length} note="按 strategy_type + 数据窗口取最新运行" />
-        <MetricCard
-          label="平均累计收益"
-          value={formatPercent(average(latestRuns, "cumulative_return"))}
-          note="当前展示批次平均值"
-        />
-        <MetricCard
-          label="最佳 Sharpe"
-          value={formatMetric(metric(bestSharpeRun, "sharpe"))}
-          note={bestSharpeRun ? strategyLabel(bestSharpeRun) : "暂无记录"}
-        />
-        <MetricCard
-          label="最深回撤"
-          value={formatPercent(metric(worstDrawdownRun, "max_drawdown"))}
-          note={worstDrawdownRun ? strategyLabel(worstDrawdownRun) : "暂无记录"}
-        />
-      </section>
-
       <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <h2 className="text-base font-semibold text-zinc-950">全部回测记录</h2>
-          <div className="text-xs text-zinc-500">最近 {recordsForDisplay.length} 条 workflow run</div>
-        </div>
+        <h2 className="text-base font-semibold text-zinc-950">全部回测记录</h2>
         <BacktestTable records={recordsForDisplay} />
       </section>
     </div>

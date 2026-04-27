@@ -53,7 +53,7 @@ function ExperimentDraft({ selected, yamlDraft, onYamlChange, onCreateJob, submi
           disabled={submitting}
           className="rounded-md bg-[#1f6feb] px-4 py-2 text-sm font-semibold text-white hover:bg-[#185abc] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? "创建中..." : "用 YAML 创建回测任务"}
+          {submitting ? "创建中..." : "创建回测任务"}
         </button>
       </div>
 
@@ -80,7 +80,6 @@ function ExperimentDraft({ selected, yamlDraft, onYamlChange, onCreateJob, submi
             <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Workflow YAML</div>
             <p className="mt-2 text-xs leading-5 text-zinc-500">这里编辑的是完整 workflow。提交时后端会用同一套 YAML loader 校验。</p>
           </div>
-          <div className="rounded border border-zinc-200 bg-white px-2 py-1 text-[11px] text-zinc-500">source of truth</div>
         </div>
         <textarea
           value={yamlDraft}
