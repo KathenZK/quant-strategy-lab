@@ -6,8 +6,6 @@ import { usePathname } from "next/navigation";
 import {
   Database,
   Flask,
-  GearSix,
-  House,
   ListChecks,
   MagnifyingGlass,
   MoonStars,
@@ -17,12 +15,10 @@ import {
 } from "@phosphor-icons/react";
 
 const navItems = [
-  { href: "/", label: "总览", eyebrow: "Desk", icon: House },
   { href: "/lab", label: "策略实验室", eyebrow: "Lab", icon: Flask },
   { href: "/backtests", label: "回测记录", eyebrow: "Runs", icon: ListChecks },
   { href: "/news", label: "新闻事件", eyebrow: "Events", icon: NewspaperClipping },
   { href: "/data-sources", label: "数据源", eyebrow: "Sources", icon: Database },
-  { href: "/settings", label: "设置", eyebrow: "Config", icon: GearSix },
 ];
 
 const railEvents = [
@@ -84,7 +80,7 @@ export default function PlatformShell({ children }) {
   return (
     <div className="min-h-[100dvh] bg-[#f5f6fa] text-zinc-950 dark:bg-[#080b10] dark:text-zinc-100">
       <aside className="fixed inset-y-0 left-0 z-30 hidden w-[224px] border-r border-zinc-200 bg-white px-3 py-3 dark:border-slate-800 dark:bg-[#0c1118] lg:block">
-        <Link href="/" className="group flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-[#111722]">
+        <Link href="/lab" className="group flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-[#111722]">
           <div className="grid size-9 place-items-center rounded-md bg-[#1f6feb] text-white">
             <Pulse size={21} weight="fill" />
           </div>
