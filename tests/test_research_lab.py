@@ -1,6 +1,6 @@
 import pandas as pd
 
-from signal_lab.research import FactorResearchLab, factor_correlation_matrix
+from strategy_lab.research import FactorResearchLab, factor_correlation_matrix
 
 
 def _price_and_factor_frames() -> tuple[pd.DataFrame, pd.DataFrame]:

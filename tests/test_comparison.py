@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from signal_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
-from signal_lab.data import DataLakeLayout
-from signal_lab.scenarios import seed_trend_mvp_data
+from strategy_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
+from strategy_lab.data import DataLakeLayout
+from strategy_lab.scenarios import seed_trend_mvp_data
 
 
 def _write_app_config(tmp_path: Path) -> Path:

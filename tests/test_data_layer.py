@@ -3,9 +3,9 @@ from pathlib import Path
 import pandas as pd
 import pytest
 
-from signal_lab.data import CCXTDataClient, DataIngestionService, DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType, normalize_dataset, write_dataframe
-from signal_lab.features import FeatureBuilder, FeatureStore
-from signal_lab.factors import default_registry
+from strategy_lab.data import CCXTDataClient, DataIngestionService, DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType, normalize_dataset, write_dataframe
+from strategy_lab.features import FeatureBuilder, FeatureStore
+from strategy_lab.factors import default_registry
 
 
 def _layout(tmp_path: Path) -> DataLakeLayout:

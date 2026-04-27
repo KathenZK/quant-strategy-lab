@@ -14,7 +14,7 @@ from pathlib import Path
 
 import pandas as pd
 
-from signal_lab.data import DataLakeLayout, DatasetKind, MarketType, write_dataframe
+from strategy_lab.data import DataLakeLayout, DatasetKind, MarketType, write_dataframe
 
 
 SRC_ROOT = Path("data/binance-recent1y")

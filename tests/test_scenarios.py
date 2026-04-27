@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from signal_lab.data import DataLakeLayout
-from signal_lab.scenarios import seed_crowding_mvp_data, seed_shared_comparison_mvp_data, seed_trend_mvp_data
+from strategy_lab.data import DataLakeLayout
+from strategy_lab.scenarios import seed_crowding_mvp_data, seed_shared_comparison_mvp_data, seed_trend_mvp_data
 
 
 def _layout(tmp_path: Path) -> DataLakeLayout:

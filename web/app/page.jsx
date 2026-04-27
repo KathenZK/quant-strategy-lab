@@ -1,4 +1,4 @@
-import { fetchSignalLabJson, SIGNAL_LAB_ENDPOINTS } from "../lib/signal-lab-api";
+import { fetchStrategyLabJson, STRATEGY_LAB_ENDPOINTS } from "../lib/strategy-lab-api";
 
 export const dynamic = "force-dynamic";
 
@@ -20,10 +20,10 @@ function bestRun(runs) {
 
 async function loadDashboardData() {
   const [runsPayload, tickersPayload, sourcesPayload, newsPayload] = await Promise.allSettled([
-    fetchSignalLabJson(SIGNAL_LAB_ENDPOINTS.runs),
-    fetchSignalLabJson(SIGNAL_LAB_ENDPOINTS.marketTickers, { searchParams: { source: "binance", limit: 8 } }),
-    fetchSignalLabJson(SIGNAL_LAB_ENDPOINTS.marketSources),
-    fetchSignalLabJson(SIGNAL_LAB_ENDPOINTS.newsEvents, { searchParams: { limit: 4 } }),
+    fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.runs),
+    fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.marketTickers, { searchParams: { source: "binance", limit: 8 } }),
+    fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.marketSources),
+    fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.newsEvents, { searchParams: { limit: 4 } }),
   ]);
 
   return {
@@ -40,110 +40,71 @@ export default async function HomePage() {
   const onlineSources = sources.filter((source) => ["online", "ready"].includes(source.status)).length;
 
   return (
-    <div className="space-y-5">
-      <section className="overflow-hidden rounded-[2rem] border border-zinc-200 bg-white shadow-[0_36px_110px_-74px_rgba(37,61,56,0.32)]">
-        <div className="grid gap-8 p-6 lg:grid-cols-[1fr_360px] lg:p-8">
-          <div>
-            <div className="inline-flex rounded-full border border-teal-200 bg-teal-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.18em] text-teal-700">
-              Research command center
-            </div>
-            <h1 className="mt-5 max-w-4xl text-balance text-4xl font-semibold tracking-[-0.06em] text-zinc-950 md:text-6xl">
-              从行情和事件发现机会，在策略实验室里验证。
-            </h1>
-            <p className="mt-4 max-w-2xl text-sm leading-7 text-zinc-600">
-              第一阶段先服务个人/小团队：行情页偏实时，回测使用可复现数据快照，所有实验结果沉淀到统一运行注册表。
-            </p>
+    <div className="space-y-4">
+      <section className="grid gap-3 md:grid-cols-4">
+        {[
+          ["策略实验", "3", "模板化创建入口"],
+          ["数据源", `${onlineSources}/${sources.length || 1}`, "Binance / OKX / Data Lake"],
+          ["回测记录", String(runs.length), "运行注册表"],
+          ["新闻事件", String(events.length), "事件交易研究输入"],
+        ].map(([label, value, note]) => (
+          <div key={label} className="lab-card px-4 py-3">
+            <div className="text-xs text-zinc-500">{label}</div>
+            <div className="mt-2 font-mono text-xl font-semibold tabular-nums text-zinc-950">{value}</div>
+            <div className="mt-1 text-xs text-zinc-400">{note}</div>
           </div>
-          <div className="rounded-[1.6rem] border border-zinc-200 bg-zinc-50 p-4">
-            <div className="text-[11px] uppercase tracking-[0.18em] text-zinc-500">Platform state</div>
-            <div className="mt-4 grid grid-cols-2 gap-3">
-              <div className="rounded-2xl border border-zinc-200 bg-white p-3">
-                <div className="text-xs text-zinc-500">数据源</div>
-                <div className="mt-1 font-mono text-2xl font-semibold tabular-nums text-zinc-950">{onlineSources}</div>
-              </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white p-3">
-                <div className="text-xs text-zinc-500">回测记录</div>
-                <div className="mt-1 font-mono text-2xl font-semibold tabular-nums text-zinc-950">{runs.length}</div>
-              </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white p-3">
-                <div className="text-xs text-zinc-500">观察标的</div>
-                <div className="mt-1 font-mono text-2xl font-semibold tabular-nums text-zinc-950">{tickers.length}</div>
-              </div>
-              <div className="rounded-2xl border border-zinc-200 bg-white p-3">
-                <div className="text-xs text-zinc-500">事件流</div>
-                <div className="mt-1 font-mono text-2xl font-semibold tabular-nums text-zinc-950">{events.length}</div>
-              </div>
-            </div>
-          </div>
-        </div>
+        ))}
       </section>
 
-      <section className="grid gap-5 xl:grid-cols-[1.2fr_0.8fr]">
-        <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-[0_24px_80px_-60px_rgba(37,61,56,0.28)]">
-          <div className="flex items-center justify-between">
-            <div>
-              <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Market watch</div>
-              <h2 className="mt-1 text-xl font-semibold text-zinc-950">Binance/OKX 行情入口</h2>
-            </div>
-            <a href="/markets" className="rounded-full border border-zinc-200 px-3 py-1.5 text-xs text-zinc-600 hover:bg-zinc-50">
-              查看行情
+      <section className="grid gap-4 xl:grid-cols-[1fr_360px]">
+        <div className="lab-card p-4">
+          <div className="flex items-center justify-between border-b border-zinc-100 pb-3">
+            <h2 className="text-base font-semibold text-zinc-950">策略实验概览</h2>
+            <a href="/lab" className="text-sm text-[#1f6feb] hover:underline">
+              创建策略实验
             </a>
           </div>
-          <div className="mt-4 overflow-hidden rounded-2xl border border-zinc-200">
-            <table className="w-full text-left text-sm">
-              <thead className="bg-zinc-50 text-[11px] uppercase tracking-[0.14em] text-zinc-500">
-                <tr>
-                  <th className="px-4 py-3">Symbol</th>
-                  <th className="px-4 py-3">Last</th>
-                  <th className="px-4 py-3">24h</th>
-                  <th className="px-4 py-3">Volume</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-zinc-100">
-                {tickers.slice(0, 6).map((ticker) => (
-                  <tr key={`${ticker.source}-${ticker.symbol}`} className="text-zinc-700">
-                    <td className="px-4 py-3 font-semibold text-zinc-950">{ticker.symbol}</td>
-                    <td className="px-4 py-3 font-mono tabular-nums">{ticker.last}</td>
-                    <td className={`px-4 py-3 font-mono tabular-nums ${ticker.change_24h >= 0 ? "text-emerald-600" : "text-rose-600"}`}>
-                      {formatPct(ticker.change_24h)}
-                    </td>
-                    <td className="px-4 py-3 font-mono tabular-nums">{Math.round(ticker.quote_volume_24h).toLocaleString("en-US")}</td>
-                  </tr>
-                ))}
-              </tbody>
-            </table>
+          <div className="mt-4 grid gap-3 md:grid-cols-3">
+            <div className="rounded-lg bg-zinc-50 p-3">
+              <div className="text-xs text-zinc-500">回测记录</div>
+              <div className="mt-1 font-mono text-xl font-semibold text-zinc-950">{runs.length}</div>
+            </div>
+            <div className="rounded-lg bg-zinc-50 p-3">
+              <div className="text-xs text-zinc-500">Best Sharpe</div>
+              <div className="mt-1 font-mono text-xl font-semibold text-zinc-950">{winner?.backtest_metrics?.sharpe ?? "-"}</div>
+            </div>
+            <div className="rounded-lg bg-zinc-50 p-3">
+              <div className="text-xs text-zinc-500">当前最佳策略</div>
+              <div className="mt-1 truncate text-sm font-semibold text-zinc-950">{winner?.variant_id || winner?.strategy_type || "暂无回测结果"}</div>
+            </div>
           </div>
-        </div>
-
-        <div className="space-y-5">
-          <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-[0_24px_80px_-60px_rgba(37,61,56,0.28)]">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Best run</div>
-            <h2 className="mt-2 text-xl font-semibold text-zinc-950">{winner?.variant_id || winner?.strategy_type || "暂无回测结果"}</h2>
-            <div className="mt-4 grid grid-cols-3 gap-3">
-              {["sharpe", "cumulative_return", "max_drawdown"].map((key) => (
-                <div key={key} className="rounded-2xl border border-zinc-200 bg-zinc-50 p-3">
-                  <div className="text-xs text-zinc-500">{key}</div>
-                  <div className="mt-1 font-mono text-sm font-semibold tabular-nums text-zinc-950">
-                    {key === "sharpe" ? (winner?.backtest_metrics?.[key] ?? "-") : formatPct(winner?.backtest_metrics?.[key])}
+          <div className="mt-4 border-t border-zinc-100 pt-4">
+            <div className="mb-3 text-sm font-semibold text-zinc-950">轻量观察标的</div>
+            <div className="grid gap-2 md:grid-cols-4">
+              {tickers.slice(0, 4).map((ticker) => (
+                <div key={`${ticker.source}-${ticker.symbol}`} className="rounded-lg border border-zinc-200 bg-white px-3 py-2">
+                  <div className="text-sm font-semibold text-zinc-950">{ticker.symbol}</div>
+                  <div className="mt-1 flex items-center justify-between gap-2 text-xs">
+                    <span className="font-mono text-zinc-600">{ticker.last}</span>
+                    <span className={`font-mono font-semibold ${ticker.change_24h >= 0 ? "text-[#16a05d]" : "text-[#d93025]"}`}>
+                      {formatPct(ticker.change_24h)}
+                    </span>
                   </div>
                 </div>
               ))}
             </div>
-            <a href="/backtests" className="mt-4 inline-flex rounded-full bg-teal-300 px-4 py-2 text-sm font-semibold text-zinc-950 hover:bg-teal-200">
-              进入回测记录
-            </a>
           </div>
+        </div>
 
-          <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-[0_24px_80px_-60px_rgba(37,61,56,0.28)]">
-            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">News events</div>
-            <div className="mt-4 space-y-3">
-              {events.map((event) => (
-                <a key={event.id} href="/news" className="block rounded-2xl border border-zinc-200 bg-zinc-50 p-3 hover:bg-white">
-                  <div className="text-sm font-medium text-zinc-950">{event.title}</div>
-                  <div className="mt-1 text-xs text-zinc-500">{event.assets.join(" / ")}</div>
-                </a>
-              ))}
-            </div>
+        <div className="lab-card p-4">
+          <div className="border-b border-zinc-100 pb-3 text-base font-semibold text-zinc-950">快讯 / 事件</div>
+          <div className="mt-3 space-y-3">
+            {events.map((event) => (
+              <a key={event.id} href="/news" className="block border-b border-zinc-100 pb-3 last:border-0 last:pb-0">
+                <div className="text-sm font-medium leading-5 text-zinc-950">{event.title}</div>
+                <div className="mt-1 text-xs text-zinc-500">{event.assets.join(" / ")}</div>
+              </a>
+            ))}
           </div>
         </div>
       </section>

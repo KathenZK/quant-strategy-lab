@@ -12,7 +12,7 @@ import {
   Trophy,
 } from "@phosphor-icons/react";
 
-import { fetchSignalLabAppJson, SIGNAL_LAB_ENDPOINTS } from "../lib/signal-lab-api";
+import { fetchStrategyLabAppJson, STRATEGY_LAB_ENDPOINTS } from "../lib/strategy-lab-api";
 
 const numberFormat = new Intl.NumberFormat("en-US", {
   maximumFractionDigits: 4,
@@ -124,7 +124,7 @@ function useRuns(initialRuns = [], initialError = "") {
       error: "",
     }));
     try {
-      const data = await fetchSignalLabAppJson(SIGNAL_LAB_ENDPOINTS.runs, {
+      const data = await fetchStrategyLabAppJson(STRATEGY_LAB_ENDPOINTS.runs, {
         searchParams: buildRunsSearchParams(query),
       });
       setState({
@@ -158,11 +158,11 @@ function useSelectedDetail(run) {
 
     const endpoint =
       run.kind === "workflow_run"
-        ? SIGNAL_LAB_ENDPOINTS.runDetail
+        ? STRATEGY_LAB_ENDPOINTS.runDetail
         : run.kind === "experiment_run"
-          ? SIGNAL_LAB_ENDPOINTS.experimentDetail
+          ? STRATEGY_LAB_ENDPOINTS.experimentDetail
           : run.kind === "comparison_run"
-            ? SIGNAL_LAB_ENDPOINTS.comparisonDetail
+            ? STRATEGY_LAB_ENDPOINTS.comparisonDetail
             : null;
     if (!endpoint) {
       setState({ loading: false, error: "", detail: null });
@@ -171,7 +171,7 @@ function useSelectedDetail(run) {
 
     let cancelled = false;
     setState({ loading: true, error: "", detail: null });
-    fetchSignalLabAppJson(endpoint, {
+    fetchStrategyLabAppJson(endpoint, {
       searchParams: new URLSearchParams({
         manifest_path: run.manifest_path,
       }),
@@ -456,7 +456,7 @@ function FilterPanel({ query, onChange, onApply, onReset, strategyTypes, loading
         <input
           value={query.search}
           onChange={(event) => onChange("search", event.target.value)}
-          placeholder="搜索策略名、信号名、变体 ID"
+          placeholder="搜索策略名、类型或变体 ID"
           className={fieldClassName}
         />
         <div className="grid gap-3 sm:grid-cols-2">

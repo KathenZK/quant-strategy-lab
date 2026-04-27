@@ -1,4 +1,4 @@
-import { fetchSignalLabJson, SIGNAL_LAB_ENDPOINTS } from "../../lib/signal-lab-api";
+import { fetchStrategyLabJson, STRATEGY_LAB_ENDPOINTS } from "../../lib/strategy-lab-api";
 
 export const dynamic = "force-dynamic";
 
@@ -20,7 +20,7 @@ function sentimentLabel(value) {
 export default async function NewsPage() {
   let events = [];
   try {
-    const payload = await fetchSignalLabJson(SIGNAL_LAB_ENDPOINTS.newsEvents);
+    const payload = await fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.newsEvents);
     events = payload.events ?? [];
   } catch {
     events = [];
@@ -28,29 +28,29 @@ export default async function NewsPage() {
 
   return (
     <div className="grid gap-5 xl:grid-cols-[1fr_360px]">
-      <section className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-[0_24px_80px_-60px_rgba(37,61,56,0.28)]">
+      <section className="lab-card p-4">
         <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">News intelligence</div>
         <h1 className="mt-2 text-3xl font-semibold tracking-[-0.04em] text-zinc-950">新闻事件</h1>
         <p className="mt-3 max-w-2xl text-sm leading-6 text-zinc-600">第一阶段先把新闻作为研究输入：标记资产、事件类型和时间窗口，后续再进入事件因子与事件回测。</p>
 
         <div className="mt-6 space-y-4">
           {events.map((event) => (
-            <article key={event.id} className="rounded-[1.5rem] border border-zinc-200 bg-zinc-50 p-4">
+            <article key={event.id} className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
               <div className="flex flex-wrap items-center gap-2 text-[11px] uppercase tracking-[0.16em] text-zinc-500">
                 <span>{event.source}</span>
                 <span>·</span>
                 <span>{new Date(event.published_at).toLocaleString("zh-CN", { hour12: false })}</span>
-                <span className="rounded-full border border-zinc-200 bg-white px-2 py-0.5">{event.event_type}</span>
+                <span className="rounded border border-zinc-200 bg-white px-2 py-0.5">{event.event_type}</span>
               </div>
               <h2 className="mt-3 text-xl font-semibold text-zinc-950">{event.title}</h2>
               <p className="mt-2 text-sm leading-6 text-zinc-600">{event.summary}</p>
               <div className="mt-4 flex flex-wrap gap-2">
                 {event.assets.map((asset) => (
-                  <span key={asset} className="rounded-full bg-teal-50 px-3 py-1 text-xs font-semibold text-teal-700">
+                  <span key={asset} className="rounded bg-blue-50 px-3 py-1 text-xs font-semibold text-[#1f6feb]">
                     {asset}
                   </span>
                 ))}
-                <span className="rounded-full bg-white px-3 py-1 text-xs text-zinc-600">{sentimentLabel(event.sentiment)}</span>
+                <span className="rounded bg-white px-3 py-1 text-xs text-zinc-600">{sentimentLabel(event.sentiment)}</span>
               </div>
             </article>
           ))}
@@ -58,7 +58,7 @@ export default async function NewsPage() {
       </section>
 
       <aside className="space-y-5">
-        <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-[0_24px_80px_-60px_rgba(37,61,56,0.28)]">
+        <div className="lab-card p-4">
           <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Event trading model</div>
           <h2 className="mt-2 text-xl font-semibold text-zinc-950">事件交易预留模型</h2>
           <div className="mt-4 space-y-3 text-sm leading-6 text-zinc-600">
@@ -67,11 +67,11 @@ export default async function NewsPage() {
             <p>3. 通过策略实验室验证规则，不直接从新闻触发交易。</p>
           </div>
         </div>
-        <div className="rounded-[1.75rem] border border-zinc-200 bg-white p-5 shadow-[0_24px_80px_-60px_rgba(37,61,56,0.28)]">
+        <div className="lab-card p-4">
           <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Asset coverage</div>
           <div className="mt-4 flex flex-wrap gap-2">
             {[...new Set(events.flatMap((event) => event.assets))].map((asset) => (
-              <span key={asset} className="rounded-2xl border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700">
+              <span key={asset} className="rounded border border-zinc-200 bg-zinc-50 px-3 py-2 text-sm text-zinc-700">
                 {asset}
               </span>
             ))}

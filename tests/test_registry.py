@@ -1,14 +1,14 @@
 from pathlib import Path
 import json
 
-from signal_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
-from signal_lab.data import DataLakeLayout, DuckDBWarehouse
-from signal_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
-from signal_lab.factors import default_registry
-from signal_lab.features import FeatureBuilder, FeatureStore
-from signal_lab.fs import append_text_locked
-from signal_lab.orchestration import StrategyRunner, load_strategy_workflow
-from signal_lab.scenarios import seed_trend_mvp_data
+from strategy_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse
+from strategy_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
+from strategy_lab.factors import default_registry
+from strategy_lab.features import FeatureBuilder, FeatureStore
+from strategy_lab.fs import append_text_locked
+from strategy_lab.orchestration import StrategyRunner, load_strategy_workflow
+from strategy_lab.scenarios import seed_trend_mvp_data
 
 
 def _write_app_config(tmp_path: Path) -> Path:

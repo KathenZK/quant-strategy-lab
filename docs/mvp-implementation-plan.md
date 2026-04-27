@@ -1,8 +1,8 @@
-# MVP 实施计划
+# MVP 实施计划（历史记录）
 
 这份文档把当前阶段的中低频永续合约路线拆成可执行开发顺序，目标是在 `2-4` 周内做出第一条稳定主线策略。
 
-> 状态说明：这是一份早期实施计划文档，保留作为阶段性历史记录。当前仓库已经超出文中 MVP 边界，除主线策略外还包含 `signals / allocators / experiments / comparison / batches / registry` 等后续能力。若要看当前架构状态，优先参考代码与 `docs/quant-strategy-lab-architecture-refactor.md`。
+> 状态说明：这是一份早期实施计划文档，保留作为阶段性历史记录。当前仓库已经超出文中 MVP 边界，除主线策略外还包含 `signals / allocators / experiments / comparison / batches / registry` 与前端实验室等后续能力。当前入口以 `README.md`、代码和配置为准。
 
 默认边界：
 

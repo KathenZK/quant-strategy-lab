@@ -1,12 +1,12 @@
 from pathlib import Path
 import json
 
-from signal_lab.batches.models import WorkflowBatchEntry
-from signal_lab.data import DataLakeLayout
-from signal_lab.experiments import ExperimentRunner, load_experiment_config
-from signal_lab.experiments.runner import _pick_winner
-from signal_lab.reporting.experiments import render_experiment_report
-from signal_lab.scenarios import seed_trend_mvp_data
+from strategy_lab.batches.models import WorkflowBatchEntry
+from strategy_lab.data import DataLakeLayout
+from strategy_lab.experiments import ExperimentRunner, load_experiment_config
+from strategy_lab.experiments.runner import _pick_winner
+from strategy_lab.reporting.experiments import render_experiment_report
+from strategy_lab.scenarios import seed_trend_mvp_data
 
 
 def _write_app_config(tmp_path: Path) -> Path:

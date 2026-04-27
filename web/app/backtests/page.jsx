@@ -1,5 +1,5 @@
 import DashboardClient from "../../components/dashboard-client";
-import { fetchSignalLabJson, SIGNAL_LAB_ENDPOINTS } from "../../lib/signal-lab-api";
+import { fetchStrategyLabJson, STRATEGY_LAB_ENDPOINTS } from "../../lib/strategy-lab-api";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +13,7 @@ export default async function BacktestsPage() {
   let initialError = "";
 
   try {
-    const payload = await fetchSignalLabJson(SIGNAL_LAB_ENDPOINTS.runs);
+    const payload = await fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.runs);
     initialRuns = payload.runs ?? [];
   } catch (error) {
     initialError = error instanceof Error ? error.message : "Failed to load runs.";

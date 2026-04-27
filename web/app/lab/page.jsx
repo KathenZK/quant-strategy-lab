@@ -1,5 +1,5 @@
 import StrategyLabClient from "../../components/lab/strategy-lab-client";
-import { fetchSignalLabJson, SIGNAL_LAB_ENDPOINTS } from "../../lib/signal-lab-api";
+import { fetchStrategyLabJson, STRATEGY_LAB_ENDPOINTS } from "../../lib/strategy-lab-api";
 
 export const dynamic = "force-dynamic";
 
@@ -11,7 +11,7 @@ export const metadata = {
 export default async function LabPage() {
   let templates = [];
   try {
-    const payload = await fetchSignalLabJson(SIGNAL_LAB_ENDPOINTS.strategyTemplates);
+    const payload = await fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.strategyTemplates);
     templates = payload.templates ?? [];
   } catch {
     templates = [];

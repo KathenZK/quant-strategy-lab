@@ -1,7 +1,7 @@
 import pandas as pd
 
-from signal_lab.execution import PaperBroker, PaperTradingSession
-from signal_lab.portfolio import RiskLimits, RiskManager
+from strategy_lab.execution import PaperBroker, PaperTradingSession
+from strategy_lab.portfolio import RiskLimits, RiskManager
 
 
 def test_paper_broker_rebalances_and_marks_equity() -> None:

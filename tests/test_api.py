@@ -5,8 +5,8 @@ from fastapi import HTTPException
 import pandas as pd
 import pytest
 
-from signal_lab.api import _jsonable_frame, _load_manifest, create_app
-from signal_lab.experiments import RunRegistry, RunRegistryEntry
+from strategy_lab.api import _jsonable_frame, _load_manifest, create_app
+from strategy_lab.experiments import RunRegistry, RunRegistryEntry
 
 
 def _write_run_manifest(

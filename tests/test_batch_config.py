@@ -1,8 +1,8 @@
 from pathlib import Path
 
-from signal_lab.batches import load_workflow_batch_config
-from signal_lab.comparison import load_strategy_comparison
-from signal_lab.experiments import load_experiment_config
+from strategy_lab.batches import load_workflow_batch_config
+from strategy_lab.comparison import load_strategy_comparison
+from strategy_lab.experiments import load_experiment_config
 
 
 def test_load_workflow_batch_config_resolves_relative_paths(tmp_path: Path) -> None:

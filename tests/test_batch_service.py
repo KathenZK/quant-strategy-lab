@@ -1,9 +1,9 @@
 from pathlib import Path
 
-from signal_lab.batches import BatchRunMode
-from signal_lab.batches.service import load_batch_for_mode, run_workflow_batch
-from signal_lab.data import DataLakeLayout
-from signal_lab.scenarios import seed_trend_mvp_data
+from strategy_lab.batches import BatchRunMode
+from strategy_lab.batches.service import load_batch_for_mode, run_workflow_batch
+from strategy_lab.data import DataLakeLayout
+from strategy_lab.scenarios import seed_trend_mvp_data
 
 
 def _write_app_config(tmp_path: Path) -> Path:

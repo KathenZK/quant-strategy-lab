@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from signal_lab.factors import (
+from strategy_lab.factors import (
     AmihudIlliquidityFactor,
     BasisChangeFactor,
     BasisZScoreFactor,

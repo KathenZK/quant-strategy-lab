@@ -1,13 +1,13 @@
 import pandas as pd
 
-from signal_lab.allocators import DonchianBreakoutAllocator, PersistentSignalAllocator, RankedCrossSectionalAllocator
-from signal_lab.signals import (
+from strategy_lab.allocators import DonchianBreakoutAllocator, PersistentSignalAllocator, RankedCrossSectionalAllocator
+from strategy_lab.signals import (
     CrowdingReversalSignalModel,
     DonchianBreakoutSignalModel,
     MovingAverageCrossoverSignalModel,
     TrendConfirmationSignalModel,
 )
-from signal_lab.strategies import (
+from strategy_lab.strategies import (
     CrowdingReversalConfig,
     CrowdingReversalStrategy,
     DonchianBreakoutConfig,

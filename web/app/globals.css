@@ -8,13 +8,13 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  --page-bg: #f7f8f4;
+  --page-bg: #f5f6fa;
   --page-ink: #171a18;
   --page-muted: #69706a;
   --page-accent: rgba(18, 116, 104, 0.14);
   --page-accent-strong: rgba(18, 116, 104, 0.34);
-  --page-shadow: 0 32px 90px -48px rgba(37, 61, 56, 0.36);
-  --page-shadow-soft: 0 20px 55px -38px rgba(37, 61, 56, 0.22);
+  --page-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+  --page-shadow-soft: 0 6px 18px rgba(15, 23, 42, 0.04);
   --font-sans: Outfit, Satoshi, ui-sans-serif, system-ui, sans-serif;
   --font-mono: "JetBrains Mono", SFMono-Regular, ui-monospace, monospace;
 }
@@ -29,9 +29,7 @@ body {
   min-height: 100dvh;
   font-family: var(--font-sans), ui-sans-serif, system-ui, sans-serif;
   background:
-    radial-gradient(circle at 14% 0%, rgba(20, 184, 166, 0.1), transparent 30rem),
-    radial-gradient(circle at 86% 8%, rgba(120, 113, 108, 0.08), transparent 28rem),
-    linear-gradient(180deg, #ffffff 0%, var(--page-bg) 48%, #eef1eb 100%);
+    linear-gradient(180deg, #ffffff 0%, var(--page-bg) 18rem, #f5f6fa 100%);
   color: var(--page-ink);
   position: relative;
 }
@@ -78,29 +76,11 @@ main {
 }
 
 main::before {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.16;
-  background-image:
-    linear-gradient(rgba(24, 24, 27, 0.04) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(24, 24, 27, 0.04) 1px, transparent 1px);
-  background-size: 120px 120px;
-  mask-image: radial-gradient(circle at center, black 42%, transparent 100%);
+  content: none;
 }
 
 main::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  opacity: 0.08;
-  background-image:
-    radial-gradient(circle at 15% 25%, rgba(24, 24, 27, 0.35) 0.6px, transparent 0.8px),
-    radial-gradient(circle at 72% 58%, rgba(24, 24, 27, 0.28) 0.6px, transparent 0.8px),
-    radial-gradient(circle at 48% 82%, rgba(24, 24, 27, 0.2) 0.6px, transparent 0.8px);
-  background-size: 160px 160px;
+  content: none;
 }
 
 ::-webkit-scrollbar {
@@ -132,13 +112,10 @@ main::after {
   .dashboard-card {
     position: relative;
     overflow: hidden;
-    border-radius: 1.75rem;
-    border: 1px solid rgba(255, 255, 255, 0.74);
-    background:
-      linear-gradient(145deg, rgba(255, 255, 255, 0.92), rgba(248, 249, 244, 0.8)),
-      rgba(255, 255, 255, 0.82);
+    border-radius: 0.75rem;
+    border: 1px solid #e5e7eb;
+    background: #ffffff;
     box-shadow: var(--page-shadow-soft);
-    backdrop-filter: blur(18px);
   }
 
   .dashboard-card::before {
@@ -147,12 +124,12 @@ main::after {
     inset: 0;
     pointer-events: none;
     border-radius: inherit;
-    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.78);
+    box-shadow: none;
   }
 
   .dashboard-field {
     width: 100%;
-    border-radius: 1rem;
+    border-radius: 0.5rem;
     border: 1px solid rgba(161, 161, 170, 0.42);
     background: rgba(255, 255, 255, 0.82);
     padding: 0.72rem 0.9rem;
@@ -176,9 +153,9 @@ main::after {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
-    background: #151815;
-    padding: 0.62rem 1rem;
+    border-radius: 0.45rem;
+    background: #1f6feb;
+    padding: 0.55rem 0.9rem;
     font-size: 0.875rem;
     font-weight: 600;
     color: white;
@@ -186,7 +163,7 @@ main::after {
   }
 
   .dashboard-button-primary:hover {
-    background: #243027;
+    background: #185abc;
     transform: translateY(-1px);
   }
 
@@ -199,7 +176,7 @@ main::after {
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    border-radius: 999px;
+    border-radius: 0.45rem;
     border: 1px solid rgba(161, 161, 170, 0.48);
     background: rgba(255, 255, 255, 0.66);
     padding: 0.62rem 1rem;
@@ -218,13 +195,20 @@ main::after {
     display: inline-flex;
     align-items: center;
     gap: 0.45rem;
-    border-radius: 0.9rem;
-    border: 1px solid rgba(255, 255, 255, 0.14);
-    background: rgba(255, 255, 255, 0.08);
-    padding: 0.36rem 0.72rem;
+    border-radius: 0.35rem;
+    border: 1px solid #e5e7eb;
+    background: #f8fafc;
+    padding: 0.32rem 0.58rem;
     font-size: 0.72rem;
     font-weight: 600;
     letter-spacing: 0.16em;
+  }
+
+  .lab-card {
+    border: 1px solid #e5e7eb;
+    border-radius: 0.75rem;
+    background: #ffffff;
+    box-shadow: var(--page-shadow-soft);
   }
 }
 

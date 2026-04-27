@@ -1,8 +1,8 @@
 import pandas as pd
 
-from signal_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions, PortfolioBacktester
-from signal_lab.backtest.engine import _periods_per_year
-from signal_lab.portfolio import RiskLimits
+from strategy_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions, PortfolioBacktester
+from strategy_lab.backtest.engine import _periods_per_year
+from strategy_lab.portfolio import RiskLimits
 
 
 def _frames() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:

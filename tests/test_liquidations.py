@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from signal_lab.data import aggregate_liquidation_events, enrich_liquidation_features, normalize_binance_force_order_events
+from strategy_lab.data import aggregate_liquidation_events, enrich_liquidation_features, normalize_binance_force_order_events
 
 
 def test_normalize_binance_force_order_events() -> None:

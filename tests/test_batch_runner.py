@@ -1,11 +1,11 @@
 from pathlib import Path
 
-import signal_lab.batches.runner as batch_runner_module
+import strategy_lab.batches.runner as batch_runner_module
 
-from signal_lab.batches import WorkflowBatchRunner
-from signal_lab.data import DataLakeLayout
-from signal_lab.orchestration import StrategyRunner
-from signal_lab.scenarios import seed_trend_mvp_data
+from strategy_lab.batches import WorkflowBatchRunner
+from strategy_lab.data import DataLakeLayout
+from strategy_lab.orchestration import StrategyRunner
+from strategy_lab.scenarios import seed_trend_mvp_data
 
 
 def _write_app_config(tmp_path: Path) -> Path:

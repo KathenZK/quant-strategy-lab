@@ -1,4 +1,4 @@
-import { SIGNAL_LAB_ENDPOINTS } from "../../../../lib/signal-lab-api";
-import { createSignalLabRoute } from "../../../../lib/signal-lab-proxy";
+import { STRATEGY_LAB_ENDPOINTS } from "../../../../lib/strategy-lab-api";
+import { createStrategyLabRoute } from "../../../../lib/strategy-lab-proxy";
 
-export const GET = createSignalLabRoute(SIGNAL_LAB_ENDPOINTS.marketOhlcv);
+export const GET = createStrategyLabRoute(STRATEGY_LAB_ENDPOINTS.marketOhlcv);

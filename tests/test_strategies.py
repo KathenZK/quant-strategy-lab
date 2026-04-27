@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from signal_lab.strategies import (
+from strategy_lab.strategies import (
     CrowdingReversalConfig,
     CrowdingReversalStrategy,
     DonchianBreakoutConfig,

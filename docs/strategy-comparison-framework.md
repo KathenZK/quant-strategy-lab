@@ -32,13 +32,13 @@
 
 代码模块：
 
-- `src/signal_lab/batches/config.py`
-- `src/signal_lab/batches/runner.py`
-- `src/signal_lab/batches/service.py`
-- `src/signal_lab/experiments/runner.py`
-- `src/signal_lab/comparison/config.py`
-- `src/signal_lab/comparison/models.py`
-- `src/signal_lab/comparison/runner.py`
+- `src/strategy_lab/batches/config.py`
+- `src/strategy_lab/batches/runner.py`
+- `src/strategy_lab/batches/service.py`
+- `src/strategy_lab/experiments/runner.py`
+- `src/strategy_lab/comparison/config.py`
+- `src/strategy_lab/comparison/models.py`
+- `src/strategy_lab/comparison/runner.py`
 
 CLI 入口：
 
