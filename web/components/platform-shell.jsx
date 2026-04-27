@@ -1,5 +1,6 @@
 "use client";
 
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
@@ -9,8 +10,10 @@ import {
   House,
   ListChecks,
   MagnifyingGlass,
+  MoonStars,
   NewspaperClipping,
   Pulse,
+  SunDim,
 } from "@phosphor-icons/react";
 
 const navItems = [
@@ -28,6 +31,27 @@ const railEvents = [
   { label: "News latency", value: "8m", tone: "text-amber-600" },
 ];
 
+const themeStorageKey = "quant-strategy-lab-theme";
+
+function applyTheme(theme) {
+  if (typeof document === "undefined") {
+    return;
+  }
+  document.documentElement.classList.toggle("dark", theme === "dark");
+  document.documentElement.style.colorScheme = theme;
+}
+
+function resolveTheme() {
+  if (typeof window === "undefined") {
+    return "light";
+  }
+  const storedTheme = window.localStorage.getItem(themeStorageKey);
+  if (storedTheme === "dark" || storedTheme === "light") {
+    return storedTheme;
+  }
+  return window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light";
+}
+
 function isActive(pathname, href) {
   if (href === "/") {
     return pathname === "/";
@@ -37,11 +61,30 @@ function isActive(pathname, href) {
 
 export default function PlatformShell({ children }) {
   const pathname = usePathname();
+  const [theme, setTheme] = useState("light");
+
+  useEffect(() => {
+    const resolvedTheme = resolveTheme();
+    setTheme(resolvedTheme);
+    applyTheme(resolvedTheme);
+  }, []);
+
+  function toggleTheme() {
+    setTheme((currentTheme) => {
+      const nextTheme = currentTheme === "dark" ? "light" : "dark";
+      window.localStorage.setItem(themeStorageKey, nextTheme);
+      applyTheme(nextTheme);
+      return nextTheme;
+    });
+  }
+
+  const isDark = theme === "dark";
+  const ThemeIcon = isDark ? SunDim : MoonStars;
 
   return (
-    <div className="min-h-[100dvh] bg-[#f5f6fa] text-zinc-950">
-      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[224px] border-r border-zinc-200 bg-white px-3 py-3 lg:block">
-        <Link href="/" className="group flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-2">
+    <div className="min-h-[100dvh] bg-[#f5f6fa] text-zinc-950 dark:bg-[#080b10] dark:text-zinc-100">
+      <aside className="fixed inset-y-0 left-0 z-30 hidden w-[224px] border-r border-zinc-200 bg-white px-3 py-3 dark:border-slate-800 dark:bg-[#0c1118] lg:block">
+        <Link href="/" className="group flex items-center gap-3 rounded-lg border border-zinc-200 bg-white px-3 py-2 dark:border-slate-800 dark:bg-[#111722]">
           <div className="grid size-9 place-items-center rounded-md bg-[#1f6feb] text-white">
             <Pulse size={21} weight="fill" />
           </div>
@@ -61,8 +104,8 @@ export default function PlatformShell({ children }) {
                 href={item.href}
                 className={`group flex items-center gap-3 rounded-md px-3 py-2.5 text-sm ${
                   active
-                    ? "border border-blue-100 bg-blue-50 text-[#1f6feb]"
-                    : "border border-transparent text-zinc-600 hover:border-zinc-200 hover:bg-zinc-50 hover:text-zinc-950"
+                    ? "border border-blue-100 bg-blue-50 text-[#1f6feb] dark:border-blue-400/20 dark:bg-blue-400/10 dark:text-blue-300"
+                    : "border border-transparent text-zinc-600 hover:border-zinc-200 hover:bg-zinc-50 hover:text-zinc-950 dark:text-slate-400 dark:hover:border-slate-700 dark:hover:bg-slate-800/60 dark:hover:text-slate-100"
                 }`}
               >
                 <Icon size={19} weight={active ? "fill" : "regular"} className={active ? "text-[#1f6feb]" : "text-zinc-500 group-hover:text-zinc-700"} />
@@ -86,9 +129,9 @@ export default function PlatformShell({ children }) {
       </aside>
 
       <div className="lg:pl-[224px]">
-        <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white px-4 py-2.5 md:px-5">
+        <header className="sticky top-0 z-20 border-b border-zinc-200 bg-white px-4 py-2.5 dark:border-slate-800 dark:bg-[#0c1118]/95 md:px-5">
           <div className="flex items-center gap-3">
-            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-500">
+            <div className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-500 dark:border-slate-700 dark:bg-[#111722] dark:text-slate-400">
               <MagnifyingGlass size={18} />
               <span className="truncate text-sm">搜索策略模板、回测记录、新闻事件或数据源</span>
             </div>
@@ -96,6 +139,16 @@ export default function PlatformShell({ children }) {
               <Pulse size={16} />
               API online
             </div>
+            <button
+              type="button"
+              onClick={toggleTheme}
+              aria-pressed={isDark}
+              aria-label={isDark ? "切换为白色模式" : "切换为暗黑模式"}
+              className="inline-flex items-center gap-2 rounded-md border border-zinc-200 bg-white px-3 py-2 text-xs font-semibold text-zinc-700 shadow-[0_12px_30px_-24px_rgba(15,23,42,0.45)] hover:border-zinc-300 hover:bg-zinc-50 dark:border-slate-700 dark:bg-[#111722] dark:text-slate-200 dark:hover:border-slate-600 dark:hover:bg-slate-800"
+            >
+              <ThemeIcon size={16} weight="duotone" />
+              <span>{isDark ? "暗黑" : "白色"}</span>
+            </button>
           </div>
         </header>
 

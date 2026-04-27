@@ -125,10 +125,6 @@ function latestByStrategyAndWindow(records) {
   return latest;
 }
 
-function latestDaily1yRuns(records) {
-  return latestByStrategyAndWindow(records.filter((run) => runWindow(run) === "1y daily"));
-}
-
 function average(records, key) {
   const values = records.map((run) => metric(run, key)).filter((value) => value !== null);
   if (values.length === 0) {
@@ -251,9 +247,9 @@ export default async function BacktestsPage() {
   }
 
   const trackedRuns = runs.filter(isTrackedRun);
-  const recordsForDisplay = trackedRuns.length > 0 ? trackedRuns : runs;
-  const latestRuns = latestByStrategyAndWindow(recordsForDisplay);
-  const daily1yRuns = latestDaily1yRuns(recordsForDisplay);
+  const summaryRuns = trackedRuns.length > 0 ? trackedRuns : runs;
+  const recordsForDisplay = runs;
+  const latestRuns = latestByStrategyAndWindow(summaryRuns);
   const bestSharpeRun = bestBy(latestRuns, "sharpe");
   const worstDrawdownRun = worstDrawdown(latestRuns);
 
@@ -297,17 +293,6 @@ export default async function BacktestsPage() {
           value={formatPercent(metric(worstDrawdownRun, "max_drawdown"))}
           note={worstDrawdownRun ? strategyLabel(worstDrawdownRun) : "暂无记录"}
         />
-      </section>
-
-      <section className="space-y-3">
-        <div className="flex items-center justify-between">
-          <div>
-            <h2 className="text-base font-semibold text-zinc-950">最新一年日 K 策略回测</h2>
-            <p className="mt-1 text-xs text-zinc-500">覆盖当前注册策略：趋势确认、拥挤度反转、双均线交叉、Donchian 突破。</p>
-          </div>
-          <div className="text-xs text-zinc-500">共 {daily1yRuns.length} 条策略记录</div>
-        </div>
-        <BacktestTable records={daily1yRuns} />
       </section>
 
       <section className="space-y-3">

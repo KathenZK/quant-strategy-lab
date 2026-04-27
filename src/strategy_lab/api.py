@@ -13,10 +13,15 @@ import uuid
 
 import pandas as pd
 from fastapi import Body, FastAPI, HTTPException, Query
+import yaml
 
 from strategy_lab.config import AppSettings, load_settings
 from strategy_lab.data import DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType
 from strategy_lab.experiments import RunRegistry
+from strategy_lab.factors import default_registry
+from strategy_lab.features import FeatureBuilder, FeatureStore
+from strategy_lab.orchestration import StrategyRunner
+from strategy_lab.orchestration.config import load_strategy_workflow_text
 from strategy_lab.strategies import strategy_registry
 
 
@@ -277,8 +282,109 @@ def _strategy_template(strategy_type: str, strategy_cls: type) -> dict[str, Any]
     }
 
 
+def _workflow_templates_dir() -> Path:
+    current = Path.cwd()
+    module_path = Path(__file__).resolve()
+    for candidate in (current, *module_path.parents):
+        templates_dir = candidate / "configs" / "workflows" / "strategies"
+        if templates_dir.exists():
+            return templates_dir
+    return current / "configs" / "workflows" / "strategies"
+
+
+def _read_workflow_template(path: Path, templates_dir: Path) -> dict[str, Any] | None:
+    try:
+        workflow_yaml = path.read_text(encoding="utf-8")
+        payload = yaml.safe_load(workflow_yaml) or {}
+    except Exception:
+        return None
+    if not isinstance(payload, dict):
+        return None
+
+    strategy = payload.get("strategy") or {}
+    refresh = payload.get("refresh") or {}
+    metadata = payload.get("metadata") or {}
+    if not isinstance(strategy, dict) or not isinstance(refresh, dict) or not isinstance(metadata, dict):
+        return None
+
+    relative_path = path.relative_to(templates_dir).as_posix()
+    strategy_name = strategy.get("name") or path.stem
+    strategy_type = strategy.get("strategy_type") or strategy.get("signal_type") or "factor"
+    template_metadata = _STRATEGY_TEMPLATE_METADATA.get(str(strategy_type), {})
+    exchange = strategy.get("exchange") or ""
+    market_type = strategy.get("market_type") or ""
+    symbols = strategy.get("symbols") or []
+    return {
+        "id": relative_path,
+        "path": f"configs/workflows/strategies/{relative_path}",
+        "name": template_metadata.get("name") or str(strategy_name),
+        "category": template_metadata.get("category") or str(strategy_type),
+        "description": metadata.get("description")
+        or template_metadata.get("description")
+        or f"{exchange} {market_type} workflow from {path.name}".strip(),
+        "strategy_type": str(strategy_type),
+        "default_timeframe": refresh.get("timeframe") or "1h",
+        "default_universe": symbols if isinstance(symbols, list) else [],
+        "workflow_yaml": workflow_yaml,
+        "workflow": payload,
+    }
+
+
+def _canonical_template_rank(template: dict[str, Any]) -> tuple[int, str]:
+    path = str(template.get("id") or "")
+    strategy_type = str(template.get("strategy_type") or "")
+    score = 100
+
+    if path.startswith(f"{strategy_type}.") and "binance" in path and "recent1y" in path and ".daily." not in path:
+        score = 0
+    elif path == f"{strategy_type}.mvp.yaml":
+        score = 10
+    elif path.startswith(f"{strategy_type}.") and "binance" in path and "recent1y" in path:
+        score = 20
+    elif path.startswith(f"{strategy_type}.") and "binance" in path and "recent3m" in path:
+        score = 30
+    elif path.startswith(f"{strategy_type}."):
+        score = 40
+
+    if "shared-baseline" in path:
+        score += 100
+    if "baseline" in path:
+        score += 80
+    if "no_liq" in path or "filtered" in path:
+        score += 60
+    return (score, path)
+
+
+def _canonical_strategy_templates(templates: list[dict[str, Any]]) -> list[dict[str, Any]]:
+    by_strategy_type: dict[str, dict[str, Any]] = {}
+    for template in templates:
+        strategy_type = str(template.get("strategy_type") or "")
+        if not strategy_type:
+            continue
+        current = by_strategy_type.get(strategy_type)
+        if current is None or _canonical_template_rank(template) < _canonical_template_rank(current):
+            by_strategy_type[strategy_type] = template
+
+    metadata_order = {strategy_type: index for index, strategy_type in enumerate(_STRATEGY_TEMPLATE_METADATA)}
+    return sorted(
+        by_strategy_type.values(),
+        key=lambda template: (
+            metadata_order.get(str(template.get("strategy_type") or ""), len(metadata_order)),
+            str(template.get("strategy_type") or ""),
+        ),
+    )
+
+
 def _strategy_templates() -> list[dict[str, Any]]:
-    return [_strategy_template(strategy_type, strategy_cls) for strategy_type, strategy_cls in strategy_registry.items()]
+    templates_dir = _workflow_templates_dir()
+    if not templates_dir.exists():
+        return []
+    templates = [
+        template
+        for path in sorted(templates_dir.glob("*.y*ml"))
+        if (template := _read_workflow_template(path, templates_dir)) is not None
+    ]
+    return _canonical_strategy_templates(templates)
 
 
 def _layout(config_path: str | Path | None = None) -> DataLakeLayout:
@@ -677,6 +783,9 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
     resolved_config = config_path or os.environ.get("STRATEGY_LAB_CONFIG")
     settings = load_settings(resolved_config)
     layout = DataLakeLayout.from_settings(settings)
+    layout.ensure_directories()
+    warehouse = DuckDBWarehouse(layout)
+    builder = FeatureBuilder(warehouse=warehouse, store=FeatureStore(layout), registry=default_registry())
     registry = RunRegistry(layout.reports_dir, db_path=layout.run_registry_db_path)
     app = FastAPI(title="Quant Strategy Lab API", version="0.1.0")
     lab_jobs: dict[str, dict[str, Any]] = {}
@@ -758,31 +867,79 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
     def create_backtest_job(payload: dict[str, Any] | None = Body(default=None)) -> dict[str, Any]:
         request_payload = payload or {}
         templates = _strategy_templates()
-        template_id = str(request_payload.get("template_id") or templates[0]["id"])
-        template = next((item for item in templates if item["id"] == template_id), templates[0])
+        workflow_yaml = request_payload.get("workflow_yaml")
+        template_id = str(request_payload.get("template_id") or (templates[0]["id"] if templates else ""))
+        template = next((item for item in templates if item["id"] == template_id), templates[0] if templates else None)
+        if not workflow_yaml:
+            if template is None:
+                raise HTTPException(status_code=400, detail="workflow_yaml is required when no YAML templates are available")
+            workflow_yaml = template["workflow_yaml"]
+        if not isinstance(workflow_yaml, str) or not workflow_yaml.strip():
+            raise HTTPException(status_code=400, detail="workflow_yaml must be a non-empty YAML string")
+        try:
+            workflow_config = load_strategy_workflow_text(workflow_yaml)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"invalid workflow_yaml: {exc}") from exc
+
         job_id = uuid.uuid4().hex[:12]
         created_at = datetime.now(timezone.utc).isoformat()
         snapshot_id = f"web-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}-{job_id[:6]}"
+        lab_jobs_dir.mkdir(parents=True, exist_ok=True)
+        submitted_workflows_dir = lab_jobs_dir / "workflows"
+        submitted_workflows_dir.mkdir(parents=True, exist_ok=True)
+        workflow_yaml_path = submitted_workflows_dir / f"{job_id}.yaml"
+        workflow_yaml_path.write_text(workflow_yaml, encoding="utf-8")
         job = {
             "id": job_id,
-            "status": "queued",
+            "status": "running",
             "created_at": created_at,
             "updated_at": created_at,
-            "template_id": template["id"],
-            "template_name": template["name"],
-            "source": request_payload.get("source") or "binance",
-            "timeframe": request_payload.get("timeframe") or template["default_timeframe"],
-            "universe": request_payload.get("universe") or template["default_universe"],
-            "parameters": request_payload.get("parameters") or {item["key"]: item["default"] for item in template["parameters"]},
+            "template_id": template_id or workflow_config.strategy.name,
+            "template_name": workflow_config.strategy.name,
+            "source": workflow_config.strategy.exchange,
+            "timeframe": workflow_config.refresh.timeframe,
+            "universe": workflow_config.strategy.symbols,
+            "parameters": workflow_config.strategy.strategy_params,
+            "workflow_yaml_path": str(workflow_yaml_path),
             "data_snapshot_id": snapshot_id,
             "result_sink": {
                 "registry_db": str(layout.run_registry_db_path),
                 "reports_dir": str(layout.reports_dir),
             },
-            "next_step": "已创建 Web 回测任务。接入 worker 后将调用 StrategyRunner，并把结果写入 RunRegistry。",
+            "next_step": "已保存编辑后的 YAML workflow，正在运行回测并写入 RunRegistry。",
         }
         lab_jobs[job_id] = job
-        lab_jobs_dir.mkdir(parents=True, exist_ok=True)
+        (lab_jobs_dir / f"{job_id}.json").write_text(json.dumps(job, ensure_ascii=False, indent=2), encoding="utf-8")
+
+        try:
+            artifacts = StrategyRunner(layout=layout, builder=builder).run(workflow_config)
+            manifest_payload = _read_json(layout.reports_dir, artifacts.manifest_path, strict=False)
+            job.update(
+                {
+                    "status": "completed",
+                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "run_id": artifacts.run_id,
+                    "manifest_path": artifacts.manifest_path,
+                    "factor_report_path": artifacts.factor_report_path,
+                    "backtest_report_path": artifacts.backtest_report_path,
+                    "paper_report_path": artifacts.paper_report_path,
+                    "backtest_metrics": artifacts.backtest_metrics,
+                    "paper_summary": artifacts.paper_summary,
+                    "data_snapshot_id": manifest_payload.get("data_snapshot_id") or snapshot_id,
+                    "next_step": "回测已完成，结果已写入 RunRegistry，可在回测记录页面查看。",
+                }
+            )
+        except Exception as exc:
+            job.update(
+                {
+                    "status": "failed",
+                    "updated_at": datetime.now(timezone.utc).isoformat(),
+                    "error": str(exc),
+                    "next_step": "回测执行失败，请检查 YAML、数据快照和因子配置。",
+                }
+            )
+
+        lab_jobs[job_id] = job
         (lab_jobs_dir / f"{job_id}.json").write_text(json.dumps(job, ensure_ascii=False, indent=2), encoding="utf-8")
         return {"job": job}
 

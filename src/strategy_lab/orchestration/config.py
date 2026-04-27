@@ -17,14 +17,7 @@ def _first_defined(mapping: dict, *keys: str, default=None):
     return default
 
 
-def load_strategy_workflow(path: str | Path) -> StrategyWorkflowConfig:
-    config_path = Path(path)
-    if not config_path.exists():
-        raise FileNotFoundError(f"strategy workflow config not found: {config_path}")
-
-    with config_path.open("r", encoding="utf-8") as handle:
-        payload = yaml.safe_load(handle) or {}
-
+def strategy_workflow_from_mapping(payload: dict) -> StrategyWorkflowConfig:
     strategy = payload.get("strategy", {})
     refresh = payload.get("refresh", {})
     execution = payload.get("execution", {})
@@ -78,3 +71,21 @@ def load_strategy_workflow(path: str | Path) -> StrategyWorkflowConfig:
         run_backtest=workflow.get("run_backtest", True),
         run_paper_trade=workflow.get("run_paper_trade", True),
     )
+
+
+def load_strategy_workflow(path: str | Path) -> StrategyWorkflowConfig:
+    config_path = Path(path)
+    if not config_path.exists():
+        raise FileNotFoundError(f"strategy workflow config not found: {config_path}")
+
+    with config_path.open("r", encoding="utf-8") as handle:
+        payload = yaml.safe_load(handle) or {}
+
+    return strategy_workflow_from_mapping(payload)
+
+
+def load_strategy_workflow_text(workflow_yaml: str) -> StrategyWorkflowConfig:
+    payload = yaml.safe_load(workflow_yaml) or {}
+    if not isinstance(payload, dict):
+        raise ValueError("strategy workflow YAML must contain a mapping")
+    return strategy_workflow_from_mapping(payload)

@@ -6,7 +6,10 @@ import pandas as pd
 import pytest
 
 from strategy_lab.api import _jsonable_frame, _load_manifest, create_app
+from strategy_lab.config import load_settings
+from strategy_lab.data import DataLakeLayout
 from strategy_lab.experiments import RunRegistry, RunRegistryEntry
+from strategy_lab.scenarios import seed_trend_mvp_data
 
 
 def _write_run_manifest(
@@ -303,3 +306,73 @@ def test_api_returns_experiment_and_comparison_details(tmp_path: Path) -> None:
     assert comparison_detail["run"]["name"] == "cmp_demo"
     assert len(comparison_detail["children"]) == 2
     assert comparison_detail["manifest"]["comparison"]["description"] == "comparison detail probe"
+
+
+def test_lab_strategy_templates_are_loaded_from_yaml(tmp_path: Path) -> None:
+    app_config = _write_app_config(tmp_path, tmp_path / "reports")
+    app = create_app(app_config)
+
+    payload = _endpoint(app, "/api/lab/strategy-templates")()
+
+    assert payload["templates"]
+    strategy_types = [template["strategy_type"] for template in payload["templates"]]
+    assert len(strategy_types) == len(set(strategy_types))
+    assert "crowding_reversal" in strategy_types
+    assert "momentum_rotation" in strategy_types
+    template = payload["templates"][0]
+    assert template["id"].endswith((".yaml", ".yml"))
+    assert template["path"].startswith("configs/workflows/strategies/")
+    assert "strategy:" in template["workflow_yaml"]
+    assert template["workflow"]["strategy"]["name"]
+
+
+def test_lab_backtest_job_accepts_full_workflow_yaml(tmp_path: Path) -> None:
+    reports_dir = tmp_path / "reports"
+    app_config = _write_app_config(tmp_path, reports_dir)
+    app = create_app(app_config)
+    seed_trend_mvp_data(DataLakeLayout.from_settings(load_settings(app_config)))
+    workflow_yaml = """
+strategy:
+  name: lab_yaml_probe
+  strategy_type: factor
+  factor_name: ret_1
+  exchange: binance
+  market_type: perp
+  symbols:
+    - BTC/USDT:USDT
+refresh:
+  enabled: false
+  timeframe: 1h
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+""".strip()
+
+    payload = _endpoint(app, "/api/lab/backtests")(
+        payload={
+            "template_id": "lab_yaml_probe.yaml",
+            "workflow_yaml": workflow_yaml,
+        }
+    )
+
+    job = payload["job"]
+    assert job["template_name"] == "lab_yaml_probe"
+    assert job["source"] == "binance"
+    assert job["timeframe"] == "1h"
+    assert job["universe"] == ["BTC/USDT:USDT"]
+    assert job["status"] == "completed"
+    assert Path(job["manifest_path"]).exists()
+    assert Path(job["backtest_report_path"]).exists()
+    assert Path(job["workflow_yaml_path"]).read_text(encoding="utf-8") == workflow_yaml
+
+    runs = _endpoint(app, "/api/runs")(
+        kind="workflow_run",
+        search="lab_yaml_probe",
+        strategy_type=None,
+        sort_by="generated_at",
+        sort_order="desc",
+        limit=200,
+        offset=0,
+    )["runs"]
+    assert any(run["run_id"] == job["run_id"] for run in runs)

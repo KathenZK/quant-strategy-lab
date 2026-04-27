@@ -1,13 +1,8 @@
 "use client";
 
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 
 import { fetchStrategyLabAppJson, STRATEGY_LAB_ENDPOINTS } from "../../lib/strategy-lab-api";
-
-const sourceOptions = [
-  { value: "binance", label: "Binance" },
-  { value: "okx", label: "OKX" },
-];
 
 function TemplatePicker({ templates, selectedId, onSelect }) {
   return (
@@ -41,7 +36,9 @@ function TemplatePicker({ templates, selectedId, onSelect }) {
   );
 }
 
-function ExperimentDraft({ selected, source, onSourceChange, onCreateJob, submitting }) {
+function ExperimentDraft({ selected, yamlDraft, onYamlChange, onCreateJob, submitting }) {
+  const universe = Array.isArray(selected.default_universe) ? selected.default_universe : [];
+
   return (
     <>
       <div className="flex flex-wrap items-start justify-between gap-4">
@@ -56,45 +53,41 @@ function ExperimentDraft({ selected, source, onSourceChange, onCreateJob, submit
           disabled={submitting}
           className="rounded-md bg-[#1f6feb] px-4 py-2 text-sm font-semibold text-white hover:bg-[#185abc] disabled:cursor-not-allowed disabled:opacity-60"
         >
-          {submitting ? "创建中..." : "创建回测任务"}
+          {submitting ? "创建中..." : "用 YAML 创建回测任务"}
         </button>
       </div>
 
       <div className="mt-6 grid gap-4 lg:grid-cols-3">
-        <label className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
-          <span className="text-xs text-zinc-500">数据源</span>
-          <select
-            value={source}
-            onChange={(event) => onSourceChange(event.target.value)}
-            className="mt-2 w-full rounded-xl border border-zinc-200 bg-white px-3 py-2 text-sm text-zinc-950"
-          >
-            {sourceOptions.map((option) => (
-              <option key={option.value} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        </label>
         <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
-          <div className="text-xs text-zinc-500">周期</div>
-          <div className="mt-2 font-mono text-lg font-semibold text-zinc-950">{selected.default_timeframe}</div>
+          <div className="text-xs text-zinc-500">YAML 文件</div>
+          <div className="mt-2 break-all font-mono text-sm font-semibold text-zinc-950">{selected.path}</div>
+        </div>
+        <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
+          <div className="text-xs text-zinc-500">策略 / 周期</div>
+          <div className="mt-2 font-mono text-sm font-semibold text-zinc-950">
+            {selected.strategy_type} / {selected.default_timeframe}
+          </div>
         </div>
         <div className="rounded-lg border border-zinc-200 bg-zinc-50 p-4">
           <div className="text-xs text-zinc-500">Universe</div>
-          <div className="mt-2 text-sm font-semibold text-zinc-950">{selected.default_universe.join(" / ")}</div>
+          <div className="mt-2 text-sm font-semibold text-zinc-950">{universe.join(" / ")}</div>
         </div>
       </div>
 
       <div className="mt-5 rounded-lg border border-zinc-200 bg-zinc-50 p-4">
-        <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Parameters</div>
-        <div className="mt-4 grid gap-3 md:grid-cols-3">
-          {selected.parameters.map((parameter) => (
-            <div key={parameter.key} className="rounded-lg border border-zinc-200 bg-white p-3">
-              <div className="text-xs text-zinc-500">{parameter.label}</div>
-              <div className="mt-1 font-mono text-lg font-semibold tabular-nums text-zinc-950">{parameter.default}</div>
-            </div>
-          ))}
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div>
+            <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-zinc-500">Workflow YAML</div>
+            <p className="mt-2 text-xs leading-5 text-zinc-500">这里编辑的是完整 workflow。提交时后端会用同一套 YAML loader 校验。</p>
+          </div>
+          <div className="rounded border border-zinc-200 bg-white px-2 py-1 text-[11px] text-zinc-500">source of truth</div>
         </div>
+        <textarea
+          value={yamlDraft}
+          onChange={(event) => onYamlChange(event.target.value)}
+          spellCheck={false}
+          className="mt-4 min-h-[560px] w-full resize-y rounded-lg border border-zinc-200 bg-white p-4 font-mono text-sm leading-6 text-zinc-950 outline-none focus:border-blue-300 focus:ring-2 focus:ring-blue-100"
+        />
       </div>
     </>
   );
@@ -105,24 +98,47 @@ function JobSummary({ job }) {
     return null;
   }
 
+  const failed = job.status === "failed";
+  const completed = job.status === "completed";
+  const panelClass = failed
+    ? "border-rose-200 bg-rose-50"
+    : completed
+      ? "border-emerald-200 bg-emerald-50"
+      : "border-amber-200 bg-amber-50";
+  const titleClass = failed ? "text-rose-800" : completed ? "text-emerald-800" : "text-amber-800";
+  const labelClass = failed ? "text-rose-700/70" : completed ? "text-emerald-700/70" : "text-amber-700/70";
+  const messageClass = failed ? "text-rose-800/75" : completed ? "text-emerald-800/75" : "text-amber-800/75";
+
   return (
-    <div className="mt-5 rounded-lg border border-emerald-200 bg-emerald-50 p-4">
-      <div className="text-sm font-semibold text-emerald-800">回测任务已创建</div>
+    <div className={`mt-5 rounded-lg border p-4 ${panelClass}`}>
+      <div className={`text-sm font-semibold ${titleClass}`}>{failed ? "回测任务失败" : completed ? "回测任务已完成" : "回测任务已创建"}</div>
       <div className="mt-3 grid gap-3 md:grid-cols-3">
         <div>
-          <div className="text-xs text-emerald-700/70">Job ID</div>
+          <div className={`text-xs ${labelClass}`}>Job ID</div>
           <div className="mt-1 font-mono text-sm text-zinc-950">{job.id}</div>
         </div>
         <div>
-          <div className="text-xs text-emerald-700/70">Status</div>
+          <div className={`text-xs ${labelClass}`}>Status</div>
           <div className="mt-1 font-mono text-sm text-zinc-950">{job.status}</div>
         </div>
         <div>
-          <div className="text-xs text-emerald-700/70">Snapshot</div>
-          <div className="mt-1 font-mono text-sm text-zinc-950">{job.data_snapshot_id}</div>
+          <div className={`text-xs ${labelClass}`}>{completed ? "Run ID" : "Snapshot"}</div>
+          <div className="mt-1 font-mono text-sm text-zinc-950">{completed ? job.run_id : job.data_snapshot_id}</div>
         </div>
+        {job.backtest_report_path ? (
+          <div className="md:col-span-3">
+            <div className={`text-xs ${labelClass}`}>Backtest report</div>
+            <div className="mt-1 break-all font-mono text-xs text-zinc-950">{job.backtest_report_path}</div>
+          </div>
+        ) : null}
+        {job.error ? (
+          <div className="md:col-span-3">
+            <div className={`text-xs ${labelClass}`}>Error</div>
+            <div className="mt-1 break-all font-mono text-xs text-zinc-950">{job.error}</div>
+          </div>
+        ) : null}
       </div>
-      <p className="mt-3 text-xs leading-5 text-emerald-800/75">{job.next_step}</p>
+      <p className={`mt-3 text-xs leading-5 ${messageClass}`}>{job.next_step}</p>
     </div>
   );
 }
@@ -130,11 +146,17 @@ function JobSummary({ job }) {
 export default function StrategyLabClient({ initialTemplates = [] }) {
   const [templates] = useState(initialTemplates);
   const [selectedId, setSelectedId] = useState(initialTemplates[0]?.id ?? "");
-  const [source, setSource] = useState("binance");
+  const [yamlDraft, setYamlDraft] = useState(initialTemplates[0]?.workflow_yaml ?? "");
   const [job, setJob] = useState(null);
   const [error, setError] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const selected = useMemo(() => templates.find((template) => template.id === selectedId) ?? templates[0], [selectedId, templates]);
+
+  useEffect(() => {
+    setYamlDraft(selected?.workflow_yaml ?? "");
+    setJob(null);
+    setError("");
+  }, [selected?.id, selected?.workflow_yaml]);
 
   async function createJob() {
     if (!selected) {
@@ -147,9 +169,7 @@ export default function StrategyLabClient({ initialTemplates = [] }) {
         method: "POST",
         body: {
           template_id: selected.id,
-          source,
-          timeframe: selected.default_timeframe,
-          universe: selected.default_universe,
+          workflow_yaml: yamlDraft,
         },
       });
       setJob(payload.job);
@@ -169,8 +189,8 @@ export default function StrategyLabClient({ initialTemplates = [] }) {
           <>
             <ExperimentDraft
               selected={selected}
-              source={source}
-              onSourceChange={setSource}
+              yamlDraft={yamlDraft}
+              onYamlChange={setYamlDraft}
               onCreateJob={createJob}
               submitting={submitting}
             />
