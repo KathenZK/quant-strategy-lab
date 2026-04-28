@@ -4,6 +4,7 @@ import { Fragment, useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "next/navigation";
 import { ChartLineUp, Flask, ListChecks, Scales, TrendUp } from "@phosphor-icons/react";
 
+import { fetchStrategyLabAppJson, STRATEGY_LAB_ENDPOINTS } from "../../lib/strategy-lab-api";
 import {
   buildStrategyGroups,
   costRatioOf,
@@ -116,7 +117,7 @@ function StrategyRail({ groups, selectedKey, onSelect }) {
 
       <section className="lab-card overflow-hidden">
         <div className="border-b border-zinc-200 px-4 py-3 text-xs font-semibold text-zinc-500 dark:border-slate-800 dark:text-slate-500">策略族</div>
-        <div className="max-h-[calc(100dvh-310px)] space-y-1 overflow-y-auto p-2">
+        <div className="space-y-1 p-2">
           {groups.map((group) => {
             const active = group.key === selectedKey;
             const bestRun = bestByMetric(group.runs, "sharpe");
@@ -210,7 +211,241 @@ function MetricCell({ run, column }) {
   );
 }
 
+function useRunDetail(run) {
+  const [state, setState] = useState({ loading: false, error: "", detail: null });
+
+  useEffect(() => {
+    if (!run?.manifest_path) {
+      setState({ loading: false, error: "", detail: null });
+      return undefined;
+    }
+
+    let cancelled = false;
+    setState({ loading: true, error: "", detail: null });
+    fetchStrategyLabAppJson(STRATEGY_LAB_ENDPOINTS.runDetail, {
+      searchParams: new URLSearchParams({
+        manifest_path: run.manifest_path,
+      }),
+    })
+      .then((detail) => {
+        if (!cancelled) {
+          setState({ loading: false, error: "", detail });
+        }
+      })
+      .catch((error) => {
+        if (!cancelled) {
+          setState({ loading: false, error: error instanceof Error ? error.message : "加载交易明细失败", detail: null });
+        }
+      });
+
+    return () => {
+      cancelled = true;
+    };
+  }, [run?.manifest_path]);
+
+  return state;
+}
+
+function maWindowFromFactor(factor) {
+  const match = String(factor || "").match(/ma_distance_(\d+)/);
+  return match ? Number(match[1]) : null;
+}
+
+function inferMaWindows(run) {
+  const params = strategyParamsOf(run);
+  const fastFromParams = maWindowFromFactor(params.fast_ma_factor);
+  const slowFromParams = maWindowFromFactor(params.slow_ma_factor);
+  if (fastFromParams && slowFromParams) {
+    return { fast: fastFromParams, slow: slowFromParams };
+  }
+
+  const text = [run?.variant_id, run?.name, run?.strategy_name, run?.manifest_path].filter(Boolean).join(" ");
+  const match = text.match(/ma(?:_crossover)?[_-](\d+)[_-](\d+)|ma(\d+)_ma(\d+)/i);
+  if (!match) {
+    return { fast: fastFromParams, slow: slowFromParams };
+  }
+  return {
+    fast: fastFromParams || Number(match[1] || match[3]),
+    slow: slowFromParams || Number(match[2] || match[4]),
+  };
+}
+
+function rollingAverage(rows, window) {
+  if (!window || window <= 1) {
+    return [];
+  }
+  const output = [];
+  let sum = 0;
+  const queue = [];
+  for (const row of rows) {
+    queue.push(row.value);
+    sum += row.value;
+    if (queue.length > window) {
+      sum -= queue.shift();
+    }
+    output.push({
+      ts: row.ts,
+      value: queue.length === window ? sum / window : null,
+    });
+  }
+  return output;
+}
+
+function seriesPoints(series, xByTs, yFor) {
+  return series
+    .filter((point) => Number.isFinite(Number(point.value)) && xByTs.has(point.ts))
+    .map((point) => `${xByTs.get(point.ts).toFixed(2)},${yFor(point.value).toFixed(2)}`)
+    .join(" ");
+}
+
+function PriceTradeChart({ detail, run }) {
+  const prices = detail?.artifacts?.prices ?? [];
+  const trades = detail?.artifacts?.trades ?? [];
+  const symbols = useMemo(() => Object.keys(prices[0] ?? {}).filter((key) => key !== "ts"), [prices]);
+  const [symbol, setSymbol] = useState("");
+  const maWindows = useMemo(() => inferMaWindows(run), [run]);
+
+  useEffect(() => {
+    if (!symbols.length) {
+      if (symbol) {
+        setSymbol("");
+      }
+      return;
+    }
+    if (!symbols.includes(symbol)) {
+      setSymbol(symbols[0]);
+    }
+  }, [symbol, symbols]);
+
+  const chart = useMemo(() => {
+    const rows = prices
+      .map((row, index) => ({
+        index,
+        ts: row.ts,
+        value: Number(row[symbol]),
+      }))
+      .filter((point) => Number.isFinite(point.value));
+
+    if (rows.length < 2) {
+      return { points: "", fastMaPoints: "", slowMaPoints: "", xByTs: new Map(), yFor: () => 0 };
+    }
+
+    const fastMa = rollingAverage(rows, maWindows.fast);
+    const slowMa = rollingAverage(rows, maWindows.slow);
+    const allValues = [
+      ...rows.map((point) => point.value),
+      ...fastMa.map((point) => point.value).filter((value) => Number.isFinite(Number(value))),
+      ...slowMa.map((point) => point.value).filter((value) => Number.isFinite(Number(value))),
+    ];
+    const min = Math.min(...allValues);
+    const max = Math.max(...allValues);
+    const span = max - min || 1;
+    const xByTs = new Map();
+    const points = rows
+      .map((point, index) => {
+        const x = (index / (rows.length - 1)) * 1000;
+        const y = 250 - ((point.value - min) / span) * 224 - 13;
+        xByTs.set(point.ts, x);
+        return `${x.toFixed(2)},${y.toFixed(2)}`;
+      })
+      .join(" ");
+
+    return {
+      points,
+      fastMaPoints: seriesPoints(fastMa, xByTs, (value) => 250 - ((Number(value) - min) / span) * 224 - 13),
+      slowMaPoints: seriesPoints(slowMa, xByTs, (value) => 250 - ((Number(value) - min) / span) * 224 - 13),
+      xByTs,
+      yFor: (value) => 250 - ((Number(value) - min) / span) * 224 - 13,
+    };
+  }, [maWindows.fast, maWindows.slow, prices, symbol]);
+
+  const selectedTrades = useMemo(
+    () => trades.filter((trade) => trade.symbol === symbol && chart.xByTs.has(trade.ts) && Number.isFinite(Number(trade.price))),
+    [chart.xByTs, symbol, trades],
+  );
+
+  if (!prices.length) {
+    return (
+      <div className="rounded-lg border border-dashed border-zinc-300 bg-white p-4 text-xs text-zinc-500 dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-400">
+        暂无价格 artifact，无法绘制买卖点。
+      </div>
+    );
+  }
+
+  return (
+    <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950/50">
+      <div className="mb-3 flex flex-wrap items-center justify-between gap-3">
+        <div>
+          <div className="flex items-center gap-2 text-sm font-semibold text-zinc-950 dark:text-zinc-100">
+            <ChartLineUp size={17} />
+            价格、双均线与买卖点
+          </div>
+          <div className="mt-1 text-xs text-zinc-500 dark:text-slate-500">
+            基于 close 价格计算 MA；绿色为买入/减空，红色为卖出/减多。
+          </div>
+        </div>
+        {symbols.length > 1 ? (
+          <select
+            value={symbol}
+            onChange={(event) => setSymbol(event.target.value)}
+            className="rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-xs text-zinc-900 dark:border-slate-700 dark:bg-slate-900 dark:text-slate-100"
+          >
+            {symbols.map((item) => (
+              <option key={item} value={item}>
+                {item}
+              </option>
+            ))}
+          </select>
+        ) : (
+          <span className="rounded border border-zinc-200 px-2 py-1 font-mono text-xs text-zinc-500 dark:border-slate-700 dark:text-slate-400">
+            {symbol || "-"}
+          </span>
+        )}
+      </div>
+
+      <div className="relative h-[300px] overflow-hidden rounded-xl border border-zinc-200 bg-zinc-50 p-3 dark:border-slate-800 dark:bg-slate-900/70">
+        <svg viewBox="0 0 1000 250" className="h-full w-full overflow-visible">
+          <line x1="0" x2="1000" y1="249" y2="249" stroke="currentColor" className="text-zinc-200 dark:text-slate-800" />
+          {chart.points ? (
+            <polyline fill="none" stroke="rgb(20 184 166)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="3" points={chart.points} vectorEffect="non-scaling-stroke" />
+          ) : null}
+          {chart.fastMaPoints ? (
+            <polyline fill="none" stroke="rgb(96 165 250)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points={chart.fastMaPoints} vectorEffect="non-scaling-stroke" />
+          ) : null}
+          {chart.slowMaPoints ? (
+            <polyline fill="none" stroke="rgb(250 204 21)" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" points={chart.slowMaPoints} vectorEffect="non-scaling-stroke" />
+          ) : null}
+          {selectedTrades.map((trade, index) => {
+            const x = chart.xByTs.get(trade.ts);
+            const y = chart.yFor(trade.price);
+            const isBuy = trade.side === "buy";
+            return (
+              <g key={`${trade.ts}-${trade.symbol}-${index}`} transform={`translate(${x} ${y})`}>
+                {isBuy ? (
+                  <path d="M 0 -10 L 9 8 L -9 8 Z" fill="rgb(16 185 129)" stroke="white" strokeWidth="1.5" />
+                ) : (
+                  <path d="M 0 10 L 9 -8 L -9 -8 Z" fill="rgb(244 63 94)" stroke="white" strokeWidth="1.5" />
+                )}
+              </g>
+            );
+          })}
+        </svg>
+      </div>
+
+      <div className="mt-3 flex flex-wrap items-center gap-4 text-xs text-zinc-600 dark:text-slate-400">
+        <span className="inline-flex items-center gap-1.5"><span className="h-0.5 w-4 rounded bg-teal-500" /> Close</span>
+        {maWindows.fast ? <span className="inline-flex items-center gap-1.5"><span className="h-0.5 w-4 rounded bg-blue-400" /> MA{maWindows.fast}</span> : null}
+        {maWindows.slow ? <span className="inline-flex items-center gap-1.5"><span className="h-0.5 w-4 rounded bg-yellow-400" /> MA{maWindows.slow}</span> : null}
+        <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-sm bg-emerald-500" /> 买入 / 减空</span>
+        <span className="inline-flex items-center gap-1.5"><span className="size-2 rounded-sm bg-rose-500" /> 卖出 / 减多</span>
+        <span className="font-mono">{formatNumber(selectedTrades.length, "0")} trades</span>
+      </div>
+    </div>
+  );
+}
+
 function RunDetailRow({ run, colSpan }) {
+  const detailState = useRunDetail(run);
   const params = strategyParamsOf(run);
   const execution = run.execution_assumptions || {};
   const attribution = run.backtest_attribution || {};
@@ -218,7 +453,20 @@ function RunDetailRow({ run, colSpan }) {
   return (
     <tr className="border-t border-teal-100 bg-teal-50/40 dark:border-teal-400/20 dark:bg-teal-950/10">
       <td colSpan={colSpan} className="px-4 py-4">
-        <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr_0.9fr]">
+        <div className="space-y-4">
+          {detailState.loading ? (
+            <div className="rounded-lg border border-zinc-200 bg-white p-4 text-xs text-zinc-500 dark:border-slate-800 dark:bg-slate-950/50 dark:text-slate-400">
+              正在加载价格和交易明细...
+            </div>
+          ) : null}
+          {detailState.error ? (
+            <div className="rounded-lg border border-rose-200 bg-rose-50 p-4 text-xs text-rose-700 dark:border-rose-400/30 dark:bg-rose-950/20 dark:text-rose-200">
+              {detailState.error}
+            </div>
+          ) : null}
+          {detailState.detail ? <PriceTradeChart detail={detailState.detail} run={run} /> : null}
+
+          <div className="grid gap-4 xl:grid-cols-[1.1fr_0.9fr_0.9fr]">
           <div className="rounded-lg border border-zinc-200 bg-white p-4 dark:border-slate-800 dark:bg-slate-950/50">
             <div className="flex items-center gap-2 text-sm font-semibold text-zinc-950 dark:text-zinc-100">
               <Scales size={17} />
@@ -278,6 +526,7 @@ function RunDetailRow({ run, colSpan }) {
                 <div className="mt-1 font-mono text-zinc-900 dark:text-slate-100">{formatMetric(attribution.funding_cost_sum)}</div>
               </div>
             </div>
+          </div>
           </div>
         </div>
       </td>
