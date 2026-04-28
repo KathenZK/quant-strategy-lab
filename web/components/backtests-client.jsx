@@ -1,34 +1,40 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
+import Link from "next/link";
 
 import { fetchStrategyLabAppJson, STRATEGY_LAB_ENDPOINTS } from "../lib/strategy-lab-api";
+import {
+  buildLabRunHref,
+  costRatioOf,
+  formatDate,
+  formatMetric,
+  formatNumber,
+  formatPercent,
+  metricOf,
+  parameterSummary,
+  runIdentity,
+  runVariantId,
+  runWindow,
+  shortHash,
+  strategyLabel,
+} from "../lib/strategy-workbench";
 
 export const BACKTEST_PAGE_SIZE = 30;
 
-const strategyLabels = {
-  crowding_reversal: "拥挤度反转",
-  donchian_breakout: "Donchian 突破",
-  ma_crossover: "双均线交叉",
-  momentum_rotation: "动量轮动",
-  trend_confirmation: "趋势确认",
-};
-
-const numberFormat = new Intl.NumberFormat("en-US", {
-  maximumFractionDigits: 2,
-});
-
-const compactNumberFormat = new Intl.NumberFormat("en-US", {
-  maximumFractionDigits: 4,
-});
-
-const dateFormat = new Intl.DateTimeFormat("zh-CN", {
-  month: "2-digit",
-  day: "2-digit",
-  hour: "2-digit",
-  minute: "2-digit",
-  hour12: false,
-});
+const metricColumns = [
+  { key: "cumulative_return", label: "累计收益", kind: "percent", strong: true },
+  { key: "buy_hold_return", label: "BTC持有", kind: "percent" },
+  { key: "excess_return_vs_buy_hold", label: "超额", kind: "percent", strong: true },
+  { key: "annualized_return", label: "年化", kind: "percent" },
+  { key: "max_drawdown", label: "最大回撤", kind: "percent", bad: true },
+  { key: "sharpe", label: "Sharpe", kind: "number" },
+  { key: "calmar", label: "Calmar", kind: "number" },
+  { key: "win_rate", label: "胜率", kind: "percent" },
+  { key: "profit_loss_ratio", label: "盈亏比", kind: "number" },
+  { key: "avg_turnover", label: "换手率", kind: "number" },
+  { key: "fee_ratio", label: "费用占比", kind: "percent" },
+];
 
 function buildRunsSearchParams(offset) {
   return new URLSearchParams({
@@ -40,84 +46,37 @@ function buildRunsSearchParams(offset) {
   });
 }
 
-function metric(run, key) {
-  const value = run?.backtest_metrics?.[key] ?? run?.[key];
-  const numericValue = Number(value);
-  return Number.isFinite(numericValue) ? numericValue : null;
+function valueFor(run, key) {
+  if (key === "fee_ratio") {
+    return costRatioOf(run);
+  }
+  return metricOf(run, key);
 }
 
-function formatNumber(value, fallback = "-") {
+function toneFor(value, column) {
   if (value === null || value === undefined || Number.isNaN(Number(value))) {
-    return fallback;
+    return "text-zinc-400 dark:text-slate-500";
   }
-  return numberFormat.format(Number(value));
-}
-
-function formatMetric(value, fallback = "-") {
-  if (value === null || value === undefined || Number.isNaN(Number(value))) {
-    return fallback;
+  if (column.bad) {
+    return Number(value) < 0 ? "text-rose-600 dark:text-rose-300" : "text-zinc-800 dark:text-slate-200";
   }
-  return compactNumberFormat.format(Number(value));
-}
-
-function formatPercent(value, fallback = "-") {
-  if (value === null || value === undefined || Number.isNaN(Number(value))) {
-    return fallback;
+  if (["cumulative_return", "annualized_return", "excess_return_vs_buy_hold", "sharpe", "calmar"].includes(column.key)) {
+    return Number(value) >= 0 ? "text-emerald-700 dark:text-emerald-300" : "text-rose-600 dark:text-rose-300";
   }
-  return `${(Number(value) * 100).toFixed(2)}%`;
+  return "text-zinc-800 dark:text-slate-200";
 }
 
-function formatDate(value) {
-  if (!value) {
-    return "-";
-  }
-  const date = new Date(value);
-  return Number.isNaN(date.getTime()) ? "-" : dateFormat.format(date);
+function formatValue(value, kind) {
+  return kind === "percent" ? formatPercent(value) : formatMetric(value);
 }
 
-function shortHash(value) {
-  return value ? String(value).slice(0, 10) : "-";
-}
-
-function shortPath(value) {
-  if (!value) {
-    return "-";
-  }
-  const text = String(value);
-  const marker = "/reports/";
-  const index = text.indexOf(marker);
-  return index >= 0 ? `reports/${text.slice(index + marker.length)}` : text;
-}
-
-function strategyLabel(run) {
-  const key = run.strategy_type || run.signal_name || run.name;
-  return strategyLabels[key] || key || "-";
-}
-
-function runSearchText(run) {
-  return [run.name, run.strategy_name, run.backtest_report_path, run.manifest_path, run.registry_profile]
-    .filter(Boolean)
-    .join(" ")
-    .toLowerCase();
-}
-
-function runWindow(run) {
-  const searchable = runSearchText(run);
-  if (searchable.includes("recent1y_daily") || searchable.includes("daily_recent1y") || searchable.includes("recent1y-daily")) {
-    return "1y daily";
-  }
-  if (searchable.includes("recent3m")) {
-    return "3m 1h";
-  }
-  if (searchable.includes("recent1y")) {
-    return "1y";
-  }
-  return run.registry_profile || "registry";
-}
-
-function ReturnValue({ value }) {
-  const tone = Number(value) >= 0 ? "text-emerald-600" : "text-red-600";
-  return <span className={tone}>{formatPercent(value)}</span>;
+function MetricCell({ run, column }) {
+  const value = valueFor(run, column.key);
+  return (
+    <td className={`whitespace-nowrap px-3 py-4 text-right font-mono text-xs tabular-nums ${column.strong ? "font-semibold" : ""} ${toneFor(value, column)}`}>
+      {formatValue(value, column.kind)}
+    </td>
+  );
 }
 
 function BacktestTable({ records }) {
@@ -130,49 +89,49 @@ function BacktestTable({ records }) {
   }
 
   return (
-    <div className="overflow-hidden rounded-[1rem] border border-zinc-200 bg-white shadow-[0_18px_50px_-42px_rgba(15,23,42,0.45)]">
+    <div className="overflow-hidden rounded-[1rem] border border-zinc-200 bg-white shadow-[0_18px_50px_-42px_rgba(15,23,42,0.45)] dark:border-slate-800 dark:bg-[#111722]">
       <div className="overflow-x-auto">
-        <table className="min-w-[1160px] text-left text-sm">
-          <thead className="border-b border-zinc-200 bg-zinc-50 text-[11px] uppercase tracking-[0.14em] text-zinc-500">
+        <table className="min-w-[1840px] text-left text-sm">
+          <thead className="border-b border-zinc-200 bg-zinc-50 text-[11px] uppercase tracking-[0.14em] text-zinc-500 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-500">
             <tr>
-              <th className="w-[250px] whitespace-nowrap px-4 py-3 font-semibold">策略</th>
-              <th className="w-[170px] whitespace-nowrap px-4 py-3 font-semibold">运行时间</th>
-              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">累计收益</th>
-              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">Sharpe</th>
-              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">最大回撤</th>
-              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">换手</th>
-              <th className="whitespace-nowrap px-4 py-3 text-right font-semibold">交易</th>
-              <th className="w-[320px] whitespace-nowrap px-4 py-3 font-semibold">运行指纹</th>
+              <th className="w-[170px] whitespace-nowrap px-4 py-3 font-semibold">策略</th>
+              <th className="w-[210px] whitespace-nowrap px-3 py-3 font-semibold">参数版本</th>
+              <th className="w-[230px] whitespace-nowrap px-3 py-3 font-semibold">参数摘要</th>
+              <th className="w-[110px] whitespace-nowrap px-3 py-3 font-semibold">窗口</th>
+              <th className="w-[130px] whitespace-nowrap px-3 py-3 font-semibold">运行时间</th>
+              {metricColumns.map((column) => (
+                <th key={column.key} className="whitespace-nowrap px-3 py-3 text-right font-semibold">{column.label}</th>
+              ))}
+              <th className="w-[130px] whitespace-nowrap px-4 py-3 text-right font-semibold">操作</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-zinc-100">
+          <tbody className="divide-y divide-zinc-100 dark:divide-slate-800">
             {records.map((run) => (
-              <tr key={run.manifest_path || run.run_id} className="align-top hover:bg-blue-50/40">
+              <tr key={runIdentity(run)} className="align-top hover:bg-blue-50/40 dark:hover:bg-slate-900/50">
                 <td className="px-4 py-4">
-                  <div className="font-semibold text-zinc-950">{strategyLabel(run)}</div>
-                  <div className="mt-1 text-xs text-zinc-500">{run.name}</div>
+                  <div className="font-semibold text-zinc-950 dark:text-zinc-100">{strategyLabel(run)}</div>
+                  <div className="mt-1 text-[11px] text-zinc-500 dark:text-slate-500">{run.strategy_type || run.signal_name || "-"}</div>
                 </td>
-                <td className="whitespace-nowrap px-4 py-4 text-zinc-700">
-                  <div>{formatDate(run.generated_at)}</div>
-                  <div className="mt-1 text-xs text-zinc-500">Binance perp · {runWindow(run)}</div>
+                <td className="px-3 py-4">
+                  <div className="font-mono text-xs font-semibold text-zinc-950 dark:text-zinc-100">{runVariantId(run)}</div>
+                  <div className="mt-1 text-[11px] text-zinc-500 dark:text-slate-500">{shortHash(run.run_id)}</div>
                 </td>
-                <td className="whitespace-nowrap px-4 py-4 text-right font-semibold">
-                  <ReturnValue value={metric(run, "cumulative_return")} />
+                <td className="px-3 py-4">
+                  <div className="text-xs font-medium text-zinc-800 dark:text-slate-200">{parameterSummary(run)}</div>
+                  <div className="mt-1 truncate text-[11px] text-zinc-500 dark:text-slate-500">{run.name}</div>
                 </td>
-                <td className="whitespace-nowrap px-4 py-4 text-right text-zinc-800">{formatMetric(metric(run, "sharpe"))}</td>
-                <td className="whitespace-nowrap px-4 py-4 text-right font-semibold text-red-600">
-                  {formatPercent(metric(run, "max_drawdown"))}
-                </td>
-                <td className="whitespace-nowrap px-4 py-4 text-right text-zinc-700">{formatPercent(metric(run, "avg_turnover"))}</td>
-                <td className="whitespace-nowrap px-4 py-4 text-right text-zinc-700">
-                  {formatNumber(run.trade_count ?? run.fill_count)}
-                </td>
-                <td className="px-4 py-4">
-                  <div className="font-mono text-xs text-zinc-800">{shortHash(run.run_id)}</div>
-                  <div className="mt-1 max-w-[260px] truncate font-mono text-[11px] text-zinc-500">
-                    {shortPath(run.backtest_report_path)}
-                  </div>
-                  <div className="mt-1 text-[11px] text-zinc-500">snapshot {shortHash(run.data_snapshot_id)}</div>
+                <td className="whitespace-nowrap px-3 py-4 text-xs text-zinc-700 dark:text-slate-300">{runWindow(run)}</td>
+                <td className="whitespace-nowrap px-3 py-4 font-mono text-xs text-zinc-500 dark:text-slate-500">{formatDate(run.generated_at)}</td>
+                {metricColumns.map((column) => (
+                  <MetricCell key={column.key} run={run} column={column} />
+                ))}
+                <td className="px-4 py-4 text-right">
+                  <Link
+                    href={buildLabRunHref(run)}
+                    className="inline-flex rounded-md border border-blue-200 bg-blue-50 px-3 py-2 text-xs font-semibold text-blue-700 hover:-translate-y-0.5 hover:bg-blue-100"
+                  >
+                    打开策略
+                  </Link>
                 </td>
               </tr>
             ))}

@@ -10,6 +10,8 @@ from strategy_lab.strategies import (
     MovingAverageCrossoverStrategy,
     MomentumRotationConfig,
     MomentumRotationStrategy,
+    SmallCapMomentumBreakoutConfig,
+    SmallCapMomentumBreakoutStrategy,
     TrendConfirmationConfig,
     TrendConfirmationStrategy,
     create_strategy,
@@ -433,6 +435,60 @@ def test_momentum_rotation_strategy_version_changes_with_config() -> None:
     assert baseline != updated
 
 
+def test_small_cap_momentum_breakout_strategy_enters_and_times_out() -> None:
+    index = pd.date_range("2024-01-01", periods=4, freq="h", tz="UTC")
+    factors = {
+        "donchian_breakout_10": pd.DataFrame(
+            {"DOGE": [float("nan"), 1.0, float("nan"), float("nan")], "PEPE": [float("nan")] * 4},
+            index=index,
+        ),
+        "ret_1": pd.DataFrame({"DOGE": [0.0, 0.03, 0.00, 0.00], "PEPE": [0.0, 0.03, 0.00, 0.00]}, index=index),
+        "ret_4": pd.DataFrame({"DOGE": [0.0, 0.02, 0.00, 0.00], "PEPE": [0.0, 0.02, 0.00, 0.00]}, index=index),
+        "volume_surge_20": pd.DataFrame(
+            {"DOGE": [0.0, 3.0, 0.0, 0.0], "PEPE": [0.0, 3.0, 0.0, 0.0]},
+            index=index,
+        ),
+        "rsi_14": pd.DataFrame(
+            {"DOGE": [50.0, 68.0, 60.0, 55.0], "PEPE": [50.0, 68.0, 60.0, 55.0]},
+            index=index,
+        ),
+        "amihud_illiquidity": pd.DataFrame(
+            {"DOGE": [0.0, 0.000001, 0.0, 0.0], "PEPE": [0.0, 0.000001, 0.0, 0.0]},
+            index=index,
+        ),
+    }
+    price_frame = pd.DataFrame({"DOGE": [100.0, 104.0, 106.0, 107.0], "PEPE": [100.0] * 4}, index=index)
+    strategy = SmallCapMomentumBreakoutStrategy(
+        SmallCapMomentumBreakoutConfig(
+            max_positions=1,
+            long_allocation=0.3,
+            stop_loss_pct=None,
+            trailing_stop_pct=None,
+            max_hold_bars=2,
+            cooldown_bars=1,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert signal.loc[index[1], "DOGE"] > 0.0
+    assert pd.isna(signal.loc[index[1], "PEPE"])
+    assert weights.loc[index[0], "DOGE"] == pytest.approx(0.0)
+    assert weights.loc[index[1], "DOGE"] == pytest.approx(0.3)
+    assert weights.loc[index[2], "DOGE"] == pytest.approx(0.3)
+    assert weights.loc[index[3], "DOGE"] == pytest.approx(0.0)
+
+
+def test_small_cap_momentum_breakout_requires_price_frame_for_stops() -> None:
+    strategy = SmallCapMomentumBreakoutStrategy(SmallCapMomentumBreakoutConfig(stop_loss_pct=0.06))
+    index = pd.date_range("2024-01-01", periods=1, freq="h", tz="UTC")
+    signal = pd.DataFrame({"DOGE": [1.0]}, index=index)
+
+    with pytest.raises(ValueError):
+        strategy.build_weights(signal)
+
+
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
     assert "trend_confirmation" in names
@@ -440,6 +496,7 @@ def test_strategy_registry_lists_builtin_strategies() -> None:
     assert "ma_crossover" in names
     assert "donchian_breakout" in names
     assert "momentum_rotation" in names
+    assert "small_cap_momentum_breakout" in names
 
 
 def test_create_strategy_uses_registry() -> None:
@@ -448,11 +505,13 @@ def test_create_strategy_uses_registry() -> None:
     crossover = create_strategy("ma_crossover", {"long_allocation": 0.75})
     donchian = create_strategy("donchian_breakout", {"long_allocation": 0.75})
     momentum = create_strategy("momentum_rotation", {"long_allocation": 0.75})
+    small_cap = create_strategy("small_cap_momentum_breakout", {"long_allocation": 0.25})
     assert isinstance(trend, TrendConfirmationStrategy)
     assert isinstance(crowding, CrowdingReversalStrategy)
     assert isinstance(crossover, MovingAverageCrossoverStrategy)
     assert isinstance(donchian, DonchianBreakoutStrategy)
     assert isinstance(momentum, MomentumRotationStrategy)
+    assert isinstance(small_cap, SmallCapMomentumBreakoutStrategy)
 
 
 def test_register_strategy_decorator_supports_new_strategy_types() -> None:

@@ -14,7 +14,16 @@ from strategy_lab.data import DataIngestionService, DataLakeLayout, DuckDBWareho
 from strategy_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
 from strategy_lab.factors import default_registry
 from strategy_lab.features import FeatureBuilder, FeatureStore
-from strategy_lab.orchestration import IncrementalStateStore, RefreshOptions, StrategyRunner, StrategyWorkflowConfig, StrategyWorkflowSpec, load_strategy_workflow
+from strategy_lab.ingest import sync_small_cap_universe
+from strategy_lab.ingest.market_caps import DEFAULT_MARKET_CAP_THRESHOLD_USD
+from strategy_lab.orchestration import (
+    IncrementalStateStore,
+    RefreshOptions,
+    StrategyRunner,
+    StrategyWorkflowConfig,
+    StrategyWorkflowSpec,
+    load_strategy_workflow,
+)
 from strategy_lab.portfolio import RiskLimits
 from strategy_lab.scenarios import seed_crowding_mvp_data, seed_shared_comparison_mvp_data, seed_trend_mvp_data
 
@@ -494,6 +503,85 @@ def run_batch(
 ) -> None:
     """Run a workflow batch through a unified batch entrypoint."""
     _run_batch_command(mode, batch_config, config)
+
+
+@app.command("sync-small-cap-universe")
+def sync_small_cap_universe_command(
+    database_url: str | None = typer.Option(
+        None,
+        "--database-url",
+        envvar="DATABASE_URL",
+        help="PostgreSQL connection URL. Defaults to DATABASE_URL.",
+    ),
+    schema: str = typer.Option("qsl", "--schema", help="Target PostgreSQL schema."),
+    threshold_usd: float = typer.Option(
+        DEFAULT_MARKET_CAP_THRESHOLD_USD,
+        "--threshold-usd",
+        min=0.01,
+        help="Maximum market cap in USD.",
+    ),
+    quote_assets: str = typer.Option("USDT", "--quote-assets", help="Comma-separated Binance quote assets."),
+    coingecko_max_pages: int = typer.Option(10, "--coingecko-max-pages", min=1, help="CoinGecko pages to fetch."),
+    coingecko_per_page: int = typer.Option(250, "--coingecko-per-page", min=1, max=250, help="CoinGecko page size."),
+    coingecko_page_delay_seconds: float = typer.Option(
+        2.0,
+        "--coingecko-page-delay-seconds",
+        min=0.0,
+        help="Delay between CoinGecko page requests to reduce rate-limit errors.",
+    ),
+    market_cap_source: str = typer.Option(
+        "coinpaprika",
+        "--market-cap-source",
+        help="Market cap source: coinpaprika or coingecko.",
+    ),
+    coingecko_api_key: str | None = typer.Option(
+        None,
+        "--coingecko-api-key",
+        envvar="COINGECKO_API_KEY",
+        help="Optional CoinGecko demo API key.",
+    ),
+    include_inactive: bool = typer.Option(
+        False,
+        "--include-inactive/--active-only",
+        help="Include inactive Binance spot symbols.",
+    ),
+    dry_run: bool = typer.Option(False, "--dry-run", help="Fetch and filter without writing to PostgreSQL."),
+    output_limit: int = typer.Option(50, "--output-limit", min=1, help="How many matched assets to print."),
+) -> None:
+    """Sync Binance listings and CoinGecko market caps, then print Binance small-cap symbols."""
+    parsed_quote_assets = tuple(item.strip().upper() for item in quote_assets.split(",") if item.strip())
+    if not parsed_quote_assets:
+        raise typer.BadParameter("quote_assets cannot be empty")
+
+    try:
+        result = sync_small_cap_universe(
+            database_url=database_url,
+            schema=schema,
+            threshold_usd=threshold_usd,
+            quote_assets=parsed_quote_assets,
+            include_inactive=include_inactive,
+            coingecko_max_pages=coingecko_max_pages,
+            coingecko_per_page=coingecko_per_page,
+            coingecko_page_delay_seconds=coingecko_page_delay_seconds,
+            coingecko_api_key=coingecko_api_key,
+            market_cap_source=market_cap_source,
+            dry_run=dry_run,
+        )
+    except (RuntimeError, ValueError) as exc:
+        typer.echo(f"error: {exc}", err=True)
+        raise typer.Exit(code=1) from exc
+
+    typer.echo(f"binance_listings: {len(result.listings)}")
+    typer.echo(f"{market_cap_source}_assets: {len(result.market_caps)}")
+    typer.echo(f"low_market_cap_matches: {len(result.matches)}")
+    typer.echo(f"wrote_to_database: {str(result.wrote_to_database).lower()}")
+    for item in result.matches[:output_limit]:
+        cap = item.market_cap.market_cap_usd or 0.0
+        ambiguity = " ambiguous_symbol" if item.ambiguous_symbol else ""
+        typer.echo(
+            f"{item.listing.symbol}\t{item.listing.base_asset}\t"
+            f"{item.market_cap.asset_id}\t${cap:,.0f}{ambiguity}"
+        )
 
 
 @app.command()

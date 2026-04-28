@@ -102,6 +102,46 @@ def _build_trade_events(
     return pd.DataFrame(rows)
 
 
+def _extended_backtest_metrics(
+    *,
+    backtest,
+    price_frame: pd.DataFrame,
+    trading_costs: pd.Series,
+    gross_return_sum: float,
+    benchmark_symbol: str | None,
+) -> dict[str, float]:
+    period_returns = backtest.period_returns.fillna(0.0)
+    active_returns = period_returns[period_returns != 0.0]
+    winners = active_returns[active_returns > 0.0]
+    losers = active_returns[active_returns < 0.0]
+
+    win_rate = float(len(winners) / len(active_returns)) if len(active_returns) else 0.0
+    profit_loss_ratio = (
+        float(winners.mean() / abs(losers.mean()))
+        if len(winners) and len(losers) and losers.mean() != 0.0
+        else 0.0
+    )
+    trading_cost_sum = float(trading_costs.fillna(0.0).sum())
+    fee_ratio = trading_cost_sum / abs(float(gross_return_sum)) if gross_return_sum else 0.0
+
+    benchmark_column = benchmark_symbol if benchmark_symbol in price_frame.columns else price_frame.columns[0] if len(price_frame.columns) else None
+    buy_hold_return = 0.0
+    if benchmark_column is not None:
+        benchmark_price = price_frame[benchmark_column].dropna()
+        if len(benchmark_price) >= 2 and benchmark_price.iloc[0] != 0.0:
+            buy_hold_return = float(benchmark_price.iloc[-1] / benchmark_price.iloc[0] - 1.0)
+
+    cumulative_return = float(backtest.metrics.get("cumulative_return", 0.0))
+    return {
+        "win_rate": win_rate,
+        "profit_loss_ratio": profit_loss_ratio,
+        "fee_ratio": fee_ratio,
+        "trading_cost_sum": trading_cost_sum,
+        "buy_hold_return": buy_hold_return,
+        "excess_return_vs_buy_hold": cumulative_return - buy_hold_return,
+    }
+
+
 def _write_structured_artifacts(
     *,
     artifacts_dir: Path,
@@ -244,7 +284,6 @@ class WorkflowService:
         if config.run_backtest:
             backtest = self.run_backtest(config, prepared)
             effective_weights = backtest.weights
-            backtest_metrics = backtest.metrics
             backtest_attribution = compute_backtest_attribution(
                 weights=backtest.weights,
                 price_frame=prepared.panels.price,
@@ -252,6 +291,16 @@ class WorkflowService:
                 fee_bps=config.execution.fee_bps,
                 slippage_bps=config.execution.slippage_bps,
             )
+            backtest_metrics = {
+                **backtest.metrics,
+                **_extended_backtest_metrics(
+                    backtest=backtest,
+                    price_frame=prepared.panels.price,
+                    trading_costs=backtest.trading_costs,
+                    gross_return_sum=float(backtest_attribution.get("gross_return_sum") or 0.0),
+                    benchmark_symbol=config.strategy.benchmark_symbol or (config.strategy.symbols[0] if config.strategy.symbols else None),
+                ),
+            }
             report = render_backtest_report(prepared.signal_name, backtest)
             backtest_report_path = run_dir / "backtest_report.md"
             backtest_report_path.parent.mkdir(parents=True, exist_ok=True)

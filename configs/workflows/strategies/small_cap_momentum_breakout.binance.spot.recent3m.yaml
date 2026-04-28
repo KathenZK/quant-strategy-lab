@@ -1,0 +1,65 @@
+strategy:
+  name: small_cap_momentum_breakout_binance_spot_recent3m
+  strategy_type: small_cap_momentum_breakout
+  exchange: binance
+  market_type: spot
+  symbols:
+    - DOGE/USDT
+    - PEPE/USDT
+    - WIF/USDT
+    - BONK/USDT
+    - FLOKI/USDT
+  strategy_params:
+    breakout_factor: donchian_breakout_10
+    fast_momentum_factor: ret_1
+    confirmation_momentum_factor: ret_4
+    volume_factor: volume_surge_20
+    rsi_factor: rsi_14
+    illiquidity_factor: amihud_illiquidity
+    min_breakout_signal: 1.0
+    min_fast_momentum: 0.02
+    min_confirmation_momentum: 0.01
+    min_volume_surge: 2.0
+    min_rsi: 55.0
+    max_rsi: 88.0
+    max_positions: 3
+    long_allocation: 0.30
+    stop_loss_pct: 0.06
+    trailing_stop_pct: 0.08
+    take_profit_pct:
+    max_hold_bars: 12
+    cooldown_bars: 6
+
+execution:
+  fee_bps: 10.0
+  slippage_bps: 15.0
+  starting_cash: 100000.0
+  max_abs_weight: 0.10
+  max_gross_leverage: 0.30
+  max_net_exposure: 0.30
+  min_dollar_volume: 500000.0
+
+risk:
+  max_abs_weight: 0.10
+  max_gross_leverage: 0.30
+  max_net_exposure: 0.30
+  min_dollar_volume: 500000.0
+  max_drawdown: 0.20
+
+refresh:
+  enabled: false
+  incremental: false
+  include_derivatives: false
+  timeframe: 5m
+  limit: 1500
+  overlap_bars: 0
+
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+
+schedule:
+  enabled: false
+  sleep_seconds: 0
+  max_runs: 1

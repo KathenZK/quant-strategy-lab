@@ -4,8 +4,8 @@ import BacktestsClient from "../../components/backtests-client";
 export const dynamic = "force-dynamic";
 
 export const metadata = {
-  title: "回测记录",
-  description: "查看策略回测批次、核心指标与运行指纹。",
+  title: "回测库",
+  description: "筛选全量回测记录、核心指标与运行指纹，并跳转回对应策略。",
 };
 
 const BACKTEST_PAGE_SIZE = 30;
@@ -36,9 +36,9 @@ export default async function BacktestsPage() {
         <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
           <div>
             <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-blue-600">Backtest Registry</div>
-            <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-zinc-950">回测记录</h1>
+            <h1 className="mt-3 text-3xl font-semibold tracking-[-0.04em] text-zinc-950">回测库</h1>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-zinc-600">
-              这里会合并读取 reports 下各个 RunRegistry 的 SQLite 表。每次 workflow 跑完后会把 manifest、指标、交易明细和报告路径写入对应回测表，并展示在这里。
+              这里保留全量 RunRegistry，用来筛选、排序和横向对比。需要调参或查看单个策略脉络时，可以从表格直接回到对应策略工作台。
             </p>
           </div>
         </div>

@@ -10,6 +10,7 @@ export const metadata = {
 
 export default async function LabPage() {
   let templates = [];
+  let runs = [];
   try {
     const payload = await fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.strategyTemplates);
     templates = payload.templates ?? [];
@@ -17,5 +18,18 @@ export default async function LabPage() {
     templates = [];
   }
 
-  return <StrategyLabClient initialTemplates={templates} />;
+  try {
+    const searchParams = new URLSearchParams({
+      kind: "workflow_run",
+      limit: "200",
+      sort_by: "generated_at",
+      sort_order: "desc",
+    });
+    const payload = await fetchStrategyLabJson(STRATEGY_LAB_ENDPOINTS.runs, { searchParams });
+    runs = payload.runs ?? [];
+  } catch {
+    runs = [];
+  }
+
+  return <StrategyLabClient initialTemplates={templates} initialRuns={runs} />;
 }

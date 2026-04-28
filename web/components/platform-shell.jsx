@@ -9,15 +9,15 @@ import {
   ListChecks,
   MagnifyingGlass,
   MoonStars,
-  NewspaperClipping,
+  PlayCircle,
   Pulse,
   SunDim,
 } from "@phosphor-icons/react";
 
 const navItems = [
-  { href: "/lab", label: "策略实验室", eyebrow: "Lab", icon: Flask },
-  { href: "/backtests", label: "回测记录", eyebrow: "Runs", icon: ListChecks },
-  { href: "/news", label: "新闻事件", eyebrow: "Events", icon: NewspaperClipping },
+  { href: "/lab", label: "策略工作台", eyebrow: "Workbench", icon: Flask },
+  { href: "/backtests", label: "回测库", eyebrow: "Runs", icon: ListChecks },
+  { href: "/paper", label: "模拟盘", eyebrow: "Paper", icon: PlayCircle },
   { href: "/data-sources", label: "数据源", eyebrow: "Sources", icon: Database },
 ];
 
@@ -115,7 +115,7 @@ export default function PlatformShell({ children }) {
           <div className="flex items-center gap-3">
             <div className="flex min-w-0 flex-1 items-center gap-3 rounded-md border border-zinc-200 bg-zinc-50 px-3 py-2 text-zinc-500 dark:border-slate-700 dark:bg-[#111722] dark:text-slate-400">
               <MagnifyingGlass size={18} />
-              <span className="truncate text-sm">搜索策略模板、回测记录、新闻事件或数据源</span>
+              <span className="truncate text-sm">搜索策略、参数版本、回测记录、模拟盘或数据源</span>
             </div>
             <button
               type="button"

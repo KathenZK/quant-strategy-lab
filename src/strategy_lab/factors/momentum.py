@@ -135,6 +135,7 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         DonchianBreakoutFactor(window=14),
         MovingAverageDistanceFactor(window=20),
         MovingAverageDistanceFactor(window=30),
+        MovingAverageDistanceFactor(window=90),
         MovingAverageDistanceFactor(window=120),
         RSIFactor(window=6),
         RSIFactor(window=12),

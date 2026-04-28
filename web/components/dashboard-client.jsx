@@ -12,6 +12,7 @@ import {
   Trophy,
 } from "@phosphor-icons/react";
 
+import RunDetailPanel from "./run-detail-panel";
 import { fetchStrategyLabAppJson, STRATEGY_LAB_ENDPOINTS } from "../lib/strategy-lab-api";
 
 const numberFormat = new Intl.NumberFormat("en-US", {
@@ -982,135 +983,7 @@ function ComparisonDetail({ run, detailState, onSelectRun }) {
 }
 
 function RunDetail({ run, detailState }) {
-  if (!run) {
-    return <EmptyState />;
-  }
-  if (detailState.loading) {
-    return <Skeleton />;
-  }
-  if (detailState.error) {
-    return <div className="rounded-[1.25rem] border border-rose-200 bg-rose-50 p-5 text-sm text-rose-700">{detailState.error}</div>;
-  }
-
-  const detail = detailState.detail;
-  const metrics = detail?.metrics?.backtest_metrics ?? run.backtest_metrics ?? {};
-  const attribution = detail?.metrics?.backtest_attribution ?? run.backtest_attribution ?? {};
-  const paperSummary = run.paper_summary ?? {};
-  const artifactCount = Object.keys(run.structured_artifact_paths ?? {}).length;
-  const tradeCount = detail?.artifacts?.trades?.length ?? 0;
-
-  return (
-    <div className="space-y-5">
-      <Card className="p-5">
-        <div className="flex flex-wrap items-start justify-between gap-4">
-          <div>
-            <div className="flex items-center gap-2 text-xs uppercase tracking-[0.14em] text-zinc-500">
-              <Crosshair size={15} /> Selected run
-            </div>
-            <h1 className="mt-2 max-w-3xl text-2xl font-semibold tracking-tight text-zinc-950">{run.strategy_name || run.name}</h1>
-            <div className="mt-2 flex flex-wrap gap-2 text-xs text-zinc-500">
-              <span className="rounded border border-zinc-200 px-2 py-1 font-mono">{run.run_id}</span>
-              <span className="rounded border border-zinc-200 px-2 py-1">{runTypeLabel(run)}</span>
-              <span className="rounded border border-zinc-200 px-2 py-1">{artifactCount} artifacts</span>
-            </div>
-          </div>
-          <div className="flex items-center gap-2 rounded-[1rem] bg-[#f5f7f2] px-3 py-2 text-xs text-zinc-600 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.06)]">
-            <GitBranch size={16} />
-            <span className="font-mono">{run.git_sha ? run.git_sha.slice(0, 8) : "no git sha"}</span>
-          </div>
-        </div>
-        <div className="mt-5 grid gap-4 sm:grid-cols-2 xl:grid-cols-4">
-          <Stat label="Sharpe" value={fmt(metrics.sharpe)} tone={metrics.sharpe > 0 ? "good" : "bad"} />
-          <Stat label="Cumulative" value={pct(metrics.cumulative_return)} tone={metrics.cumulative_return > 0 ? "good" : "bad"} />
-          <Stat label="Max DD" value={pct(metrics.max_drawdown)} tone="bad" />
-          <Stat label="Turnover" value={fmt(metrics.avg_turnover)} />
-        </div>
-      </Card>
-
-      {detail ? <PriceTradeChart detail={detail} /> : null}
-
-      <div className="grid gap-5 xl:grid-cols-[1.15fr_0.85fr]">
-        <Card className="p-5">
-          <div className="mb-4 flex items-center gap-2">
-            <ChartLineUp size={20} className="text-teal-700" />
-            <div>
-              <div className="text-sm font-semibold text-zinc-950">权益曲线</div>
-              <div className="text-xs text-zinc-500">来自结构化 equity_curve artifact</div>
-            </div>
-          </div>
-          <div className="h-[190px] rounded-[1.35rem] bg-[#f5f7f2] p-3 shadow-[inset_0_0_0_1px_rgba(24,24,27,0.06)]">
-            <LineChart rows={detail?.artifacts?.equity_curve ?? []} yKey="equity" label="equity" />
-          </div>
-        </Card>
-        <Card className="p-5">
-          <div className="text-sm font-semibold text-zinc-950">运行指纹</div>
-          <div className="mt-4 space-y-3 text-xs">
-            <div>
-              <div className="text-zinc-500">Config hash</div>
-              <div className="font-mono text-zinc-900">{run.config_hash || "-"}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Data snapshot</div>
-              <div className="font-mono text-zinc-900">{run.data_snapshot_id || "-"}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Manifest</div>
-              <div className="break-all font-mono text-zinc-900">{run.manifest_path}</div>
-            </div>
-          </div>
-        </Card>
-      </div>
-
-      <div className="grid gap-5 xl:grid-cols-2">
-        <Card className="p-5">
-          <div className="text-sm font-semibold text-zinc-950">回测归因</div>
-          <div className="mt-4 grid gap-3 text-xs sm:grid-cols-2">
-            <div>
-              <div className="text-zinc-500">Gross return sum</div>
-              <div className="font-mono text-zinc-900">{fmt(attribution.gross_return_sum)}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Trading cost sum</div>
-              <div className="font-mono text-zinc-900">{fmt(attribution.trading_cost_sum)}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Funding cost sum</div>
-              <div className="font-mono text-zinc-900">{fmt(attribution.funding_cost_sum)}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Trade rows</div>
-              <div className="font-mono text-zinc-900">{fmt(tradeCount, "0")}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Top symbol</div>
-              <div className="font-mono text-zinc-900">{attribution.top_symbol || "-"}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Worst symbol</div>
-              <div className="font-mono text-zinc-900">{attribution.worst_symbol || "-"}</div>
-            </div>
-          </div>
-        </Card>
-        <Card className="p-5">
-          <div className="text-sm font-semibold text-zinc-950">模拟盘摘要</div>
-          <div className="mt-4 grid gap-3 text-xs sm:grid-cols-2">
-            <div>
-              <div className="text-zinc-500">Final equity</div>
-              <div className="font-mono text-zinc-900">{fmt(paperSummary.final_equity)}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Fill count</div>
-              <div className="font-mono text-zinc-900">{fmt(paperSummary.fill_count, "0")}</div>
-            </div>
-            <div>
-              <div className="text-zinc-500">Funding cashflow</div>
-              <div className="font-mono text-zinc-900">{fmt(paperSummary.funding_cashflow)}</div>
-            </div>
-          </div>
-        </Card>
-      </div>
-    </div>
-  );
+  return <RunDetailPanel run={run} detailState={detailState} />;
 }
 
 export default function DashboardClient({ initialRuns = [], initialError = "" }) {

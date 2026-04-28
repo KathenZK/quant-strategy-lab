@@ -29,6 +29,7 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "basis_change_4" in names
     assert "basis_zscore_72" in names
     assert "ma_distance_30" in names
+    assert "ma_distance_90" in names
     assert "ma_distance_120" in names
     assert "price_oi_regime_4" in names
     assert "relative_strength_24" in names

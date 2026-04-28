@@ -111,6 +111,13 @@ _STRATEGY_TEMPLATE_METADATA = {
         "default_timeframe": "1h",
         "default_universe": ["BTC/USDT:USDT", "ETH/USDT:USDT", "SOL/USDT:USDT"],
     },
+    "small_cap_momentum_breakout": {
+        "name": "小市值动量突破",
+        "category": "momentum",
+        "description": "监控小市值币种的突破、短周期动量和放量异动，并用止损、移动止盈和冷却期控制追涨风险。",
+        "default_timeframe": "5m",
+        "default_universe": ["DOGE/USDT", "PEPE/USDT", "WIF/USDT", "BONK/USDT", "FLOKI/USDT"],
+    },
 }
 
 _PARAMETER_LABELS = {
@@ -128,19 +135,32 @@ _PARAMETER_LABELS = {
     "momentum_factor": "动量因子",
     "primary_momentum_factor": "主动量因子",
     "short_momentum_factor": "短周期动量因子",
+    "fast_momentum_factor": "快速动量因子",
+    "confirmation_momentum_factor": "确认动量因子",
     "breakout_factor": "突破因子",
     "rsi_factor": "RSI 因子",
     "volume_factor": "成交量因子",
+    "illiquidity_factor": "流动性惩罚因子",
     "funding_zscore_factor": "资金费率 zscore",
     "min_momentum": "最小动量",
+    "min_fast_momentum": "最小快速动量",
+    "min_confirmation_momentum": "最小确认动量",
     "breakout_floor": "突破下限",
+    "min_breakout_signal": "最小突破信号",
     "min_volume_surge": "最小放量",
+    "min_rsi": "RSI 下限",
+    "max_rsi": "RSI 上限",
     "min_long_rsi": "做多 RSI 下限",
     "max_long_rsi": "做多 RSI 上限",
     "min_short_rsi": "做空 RSI 下限",
     "max_short_rsi": "做空 RSI 上限",
+    "max_amihud_illiquidity": "最大 Amihud 非流动性",
     "max_long_positions": "最大多头数",
     "max_short_positions": "最大空头数",
+    "max_positions": "最大持仓数",
+    "position_weight": "单币仓位",
+    "trailing_stop_pct": "移动止盈回撤",
+    "max_hold_bars": "最长持仓 bar 数",
     "market_neutral": "市场中性",
     "risk_budget_pct": "风险预算",
     "max_pyramids": "最大加仓次数",
@@ -654,11 +674,52 @@ def _load_manifest(reports_dir: Path, manifest_path: str, *, strict: bool = True
     return json.loads(target.read_text(encoding="utf-8"))
 
 
+def _backfill_benchmark_metrics(reports_dir: Path, manifest: dict, metrics: dict[str, Any]) -> dict[str, Any]:
+    if "buy_hold_return" in metrics and "excess_return_vs_buy_hold" in metrics:
+        return metrics
+
+    artifacts = manifest.get("structured_artifacts", {})
+    prices_path = _resolve_reports_path(reports_dir, artifacts.get("prices"), strict=False)
+    if prices_path is None or not prices_path.exists():
+        return metrics
+
+    try:
+        prices = pd.read_parquet(prices_path)
+    except Exception:
+        return metrics
+
+    strategy = manifest.get("strategy", {})
+    benchmark_symbol = strategy.get("benchmark_symbol") or (strategy.get("symbols") or [None])[0]
+    benchmark_column = benchmark_symbol if benchmark_symbol in prices.columns else None
+    if benchmark_column is None:
+        benchmark_column = next((column for column in prices.columns if column != "ts"), None)
+    if benchmark_column is None:
+        return metrics
+
+    benchmark_price = pd.to_numeric(prices[benchmark_column], errors="coerce").dropna()
+    if len(benchmark_price) < 2 or benchmark_price.iloc[0] == 0:
+        return metrics
+
+    next_metrics = dict(metrics)
+    buy_hold_return = float(benchmark_price.iloc[-1] / benchmark_price.iloc[0] - 1.0)
+    next_metrics.setdefault("buy_hold_return", buy_hold_return)
+    cumulative_return = next_metrics.get("cumulative_return")
+    if cumulative_return is not None:
+        next_metrics.setdefault("excess_return_vs_buy_hold", float(cumulative_return) - buy_hold_return)
+    return next_metrics
+
+
 def _enrich_run(reports_dir: Path, row: dict) -> dict:
-    manifest = {}
-    if not row.get("config_hash") or not row.get("git_sha") or not row.get("data_snapshot_id") or not row.get("structured_artifact_paths"):
-        manifest = _read_json(reports_dir, row.get("manifest_path"), strict=False)
+    manifest = _read_json(reports_dir, row.get("manifest_path"), strict=False)
     metadata = manifest.get("metadata", {})
+    strategy = manifest.get("strategy", {})
+    refresh = manifest.get("refresh", {})
+    execution = manifest.get("execution", {})
+    backtest_metrics = _backfill_benchmark_metrics(
+        reports_dir,
+        manifest,
+        row.get("backtest_metrics") or manifest.get("backtest_metrics", {}),
+    )
     strategy_type = (
         row.get("strategy_type")
         or manifest.get("strategy_type")
@@ -672,6 +733,16 @@ def _enrich_run(reports_dir: Path, row: dict) -> dict:
         "git_sha": row.get("git_sha") or manifest.get("git_sha"),
         "data_snapshot_id": row.get("data_snapshot_id") or manifest.get("data_snapshot_id"),
         "strategy_type": strategy_type,
+        "strategy_params": strategy.get("strategy_params", {}),
+        "exchange": strategy.get("exchange"),
+        "market_type": strategy.get("market_type"),
+        "symbols": strategy.get("symbols", []),
+        "benchmark_symbol": strategy.get("benchmark_symbol") or (strategy.get("symbols") or [None])[0],
+        "timeframe": refresh.get("timeframe"),
+        "execution_assumptions": execution,
+        "metadata": metadata,
+        "backtest_metrics": backtest_metrics,
+        "backtest_attribution": row.get("backtest_attribution") or manifest.get("backtest_attribution", {}),
         "structured_artifact_paths": row.get("structured_artifact_paths") or manifest.get("structured_artifacts", {}),
         "generated_at": row.get("generated_at") or manifest.get("generated_at"),
     }

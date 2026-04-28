@@ -5,6 +5,7 @@ from .factory import create_strategy, list_strategies
 from .ma_crossover import MovingAverageCrossoverConfig, MovingAverageCrossoverStrategy
 from .momentum import MomentumRotationConfig, MomentumRotationStrategy
 from .registry import list_registered_strategies, register_strategy, strategy_registry
+from .small_cap_momentum import SmallCapMomentumBreakoutConfig, SmallCapMomentumBreakoutStrategy
 from .trend import TrendConfirmationConfig, TrendConfirmationStrategy
 
 __all__ = [
@@ -16,6 +17,8 @@ __all__ = [
     "MovingAverageCrossoverStrategy",
     "MomentumRotationConfig",
     "MomentumRotationStrategy",
+    "SmallCapMomentumBreakoutConfig",
+    "SmallCapMomentumBreakoutStrategy",
     "Strategy",
     "TrendConfirmationConfig",
     "TrendConfirmationStrategy",
