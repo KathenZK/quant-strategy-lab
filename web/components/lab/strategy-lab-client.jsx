@@ -110,7 +110,7 @@ function StrategyRail({ groups, selectedKey, onSelect }) {
     <aside className="space-y-3">
       <section className="lab-card p-4">
         <div className="text-[11px] font-semibold uppercase tracking-[0.18em] text-teal-700 dark:text-teal-300">Results Console</div>
-        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.05em] text-zinc-950 dark:text-zinc-100">回测结果台</h1>
+        <h1 className="mt-2 text-3xl font-semibold tracking-[-0.05em] text-zinc-950 dark:text-zinc-100">策略实验室</h1>
         <p className="mt-3 text-sm leading-6 text-zinc-600 dark:text-slate-400">策略在 IDE/CLI 里开发和运行，这里只负责展示记录、参数、指标和对比。</p>
       </section>
 

@@ -15,8 +15,8 @@ import {
 } from "@phosphor-icons/react";
 
 const navItems = [
-  { href: "/lab", label: "策略工作台", eyebrow: "Workbench", icon: Flask },
-  { href: "/backtests", label: "回测库", eyebrow: "Runs", icon: ListChecks },
+  { href: "/lab", label: "策略实验室", eyebrow: "Workbench", icon: Flask },
+  { href: "/backtests", label: "回测记录", eyebrow: "Runs", icon: ListChecks },
   { href: "/paper", label: "模拟盘", eyebrow: "Paper", icon: PlayCircle },
   { href: "/data-sources", label: "数据源", eyebrow: "Sources", icon: Database },
 ];
