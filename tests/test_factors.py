@@ -3,6 +3,7 @@ import pytest
 
 from strategy_lab.factors import (
     AmihudIlliquidityFactor,
+    ATRPercentFactor,
     BasisChangeFactor,
     BasisZScoreFactor,
     DonchianBreakoutFactor,
@@ -11,6 +12,7 @@ from strategy_lab.factors import (
     RelativeStrengthFactor,
     OpenInterestChangeFactor,
     PriceOpenInterestRegimeFactor,
+    RSIFactor,
     TrailingReturnFactor,
     compute_factor_bundle,
     default_registry,
@@ -35,6 +37,11 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "relative_strength_24" in names
     assert "donchian_breakout_10" in names
     assert "donchian_breakout_14" in names
+    assert "donchian_breakout_20" in names
+    assert "donchian_breakout_55" in names
+    assert "ret_72" in names
+    assert "ret_168" in names
+    assert "atr_pct_14" in names
 
 
 def test_builtin_factor_providers_are_discovered() -> None:
@@ -145,12 +152,33 @@ def test_donchian_breakout_factor_holds_when_inside_range() -> None:
     assert pd.isna(result.iloc[3])
 
 
+def test_rsi_factor_handles_one_way_and_flat_markets() -> None:
+    up = RSIFactor(window=2).compute(pd.DataFrame({"close": [100.0, 101.0, 102.0]}))
+    flat = RSIFactor(window=2).compute(pd.DataFrame({"close": [100.0, 100.0, 100.0]}))
+
+    assert up.iloc[-1] == pytest.approx(100.0)
+    assert flat.iloc[-1] == pytest.approx(50.0)
+
+
 def test_amihud_illiquidity_factor_is_positive() -> None:
     frame = pd.DataFrame({"close": [100.0, 110.0, 121.0], "volume": [10_000.0, 15_000.0, 20_000.0]})
     result = AmihudIlliquidityFactor().compute(frame)
     assert pd.isna(result.iloc[0])
     assert result.iloc[1] > 0
     assert result.iloc[2] > 0
+
+
+def test_atr_percent_factor_normalizes_true_range_by_close() -> None:
+    frame = pd.DataFrame(
+        {
+            "high": [11.0, 12.0, 13.0],
+            "low": [9.0, 10.0, 11.0],
+            "close": [10.0, 11.0, 12.0],
+        }
+    )
+    result = ATRPercentFactor(window=2).compute(frame)
+    assert pd.isna(result.iloc[0])
+    assert result.iloc[1] == pytest.approx(2.0 / 11.0)
 
 
 def test_compute_factor_bundle_adds_expected_columns() -> None:

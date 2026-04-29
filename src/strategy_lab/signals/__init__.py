@@ -7,6 +7,7 @@ from .small_cap_momentum import (
     SmallCapMomentumBreakoutSignalConfig,
     SmallCapMomentumBreakoutSignalModel,
 )
+from .spot_cta import SpotCtaTrendSignalConfig, SpotCtaTrendSignalModel
 from .trend import TrendConfirmationSignalConfig, TrendConfirmationSignalModel
 
 __all__ = [
@@ -21,6 +22,8 @@ __all__ = [
     "SignalModel",
     "SmallCapMomentumBreakoutSignalConfig",
     "SmallCapMomentumBreakoutSignalModel",
+    "SpotCtaTrendSignalConfig",
+    "SpotCtaTrendSignalModel",
     "TrendConfirmationSignalConfig",
     "TrendConfirmationSignalModel",
 ]

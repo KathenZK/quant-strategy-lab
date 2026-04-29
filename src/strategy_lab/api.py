@@ -22,7 +22,6 @@ from strategy_lab.factors import default_registry
 from strategy_lab.features import FeatureBuilder, FeatureStore
 from strategy_lab.orchestration import StrategyRunner
 from strategy_lab.orchestration.config import load_strategy_workflow_text
-from strategy_lab.strategies import strategy_registry
 
 
 _MARKET_SOURCES = [

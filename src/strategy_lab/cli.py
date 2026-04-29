@@ -10,11 +10,11 @@ from strategy_lab.batches import BatchRunMode
 from strategy_lab.batches.service import load_batch_for_mode, run_workflow_batch
 from strategy_lab.backtest import ExecutionAssumptions
 from strategy_lab.config import load_settings
-from strategy_lab.data import DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data import CCXTDataClient, DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
 from strategy_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
 from strategy_lab.factors import default_registry
 from strategy_lab.features import FeatureBuilder, FeatureStore
-from strategy_lab.ingest import sync_small_cap_universe
+from strategy_lab.ingest import BinanceSpotUniverseConfig, candidate_symbols_from_markets, select_binance_spot_universe, sync_small_cap_universe
 from strategy_lab.ingest.market_caps import DEFAULT_MARKET_CAP_THRESHOLD_USD
 from strategy_lab.orchestration import (
     IncrementalStateStore,
@@ -126,6 +126,37 @@ def factors() -> None:
         typer.echo(
             f"{metadata.name}\t{metadata.category}\tlookback={metadata.lookback}\tmarkets={','.join(metadata.market_types)}"
         )
+
+
+@app.command()
+def binance_spot_universe(
+    min_avg_dollar_volume: float = typer.Option(1_000_000.0, "--min-avg-dollar-volume"),
+    avg_volume_window: int = typer.Option(30, "--avg-volume-window", min=1),
+    min_history_bars: int = typer.Option(180, "--min-history-bars", min=1),
+    metadata_only: bool = typer.Option(False, "--metadata-only", help="Skip local OHLCV history and liquidity filters."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path."),
+) -> None:
+    """Print a Binance spot USDT universe suitable for CTA workflows."""
+    _, warehouse, _ = _runtime(config)
+    universe_config = BinanceSpotUniverseConfig(
+        min_avg_dollar_volume=min_avg_dollar_volume,
+        avg_volume_window=avg_volume_window,
+        min_history_bars=min_history_bars,
+    )
+    markets = CCXTDataClient(exchange_name="binance", market_type=MarketType.SPOT).load_markets()
+    candidates = candidate_symbols_from_markets(markets, config=universe_config)
+    symbols = (
+        candidates
+        if metadata_only
+        else select_binance_spot_universe(
+            warehouse,
+            exchange="binance",
+            config=universe_config,
+            candidate_symbols=candidates,
+        )
+    )
+    for symbol in symbols:
+        typer.echo(symbol)
 
 
 @app.command()

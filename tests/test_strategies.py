@@ -12,6 +12,8 @@ from strategy_lab.strategies import (
     MomentumRotationStrategy,
     SmallCapMomentumBreakoutConfig,
     SmallCapMomentumBreakoutStrategy,
+    SpotCtaTrendConfig,
+    SpotCtaTrendStrategy,
     TrendConfirmationConfig,
     TrendConfirmationStrategy,
     create_strategy,
@@ -489,6 +491,61 @@ def test_small_cap_momentum_breakout_requires_price_frame_for_stops() -> None:
         strategy.build_weights(signal)
 
 
+def test_spot_cta_trend_strategy_builds_long_only_trend_weights() -> None:
+    index = pd.date_range("2024-01-01", periods=1, freq="4h", tz="UTC")
+    factors = {
+        "donchian_breakout_20": pd.DataFrame({"BTC": [1.0], "ETH": [1.0], "SOL": [0.0]}, index=index),
+        "ret_72": pd.DataFrame({"BTC": [0.10], "ETH": [0.02], "SOL": [-0.01]}, index=index),
+        "ret_24": pd.DataFrame({"BTC": [0.04], "ETH": [0.01], "SOL": [0.00]}, index=index),
+        "ma_distance_120": pd.DataFrame({"BTC": [0.05], "ETH": [0.03], "SOL": [-0.02]}, index=index),
+        "volume_surge_20": pd.DataFrame({"BTC": [0.2], "ETH": [0.2], "SOL": [0.2]}, index=index),
+        "rsi_14": pd.DataFrame({"BTC": [65.0], "ETH": [70.0], "SOL": [48.0]}, index=index),
+        "amihud_illiquidity": pd.DataFrame({"BTC": [0.000001], "ETH": [0.000002], "SOL": [0.000001]}, index=index),
+        "atr_pct_14": pd.DataFrame({"BTC": [0.04], "ETH": [0.05], "SOL": [0.03]}, index=index),
+    }
+    price_frame = pd.DataFrame({"BTC": [100.0], "ETH": [50.0], "SOL": [25.0]}, index=index)
+    strategy = SpotCtaTrendStrategy(
+        SpotCtaTrendConfig(
+            max_positions=1,
+            long_allocation=0.70,
+            stop_loss_pct=None,
+            trailing_stop_pct=None,
+            max_rank_hold_positions=1,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert signal.loc[index[0], "BTC"] > 0.0
+    assert signal.loc[index[0], "ETH"] == pytest.approx(0.0)
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.70)
+    assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)
+    assert weights.loc[index[0], "SOL"] == pytest.approx(0.0)
+
+
+def test_spot_cta_trend_strategy_exits_when_signal_is_lost() -> None:
+    index = pd.date_range("2024-01-01", periods=3, freq="4h", tz="UTC")
+    signal = pd.DataFrame({"BTC": [1.0, 0.0, 1.0]}, index=index)
+    price_frame = pd.DataFrame({"BTC": [100.0, 101.0, 102.0]}, index=index)
+    strategy = SpotCtaTrendStrategy(
+        SpotCtaTrendConfig(
+            max_positions=1,
+            long_allocation=0.70,
+            stop_loss_pct=None,
+            trailing_stop_pct=None,
+            cooldown_bars=0,
+            max_rank_hold_positions=None,
+        )
+    )
+
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.70)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(0.0)
+    assert weights.loc[index[2], "BTC"] == pytest.approx(0.70)
+
+
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
     assert "trend_confirmation" in names
@@ -497,6 +554,7 @@ def test_strategy_registry_lists_builtin_strategies() -> None:
     assert "donchian_breakout" in names
     assert "momentum_rotation" in names
     assert "small_cap_momentum_breakout" in names
+    assert "spot_cta_trend" in names
 
 
 def test_create_strategy_uses_registry() -> None:
@@ -506,12 +564,14 @@ def test_create_strategy_uses_registry() -> None:
     donchian = create_strategy("donchian_breakout", {"long_allocation": 0.75})
     momentum = create_strategy("momentum_rotation", {"long_allocation": 0.75})
     small_cap = create_strategy("small_cap_momentum_breakout", {"long_allocation": 0.25})
+    spot_cta = create_strategy("spot_cta_trend", {"long_allocation": 0.70})
     assert isinstance(trend, TrendConfirmationStrategy)
     assert isinstance(crowding, CrowdingReversalStrategy)
     assert isinstance(crossover, MovingAverageCrossoverStrategy)
     assert isinstance(donchian, DonchianBreakoutStrategy)
     assert isinstance(momentum, MomentumRotationStrategy)
     assert isinstance(small_cap, SmallCapMomentumBreakoutStrategy)
+    assert isinstance(spot_cta, SpotCtaTrendStrategy)
 
 
 def test_register_strategy_decorator_supports_new_strategy_types() -> None:

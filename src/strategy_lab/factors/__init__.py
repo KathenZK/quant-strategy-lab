@@ -21,6 +21,7 @@ from .engine import compute_factor_bundle, compute_factor_frame
 from .liquidity import AmihudIlliquidityFactor, VWAPDistanceFactor, VolumeSurgeFactor
 from .mean_reversion import BollingerDistanceFactor, ZScoreFactor
 from .momentum import (
+    ATRPercentFactor,
     BreakoutFactor,
     DonchianBreakoutFactor,
     MovingAverageDistanceFactor,
@@ -38,6 +39,7 @@ def default_registry() -> FactorRegistry:
 
 __all__ = [
     "AmihudIlliquidityFactor",
+    "ATRPercentFactor",
     "BasisChangeFactor",
     "BasisFactor",
     "BasisZScoreFactor",

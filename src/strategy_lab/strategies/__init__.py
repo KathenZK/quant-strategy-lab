@@ -6,6 +6,7 @@ from .ma_crossover import MovingAverageCrossoverConfig, MovingAverageCrossoverSt
 from .momentum import MomentumRotationConfig, MomentumRotationStrategy
 from .registry import list_registered_strategies, register_strategy, strategy_registry
 from .small_cap_momentum import SmallCapMomentumBreakoutConfig, SmallCapMomentumBreakoutStrategy
+from .spot_cta import SpotCtaTrendConfig, SpotCtaTrendStrategy
 from .trend import TrendConfirmationConfig, TrendConfirmationStrategy
 
 __all__ = [
@@ -19,6 +20,8 @@ __all__ = [
     "MomentumRotationStrategy",
     "SmallCapMomentumBreakoutConfig",
     "SmallCapMomentumBreakoutStrategy",
+    "SpotCtaTrendConfig",
+    "SpotCtaTrendStrategy",
     "Strategy",
     "TrendConfirmationConfig",
     "TrendConfirmationStrategy",

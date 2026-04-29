@@ -703,3 +703,94 @@ workflow:
     assert prepared.target_weights is not None
     assert prepared.target_weights.max().max() > 0.4
     assert prepared.panels.price is not None
+
+
+def test_strategy_runner_supports_spot_cta_trend_backtest(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+
+    index = pd.date_range("2024-01-01", periods=180, freq="4h", tz="UTC")
+    close_by_symbol = {
+        "BTC/USDT": [100.0 + i * 0.8 for i in range(len(index))],
+        "ETH/USDT": [80.0 + i * 0.2 for i in range(len(index))],
+        "SOL/USDT": [30.0 + i * 0.5 for i in range(len(index))],
+    }
+    for symbol, closes in close_by_symbol.items():
+        frame = pd.DataFrame(
+            {
+                "ts": index,
+                "exchange": ["binance"] * len(index),
+                "symbol": [symbol] * len(index),
+                "market_type": ["spot"] * len(index),
+                "base_asset": [symbol.split("/")[0]] * len(index),
+                "quote_asset": [symbol.split("/")[1]] * len(index),
+                "open": closes,
+                "high": [value * 1.01 for value in closes],
+                "low": [value * 0.99 for value in closes],
+                "close": closes,
+                "volume": [2_000_000.0] * len(index),
+                "source": ["test"] * len(index),
+                "date": [item.date().isoformat() for item in index],
+            }
+        )
+        write_dataframe(
+            frame,
+            layout=layout,
+            layer="normalized",
+            kind=DatasetKind.OHLCV,
+            exchange="binance",
+            market_type=MarketType.SPOT,
+            symbol=symbol,
+            partition_date=frame["ts"].max().date(),
+        )
+
+    config_path = tmp_path / "spot-cta-workflow.yaml"
+    config_path.write_text(
+        """
+strategy:
+  name: spot_cta_demo
+  strategy_type: spot_cta_trend
+  exchange: binance
+  market_type: spot
+  symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
+  strategy_params:
+    max_positions: 2
+    long_allocation: 0.70
+    max_rsi: 100.0
+    stop_loss_pct:
+    trailing_stop_pct:
+    cooldown_bars: 0
+    max_rank_hold_positions: 2
+execution:
+  fee_bps: 10.0
+  slippage_bps: 10.0
+risk:
+  max_abs_weight: 0.35
+  max_gross_leverage: 0.70
+  max_net_exposure: 0.70
+  min_dollar_volume: 1000000.0
+refresh:
+  enabled: false
+workflow:
+  run_factor_report: false
+  run_backtest: true
+  run_paper_trade: false
+""".strip(),
+        encoding="utf-8",
+    )
+
+    builder = FeatureBuilder(
+        warehouse=DuckDBWarehouse(layout),
+        store=FeatureStore(layout),
+        registry=default_registry(),
+    )
+    workflow = load_strategy_workflow(config_path)
+    runner = StrategyRunner(layout=layout, builder=builder)
+
+    prepared = runner.workflow_service.prepare(workflow)
+    backtest = runner.workflow_service.run_backtest(workflow, prepared)
+
+    assert prepared.signal_name == "spot_cta_trend"
+    assert prepared.target_weights is not None
+    assert prepared.target_weights.max().max() > 0.0
+    assert backtest.metrics["cumulative_return"] > 0.0

@@ -18,6 +18,9 @@ class SmallCapMomentumBreakoutAllocatorConfig:
     take_profit_pct: float | None = None
     max_hold_bars: int | None = 12
     cooldown_bars: int = 6
+    exit_on_signal_loss: bool = False
+    exit_signal_threshold: float = 0.0
+    max_rank_hold_positions: int | None = None
 
 
 @dataclass(slots=True)
@@ -71,10 +74,23 @@ class SmallCapMomentumBreakoutAllocator:
             cooldown_at_start = cooldown_remaining.copy()
             signal_row = signal_frame.loc[ts]
             price_row = close.loc[ts]
+            ranked_hold_symbols = self._ranked_hold_symbols(signal_row)
 
             for symbol in signal_frame.columns:
                 price = price_row.loc[symbol]
                 if not current.loc[symbol] or pd.isna(price):
+                    continue
+
+                if self._should_exit_on_signal(
+                    symbol=symbol,
+                    signal_row=signal_row,
+                    ranked_hold_symbols=ranked_hold_symbols,
+                ):
+                    current.loc[symbol] = False
+                    entry_prices.loc[symbol] = np.nan
+                    trail_highs.loc[symbol] = np.nan
+                    holding_bars.loc[symbol] = 0
+                    cooldown_remaining.loc[symbol] = self.config.cooldown_bars
                     continue
 
                 holding_bars.loc[symbol] += 1
@@ -129,6 +145,8 @@ class SmallCapMomentumBreakoutAllocator:
             raise ValueError("cooldown_bars must be non-negative")
         if self.config.max_hold_bars is not None and self.config.max_hold_bars <= 0:
             raise ValueError("max_hold_bars must be positive when provided")
+        if self.config.max_rank_hold_positions is not None and self.config.max_rank_hold_positions <= 0:
+            raise ValueError("max_rank_hold_positions must be positive when provided")
         for name, value in (
             ("stop_loss_pct", self.config.stop_loss_pct),
             ("trailing_stop_pct", self.config.trailing_stop_pct),
@@ -153,6 +171,27 @@ class SmallCapMomentumBreakoutAllocator:
             or self.config.trailing_stop_pct is not None
             or self.config.take_profit_pct is not None
         )
+
+    def _ranked_hold_symbols(self, signal_row: pd.Series) -> set[str] | None:
+        if self.config.max_rank_hold_positions is None:
+            return None
+        candidates = signal_row[signal_row > self.config.exit_signal_threshold].dropna().sort_values(ascending=False)
+        return set(candidates.head(self.config.max_rank_hold_positions).index)
+
+    def _should_exit_on_signal(
+        self,
+        *,
+        symbol: str,
+        signal_row: pd.Series,
+        ranked_hold_symbols: set[str] | None,
+    ) -> bool:
+        signal_value = signal_row.loc[symbol]
+        if self.config.exit_on_signal_loss:
+            if pd.isna(signal_value) or float(signal_value) <= self.config.exit_signal_threshold:
+                return True
+        if ranked_hold_symbols is not None and symbol not in ranked_hold_symbols:
+            return True
+        return False
 
     def _updated_trail_high(self, *, price: float, current_trail: float) -> float:
         if pd.isna(current_trail):
