@@ -35,6 +35,7 @@ def load_multi_factor_panels(
     factor_names: list[str],
     benchmark_symbol: str | None,
     timeframe: str | None = None,
+    liquidation_feature_names: list[str] | None = None,
 ) -> MultiFactorUniversePanels:
     factor_series: dict[str, dict[str, pd.Series]] = {name: {} for name in factor_names}
     price_series: dict[str, pd.Series] = {}
@@ -65,6 +66,7 @@ def load_multi_factor_panels(
             timeframe=timeframe,
             benchmark_symbol=benchmark_symbol,
             factor_names=factor_names,
+            market_frame=market,
         )
         missing = [name for name in factor_names if bundle.empty or name not in bundle.columns]
         if missing:
@@ -76,16 +78,19 @@ def load_multi_factor_panels(
         if "funding_rate" in market.columns:
             funding_series[symbol] = pd.Series(market["funding_rate"].to_numpy(), index=index)
 
-        liquidation = builder.warehouse.load_liquidation_features(
-            exchange=exchange,
-            symbol=symbol,
-            market_type=market_type,
-            timeframe=timeframe,
-        )
-        if not liquidation.empty:
-            liq_index = pd.to_datetime(liquidation["ts"], utc=True)
-            for feature_name in liquidation_series:
-                liquidation_series[feature_name][symbol] = pd.Series(liquidation[feature_name].to_numpy(), index=liq_index)
+        if liquidation_feature_names:
+            liquidation = builder.warehouse.load_liquidation_features(
+                exchange=exchange,
+                symbol=symbol,
+                market_type=market_type,
+                timeframe=timeframe,
+            )
+            if not liquidation.empty:
+                liq_index = pd.to_datetime(liquidation["ts"], utc=True)
+                for feature_name in liquidation_feature_names:
+                    if feature_name in liquidation.columns:
+                        liquidation_series.setdefault(feature_name, {})
+                        liquidation_series[feature_name][symbol] = pd.Series(liquidation[feature_name].to_numpy(), index=liq_index)
 
         factor_index = pd.to_datetime(bundle["ts"], utc=True)
         for name in factor_names:
@@ -137,6 +142,7 @@ def load_universe_panels(
     factor_name: str,
     benchmark_symbol: str | None,
     timeframe: str | None = None,
+    liquidation_feature_names: list[str] | None = None,
 ) -> UniversePanels:
     multi = load_multi_factor_panels(
         builder=builder,
@@ -146,6 +152,7 @@ def load_universe_panels(
         timeframe=timeframe,
         factor_names=[factor_name],
         benchmark_symbol=benchmark_symbol,
+        liquidation_feature_names=liquidation_feature_names,
     )
     return UniversePanels(
         factor=multi.factors[factor_name],

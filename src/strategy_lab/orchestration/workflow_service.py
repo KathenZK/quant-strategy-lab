@@ -9,11 +9,13 @@ import pandas as pd
 from strategy_lab.backtest import CrossSectionalBacktester, PortfolioBacktester, compute_backtest_attribution
 from strategy_lab.execution import PaperBroker, PaperTradingSession
 from strategy_lab.features import FeatureBuilder
+from strategy_lab.ingest import BinanceSpotUniverseConfig, select_binance_spot_universe
 from strategy_lab.orchestration.models import StrategyWorkflowConfig
 from strategy_lab.orchestration.panels import MultiFactorUniversePanels, UniversePanels, load_multi_factor_panels, load_universe_panels
 from strategy_lab.portfolio import RiskManager
 from strategy_lab.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
 from strategy_lab.research import FactorResearchLab
+from strategy_lab.fs import atomic_write_path
 from strategy_lab.strategies import create_strategy
 
 
@@ -157,7 +159,7 @@ def _write_structured_artifacts(
 
     def _write_parquet(name: str, frame: pd.DataFrame | pd.Series, value_name: str | None = None) -> None:
         path = artifacts_dir / f"{name}.parquet"
-        _frame_with_ts(frame, value_name=value_name).to_parquet(path, index=False)
+        atomic_write_path(path, lambda temp_path: _frame_with_ts(frame, value_name=value_name).to_parquet(temp_path, index=False))
         paths[name] = str(path)
 
     _write_parquet("signals", signal_frame)
@@ -166,7 +168,7 @@ def _write_structured_artifacts(
         _write_parquet("weights", weights)
         trades = _build_trade_events(weights=weights, price_frame=price_frame, signal_frame=signal_frame)
         trade_path = artifacts_dir / "trades.parquet"
-        trades.to_parquet(trade_path, index=False)
+        atomic_write_path(trade_path, lambda temp_path: trades.to_parquet(temp_path, index=False))
         paths["trades"] = str(trade_path)
 
     if backtest is not None:
@@ -177,8 +179,7 @@ def _write_structured_artifacts(
         _write_parquet("funding_costs", backtest.funding_costs, value_name="funding_costs")
 
     metrics_path = artifacts_dir / "metrics.json"
-    metrics_path.write_text(
-        json.dumps(
+    metrics_payload = json.dumps(
             {
                 "backtest_metrics": backtest_metrics,
                 "backtest_attribution": backtest_attribution,
@@ -186,9 +187,8 @@ def _write_structured_artifacts(
             indent=2,
             sort_keys=True,
             default=str,
-        ),
-        encoding="utf-8",
     )
+    atomic_write_path(metrics_path, lambda temp_path: temp_path.write_text(metrics_payload, encoding="utf-8"))
     paths["metrics"] = str(metrics_path)
     return paths
 
@@ -198,6 +198,28 @@ class WorkflowService:
         self.builder = builder
 
     def resolve_symbols(self, config: StrategyWorkflowConfig) -> list[str]:
+        if config.universe.enabled:
+            if config.universe.source != "local_binance_spot":
+                raise ValueError(f"unsupported universe source: {config.universe.source}")
+            if config.strategy.exchange != "binance" or config.strategy.market_type.value != "spot":
+                raise ValueError("local_binance_spot universe requires binance spot workflow")
+            universe_config = BinanceSpotUniverseConfig(
+                min_avg_dollar_volume=config.universe.min_avg_dollar_volume,
+                min_history_bars=config.universe.min_history_bars,
+            )
+            symbols = select_binance_spot_universe(
+                self.builder.warehouse,
+                exchange=config.strategy.exchange,
+                config=universe_config,
+                timeframe=config.refresh.timeframe,
+            )
+            if config.universe.max_symbols > 0:
+                symbols = symbols[: config.universe.max_symbols]
+            if config.strategy.benchmark_symbol and config.strategy.benchmark_symbol not in symbols:
+                symbols = [config.strategy.benchmark_symbol, *symbols]
+            if not symbols:
+                raise ValueError("local_binance_spot universe resolved an empty symbol universe")
+            return symbols
         if config.strategy.symbols:
             return config.strategy.symbols
         if config.strategy.is_factor_strategy:
@@ -218,19 +240,25 @@ class WorkflowService:
             return config
         return replace(config, strategy=replace(config.strategy, symbols=symbols))
 
-    def required_factor_names(self, config: StrategyWorkflowConfig) -> list[str] | None:
+    def strategy_instance(self, config: StrategyWorkflowConfig):
+        if config.strategy.is_factor_strategy:
+            return None
+        return create_strategy(config.strategy.strategy_type, config.strategy.strategy_params)
+
+    def required_factor_names(self, config: StrategyWorkflowConfig, *, strategy=None) -> list[str] | None:
         config = self.with_resolved_symbols(config)
         if not config.strategy.is_factor_strategy:
-            strategy = create_strategy(config.strategy.strategy_type, config.strategy.strategy_params)
+            strategy = strategy or self.strategy_instance(config)
             return strategy.required_factors()
         if config.strategy.factor_name is not None:
             return [config.strategy.factor_name]
         return None
 
-    def prepare(self, config: StrategyWorkflowConfig) -> PreparedWorkflow:
+    def prepare(self, config: StrategyWorkflowConfig, *, strategy=None) -> PreparedWorkflow:
         config = self.with_resolved_symbols(config)
         if not config.strategy.is_factor_strategy:
-            strategy = create_strategy(config.strategy.strategy_type, config.strategy.strategy_params)
+            strategy = strategy or self.strategy_instance(config)
+            liquidation_features = strategy.required_liquidation_features()
             panels = load_multi_factor_panels(
                 builder=self.builder,
                 exchange=config.strategy.exchange,
@@ -239,6 +267,7 @@ class WorkflowService:
                 factor_names=strategy.required_factors(),
                 benchmark_symbol=config.strategy.benchmark_symbol,
                 timeframe=config.refresh.timeframe,
+                liquidation_feature_names=liquidation_features,
             )
             signal_frame = strategy.build_signal_frame(panels.factors)
             target_weights = strategy.build_weights(
@@ -263,6 +292,7 @@ class WorkflowService:
             factor_name=config.strategy.signal_name,
             benchmark_symbol=config.strategy.benchmark_symbol,
             timeframe=config.refresh.timeframe,
+            liquidation_feature_names=None,
         )
         return PreparedWorkflow(
             signal_name=config.strategy.signal_name,
@@ -287,8 +317,8 @@ class WorkflowService:
             funding_rate=prepared.panels.funding_rate,
         )
 
-    def execute(self, config: StrategyWorkflowConfig, *, run_dir: Path) -> WorkflowExecutionResult:
-        prepared = self.prepare(config)
+    def execute(self, config: StrategyWorkflowConfig, *, run_dir: Path, strategy=None) -> WorkflowExecutionResult:
+        prepared = self.prepare(config, strategy=strategy)
         factor_report_path: Path | None = None
         backtest_report_path: Path | None = None
         paper_report_path: Path | None = None
@@ -303,8 +333,7 @@ class WorkflowService:
             diagnostics = FactorResearchLab().evaluate(prepared.signal_frame, prepared.panels.price)
             report = render_factor_report(prepared.signal_name, diagnostics)
             factor_report_path = run_dir / "factor_report.md"
-            factor_report_path.parent.mkdir(parents=True, exist_ok=True)
-            factor_report_path.write_text(report, encoding="utf-8")
+            atomic_write_path(factor_report_path, lambda temp_path: temp_path.write_text(report, encoding="utf-8"))
 
         if config.run_backtest:
             backtest = self.run_backtest(config, prepared)
@@ -328,8 +357,7 @@ class WorkflowService:
             }
             report = render_backtest_report(prepared.signal_name, backtest)
             backtest_report_path = run_dir / "backtest_report.md"
-            backtest_report_path.parent.mkdir(parents=True, exist_ok=True)
-            backtest_report_path.write_text(report, encoding="utf-8")
+            atomic_write_path(backtest_report_path, lambda temp_path: temp_path.write_text(report, encoding="utf-8"))
 
         if config.run_paper_trade and paper_target_weights is None:
             paper_target_weights = CrossSectionalBacktester(
@@ -370,8 +398,7 @@ class WorkflowService:
             }
             report = render_paper_trading_report(prepared.signal_name, paper)
             paper_report_path = run_dir / "paper_report.md"
-            paper_report_path.parent.mkdir(parents=True, exist_ok=True)
-            paper_report_path.write_text(report, encoding="utf-8")
+            atomic_write_path(paper_report_path, lambda temp_path: temp_path.write_text(report, encoding="utf-8"))
 
         return WorkflowExecutionResult(
             signal_name=prepared.signal_name,

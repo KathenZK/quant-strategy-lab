@@ -6,7 +6,7 @@ import yaml
 
 from strategy_lab.backtest import ExecutionAssumptions
 from strategy_lab.data import MarketType
-from strategy_lab.orchestration.models import RefreshOptions, ScheduleOptions, StrategyWorkflowConfig, StrategyWorkflowSpec
+from strategy_lab.orchestration.models import RefreshOptions, ScheduleOptions, StrategyWorkflowConfig, StrategyWorkflowSpec, UniverseOptions
 from strategy_lab.portfolio import RiskLimits
 
 
@@ -20,6 +20,7 @@ def _first_defined(mapping: dict, *keys: str, default=None):
 def strategy_workflow_from_mapping(payload: dict) -> StrategyWorkflowConfig:
     strategy = payload.get("strategy", {})
     refresh = payload.get("refresh", {})
+    universe = payload.get("universe", {})
     execution = payload.get("execution", {})
     risk = payload.get("risk", {})
     schedule = payload.get("schedule", {})
@@ -47,6 +48,12 @@ def strategy_workflow_from_mapping(payload: dict) -> StrategyWorkflowConfig:
             limit=refresh.get("limit", 500),
             since=refresh.get("since"),
             overlap_bars=refresh.get("overlap_bars", 50),
+        ),
+        universe=UniverseOptions(
+            source=universe.get("source"),
+            min_avg_dollar_volume=universe.get("min_avg_dollar_volume", 1_000_000.0),
+            min_history_bars=universe.get("min_history_bars", 120),
+            max_symbols=universe.get("max_symbols", 0),
         ),
         execution=ExecutionAssumptions(
             fee_bps=execution.get("fee_bps", 5.0),

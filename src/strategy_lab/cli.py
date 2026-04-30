@@ -29,6 +29,7 @@ from strategy_lab.orchestration import (
     StrategyRunner,
     StrategyWorkflowConfig,
     StrategyWorkflowSpec,
+    UniverseOptions,
     build_strategy_scan_result,
     load_strategy_workflow,
 )
@@ -101,28 +102,22 @@ def _run_batch_command(mode: BatchRunMode, batch_config: Path, config: Path | No
     typer.echo(f"manifest: {artifacts.manifest_path}")
 
 
-def _with_local_binance_spot_universe(
+def _with_cli_local_universe(
     workflow: StrategyWorkflowConfig,
     *,
-    warehouse: DuckDBWarehouse,
     min_avg_dollar_volume: float,
     min_history_bars: int,
     max_symbols: int,
 ) -> StrategyWorkflowConfig:
-    universe_config = BinanceSpotUniverseConfig(
-        min_avg_dollar_volume=min_avg_dollar_volume,
-        min_history_bars=min_history_bars,
+    return replace(
+        workflow,
+        universe=UniverseOptions(
+            source="local_binance_spot",
+            min_avg_dollar_volume=min_avg_dollar_volume,
+            min_history_bars=min_history_bars,
+            max_symbols=max_symbols,
+        ),
     )
-    symbols = select_binance_spot_universe(
-        warehouse,
-        exchange=workflow.strategy.exchange,
-        config=universe_config,
-    )
-    if max_symbols > 0:
-        symbols = symbols[:max_symbols]
-    if workflow.strategy.benchmark_symbol and workflow.strategy.benchmark_symbol not in symbols:
-        symbols = [workflow.strategy.benchmark_symbol, *symbols]
-    return replace(workflow, strategy=replace(workflow.strategy, symbols=symbols))
 
 
 @app.command()
@@ -306,13 +301,12 @@ def scan_spot_cta(
     config: Path | None = typer.Option(None, "--config", "-c"),
 ) -> None:
     """Scan latest spot CTA signals and print buy/hold/sell/watch decisions."""
-    _, warehouse, builder = _runtime(config)
+    _, _, builder = _runtime(config)
     workflow = load_strategy_workflow(workflow_config)
 
     if use_local_universe:
-        workflow = _with_local_binance_spot_universe(
+        workflow = _with_cli_local_universe(
             workflow,
-            warehouse=warehouse,
             min_avg_dollar_volume=min_avg_dollar_volume,
             min_history_bars=min_history_bars,
             max_symbols=max_symbols,
@@ -573,12 +567,11 @@ def run_strategy(
     config: Path | None = typer.Option(None, "--config", "-c"),
 ) -> None:
     """Run the full configured workflow and persist artifacts."""
-    lake, warehouse, builder = _runtime(config)
+    lake, _, builder = _runtime(config)
     workflow = load_strategy_workflow(workflow_config)
     if use_local_universe:
-        workflow = _with_local_binance_spot_universe(
+        workflow = _with_cli_local_universe(
             workflow,
-            warehouse=warehouse,
             min_avg_dollar_volume=min_avg_dollar_volume,
             min_history_bars=min_history_bars,
             max_symbols=max_symbols,

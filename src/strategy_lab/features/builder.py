@@ -78,13 +78,18 @@ class FeatureBuilder:
         timeframe: str | None = None,
         benchmark_symbol: str | None = None,
         factor_names: list[str] | None = None,
+        market_frame: pd.DataFrame | None = None,
     ) -> pd.DataFrame:
-        frame = self.load_symbol_frame(
-            exchange=exchange,
-            symbol=symbol,
-            market_type=market_type,
-            timeframe=timeframe,
-            benchmark_symbol=benchmark_symbol,
+        frame = (
+            market_frame.copy()
+            if market_frame is not None
+            else self.load_symbol_frame(
+                exchange=exchange,
+                symbol=symbol,
+                market_type=market_type,
+                timeframe=timeframe,
+                benchmark_symbol=benchmark_symbol,
+            )
         )
         if frame.empty:
             return frame
@@ -96,7 +101,65 @@ class FeatureBuilder:
                 for metadata in self.registry.list_metadata()
                 if all(column in frame.columns for column in metadata.inputs)
             ]
-        return compute_factor_bundle(frame, self.registry, factor_names=selected)
+        cached, missing = self._load_cached_factor_bundle(
+            frame,
+            exchange=exchange,
+            symbol=symbol,
+            market_type=market_type,
+            timeframe=timeframe,
+            factor_names=selected,
+        )
+        if not missing:
+            return cached
+
+        computed = compute_factor_bundle(frame, self.registry, factor_names=missing)
+        if cached.empty:
+            return computed
+        merge_keys = [column for column in ("ts", "exchange", "symbol", "market_type", "timeframe") if column in cached.columns and column in computed.columns]
+        merged = cached.merge(computed[[*merge_keys, *missing]], on=merge_keys, how="left")
+        return merged
+
+    def _load_cached_factor_bundle(
+        self,
+        frame: pd.DataFrame,
+        *,
+        exchange: str,
+        symbol: str,
+        market_type: MarketType,
+        timeframe: str | None,
+        factor_names: list[str],
+    ) -> tuple[pd.DataFrame, list[str]]:
+        base_columns = [column for column in ("ts", "exchange", "symbol", "market_type", "timeframe") if column in frame.columns]
+        if not base_columns:
+            return pd.DataFrame(), factor_names
+        cached_bundle = frame[base_columns].copy()
+        frame_ts = set(pd.to_datetime(frame["ts"], utc=True)) if "ts" in frame.columns else set()
+        missing: list[str] = []
+
+        for factor_name in factor_names:
+            factor = self.registry.get(factor_name)
+            cached = self.store.load_factor_frame(
+                factor_name,
+                exchange=exchange,
+                market_type=market_type.value,
+                symbol=symbol,
+                timeframe=timeframe,
+                factor_version=factor.version(),
+            )
+            if cached.empty or factor_name not in cached.columns or not self._covers_frame(cached, frame_ts):
+                missing.append(factor_name)
+                continue
+            merge_keys = [column for column in base_columns if column in cached.columns]
+            cached_bundle = cached_bundle.merge(cached[[*merge_keys, factor_name]], on=merge_keys, how="left")
+
+        return cached_bundle, missing
+
+    @staticmethod
+    def _covers_frame(cached: pd.DataFrame, frame_ts: set[pd.Timestamp]) -> bool:
+        if not frame_ts or "ts" not in cached.columns:
+            return False
+        cached_ts = set(pd.to_datetime(cached["ts"], utc=True))
+        return frame_ts.issubset(cached_ts)
 
     def persist_bundle(
         self,

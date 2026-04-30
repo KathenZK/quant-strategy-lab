@@ -52,6 +52,12 @@ strategy:
     exit_signal_threshold: 0.0
     max_rank_hold_positions: 20
 
+universe:
+  source: local_binance_spot
+  min_avg_dollar_volume: 1000000.0
+  min_history_bars: 120
+  max_symbols: 0
+
 execution:
   fee_bps: 10.0
   slippage_bps: 30.0

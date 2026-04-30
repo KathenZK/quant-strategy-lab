@@ -10,6 +10,7 @@ import subprocess
 from strategy_lab.data import DataIngestionService, DataLakeLayout, DatasetKind
 from strategy_lab.experiments.registry import RunRegistry, RunRegistryEntry
 from strategy_lab.features import FeatureBuilder
+from strategy_lab.fs import atomic_write_path
 from strategy_lab.orchestration.models import StrategyRunArtifacts, StrategyWorkflowConfig
 from strategy_lab.orchestration.state import IncrementalStateStore
 from strategy_lab.orchestration.workflow_service import WorkflowService
@@ -92,7 +93,12 @@ class StrategyRunner:
             normalized_path=str(result["normalized"]),
         )
 
-    def refresh_data(self, config: StrategyWorkflowConfig) -> dict[str, dict[str, dict[str, object]]]:
+    def refresh_data(
+        self,
+        config: StrategyWorkflowConfig,
+        *,
+        liquidation_feature_names: list[str] | None = None,
+    ) -> dict[str, dict[str, dict[str, object]]]:
         config = self.workflow_service.with_resolved_symbols(config)
         artifacts: dict[str, dict[str, dict[str, object]]] = {}
         if not config.refresh.enabled:
@@ -134,30 +140,32 @@ class StrategyRunner:
                     since=self._resolve_since(config, dataset=DatasetKind.BASIS, symbol=symbol),
                     limit=config.refresh.limit,
                 )
-                liquidations = self.ingestion.refresh_historical_liquidations(
-                    exchange=config.strategy.exchange,
-                    symbol=symbol,
-                    timeframe="4h",
-                    since=self._resolve_since(config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol, timeframe="4h"),
-                    limit=1000,
-                )
                 symbol_artifacts["funding_rates"] = funding
                 symbol_artifacts["open_interest"] = open_interest
                 symbol_artifacts["basis_or_premium"] = basis
-                symbol_artifacts["historical_liquidations"] = liquidations
+                liquidations = None
+                if liquidation_feature_names:
+                    liquidations = self.ingestion.refresh_historical_liquidations(
+                        exchange=config.strategy.exchange,
+                        symbol=symbol,
+                        timeframe="4h",
+                        since=self._resolve_since(config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol, timeframe="4h"),
+                        limit=1000,
+                    )
+                    symbol_artifacts["historical_liquidations"] = liquidations
                 self._record_refresh(config=config, dataset=DatasetKind.FUNDING_RATES, symbol=symbol, result=funding)
                 self._record_refresh(config=config, dataset=DatasetKind.OPEN_INTEREST, symbol=symbol, result=open_interest)
                 self._record_refresh(config=config, dataset=DatasetKind.BASIS, symbol=symbol, result=basis)
-                if liquidations.get("rows"):
+                if liquidations and liquidations.get("rows"):
                     self._record_refresh(config=config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol, result=liquidations, timeframe="4h")
 
             artifacts[symbol] = symbol_artifacts
         return artifacts
 
-    def build_features(self, config: StrategyWorkflowConfig) -> dict[str, dict[str, dict[str, str]]]:
+    def build_features(self, config: StrategyWorkflowConfig, *, strategy=None) -> dict[str, dict[str, dict[str, str]]]:
         config = self.workflow_service.with_resolved_symbols(config)
         artifacts: dict[str, dict[str, dict[str, str]]] = {}
-        factor_names = self.workflow_service.required_factor_names(config)
+        factor_names = self.workflow_service.required_factor_names(config, strategy=strategy)
         for symbol in config.strategy.symbols:
             bundle = self.builder.build_symbol_features(
                 exchange=config.strategy.exchange,
@@ -181,16 +189,19 @@ class StrategyRunner:
 
     def run(self, config: StrategyWorkflowConfig) -> StrategyRunArtifacts:
         config = self.workflow_service.with_resolved_symbols(config)
+        strategy = self.workflow_service.strategy_instance(config)
+        liquidation_feature_names = strategy.required_liquidation_features() if strategy else []
         run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
-        refresh_artifacts = self.refresh_data(config)
-        feature_artifacts = self.build_features(config)
+        refresh_artifacts = self.refresh_data(config, liquidation_feature_names=liquidation_feature_names)
+        feature_artifacts = self.build_features(config, strategy=strategy)
         run_dir = self.layout.reports_dir / "runs" / config.strategy.name / run_id
-        execution_result = self.workflow_service.execute(config, run_dir=run_dir)
+        execution_result = self.workflow_service.execute(config, run_dir=run_dir, strategy=strategy)
 
         manifest_payload = {
             "run_id": run_id,
             "strategy": asdict(config.strategy),
             "refresh": asdict(config.refresh),
+            "universe": asdict(config.universe),
             "execution": asdict(config.execution),
             "risk": asdict(config.risk),
             "schedule": asdict(config.schedule),
@@ -213,8 +224,8 @@ class StrategyRunner:
             "generated_at": datetime.now(timezone.utc).isoformat(),
         }
         manifest_path = run_dir / "run_manifest.json"
-        manifest_path.parent.mkdir(parents=True, exist_ok=True)
-        manifest_path.write_text(json.dumps(manifest_payload, indent=2, sort_keys=True, default=str), encoding="utf-8")
+        manifest_text = json.dumps(manifest_payload, indent=2, sort_keys=True, default=str)
+        atomic_write_path(manifest_path, lambda temp_path: temp_path.write_text(manifest_text, encoding="utf-8"))
         RunRegistry(self.layout.reports_dir, db_path=self.layout.run_registry_db_path).append(
             RunRegistryEntry(
                 kind="workflow_run",

@@ -1,5 +1,5 @@
 from .config import load_strategy_workflow
-from .models import RefreshOptions, ScheduleOptions, StrategyRunArtifacts, StrategyWorkflowConfig, StrategyWorkflowSpec
+from .models import RefreshOptions, ScheduleOptions, StrategyRunArtifacts, StrategyWorkflowConfig, StrategyWorkflowSpec, UniverseOptions
 from .panels import MultiFactorUniversePanels, UniversePanels, load_multi_factor_panels, load_universe_panels
 from .runner import StrategyRunner
 from .scanner import ScanDecision, StrategyScanResult, build_strategy_scan_result
@@ -18,6 +18,7 @@ __all__ = [
     "StrategyScanResult",
     "StrategyWorkflowConfig",
     "StrategyWorkflowSpec",
+    "UniverseOptions",
     "UniversePanels",
     "WorkflowService",
     "build_strategy_scan_result",

@@ -1,13 +1,13 @@
 import pandas as pd
 
-from strategy_lab.cli import _with_local_binance_spot_universe
+from strategy_lab.cli import _with_cli_local_universe
 from strategy_lab.data import MarketType
-from strategy_lab.orchestration import StrategyWorkflowConfig, StrategyWorkflowSpec
+from strategy_lab.orchestration import StrategyWorkflowConfig, StrategyWorkflowSpec, WorkflowService
 
 
 class FakeWarehouse:
     def load_dataset(self, **kwargs):
-        del kwargs
+        assert kwargs["timeframe"] == "1h"
         index = pd.date_range("2024-01-01", periods=5, freq="h", tz="UTC")
         return pd.DataFrame(
             {
@@ -19,7 +19,11 @@ class FakeWarehouse:
         )
 
 
-def test_with_local_binance_spot_universe_replaces_symbols_and_keeps_benchmark() -> None:
+class FakeBuilder:
+    warehouse = FakeWarehouse()
+
+
+def test_cli_local_universe_options_resolve_in_workflow_service() -> None:
     workflow = StrategyWorkflowConfig(
         strategy=StrategyWorkflowSpec(
             name="spot_cta_test",
@@ -31,13 +35,13 @@ def test_with_local_binance_spot_universe_replaces_symbols_and_keeps_benchmark()
         ),
     )
 
-    updated = _with_local_binance_spot_universe(
+    configured = _with_cli_local_universe(
         workflow,
-        warehouse=FakeWarehouse(),
         min_avg_dollar_volume=1_000.0,
         min_history_bars=5,
         max_symbols=1,
     )
+    updated = WorkflowService(FakeBuilder()).with_resolved_symbols(configured)
 
     assert updated.strategy.symbols == ["BTC/USDT", "ACH/USDT"]
     assert workflow.strategy.symbols == ["ETH/USDT"]

@@ -20,6 +20,18 @@ class RefreshOptions:
 
 
 @dataclass(frozen=True, slots=True)
+class UniverseOptions:
+    source: str | None = None
+    min_avg_dollar_volume: float = 1_000_000.0
+    min_history_bars: int = 120
+    max_symbols: int = 0
+
+    @property
+    def enabled(self) -> bool:
+        return bool(self.source)
+
+
+@dataclass(frozen=True, slots=True)
 class ScheduleOptions:
     enabled: bool = False
     sleep_seconds: int = 0
@@ -54,6 +66,7 @@ class StrategyWorkflowSpec:
 class StrategyWorkflowConfig:
     strategy: StrategyWorkflowSpec
     refresh: RefreshOptions = field(default_factory=RefreshOptions)
+    universe: UniverseOptions = field(default_factory=UniverseOptions)
     execution: ExecutionAssumptions = field(default_factory=ExecutionAssumptions)
     risk: RiskLimits = field(default_factory=RiskLimits)
     schedule: ScheduleOptions = field(default_factory=ScheduleOptions)

@@ -70,7 +70,8 @@ def test_workflow_batch_runner_uses_shared_refresh_once(tmp_path: Path, monkeypa
 
     refresh_flags: list[bool] = []
 
-    def fake_refresh(self, config):
+    def fake_refresh(self, config, **kwargs):
+        del kwargs
         refresh_flags.append(config.refresh.enabled)
         return {}
 
@@ -108,7 +109,8 @@ def test_workflow_batch_runner_falls_back_to_serial_when_refresh_is_enabled(tmp_
     def fail_parallel(*args, **kwargs):
         raise AssertionError("parallel worker path should not run when refresh is enabled")
 
-    def fake_refresh(self, config):
+    def fake_refresh(self, config, **kwargs):
+        del kwargs
         return {}
 
     monkeypatch.setattr(batch_runner_module, "_run_workflow_entry", fail_parallel)

@@ -197,12 +197,14 @@ def select_binance_spot_universe(
     exchange: str = "binance",
     config: BinanceSpotUniverseConfig = BinanceSpotUniverseConfig(),
     candidate_symbols: list[str] | None = None,
+    timeframe: str | None = None,
 ) -> list[str]:
     ohlcv = warehouse.load_dataset(
         layer="normalized",
         kind=DatasetKind.OHLCV,
         exchange=exchange,
         market_type=MarketType.SPOT,
+        timeframe=timeframe,
         columns=["ts", "symbol", "close", "volume"],
     )
     return filter_symbols_by_ohlcv(ohlcv, config=config, candidate_symbols=candidate_symbols)
