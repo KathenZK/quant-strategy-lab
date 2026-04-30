@@ -4,12 +4,17 @@ from collections.abc import Iterable
 from pathlib import Path
 import json
 import sqlite3
+import threading
 from typing import TYPE_CHECKING
 
 import pandas as pd
 
 if TYPE_CHECKING:
     from strategy_lab.experiments.registry import RunRegistryEntry
+
+
+_SQLITE_SCHEMA_LOCK = threading.RLock()
+_SQLITE_WRITE_LOCK = threading.RLock()
 
 
 def _json_dumps(payload: object) -> str:
@@ -53,105 +58,108 @@ class RunSqliteStore:
     def __init__(self, db_path: Path) -> None:
         self.db_path = Path(db_path)
 
-    def _connect(self) -> sqlite3.Connection:
+    def _connect(self, *, configure_wal: bool = False) -> sqlite3.Connection:
         self.db_path.parent.mkdir(parents=True, exist_ok=True)
-        connection = sqlite3.connect(self.db_path, timeout=30.0)
+        connection = sqlite3.connect(self.db_path, timeout=60.0)
         connection.row_factory = sqlite3.Row
+        connection.execute("PRAGMA busy_timeout = 60000")
         connection.execute("PRAGMA foreign_keys = ON")
-        connection.execute("PRAGMA journal_mode = WAL")
+        if configure_wal:
+            connection.execute("PRAGMA journal_mode = WAL")
         connection.execute("PRAGMA synchronous = NORMAL")
         return connection
 
     def ensure_schema(self) -> Path:
-        with self._connect() as connection:
-            connection.executescript(
-                """
-                CREATE TABLE IF NOT EXISTS runs (
-                    manifest_path TEXT PRIMARY KEY,
-                    kind TEXT NOT NULL,
-                    name TEXT NOT NULL,
-                    run_id TEXT NOT NULL,
-                    generated_at TEXT NOT NULL,
-                    app_config_path TEXT,
-                    primary_report_path TEXT,
-                    factor_report_path TEXT,
-                    backtest_report_path TEXT,
-                    paper_report_path TEXT,
-                    strategy_name TEXT,
-                    signal_name TEXT,
-                    strategy_type TEXT,
-                    variant_id TEXT,
-                    config_hash TEXT,
-                    git_sha TEXT,
-                    data_snapshot_id TEXT,
-                    signal_version TEXT,
-                    backtest_metrics_json TEXT NOT NULL DEFAULT '{}',
-                    backtest_attribution_json TEXT NOT NULL DEFAULT '{}',
-                    paper_summary_json TEXT NOT NULL DEFAULT '{}',
-                    structured_artifact_paths_json TEXT NOT NULL DEFAULT '{}',
-                    child_manifest_paths_json TEXT NOT NULL DEFAULT '[]',
-                    manifest_json TEXT,
-                    sharpe REAL,
-                    cumulative_return REAL,
-                    annualized_return REAL,
-                    max_drawdown REAL,
-                    avg_turnover REAL,
-                    final_equity REAL,
-                    fill_count REAL
-                );
+        with _SQLITE_SCHEMA_LOCK:
+            with self._connect(configure_wal=True) as connection:
+                connection.executescript(
+                    """
+                    CREATE TABLE IF NOT EXISTS runs (
+                        manifest_path TEXT PRIMARY KEY,
+                        kind TEXT NOT NULL,
+                        name TEXT NOT NULL,
+                        run_id TEXT NOT NULL,
+                        generated_at TEXT NOT NULL,
+                        app_config_path TEXT,
+                        primary_report_path TEXT,
+                        factor_report_path TEXT,
+                        backtest_report_path TEXT,
+                        paper_report_path TEXT,
+                        strategy_name TEXT,
+                        signal_name TEXT,
+                        strategy_type TEXT,
+                        variant_id TEXT,
+                        config_hash TEXT,
+                        git_sha TEXT,
+                        data_snapshot_id TEXT,
+                        signal_version TEXT,
+                        backtest_metrics_json TEXT NOT NULL DEFAULT '{}',
+                        backtest_attribution_json TEXT NOT NULL DEFAULT '{}',
+                        paper_summary_json TEXT NOT NULL DEFAULT '{}',
+                        structured_artifact_paths_json TEXT NOT NULL DEFAULT '{}',
+                        child_manifest_paths_json TEXT NOT NULL DEFAULT '[]',
+                        manifest_json TEXT,
+                        sharpe REAL,
+                        cumulative_return REAL,
+                        annualized_return REAL,
+                        max_drawdown REAL,
+                        avg_turnover REAL,
+                        final_equity REAL,
+                        fill_count REAL
+                    );
 
-                CREATE INDEX IF NOT EXISTS idx_runs_kind_generated_at
-                    ON runs(kind, generated_at DESC);
-                CREATE INDEX IF NOT EXISTS idx_runs_strategy_name
-                    ON runs(strategy_name);
-                CREATE INDEX IF NOT EXISTS idx_runs_strategy_type
-                    ON runs(strategy_type);
-                CREATE INDEX IF NOT EXISTS idx_runs_sharpe
-                    ON runs(sharpe DESC);
+                    CREATE INDEX IF NOT EXISTS idx_runs_kind_generated_at
+                        ON runs(kind, generated_at DESC);
+                    CREATE INDEX IF NOT EXISTS idx_runs_strategy_name
+                        ON runs(strategy_name);
+                    CREATE INDEX IF NOT EXISTS idx_runs_strategy_type
+                        ON runs(strategy_type);
+                    CREATE INDEX IF NOT EXISTS idx_runs_sharpe
+                        ON runs(sharpe DESC);
 
-                CREATE TABLE IF NOT EXISTS run_relations (
-                    parent_manifest_path TEXT NOT NULL,
-                    child_manifest_path TEXT NOT NULL,
-                    relation_type TEXT NOT NULL,
-                    ordinal INTEGER NOT NULL DEFAULT 0,
-                    PRIMARY KEY (parent_manifest_path, child_manifest_path, relation_type),
-                    FOREIGN KEY (parent_manifest_path) REFERENCES runs(manifest_path) ON DELETE CASCADE
-                );
+                    CREATE TABLE IF NOT EXISTS run_relations (
+                        parent_manifest_path TEXT NOT NULL,
+                        child_manifest_path TEXT NOT NULL,
+                        relation_type TEXT NOT NULL,
+                        ordinal INTEGER NOT NULL DEFAULT 0,
+                        PRIMARY KEY (parent_manifest_path, child_manifest_path, relation_type),
+                        FOREIGN KEY (parent_manifest_path) REFERENCES runs(manifest_path) ON DELETE CASCADE
+                    );
 
-                CREATE INDEX IF NOT EXISTS idx_run_relations_parent
-                    ON run_relations(parent_manifest_path, ordinal);
+                    CREATE INDEX IF NOT EXISTS idx_run_relations_parent
+                        ON run_relations(parent_manifest_path, ordinal);
 
-                CREATE TABLE IF NOT EXISTS run_series (
-                    manifest_path TEXT NOT NULL,
-                    series_name TEXT NOT NULL,
-                    ts TEXT NOT NULL,
-                    value REAL,
-                    PRIMARY KEY (manifest_path, series_name, ts),
-                    FOREIGN KEY (manifest_path) REFERENCES runs(manifest_path) ON DELETE CASCADE
-                );
+                    CREATE TABLE IF NOT EXISTS run_series (
+                        manifest_path TEXT NOT NULL,
+                        series_name TEXT NOT NULL,
+                        ts TEXT NOT NULL,
+                        value REAL,
+                        PRIMARY KEY (manifest_path, series_name, ts),
+                        FOREIGN KEY (manifest_path) REFERENCES runs(manifest_path) ON DELETE CASCADE
+                    );
 
-                CREATE INDEX IF NOT EXISTS idx_run_series_lookup
-                    ON run_series(manifest_path, series_name, ts);
+                    CREATE INDEX IF NOT EXISTS idx_run_series_lookup
+                        ON run_series(manifest_path, series_name, ts);
 
-                CREATE TABLE IF NOT EXISTS run_trades (
-                    id INTEGER PRIMARY KEY AUTOINCREMENT,
-                    manifest_path TEXT NOT NULL,
-                    ts TEXT NOT NULL,
-                    symbol TEXT,
-                    side TEXT,
-                    previous_weight REAL,
-                    target_weight REAL,
-                    delta_weight REAL,
-                    price REAL,
-                    signal REAL,
-                    reason TEXT,
-                    FOREIGN KEY (manifest_path) REFERENCES runs(manifest_path) ON DELETE CASCADE
-                );
+                    CREATE TABLE IF NOT EXISTS run_trades (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        manifest_path TEXT NOT NULL,
+                        ts TEXT NOT NULL,
+                        symbol TEXT,
+                        side TEXT,
+                        previous_weight REAL,
+                        target_weight REAL,
+                        delta_weight REAL,
+                        price REAL,
+                        signal REAL,
+                        reason TEXT,
+                        FOREIGN KEY (manifest_path) REFERENCES runs(manifest_path) ON DELETE CASCADE
+                    );
 
-                CREATE INDEX IF NOT EXISTS idx_run_trades_lookup
-                    ON run_trades(manifest_path, ts);
-                """
-            )
+                    CREATE INDEX IF NOT EXISTS idx_run_trades_lookup
+                        ON run_trades(manifest_path, ts);
+                    """
+                )
         return self.db_path
 
     def load_count(self) -> int:
@@ -313,29 +321,30 @@ class RunSqliteStore:
             "experiment_run": "experiment_child",
             "comparison_run": "comparison_child",
         }.get(entry.kind)
-        with self._connect() as connection:
-            connection.execute(
-                f"""
-                INSERT INTO runs ({", ".join(columns)})
-                VALUES ({placeholders})
-                ON CONFLICT(manifest_path) DO UPDATE SET
-                    {assignments}
-                """,
-                record,
-            )
-            if relation_type is not None:
-                self._replace_relations(
-                    connection,
-                    parent_manifest_path=entry.manifest_path,
-                    relation_type=relation_type,
-                    child_manifest_paths=entry.child_manifest_paths,
+        with _SQLITE_WRITE_LOCK:
+            with self._connect() as connection:
+                connection.execute(
+                    f"""
+                    INSERT INTO runs ({", ".join(columns)})
+                    VALUES ({placeholders})
+                    ON CONFLICT(manifest_path) DO UPDATE SET
+                        {assignments}
+                    """,
+                    record,
                 )
-            if entry.kind == "workflow_run":
-                self._replace_workflow_detail(
-                    connection,
-                    manifest_path=entry.manifest_path,
-                    structured_artifact_paths=entry.structured_artifact_paths,
-                )
+                if relation_type is not None:
+                    self._replace_relations(
+                        connection,
+                        parent_manifest_path=entry.manifest_path,
+                        relation_type=relation_type,
+                        child_manifest_paths=entry.child_manifest_paths,
+                    )
+                if entry.kind == "workflow_run":
+                    self._replace_workflow_detail(
+                        connection,
+                        manifest_path=entry.manifest_path,
+                        structured_artifact_paths=entry.structured_artifact_paths,
+                    )
         return self.db_path
 
     def _decode_run_row(self, row: sqlite3.Row, *, include_manifest: bool = False) -> dict[str, object]:

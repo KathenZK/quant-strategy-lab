@@ -4,7 +4,18 @@ from datetime import datetime, timezone
 import pandas as pd
 import pytest
 
-from strategy_lab.data import CCXTDataClient, DataIngestionService, DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType, normalize_dataset, write_dataframe
+from strategy_lab.data import (
+    CCXTDataClient,
+    DataAuthenticityAuditor,
+    DataIngestionService,
+    DataLakeLayout,
+    DataLakeMigrator,
+    DatasetKind,
+    DuckDBWarehouse,
+    MarketType,
+    normalize_dataset,
+    write_dataframe,
+)
 from strategy_lab.data.pipeline import drop_incomplete_ohlcv
 from strategy_lab.features import FeatureBuilder, FeatureStore
 from strategy_lab.factors import default_registry
@@ -141,7 +152,7 @@ def test_warehouse_keeps_ohlcv_timeframes_separate(tmp_path: Path) -> None:
 
     assert hourly_loaded["close"].tolist() == [1.0, 2.0]
     assert daily_loaded["close"].tolist() == [10.0, 20.0]
-    assert "timeframe=1h" in str(layout.dataset_path(
+    canonical_path = layout.dataset_path(
         layer="normalized",
         kind=DatasetKind.OHLCV,
         exchange="binance",
@@ -149,7 +160,111 @@ def test_warehouse_keeps_ohlcv_timeframes_separate(tmp_path: Path) -> None:
         symbol="BTC/USDT",
         timeframe="1h",
         partition_date=base["ts"].max().date(),
-    ))
+    )
+    assert "timeframe=1h" in str(canonical_path)
+    assert "/symbol=btc_usdt/" not in str(canonical_path)
+    assert canonical_path.name == "symbol=btc_usdt.parquet"
+
+
+def test_data_lake_migrator_copies_legacy_profiles_to_canonical_layout(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    legacy = layout.root_dir / "binance-recent1y"
+    legacy_layout = DataLakeLayout(
+        root_dir=legacy,
+        raw_dir=legacy / "raw",
+        normalized_dir=legacy / "normalized",
+        features_dir=legacy / "features",
+        reports_dir=tmp_path / "legacy-reports",
+    )
+    legacy_layout.ensure_directories()
+    frame = pd.DataFrame(
+        {
+            "ts": pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC"),
+            "exchange": ["binance"] * 2,
+            "symbol": ["BTC/USDT"] * 2,
+            "market_type": ["spot"] * 2,
+            "open": [1.0, 2.0],
+            "high": [1.1, 2.1],
+            "low": [0.9, 1.9],
+            "close": [1.0, 2.0],
+            "volume": [100.0, 100.0],
+            "source": ["test"] * 2,
+        }
+    )
+    write_dataframe(
+        frame,
+        layout=legacy_layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        partition_date=frame["ts"].max().date(),
+    )
+
+    summary = DataLakeMigrator(layout).migrate(dry_run=False)
+    loaded = DuckDBWarehouse(layout).load_dataset(
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        timeframe="1h",
+    )
+
+    assert summary.copied == 1
+    assert not loaded.empty
+    assert loaded["timeframe"].dropna().unique().tolist() == ["1h"]
+
+
+def test_data_authenticity_auditor_quarantines_non_real_sources(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+    frame = pd.DataFrame(
+        {
+            "ts": pd.date_range("2024-01-01", periods=3, freq="h", tz="UTC"),
+            "exchange": ["binance"] * 3,
+            "symbol": ["BTC/USDT"] * 3,
+            "market_type": ["spot"] * 3,
+            "open": [1.0, 2.0, 3.0],
+            "high": [1.1, 2.1, 3.1],
+            "low": [0.9, 1.9, 2.9],
+            "close": [1.0, 2.0, 3.0],
+            "volume": [100.0, 100.0, 100.0],
+            "source": ["ccxt", "scenario_seed", "unknown_vendor"],
+        }
+    )
+    write_dataframe(
+        frame,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        partition_date=frame["ts"].max().date(),
+        timeframe="1h",
+    )
+
+    auditor = DataAuthenticityAuditor(layout)
+    dry_run = auditor.audit()
+    clean = auditor.clean(dry_run=False, quarantine_unverified_features=False, quarantine_duckdb=False)
+    verified = auditor.audit()
+    loaded = DuckDBWarehouse(layout).load_dataset(
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        timeframe="1h",
+    )
+    quarantine_files = list((layout.root_dir / "_quarantine" / "non_real_sources").rglob("*.parquet"))
+
+    assert dry_run.blocked_rows == 2
+    assert clean.blocked_rows == 2
+    assert verified.blocked_rows == 0
+    assert loaded["source"].unique().tolist() == ["ccxt"]
+    assert len(quarantine_files) == 1
 
 
 def test_feature_store_paths_include_data_identity(tmp_path: Path) -> None:

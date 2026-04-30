@@ -11,7 +11,7 @@ from strategy_lab.batches import BatchRunMode
 from strategy_lab.batches.service import load_batch_for_mode, run_workflow_batch
 from strategy_lab.backtest import ExecutionAssumptions
 from strategy_lab.config import load_settings
-from strategy_lab.data import CCXTDataClient, DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data import CCXTDataClient, DataAuthenticityAuditor, DataIngestionService, DataLakeLayout, DataLakeMigrator, DuckDBWarehouse, MarketType
 from strategy_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
 from strategy_lab.factors import default_registry
 from strategy_lab.features import FeatureBuilder, FeatureStore
@@ -124,6 +124,90 @@ def init_dirs(config: Path | None = typer.Option(None, "--config", "-c", help="O
     lake, _, _ = _runtime(config)
     lake.ensure_directories()
     typer.echo("created data lake directories")
+
+
+@app.command("audit-data-lake")
+def audit_data_lake(config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path.")) -> None:
+    """Print legacy data lake profile directories that can be migrated."""
+    lake, _, _ = _runtime(config)
+    migrator = DataLakeMigrator(lake)
+    roots = migrator.legacy_roots()
+    typer.echo(f"legacy_roots: {len(roots)}")
+    for root in roots:
+        parquet_count = sum(1 for _ in root.rglob("*.parquet"))
+        typer.echo(f"{root}\tparquet={parquet_count}")
+
+
+@app.command("migrate-data-lake")
+def migrate_data_lake(
+    execute: bool = typer.Option(False, "--execute", help="Write canonical copies. Defaults to dry-run."),
+    archive_legacy: bool = typer.Option(False, "--archive-legacy", help="Move legacy profile roots into data/_archive after copying."),
+    report_path: Path | None = typer.Option(None, "--report-path", help="Optional JSON migration report path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path."),
+) -> None:
+    """Migrate legacy profile data into the canonical shared data lake layout."""
+    if archive_legacy and not execute:
+        raise typer.BadParameter("--archive-legacy requires --execute")
+    lake, _, _ = _runtime(config)
+    summary = DataLakeMigrator(lake).migrate(
+        dry_run=not execute,
+        archive_legacy=archive_legacy,
+        report_path=report_path,
+    )
+    typer.echo(f"dry_run: {str(summary.dry_run).lower()}")
+    typer.echo(f"legacy_roots: {len(summary.legacy_roots)}")
+    typer.echo(f"copy: {summary.copied}")
+    typer.echo(f"skip: {summary.skipped}")
+    typer.echo(f"failed: {summary.failed}")
+    if report_path:
+        typer.echo(f"report: {report_path}")
+    if summary.failed:
+        raise typer.Exit(code=1)
+
+
+def _print_authenticity_summary(summary) -> None:
+    typer.echo(f"dry_run: {str(summary.dry_run).lower()}")
+    typer.echo(f"blocked_patterns: {','.join(summary.blocked_patterns)}")
+    typer.echo(f"allowed_sources: {','.join(summary.allowed_sources)}")
+    typer.echo(f"blocked_files: {summary.blocked_files}")
+    typer.echo(f"blocked_rows: {summary.blocked_rows}")
+    typer.echo(f"quarantined_files: {summary.quarantined_files}")
+
+
+@app.command("audit-real-data")
+def audit_real_data(
+    report_path: Path | None = typer.Option(None, "--report-path", help="Optional JSON authenticity report path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path."),
+) -> None:
+    """Audit active data lake layers for synthetic, proxy, or interpolated sources."""
+    lake, _, _ = _runtime(config)
+    summary = DataAuthenticityAuditor(lake).audit(report_path=report_path)
+    _print_authenticity_summary(summary)
+    if report_path:
+        typer.echo(f"report: {report_path}")
+
+
+@app.command("clean-non-real-data")
+def clean_non_real_data(
+    execute: bool = typer.Option(False, "--execute", help="Quarantine non-real rows/files. Defaults to dry-run."),
+    keep_features: bool = typer.Option(False, "--keep-features", help="Keep existing feature cache even without source lineage."),
+    keep_duckdb: bool = typer.Option(False, "--keep-duckdb", help="Keep DuckDB cache files."),
+    report_path: Path | None = typer.Option(None, "--report-path", help="Optional JSON cleanup report path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path."),
+) -> None:
+    """Quarantine synthetic, proxy, interpolated, and unverifiable active data."""
+    lake, _, _ = _runtime(config)
+    summary = DataAuthenticityAuditor(lake).clean(
+        dry_run=not execute,
+        quarantine_unverified_features=not keep_features,
+        quarantine_duckdb=not keep_duckdb,
+        report_path=report_path,
+    )
+    _print_authenticity_summary(summary)
+    if report_path:
+        typer.echo(f"report: {report_path}")
+    if not execute and summary.blocked_rows:
+        typer.echo("next_step: rerun with --execute to quarantine these rows/files")
 
 
 @app.command()

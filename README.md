@@ -23,6 +23,9 @@
 ## 架构约定
 
 - 数据默认共享：相对路径的 app profile 配置会收敛到同一套 `data/`、`reports/` 目录。
+- 数据湖只写 canonical 层：`data/raw`、`data/normalized`、`data/features`，不再按策略或时间窗口创建项目专属数据目录。
+- active 数据层只保留可追溯的真实交易所来源；synthetic、proxy、test、插值类数据必须隔离到 `data/_quarantine`，不能参与研究回测。
+- OHLCV 等周期数据必须显式带 `timeframe`，路径按 `dataset/exchange/market_type/timeframe/date` 分区，`symbol` 保留在文件字段和文件名中。
 - 回测结果统一入库：workflow、experiment、comparison 都写入 `reports/_registry/runs.sqlite`。
 - 策略自己决定 universe：优先使用 `strategy.symbols` 兼容旧配置；未配置时由策略默认 universe 或 `strategy.strategy_params.symbols` 解析。
 
@@ -42,6 +45,22 @@ pip install -e ".[dev]"
 ./.venv/bin/quant-strategy-lab --help
 ./.venv/bin/quant-strategy-lab layout
 ./.venv/bin/quant-strategy-lab factors
+```
+
+迁移旧数据湖 profile：
+
+```bash
+./.venv/bin/quant-strategy-lab audit-data-lake
+./.venv/bin/quant-strategy-lab migrate-data-lake --report-path reports/data_lake_migration.dry-run.json
+./.venv/bin/quant-strategy-lab migrate-data-lake --execute --report-path reports/data_lake_migration.json
+```
+
+审计并清理非真实数据：
+
+```bash
+./.venv/bin/quant-strategy-lab audit-real-data --report-path reports/data_authenticity.audit.json
+./.venv/bin/quant-strategy-lab clean-non-real-data --execute --report-path reports/data_authenticity.clean.json
+./.venv/bin/quant-strategy-lab audit-real-data --report-path reports/data_authenticity.verify.json
 ```
 
 运行策略工作流或策略对比：

@@ -14,7 +14,7 @@ web/node_modules/
 .next/
 web/.next/
 *.egg-info/
-data/
-reports/
+/data/
+/reports/
 .coverage
 htmlcov/
