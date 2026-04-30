@@ -1,6 +1,0 @@
-comparison:
-  name: trend_vs_crowding_on_shared_baseline
-  description: Compare trend confirmation and crowding reversal on a shared regime-mixed baseline dataset.
-  workflow_configs:
-    - ../workflows/strategies/trend_confirmation.mvp.shared-baseline.yaml
-    - ../workflows/strategies/crowding_reversal.mvp.shared-baseline.yaml

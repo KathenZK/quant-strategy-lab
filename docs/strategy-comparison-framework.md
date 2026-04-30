@@ -86,19 +86,19 @@ batch:
 当前更推荐直接使用 shared comparison baseline，而不是单独的 trend-only baseline。
 
 ```bash
-./.venv/bin/quant-strategy-lab seed-shared-comparison-mvp -c configs/app/shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-shared-comparison-mvp -c configs/environments/shared-comparison-baseline.yaml
 ```
 
 ### 再运行统一策略比较
 
 ```bash
-./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/comparisons/strategy_comparison.shared-baseline.yaml -c configs/app/shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/comparisons/strategy_comparison.shared-baseline.yaml -c configs/environments/shared-comparison-baseline.yaml
 ```
 
 等价的统一 batch 入口：
 
 ```bash
-./.venv/bin/quant-strategy-lab run-batch --mode comparison --batch-config configs/comparisons/strategy_comparison.shared-baseline.yaml -c configs/app/shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab run-batch --mode comparison --batch-config configs/comparisons/strategy_comparison.shared-baseline.yaml -c configs/environments/shared-comparison-baseline.yaml
 ```
 
 ## 5. 兼容性要求

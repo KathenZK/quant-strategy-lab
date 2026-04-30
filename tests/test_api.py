@@ -317,8 +317,7 @@ def test_lab_strategy_templates_are_loaded_from_yaml(tmp_path: Path) -> None:
     assert payload["templates"]
     strategy_types = [template["strategy_type"] for template in payload["templates"]]
     assert len(strategy_types) == len(set(strategy_types))
-    assert "crowding_reversal" in strategy_types
-    assert "momentum_rotation" in strategy_types
+    assert strategy_types == ["spot_cta_trend"]
     template = payload["templates"][0]
     assert template["id"].endswith((".yaml", ".yml"))
     assert template["path"].startswith("configs/workflows/strategies/")

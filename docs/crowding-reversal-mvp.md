@@ -51,9 +51,9 @@
 - 不刷新真实数据
 - 当前只输出 backtest 报告
 
-### 基准场景 app 配置
+### 基准场景环境配置
 
-- `configs/app/crowding-baseline.yaml`
+- `configs/environments/crowding-baseline.yaml`
 
 用途：
 
@@ -141,13 +141,13 @@
 先写入隔离的基准数据：
 
 ```bash
-./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/app/crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-crowding-mvp -c configs/environments/crowding-baseline.yaml
 ```
 
 再运行基准策略：
 
 ```bash
-./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/crowding_reversal.mvp.baseline.yaml -c configs/app/crowding-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/crowding_reversal.mvp.baseline.yaml -c configs/environments/crowding-baseline.yaml
 ```
 
 ## 6. 这份 MVP 配置的作用

@@ -714,7 +714,7 @@ def backfill_run_db(config: Path | None = typer.Option(None, "--config", "-c")) 
 
 @app.command()
 def seed_trend_mvp(
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
 ) -> None:
     """Seed deterministic MVP perp data for baseline reports."""
     lake, _, _ = _runtime(config)
@@ -723,7 +723,7 @@ def seed_trend_mvp(
 
 @app.command()
 def seed_crowding_mvp(
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
 ) -> None:
     """Seed deterministic crowding reversal MVP data for baseline reports."""
     lake, _, _ = _runtime(config)
@@ -732,7 +732,7 @@ def seed_crowding_mvp(
 
 @app.command()
 def seed_shared_comparison_mvp(
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
 ) -> None:
     """Seed deterministic shared comparison baseline data."""
     lake, _, _ = _runtime(config)
@@ -742,7 +742,7 @@ def seed_shared_comparison_mvp(
 @app.command()
 def compare_strategies(
     comparison_config: Path = typer.Option(..., "--comparison-config", help="Path to strategy comparison YAML."),
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
 ) -> None:
     """Run a side-by-side strategy comparison report."""
     _run_batch_command(BatchRunMode.COMPARISON, comparison_config, config)
@@ -751,7 +751,7 @@ def compare_strategies(
 @app.command()
 def run_experiment(
     experiment_config: Path = typer.Option(..., "--experiment-config", help="Path to experiment YAML."),
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
 ) -> None:
     """Run a batch of workflows and persist an experiment summary."""
     experiment = load_experiment_config(experiment_config)
@@ -767,7 +767,7 @@ def run_experiment(
 def run_batch(
     mode: BatchRunMode = typer.Option(..., "--mode", help="Batch run mode: experiment or comparison."),
     batch_config: Path = typer.Option(..., "--batch-config", help="Path to batch YAML."),
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
 ) -> None:
     """Run a workflow batch through a unified batch entrypoint."""
     _run_batch_command(mode, batch_config, config)
@@ -856,7 +856,7 @@ def sync_small_cap_universe_command(
 def dashboard(
     host: str = typer.Option("127.0.0.1", "--host", help="Dashboard host."),
     port: int = typer.Option(27098, "--port", help="Dashboard port."),
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional app config path."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
 ) -> None:
     """Serve the dashboard JSON API backend."""
     import uvicorn

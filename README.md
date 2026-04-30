@@ -66,8 +66,13 @@ pip install -e ".[dev]"
 运行策略工作流或策略对比：
 
 ```bash
-./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/trend_confirmation.mvp.yaml
-./.venv/bin/quant-strategy-lab compare-strategies --comparison-config configs/comparisons/strategy_comparison.shared-baseline.yaml -c configs/app/shared-comparison-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy \
+  --workflow-config configs/workflows/strategies/spot_cta_trend.binance.spot.1h.local.yaml \
+  --use-local-universe \
+  --min-avg-dollar-volume 0 \
+  --min-history-bars 120 \
+  --max-symbols 0 \
+  -c configs/environments/binance-spot-1h-local.yaml
 ```
 
 启动后端 Dashboard API：

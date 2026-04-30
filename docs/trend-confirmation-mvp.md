@@ -49,9 +49,9 @@
 - 只使用隔离的基准场景数据
 - 当前只输出 backtest 报告
 
-### 基准场景 app 配置
+### 基准场景环境配置
 
-- `configs/app/mvp-baseline.yaml`
+- `configs/environments/mvp-baseline.yaml`
 
 用途：
 
@@ -139,13 +139,13 @@
 先写入隔离的基准数据：
 
 ```bash
-./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/app/mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/environments/mvp-baseline.yaml
 ```
 
 再运行基准策略：
 
 ```bash
-./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/trend_confirmation.mvp.baseline.yaml -c configs/app/mvp-baseline.yaml
+./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/trend_confirmation.mvp.baseline.yaml -c configs/environments/mvp-baseline.yaml
 ```
 
 ## 6. 这份 MVP 配置的作用

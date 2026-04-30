@@ -250,7 +250,7 @@ data/
 查看数据湖布局：
 
 ```bash
-./.venv/bin/quant-strategy-lab layout -c configs/app/binance-spot-1h-local.yaml
+./.venv/bin/quant-strategy-lab layout -c configs/environments/binance-spot-1h-local.yaml
 ```
 
 同步 Binance spot 1h：
@@ -262,7 +262,7 @@ data/
   --limit 3000 \
   --max-symbols 0 \
   --min-quote-volume 0 \
-  -c configs/app/binance-spot-1h-local.yaml
+  -c configs/environments/binance-spot-1h-local.yaml
 ```
 
 扫描现货 CTA：
@@ -275,7 +275,7 @@ data/
   --min-history-bars 120 \
   --max-symbols 0 \
   --top-n 20 \
-  -c configs/app/binance-spot-1h-local.yaml
+  -c configs/environments/binance-spot-1h-local.yaml
 ```
 
 运行策略回测：
@@ -283,7 +283,7 @@ data/
 ```bash
 ./.venv/bin/quant-strategy-lab run-strategy \
   --workflow-config configs/workflows/strategies/spot_cta_trend.binance.spot.1h.local.yaml \
-  -c configs/app/binance-spot-1h-local.yaml
+  -c configs/environments/binance-spot-1h-local.yaml
 ```
 
 ## 11. 判断是否符合约定
