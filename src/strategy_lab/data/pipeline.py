@@ -33,6 +33,38 @@ def drop_incomplete_ohlcv(frame: pd.DataFrame, *, timeframe: str, now: pd.Timest
     return frame.loc[close_time <= current_time].reset_index(drop=True)
 
 
+def _partition_dates(frame: pd.DataFrame) -> pd.Series:
+    return pd.to_datetime(frame["ts"], utc=True).dt.date
+
+
+def _write_frame_by_date(
+    frame: pd.DataFrame,
+    *,
+    layout: DataLakeLayout,
+    layer: str,
+    kind: DatasetKind,
+    exchange: str,
+    market_type: MarketType,
+    symbol: str,
+    timeframe: str | None = None,
+) -> list[str]:
+    paths: list[str] = []
+    for partition_date, group in frame.groupby(_partition_dates(frame), sort=True):
+        path = write_dataframe(
+            group.reset_index(drop=True),
+            layout=layout,
+            layer=layer,
+            kind=kind,
+            exchange=exchange,
+            market_type=market_type,
+            symbol=symbol,
+            partition_date=partition_date,
+            timeframe=timeframe,
+        )
+        paths.append(str(path))
+    return paths
+
+
 def _write_dataset_pair(
     *,
     layout: DataLakeLayout,
@@ -49,8 +81,7 @@ def _write_dataset_pair(
         normalized = normalized.copy()
         raw["timeframe"] = timeframe.lower()
         normalized["timeframe"] = timeframe.lower()
-    partition_date = normalized["ts"].max().date()
-    raw_path = write_dataframe(
+    raw_paths = _write_frame_by_date(
         raw,
         layout=layout,
         layer="raw",
@@ -58,10 +89,9 @@ def _write_dataset_pair(
         exchange=exchange,
         market_type=market_type,
         symbol=symbol,
-        partition_date=partition_date,
         timeframe=timeframe,
     )
-    normalized_path = write_dataframe(
+    normalized_paths = _write_frame_by_date(
         normalized,
         layout=layout,
         layer="normalized",
@@ -69,12 +99,13 @@ def _write_dataset_pair(
         exchange=exchange,
         market_type=market_type,
         symbol=symbol,
-        partition_date=partition_date,
         timeframe=timeframe,
     )
     return {
-        "raw": str(raw_path),
-        "normalized": str(normalized_path),
+        "raw": raw_paths[-1] if raw_paths else None,
+        "normalized": normalized_paths[-1] if normalized_paths else None,
+        "raw_paths": raw_paths,
+        "normalized_paths": normalized_paths,
         "rows": int(len(normalized)),
         "last_ts": pd.to_datetime(normalized["ts"], utc=True).max().isoformat(),
     }

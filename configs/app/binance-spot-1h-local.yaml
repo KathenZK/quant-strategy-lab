@@ -3,6 +3,7 @@ project:
   timezone: UTC
 
 storage:
+  shared: false
   root_dir: data/binance-spot-1h-local
   raw_dir: data/binance-spot-1h-local/raw
   normalized_dir: data/binance-spot-1h-local/normalized

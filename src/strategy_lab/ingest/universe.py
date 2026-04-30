@@ -61,7 +61,6 @@ class BinanceSpotUniverseConfig:
     exclude_stablecoins: bool = True
     exclude_fiat: bool = True
     exclude_leveraged_tokens: bool = True
-    exclude_non_ascii: bool = True
     require_active: bool = True
     excluded_bases: tuple[str, ...] = field(default_factory=tuple)
     excluded_symbols: tuple[str, ...] = field(default_factory=tuple)
@@ -84,10 +83,6 @@ def _is_leveraged_base(base: str) -> bool:
         if base in {f"{root}UP", f"{root}DOWN"}:
             return True
     return False
-
-
-def _is_ascii_identifier(value: str) -> bool:
-    return value.isascii() and value.replace("/", "").replace(":", "").replace("-", "").isalnum()
 
 
 def is_tradeable_binance_spot_market(
@@ -116,8 +111,6 @@ def is_tradeable_binance_spot_market(
     if config.exclude_fiat and base in FIAT_BASES:
         return False
     if config.exclude_leveraged_tokens and _is_leveraged_base(base):
-        return False
-    if config.exclude_non_ascii and (not _is_ascii_identifier(normalized) or not _is_ascii_identifier(base)):
         return False
     return True
 

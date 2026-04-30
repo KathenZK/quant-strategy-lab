@@ -40,6 +40,27 @@ def _sort_columns(kind: DatasetKind, frame: pd.DataFrame) -> pd.DataFrame:
     return frame[priority + remaining]
 
 
+def _ensure_ohlcv_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    if "close" not in frame.columns or "volume" not in frame.columns:
+        return frame
+    enriched = frame.copy()
+    if "quote_volume" not in enriched.columns:
+        enriched["quote_volume"] = enriched["close"] * enriched["volume"]
+    if "trade_count" not in enriched.columns:
+        enriched["trade_count"] = 0
+    if "vwap" not in enriched.columns:
+        volume = enriched["volume"].replace(0.0, pd.NA)
+        enriched["vwap"] = enriched["quote_volume"] / volume
+        if {"high", "low", "close"}.issubset(enriched.columns):
+            fallback = (enriched["high"] + enriched["low"] + enriched["close"]) / 3.0
+            enriched["vwap"] = enriched["vwap"].fillna(fallback)
+    else:
+        enriched["vwap"] = enriched["vwap"].fillna(enriched["close"])
+    if "is_closed" not in enriched.columns:
+        enriched["is_closed"] = True
+    return enriched
+
+
 def normalize_dataset(kind: DatasetKind, frame: pd.DataFrame) -> pd.DataFrame:
     if frame.empty:
         return frame.copy()
@@ -69,6 +90,9 @@ def normalize_dataset(kind: DatasetKind, frame: pd.DataFrame) -> pd.DataFrame:
         "bid",
         "ask",
         "price",
+        "quote_volume",
+        "trade_count",
+        "vwap",
         "size",
         "filled_quantity",
         "notional",
@@ -76,6 +100,8 @@ def normalize_dataset(kind: DatasetKind, frame: pd.DataFrame) -> pd.DataFrame:
     }
     for column in numeric_candidates.intersection(normalized.columns):
         normalized[column] = pd.to_numeric(normalized[column], errors="coerce")
+    if kind == DatasetKind.OHLCV:
+        normalized = _ensure_ohlcv_columns(normalized)
 
     subset = [column for column in ("ts", "exchange", "symbol", "market_type", "timeframe") if column in normalized.columns]
     if subset:
@@ -83,4 +109,6 @@ def normalize_dataset(kind: DatasetKind, frame: pd.DataFrame) -> pd.DataFrame:
     if "ts" in normalized.columns:
         sort_by = [column for column in ("exchange", "symbol", "ts") if column in normalized.columns]
         normalized = normalized.sort_values(sort_by).reset_index(drop=True)
+    if "is_closed" in normalized.columns:
+        normalized["is_closed"] = normalized["is_closed"].astype(bool)
     return _sort_columns(kind, normalized)

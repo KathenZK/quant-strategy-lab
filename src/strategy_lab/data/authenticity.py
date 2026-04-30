@@ -20,13 +20,16 @@ DEFAULT_BLOCKED_SOURCE_PATTERNS = (
 )
 
 DEFAULT_REAL_SOURCE_ALLOWLIST = (
+    "binance_api",
     "binance_ccxt",
     "binance_funding_daily",
+    "binance_kline_api",
     "binance_mark_index",
     "binance_premium_index",
     "binance_rest",
     "binance_vision",
     "ccxt",
+    "gateio_contract_stats",
     "okx_ccxt",
     "okx_ccxt_daily",
     "okx_mark_index",

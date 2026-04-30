@@ -85,6 +85,9 @@ class SpotCtaTrendSignalModel:
             raise ValueError(f"missing factors for spot CTA trend strategy: {missing}")
 
         breakout = factors[self.config.breakout_factor]
+        # Donchian factors use NaN to mean "no fresh breakout". For this
+        # cross-sectional CTA model that is a neutral signal, not missing data.
+        breakout_signal = breakout.fillna(0.0)
         primary_momentum = factors[self.config.primary_momentum_factor].reindex_like(breakout)
         confirmation_momentum = factors[self.config.confirmation_momentum_factor].reindex_like(breakout)
         trend = factors[self.config.trend_factor].reindex_like(breakout)
@@ -92,7 +95,7 @@ class SpotCtaTrendSignalModel:
         rsi = factors[self.config.rsi_factor].reindex_like(breakout)
 
         score = (
-            self.config.breakout_weight * cross_section_zscore(breakout.fillna(0.0))
+            self.config.breakout_weight * cross_section_zscore(breakout_signal)
             + self.config.primary_momentum_weight * cross_section_zscore(primary_momentum)
             + self.config.confirmation_momentum_weight * cross_section_zscore(confirmation_momentum)
             + self.config.trend_weight * cross_section_zscore(trend)
@@ -101,7 +104,7 @@ class SpotCtaTrendSignalModel:
         )
 
         eligible = (
-            breakout.ge(self.config.min_breakout_signal)
+            breakout_signal.ge(self.config.min_breakout_signal)
             & primary_momentum.ge(self.config.min_primary_momentum)
             & confirmation_momentum.ge(self.config.min_confirmation_momentum)
             & trend.ge(self.config.min_trend_distance)
@@ -125,8 +128,7 @@ class SpotCtaTrendSignalModel:
                 eligible &= volatility.le(self.config.max_atr_pct)
 
         valid = (
-            breakout.notna()
-            & primary_momentum.notna()
+            primary_momentum.notna()
             & confirmation_momentum.notna()
             & trend.notna()
             & volume_surge.notna()

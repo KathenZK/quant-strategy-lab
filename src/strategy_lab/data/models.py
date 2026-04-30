@@ -97,7 +97,22 @@ def dataset_specs() -> dict[DatasetKind, DatasetSpec]:
     return {
         DatasetKind.OHLCV: DatasetSpec(
             kind=DatasetKind.OHLCV,
-            required_columns=("ts", "exchange", "symbol", "market_type", "open", "high", "low", "close", "volume", "source"),
+            required_columns=(
+                "ts",
+                "exchange",
+                "symbol",
+                "market_type",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "quote_volume",
+                "trade_count",
+                "vwap",
+                "is_closed",
+                "source",
+            ),
             partition_columns=("exchange", "market_type", "symbol", "timeframe", "date"),
         ),
         DatasetKind.FUNDING_RATES: DatasetSpec(

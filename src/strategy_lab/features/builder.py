@@ -52,7 +52,8 @@ class FeatureBuilder:
             if column in enriched.columns:
                 enriched[column] = enriched[column].ffill()
 
-        enriched["vwap"] = (enriched["high"] + enriched["low"] + enriched["close"]) / 3.0
+        if "vwap" not in enriched.columns:
+            enriched["vwap"] = (enriched["high"] + enriched["low"] + enriched["close"]) / 3.0
         if benchmark_symbol:
             benchmark = self.warehouse.merged_market_frame(
                 exchange=exchange,

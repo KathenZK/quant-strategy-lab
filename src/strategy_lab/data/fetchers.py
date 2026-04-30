@@ -52,6 +52,15 @@ def _binance_pair(symbol: str) -> str:
     return f"{base_asset}{quote_asset}"
 
 
+def _market_id(exchange: Any, symbol: str) -> str:
+    try:
+        if getattr(exchange, "markets", None) is None:
+            exchange.load_markets()
+        return str(exchange.market(symbol)["id"])
+    except Exception:
+        return _binance_pair(symbol)
+
+
 def _to_seconds(value: datetime | None) -> int | None:
     if value is None:
         return None
@@ -129,6 +138,14 @@ class CCXTDataClient:
         limit: int = 1000,
     ) -> pd.DataFrame:
         exchange = self._get_exchange()
+        if self.exchange_name == "binance" and self.market_type == MarketType.SPOT and hasattr(exchange, "publicGetKlines"):
+            return self._fetch_binance_spot_ohlcv(
+                exchange=exchange,
+                symbol=symbol,
+                timeframe=timeframe,
+                since=since,
+                limit=limit,
+            )
         since_ms = _to_millis(since)
         if since_ms is None:
             raw = exchange.fetch_ohlcv(symbol, timeframe=timeframe, since=None, limit=limit)
@@ -151,29 +168,7 @@ class CCXTDataClient:
                 next_since = candidate_since
         frame = pd.DataFrame(raw, columns=["ts", "open", "high", "low", "close", "volume"])
         if frame.empty:
-            base_asset, quote_asset = _split_symbol(symbol)
-            frame["exchange"] = self.exchange_name
-            frame["symbol"] = symbol.upper()
-            frame["market_type"] = self.market_type.value
-            frame["base_asset"] = base_asset
-            frame["quote_asset"] = quote_asset
-            frame["source"] = "ccxt"
-            return frame[
-                [
-                    "ts",
-                    "exchange",
-                    "symbol",
-                    "market_type",
-                    "base_asset",
-                    "quote_asset",
-                    "open",
-                    "high",
-                    "low",
-                    "close",
-                    "volume",
-                    "source",
-                ]
-            ]
+            return self._empty_ohlcv_frame(symbol=symbol)
         frame["ts"] = pd.to_datetime(frame["ts"], unit="ms", utc=True)
         frame = frame.drop_duplicates(subset=["ts"]).sort_values("ts").reset_index(drop=True)
         base_asset, quote_asset = _split_symbol(symbol)
@@ -182,6 +177,10 @@ class CCXTDataClient:
         frame["market_type"] = self.market_type.value
         frame["base_asset"] = base_asset
         frame["quote_asset"] = quote_asset
+        frame["quote_volume"] = frame["close"].astype(float) * frame["volume"].astype(float)
+        frame["trade_count"] = 0
+        frame["vwap"] = frame["quote_volume"] / frame["volume"].replace(0.0, pd.NA)
+        frame["is_closed"] = True
         frame["source"] = "ccxt"
         ordered_columns = [
             "ts",
@@ -195,9 +194,129 @@ class CCXTDataClient:
             "low",
             "close",
             "volume",
+            "quote_volume",
+            "trade_count",
+            "vwap",
+            "is_closed",
             "source",
         ]
         return frame[ordered_columns]
+
+    def _empty_ohlcv_frame(self, *, symbol: str) -> pd.DataFrame:
+        base_asset, quote_asset = _split_symbol(symbol)
+        columns = [
+            "ts",
+            "exchange",
+            "symbol",
+            "market_type",
+            "base_asset",
+            "quote_asset",
+            "open",
+            "high",
+            "low",
+            "close",
+            "volume",
+            "quote_volume",
+            "trade_count",
+            "vwap",
+            "is_closed",
+            "source",
+        ]
+        frame = pd.DataFrame(columns=columns)
+        frame["exchange"] = self.exchange_name
+        frame["symbol"] = symbol.upper()
+        frame["market_type"] = self.market_type.value
+        frame["base_asset"] = base_asset
+        frame["quote_asset"] = quote_asset
+        frame["source"] = "ccxt"
+        return frame[columns]
+
+    def _fetch_binance_spot_ohlcv(
+        self,
+        *,
+        exchange: Any,
+        symbol: str,
+        timeframe: str,
+        since: datetime | None,
+        limit: int,
+    ) -> pd.DataFrame:
+        request_symbol = _market_id(exchange, symbol)
+        since_ms = _to_millis(since)
+        raw: list[list[Any]] = []
+        step_ms = _timeframe_millis(timeframe)
+        next_since = since_ms
+        remaining = limit
+        while remaining > 0:
+            batch_limit = min(1000, remaining)
+            params: dict[str, Any] = {
+                "symbol": request_symbol,
+                "interval": timeframe,
+                "limit": batch_limit,
+            }
+            if next_since is not None:
+                params["startTime"] = next_since
+            batch = exchange.publicGetKlines(params)
+            if not batch:
+                break
+            raw.extend(batch)
+            remaining -= len(batch)
+            last_ts = int(batch[-1][0])
+            candidate_since = last_ts + step_ms
+            if next_since is None:
+                break
+            if candidate_since <= next_since:
+                break
+            next_since = candidate_since
+
+        if not raw:
+            return self._empty_ohlcv_frame(symbol=symbol)
+
+        rows = []
+        base_asset, quote_asset = _split_symbol(symbol)
+        for item in raw:
+            volume = float(item[5])
+            quote_volume = float(item[7])
+            rows.append(
+                {
+                    "ts": pd.to_datetime(int(item[0]), unit="ms", utc=True),
+                    "exchange": self.exchange_name,
+                    "symbol": symbol.upper(),
+                    "market_type": self.market_type.value,
+                    "base_asset": base_asset,
+                    "quote_asset": quote_asset,
+                    "open": float(item[1]),
+                    "high": float(item[2]),
+                    "low": float(item[3]),
+                    "close": float(item[4]),
+                    "volume": volume,
+                    "quote_volume": quote_volume,
+                    "trade_count": int(item[8]),
+                    "vwap": quote_volume / volume if volume else float(item[4]),
+                    "is_closed": True,
+                    "source": "binance_kline_api",
+                }
+            )
+        frame = pd.DataFrame(rows).drop_duplicates(subset=["ts"]).sort_values("ts").reset_index(drop=True)
+        return frame[
+            [
+                "ts",
+                "exchange",
+                "symbol",
+                "market_type",
+                "base_asset",
+                "quote_asset",
+                "open",
+                "high",
+                "low",
+                "close",
+                "volume",
+                "quote_volume",
+                "trade_count",
+                "vwap",
+                "is_closed",
+                "source",
+            ]
+        ]
 
     def fetch_funding_rates(
         self,

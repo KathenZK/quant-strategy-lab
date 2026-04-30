@@ -314,6 +314,47 @@ def test_drop_incomplete_ohlcv_removes_current_open_bar() -> None:
     assert closed["ts"].tolist() == [pd.Timestamp("2024-01-01T00:00:00Z")]
 
 
+def test_refresh_ohlcv_writes_each_ts_date_to_its_own_partition(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+
+    class FakeClient:
+        def fetch_ohlcv(self, *, symbol: str, timeframe: str = "1h", since=None, limit: int = 1000):
+            return pd.DataFrame(
+                {
+                    "ts": pd.to_datetime(["2024-01-01T23:00:00Z", "2024-01-02T00:00:00Z"], utc=True),
+                    "exchange": ["binance", "binance"],
+                    "symbol": [symbol, symbol],
+                    "market_type": ["spot", "spot"],
+                    "base_asset": ["BTC", "BTC"],
+                    "quote_asset": ["USDT", "USDT"],
+                    "open": [1.0, 2.0],
+                    "high": [1.1, 2.1],
+                    "low": [0.9, 1.9],
+                    "close": [1.0, 2.0],
+                    "volume": [100.0, 100.0],
+                    "quote_volume": [100.0, 200.0],
+                    "trade_count": [10, 20],
+                    "vwap": [1.0, 2.0],
+                    "is_closed": [True, True],
+                    "source": ["binance_kline_api", "binance_kline_api"],
+                }
+            )
+
+    result = DataIngestionService(layout).refresh_ohlcv(
+        exchange="binance",
+        symbol="BTC/USDT",
+        market_type=MarketType.SPOT,
+        timeframe="1h",
+        client=FakeClient(),
+    )
+
+    assert result["rows"] == 2
+    assert len(result["normalized_paths"]) == 2
+    assert any("date=2024-01-01" in path for path in result["normalized_paths"])
+    assert any("date=2024-01-02" in path for path in result["normalized_paths"])
+
+
 def test_fetch_ohlcv_paginates_from_since() -> None:
     start_ms = 1_704_067_200_000
     hour_ms = 60 * 60 * 1000
@@ -344,6 +385,56 @@ def test_fetch_ohlcv_paginates_from_since() -> None:
     assert len(frame) == 5
     assert frame["close"].tolist() == [1.0, 2.0, 3.0, 4.0, 5.0]
     assert [call[2] for call in fake_exchange.calls] == [start_ms, start_ms + 2 * hour_ms, start_ms + 4 * hour_ms]
+
+
+def test_fetch_binance_spot_ohlcv_uses_raw_kline_quality_fields() -> None:
+    start_ms = 1_704_067_200_000
+    hour_ms = 60 * 60 * 1000
+
+    class FakeExchange:
+        def __init__(self) -> None:
+            self.calls = []
+            self.rows = [
+                [
+                    start_ms + hour_ms * i,
+                    str(1.0 + i),
+                    str(1.1 + i),
+                    str(0.9 + i),
+                    str(1.0 + i),
+                    "100",
+                    start_ms + hour_ms * (i + 1) - 1,
+                    str(100.0 * (1.0 + i)),
+                    10 + i,
+                    "50",
+                    str(50.0 * (1.0 + i)),
+                    "0",
+                ]
+                for i in range(3)
+            ]
+
+        def publicGetKlines(self, params):
+            self.calls.append(params)
+            rows = [row for row in self.rows if "startTime" not in params or row[0] >= params["startTime"]]
+            return rows[: min(params["limit"], 2)]
+
+    fake_exchange = FakeExchange()
+
+    class FakeClient(CCXTDataClient):
+        def _build_exchange(self):
+            return fake_exchange
+
+    frame = FakeClient(exchange_name="binance", market_type=MarketType.SPOT).fetch_ohlcv(
+        symbol="BTC/USDT",
+        timeframe="1h",
+        since=datetime(2024, 1, 1, tzinfo=timezone.utc),
+        limit=3,
+    )
+
+    assert frame["quote_volume"].tolist() == [100.0, 200.0, 300.0]
+    assert frame["trade_count"].tolist() == [10, 11, 12]
+    assert frame["vwap"].tolist() == [1.0, 2.0, 3.0]
+    assert frame["source"].unique().tolist() == ["binance_kline_api"]
+    assert [call.get("startTime") for call in fake_exchange.calls] == [start_ms, start_ms + 2 * hour_ms]
 
 
 def test_fetch_basis_or_premium_merges_basis_and_premium_rows() -> None:

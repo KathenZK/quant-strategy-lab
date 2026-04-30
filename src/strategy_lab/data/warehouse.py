@@ -12,6 +12,10 @@ from strategy_lab.data.liquidations import aggregate_liquidation_events, enrich_
 from strategy_lab.data.models import DatasetKind, MarketType
 
 
+def _symbol_file_stem(symbol: str) -> str:
+    return f"symbol={symbol.replace('/', '_').replace(':', '_').lower()}.parquet"
+
+
 @dataclass(slots=True)
 class DuckDBWarehouse:
     layout: DataLakeLayout
@@ -29,6 +33,30 @@ class DuckDBWarehouse:
         root = self.layout.dataset_root(layer, kind)
         return [str(path) for path in sorted(root.glob("**/*.parquet"))]
 
+    def _filtered_dataset_files(
+        self,
+        *,
+        layer: str,
+        kind: DatasetKind,
+        exchange: str | None = None,
+        market_type: MarketType | None = None,
+        symbol: str | None = None,
+        timeframe: str | None = None,
+    ) -> list[str]:
+        root = self.layout.dataset_root(layer, kind)
+        path = root
+        if exchange:
+            path = path / f"exchange={exchange.lower()}"
+        if market_type:
+            path = path / f"market_type={market_type.value}"
+        if timeframe:
+            path = path / f"timeframe={timeframe.lower()}"
+        if symbol and any((exchange, market_type, timeframe)):
+            files = sorted(path.glob(f"**/{_symbol_file_stem(symbol)}"))
+        else:
+            files = sorted(path.glob("**/*.parquet"))
+        return [str(file_path) for file_path in files]
+
     def load_dataset(
         self,
         *,
@@ -40,7 +68,17 @@ class DuckDBWarehouse:
         timeframe: str | None = None,
         columns: list[str] | None = None,
     ) -> pd.DataFrame:
-        files = self.dataset_files(layer=layer, kind=kind)
+        files = self._filtered_dataset_files(
+            layer=layer,
+            kind=kind,
+            exchange=exchange,
+            market_type=market_type,
+            symbol=symbol,
+            timeframe=timeframe,
+        )
+        if not files and any((exchange, market_type, symbol, timeframe)):
+            # Fall back to scanning the dataset root so pre-canonical legacy files remain readable.
+            files = self.dataset_files(layer=layer, kind=kind)
         if not files:
             return pd.DataFrame(columns=columns or [])
 

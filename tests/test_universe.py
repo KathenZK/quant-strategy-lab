@@ -23,7 +23,7 @@ def test_binance_spot_universe_filters_non_tradeable_markets() -> None:
 
     symbols = candidate_symbols_from_markets(markets)
 
-    assert symbols == ["BTC/USDT", "JUP/USDT"]
+    assert symbols == ["BTC/USDT", "JUP/USDT", "币安人生/USDT"]
 
 
 def test_binance_spot_universe_filters_local_history_and_liquidity() -> None:

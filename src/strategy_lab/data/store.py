@@ -11,6 +11,26 @@ from strategy_lab.data.normalize import normalize_dataset
 from strategy_lab.fs import atomic_write_path
 
 
+def _ensure_ohlcv_columns(frame: pd.DataFrame) -> pd.DataFrame:
+    if "close" not in frame.columns or "volume" not in frame.columns:
+        return frame
+    enriched = frame.copy()
+    if "quote_volume" not in enriched.columns:
+        enriched["quote_volume"] = enriched["close"].astype(float) * enriched["volume"].astype(float)
+    if "trade_count" not in enriched.columns:
+        enriched["trade_count"] = 0
+    if "vwap" not in enriched.columns:
+        enriched["vwap"] = enriched["quote_volume"] / enriched["volume"].replace(0.0, pd.NA)
+        if {"high", "low", "close"}.issubset(enriched.columns):
+            fallback = (enriched["high"].astype(float) + enriched["low"].astype(float) + enriched["close"].astype(float)) / 3.0
+            enriched["vwap"] = enriched["vwap"].fillna(fallback)
+    else:
+        enriched["vwap"] = enriched["vwap"].fillna(enriched["close"])
+    if "is_closed" not in enriched.columns:
+        enriched["is_closed"] = True
+    return enriched
+
+
 def _infer_timeframe(frame: pd.DataFrame, timeframe: str | None) -> str | None:
     if timeframe:
         return timeframe
@@ -40,6 +60,8 @@ def write_dataframe(
     timeframe: str | None = None,
     file_stem: str | None = None,
 ) -> Path:
+    if kind == DatasetKind.OHLCV:
+        frame = _ensure_ohlcv_columns(frame)
     if timeframe:
         frame = frame.copy()
         frame["timeframe"] = timeframe.lower()
