@@ -4,11 +4,11 @@ project:
 
 storage:
   shared: false
-  root_dir: data/binance-spot-1h-local
-  raw_dir: data/binance-spot-1h-local/raw
-  normalized_dir: data/binance-spot-1h-local/normalized
-  features_dir: data/binance-spot-1h-local/features
-  reports_dir: reports/binance-spot-1h-local
+  root_dir: data
+  raw_dir: data/raw
+  normalized_dir: data/normalized
+  features_dir: data/features
+  reports_dir: reports
 
 exchanges:
   - name: binance

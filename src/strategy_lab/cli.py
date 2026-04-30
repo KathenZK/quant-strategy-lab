@@ -110,6 +110,30 @@ def _run_batch_command(mode: BatchRunMode, batch_config: Path, config: Path | No
     typer.echo(f"manifest: {artifacts.manifest_path}")
 
 
+def _with_local_binance_spot_universe(
+    workflow: StrategyWorkflowConfig,
+    *,
+    warehouse: DuckDBWarehouse,
+    min_avg_dollar_volume: float,
+    min_history_bars: int,
+    max_symbols: int,
+) -> StrategyWorkflowConfig:
+    universe_config = BinanceSpotUniverseConfig(
+        min_avg_dollar_volume=min_avg_dollar_volume,
+        min_history_bars=min_history_bars,
+    )
+    symbols = select_binance_spot_universe(
+        warehouse,
+        exchange=workflow.strategy.exchange,
+        config=universe_config,
+    )
+    if max_symbols > 0:
+        symbols = symbols[:max_symbols]
+    if workflow.strategy.benchmark_symbol and workflow.strategy.benchmark_symbol not in symbols:
+        symbols = [workflow.strategy.benchmark_symbol, *symbols]
+    return replace(workflow, strategy=replace(workflow.strategy, symbols=symbols))
+
+
 @app.command()
 def layout(config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path.")) -> None:
     """Print data lake directories."""
@@ -334,20 +358,13 @@ def scan_spot_cta(
     workflow = load_strategy_workflow(workflow_config)
 
     if use_local_universe:
-        universe_config = BinanceSpotUniverseConfig(
+        workflow = _with_local_binance_spot_universe(
+            workflow,
+            warehouse=warehouse,
             min_avg_dollar_volume=min_avg_dollar_volume,
             min_history_bars=min_history_bars,
+            max_symbols=max_symbols,
         )
-        symbols = select_binance_spot_universe(
-            warehouse,
-            exchange=workflow.strategy.exchange,
-            config=universe_config,
-        )
-        if max_symbols > 0:
-            symbols = symbols[:max_symbols]
-        if workflow.strategy.benchmark_symbol and workflow.strategy.benchmark_symbol not in symbols:
-            symbols = [workflow.strategy.benchmark_symbol, *symbols]
-        workflow = replace(workflow, strategy=replace(workflow.strategy, symbols=symbols))
 
     prepared = StrategyRunner(layout=builder.store.layout, builder=builder).workflow_service.prepare(workflow)
     if prepared.target_weights is None:
@@ -597,11 +614,23 @@ def paper_trade(
 @app.command()
 def run_strategy(
     workflow_config: Path = typer.Option(..., "--workflow-config", help="Path to a strategy workflow YAML."),
+    use_local_universe: bool = typer.Option(False, "--use-local-universe", help="Use locally available Binance spot OHLCV symbols instead of config symbols."),
+    min_avg_dollar_volume: float = typer.Option(1_000_000.0, "--min-avg-dollar-volume"),
+    min_history_bars: int = typer.Option(120, "--min-history-bars", min=1),
+    max_symbols: int = typer.Option(0, "--max-symbols", help="0 means no cap."),
     config: Path | None = typer.Option(None, "--config", "-c"),
 ) -> None:
     """Run the full configured workflow and persist artifacts."""
-    lake, _, builder = _runtime(config)
+    lake, warehouse, builder = _runtime(config)
     workflow = load_strategy_workflow(workflow_config)
+    if use_local_universe:
+        workflow = _with_local_binance_spot_universe(
+            workflow,
+            warehouse=warehouse,
+            min_avg_dollar_volume=min_avg_dollar_volume,
+            min_history_bars=min_history_bars,
+            max_symbols=max_symbols,
+        )
     artifacts = StrategyRunner(layout=lake, builder=builder).run(workflow)
     typer.echo(f"run_id: {artifacts.run_id}")
     if artifacts.factor_report_path:

@@ -80,6 +80,7 @@ pip install -e ".[dev]"
 
 ## 保留文档
 
+- `docs/strategy-lab-data-lake-conventions.md`：策略实验室共享数据湖、报告和前端展示约定
 - `docs/trend-confirmation-mvp.md`：趋势确认策略说明
 - `docs/crowding-reversal-mvp.md`：拥挤度反转策略说明
 - `docs/strategy-comparison-framework.md`：策略对比框架说明
