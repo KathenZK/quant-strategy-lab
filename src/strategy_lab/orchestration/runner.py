@@ -47,28 +47,45 @@ class StrategyRunner:
         self.state_store = IncrementalStateStore(self.layout.root_dir)
         self.workflow_service = WorkflowService(self.builder)
 
-    def _resolve_since(self, config: StrategyWorkflowConfig, *, dataset: DatasetKind, symbol: str) -> datetime | None:
+    def _resolve_since(
+        self,
+        config: StrategyWorkflowConfig,
+        *,
+        dataset: DatasetKind,
+        symbol: str,
+        timeframe: str | None = None,
+    ) -> datetime | None:
         explicit = config.refresh.since
         if explicit:
             return datetime.fromisoformat(explicit.replace("Z", "+00:00"))
         if not config.refresh.incremental:
             return None
+        timeframe = config.refresh.timeframe if timeframe is None else timeframe
         return self.state_store.resolve_since(
             dataset=dataset,
             exchange=config.strategy.exchange,
             symbol=symbol,
             market_type=config.strategy.market_type,
-            timeframe=config.refresh.timeframe,
+            timeframe=timeframe,
             overlap_bars=config.refresh.overlap_bars,
         )
 
-    def _record_refresh(self, *, config: StrategyWorkflowConfig, dataset: DatasetKind, symbol: str, result: dict[str, object]) -> None:
+    def _record_refresh(
+        self,
+        *,
+        config: StrategyWorkflowConfig,
+        dataset: DatasetKind,
+        symbol: str,
+        result: dict[str, object],
+        timeframe: str | None = None,
+    ) -> None:
+        timeframe = config.refresh.timeframe if timeframe is None else timeframe
         self.state_store.update_checkpoint(
             dataset=dataset,
             exchange=config.strategy.exchange,
             symbol=symbol,
             market_type=config.strategy.market_type,
-            timeframe=config.refresh.timeframe,
+            timeframe=timeframe,
             last_ts=result["last_ts"],
             rows=int(result["rows"]),
             raw_path=str(result["raw"]),
@@ -76,6 +93,7 @@ class StrategyRunner:
         )
 
     def refresh_data(self, config: StrategyWorkflowConfig) -> dict[str, dict[str, dict[str, object]]]:
+        config = self.workflow_service.with_resolved_symbols(config)
         artifacts: dict[str, dict[str, dict[str, object]]] = {}
         if not config.refresh.enabled:
             return artifacts
@@ -120,7 +138,7 @@ class StrategyRunner:
                     exchange=config.strategy.exchange,
                     symbol=symbol,
                     timeframe="4h",
-                    since=self._resolve_since(config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol),
+                    since=self._resolve_since(config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol, timeframe="4h"),
                     limit=1000,
                 )
                 symbol_artifacts["funding_rates"] = funding
@@ -131,12 +149,13 @@ class StrategyRunner:
                 self._record_refresh(config=config, dataset=DatasetKind.OPEN_INTEREST, symbol=symbol, result=open_interest)
                 self._record_refresh(config=config, dataset=DatasetKind.BASIS, symbol=symbol, result=basis)
                 if liquidations.get("rows"):
-                    self._record_refresh(config=config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol, result=liquidations)
+                    self._record_refresh(config=config, dataset=DatasetKind.LIQUIDATIONS, symbol=symbol, result=liquidations, timeframe="4h")
 
             artifacts[symbol] = symbol_artifacts
         return artifacts
 
     def build_features(self, config: StrategyWorkflowConfig) -> dict[str, dict[str, dict[str, str]]]:
+        config = self.workflow_service.with_resolved_symbols(config)
         artifacts: dict[str, dict[str, dict[str, str]]] = {}
         factor_names = self.workflow_service.required_factor_names(config)
         for symbol in config.strategy.symbols:
@@ -144,6 +163,7 @@ class StrategyRunner:
                 exchange=config.strategy.exchange,
                 symbol=symbol,
                 market_type=config.strategy.market_type,
+                timeframe=config.refresh.timeframe,
                 benchmark_symbol=config.strategy.benchmark_symbol,
                 factor_names=factor_names,
             )
@@ -154,11 +174,13 @@ class StrategyRunner:
                 exchange=config.strategy.exchange,
                 symbol=symbol,
                 market_type=config.strategy.market_type,
+                timeframe=config.refresh.timeframe,
                 benchmark_symbol=config.strategy.benchmark_symbol,
             )
         return artifacts
 
     def run(self, config: StrategyWorkflowConfig) -> StrategyRunArtifacts:
+        config = self.workflow_service.with_resolved_symbols(config)
         run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         refresh_artifacts = self.refresh_data(config)
         feature_artifacts = self.build_features(config)

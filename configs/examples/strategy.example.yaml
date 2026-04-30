@@ -3,11 +3,11 @@ strategy:
   strategy_type: trend_confirmation
   exchange: binance
   market_type: perp
-  symbols:
-    - BTC/USDT:USDT
-    - ETH/USDT:USDT
-    - SOL/USDT:USDT
   strategy_params:
+    symbols:
+      - BTC/USDT:USDT
+      - ETH/USDT:USDT
+      - SOL/USDT:USDT
     max_long_positions: 2
     max_short_positions: 2
     max_abs_funding_zscore: 2.5

@@ -11,6 +11,35 @@ def _project_root() -> Path:
     return Path(__file__).resolve().parents[3]
 
 
+def _coerce_bool(value: Any, *, default: bool) -> bool:
+    if value is None:
+        return default
+    if isinstance(value, bool):
+        return value
+    if isinstance(value, str):
+        return value.strip().lower() not in {"0", "false", "no", "off"}
+    return bool(value)
+
+
+def _looks_like_profile_storage(value: object) -> bool:
+    if value is None:
+        return False
+    path = Path(value)
+    if path.is_absolute():
+        return False
+    return len(path.parts) >= 2 and path.parts[0] in {"data", "reports"}
+
+
+def _uses_shared_storage(storage: dict[str, Any]) -> bool:
+    explicit = storage.get("shared", storage.get("shared_storage"))
+    if explicit is not None:
+        return _coerce_bool(explicit, default=True)
+    return any(
+        _looks_like_profile_storage(storage.get(key))
+        for key in ("root_dir", "raw_dir", "normalized_dir", "features_dir", "reports_dir", "registry_db_path")
+    )
+
+
 @dataclass(slots=True)
 class StorageConfig:
     root_dir: Path
@@ -87,12 +116,21 @@ def load_settings(path: str | Path | None = None) -> AppSettings:
     storage = payload.get("storage", {})
     exchanges = payload.get("exchanges", [])
     research = payload.get("research", {})
-    root_dir = Path(storage.get("root_dir", defaults.storage.root_dir))
-    raw_dir = Path(storage.get("raw_dir", defaults.storage.raw_dir))
-    normalized_dir = Path(storage.get("normalized_dir", defaults.storage.normalized_dir))
-    features_dir = Path(storage.get("features_dir", defaults.storage.features_dir))
-    reports_dir = Path(storage.get("reports_dir", defaults.storage.reports_dir))
-    registry_db_default = reports_dir / "_registry" / "runs.sqlite"
+    if _uses_shared_storage(storage):
+        root_dir = defaults.storage.root_dir
+        raw_dir = defaults.storage.raw_dir
+        normalized_dir = defaults.storage.normalized_dir
+        features_dir = defaults.storage.features_dir
+        reports_dir = defaults.storage.reports_dir
+        registry_db_path = defaults.storage.registry_db_path
+    else:
+        root_dir = Path(storage.get("root_dir", defaults.storage.root_dir))
+        raw_dir = Path(storage.get("raw_dir", defaults.storage.raw_dir))
+        normalized_dir = Path(storage.get("normalized_dir", defaults.storage.normalized_dir))
+        features_dir = Path(storage.get("features_dir", defaults.storage.features_dir))
+        reports_dir = Path(storage.get("reports_dir", defaults.storage.reports_dir))
+        registry_db_default = reports_dir / "_registry" / "runs.sqlite"
+        registry_db_path = Path(storage.get("registry_db_path", registry_db_default))
 
     return AppSettings(
         name=project.get("name", defaults.name),
@@ -103,7 +141,7 @@ def load_settings(path: str | Path | None = None) -> AppSettings:
             normalized_dir=normalized_dir,
             features_dir=features_dir,
             reports_dir=reports_dir,
-            registry_db_path=Path(storage.get("registry_db_path", registry_db_default)),
+            registry_db_path=registry_db_path,
         ),
         exchanges=[
             ExchangeConfig(

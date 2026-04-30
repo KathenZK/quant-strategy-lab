@@ -80,6 +80,108 @@ def test_warehouse_loads_written_dataset(tmp_path: Path) -> None:
     assert loaded["close"].iloc[-1] == 3.0
 
 
+def test_warehouse_keeps_ohlcv_timeframes_separate(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+    index = pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC")
+    base = pd.DataFrame(
+        {
+            "ts": index,
+            "exchange": ["binance"] * 2,
+            "symbol": ["BTC/USDT"] * 2,
+            "market_type": ["spot"] * 2,
+            "open": [1.0, 2.0],
+            "high": [1.1, 2.1],
+            "low": [0.9, 1.9],
+            "close": [1.0, 2.0],
+            "volume": [100.0, 100.0],
+            "source": ["test"] * 2,
+        }
+    )
+    daily = base.assign(close=[10.0, 20.0])
+    write_dataframe(
+        base,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        partition_date=base["ts"].max().date(),
+        timeframe="1h",
+    )
+    write_dataframe(
+        daily,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        partition_date=daily["ts"].max().date(),
+        timeframe="1d",
+    )
+
+    hourly_loaded = DuckDBWarehouse(layout).load_dataset(
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        timeframe="1h",
+    )
+    daily_loaded = DuckDBWarehouse(layout).load_dataset(
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        timeframe="1d",
+    )
+
+    assert hourly_loaded["close"].tolist() == [1.0, 2.0]
+    assert daily_loaded["close"].tolist() == [10.0, 20.0]
+    assert "timeframe=1h" in str(layout.dataset_path(
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        timeframe="1h",
+        partition_date=base["ts"].max().date(),
+    ))
+
+
+def test_feature_store_paths_include_data_identity(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    store = FeatureStore(layout)
+    frame = pd.DataFrame(
+        {
+            "ts": pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC"),
+            "exchange": ["binance"] * 2,
+            "symbol": ["BTC/USDT"] * 2,
+            "market_type": ["spot"] * 2,
+            "timeframe": ["1h"] * 2,
+            "ret_1": [0.0, 0.01],
+        }
+    )
+
+    path = store.write_factor_frame(
+        "ret_1",
+        frame,
+        exchange="binance",
+        market_type="spot",
+        symbol="BTC/USDT",
+        timeframe="1h",
+        factor_version="v1",
+    )
+
+    assert "version=v1" in str(path)
+    assert "exchange=binance" in str(path)
+    assert "symbol=btc_usdt" in str(path)
+    assert "timeframe=1h" in str(path)
+
+
 def test_drop_incomplete_ohlcv_removes_current_open_bar() -> None:
     frame = pd.DataFrame(
         {

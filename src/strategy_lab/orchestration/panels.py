@@ -34,6 +34,7 @@ def load_multi_factor_panels(
     market_type: MarketType,
     factor_names: list[str],
     benchmark_symbol: str | None,
+    timeframe: str | None = None,
 ) -> MultiFactorUniversePanels:
     factor_series: dict[str, dict[str, pd.Series]] = {name: {} for name in factor_names}
     price_series: dict[str, pd.Series] = {}
@@ -51,6 +52,7 @@ def load_multi_factor_panels(
             exchange=exchange,
             symbol=symbol,
             market_type=market_type,
+            timeframe=timeframe,
             benchmark_symbol=benchmark_symbol,
         )
         if market.empty:
@@ -60,6 +62,7 @@ def load_multi_factor_panels(
             exchange=exchange,
             symbol=symbol,
             market_type=market_type,
+            timeframe=timeframe,
             benchmark_symbol=benchmark_symbol,
             factor_names=factor_names,
         )
@@ -77,6 +80,7 @@ def load_multi_factor_panels(
             exchange=exchange,
             symbol=symbol,
             market_type=market_type,
+            timeframe=timeframe,
         )
         if not liquidation.empty:
             liq_index = pd.to_datetime(liquidation["ts"], utc=True)
@@ -132,12 +136,14 @@ def load_universe_panels(
     market_type: MarketType,
     factor_name: str,
     benchmark_symbol: str | None,
+    timeframe: str | None = None,
 ) -> UniversePanels:
     multi = load_multi_factor_panels(
         builder=builder,
         exchange=exchange,
         symbols=symbols,
         market_type=market_type,
+        timeframe=timeframe,
         factor_names=[factor_name],
         benchmark_symbol=benchmark_symbol,
     )

@@ -32,7 +32,7 @@ def compute_factor_frame(
     else:
         working[factor.metadata.name] = factor.compute(working)
 
-    columns = [column for column in ("ts", "exchange", "symbol", "market_type") if column in working.columns]
+    columns = [column for column in ("ts", "exchange", "symbol", "market_type", "timeframe") if column in working.columns]
     columns.append(factor.metadata.name)
     return working[columns]
 
@@ -46,7 +46,7 @@ def compute_factor_bundle(
     time_column: str = "ts",
 ) -> pd.DataFrame:
     names = factor_names or registry.names()
-    base_columns = [column for column in ("ts", "exchange", "symbol", "market_type") if column in frame.columns]
+    base_columns = [column for column in ("ts", "exchange", "symbol", "market_type", "timeframe") if column in frame.columns]
     bundle = frame[base_columns].copy()
 
     for name in names:

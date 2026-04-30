@@ -8,6 +8,7 @@ import pandas as pd
 
 from strategy_lab.allocators import DonchianBreakoutAllocator, DonchianBreakoutAllocatorConfig
 from strategy_lab.signals import DonchianBreakoutSignalConfig, DonchianBreakoutSignalModel
+from strategy_lab.strategies.common import resolve_configured_symbols
 from strategy_lab.strategies.registry import register_strategy
 
 
@@ -29,6 +30,7 @@ class DonchianBreakoutConfig:
     while the Donchian breakout remains the entry and add-on trigger.
     """
 
+    symbols: tuple[str, ...] = ()
     breakout_factor: str = "donchian_breakout_14"
     long_allocation: float = 1.0
     short_allocation: float = 1.0
@@ -108,6 +110,13 @@ class DonchianBreakoutStrategy:
 
     def required_liquidation_features(self) -> list[str]:
         return self.allocator.required_risk_features()
+
+    def default_symbols(self, *, exchange: str, market_type) -> list[str]:
+        return resolve_configured_symbols(
+            self.config.symbols,
+            market_type=market_type,
+            default_bases=("BTC",),
+        )
 
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
         return self.signal_model.build_signal_frame(factors)

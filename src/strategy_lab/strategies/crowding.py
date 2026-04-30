@@ -8,11 +8,13 @@ import pandas as pd
 
 from strategy_lab.allocators import RankedCrossSectionalAllocator, RankedCrossSectionalAllocatorConfig
 from strategy_lab.signals import CrowdingReversalSignalConfig, CrowdingReversalSignalModel
+from strategy_lab.strategies.common import resolve_configured_symbols
 from strategy_lab.strategies.registry import register_strategy
 
 
 @dataclass(frozen=True, slots=True)
 class CrowdingReversalConfig:
+    symbols: tuple[str, ...] = ()
     long_term_momentum_factor: str = "ret_24"
     short_term_momentum_factor: str = "ret_4"
     funding_zscore_factor: str = "funding_zscore_72"
@@ -122,6 +124,13 @@ class CrowdingReversalStrategy:
 
     def required_liquidation_features(self) -> list[str]:
         return self.allocator.required_risk_features()
+
+    def default_symbols(self, *, exchange: str, market_type) -> list[str]:
+        return resolve_configured_symbols(
+            self.config.symbols,
+            market_type=market_type,
+            default_bases=("BTC", "ETH", "SOL"),
+        )
 
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
         return self.signal_model.build_signal_frame(factors)

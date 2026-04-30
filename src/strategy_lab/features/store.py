@@ -15,17 +15,59 @@ from strategy_lab.fs import atomic_write_path
 class FeatureStore:
     layout: DataLakeLayout
 
-    def feature_root(self, factor_name: str) -> Path:
-        return self.layout.features_dir / f"factor={factor_name}"
+    @staticmethod
+    def _symbol_partition(symbol: str) -> str:
+        return symbol.replace("/", "_").replace(":", "_").lower()
+
+    def feature_root(
+        self,
+        factor_name: str,
+        *,
+        exchange: str | None = None,
+        market_type: str | None = None,
+        symbol: str | None = None,
+        timeframe: str | None = None,
+        factor_version: str | None = None,
+    ) -> Path:
+        path = self.layout.features_dir / f"factor={factor_name}"
+        if factor_version:
+            path = path / f"version={factor_version}"
+        if exchange:
+            path = path / f"exchange={exchange.lower()}"
+        if market_type:
+            path = path / f"market_type={market_type.lower()}"
+        if symbol:
+            path = path / f"symbol={self._symbol_partition(symbol)}"
+        if timeframe:
+            path = path / f"timeframe={timeframe.lower()}"
+        return path
 
     def manifest_root(self, factor_name: str) -> Path:
         return self.layout.features_dir / "_manifests" / f"factor={factor_name}"
 
-    def write_factor_frame(self, factor_name: str, frame: pd.DataFrame, *, file_stem: str = "part-0000") -> Path:
+    def write_factor_frame(
+        self,
+        factor_name: str,
+        frame: pd.DataFrame,
+        *,
+        exchange: str | None = None,
+        market_type: str | None = None,
+        symbol: str | None = None,
+        timeframe: str | None = None,
+        factor_version: str | None = None,
+        file_stem: str = "part-0000",
+    ) -> Path:
         if "ts" not in frame.columns:
             raise ValueError("factor frame must include ts column")
         partition_date = pd.to_datetime(frame["ts"], utc=True).max().date().isoformat()
-        path = self.feature_root(factor_name) / f"date={partition_date}" / f"{file_stem}.parquet"
+        path = self.feature_root(
+            factor_name,
+            exchange=exchange,
+            market_type=market_type,
+            symbol=symbol,
+            timeframe=timeframe,
+            factor_version=factor_version,
+        ) / f"date={partition_date}" / f"{file_stem}.parquet"
         return atomic_write_path(path, lambda temp_path: frame.to_parquet(temp_path, index=False))
 
     def load_factor_frame(self, factor_name: str) -> pd.DataFrame:

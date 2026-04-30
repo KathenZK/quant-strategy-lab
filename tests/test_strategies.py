@@ -1,6 +1,7 @@
 import pandas as pd
 import pytest
 
+from strategy_lab.data import MarketType
 from strategy_lab.strategies import (
     CrowdingReversalConfig,
     CrowdingReversalStrategy,
@@ -572,6 +573,11 @@ def test_create_strategy_uses_registry() -> None:
     assert isinstance(momentum, MomentumRotationStrategy)
     assert isinstance(small_cap, SmallCapMomentumBreakoutStrategy)
     assert isinstance(spot_cta, SpotCtaTrendStrategy)
+
+
+def test_strategy_universe_can_be_configured_inside_strategy_options() -> None:
+    strategy = create_strategy("ma_crossover", {"symbols": ["eth/usdt"]})
+    assert strategy.default_symbols(exchange="binance", market_type=MarketType.SPOT) == ["ETH/USDT"]
 
 
 def test_register_strategy_decorator_supports_new_strategy_types() -> None:

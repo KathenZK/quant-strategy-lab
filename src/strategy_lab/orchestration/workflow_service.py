@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+from dataclasses import dataclass, replace
 from pathlib import Path
 import json
 
@@ -197,7 +197,29 @@ class WorkflowService:
     def __init__(self, builder: FeatureBuilder) -> None:
         self.builder = builder
 
+    def resolve_symbols(self, config: StrategyWorkflowConfig) -> list[str]:
+        if config.strategy.symbols:
+            return config.strategy.symbols
+        if config.strategy.is_factor_strategy:
+            raise ValueError("factor strategy workflows must define strategy.symbols")
+
+        strategy = create_strategy(config.strategy.strategy_type, config.strategy.strategy_params)
+        symbols = strategy.default_symbols(
+            exchange=config.strategy.exchange,
+            market_type=config.strategy.market_type,
+        )
+        if not symbols:
+            raise ValueError(f"strategy {config.strategy.strategy_type} resolved an empty symbol universe")
+        return symbols
+
+    def with_resolved_symbols(self, config: StrategyWorkflowConfig) -> StrategyWorkflowConfig:
+        symbols = self.resolve_symbols(config)
+        if symbols == config.strategy.symbols:
+            return config
+        return replace(config, strategy=replace(config.strategy, symbols=symbols))
+
     def required_factor_names(self, config: StrategyWorkflowConfig) -> list[str] | None:
+        config = self.with_resolved_symbols(config)
         if not config.strategy.is_factor_strategy:
             strategy = create_strategy(config.strategy.strategy_type, config.strategy.strategy_params)
             return strategy.required_factors()
@@ -206,6 +228,7 @@ class WorkflowService:
         return None
 
     def prepare(self, config: StrategyWorkflowConfig) -> PreparedWorkflow:
+        config = self.with_resolved_symbols(config)
         if not config.strategy.is_factor_strategy:
             strategy = create_strategy(config.strategy.strategy_type, config.strategy.strategy_params)
             panels = load_multi_factor_panels(
@@ -215,6 +238,7 @@ class WorkflowService:
                 market_type=config.strategy.market_type,
                 factor_names=strategy.required_factors(),
                 benchmark_symbol=config.strategy.benchmark_symbol,
+                timeframe=config.refresh.timeframe,
             )
             signal_frame = strategy.build_signal_frame(panels.factors)
             target_weights = strategy.build_weights(
@@ -238,6 +262,7 @@ class WorkflowService:
             market_type=config.strategy.market_type,
             factor_name=config.strategy.signal_name,
             benchmark_symbol=config.strategy.benchmark_symbol,
+            timeframe=config.refresh.timeframe,
         )
         return PreparedWorkflow(
             signal_name=config.strategy.signal_name,

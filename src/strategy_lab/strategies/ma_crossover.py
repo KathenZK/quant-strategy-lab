@@ -8,11 +8,13 @@ import pandas as pd
 
 from strategy_lab.allocators import PersistentSignalAllocator, PersistentSignalAllocatorConfig
 from strategy_lab.signals import MovingAverageCrossoverSignalConfig, MovingAverageCrossoverSignalModel
+from strategy_lab.strategies.common import resolve_configured_symbols
 from strategy_lab.strategies.registry import register_strategy
 
 
 @dataclass(frozen=True, slots=True)
 class MovingAverageCrossoverConfig:
+    symbols: tuple[str, ...] = ()
     fast_ma_factor: str = "ma_distance_30"
     slow_ma_factor: str = "ma_distance_120"
     long_allocation: float = 1.0
@@ -86,6 +88,13 @@ class MovingAverageCrossoverStrategy:
 
     def required_liquidation_features(self) -> list[str]:
         return self.allocator.required_risk_features()
+
+    def default_symbols(self, *, exchange: str, market_type) -> list[str]:
+        return resolve_configured_symbols(
+            self.config.symbols,
+            market_type=market_type,
+            default_bases=("BTC",),
+        )
 
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
         return self.signal_model.build_signal_frame(factors)

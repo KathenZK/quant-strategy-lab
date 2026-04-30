@@ -8,11 +8,13 @@ import pandas as pd
 
 from strategy_lab.allocators import SmallCapMomentumBreakoutAllocator, SmallCapMomentumBreakoutAllocatorConfig
 from strategy_lab.signals import SpotCtaTrendSignalConfig, SpotCtaTrendSignalModel
+from strategy_lab.strategies.common import resolve_configured_symbols
 from strategy_lab.strategies.registry import register_strategy
 
 
 @dataclass(frozen=True, slots=True)
 class SpotCtaTrendConfig:
+    symbols: tuple[str, ...] = ()
     breakout_factor: str = "donchian_breakout_20"
     primary_momentum_factor: str = "ret_72"
     confirmation_momentum_factor: str = "ret_24"
@@ -134,6 +136,13 @@ class SpotCtaTrendStrategy:
 
     def required_liquidation_features(self) -> list[str]:
         return self.allocator.required_risk_features()
+
+    def default_symbols(self, *, exchange: str, market_type) -> list[str]:
+        return resolve_configured_symbols(
+            self.config.symbols,
+            market_type=market_type,
+            default_bases=("BTC", "ETH", "SOL"),
+        )
 
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
         return self.signal_model.build_signal_frame(factors)

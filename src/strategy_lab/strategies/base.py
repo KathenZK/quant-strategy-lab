@@ -5,6 +5,7 @@ from typing import Protocol
 import pandas as pd
 
 from strategy_lab.allocators.base import Allocator
+from strategy_lab.data import MarketType
 from strategy_lab.signals.base import SignalModel
 
 
@@ -32,6 +33,9 @@ class Strategy(Protocol):
         ...
 
     def required_liquidation_features(self) -> list[str]:
+        ...
+
+    def default_symbols(self, *, exchange: str, market_type: MarketType) -> list[str]:
         ...
 
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:

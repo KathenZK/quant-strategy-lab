@@ -5,6 +5,7 @@ import pandas as pd
 from strategy_lab.data import DataLakeLayout, DatasetKind, MarketType, write_dataframe
 from strategy_lab.features import FeatureBuilder, FeatureStore
 from strategy_lab.orchestration import IncrementalStateStore, StrategyRunner, load_strategy_workflow
+from strategy_lab.orchestration.workflow_service import WorkflowService
 from strategy_lab.data import DuckDBWarehouse
 from strategy_lab.factors import default_registry
 
@@ -353,6 +354,30 @@ execution:
     assert workflow.execution.starting_cash == 50000
     assert workflow.refresh.incremental is True
     assert workflow.run_backtest is True
+
+
+def test_strategy_workflow_can_resolve_strategy_owned_symbols(tmp_path: Path) -> None:
+    config_path = tmp_path / "strategy-owned-universe.yaml"
+    config_path.write_text(
+        """
+strategy:
+  name: ma_owned_universe
+  strategy_type: ma_crossover
+  exchange: binance
+  market_type: spot
+  strategy_params:
+    symbols: [eth/usdt]
+refresh:
+  enabled: false
+""".strip(),
+        encoding="utf-8",
+    )
+
+    workflow = load_strategy_workflow(config_path)
+    resolved = WorkflowService(builder=None).with_resolved_symbols(workflow)
+
+    assert workflow.strategy.symbols == []
+    assert resolved.strategy.symbols == ["ETH/USDT"]
 
 
 def test_strategy_runner_creates_reports_and_manifests(tmp_path: Path) -> None:

@@ -20,6 +20,12 @@
 - Paper broker、执行会话和风险约束
 - 前端页面覆盖策略实验室、回测记录、新闻事件和数据源
 
+## 架构约定
+
+- 数据默认共享：相对路径的 app profile 配置会收敛到同一套 `data/`、`reports/` 目录。
+- 回测结果统一入库：workflow、experiment、comparison 都写入 `reports/_registry/runs.sqlite`。
+- 策略自己决定 universe：优先使用 `strategy.symbols` 兼容旧配置；未配置时由策略默认 universe 或 `strategy.strategy_params.symbols` 解析。
+
 ## 快速开始
 
 安装 Python 依赖：

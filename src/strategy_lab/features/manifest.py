@@ -23,6 +23,7 @@ class FactorArtifactManifest:
     exchange: str
     symbol: str
     market_type: str
+    timeframe: str | None
     rows: int
     columns: list[str]
     benchmark_symbol: str | None
@@ -42,6 +43,7 @@ class FactorArtifactManifest:
         exchange: str,
         symbol: str,
         market_type: str,
+        timeframe: str | None,
         frame: pd.DataFrame,
         feature_path: Path,
         benchmark_symbol: str | None = None,
@@ -53,6 +55,7 @@ class FactorArtifactManifest:
             "exchange": exchange.lower(),
             "symbol": symbol.upper(),
             "market_type": market_type,
+            "timeframe": timeframe.lower() if timeframe else None,
             "rows": len(frame),
             "columns": frame.columns.tolist(),
             "benchmark_symbol": benchmark_symbol.upper() if benchmark_symbol else None,

@@ -22,9 +22,15 @@ class FeatureBuilder:
         exchange: str,
         symbol: str,
         market_type: MarketType,
+        timeframe: str | None = None,
         benchmark_symbol: str | None = None,
     ) -> pd.DataFrame:
-        frame = self.warehouse.merged_market_frame(exchange=exchange, symbol=symbol, market_type=market_type)
+        frame = self.warehouse.merged_market_frame(
+            exchange=exchange,
+            symbol=symbol,
+            market_type=market_type,
+            timeframe=timeframe,
+        )
         if frame.empty:
             return frame
 
@@ -48,7 +54,12 @@ class FeatureBuilder:
 
         enriched["vwap"] = (enriched["high"] + enriched["low"] + enriched["close"]) / 3.0
         if benchmark_symbol:
-            benchmark = self.warehouse.merged_market_frame(exchange=exchange, symbol=benchmark_symbol, market_type=market_type)
+            benchmark = self.warehouse.merged_market_frame(
+                exchange=exchange,
+                symbol=benchmark_symbol,
+                market_type=market_type,
+                timeframe=timeframe,
+            )
             if not benchmark.empty:
                 enriched = enriched.merge(
                     benchmark[["ts", "close"]].rename(columns={"close": "benchmark_close"}),
@@ -63,6 +74,7 @@ class FeatureBuilder:
         exchange: str,
         symbol: str,
         market_type: MarketType,
+        timeframe: str | None = None,
         benchmark_symbol: str | None = None,
         factor_names: list[str] | None = None,
     ) -> pd.DataFrame:
@@ -70,6 +82,7 @@ class FeatureBuilder:
             exchange=exchange,
             symbol=symbol,
             market_type=market_type,
+            timeframe=timeframe,
             benchmark_symbol=benchmark_symbol,
         )
         if frame.empty:
@@ -91,16 +104,25 @@ class FeatureBuilder:
         exchange: str,
         symbol: str,
         market_type: MarketType,
+        timeframe: str | None = None,
         benchmark_symbol: str | None = None,
     ) -> dict[str, dict[str, str]]:
         saved: dict[str, dict[str, str]] = {}
-        base_columns = ("ts", "exchange", "symbol", "market_type")
+        base_columns = tuple(column for column in ("ts", "exchange", "symbol", "market_type", "timeframe") if column in factor_bundle.columns)
         for column in factor_bundle.columns:
             if column in base_columns:
                 continue
             factor = self.registry.get(column)
             frame = factor_bundle[[*base_columns, column]]
-            path = self.store.write_factor_frame(column, frame)
+            path = self.store.write_factor_frame(
+                column,
+                frame,
+                exchange=exchange,
+                symbol=symbol,
+                market_type=market_type.value,
+                timeframe=timeframe,
+                factor_version=factor.version(),
+            )
             manifest = FactorArtifactManifest.create(
                 factor_name=column,
                 factor_version=factor.version(),
@@ -108,6 +130,7 @@ class FeatureBuilder:
                 exchange=exchange,
                 symbol=symbol,
                 market_type=market_type.value,
+                timeframe=timeframe,
                 frame=frame,
                 feature_path=path,
                 benchmark_symbol=benchmark_symbol,

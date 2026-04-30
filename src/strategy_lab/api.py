@@ -332,7 +332,8 @@ def _read_workflow_template(path: Path, templates_dir: Path) -> dict[str, Any] |
     template_metadata = _STRATEGY_TEMPLATE_METADATA.get(str(strategy_type), {})
     exchange = strategy.get("exchange") or ""
     market_type = strategy.get("market_type") or ""
-    symbols = strategy.get("symbols") or []
+    strategy_params = strategy.get("strategy_params") or {}
+    symbols = strategy.get("symbols") or (strategy_params.get("symbols") if isinstance(strategy_params, dict) else []) or []
     return {
         "id": relative_path,
         "path": f"configs/workflows/strategies/{relative_path}",
@@ -905,6 +906,7 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
             exchange=source,
             market_type=selected_market_type,
             symbol=symbol,
+            timeframe=timeframe,
         )
         if frame.empty:
             bars: list[dict[str, Any]] = []
@@ -950,6 +952,11 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
             workflow_config = load_strategy_workflow_text(workflow_yaml)
         except Exception as exc:
             raise HTTPException(status_code=400, detail=f"invalid workflow_yaml: {exc}") from exc
+        runner = StrategyRunner(layout=layout, builder=builder)
+        try:
+            workflow_config = runner.workflow_service.with_resolved_symbols(workflow_config)
+        except Exception as exc:
+            raise HTTPException(status_code=400, detail=f"invalid strategy universe: {exc}") from exc
 
         job_id = uuid.uuid4().hex[:12]
         created_at = datetime.now(timezone.utc).isoformat()
@@ -982,7 +989,7 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         (lab_jobs_dir / f"{job_id}.json").write_text(json.dumps(job, ensure_ascii=False, indent=2), encoding="utf-8")
 
         try:
-            artifacts = StrategyRunner(layout=layout, builder=builder).run(workflow_config)
+            artifacts = runner.run(workflow_config)
             manifest_payload = _read_json(layout.reports_dir, artifacts.manifest_path, strict=False)
             job.update(
                 {

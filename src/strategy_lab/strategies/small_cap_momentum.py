@@ -14,6 +14,7 @@ from strategy_lab.signals import (
     SmallCapMomentumBreakoutSignalConfig,
     SmallCapMomentumBreakoutSignalModel,
 )
+from strategy_lab.strategies.common import resolve_configured_symbols
 from strategy_lab.strategies.registry import register_strategy
 
 
@@ -26,6 +27,7 @@ class SmallCapMomentumBreakoutConfig:
     limits then remove names with insufficient current dollar volume.
     """
 
+    symbols: tuple[str, ...] = ()
     breakout_factor: str = "donchian_breakout_10"
     fast_momentum_factor: str = "ret_1"
     confirmation_momentum_factor: str = "ret_4"
@@ -132,6 +134,13 @@ class SmallCapMomentumBreakoutStrategy:
 
     def required_liquidation_features(self) -> list[str]:
         return self.allocator.required_risk_features()
+
+    def default_symbols(self, *, exchange: str, market_type) -> list[str]:
+        return resolve_configured_symbols(
+            self.config.symbols,
+            market_type=market_type,
+            default_bases=("DOGE", "PEPE", "FLOKI", "WIF", "BONK"),
+        )
 
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
         return self.signal_model.build_signal_frame(factors)

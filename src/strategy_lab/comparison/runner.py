@@ -21,7 +21,12 @@ class StrategyComparisonRunner:
         if len(config.workflow_configs) < 2:
             raise ValueError("strategy comparison requires at least two workflow configs")
 
-        workflow_configs = [load_strategy_workflow(path) for path in config.workflow_configs]
+        batch_runner = WorkflowBatchRunner(workspace_root=self.workspace_root, app_config_path=self.app_config_path)
+        runtime_runner = batch_runner.create_strategy_runner()
+        workflow_configs = [
+            runtime_runner.workflow_service.with_resolved_symbols(load_strategy_workflow(path))
+            for path in config.workflow_configs
+        ]
         reference = workflow_configs[0]
 
         for current in workflow_configs[1:]:
@@ -34,8 +39,6 @@ class StrategyComparisonRunner:
             if asdict(current.execution) != asdict(reference.execution):
                 raise ValueError("all compared strategies must share the same execution assumptions")
 
-        batch_runner = WorkflowBatchRunner(workspace_root=self.workspace_root, app_config_path=self.app_config_path)
-        runtime_runner = batch_runner.create_strategy_runner()
         source_entries = batch_runner.collect_entries_from_workflows(
             workflow_configs,
             runner=runtime_runner,
