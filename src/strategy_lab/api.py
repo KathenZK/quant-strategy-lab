@@ -52,15 +52,6 @@ _MARKET_SOURCES = [
         "coverage": ["ohlcv", "features", "snapshots", "run_registry"],
         "note": "策略回测默认使用可复现的数据快照。",
     },
-    {
-        "id": "news_events",
-        "name": "News/Event Stream",
-        "type": "intelligence",
-        "status": "planned",
-        "latency_ms": None,
-        "coverage": ["headlines", "entity_tags", "event_windows"],
-        "note": "先做只读聚合和资产标签，后续进入事件因子研究。",
-    },
 ]
 
 _INSTRUMENTS = [
@@ -540,22 +531,6 @@ def _real_market_sources(layout: DataLakeLayout, settings: AppSettings) -> list[
             "note": "从 normalized parquet 和 SQLite run registry 读取真实研究数据。",
         }
     )
-    sources.append(
-        {
-            "id": "news_events",
-            "name": "News/Event Stream",
-            "type": "intelligence",
-            "status": "not_configured",
-            "latency_ms": None,
-            "coverage": [],
-            "file_count": 0,
-            "row_count": 0,
-            "symbol_count": 0,
-            "from": None,
-            "to": None,
-            "note": "未检测到真实新闻/事件数据源，总览页不会展示模拟快讯。",
-        }
-    )
     return sources
 
 
@@ -1030,10 +1005,6 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         if not job:
             raise HTTPException(status_code=404, detail=f"lab job not found: {job_id}")
         return {"job": job}
-
-    @app.get("/api/news/events")
-    def news_events(limit: int = Query(30, ge=1, le=100)) -> dict[str, list[dict[str, Any]]]:
-        return {"events": [], "source_status": "not_configured", "message": "未配置真实新闻/事件数据源。"}
 
     @app.get("/api/runs")
     def runs(

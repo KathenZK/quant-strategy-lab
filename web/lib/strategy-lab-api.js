@@ -16,7 +16,6 @@ export const STRATEGY_LAB_ENDPOINTS = Object.freeze({
   strategyTemplates: "/api/lab/strategy-templates",
   labBacktests: "/api/lab/backtests",
   labJob: (jobId) => `/api/lab/jobs/${encodeURIComponent(jobId)}`,
-  newsEvents: "/api/news/events",
 });
 
 function normalizeSearchParams(searchParams) {
