@@ -8,7 +8,6 @@ from .liquidations import (
     enrich_liquidation_features,
     normalize_binance_force_order_events,
 )
-from .migration import DataLakeMigrationRecord, DataLakeMigrationSummary, DataLakeMigrator
 from .normalize import normalize_dataset
 from .pipeline import DataIngestionService
 from .store import validate_frame, write_dataframe, write_normalized_dataframe
@@ -23,9 +22,6 @@ __all__ = [
     "DataAuthenticitySummary",
     "DataLakeLayout",
     "DataIngestionService",
-    "DataLakeMigrationRecord",
-    "DataLakeMigrationSummary",
-    "DataLakeMigrator",
     "DatasetKind",
     "DuckDBWarehouse",
     "InstrumentId",

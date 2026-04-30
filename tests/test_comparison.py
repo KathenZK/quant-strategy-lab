@@ -2,7 +2,7 @@ from pathlib import Path
 
 from strategy_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
 from strategy_lab.data import DataLakeLayout
-from strategy_lab.scenarios import seed_trend_mvp_data
+from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 
 
 def _write_app_config(tmp_path: Path) -> Path:
@@ -25,17 +25,16 @@ storage:
     return app_config
 
 
-def _write_workflow(path: Path, name: str, strategy_type: str, strategy_params: str) -> Path:
+def _write_workflow(path: Path, name: str, factor_name: str) -> Path:
     path.write_text(
         f"""
 strategy:
   name: {name}
-  strategy_type: {strategy_type}
+  strategy_type: factor
+  factor_name: {factor_name}
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
-  strategy_params:
-{strategy_params}
 refresh:
   enabled: false
 workflow:
@@ -56,20 +55,18 @@ def test_strategy_comparison_runner_generates_report(tmp_path: Path) -> None:
         features_dir=tmp_path / "data" / "features",
         reports_dir=tmp_path / "reports",
     )
-    seed_trend_mvp_data(layout)
+    seed_real_binance_perp_ohlcv_sample(layout)
 
     app_config = _write_app_config(tmp_path)
     trend_workflow = _write_workflow(
         tmp_path / "trend.yaml",
         "trend_cmp",
-        "trend_confirmation",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_1",
     )
     crowding_workflow = _write_workflow(
         tmp_path / "crowding.yaml",
         "crowding_cmp",
-        "crowding_reversal",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_4",
     )
     comparison_config = tmp_path / "comparison.yaml"
     comparison_config.write_text(
@@ -98,14 +95,12 @@ def test_strategy_comparison_loader_supports_shared_batch_config(tmp_path: Path)
     trend_workflow = _write_workflow(
         tmp_path / "trend-batch.yaml",
         "trend_cmp_batch",
-        "trend_confirmation",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_1",
     )
     crowding_workflow = _write_workflow(
         tmp_path / "crowding-batch.yaml",
         "crowding_cmp_batch",
-        "crowding_reversal",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_4",
     )
     config_path = tmp_path / "comparison-shared-batch.yaml"
     config_path.write_text(

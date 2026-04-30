@@ -3,7 +3,7 @@ from pathlib import Path
 from strategy_lab.batches import BatchRunMode
 from strategy_lab.batches.service import load_batch_for_mode, run_workflow_batch
 from strategy_lab.data import DataLakeLayout
-from strategy_lab.scenarios import seed_trend_mvp_data
+from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 
 
 def _write_app_config(tmp_path: Path) -> Path:
@@ -26,17 +26,16 @@ storage:
     return app_config
 
 
-def _write_workflow(path: Path, name: str, strategy_type: str, strategy_params: str) -> Path:
+def _write_workflow(path: Path, name: str, factor_name: str) -> Path:
     path.write_text(
         f"""
 strategy:
   name: {name}
-  strategy_type: {strategy_type}
+  strategy_type: factor
+  factor_name: {factor_name}
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
-  strategy_params:
-{strategy_params}
 refresh:
   enabled: false
 workflow:
@@ -57,20 +56,18 @@ def test_run_workflow_batch_dispatches_experiment_and_comparison(tmp_path: Path)
         features_dir=tmp_path / "data" / "features",
         reports_dir=tmp_path / "reports",
     )
-    seed_trend_mvp_data(layout)
+    seed_real_binance_perp_ohlcv_sample(layout)
 
     app_config = _write_app_config(tmp_path)
     trend_workflow = _write_workflow(
         tmp_path / "trend.yaml",
         "trend_batch_service",
-        "trend_confirmation",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_1",
     )
     crowding_workflow = _write_workflow(
         tmp_path / "crowding.yaml",
         "crowding_batch_service",
-        "crowding_reversal",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_4",
     )
     batch_config_path = tmp_path / "batch.yaml"
     batch_config_path.write_text(

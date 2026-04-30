@@ -18,7 +18,7 @@
 - 信号、allocator、策略 facade 与策略注册
 - 单策略回测、批量实验、策略对比与运行 registry
 - Paper broker、执行会话和风险约束
-- 前端页面覆盖策略实验室、回测记录、新闻事件和数据源
+- 前端页面覆盖策略实验室、回测记录和数据源
 
 ## 架构约定
 
@@ -47,13 +47,7 @@ pip install -e ".[dev]"
 ./.venv/bin/quant-strategy-lab factors
 ```
 
-迁移旧数据湖 profile：
-
-```bash
-./.venv/bin/quant-strategy-lab audit-data-lake
-./.venv/bin/quant-strategy-lab migrate-data-lake --report-path reports/data_lake_migration.dry-run.json
-./.venv/bin/quant-strategy-lab migrate-data-lake --execute --report-path reports/data_lake_migration.json
-```
+旧 profile 数据湖迁移工具已经移除。当前项目只接受 canonical data lake；旧目录应在确认无进程读取后人工归档或删除。
 
 审计并清理非真实数据：
 

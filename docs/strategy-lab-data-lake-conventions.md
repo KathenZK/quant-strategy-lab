@@ -151,7 +151,7 @@ quote_asset = USDT
 
 ## 6. 配置约定
 
-本地 app profile 应指向标准数据湖：
+本地环境配置应指向标准数据湖：
 
 ```yaml
 storage:
@@ -229,7 +229,7 @@ reports/
 
 1. 确认没有同步、扫描或回测进程正在读取。
 2. 保留最新、可信、字段完整的数据。
-3. 删除旧的 strategy/profile 数据目录。
+3. 删除旧的 strategy 或 profile 数据目录。
 4. 确保最终只剩 `data/raw`、`data/normalized`、`data/features`。
 5. 重新跑数据覆盖统计和关键字段检查。
 6. 用至少一个 workflow scanner 验证策略可读取。

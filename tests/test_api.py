@@ -9,7 +9,7 @@ from strategy_lab.api import _jsonable_frame, _load_manifest, create_app
 from strategy_lab.config import load_settings
 from strategy_lab.data import DataLakeLayout
 from strategy_lab.experiments import RunRegistry, RunRegistryEntry
-from strategy_lab.scenarios import seed_trend_mvp_data
+from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 
 
 def _write_run_manifest(
@@ -329,7 +329,7 @@ def test_lab_backtest_job_accepts_full_workflow_yaml(tmp_path: Path) -> None:
     reports_dir = tmp_path / "reports"
     app_config = _write_app_config(tmp_path, reports_dir)
     app = create_app(app_config)
-    seed_trend_mvp_data(DataLakeLayout.from_settings(load_settings(app_config)))
+    seed_real_binance_perp_ohlcv_sample(DataLakeLayout.from_settings(load_settings(app_config)))
     workflow_yaml = """
 strategy:
   name: lab_yaml_probe

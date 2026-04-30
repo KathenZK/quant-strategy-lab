@@ -6,28 +6,42 @@ from .base import (
     list_registered_factor_providers,
     register_factor_provider,
 )
-from .cross_sectional import RelativeStrengthFactor
-from .derivatives import (
-    BasisChangeFactor,
-    BasisFactor,
-    BasisZScoreFactor,
-    FundingRateFactor,
-    FundingRateZScoreFactor,
-    OpenInterestChangeFactor,
-    OpenInterestZScoreFactor,
-    PriceOpenInterestRegimeFactor,
-)
 from .engine import compute_factor_bundle, compute_factor_frame
-from .liquidity import AmihudIlliquidityFactor, VWAPDistanceFactor, VolumeSurgeFactor
-from .mean_reversion import BollingerDistanceFactor, ZScoreFactor
-from .momentum import (
-    ATRPercentFactor,
-    BreakoutFactor,
-    DonchianBreakoutFactor,
-    MovingAverageDistanceFactor,
-    RSIFactor,
-    TrailingReturnFactor,
-)
+
+
+_FACTOR_EXPORTS = {
+    "AmihudIlliquidityFactor": "strategy_lab.factors.liquidity",
+    "ATRPercentFactor": "strategy_lab.factors.momentum",
+    "BasisChangeFactor": "strategy_lab.factors.derivatives",
+    "BasisFactor": "strategy_lab.factors.derivatives",
+    "BasisZScoreFactor": "strategy_lab.factors.derivatives",
+    "BollingerDistanceFactor": "strategy_lab.factors.mean_reversion",
+    "BreakoutFactor": "strategy_lab.factors.momentum",
+    "DonchianBreakoutFactor": "strategy_lab.factors.momentum",
+    "FundingRateFactor": "strategy_lab.factors.derivatives",
+    "FundingRateZScoreFactor": "strategy_lab.factors.derivatives",
+    "MovingAverageDistanceFactor": "strategy_lab.factors.momentum",
+    "OpenInterestChangeFactor": "strategy_lab.factors.derivatives",
+    "OpenInterestZScoreFactor": "strategy_lab.factors.derivatives",
+    "PriceOpenInterestRegimeFactor": "strategy_lab.factors.derivatives",
+    "RelativeStrengthFactor": "strategy_lab.factors.cross_sectional",
+    "RSIFactor": "strategy_lab.factors.momentum",
+    "TrailingReturnFactor": "strategy_lab.factors.momentum",
+    "VolumeSurgeFactor": "strategy_lab.factors.liquidity",
+    "VWAPDistanceFactor": "strategy_lab.factors.liquidity",
+    "ZScoreFactor": "strategy_lab.factors.mean_reversion",
+}
+
+
+def __getattr__(name: str):
+    if name not in _FACTOR_EXPORTS:
+        raise AttributeError(name)
+    from importlib import import_module
+
+    module = import_module(_FACTOR_EXPORTS[name])
+    value = getattr(module, name)
+    globals()[name] = value
+    return value
 
 
 def default_registry() -> FactorRegistry:

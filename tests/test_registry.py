@@ -8,7 +8,7 @@ from strategy_lab.factors import default_registry
 from strategy_lab.features import FeatureBuilder, FeatureStore
 from strategy_lab.fs import append_text_locked
 from strategy_lab.orchestration import StrategyRunner, load_strategy_workflow
-from strategy_lab.scenarios import seed_trend_mvp_data
+from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 
 
 def _write_app_config(tmp_path: Path) -> Path:
@@ -31,17 +31,16 @@ storage:
     return app_config
 
 
-def _write_workflow(path: Path, name: str, strategy_type: str, strategy_params: str) -> Path:
+def _write_workflow(path: Path, name: str, factor_name: str) -> Path:
     path.write_text(
         f"""
 strategy:
   name: {name}
-  strategy_type: {strategy_type}
+  strategy_type: factor
+  factor_name: {factor_name}
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
-  strategy_params:
-{strategy_params}
 refresh:
   enabled: false
 workflow:
@@ -136,26 +135,23 @@ def test_run_registry_indexes_workflow_experiment_and_comparison_runs(tmp_path: 
         features_dir=tmp_path / "data" / "features",
         reports_dir=tmp_path / "reports",
     )
-    seed_trend_mvp_data(layout)
+    seed_real_binance_perp_ohlcv_sample(layout)
 
     app_config = _write_app_config(tmp_path)
     workflow_for_direct_run = _write_workflow(
         tmp_path / "trend-registry.yaml",
         "trend_registry",
-        "trend_confirmation",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_1",
     )
     trend_workflow = _write_workflow(
         tmp_path / "trend-exp.yaml",
         "trend_exp_registry",
-        "trend_confirmation",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_1",
     )
     crowding_workflow = _write_workflow(
         tmp_path / "crowding-exp.yaml",
         "crowding_exp_registry",
-        "crowding_reversal",
-        "    max_long_positions: 2\n    max_short_positions: 2",
+        "ret_4",
     )
 
     builder = FeatureBuilder(

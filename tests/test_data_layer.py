@@ -9,7 +9,6 @@ from strategy_lab.data import (
     DataAuthenticityAuditor,
     DataIngestionService,
     DataLakeLayout,
-    DataLakeMigrator,
     DatasetKind,
     DuckDBWarehouse,
     MarketType,
@@ -166,57 +165,6 @@ def test_warehouse_keeps_ohlcv_timeframes_separate(tmp_path: Path) -> None:
     assert canonical_path.name == "symbol=btc_usdt.parquet"
 
 
-def test_data_lake_migrator_copies_legacy_profiles_to_canonical_layout(tmp_path: Path) -> None:
-    layout = _layout(tmp_path)
-    legacy = layout.root_dir / "binance-recent1y"
-    legacy_layout = DataLakeLayout(
-        root_dir=legacy,
-        raw_dir=legacy / "raw",
-        normalized_dir=legacy / "normalized",
-        features_dir=legacy / "features",
-        reports_dir=tmp_path / "legacy-reports",
-    )
-    legacy_layout.ensure_directories()
-    frame = pd.DataFrame(
-        {
-            "ts": pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC"),
-            "exchange": ["binance"] * 2,
-            "symbol": ["BTC/USDT"] * 2,
-            "market_type": ["spot"] * 2,
-            "open": [1.0, 2.0],
-            "high": [1.1, 2.1],
-            "low": [0.9, 1.9],
-            "close": [1.0, 2.0],
-            "volume": [100.0, 100.0],
-            "source": ["test"] * 2,
-        }
-    )
-    write_dataframe(
-        frame,
-        layout=legacy_layout,
-        layer="normalized",
-        kind=DatasetKind.OHLCV,
-        exchange="binance",
-        market_type=MarketType.SPOT,
-        symbol="BTC/USDT",
-        partition_date=frame["ts"].max().date(),
-    )
-
-    summary = DataLakeMigrator(layout).migrate(dry_run=False)
-    loaded = DuckDBWarehouse(layout).load_dataset(
-        layer="normalized",
-        kind=DatasetKind.OHLCV,
-        exchange="binance",
-        market_type=MarketType.SPOT,
-        symbol="BTC/USDT",
-        timeframe="1h",
-    )
-
-    assert summary.copied == 1
-    assert not loaded.empty
-    assert loaded["timeframe"].dropna().unique().tolist() == ["1h"]
-
-
 def test_data_authenticity_auditor_quarantines_non_real_sources(tmp_path: Path) -> None:
     layout = _layout(tmp_path)
     layout.ensure_directories()
@@ -231,7 +179,7 @@ def test_data_authenticity_auditor_quarantines_non_real_sources(tmp_path: Path) 
             "low": [0.9, 1.9, 2.9],
             "close": [1.0, 2.0, 3.0],
             "volume": [100.0, 100.0, 100.0],
-            "source": ["ccxt", "scenario_seed", "unknown_vendor"],
+            "source": ["ccxt", "proxy_vendor", "unknown_vendor"],
         }
     )
     write_dataframe(

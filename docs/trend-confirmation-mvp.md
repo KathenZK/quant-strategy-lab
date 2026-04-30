@@ -136,13 +136,9 @@
 
 ### 跑基准场景
 
-先写入隔离的基准数据：
+隔离基准数据写入命令已经移除。后续基准验证必须使用标准 data lake 中可追溯的真实交易所数据。
 
-```bash
-./.venv/bin/quant-strategy-lab seed-trend-mvp -c configs/environments/mvp-baseline.yaml
-```
-
-再运行基准策略：
+运行基准策略：
 
 ```bash
 ./.venv/bin/quant-strategy-lab run-strategy --workflow-config configs/workflows/strategies/trend_confirmation.mvp.baseline.yaml -c configs/environments/mvp-baseline.yaml

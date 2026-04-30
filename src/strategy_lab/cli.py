@@ -11,7 +11,7 @@ from strategy_lab.batches import BatchRunMode
 from strategy_lab.batches.service import load_batch_for_mode, run_workflow_batch
 from strategy_lab.backtest import ExecutionAssumptions
 from strategy_lab.config import load_settings
-from strategy_lab.data import CCXTDataClient, DataAuthenticityAuditor, DataIngestionService, DataLakeLayout, DataLakeMigrator, DuckDBWarehouse, MarketType
+from strategy_lab.data import CCXTDataClient, DataAuthenticityAuditor, DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
 from strategy_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
 from strategy_lab.factors import default_registry
 from strategy_lab.features import FeatureBuilder, FeatureStore
@@ -33,7 +33,6 @@ from strategy_lab.orchestration import (
     load_strategy_workflow,
 )
 from strategy_lab.portfolio import RiskLimits
-from strategy_lab.scenarios import seed_crowding_mvp_data, seed_shared_comparison_mvp_data, seed_trend_mvp_data
 
 app = typer.Typer(add_completion=False, help="Quant Strategy Lab research platform CLI.")
 
@@ -89,14 +88,6 @@ def _factor_workflow(
     )
 
 
-def _print_seeded(written: dict[str, dict[str, str]]) -> None:
-    typer.echo(f"seeded {len(written)} symbols")
-    for symbol, datasets in sorted(written.items()):
-        typer.echo(symbol)
-        for dataset, path in sorted(datasets.items()):
-            typer.echo(f"  {dataset}: {path}")
-
-
 def _run_batch_command(mode: BatchRunMode, batch_config: Path, config: Path | None) -> None:
     batch = load_batch_for_mode(batch_config, mode)
     artifacts = run_workflow_batch(
@@ -148,45 +139,6 @@ def init_dirs(config: Path | None = typer.Option(None, "--config", "-c", help="O
     lake, _, _ = _runtime(config)
     lake.ensure_directories()
     typer.echo("created data lake directories")
-
-
-@app.command("audit-data-lake")
-def audit_data_lake(config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path.")) -> None:
-    """Print legacy data lake profile directories that can be migrated."""
-    lake, _, _ = _runtime(config)
-    migrator = DataLakeMigrator(lake)
-    roots = migrator.legacy_roots()
-    typer.echo(f"legacy_roots: {len(roots)}")
-    for root in roots:
-        parquet_count = sum(1 for _ in root.rglob("*.parquet"))
-        typer.echo(f"{root}\tparquet={parquet_count}")
-
-
-@app.command("migrate-data-lake")
-def migrate_data_lake(
-    execute: bool = typer.Option(False, "--execute", help="Write canonical copies. Defaults to dry-run."),
-    archive_legacy: bool = typer.Option(False, "--archive-legacy", help="Move legacy profile roots into data/_archive after copying."),
-    report_path: Path | None = typer.Option(None, "--report-path", help="Optional JSON migration report path."),
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path."),
-) -> None:
-    """Migrate legacy profile data into the canonical shared data lake layout."""
-    if archive_legacy and not execute:
-        raise typer.BadParameter("--archive-legacy requires --execute")
-    lake, _, _ = _runtime(config)
-    summary = DataLakeMigrator(lake).migrate(
-        dry_run=not execute,
-        archive_legacy=archive_legacy,
-        report_path=report_path,
-    )
-    typer.echo(f"dry_run: {str(summary.dry_run).lower()}")
-    typer.echo(f"legacy_roots: {len(summary.legacy_roots)}")
-    typer.echo(f"copy: {summary.copied}")
-    typer.echo(f"skip: {summary.skipped}")
-    typer.echo(f"failed: {summary.failed}")
-    if report_path:
-        typer.echo(f"report: {report_path}")
-    if summary.failed:
-        raise typer.Exit(code=1)
 
 
 def _print_authenticity_summary(summary) -> None:
@@ -710,33 +662,6 @@ def backfill_run_db(config: Path | None = typer.Option(None, "--config", "-c")) 
         for manifest_path in summary["failed_manifests"]:
             typer.echo(f"failed_manifest: {manifest_path}")
         raise typer.Exit(code=1)
-
-
-@app.command()
-def seed_trend_mvp(
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
-) -> None:
-    """Seed deterministic MVP perp data for baseline reports."""
-    lake, _, _ = _runtime(config)
-    _print_seeded(seed_trend_mvp_data(lake))
-
-
-@app.command()
-def seed_crowding_mvp(
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
-) -> None:
-    """Seed deterministic crowding reversal MVP data for baseline reports."""
-    lake, _, _ = _runtime(config)
-    _print_seeded(seed_crowding_mvp_data(lake))
-
-
-@app.command()
-def seed_shared_comparison_mvp(
-    config: Path | None = typer.Option(None, "--config", "-c", help="Optional environment config path."),
-) -> None:
-    """Seed deterministic shared comparison baseline data."""
-    lake, _, _ = _runtime(config)
-    _print_seeded(seed_shared_comparison_mvp_data(lake))
 
 
 @app.command()

@@ -5,7 +5,7 @@ import strategy_lab.batches.runner as batch_runner_module
 from strategy_lab.batches import WorkflowBatchRunner
 from strategy_lab.data import DataLakeLayout
 from strategy_lab.orchestration import StrategyRunner
-from strategy_lab.scenarios import seed_trend_mvp_data
+from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 
 
 def _write_app_config(tmp_path: Path) -> Path:
@@ -28,18 +28,16 @@ storage:
     return app_config
 
 
-def _write_workflow(path: Path, name: str, strategy_type: str) -> Path:
+def _write_workflow(path: Path, name: str, factor_name: str) -> Path:
     path.write_text(
         f"""
 strategy:
   name: {name}
-  strategy_type: {strategy_type}
+  strategy_type: factor
+  factor_name: {factor_name}
   exchange: binance
   market_type: perp
   symbols: [BTC/USDT:USDT, ETH/USDT:USDT, SOL/USDT:USDT]
-  strategy_params:
-    max_long_positions: 2
-    max_short_positions: 2
 refresh:
   enabled: true
 workflow:
@@ -60,11 +58,11 @@ def test_workflow_batch_runner_uses_shared_refresh_once(tmp_path: Path, monkeypa
         features_dir=tmp_path / "data" / "features",
         reports_dir=tmp_path / "reports",
     )
-    seed_trend_mvp_data(layout)
+    seed_real_binance_perp_ohlcv_sample(layout)
 
     app_config = _write_app_config(tmp_path)
-    trend_workflow = _write_workflow(tmp_path / "trend.yaml", "trend_batch_runner", "trend_confirmation")
-    crowding_workflow = _write_workflow(tmp_path / "crowding.yaml", "crowding_batch_runner", "crowding_reversal")
+    trend_workflow = _write_workflow(tmp_path / "trend.yaml", "trend_batch_runner", "ret_1")
+    crowding_workflow = _write_workflow(tmp_path / "crowding.yaml", "crowding_batch_runner", "ret_4")
 
     batch_runner = WorkflowBatchRunner(workspace_root=tmp_path, app_config_path=app_config)
     runner = batch_runner.create_strategy_runner()
@@ -97,11 +95,11 @@ def test_workflow_batch_runner_falls_back_to_serial_when_refresh_is_enabled(tmp_
         features_dir=tmp_path / "data" / "features",
         reports_dir=tmp_path / "reports",
     )
-    seed_trend_mvp_data(layout)
+    seed_real_binance_perp_ohlcv_sample(layout)
 
     app_config = _write_app_config(tmp_path)
-    trend_workflow = _write_workflow(tmp_path / "trend-parallel.yaml", "trend_parallel_guard", "trend_confirmation")
-    crowding_workflow = _write_workflow(tmp_path / "crowding-parallel.yaml", "crowding_parallel_guard", "crowding_reversal")
+    trend_workflow = _write_workflow(tmp_path / "trend-parallel.yaml", "trend_parallel_guard", "ret_1")
+    crowding_workflow = _write_workflow(tmp_path / "crowding-parallel.yaml", "crowding_parallel_guard", "ret_4")
 
     batch_runner = WorkflowBatchRunner(workspace_root=tmp_path, app_config_path=app_config)
     runner = batch_runner.create_strategy_runner()

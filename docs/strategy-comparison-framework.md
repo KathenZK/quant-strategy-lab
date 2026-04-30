@@ -83,11 +83,7 @@ batch:
 
 ### 先准备共享 baseline 数据
 
-当前更推荐直接使用 shared comparison baseline，而不是单独的 trend-only baseline。
-
-```bash
-./.venv/bin/quant-strategy-lab seed-shared-comparison-mvp -c configs/environments/shared-comparison-baseline.yaml
-```
+共享 baseline 造数命令已经移除。策略比较应直接使用标准 data lake 中可追溯的真实交易所数据。
 
 ### 再运行统一策略比较
 
