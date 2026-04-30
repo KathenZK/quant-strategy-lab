@@ -61,6 +61,7 @@ class BinanceSpotUniverseConfig:
     exclude_stablecoins: bool = True
     exclude_fiat: bool = True
     exclude_leveraged_tokens: bool = True
+    exclude_non_ascii: bool = True
     require_active: bool = True
     excluded_bases: tuple[str, ...] = field(default_factory=tuple)
     excluded_symbols: tuple[str, ...] = field(default_factory=tuple)
@@ -83,6 +84,10 @@ def _is_leveraged_base(base: str) -> bool:
         if base in {f"{root}UP", f"{root}DOWN"}:
             return True
     return False
+
+
+def _is_ascii_identifier(value: str) -> bool:
+    return value.isascii() and value.replace("/", "").replace(":", "").replace("-", "").isalnum()
 
 
 def is_tradeable_binance_spot_market(
@@ -112,6 +117,8 @@ def is_tradeable_binance_spot_market(
         return False
     if config.exclude_leveraged_tokens and _is_leveraged_base(base):
         return False
+    if config.exclude_non_ascii and (not _is_ascii_identifier(normalized) or not _is_ascii_identifier(base)):
+        return False
     return True
 
 
@@ -126,6 +133,40 @@ def candidate_symbols_from_markets(
         if is_tradeable_binance_spot_market(symbol, market, config=config)
     ]
     return sorted(set(symbols))
+
+
+def ticker_quote_volume(ticker: Mapping[str, Any]) -> float:
+    quote_volume = ticker.get("quoteVolume")
+    if quote_volume is not None:
+        return float(quote_volume)
+    base_volume = ticker.get("baseVolume")
+    last = ticker.get("last") or ticker.get("close")
+    if base_volume is None or last is None:
+        return 0.0
+    return float(base_volume) * float(last)
+
+
+def rank_symbols_by_quote_volume(
+    symbols: list[str],
+    tickers: Mapping[str, Mapping[str, Any]],
+    *,
+    min_quote_volume: float = 0.0,
+    max_symbols: int | None = None,
+) -> list[str]:
+    ranked: list[tuple[str, float]] = []
+    for symbol in symbols:
+        ticker = tickers.get(symbol)
+        if ticker is None:
+            continue
+        quote_volume = ticker_quote_volume(ticker)
+        if quote_volume < min_quote_volume:
+            continue
+        ranked.append((symbol, quote_volume))
+
+    output = [symbol for symbol, _ in sorted(ranked, key=lambda item: (-item[1], item[0]))]
+    if max_symbols is not None and max_symbols > 0:
+        return output[:max_symbols]
+    return output
 
 
 def filter_symbols_by_ohlcv(

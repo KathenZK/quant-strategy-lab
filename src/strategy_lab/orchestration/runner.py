@@ -89,9 +89,11 @@ class StrategyRunner:
                 timeframe=config.refresh.timeframe,
                 since=self._resolve_since(config, dataset=DatasetKind.OHLCV, symbol=symbol),
                 limit=config.refresh.limit,
+                drop_incomplete=True,
             )
             symbol_artifacts["ohlcv"] = ohlcv
-            self._record_refresh(config=config, dataset=DatasetKind.OHLCV, symbol=symbol, result=ohlcv)
+            if ohlcv.get("rows"):
+                self._record_refresh(config=config, dataset=DatasetKind.OHLCV, symbol=symbol, result=ohlcv)
 
             if config.strategy.market_type.value == "perp" and config.refresh.include_derivatives:
                 funding = self.ingestion.refresh_funding_rates(

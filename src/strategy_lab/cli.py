@@ -1,7 +1,8 @@
 from __future__ import annotations
 
 import asyncio
-from datetime import datetime
+from dataclasses import replace
+from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import typer
@@ -14,7 +15,13 @@ from strategy_lab.data import CCXTDataClient, DataIngestionService, DataLakeLayo
 from strategy_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
 from strategy_lab.factors import default_registry
 from strategy_lab.features import FeatureBuilder, FeatureStore
-from strategy_lab.ingest import BinanceSpotUniverseConfig, candidate_symbols_from_markets, select_binance_spot_universe, sync_small_cap_universe
+from strategy_lab.ingest import (
+    BinanceSpotUniverseConfig,
+    candidate_symbols_from_markets,
+    rank_symbols_by_quote_volume,
+    select_binance_spot_universe,
+    sync_small_cap_universe,
+)
 from strategy_lab.ingest.market_caps import DEFAULT_MARKET_CAP_THRESHOLD_USD
 from strategy_lab.orchestration import (
     IncrementalStateStore,
@@ -22,6 +29,7 @@ from strategy_lab.orchestration import (
     StrategyRunner,
     StrategyWorkflowConfig,
     StrategyWorkflowSpec,
+    build_strategy_scan_result,
     load_strategy_workflow,
 )
 from strategy_lab.portfolio import RiskLimits
@@ -157,6 +165,122 @@ def binance_spot_universe(
     )
     for symbol in symbols:
         typer.echo(symbol)
+
+
+@app.command()
+def sync_binance_spot_ohlcv(
+    symbols: str | None = typer.Option(None, "--symbols", help="Comma-separated symbols. Defaults to ranked USDT spot symbols."),
+    timeframe: str = typer.Option("1h", "--timeframe"),
+    limit: int = typer.Option(1000, "--limit", min=1),
+    since_days: int | None = typer.Option(None, "--since-days", min=1, help="Fetch bars starting this many days back."),
+    max_symbols: int = typer.Option(20, "--max-symbols", help="0 means no cap."),
+    min_quote_volume: float = typer.Option(5_000_000.0, "--min-quote-volume"),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path."),
+) -> None:
+    """Sync Binance spot OHLCV for a local CTA research universe."""
+    lake, _, _ = _runtime(config)
+    service = DataIngestionService(lake)
+    client = CCXTDataClient(exchange_name="binance", market_type=MarketType.SPOT)
+
+    if symbols:
+        selected = _parse_symbols(symbols)
+    else:
+        universe_config = BinanceSpotUniverseConfig(min_avg_dollar_volume=min_quote_volume)
+        markets = client.load_markets()
+        candidates = candidate_symbols_from_markets(markets, config=universe_config)
+        if max_symbols <= 0 and min_quote_volume <= 0:
+            selected = candidates
+        else:
+            tickers = client.fetch_tickers()
+            selected = rank_symbols_by_quote_volume(
+                candidates,
+                tickers,
+                min_quote_volume=min_quote_volume,
+                max_symbols=None if max_symbols <= 0 else max_symbols,
+            )
+
+    since = None if since_days is None else datetime.now(timezone.utc) - timedelta(days=since_days)
+    typer.echo(f"symbols: {len(selected)}")
+    if since is not None:
+        typer.echo(f"since: {since.isoformat()}")
+    for symbol in selected:
+        try:
+            result = service.refresh_ohlcv(
+                exchange="binance",
+                symbol=symbol,
+                market_type=MarketType.SPOT,
+                timeframe=timeframe,
+                since=since,
+                limit=limit,
+                drop_incomplete=True,
+                client=client,
+            )
+        except Exception as exc:
+            typer.echo(f"{symbol}: failed: {type(exc).__name__}: {exc}")
+            continue
+        typer.echo(f"{symbol}: rows={result['rows']} normalized={result['normalized']}")
+
+
+def _render_scan_table(title: str, rows) -> None:
+    typer.echo(title)
+    if not rows:
+        typer.echo("  <none>")
+        return
+    for item in rows:
+        signal = "" if item.signal is None else f"{item.signal:.4f}"
+        price = "" if item.price is None else f"{item.price:.8g}"
+        typer.echo(
+            f"  {item.symbol}\taction={item.action}\ttarget={item.target_weight:.4f}"
+            f"\tprevious={item.previous_weight:.4f}\tsignal={signal}\tprice={price}"
+        )
+
+
+@app.command()
+def scan_spot_cta(
+    workflow_config: Path = typer.Option(..., "--workflow-config", help="Path to a spot CTA workflow YAML."),
+    use_local_universe: bool = typer.Option(False, "--use-local-universe", help="Use locally available OHLCV symbols instead of config symbols."),
+    min_avg_dollar_volume: float = typer.Option(1_000_000.0, "--min-avg-dollar-volume"),
+    min_history_bars: int = typer.Option(120, "--min-history-bars", min=1),
+    max_symbols: int = typer.Option(0, "--max-symbols", help="0 means no cap."),
+    top_n: int = typer.Option(20, "--top-n", min=1),
+    config: Path | None = typer.Option(None, "--config", "-c"),
+) -> None:
+    """Scan latest spot CTA signals and print buy/hold/sell/watch decisions."""
+    _, warehouse, builder = _runtime(config)
+    workflow = load_strategy_workflow(workflow_config)
+
+    if use_local_universe:
+        universe_config = BinanceSpotUniverseConfig(
+            min_avg_dollar_volume=min_avg_dollar_volume,
+            min_history_bars=min_history_bars,
+        )
+        symbols = select_binance_spot_universe(
+            warehouse,
+            exchange=workflow.strategy.exchange,
+            config=universe_config,
+        )
+        if max_symbols > 0:
+            symbols = symbols[:max_symbols]
+        if workflow.strategy.benchmark_symbol and workflow.strategy.benchmark_symbol not in symbols:
+            symbols = [workflow.strategy.benchmark_symbol, *symbols]
+        workflow = replace(workflow, strategy=replace(workflow.strategy, symbols=symbols))
+
+    prepared = StrategyRunner(layout=builder.store.layout, builder=builder).workflow_service.prepare(workflow)
+    if prepared.target_weights is None:
+        raise typer.BadParameter("scan-spot-cta requires a strategy workflow that builds target weights")
+
+    scan = build_strategy_scan_result(
+        signal_frame=prepared.signal_frame,
+        target_weights=prepared.target_weights,
+        price_frame=prepared.panels.price,
+        top_n=top_n,
+    )
+    typer.echo(f"scan_ts: {scan.ts.isoformat()}")
+    typer.echo(f"symbols: {len(prepared.target_weights.columns)}")
+    _render_scan_table("## Sell", scan.by_action("sell"))
+    _render_scan_table("## Buy", scan.by_action("buy"))
+    _render_scan_table("## Hold", scan.by_action("hold"))
+    _render_scan_table("## Watchlist", scan.watchlist)
 
 
 @app.command()

@@ -36,11 +36,15 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "price_oi_regime_4" in names
     assert "relative_strength_24" in names
     assert "donchian_breakout_10" in names
+    assert "donchian_breakout_12" in names
     assert "donchian_breakout_14" in names
     assert "donchian_breakout_20" in names
     assert "donchian_breakout_55" in names
+    assert "ret_6" in names
+    assert "ret_12" in names
     assert "ret_72" in names
     assert "ret_168" in names
+    assert "ma_distance_48" in names
     assert "atr_pct_14" in names
 
 

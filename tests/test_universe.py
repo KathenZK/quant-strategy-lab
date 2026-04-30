@@ -4,6 +4,8 @@ from strategy_lab.ingest import (
     BinanceSpotUniverseConfig,
     candidate_symbols_from_markets,
     filter_symbols_by_ohlcv,
+    rank_symbols_by_quote_volume,
+    ticker_quote_volume,
 )
 
 
@@ -14,6 +16,7 @@ def test_binance_spot_universe_filters_non_tradeable_markets() -> None:
         "USDC/USDT": {"base": "USDC", "quote": "USDT", "spot": True, "active": True},
         "BTCUP/USDT": {"base": "BTCUP", "quote": "USDT", "spot": True, "active": True},
         "JUP/USDT": {"base": "JUP", "quote": "USDT", "spot": True, "active": True},
+        "币安人生/USDT": {"base": "币安人生", "quote": "USDT", "spot": True, "active": True},
         "OLD/USDT": {"base": "OLD", "quote": "USDT", "spot": True, "active": False},
         "BTC/USDT:USDT": {"base": "BTC", "quote": "USDT", "spot": False, "active": True, "type": "swap"},
     }
@@ -45,4 +48,22 @@ def test_binance_spot_universe_filters_local_history_and_liquidity() -> None:
         candidate_symbols=["BTC/USDT", "THIN/USDT", "NEW/USDT"],
     )
 
+    assert symbols == ["BTC/USDT"]
+
+
+def test_binance_spot_universe_ranks_symbols_by_quote_volume() -> None:
+    tickers = {
+        "BTC/USDT": {"quoteVolume": 100_000_000.0},
+        "ETH/USDT": {"baseVolume": 10_000.0, "last": 2_000.0},
+        "THIN/USDT": {"quoteVolume": 100_000.0},
+    }
+
+    symbols = rank_symbols_by_quote_volume(
+        ["THIN/USDT", "ETH/USDT", "BTC/USDT"],
+        tickers,
+        min_quote_volume=1_000_000.0,
+        max_symbols=1,
+    )
+
+    assert ticker_quote_volume(tickers["ETH/USDT"]) == 20_000_000.0
     assert symbols == ["BTC/USDT"]

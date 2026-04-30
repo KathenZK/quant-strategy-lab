@@ -1,9 +1,11 @@
 from pathlib import Path
+from datetime import datetime, timezone
 
 import pandas as pd
 import pytest
 
 from strategy_lab.data import CCXTDataClient, DataIngestionService, DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType, normalize_dataset, write_dataframe
+from strategy_lab.data.pipeline import drop_incomplete_ohlcv
 from strategy_lab.features import FeatureBuilder, FeatureStore
 from strategy_lab.factors import default_registry
 
@@ -76,6 +78,55 @@ def test_warehouse_loads_written_dataset(tmp_path: Path) -> None:
     )
     assert len(loaded) == 3
     assert loaded["close"].iloc[-1] == 3.0
+
+
+def test_drop_incomplete_ohlcv_removes_current_open_bar() -> None:
+    frame = pd.DataFrame(
+        {
+            "ts": pd.to_datetime(["2024-01-01T00:00:00Z", "2024-01-01T01:00:00Z"], utc=True),
+            "close": [100.0, 101.0],
+        }
+    )
+
+    closed = drop_incomplete_ohlcv(
+        frame,
+        timeframe="1h",
+        now=pd.Timestamp("2024-01-01T01:30:00Z"),
+    )
+
+    assert closed["ts"].tolist() == [pd.Timestamp("2024-01-01T00:00:00Z")]
+
+
+def test_fetch_ohlcv_paginates_from_since() -> None:
+    start_ms = 1_704_067_200_000
+    hour_ms = 60 * 60 * 1000
+
+    class FakeExchange:
+        def __init__(self) -> None:
+            self.calls = []
+            self.rows = [[start_ms + hour_ms * i, 1.0, 1.1, 0.9, 1.0 + i, 100.0] for i in range(5)]
+
+        def fetch_ohlcv(self, symbol, timeframe="1h", since=None, limit=1000):
+            self.calls.append((symbol, timeframe, since, limit))
+            rows = [row for row in self.rows if since is None or row[0] >= since]
+            return rows[: min(limit, 2)]
+
+    fake_exchange = FakeExchange()
+
+    class FakeClient(CCXTDataClient):
+        def _build_exchange(self):
+            return fake_exchange
+
+    frame = FakeClient(exchange_name="binance", market_type=MarketType.SPOT).fetch_ohlcv(
+        symbol="BTC/USDT",
+        timeframe="1h",
+        since=datetime(2024, 1, 1, tzinfo=timezone.utc),
+        limit=5,
+    )
+
+    assert len(frame) == 5
+    assert frame["close"].tolist() == [1.0, 2.0, 3.0, 4.0, 5.0]
+    assert [call[2] for call in fake_exchange.calls] == [start_ms, start_ms + 2 * hour_ms, start_ms + 4 * hour_ms]
 
 
 def test_fetch_basis_or_premium_merges_basis_and_premium_rows() -> None:
