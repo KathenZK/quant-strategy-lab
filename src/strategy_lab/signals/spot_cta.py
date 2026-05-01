@@ -15,11 +15,11 @@ class SpotCtaTrendSignalConfig:
     breakout_factor: str = "donchian_breakout_20"
     primary_momentum_factor: str = "ret_72"
     confirmation_momentum_factor: str = "ret_24"
-    trend_factor: str = "ma_distance_120"
+    trend_factor: str | None = None
     volume_factor: str = "volume_surge_20"
     rsi_factor: str = "rsi_14"
-    illiquidity_factor: str | None = "amihud_illiquidity"
-    volatility_factor: str | None = "atr_pct_14"
+    illiquidity_factor: str | None = None
+    volatility_factor: str | None = None
     min_breakout_signal: float = 1.0
     min_primary_momentum: float = 0.03
     min_confirmation_momentum: float = 0.0
@@ -68,10 +68,11 @@ class SpotCtaTrendSignalModel:
             self.config.breakout_factor,
             self.config.primary_momentum_factor,
             self.config.confirmation_momentum_factor,
-            self.config.trend_factor,
             self.config.volume_factor,
             self.config.rsi_factor,
         ]
+        if self.config.trend_factor is not None:
+            factors.append(self.config.trend_factor)
         if self.config.illiquidity_factor is not None:
             factors.append(self.config.illiquidity_factor)
         if self.config.volatility_factor is not None:
@@ -90,7 +91,6 @@ class SpotCtaTrendSignalModel:
         breakout_signal = breakout.fillna(0.0)
         primary_momentum = factors[self.config.primary_momentum_factor].reindex_like(breakout)
         confirmation_momentum = factors[self.config.confirmation_momentum_factor].reindex_like(breakout)
-        trend = factors[self.config.trend_factor].reindex_like(breakout)
         volume_surge = factors[self.config.volume_factor].reindex_like(breakout)
         rsi = factors[self.config.rsi_factor].reindex_like(breakout)
 
@@ -98,7 +98,6 @@ class SpotCtaTrendSignalModel:
             self.config.breakout_weight * cross_section_zscore(breakout_signal)
             + self.config.primary_momentum_weight * cross_section_zscore(primary_momentum)
             + self.config.confirmation_momentum_weight * cross_section_zscore(confirmation_momentum)
-            + self.config.trend_weight * cross_section_zscore(trend)
             + self.config.volume_weight * cross_section_zscore(volume_surge)
             + self.config.rsi_weight * cross_section_zscore((rsi - 50.0) / 50.0)
         )
@@ -107,11 +106,17 @@ class SpotCtaTrendSignalModel:
             breakout_signal.ge(self.config.min_breakout_signal)
             & primary_momentum.ge(self.config.min_primary_momentum)
             & confirmation_momentum.ge(self.config.min_confirmation_momentum)
-            & trend.ge(self.config.min_trend_distance)
             & volume_surge.ge(self.config.min_volume_surge)
             & rsi.ge(self.config.min_rsi)
             & rsi.le(self.config.max_rsi)
         )
+
+        trend_factor = self.config.trend_factor
+        trend = None
+        if trend_factor is not None:
+            trend = factors[trend_factor].reindex_like(breakout)
+            score += self.config.trend_weight * cross_section_zscore(trend)
+            eligible &= trend.ge(self.config.min_trend_distance)
 
         illiquidity_factor = self.config.illiquidity_factor
         if illiquidity_factor is not None:
@@ -130,10 +135,11 @@ class SpotCtaTrendSignalModel:
         valid = (
             primary_momentum.notna()
             & confirmation_momentum.notna()
-            & trend.notna()
             & volume_surge.notna()
             & rsi.notna()
         )
+        if trend is not None:
+            valid &= trend.notna()
         signal = pd.DataFrame(np.nan, index=breakout.index, columns=breakout.columns, dtype="float64")
         signal = signal.where(~valid, 0.0)
         ranked_score = (score + 1.0).clip(lower=0.001)

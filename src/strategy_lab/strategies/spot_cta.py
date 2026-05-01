@@ -18,11 +18,11 @@ class SpotCtaTrendConfig:
     breakout_factor: str = "donchian_breakout_20"
     primary_momentum_factor: str = "ret_72"
     confirmation_momentum_factor: str = "ret_24"
-    trend_factor: str = "ma_distance_120"
+    trend_factor: str | None = None
     volume_factor: str = "volume_surge_20"
     rsi_factor: str = "rsi_14"
-    illiquidity_factor: str | None = "amihud_illiquidity"
-    volatility_factor: str | None = "atr_pct_14"
+    illiquidity_factor: str | None = None
+    volatility_factor: str | None = None
     min_breakout_signal: float = 1.0
     min_primary_momentum: float = 0.03
     min_confirmation_momentum: float = 0.0
