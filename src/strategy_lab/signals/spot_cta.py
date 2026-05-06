@@ -12,17 +12,22 @@ from strategy_lab.signals.common import cross_section_zscore
 
 @dataclass(frozen=True, slots=True)
 class SpotCtaTrendSignalConfig:
+    donchian_only: bool = False
     breakout_factor: str = "donchian_breakout_20"
+    donchian_exit_factor: str | None = None
     primary_momentum_factor: str = "ret_72"
     confirmation_momentum_factor: str = "ret_24"
+    acceleration_momentum_factor: str | None = None
     trend_factor: str | None = None
     volume_factor: str = "volume_surge_20"
     rsi_factor: str = "rsi_14"
     illiquidity_factor: str | None = None
     volatility_factor: str | None = None
+    require_breakout: bool = True
     min_breakout_signal: float = 1.0
     min_primary_momentum: float = 0.03
     min_confirmation_momentum: float = 0.0
+    min_acceleration_momentum: float = 0.0
     min_trend_distance: float = 0.0
     min_volume_surge: float = -0.25
     min_rsi: float = 50.0
@@ -32,6 +37,7 @@ class SpotCtaTrendSignalConfig:
     breakout_weight: float = 0.8
     primary_momentum_weight: float = 1.0
     confirmation_momentum_weight: float = 0.6
+    acceleration_momentum_weight: float = 0.0
     trend_weight: float = 0.8
     volume_weight: float = 0.3
     rsi_weight: float = 0.2
@@ -64,6 +70,11 @@ class SpotCtaTrendSignalModel:
         return hashlib.sha256(encoded).hexdigest()[:16]
 
     def required_factors(self) -> list[str]:
+        if self.config.donchian_only:
+            factors = [self.config.breakout_factor]
+            if self.config.donchian_exit_factor is not None and self.config.donchian_exit_factor != self.config.breakout_factor:
+                factors.append(self.config.donchian_exit_factor)
+            return factors
         factors = [
             self.config.breakout_factor,
             self.config.primary_momentum_factor,
@@ -71,6 +82,8 @@ class SpotCtaTrendSignalModel:
             self.config.volume_factor,
             self.config.rsi_factor,
         ]
+        if self.config.acceleration_momentum_factor is not None:
+            factors.append(self.config.acceleration_momentum_factor)
         if self.config.trend_factor is not None:
             factors.append(self.config.trend_factor)
         if self.config.illiquidity_factor is not None:
@@ -86,6 +99,17 @@ class SpotCtaTrendSignalModel:
             raise ValueError(f"missing factors for spot CTA trend strategy: {missing}")
 
         breakout = factors[self.config.breakout_factor]
+        if self.config.donchian_only:
+            entry = breakout.astype("float64").copy()
+            exit_factor = self.config.donchian_exit_factor
+            if exit_factor is None:
+                return entry
+            exit_breakout = factors[exit_factor].reindex_like(entry).astype("float64")
+            signal = pd.DataFrame(np.nan, index=entry.index, columns=entry.columns, dtype="float64")
+            signal = signal.where(~entry.gt(0.0), 1.0)
+            signal = signal.where(~exit_breakout.lt(0.0), -1.0)
+            return signal
+
         # Donchian factors use NaN to mean "no fresh breakout". For this
         # cross-sectional CTA model that is a neutral signal, not missing data.
         breakout_signal = breakout.fillna(0.0)
@@ -103,13 +127,21 @@ class SpotCtaTrendSignalModel:
         )
 
         eligible = (
-            breakout_signal.ge(self.config.min_breakout_signal)
-            & primary_momentum.ge(self.config.min_primary_momentum)
+            primary_momentum.ge(self.config.min_primary_momentum)
             & confirmation_momentum.ge(self.config.min_confirmation_momentum)
             & volume_surge.ge(self.config.min_volume_surge)
             & rsi.ge(self.config.min_rsi)
             & rsi.le(self.config.max_rsi)
         )
+        if self.config.require_breakout:
+            eligible &= breakout_signal.ge(self.config.min_breakout_signal)
+
+        acceleration_factor = self.config.acceleration_momentum_factor
+        acceleration = None
+        if acceleration_factor is not None:
+            acceleration = factors[acceleration_factor].reindex_like(breakout)
+            score += self.config.acceleration_momentum_weight * cross_section_zscore(acceleration)
+            eligible &= acceleration.ge(self.config.min_acceleration_momentum)
 
         trend_factor = self.config.trend_factor
         trend = None
@@ -138,6 +170,8 @@ class SpotCtaTrendSignalModel:
             & volume_surge.notna()
             & rsi.notna()
         )
+        if acceleration is not None:
+            valid &= acceleration.notna()
         if trend is not None:
             valid &= trend.notna()
         signal = pd.DataFrame(np.nan, index=breakout.index, columns=breakout.columns, dtype="float64")

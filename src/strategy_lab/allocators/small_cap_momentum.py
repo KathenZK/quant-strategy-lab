@@ -19,6 +19,12 @@ class SmallCapMomentumBreakoutAllocatorConfig:
     max_hold_bars: int | None = 12
     cooldown_bars: int = 6
     exit_on_signal_loss: bool = False
+    exit_on_negative_signal: bool = False
+    failed_breakout_bars: int | None = None
+    failed_breakout_min_profit_pct: float | None = None
+    breakeven_after_profit_pct: float | None = None
+    profit_trailing_activation_pct: float | None = None
+    profit_trailing_stop_pct: float | None = None
     exit_signal_threshold: float = 0.0
     max_rank_hold_positions: int | None = None
 
@@ -145,15 +151,25 @@ class SmallCapMomentumBreakoutAllocator:
             raise ValueError("cooldown_bars must be non-negative")
         if self.config.max_hold_bars is not None and self.config.max_hold_bars <= 0:
             raise ValueError("max_hold_bars must be positive when provided")
+        if self.config.failed_breakout_bars is not None and self.config.failed_breakout_bars <= 0:
+            raise ValueError("failed_breakout_bars must be positive when provided")
         if self.config.max_rank_hold_positions is not None and self.config.max_rank_hold_positions <= 0:
             raise ValueError("max_rank_hold_positions must be positive when provided")
         for name, value in (
             ("stop_loss_pct", self.config.stop_loss_pct),
             ("trailing_stop_pct", self.config.trailing_stop_pct),
             ("take_profit_pct", self.config.take_profit_pct),
+            ("failed_breakout_min_profit_pct", self.config.failed_breakout_min_profit_pct),
+            ("breakeven_after_profit_pct", self.config.breakeven_after_profit_pct),
+            ("profit_trailing_activation_pct", self.config.profit_trailing_activation_pct),
+            ("profit_trailing_stop_pct", self.config.profit_trailing_stop_pct),
         ):
             if value is not None and value <= 0.0:
                 raise ValueError(f"{name} must be positive when provided")
+        if (self.config.failed_breakout_bars is None) != (self.config.failed_breakout_min_profit_pct is None):
+            raise ValueError("failed breakout exit requires both bars and min profit pct")
+        if (self.config.profit_trailing_activation_pct is None) != (self.config.profit_trailing_stop_pct is None):
+            raise ValueError("profit trailing exit requires both activation and stop pct")
 
     def _build_close_frame(
         self,
@@ -186,6 +202,8 @@ class SmallCapMomentumBreakoutAllocator:
         ranked_hold_symbols: set[str] | None,
     ) -> bool:
         signal_value = signal_row.loc[symbol]
+        if self.config.exit_on_negative_signal and not pd.isna(signal_value) and float(signal_value) < 0.0:
+            return True
         if self.config.exit_on_signal_loss:
             if pd.isna(signal_value) or float(signal_value) <= self.config.exit_signal_threshold:
                 return True
@@ -218,6 +236,29 @@ class SmallCapMomentumBreakoutAllocator:
         if self.config.trailing_stop_pct is not None and not pd.isna(trail_high):
             if price <= float(trail_high) * (1.0 - self.config.trailing_stop_pct):
                 return True
+        if (
+            self.config.failed_breakout_bars is not None
+            and self.config.failed_breakout_min_profit_pct is not None
+            and holding_bars >= self.config.failed_breakout_bars
+            and not pd.isna(trail_high)
+            and float(trail_high) < entry_price * (1.0 + self.config.failed_breakout_min_profit_pct)
+        ):
+            return True
+        if (
+            self.config.breakeven_after_profit_pct is not None
+            and not pd.isna(trail_high)
+            and float(trail_high) >= entry_price * (1.0 + self.config.breakeven_after_profit_pct)
+            and price <= entry_price
+        ):
+            return True
+        if (
+            self.config.profit_trailing_activation_pct is not None
+            and self.config.profit_trailing_stop_pct is not None
+            and not pd.isna(trail_high)
+            and float(trail_high) >= entry_price * (1.0 + self.config.profit_trailing_activation_pct)
+            and price <= float(trail_high) * (1.0 - self.config.profit_trailing_stop_pct)
+        ):
+            return True
         return False
 
     def _position_weight(self) -> float:

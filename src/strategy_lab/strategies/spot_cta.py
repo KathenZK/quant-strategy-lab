@@ -15,17 +15,22 @@ from strategy_lab.strategies.registry import register_strategy
 @dataclass(frozen=True, slots=True)
 class SpotCtaTrendConfig:
     symbols: tuple[str, ...] = ()
+    donchian_only: bool = False
     breakout_factor: str = "donchian_breakout_20"
+    donchian_exit_factor: str | None = None
     primary_momentum_factor: str = "ret_72"
     confirmation_momentum_factor: str = "ret_24"
+    acceleration_momentum_factor: str | None = None
     trend_factor: str | None = None
     volume_factor: str = "volume_surge_20"
     rsi_factor: str = "rsi_14"
     illiquidity_factor: str | None = None
     volatility_factor: str | None = None
+    require_breakout: bool = True
     min_breakout_signal: float = 1.0
     min_primary_momentum: float = 0.03
     min_confirmation_momentum: float = 0.0
+    min_acceleration_momentum: float = 0.0
     min_trend_distance: float = 0.0
     min_volume_surge: float = -0.25
     min_rsi: float = 50.0
@@ -35,6 +40,7 @@ class SpotCtaTrendConfig:
     breakout_weight: float = 0.8
     primary_momentum_weight: float = 1.0
     confirmation_momentum_weight: float = 0.6
+    acceleration_momentum_weight: float = 0.0
     trend_weight: float = 0.8
     volume_weight: float = 0.3
     rsi_weight: float = 0.2
@@ -49,22 +55,33 @@ class SpotCtaTrendConfig:
     max_hold_bars: int | None = None
     cooldown_bars: int = 6
     exit_on_signal_loss: bool = True
+    exit_on_negative_signal: bool = False
+    failed_breakout_bars: int | None = None
+    failed_breakout_min_profit_pct: float | None = None
+    breakeven_after_profit_pct: float | None = None
+    profit_trailing_activation_pct: float | None = None
+    profit_trailing_stop_pct: float | None = None
     exit_signal_threshold: float = 0.0
     max_rank_hold_positions: int | None = 20
 
     def signal_options(self) -> dict[str, object]:
         return {
+            "donchian_only": self.donchian_only,
             "breakout_factor": self.breakout_factor,
+            "donchian_exit_factor": self.donchian_exit_factor,
             "primary_momentum_factor": self.primary_momentum_factor,
             "confirmation_momentum_factor": self.confirmation_momentum_factor,
+            "acceleration_momentum_factor": self.acceleration_momentum_factor,
             "trend_factor": self.trend_factor,
             "volume_factor": self.volume_factor,
             "rsi_factor": self.rsi_factor,
             "illiquidity_factor": self.illiquidity_factor,
             "volatility_factor": self.volatility_factor,
+            "require_breakout": self.require_breakout,
             "min_breakout_signal": self.min_breakout_signal,
             "min_primary_momentum": self.min_primary_momentum,
             "min_confirmation_momentum": self.min_confirmation_momentum,
+            "min_acceleration_momentum": self.min_acceleration_momentum,
             "min_trend_distance": self.min_trend_distance,
             "min_volume_surge": self.min_volume_surge,
             "min_rsi": self.min_rsi,
@@ -74,6 +91,7 @@ class SpotCtaTrendConfig:
             "breakout_weight": self.breakout_weight,
             "primary_momentum_weight": self.primary_momentum_weight,
             "confirmation_momentum_weight": self.confirmation_momentum_weight,
+            "acceleration_momentum_weight": self.acceleration_momentum_weight,
             "trend_weight": self.trend_weight,
             "volume_weight": self.volume_weight,
             "rsi_weight": self.rsi_weight,
@@ -92,6 +110,12 @@ class SpotCtaTrendConfig:
             "max_hold_bars": self.max_hold_bars,
             "cooldown_bars": self.cooldown_bars,
             "exit_on_signal_loss": self.exit_on_signal_loss,
+            "exit_on_negative_signal": self.exit_on_negative_signal,
+            "failed_breakout_bars": self.failed_breakout_bars,
+            "failed_breakout_min_profit_pct": self.failed_breakout_min_profit_pct,
+            "breakeven_after_profit_pct": self.breakeven_after_profit_pct,
+            "profit_trailing_activation_pct": self.profit_trailing_activation_pct,
+            "profit_trailing_stop_pct": self.profit_trailing_stop_pct,
             "exit_signal_threshold": self.exit_signal_threshold,
             "max_rank_hold_positions": self.max_rank_hold_positions,
         }
