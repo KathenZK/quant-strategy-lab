@@ -6,9 +6,9 @@ import pandas as pd
 import pytest
 
 from strategy_lab.api import _jsonable_frame, _load_manifest, create_app
-from strategy_lab.config import load_settings
+from strategy_lab.settings import load_settings
 from strategy_lab.data import DataLakeLayout
-from strategy_lab.experiments import RunRegistry, RunRegistryEntry
+from strategy_lab.journal import BacktestJournal, BacktestJournalEntry
 from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 
 
@@ -143,9 +143,9 @@ def test_api_prefers_sqlite_for_runs_and_detail(tmp_path: Path) -> None:
     app_config = _write_app_config(tmp_path, reports_dir)
     manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
 
-    registry = RunRegistry(reports_dir)
-    registry.append(
-        RunRegistryEntry(
+    journal = BacktestJournal(reports_dir)
+    journal.append(
+        BacktestJournalEntry(
             kind="workflow_run",
             name="api_probe",
             run_id="run-1",
@@ -192,9 +192,9 @@ def test_api_returns_experiment_and_comparison_details(tmp_path: Path) -> None:
 
     child_one = json.loads(child_one_manifest.read_text(encoding="utf-8"))
     child_two = json.loads(child_two_manifest.read_text(encoding="utf-8"))
-    registry = RunRegistry(reports_dir)
-    registry.append(
-        RunRegistryEntry(
+    journal = BacktestJournal(reports_dir)
+    journal.append(
+        BacktestJournalEntry(
             kind="workflow_run",
             name="child_one",
             run_id="run-a",
@@ -208,8 +208,8 @@ def test_api_returns_experiment_and_comparison_details(tmp_path: Path) -> None:
         ),
         manifest_payload=child_one,
     )
-    registry.append(
-        RunRegistryEntry(
+    journal.append(
+        BacktestJournalEntry(
             kind="workflow_run",
             name="child_two",
             run_id="run-b",
@@ -256,8 +256,8 @@ def test_api_returns_experiment_and_comparison_details(tmp_path: Path) -> None:
         },
     }
     experiment_manifest_path.write_text(json.dumps(experiment_manifest), encoding="utf-8")
-    registry.append(
-        RunRegistryEntry(
+    journal.append(
+        BacktestJournalEntry(
             kind="experiment_run",
             name="exp_demo",
             run_id="run-exp",
@@ -283,8 +283,8 @@ def test_api_returns_experiment_and_comparison_details(tmp_path: Path) -> None:
         ],
     }
     comparison_manifest_path.write_text(json.dumps(comparison_manifest), encoding="utf-8")
-    registry.append(
-        RunRegistryEntry(
+    journal.append(
+        BacktestJournalEntry(
             kind="comparison_run",
             name="cmp_demo",
             run_id="run-cmp",
@@ -317,7 +317,7 @@ def test_lab_strategy_templates_are_loaded_from_yaml(tmp_path: Path) -> None:
     assert payload["templates"]
     strategy_types = [template["strategy_type"] for template in payload["templates"]]
     assert len(strategy_types) == len(set(strategy_types))
-    assert strategy_types == ["spot_cta_trend"]
+    assert strategy_types == ["spot_cta_trend", "spot_cta_pump", "donchian_hold_72h"]
     template = payload["templates"][0]
     assert template["id"].endswith((".yaml", ".yml"))
     assert template["path"].startswith("configs/workflows/strategies/")
@@ -325,49 +325,33 @@ def test_lab_strategy_templates_are_loaded_from_yaml(tmp_path: Path) -> None:
     assert template["workflow"]["strategy"]["name"]
 
 
-def test_lab_backtest_job_accepts_full_workflow_yaml(tmp_path: Path) -> None:
+def test_lab_backtest_job_accepts_strategy_type_from_code_config(tmp_path: Path) -> None:
     reports_dir = tmp_path / "reports"
     app_config = _write_app_config(tmp_path, reports_dir)
     app = create_app(app_config)
     seed_real_binance_perp_ohlcv_sample(DataLakeLayout.from_settings(load_settings(app_config)))
-    workflow_yaml = """
-strategy:
-  name: lab_yaml_probe
-  strategy_type: factor
-  factor_name: ret_1
-  exchange: binance
-  market_type: perp
-  symbols:
-    - BTC/USDT:USDT
-refresh:
-  enabled: false
-  timeframe: 1h
-workflow:
-  run_factor_report: false
-  run_backtest: true
-  run_paper_trade: false
-""".strip()
 
     payload = _endpoint(app, "/api/lab/backtests")(
         payload={
-            "template_id": "lab_yaml_probe.yaml",
-            "workflow_yaml": workflow_yaml,
+            "strategy_type": "ma_crossover",
+            "market_type": "perp",
+            "symbols": ["BTC/USDT:USDT"],
         }
     )
 
     job = payload["job"]
-    assert job["template_name"] == "lab_yaml_probe"
+    assert job["template_name"] == "ma_crossover_binance_perp_1h"
     assert job["source"] == "binance"
     assert job["timeframe"] == "1h"
     assert job["universe"] == ["BTC/USDT:USDT"]
     assert job["status"] == "completed"
+    assert job["config_source"] == "strategy_code"
     assert Path(job["manifest_path"]).exists()
     assert Path(job["backtest_report_path"]).exists()
-    assert Path(job["workflow_yaml_path"]).read_text(encoding="utf-8") == workflow_yaml
 
     runs = _endpoint(app, "/api/runs")(
         kind="workflow_run",
-        search="lab_yaml_probe",
+        search="ma_crossover_binance_perp_1h",
         strategy_type=None,
         sort_by="generated_at",
         sort_order="desc",

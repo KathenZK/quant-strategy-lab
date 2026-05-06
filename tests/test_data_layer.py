@@ -16,8 +16,8 @@ from strategy_lab.data import (
     write_dataframe,
 )
 from strategy_lab.data.pipeline import drop_incomplete_ohlcv
-from strategy_lab.features import FeatureBuilder, FeatureStore
-from strategy_lab.factors import default_registry
+from strategy_lab.data.features import FeatureBuilder, FeatureStore
+from strategy_lab.data.factors import default_registry
 
 
 def _layout(tmp_path: Path) -> DataLakeLayout:

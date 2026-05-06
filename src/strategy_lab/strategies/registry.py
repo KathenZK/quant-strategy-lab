@@ -41,14 +41,18 @@ class StrategyRegistry:
         self.discover_builtin_strategies()
         return sorted(self._strategy_classes.items())
 
+    def has(self, strategy_type: str) -> bool:
+        self.discover_builtin_strategies()
+        return strategy_type in self._strategy_classes
+
     def discover_builtin_strategies(self) -> None:
         if self._discovered:
             return
         package_path = Path(__file__).resolve().parent
         package_name = __package__
-        skip = {"__init__", "base", "common", "factory", "registry"}
+        skip = {"__init__", "base", "common", "factory", "registry", "__pycache__"}
         for module_info in pkgutil.iter_modules([str(package_path)]):
-            if module_info.name in skip or module_info.ispkg:
+            if module_info.name in skip:
                 continue
             importlib.import_module(f"{package_name}.{module_info.name}")
         self._discovered = True
@@ -73,3 +77,7 @@ def create_registered_strategy(strategy_type: str, strategy_params: dict[str, ob
 
 def list_registered_strategies() -> list[str]:
     return strategy_registry.names()
+
+
+def is_registered_strategy(strategy_type: str) -> bool:
+    return strategy_registry.has(strategy_type)

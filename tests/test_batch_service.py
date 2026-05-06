@@ -1,7 +1,7 @@
 from pathlib import Path
 
-from strategy_lab.batches import BatchRunMode
-from strategy_lab.batches.service import load_batch_for_mode, run_workflow_batch
+from strategy_lab.journal.batches import BatchRunMode
+from strategy_lab.journal.batches.service import load_batch_for_mode, run_workflow_batch
 from strategy_lab.data import DataLakeLayout
 from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 

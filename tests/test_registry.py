@@ -1,13 +1,13 @@
 from pathlib import Path
 import json
 
-from strategy_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
+from strategy_lab.journal.comparison import StrategyComparisonRunner, load_strategy_comparison
 from strategy_lab.data import DataLakeLayout, DuckDBWarehouse
-from strategy_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
-from strategy_lab.factors import default_registry
-from strategy_lab.features import FeatureBuilder, FeatureStore
+from strategy_lab.journal import BacktestJournal, ExperimentRunner, load_experiment_config
+from strategy_lab.data.factors import default_registry
+from strategy_lab.data.features import FeatureBuilder, FeatureStore
 from strategy_lab.fs import append_text_locked
-from strategy_lab.orchestration import StrategyRunner, load_strategy_workflow
+from strategy_lab.workflow import StrategyRunner, load_strategy_workflow
 from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 
 
@@ -127,7 +127,7 @@ def _write_history_manifest(reports_dir: Path) -> Path:
     return manifest_path
 
 
-def test_run_registry_indexes_workflow_experiment_and_comparison_runs(tmp_path: Path) -> None:
+def test_backtest_journal_indexes_workflow_experiment_and_comparison_runs(tmp_path: Path) -> None:
     layout = DataLakeLayout(
         root_dir=tmp_path / "data",
         raw_dir=tmp_path / "data" / "raw",
@@ -192,8 +192,8 @@ comparison:
         load_strategy_comparison(comparison_config)
     )
 
-    registry = RunRegistry(layout.reports_dir, db_path=layout.run_registry_db_path)
-    records = registry.load()
+    journal = BacktestJournal(layout.reports_dir, db_path=layout.run_registry_db_path)
+    records = journal.load()
     kinds = {item["kind"] for item in records}
 
     assert {"workflow_run", "experiment_run", "comparison_run"} <= kinds
@@ -208,18 +208,18 @@ comparison:
     assert len(comparison_records) == 1
     assert len(comparison_records[0]["child_manifest_paths"]) == 2
     assert comparison_records[0]["child_run_count"] == 2
-    assert registry.sqlite_path.exists()
+    assert journal.sqlite_path.exists()
 
     workflow_record = next(item for item in records if item["kind"] == "workflow_run" and item["name"] == "trend_registry")
-    assert registry.load_run(workflow_record["manifest_path"]) is not None
-    assert registry.load_series(workflow_record["manifest_path"], "equity_curve", limit=5)
-    assert registry.load_trades(workflow_record["manifest_path"], limit=5)
+    assert journal.load_run(workflow_record["manifest_path"]) is not None
+    assert journal.load_series(workflow_record["manifest_path"], "equity_curve", limit=5)
+    assert journal.load_trades(workflow_record["manifest_path"], limit=5)
 
 
-def test_run_registry_backfill_from_jsonl_is_idempotent(tmp_path: Path) -> None:
+def test_backtest_journal_backfill_from_jsonl_is_idempotent(tmp_path: Path) -> None:
     reports_dir = tmp_path / "reports"
     manifest_path = _write_history_manifest(reports_dir)
-    registry = RunRegistry(reports_dir)
+    journal = BacktestJournal(reports_dir)
     entry_payload = {
         "kind": "workflow_run",
         "name": "history_probe",
@@ -233,18 +233,18 @@ def test_run_registry_backfill_from_jsonl_is_idempotent(tmp_path: Path) -> None:
         "backtest_attribution": {"gross_return_sum": 0.05},
         "structured_artifact_paths": json.loads(manifest_path.read_text(encoding="utf-8"))["structured_artifacts"],
     }
-    append_text_locked(registry.path, json.dumps(entry_payload) + "\n", encoding="utf-8")
+    append_text_locked(journal.path, json.dumps(entry_payload) + "\n", encoding="utf-8")
 
-    first = registry.backfill_from_jsonl()
-    second = registry.backfill_from_jsonl()
+    first = journal.backfill_from_jsonl()
+    second = journal.backfill_from_jsonl()
 
     assert first["processed"] == 1
     assert first["failed"] == 0
     assert second["processed"] == 1
     assert second["failed"] == 0
 
-    records = registry.load(kind="workflow_run")
+    records = journal.load(kind="workflow_run")
     assert len(records) == 1
     assert records[0]["manifest_path"] == str(manifest_path)
-    assert registry.load_series(str(manifest_path), "equity_curve", limit=10)
-    assert registry.load_trades(str(manifest_path), limit=10)
+    assert journal.load_series(str(manifest_path), "equity_curve", limit=10)
+    assert journal.load_trades(str(manifest_path), limit=10)

@@ -1,7 +1,7 @@
 import pandas as pd
 import pytest
 
-from strategy_lab.factors import (
+from strategy_lab.data.factors import (
     AmihudIlliquidityFactor,
     ATRPercentFactor,
     BasisChangeFactor,

@@ -7,33 +7,34 @@ from pathlib import Path
 
 import typer
 
-from strategy_lab.batches import BatchRunMode
-from strategy_lab.batches.service import load_batch_for_mode, run_workflow_batch
-from strategy_lab.backtest import ExecutionAssumptions
-from strategy_lab.config import load_settings
+from strategy_lab.journal.batches import BatchRunMode
+from strategy_lab.journal.batches.service import load_batch_for_mode, run_workflow_batch
+from strategy_lab.settings import load_settings
 from strategy_lab.data import CCXTDataClient, DataAuthenticityAuditor, DataIngestionService, DataLakeLayout, DuckDBWarehouse, MarketType
-from strategy_lab.experiments import ExperimentRunner, RunRegistry, load_experiment_config
-from strategy_lab.factors import default_registry
-from strategy_lab.features import FeatureBuilder, FeatureStore
-from strategy_lab.ingest import (
+from strategy_lab.journal import BacktestJournal, ExperimentRunner, load_experiment_config
+from strategy_lab.data.factors import default_registry
+from strategy_lab.data.features import FeatureBuilder, FeatureStore
+from strategy_lab.data.ingest import (
     BinanceSpotUniverseConfig,
     candidate_symbols_from_markets,
     rank_symbols_by_quote_volume,
     select_binance_spot_universe,
     sync_small_cap_universe,
 )
-from strategy_lab.ingest.market_caps import DEFAULT_MARKET_CAP_THRESHOLD_USD
-from strategy_lab.orchestration import (
+from strategy_lab.data.ingest.market_caps import DEFAULT_MARKET_CAP_THRESHOLD_USD
+from strategy_lab.workflow import (
+    ExecutionAssumptions,
     IncrementalStateStore,
     RefreshOptions,
+    RiskLimits,
     StrategyRunner,
     StrategyWorkflowConfig,
     StrategyWorkflowSpec,
     UniverseOptions,
     build_strategy_scan_result,
     load_strategy_workflow,
+    strategy_workflow_from_code,
 )
-from strategy_lab.portfolio import RiskLimits
 
 app = typer.Typer(add_completion=False, help="Quant Strategy Lab research platform CLI.")
 
@@ -559,23 +560,30 @@ def paper_trade(
 
 @app.command()
 def run_strategy(
-    workflow_config: Path = typer.Option(..., "--workflow-config", help="Path to a strategy workflow YAML."),
+    strategy_type: str = typer.Argument(..., help="Strategy type to run, e.g. donchian_hold_72h."),
+    exchange: str = typer.Option("binance", "--exchange"),
+    market_type: MarketType = typer.Option(MarketType.SPOT, "--market-type"),
+    timeframe: str = typer.Option("1h", "--timeframe"),
+    symbols: str | None = typer.Option(None, "--symbols", help="Comma-separated symbols. Defaults come from strategy code."),
     use_local_universe: bool = typer.Option(False, "--use-local-universe", help="Use locally available Binance spot OHLCV symbols instead of config symbols."),
     min_avg_dollar_volume: float = typer.Option(1_000_000.0, "--min-avg-dollar-volume"),
     min_history_bars: int = typer.Option(120, "--min-history-bars", min=1),
     max_symbols: int = typer.Option(0, "--max-symbols", help="0 means no cap."),
     config: Path | None = typer.Option(None, "--config", "-c"),
 ) -> None:
-    """Run the full configured workflow and persist artifacts."""
+    """Run a strategy from code defaults and persist artifacts."""
     lake, _, builder = _runtime(config)
-    workflow = load_strategy_workflow(workflow_config)
-    if use_local_universe:
-        workflow = _with_cli_local_universe(
-            workflow,
-            min_avg_dollar_volume=min_avg_dollar_volume,
-            min_history_bars=min_history_bars,
-            max_symbols=max_symbols,
-        )
+    workflow = strategy_workflow_from_code(
+        strategy_type,
+        exchange=exchange,
+        market_type=market_type,
+        timeframe=timeframe,
+        symbols=_parse_symbols(symbols) if symbols else None,
+        use_local_universe=use_local_universe,
+        min_avg_dollar_volume=min_avg_dollar_volume,
+        min_history_bars=min_history_bars,
+        max_symbols=max_symbols,
+    )
     artifacts = StrategyRunner(layout=lake, builder=builder).run(workflow)
     typer.echo(f"run_id: {artifacts.run_id}")
     if artifacts.factor_report_path:
@@ -603,27 +611,27 @@ def feature_manifests(
         )
 
 
-@app.command()
-def run_registry(
-    kind: str | None = typer.Option(None, "--kind", help="Optional registry kind filter."),
+@app.command("backtest-journal")
+def backtest_journal(
+    kind: str | None = typer.Option(None, "--kind", help="Optional journal kind filter."),
     limit: int = typer.Option(20, "--limit", min=1, help="How many recent entries to show."),
     search: str | None = typer.Option(None, "--search", help="Optional substring filter."),
     strategy_type: str | None = typer.Option(None, "--strategy-type", help="Optional strategy type filter."),
     config: Path | None = typer.Option(None, "--config", "-c"),
 ) -> None:
-    """List recent workflow, experiment, and comparison runs."""
+    """List recent workflow, experiment, and comparison backtest journal entries."""
     lake, _, _ = _runtime(config)
-    records = RunRegistry(lake.reports_dir, db_path=lake.run_registry_db_path).load(
+    records = BacktestJournal(lake.reports_dir, db_path=lake.run_registry_db_path).load(
         kind=kind,
         search=search,
         strategy_type=strategy_type,
         limit=limit,
     )
     if not records:
-        typer.echo("registry: 0")
+        typer.echo("backtest_journal: 0")
         return
 
-    typer.echo(f"registry: {len(records)}")
+    typer.echo(f"backtest_journal: {len(records)}")
     for item in records:
         typer.echo(
             f"{item['kind']}\t{item['name']}\t{item['run_id']}\t{item['manifest_path']}"
@@ -642,11 +650,11 @@ def refresh_state(config: Path | None = typer.Option(None, "--config", "-c")) ->
         )
 
 
-@app.command()
+@app.command("backfill-backtest-journal-db")
 def backfill_run_db(config: Path | None = typer.Option(None, "--config", "-c")) -> None:
-    """Backfill the SQLite run registry from historical JSONL entries."""
+    """Backfill the SQLite backtest journal from historical JSONL entries."""
     lake, _, _ = _runtime(config)
-    summary = RunRegistry(lake.reports_dir, db_path=lake.run_registry_db_path).backfill_from_jsonl()
+    summary = BacktestJournal(lake.reports_dir, db_path=lake.run_registry_db_path).backfill_from_jsonl()
     typer.echo(f"sqlite: {summary['sqlite_path']}")
     typer.echo(f"processed: {summary['processed']}")
     typer.echo(f"succeeded: {summary['succeeded']}")

@@ -4,9 +4,7 @@ from typing import Protocol
 
 import pandas as pd
 
-from strategy_lab.allocators.base import Allocator
 from strategy_lab.data import MarketType
-from strategy_lab.signals.base import SignalModel
 
 
 class Strategy(Protocol):
@@ -15,15 +13,13 @@ class Strategy(Protocol):
         ...
 
     @property
-    def signal_model(self) -> SignalModel:
-        ...
-
-    @property
-    def allocator(self) -> Allocator:
-        ...
-
-    @property
     def signal_name(self) -> str:
+        ...
+
+    def required_data(self) -> list[str]:
+        ...
+
+    def build_factors(self, market_data: dict[str, pd.DataFrame]) -> dict[str, pd.DataFrame]:
         ...
 
     def version(self) -> str:

@@ -1,11 +1,11 @@
 from pathlib import Path
 import json
 
-from strategy_lab.batches.models import WorkflowBatchEntry
+from strategy_lab.journal.batches.models import WorkflowBatchEntry
 from strategy_lab.data import DataLakeLayout
-from strategy_lab.experiments import ExperimentRunner, load_experiment_config
-from strategy_lab.experiments.runner import _pick_winner
-from strategy_lab.reporting.experiments import render_experiment_report
+from strategy_lab.journal import ExperimentRunner, load_experiment_config
+from strategy_lab.journal.runner import _pick_winner
+from strategy_lab.journal.reporting.experiments import render_experiment_report
 from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 
 

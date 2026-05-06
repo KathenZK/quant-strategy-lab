@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from strategy_lab.comparison import StrategyComparisonRunner, load_strategy_comparison
+from strategy_lab.journal.comparison import StrategyComparisonRunner, load_strategy_comparison
 from strategy_lab.data import DataLakeLayout
 from market_data_fixtures import seed_real_binance_perp_ohlcv_sample
 

@@ -1,4 +1,4 @@
-from strategy_lab.ingest.market_caps import (
+from strategy_lab.data.ingest.market_caps import (
     BINANCE_EXCHANGE_INFO_URL,
     COINGECKO_MARKETS_URL,
     COINPAPRIKA_TICKERS_URL,

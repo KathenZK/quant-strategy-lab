@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from strategy_lab.config.settings import default_settings, load_settings
+from strategy_lab.settings import default_settings, load_settings
 
 
 def test_relative_profile_storage_converges_to_shared_paths(tmp_path: Path) -> None:

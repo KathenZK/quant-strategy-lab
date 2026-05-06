@@ -1,19 +1,5 @@
 import pandas as pd
 
-from strategy_lab.allocators import (
-    DonchianBreakoutAllocator,
-    PersistentSignalAllocator,
-    RankedCrossSectionalAllocator,
-    SmallCapMomentumBreakoutAllocator,
-)
-from strategy_lab.signals import (
-    CrowdingReversalSignalModel,
-    DonchianBreakoutSignalModel,
-    MovingAverageCrossoverSignalModel,
-    MomentumRotationSignalModel,
-    SpotCtaTrendSignalModel,
-    TrendConfirmationSignalModel,
-)
 from strategy_lab.strategies import (
     CrowdingReversalConfig,
     CrowdingReversalStrategy,
@@ -38,8 +24,8 @@ def test_trend_strategy_exposes_signal_and_allocator_components() -> None:
         )
     )
 
-    assert isinstance(strategy.signal_model, TrendConfirmationSignalModel)
-    assert isinstance(strategy.allocator, RankedCrossSectionalAllocator)
+    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.trend_confirmation")
+    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.trend_confirmation")
     assert strategy.required_factors() == strategy.signal_model.required_factors()
     assert strategy.required_liquidation_features() == strategy.allocator.required_risk_features()
 
@@ -52,8 +38,8 @@ def test_crowding_strategy_exposes_signal_and_allocator_components() -> None:
         )
     )
 
-    assert isinstance(strategy.signal_model, CrowdingReversalSignalModel)
-    assert isinstance(strategy.allocator, RankedCrossSectionalAllocator)
+    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.crowding_reversal")
+    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.crowding_reversal")
     assert strategy.required_factors() == strategy.signal_model.required_factors()
     assert strategy.required_liquidation_features() == strategy.allocator.required_risk_features()
 
@@ -66,8 +52,8 @@ def test_ma_crossover_strategy_exposes_signal_and_allocator_components() -> None
         )
     )
 
-    assert isinstance(strategy.signal_model, MovingAverageCrossoverSignalModel)
-    assert isinstance(strategy.allocator, PersistentSignalAllocator)
+    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.ma_crossover")
+    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.ma_crossover")
     assert strategy.required_factors() == strategy.signal_model.required_factors()
     assert strategy.required_liquidation_features() == []
 
@@ -82,8 +68,8 @@ def test_donchian_breakout_strategy_exposes_signal_and_allocator_components() ->
         )
     )
 
-    assert isinstance(strategy.signal_model, DonchianBreakoutSignalModel)
-    assert isinstance(strategy.allocator, DonchianBreakoutAllocator)
+    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.donchian_breakout")
+    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.donchian_breakout")
     assert strategy.required_factors() == strategy.signal_model.required_factors()
     assert set(strategy.required_factors()) == {"donchian_breakout_14", "ma_distance_120"}
     assert strategy.required_liquidation_features() == []
@@ -97,13 +83,13 @@ def test_momentum_rotation_strategy_exposes_signal_and_allocator_components() ->
         )
     )
 
-    assert isinstance(strategy.signal_model, MomentumRotationSignalModel)
-    assert isinstance(strategy.allocator, RankedCrossSectionalAllocator)
+    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.momentum_rotation")
+    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.momentum_rotation")
     assert strategy.required_factors() == strategy.signal_model.required_factors()
     assert strategy.required_liquidation_features() == strategy.allocator.required_risk_features()
 
 
-def test_spot_cta_strategy_exposes_signal_and_long_only_allocator() -> None:
+def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> None:
     strategy = SpotCtaTrendStrategy(
         SpotCtaTrendConfig(
             max_positions=5,
@@ -111,9 +97,15 @@ def test_spot_cta_strategy_exposes_signal_and_long_only_allocator() -> None:
         )
     )
 
-    assert isinstance(strategy.signal_model, SpotCtaTrendSignalModel)
-    assert isinstance(strategy.allocator, SmallCapMomentumBreakoutAllocator)
-    assert strategy.required_factors() == strategy.signal_model.required_factors()
+    assert not hasattr(strategy, "signal_model")
+    assert not hasattr(strategy, "allocator")
+    assert strategy.required_factors() == [
+        "donchian_breakout_20",
+        "ret_72",
+        "ret_24",
+        "volume_surge_20",
+        "rsi_14",
+    ]
     assert strategy.required_liquidation_features() == []
 
 

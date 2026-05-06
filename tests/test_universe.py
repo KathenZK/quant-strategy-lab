@@ -1,6 +1,6 @@
 import pandas as pd
 
-from strategy_lab.ingest import (
+from strategy_lab.data.ingest import (
     BinanceSpotUniverseConfig,
     candidate_symbols_from_markets,
     filter_symbols_by_ohlcv,

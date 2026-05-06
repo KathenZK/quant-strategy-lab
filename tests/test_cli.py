@@ -2,7 +2,7 @@ import pandas as pd
 
 from strategy_lab.cli import _with_cli_local_universe
 from strategy_lab.data import MarketType
-from strategy_lab.orchestration import StrategyWorkflowConfig, StrategyWorkflowSpec, WorkflowService
+from strategy_lab.workflow import StrategyWorkflowConfig, StrategyWorkflowSpec, WorkflowService
 
 
 class FakeWarehouse:

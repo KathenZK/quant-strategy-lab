@@ -3,11 +3,11 @@ from pathlib import Path
 import pandas as pd
 
 from strategy_lab.data import DataLakeLayout, DatasetKind, MarketType, write_dataframe
-from strategy_lab.features import FeatureBuilder, FeatureStore
-from strategy_lab.orchestration import IncrementalStateStore, StrategyRunner, load_strategy_workflow
-from strategy_lab.orchestration.workflow_service import WorkflowService
+from strategy_lab.data.features import FeatureBuilder, FeatureStore
+from strategy_lab.workflow import IncrementalStateStore, StrategyRunner, load_strategy_workflow
+from strategy_lab.workflow import WorkflowService
 from strategy_lab.data import DuckDBWarehouse
-from strategy_lab.factors import default_registry
+from strategy_lab.data.factors import default_registry
 
 
 def _layout(tmp_path: Path) -> DataLakeLayout:

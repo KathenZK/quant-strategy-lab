@@ -2,7 +2,6 @@ from __future__ import annotations
 
 from collections.abc import Iterable
 
-from strategy_lab.allocators.common import apply_liquidation_risk_overlay as _apply_liquidation_risk_overlay
 from strategy_lab.data import MarketType
 
 
@@ -32,8 +31,3 @@ def resolve_configured_symbols(
         return configured
     return market_symbols(default_bases, market_type)
 
-
-def apply_liquidation_risk_overlay(*args, **kwargs):
-    if "liquidation_features" in kwargs:
-        kwargs["risk_features"] = kwargs.pop("liquidation_features")
-    return _apply_liquidation_risk_overlay(*args, **kwargs)

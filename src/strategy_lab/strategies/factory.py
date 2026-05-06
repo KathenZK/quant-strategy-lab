@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from strategy_lab.strategies.registry import create_registered_strategy, list_registered_strategies
+from strategy_lab.strategies.registry import create_registered_strategy, is_registered_strategy, list_registered_strategies
 
 
 def create_strategy(strategy_type: str, strategy_params: dict[str, object] | None = None):
@@ -9,3 +9,7 @@ def create_strategy(strategy_type: str, strategy_params: dict[str, object] | Non
 
 def list_strategies() -> list[str]:
     return list_registered_strategies()
+
+
+def is_strategy(strategy_type: str) -> bool:
+    return is_registered_strategy(strategy_type)

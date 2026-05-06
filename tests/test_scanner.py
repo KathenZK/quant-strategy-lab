@@ -1,6 +1,6 @@
 import pandas as pd
 
-from strategy_lab.orchestration import build_strategy_scan_result
+from strategy_lab.workflow import build_strategy_scan_result
 
 
 def test_strategy_scanner_classifies_latest_weight_changes() -> None:

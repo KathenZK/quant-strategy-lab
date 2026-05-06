@@ -15,13 +15,13 @@ import pandas as pd
 from fastapi import Body, FastAPI, HTTPException, Query
 import yaml
 
-from strategy_lab.config import AppSettings, load_settings
+from strategy_lab.settings import AppSettings, load_settings
 from strategy_lab.data import DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType
-from strategy_lab.experiments import RunRegistry
-from strategy_lab.factors import default_registry
-from strategy_lab.features import FeatureBuilder, FeatureStore
-from strategy_lab.orchestration import StrategyRunner
-from strategy_lab.orchestration.config import load_strategy_workflow_text
+from strategy_lab.journal import BacktestJournal
+from strategy_lab.data.factors import default_registry
+from strategy_lab.data.features import FeatureBuilder, FeatureStore
+from strategy_lab.workflow import StrategyRunner
+from strategy_lab.workflow import load_strategy_workflow_text, strategy_workflow_from_code
 
 
 _MARKET_SOURCES = [
@@ -49,7 +49,7 @@ _MARKET_SOURCES = [
         "type": "warehouse",
         "status": "ready",
         "latency_ms": 8,
-        "coverage": ["ohlcv", "features", "snapshots", "run_registry"],
+        "coverage": ["ohlcv", "features", "snapshots", "backtest_journal"],
         "note": "策略回测默认使用可复现的数据快照。",
     },
 ]
@@ -107,6 +107,27 @@ _STRATEGY_TEMPLATE_METADATA = {
         "description": "监控小市值币种的突破、短周期动量和放量异动，并用止损、移动止盈和冷却期控制追涨风险。",
         "default_timeframe": "5m",
         "default_universe": ["DOGE/USDT", "PEPE/USDT", "WIF/USDT", "BONK/USDT", "FLOKI/USDT"],
+    },
+    "spot_cta_trend": {
+        "name": "Spot CTA 趋势轮动",
+        "category": "trend",
+        "description": "隔离版现货 CTA 趋势策略，独立管理趋势信号、排名和持仓退出逻辑。",
+        "default_timeframe": "4h",
+        "default_universe": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
+    },
+    "spot_cta_pump": {
+        "name": "Spot CTA Pump 捕捉",
+        "category": "momentum",
+        "description": "隔离版短周期爆发捕捉策略，关注 ret_12/ret_4/ret_1、放量和 RSI。",
+        "default_timeframe": "1h",
+        "default_universe": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
+    },
+    "donchian_hold_72h": {
+        "name": "Donchian 72h 持有",
+        "category": "breakout",
+        "description": "隔离版 Donchian20 入场实验，入场后固定持有 72 根 1h K 再退出。",
+        "default_timeframe": "1h",
+        "default_universe": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
     },
 }
 
@@ -528,7 +549,7 @@ def _real_market_sources(layout: DataLakeLayout, settings: AppSettings) -> list[
             "symbol_count": len(lake_symbols),
             "from": _iso_or_none(lake_start),
             "to": _iso_or_none(lake_end),
-            "note": "从 normalized parquet 和 SQLite run registry 读取真实研究数据。",
+            "note": "从 normalized parquet 和 SQLite backtest journal 读取真实研究数据。",
         }
     )
     return sources
@@ -723,7 +744,7 @@ def _enrich_run(reports_dir: Path, row: dict) -> dict:
     }
 
 
-def _run_registry_dirs(reports_dir: Path) -> list[Path]:
+def _backtest_journal_dirs(reports_dir: Path) -> list[Path]:
     candidates = [reports_dir]
     parent = reports_dir.parent
     if parent.exists():
@@ -750,7 +771,7 @@ def _run_registry_dirs(reports_dir: Path) -> list[Path]:
     return unique
 
 
-def _registry_profile(reports_dir: Path) -> str:
+def _journal_profile(reports_dir: Path) -> str:
     return reports_dir.name if reports_dir.name != "reports" else "default"
 
 
@@ -779,10 +800,10 @@ def _load_runs_across_registries(
 ) -> list[dict[str, Any]]:
     rows: list[dict[str, Any]] = []
     seen_manifest_paths: set[str] = set()
-    for registry_dir in _run_registry_dirs(reports_dir):
-        registry = RunRegistry(registry_dir, db_path=registry_dir / "_registry" / "runs.sqlite")
+    for journal_dir in _backtest_journal_dirs(reports_dir):
+        journal = BacktestJournal(journal_dir, db_path=journal_dir / "_registry" / "runs.sqlite")
         try:
-            registry_rows = registry.load(
+            journal_rows = journal.load(
                 kind=kind,
                 search=search,
                 strategy_type=strategy_type,
@@ -793,16 +814,18 @@ def _load_runs_across_registries(
             )
         except Exception:
             continue
-        for row in registry_rows:
+        for row in journal_rows:
             manifest_path = str(row.get("manifest_path") or "")
             if not manifest_path or manifest_path in seen_manifest_paths:
                 continue
             seen_manifest_paths.add(manifest_path)
             rows.append(
                 {
-                    **_enrich_run(registry_dir, row),
-                    "registry_profile": _registry_profile(registry_dir),
-                    "registry_reports_dir": str(registry_dir),
+                    **_enrich_run(journal_dir, row),
+                    "journal_profile": _journal_profile(journal_dir),
+                    "journal_reports_dir": str(journal_dir),
+                    "registry_profile": _journal_profile(journal_dir),
+                    "registry_reports_dir": str(journal_dir),
                 }
             )
 
@@ -813,16 +836,16 @@ def _load_runs_across_registries(
     return rows[:limit]
 
 
-def _find_registry_for_run(reports_dir: Path, manifest_path: str) -> tuple[Path, RunRegistry, dict[str, Any] | None]:
-    for registry_dir in _run_registry_dirs(reports_dir):
-        registry = RunRegistry(registry_dir, db_path=registry_dir / "_registry" / "runs.sqlite")
+def _find_journal_for_run(reports_dir: Path, manifest_path: str) -> tuple[Path, BacktestJournal, dict[str, Any] | None]:
+    for journal_dir in _backtest_journal_dirs(reports_dir):
+        journal = BacktestJournal(journal_dir, db_path=journal_dir / "_registry" / "runs.sqlite")
         try:
-            row = registry.load_run(manifest_path)
+            row = journal.load_run(manifest_path)
         except Exception:
             row = None
         if row is not None:
-            return registry_dir, registry, row
-    return reports_dir, RunRegistry(reports_dir, db_path=reports_dir / "_registry" / "runs.sqlite"), None
+            return journal_dir, journal, row
+    return reports_dir, BacktestJournal(reports_dir, db_path=reports_dir / "_registry" / "runs.sqlite"), None
 
 
 def create_app(config_path: str | Path | None = None) -> FastAPI:
@@ -832,7 +855,7 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
     layout.ensure_directories()
     warehouse = DuckDBWarehouse(layout)
     builder = FeatureBuilder(warehouse=warehouse, store=FeatureStore(layout), registry=default_registry())
-    registry = RunRegistry(layout.reports_dir, db_path=layout.run_registry_db_path)
+    journal = BacktestJournal(layout.reports_dir, db_path=layout.run_registry_db_path)
     app = FastAPI(title="Quant Strategy Lab API", version="0.1.0")
     lab_jobs: dict[str, dict[str, Any]] = {}
     lab_jobs_dir = layout.reports_dir / "lab_jobs"
@@ -914,19 +937,33 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
     def create_backtest_job(payload: dict[str, Any] | None = Body(default=None)) -> dict[str, Any]:
         request_payload = payload or {}
         templates = _strategy_templates()
+        strategy_type = request_payload.get("strategy_type")
         workflow_yaml = request_payload.get("workflow_yaml")
-        template_id = str(request_payload.get("template_id") or (templates[0]["id"] if templates else ""))
-        template = next((item for item in templates if item["id"] == template_id), templates[0] if templates else None)
-        if not workflow_yaml:
-            if template is None:
-                raise HTTPException(status_code=400, detail="workflow_yaml is required when no YAML templates are available")
-            workflow_yaml = template["workflow_yaml"]
-        if not isinstance(workflow_yaml, str) or not workflow_yaml.strip():
-            raise HTTPException(status_code=400, detail="workflow_yaml must be a non-empty YAML string")
-        try:
-            workflow_config = load_strategy_workflow_text(workflow_yaml)
-        except Exception as exc:
-            raise HTTPException(status_code=400, detail=f"invalid workflow_yaml: {exc}") from exc
+        template_id = str(request_payload.get("template_id") or strategy_type or (templates[0]["id"] if templates else ""))
+        if strategy_type:
+            try:
+                workflow_config = strategy_workflow_from_code(
+                    str(strategy_type),
+                    exchange=str(request_payload.get("exchange") or "binance"),
+                    market_type=MarketType(str(request_payload.get("market_type") or "spot")),
+                    timeframe=str(request_payload.get("timeframe") or "1h"),
+                    symbols=[str(symbol).upper() for symbol in request_payload.get("symbols", [])] or None,
+                    use_local_universe=bool(request_payload.get("use_local_universe", False)),
+                )
+            except Exception as exc:
+                raise HTTPException(status_code=400, detail=f"invalid strategy_type: {exc}") from exc
+        else:
+            template = next((item for item in templates if item["id"] == template_id), templates[0] if templates else None)
+            if not workflow_yaml:
+                if template is None:
+                    raise HTTPException(status_code=400, detail="strategy_type is required when no code template is available")
+                workflow_yaml = template["workflow_yaml"]
+            if not isinstance(workflow_yaml, str) or not workflow_yaml.strip():
+                raise HTTPException(status_code=400, detail="workflow_yaml must be a non-empty YAML string")
+            try:
+                workflow_config = load_strategy_workflow_text(workflow_yaml)
+            except Exception as exc:
+                raise HTTPException(status_code=400, detail=f"invalid workflow_yaml: {exc}") from exc
         runner = StrategyRunner(layout=layout, builder=builder)
         try:
             workflow_config = runner.workflow_service.with_resolved_symbols(workflow_config)
@@ -937,10 +974,6 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         created_at = datetime.now(timezone.utc).isoformat()
         snapshot_id = f"web-{datetime.now(timezone.utc).strftime('%Y%m%d%H%M%S')}-{job_id[:6]}"
         lab_jobs_dir.mkdir(parents=True, exist_ok=True)
-        submitted_workflows_dir = lab_jobs_dir / "workflows"
-        submitted_workflows_dir.mkdir(parents=True, exist_ok=True)
-        workflow_yaml_path = submitted_workflows_dir / f"{job_id}.yaml"
-        workflow_yaml_path.write_text(workflow_yaml, encoding="utf-8")
         job = {
             "id": job_id,
             "status": "running",
@@ -952,13 +985,13 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
             "timeframe": workflow_config.refresh.timeframe,
             "universe": workflow_config.strategy.symbols,
             "parameters": workflow_config.strategy.strategy_params,
-            "workflow_yaml_path": str(workflow_yaml_path),
+            "config_source": "strategy_code" if strategy_type else "legacy_yaml",
             "data_snapshot_id": snapshot_id,
             "result_sink": {
-                "registry_db": str(layout.run_registry_db_path),
+                "backtest_journal_db": str(layout.run_registry_db_path),
                 "reports_dir": str(layout.reports_dir),
             },
-            "next_step": "已保存编辑后的 YAML workflow，正在运行回测并写入 RunRegistry。",
+            "next_step": "已从策略代码生成运行配置，正在运行回测并写入 BacktestJournal。",
         }
         lab_jobs[job_id] = job
         (lab_jobs_dir / f"{job_id}.json").write_text(json.dumps(job, ensure_ascii=False, indent=2), encoding="utf-8")
@@ -978,7 +1011,7 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
                     "backtest_metrics": artifacts.backtest_metrics,
                     "paper_summary": artifacts.paper_summary,
                     "data_snapshot_id": manifest_payload.get("data_snapshot_id") or snapshot_id,
-                    "next_step": "回测已完成，结果已写入 RunRegistry，可在回测记录页面查看。",
+                    "next_step": "回测已完成，结果已写入 BacktestJournal，可在回测记录页面查看。",
                 }
             )
         except Exception as exc:
@@ -987,7 +1020,7 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
                     "status": "failed",
                     "updated_at": datetime.now(timezone.utc).isoformat(),
                     "error": str(exc),
-                    "next_step": "回测执行失败，请检查 YAML、数据快照和因子配置。",
+                    "next_step": "回测执行失败，请检查策略代码配置、数据快照和因子配置。",
                 }
             )
 
@@ -1033,8 +1066,8 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
         manifest_path: str = Query(...),
         limit: int = Query(1000, ge=1, le=5000),
     ) -> dict:
-        registry_reports_dir, selected_registry, run_row = _find_registry_for_run(layout.reports_dir, manifest_path)
-        manifest = selected_registry.load_manifest(manifest_path) or _load_manifest(registry_reports_dir, manifest_path)
+        journal_reports_dir, selected_journal, run_row = _find_journal_for_run(layout.reports_dir, manifest_path)
+        manifest = selected_journal.load_manifest(manifest_path) or _load_manifest(journal_reports_dir, manifest_path)
         artifacts = manifest.get("structured_artifacts", {})
         metrics = None
         if run_row and (run_row.get("backtest_metrics") or run_row.get("backtest_attribution")):
@@ -1042,29 +1075,29 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
                 "backtest_metrics": run_row.get("backtest_metrics", {}),
                 "backtest_attribution": run_row.get("backtest_attribution", {}),
             }
-        equity_curve = selected_registry.load_series(manifest_path, "equity_curve", limit=limit)
-        period_returns = selected_registry.load_series(manifest_path, "period_returns", limit=limit)
-        trades = selected_registry.load_trades(manifest_path, limit=limit)
+        equity_curve = selected_journal.load_series(manifest_path, "equity_curve", limit=limit)
+        period_returns = selected_journal.load_series(manifest_path, "period_returns", limit=limit)
+        trades = selected_journal.load_trades(manifest_path, limit=limit)
         return {
-            "run": _enrich_run(registry_reports_dir, run_row) if run_row else None,
+            "run": _enrich_run(journal_reports_dir, run_row) if run_row else None,
             "manifest": manifest,
             "artifacts": {
-                "prices": _jsonable_frame(registry_reports_dir, artifacts.get("prices"), row_limit=limit),
-                "signals": _jsonable_frame(registry_reports_dir, artifacts.get("signals"), row_limit=limit),
-                "weights": _jsonable_frame(registry_reports_dir, artifacts.get("weights"), row_limit=limit),
-                "trades": trades or _jsonable_frame(registry_reports_dir, artifacts.get("trades"), row_limit=limit),
-                "equity_curve": equity_curve or _jsonable_frame(registry_reports_dir, artifacts.get("equity_curve"), row_limit=limit),
-                "period_returns": period_returns or _jsonable_frame(registry_reports_dir, artifacts.get("period_returns"), row_limit=limit),
+                "prices": _jsonable_frame(journal_reports_dir, artifacts.get("prices"), row_limit=limit),
+                "signals": _jsonable_frame(journal_reports_dir, artifacts.get("signals"), row_limit=limit),
+                "weights": _jsonable_frame(journal_reports_dir, artifacts.get("weights"), row_limit=limit),
+                "trades": trades or _jsonable_frame(journal_reports_dir, artifacts.get("trades"), row_limit=limit),
+                "equity_curve": equity_curve or _jsonable_frame(journal_reports_dir, artifacts.get("equity_curve"), row_limit=limit),
+                "period_returns": period_returns or _jsonable_frame(journal_reports_dir, artifacts.get("period_returns"), row_limit=limit),
             },
-            "metrics": metrics or _read_json(registry_reports_dir, artifacts.get("metrics")),
+            "metrics": metrics or _read_json(journal_reports_dir, artifacts.get("metrics")),
             "row_limit": limit,
         }
 
     @app.get("/api/experiment-detail")
     def experiment_detail(manifest_path: str = Query(...)) -> dict:
-        run_row = registry.load_run(manifest_path)
-        manifest = registry.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)
-        children = [_enrich_run(layout.reports_dir, child) for child in registry.load_child_runs(manifest_path)]
+        run_row = journal.load_run(manifest_path)
+        manifest = journal.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)
+        children = [_enrich_run(layout.reports_dir, child) for child in journal.load_child_runs(manifest_path)]
         return {
             "run": _enrich_run(layout.reports_dir, run_row) if run_row else None,
             "manifest": manifest,
@@ -1073,9 +1106,9 @@ def create_app(config_path: str | Path | None = None) -> FastAPI:
 
     @app.get("/api/comparison-detail")
     def comparison_detail(manifest_path: str = Query(...)) -> dict:
-        run_row = registry.load_run(manifest_path)
-        manifest = registry.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)
-        children = [_enrich_run(layout.reports_dir, child) for child in registry.load_child_runs(manifest_path)]
+        run_row = journal.load_run(manifest_path)
+        manifest = journal.load_manifest(manifest_path) or _load_manifest(layout.reports_dir, manifest_path)
+        children = [_enrich_run(layout.reports_dir, child) for child in journal.load_child_runs(manifest_path)]
         return {
             "run": _enrich_run(layout.reports_dir, run_row) if run_row else None,
             "manifest": manifest,

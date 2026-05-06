@@ -1,8 +1,12 @@
 import pandas as pd
 
-from strategy_lab.backtest import CrossSectionalBacktester, ExecutionAssumptions, PortfolioBacktester
-from strategy_lab.backtest.engine import _periods_per_year
-from strategy_lab.portfolio import RiskLimits
+from strategy_lab.strategies.donchian_hold_72h.backtest import (
+    CrossSectionalBacktester,
+    ExecutionAssumptions,
+    PortfolioBacktester,
+    RiskLimits,
+    _periods_per_year,
+)
 
 
 def _frames() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:
