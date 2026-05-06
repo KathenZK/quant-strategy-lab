@@ -13,8 +13,6 @@ from strategy_lab.strategies import (
     MomentumRotationStrategy,
     SmallCapMomentumBreakoutConfig,
     SmallCapMomentumBreakoutStrategy,
-    SpotCtaPumpConfig,
-    SpotCtaPumpStrategy,
     SpotCtaTrendConfig,
     SpotCtaTrendStrategy,
     TrendConfirmationConfig,
@@ -921,64 +919,6 @@ def test_spot_cta_trend_exits_failed_followthrough() -> None:
     assert weights.loc[index[0], "BTC"] == pytest.approx(0.70)
     assert weights.loc[index[1], "BTC"] == pytest.approx(0.70)
     assert weights.loc[index[2], "BTC"] == pytest.approx(0.0)
-
-
-def test_spot_cta_pump_waits_for_confirmation() -> None:
-    index = pd.date_range("2024-01-01", periods=4, freq="h", tz="UTC")
-    factors = {
-        "donchian_breakout_10": pd.DataFrame({"BTC": [1.0, 1.0, 1.0, 1.0]}, index=index),
-        "ret_12": pd.DataFrame({"BTC": [0.12, 0.11, 0.10, 0.09]}, index=index),
-        "ret_4": pd.DataFrame({"BTC": [0.05, 0.05, 0.04, 0.04]}, index=index),
-        "ret_1": pd.DataFrame({"BTC": [0.02, 0.02, 0.01, 0.01]}, index=index),
-        "volume_surge_20": pd.DataFrame({"BTC": [1.2, 1.1, 1.0, 1.0]}, index=index),
-        "rsi_14": pd.DataFrame({"BTC": [75.0, 76.0, 77.0, 78.0]}, index=index),
-        "age_bars": pd.DataFrame({"BTC": [300.0, 301.0, 302.0, 303.0]}, index=index),
-    }
-    price_frame = pd.DataFrame({"BTC": [100.0, 101.0, 102.0, 103.0]}, index=index)
-    strategy = SpotCtaPumpStrategy(
-        SpotCtaPumpConfig(
-            max_positions=1,
-            long_allocation=0.60,
-            stop_loss_pct=None,
-            trailing_stop_pct=None,
-            cooldown_bars=0,
-        )
-    )
-
-    signal = strategy.build_signal_frame(factors)
-    weights = strategy.build_weights(signal, price_frame=price_frame)
-
-    assert weights.loc[index[0], "BTC"] == pytest.approx(0.0)
-    assert weights.loc[index[1], "BTC"] == pytest.approx(0.0)
-    assert weights.loc[index[2], "BTC"] == pytest.approx(0.60)
-
-
-def test_spot_cta_pump_cancels_pending_entry_after_pullback() -> None:
-    index = pd.date_range("2024-01-01", periods=4, freq="h", tz="UTC")
-    factors = {
-        "donchian_breakout_10": pd.DataFrame({"BTC": [1.0, 1.0, 1.0, 1.0]}, index=index),
-        "ret_12": pd.DataFrame({"BTC": [0.12, 0.11, 0.10, 0.09]}, index=index),
-        "ret_4": pd.DataFrame({"BTC": [0.05, 0.05, 0.04, 0.04]}, index=index),
-        "ret_1": pd.DataFrame({"BTC": [0.02, 0.02, 0.01, 0.01]}, index=index),
-        "volume_surge_20": pd.DataFrame({"BTC": [1.2, 1.1, 1.0, 1.0]}, index=index),
-        "rsi_14": pd.DataFrame({"BTC": [75.0, 76.0, 77.0, 78.0]}, index=index),
-        "age_bars": pd.DataFrame({"BTC": [300.0, 301.0, 302.0, 303.0]}, index=index),
-    }
-    price_frame = pd.DataFrame({"BTC": [100.0, 99.0, 96.0, 103.0]}, index=index)
-    strategy = SpotCtaPumpStrategy(
-        SpotCtaPumpConfig(
-            max_positions=1,
-            long_allocation=0.60,
-            stop_loss_pct=None,
-            trailing_stop_pct=None,
-            cooldown_bars=0,
-        )
-    )
-
-    signal = strategy.build_signal_frame(factors)
-    weights = strategy.build_weights(signal, price_frame=price_frame)
-
-    assert weights["BTC"].sum() == pytest.approx(0.0)
 
 
 def test_strategy_registry_lists_builtin_strategies() -> None:

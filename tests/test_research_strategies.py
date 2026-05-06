@@ -51,7 +51,8 @@ def test_shared_execution_lives_under_data_layer() -> None:
 def test_strategy_registry_discovers_isolated_spot_cta_strategies() -> None:
     strategy_types = set(list_strategies())
 
-    assert {"donchian_hold_72h", "spot_cta_trend", "spot_cta_pump"} <= strategy_types
+    assert {"donchian_hold_72h", "spot_cta_trend"} <= strategy_types
+    assert "spot_cta_pump" not in strategy_types
 
 
 def test_donchian_hold_72h_builds_fixed_hold_weights_without_shared_allocator() -> None:

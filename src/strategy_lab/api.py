@@ -115,13 +115,6 @@ _STRATEGY_TEMPLATE_METADATA = {
         "default_timeframe": "4h",
         "default_universe": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
     },
-    "spot_cta_pump": {
-        "name": "Spot CTA Pump 捕捉",
-        "category": "momentum",
-        "description": "隔离版短周期爆发捕捉策略，关注 ret_12/ret_4/ret_1、放量和 RSI。",
-        "default_timeframe": "1h",
-        "default_universe": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
-    },
     "donchian_hold_72h": {
         "name": "Donchian 72h 持有",
         "category": "breakout",
