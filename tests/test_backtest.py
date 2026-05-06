@@ -1,12 +1,12 @@
 import pandas as pd
 
-from strategy_lab.strategies.donchian_hold_72h.backtest import (
+from strategy_lab.data.execution import (
     CrossSectionalBacktester,
     ExecutionAssumptions,
     PortfolioBacktester,
     RiskLimits,
-    _periods_per_year,
 )
+from strategy_lab.data.execution.backtest import _periods_per_year
 
 
 def _frames() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame, pd.DataFrame]:

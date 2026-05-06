@@ -331,6 +331,60 @@ def test_incremental_state_store_tracks_checkpoints(tmp_path: Path) -> None:
     assert pd.Timestamp(resolved) == pd.Timestamp("2024-01-09T22:00:00Z")
 
 
+def test_incremental_state_store_isolates_strategy_owners(tmp_path: Path) -> None:
+    store = IncrementalStateStore(tmp_path)
+    common_kwargs = dict(
+        dataset=DatasetKind.OHLCV,
+        exchange="binance",
+        symbol="BTC/USDT",
+        market_type=MarketType.SPOT,
+        timeframe="1h",
+        rows=10,
+        raw_path="raw.parquet",
+        normalized_path="normalized.parquet",
+    )
+
+    store.update_checkpoint(
+        last_ts="2026-05-06T12:00:00Z",
+        owner="spot_cta_trend",
+        **common_kwargs,
+    )
+    store.update_checkpoint(
+        last_ts="2026-05-04T00:00:00Z",
+        owner="donchian_hold_72h",
+        **common_kwargs,
+    )
+
+    cta_resolved = store.resolve_since(
+        dataset=DatasetKind.OHLCV,
+        exchange="binance",
+        symbol="BTC/USDT",
+        market_type=MarketType.SPOT,
+        timeframe="1h",
+        owner="spot_cta_trend",
+    )
+    hold_resolved = store.resolve_since(
+        dataset=DatasetKind.OHLCV,
+        exchange="binance",
+        symbol="BTC/USDT",
+        market_type=MarketType.SPOT,
+        timeframe="1h",
+        owner="donchian_hold_72h",
+    )
+    other_resolved = store.resolve_since(
+        dataset=DatasetKind.OHLCV,
+        exchange="binance",
+        symbol="BTC/USDT",
+        market_type=MarketType.SPOT,
+        timeframe="1h",
+        owner="some_new_strategy",
+    )
+
+    assert pd.Timestamp(cta_resolved) == pd.Timestamp("2026-05-06T12:00:00Z")
+    assert pd.Timestamp(hold_resolved) == pd.Timestamp("2026-05-04T00:00:00Z")
+    assert other_resolved is None, "different strategies must not share refresh checkpoints"
+
+
 def test_load_strategy_workflow_reads_defaults(tmp_path: Path) -> None:
     config_path = tmp_path / "strategy.yaml"
     config_path.write_text(

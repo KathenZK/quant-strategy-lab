@@ -4,23 +4,18 @@ from dataclasses import dataclass, field
 from typing import Any
 
 from strategy_lab.data import MarketType
+from strategy_lab.data.execution import ExecutionAssumptions, RiskLimits
 
-
-@dataclass(frozen=True, slots=True)
-class ExecutionAssumptions:
-    fee_bps: float = 5.0
-    slippage_bps: float = 2.0
-    starting_cash: float = 100_000.0
-
-
-@dataclass(frozen=True, slots=True)
-class RiskLimits:
-    max_abs_weight: float = 0.20
-    max_gross_leverage: float = 1.0
-    max_net_exposure: float = 1.0
-    min_dollar_volume: float = 0.0
-    max_funding_rate_abs: float | None = None
-    max_drawdown: float | None = None
+__all__ = [
+    "ExecutionAssumptions",
+    "RefreshOptions",
+    "RiskLimits",
+    "ScheduleOptions",
+    "StrategyRunArtifacts",
+    "StrategyWorkflowConfig",
+    "StrategyWorkflowSpec",
+    "UniverseOptions",
+]
 
 
 @dataclass(frozen=True, slots=True)

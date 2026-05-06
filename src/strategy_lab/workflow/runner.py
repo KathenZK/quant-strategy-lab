@@ -11,9 +11,9 @@ from strategy_lab.data import DataIngestionService, DataLakeLayout, DatasetKind
 from strategy_lab.journal.registry import BacktestJournal, BacktestJournalEntry
 from strategy_lab.data.features import FeatureBuilder
 from strategy_lab.fs import atomic_write_path
-from strategy_lab.journal.workflow.models import StrategyRunArtifacts, StrategyWorkflowConfig
-from strategy_lab.journal.workflow.state import IncrementalStateStore
-from strategy_lab.journal.workflow.workflow_service import WorkflowService
+from strategy_lab.workflow.models import StrategyRunArtifacts, StrategyWorkflowConfig
+from strategy_lab.workflow.state import IncrementalStateStore
+from strategy_lab.workflow.workflow_service import WorkflowService
 
 
 def _hash_payload(payload: object) -> str:
@@ -69,6 +69,7 @@ class StrategyRunner:
             market_type=config.strategy.market_type,
             timeframe=timeframe,
             overlap_bars=config.refresh.overlap_bars,
+            owner=config.strategy.name,
         )
 
     def _record_refresh(
@@ -91,6 +92,7 @@ class StrategyRunner:
             rows=int(result["rows"]),
             raw_path=str(result["raw"]),
             normalized_path=str(result["normalized"]),
+            owner=config.strategy.name,
         )
 
     def refresh_data(

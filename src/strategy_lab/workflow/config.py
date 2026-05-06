@@ -5,7 +5,7 @@ from pathlib import Path
 import yaml
 
 from strategy_lab.data import MarketType
-from strategy_lab.journal.workflow.models import (
+from strategy_lab.workflow.models import (
     ExecutionAssumptions,
     RefreshOptions,
     RiskLimits,

@@ -15,13 +15,13 @@ def test_legacy_strategies_are_directory_packages_not_flat_modules() -> None:
 
 def test_strategy_lab_top_level_is_minimal_after_refactor() -> None:
     package_dir = Path(__file__).resolve().parents[1] / "src" / "strategy_lab"
-    allowed_dirs = {"data", "journal", "strategies"}
+    allowed_dirs = {"data", "journal", "strategies", "workflow"}
     top_level_dirs = {path.name for path in package_dir.iterdir() if path.is_dir() and path.name != "__pycache__"}
 
     assert top_level_dirs == allowed_dirs
 
 
-def test_each_strategy_package_has_local_building_blocks() -> None:
+def test_each_strategy_package_only_holds_strategy_intent() -> None:
     strategies_dir = Path(__file__).resolve().parents[1] / "src" / "strategy_lab" / "strategies"
     infrastructure_dirs = {"__pycache__"}
     strategy_dirs = [
@@ -31,16 +31,21 @@ def test_each_strategy_package_has_local_building_blocks() -> None:
     ]
 
     assert strategy_dirs
+    forbidden = {"backtest.py", "paper.py", "factors.py", "portfolio_base.py", "portfolio_common.py", "signal_common.py"}
     for strategy_dir in strategy_dirs:
-        expected = {"__init__.py", "config.py", "factors.py", "signal.py", "portfolio.py", "backtest.py", "paper.py", "strategy.py"}
         present = {path.name for path in strategy_dir.iterdir() if path.is_file()}
-        assert expected <= present
+        assert "strategy.py" in present, f"{strategy_dir.name} missing strategy.py"
+        leaked = present & forbidden
+        assert not leaked, f"{strategy_dir.name} still ships shared infra: {sorted(leaked)}"
 
 
-def test_shared_engine_directory_has_been_removed() -> None:
+def test_shared_execution_lives_under_data_layer() -> None:
     package_dir = Path(__file__).resolve().parents[1] / "src" / "strategy_lab"
 
+    assert (package_dir / "data" / "execution" / "backtest.py").exists()
+    assert (package_dir / "data" / "execution" / "paper.py").exists()
     assert not (package_dir / "journal" / "engine").exists()
+    assert not (package_dir / "workflow.py").exists()
 
 
 def test_strategy_registry_discovers_isolated_spot_cta_strategies() -> None:

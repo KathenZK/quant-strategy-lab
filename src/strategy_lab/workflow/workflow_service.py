@@ -1,27 +1,27 @@
 from __future__ import annotations
 
 from dataclasses import dataclass, replace
-from importlib import import_module
 from pathlib import Path
 import json
 
 import pandas as pd
 
+from strategy_lab.data.execution import (
+    CrossSectionalBacktester,
+    PaperBroker,
+    PaperTradingSession,
+    PortfolioBacktester,
+    RiskManager,
+    compute_backtest_attribution,
+)
 from strategy_lab.data.features import FeatureBuilder
 from strategy_lab.data.ingest import BinanceSpotUniverseConfig, select_binance_spot_universe
-from strategy_lab.journal.workflow.models import StrategyWorkflowConfig
-from strategy_lab.journal.workflow.panels import MultiFactorUniversePanels, UniversePanels, load_multi_factor_panels, load_universe_panels
+from strategy_lab.workflow.models import StrategyWorkflowConfig
+from strategy_lab.workflow.panels import MultiFactorUniversePanels, UniversePanels, load_multi_factor_panels, load_universe_panels
 from strategy_lab.journal.reporting import render_backtest_report, render_factor_report, render_paper_trading_report
 from strategy_lab.journal.research import FactorResearchLab
 from strategy_lab.strategies import create_strategy, is_strategy
 from strategy_lab.fs import atomic_write_path
-
-
-def _strategy_local_module(strategy, module_name: str):
-    if strategy is None:
-        return import_module(f"strategy_lab.strategies.donchian_hold_72h.{module_name}")
-    strategy_package = type(strategy).__module__.rsplit(".", 1)[0]
-    return import_module(f"{strategy_package}.{module_name}")
 
 
 @dataclass(frozen=True, slots=True)
@@ -309,16 +309,15 @@ class WorkflowService:
             target_weights=None,
         )
 
-    def run_backtest(self, config: StrategyWorkflowConfig, prepared: PreparedWorkflow, *, strategy=None):
-        local_backtest = _strategy_local_module(strategy, "backtest")
+    def run_backtest(self, config: StrategyWorkflowConfig, prepared: PreparedWorkflow):
         if prepared.target_weights is None:
-            return local_backtest.CrossSectionalBacktester(assumptions=config.execution, risk_limits=config.risk).run(
+            return CrossSectionalBacktester(assumptions=config.execution, risk_limits=config.risk).run(
                 factor_frame=prepared.signal_frame,
                 price_frame=prepared.panels.price,
                 dollar_volume=prepared.panels.dollar_volume,
                 funding_rate=prepared.panels.funding_rate,
             )
-        return local_backtest.PortfolioBacktester(assumptions=config.execution, risk_limits=config.risk).run(
+        return PortfolioBacktester(assumptions=config.execution, risk_limits=config.risk).run(
             target_weights=prepared.target_weights,
             price_frame=prepared.panels.price,
             dollar_volume=prepared.panels.dollar_volume,
@@ -336,8 +335,6 @@ class WorkflowService:
         backtest = None
         effective_weights = prepared.target_weights
         paper_target_weights = prepared.target_weights
-        local_backtest = _strategy_local_module(strategy, "backtest")
-        local_paper = _strategy_local_module(strategy, "paper")
 
         if config.run_factor_report:
             diagnostics = FactorResearchLab().evaluate(prepared.signal_frame, prepared.panels.price)
@@ -346,9 +343,9 @@ class WorkflowService:
             atomic_write_path(factor_report_path, lambda temp_path: temp_path.write_text(report, encoding="utf-8"))
 
         if config.run_backtest:
-            backtest = self.run_backtest(config, prepared, strategy=strategy)
+            backtest = self.run_backtest(config, prepared)
             effective_weights = backtest.weights
-            backtest_attribution = local_backtest.compute_backtest_attribution(
+            backtest_attribution = compute_backtest_attribution(
                 weights=backtest.weights,
                 price_frame=prepared.panels.price,
                 funding_rate=prepared.panels.funding_rate,
@@ -370,7 +367,7 @@ class WorkflowService:
             atomic_write_path(backtest_report_path, lambda temp_path: temp_path.write_text(report, encoding="utf-8"))
 
         if config.run_paper_trade and paper_target_weights is None:
-            paper_target_weights = local_backtest.CrossSectionalBacktester(
+            paper_target_weights = CrossSectionalBacktester(
                 assumptions=config.execution,
                 risk_limits=config.risk,
             ).build_weights(prepared.signal_frame)
@@ -387,13 +384,13 @@ class WorkflowService:
         )
 
         if config.run_paper_trade:
-            session = local_paper.PaperTradingSession(
-                broker=local_paper.PaperBroker(
+            session = PaperTradingSession(
+                broker=PaperBroker(
                     starting_cash=config.execution.starting_cash,
                     fee_bps=config.execution.fee_bps,
                     slippage_bps=config.execution.slippage_bps,
                 ),
-                risk_manager=local_backtest.RiskManager(config.risk),
+                risk_manager=RiskManager(config.risk),
             )
             paper = session.run(
                 target_weights=paper_target_weights,

@@ -5,9 +5,11 @@ from collections.abc import Callable, Iterable
 from dataclasses import asdict, dataclass
 import hashlib
 import importlib
+import inspect
 import json
 from pathlib import Path
 import pkgutil
+import textwrap
 
 import pandas as pd
 
@@ -40,11 +42,22 @@ class PandasFactor(ABC):
             "class_name": type(self).__name__,
             "metadata": asdict(self.metadata),
             "parameters": self.parameters(),
+            "source_hash": self._compute_source_hash(),
         }
 
     def version(self) -> str:
         encoded = json.dumps(self.spec(), sort_keys=True, default=str).encode("utf-8")
         return hashlib.sha256(encoded).hexdigest()[:16]
+
+    @classmethod
+    def _compute_source_hash(cls) -> str:
+        """Hash the `compute` implementation so cached features invalidate when the
+        algorithm changes, even if no parameter changed."""
+        try:
+            source = textwrap.dedent(inspect.getsource(cls.compute))
+        except (OSError, TypeError):
+            source = cls.__qualname__
+        return hashlib.sha256(source.encode("utf-8")).hexdigest()[:12]
 
     @abstractmethod
     def compute(self, frame: pd.DataFrame) -> pd.Series:

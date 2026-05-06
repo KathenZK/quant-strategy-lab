@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-import hashlib
-import json
+from dataclasses import dataclass
 
-import pandas as pd
+from strategy_lab.strategies.base import CompositeStrategy
+from strategy_lab.strategies.registry import register_strategy
 
 from .portfolio import RankedCrossSectionalAllocator, RankedCrossSectionalAllocatorConfig
 from .signal import MomentumRotationSignalConfig, MomentumRotationSignalModel
-from strategy_lab.strategies.common import resolve_configured_symbols
-from strategy_lab.strategies.registry import register_strategy
 
 
 @dataclass(frozen=True, slots=True)
@@ -86,65 +83,25 @@ class MomentumRotationConfig:
 
 
 @register_strategy("momentum_rotation")
-@dataclass(slots=True)
-class MomentumRotationStrategy:
-    config: MomentumRotationConfig
-    signal_model: MomentumRotationSignalModel = field(init=False)
-    allocator: RankedCrossSectionalAllocator = field(init=False)
-
-    def __post_init__(self) -> None:
-        self.signal_model = MomentumRotationSignalModel(
-            config=MomentumRotationSignalConfig(**self.config.signal_options())
-        )
-        self.allocator = RankedCrossSectionalAllocator(
-            config=RankedCrossSectionalAllocatorConfig(**self.config.allocator_options())
-        )
+class MomentumRotationStrategy(
+    CompositeStrategy[
+        MomentumRotationConfig,
+        MomentumRotationSignalModel,
+        RankedCrossSectionalAllocator,
+    ]
+):
+    default_symbol_bases = ("BTC", "ETH", "SOL")
 
     @classmethod
-    def from_options(cls, options: dict[str, object] | None = None) -> "MomentumRotationStrategy":
-        return cls(config=MomentumRotationConfig(**(options or {})))
+    def _config_cls(cls) -> type[MomentumRotationConfig]:
+        return MomentumRotationConfig
 
-    @property
-    def signal_name(self) -> str:
-        return self.SIGNAL_TYPE
-
-    def spec(self) -> dict[str, object]:
-        return {
-            "class_name": type(self).__name__,
-            "signal_model": self.signal_model.spec(),
-            "allocator": self.allocator.spec(),
-        }
-
-    def version(self) -> str:
-        encoded = json.dumps(self.spec(), sort_keys=True, default=str).encode("utf-8")
-        return hashlib.sha256(encoded).hexdigest()[:16]
-
-    def required_factors(self) -> list[str]:
-        return self.signal_model.required_factors()
-
-    def required_liquidation_features(self) -> list[str]:
-        return self.allocator.required_risk_features()
-
-    def default_symbols(self, *, exchange: str, market_type) -> list[str]:
-        return resolve_configured_symbols(
-            self.config.symbols,
-            market_type=market_type,
-            default_bases=("BTC", "ETH", "SOL"),
+    def _build_signal_model(self, config: MomentumRotationConfig) -> MomentumRotationSignalModel:
+        return MomentumRotationSignalModel(
+            config=MomentumRotationSignalConfig(**config.signal_options())
         )
 
-    def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
-        return self.signal_model.build_signal_frame(factors)
-
-    def build_weights(
-        self,
-        signal_frame: pd.DataFrame,
-        liquidation_features: dict[str, pd.DataFrame] | None = None,
-        price_frame: pd.DataFrame | None = None,
-        factors: dict[str, pd.DataFrame] | None = None,
-    ) -> pd.DataFrame:
-        return self.allocator.build_weights(
-            signal_frame,
-            risk_features=liquidation_features,
-            price_frame=price_frame,
-            factor_frames=factors,
+    def _build_allocator(self, config: MomentumRotationConfig) -> RankedCrossSectionalAllocator:
+        return RankedCrossSectionalAllocator(
+            config=RankedCrossSectionalAllocatorConfig(**config.allocator_options())
         )

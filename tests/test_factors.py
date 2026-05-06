@@ -65,6 +65,30 @@ def test_trailing_return_factor_uses_pct_change() -> None:
     assert result.iloc[2] == pytest.approx(0.10)
 
 
+def test_factor_version_changes_when_compute_logic_changes() -> None:
+    factor = TrailingReturnFactor(periods=24)
+    baseline_version = factor.version()
+    baseline_spec = factor.spec()
+    assert "source_hash" in baseline_spec
+    assert baseline_spec["source_hash"]
+
+    original_compute = TrailingReturnFactor.compute
+
+    def patched_compute(self, frame):
+        return frame[self.price_column].pct_change(self.periods).fillna(0.0)
+
+    try:
+        TrailingReturnFactor.compute = patched_compute
+        mutated_version = TrailingReturnFactor(periods=24).version()
+    finally:
+        TrailingReturnFactor.compute = original_compute
+
+    assert mutated_version != baseline_version, (
+        "Factor.version() must change when compute() implementation changes, "
+        "otherwise feature caches silently keep the stale values."
+    )
+
+
 def test_open_interest_change_factor() -> None:
     frame = pd.DataFrame({"open_interest": [100.0, 100.0, 120.0, 144.0]})
     result = OpenInterestChangeFactor(periods=2).compute(frame)

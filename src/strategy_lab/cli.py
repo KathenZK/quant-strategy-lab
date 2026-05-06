@@ -646,7 +646,7 @@ def refresh_state(config: Path | None = typer.Option(None, "--config", "-c")) ->
     typer.echo(f"checkpoints: {len(checkpoints)}")
     for item in checkpoints:
         typer.echo(
-            f"{item.dataset}\t{item.exchange}\t{item.symbol}\t{item.market_type}\t{item.last_ts}\trows={item.rows}"
+            f"{item.owner}\t{item.dataset}\t{item.exchange}\t{item.symbol}\t{item.market_type}\t{item.last_ts}\trows={item.rows}"
         )
 
 

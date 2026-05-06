@@ -1,15 +1,12 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
-import hashlib
-import json
+from dataclasses import dataclass
 
-import pandas as pd
+from strategy_lab.strategies.base import CompositeStrategy
+from strategy_lab.strategies.registry import register_strategy
 
 from .portfolio import PersistentSignalAllocator, PersistentSignalAllocatorConfig
 from .signal import MovingAverageCrossoverSignalConfig, MovingAverageCrossoverSignalModel
-from strategy_lab.strategies.common import resolve_configured_symbols
-from strategy_lab.strategies.registry import register_strategy
 
 
 @dataclass(frozen=True, slots=True)
@@ -50,65 +47,25 @@ class MovingAverageCrossoverConfig:
 
 
 @register_strategy("ma_crossover")
-@dataclass(slots=True)
-class MovingAverageCrossoverStrategy:
-    config: MovingAverageCrossoverConfig
-    signal_model: MovingAverageCrossoverSignalModel = field(init=False)
-    allocator: PersistentSignalAllocator = field(init=False)
-
-    def __post_init__(self) -> None:
-        self.signal_model = MovingAverageCrossoverSignalModel(
-            config=MovingAverageCrossoverSignalConfig(**self.config.signal_options())
-        )
-        self.allocator = PersistentSignalAllocator(
-            config=PersistentSignalAllocatorConfig(**self.config.allocator_options())
-        )
+class MovingAverageCrossoverStrategy(
+    CompositeStrategy[
+        MovingAverageCrossoverConfig,
+        MovingAverageCrossoverSignalModel,
+        PersistentSignalAllocator,
+    ]
+):
+    default_symbol_bases = ("BTC",)
 
     @classmethod
-    def from_options(cls, options: dict[str, object] | None = None) -> "MovingAverageCrossoverStrategy":
-        return cls(config=MovingAverageCrossoverConfig(**(options or {})))
+    def _config_cls(cls) -> type[MovingAverageCrossoverConfig]:
+        return MovingAverageCrossoverConfig
 
-    @property
-    def signal_name(self) -> str:
-        return self.SIGNAL_TYPE
-
-    def spec(self) -> dict[str, object]:
-        return {
-            "class_name": type(self).__name__,
-            "signal_model": self.signal_model.spec(),
-            "allocator": self.allocator.spec(),
-        }
-
-    def version(self) -> str:
-        encoded = json.dumps(self.spec(), sort_keys=True, default=str).encode("utf-8")
-        return hashlib.sha256(encoded).hexdigest()[:16]
-
-    def required_factors(self) -> list[str]:
-        return self.signal_model.required_factors()
-
-    def required_liquidation_features(self) -> list[str]:
-        return self.allocator.required_risk_features()
-
-    def default_symbols(self, *, exchange: str, market_type) -> list[str]:
-        return resolve_configured_symbols(
-            self.config.symbols,
-            market_type=market_type,
-            default_bases=("BTC",),
+    def _build_signal_model(self, config: MovingAverageCrossoverConfig) -> MovingAverageCrossoverSignalModel:
+        return MovingAverageCrossoverSignalModel(
+            config=MovingAverageCrossoverSignalConfig(**config.signal_options())
         )
 
-    def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
-        return self.signal_model.build_signal_frame(factors)
-
-    def build_weights(
-        self,
-        signal_frame: pd.DataFrame,
-        liquidation_features: dict[str, pd.DataFrame] | None = None,
-        price_frame: pd.DataFrame | None = None,
-        factors: dict[str, pd.DataFrame] | None = None,
-    ) -> pd.DataFrame:
-        return self.allocator.build_weights(
-            signal_frame,
-            risk_features=liquidation_features,
-            price_frame=price_frame,
-            factor_frames=factors,
+    def _build_allocator(self, config: MovingAverageCrossoverConfig) -> PersistentSignalAllocator:
+        return PersistentSignalAllocator(
+            config=PersistentSignalAllocatorConfig(**config.allocator_options())
         )

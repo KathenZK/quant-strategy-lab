@@ -7,7 +7,7 @@ import json
 import numpy as np
 import pandas as pd
 
-from .signal_common import cross_section_zscore
+from strategy_lab.data.execution import cross_section_zscore
 
 
 @dataclass(frozen=True, slots=True)

@@ -1,7 +1,6 @@
 import pandas as pd
 
-from strategy_lab.strategies.donchian_hold_72h.backtest import RiskLimits, RiskManager
-from strategy_lab.strategies.donchian_hold_72h.paper import PaperBroker, PaperTradingSession
+from strategy_lab.data.execution import PaperBroker, PaperTradingSession, RiskLimits, RiskManager
 
 
 def test_paper_broker_rebalances_and_marks_equity() -> None:

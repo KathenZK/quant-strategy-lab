@@ -6,7 +6,7 @@ import json
 
 import pandas as pd
 
-from .portfolio_common import apply_liquidation_risk_overlay
+from strategy_lab.data.execution import apply_liquidation_risk_overlay
 
 
 @dataclass(frozen=True, slots=True)

@@ -19,6 +19,12 @@ def _parse_timeframe(value: str) -> pd.Timedelta:
     return pd.Timedelta(amount, unit=units[suffix])
 
 
+SHARED_OWNER = "_shared_"
+"""Sentinel owner used for legacy callers / shared-data refresh that is not tied
+to a specific strategy. Strategy-driven callers should always pass their own
+`strategy_name` so different strategies cannot fight over the same checkpoint."""
+
+
 @dataclass(frozen=True, slots=True)
 class RefreshCheckpoint:
     dataset: str
@@ -31,6 +37,7 @@ class RefreshCheckpoint:
     rows: int
     raw_path: str | None = None
     normalized_path: str | None = None
+    owner: str = SHARED_OWNER
 
 
 @dataclass(slots=True)
@@ -51,9 +58,22 @@ class IncrementalStateStore:
         self.state_path.write_text(json.dumps(payload, indent=2, sort_keys=True), encoding="utf-8")
 
     @staticmethod
-    def _key(*, dataset: DatasetKind, exchange: str, symbol: str, market_type: MarketType, timeframe: str | None = None) -> str:
+    def _key(
+        *,
+        dataset: DatasetKind,
+        exchange: str,
+        symbol: str,
+        market_type: MarketType,
+        timeframe: str | None = None,
+        owner: str = SHARED_OWNER,
+    ) -> str:
         time_key = timeframe or "na"
-        return f"{dataset.value}|{exchange.lower()}|{market_type.value}|{symbol.upper()}|{time_key}"
+        owner_key = (owner or SHARED_OWNER).strip() or SHARED_OWNER
+        return f"{owner_key}|{dataset.value}|{exchange.lower()}|{market_type.value}|{symbol.upper()}|{time_key}"
+
+    @staticmethod
+    def _normalize_owner(owner: str | None) -> str:
+        return (owner or SHARED_OWNER).strip() or SHARED_OWNER
 
     def get_checkpoint(
         self,
@@ -63,9 +83,19 @@ class IncrementalStateStore:
         symbol: str,
         market_type: MarketType,
         timeframe: str | None = None,
+        owner: str | None = None,
     ) -> RefreshCheckpoint | None:
         payload = self._load_payload()
-        item = payload.get(self._key(dataset=dataset, exchange=exchange, symbol=symbol, market_type=market_type, timeframe=timeframe))
+        item = payload.get(
+            self._key(
+                dataset=dataset,
+                exchange=exchange,
+                symbol=symbol,
+                market_type=market_type,
+                timeframe=timeframe,
+                owner=self._normalize_owner(owner),
+            )
+        )
         return RefreshCheckpoint(**item) if item else None
 
     def resolve_since(
@@ -77,6 +107,7 @@ class IncrementalStateStore:
         market_type: MarketType,
         timeframe: str | None = None,
         overlap_bars: int = 0,
+        owner: str | None = None,
     ) -> datetime | None:
         checkpoint = self.get_checkpoint(
             dataset=dataset,
@@ -84,6 +115,7 @@ class IncrementalStateStore:
             symbol=symbol,
             market_type=market_type,
             timeframe=timeframe,
+            owner=owner,
         )
         if checkpoint is None:
             return None
@@ -104,7 +136,9 @@ class IncrementalStateStore:
         raw_path: str | None,
         normalized_path: str | None,
         timeframe: str | None = None,
+        owner: str | None = None,
     ) -> RefreshCheckpoint:
+        normalized_owner = self._normalize_owner(owner)
         checkpoint = RefreshCheckpoint(
             dataset=dataset.value,
             exchange=exchange.lower(),
@@ -116,12 +150,33 @@ class IncrementalStateStore:
             rows=rows,
             raw_path=raw_path,
             normalized_path=normalized_path,
+            owner=normalized_owner,
         )
         payload = self._load_payload()
-        payload[self._key(dataset=dataset, exchange=exchange, symbol=symbol, market_type=market_type, timeframe=timeframe)] = asdict(checkpoint)
+        payload[
+            self._key(
+                dataset=dataset,
+                exchange=exchange,
+                symbol=symbol,
+                market_type=market_type,
+                timeframe=timeframe,
+                owner=normalized_owner,
+            )
+        ] = asdict(checkpoint)
         self._save_payload(payload)
         return checkpoint
 
-    def list_checkpoints(self) -> list[RefreshCheckpoint]:
+    def list_checkpoints(self, *, owner: str | None = None) -> list[RefreshCheckpoint]:
         payload = self._load_payload()
-        return [RefreshCheckpoint(**item) for _, item in sorted(payload.items())]
+        records: list[RefreshCheckpoint] = []
+        for raw in payload.values():
+            data = dict(raw)
+            data.setdefault("owner", SHARED_OWNER)
+            records.append(RefreshCheckpoint(**data))
+        if owner is None:
+            return sorted(records, key=lambda c: (c.owner, c.dataset, c.exchange, c.symbol, c.timeframe or ""))
+        normalized = self._normalize_owner(owner)
+        return sorted(
+            (c for c in records if c.owner == normalized),
+            key=lambda c: (c.dataset, c.exchange, c.symbol, c.timeframe or ""),
+        )
