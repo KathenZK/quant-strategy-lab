@@ -81,17 +81,41 @@ class FeatureStore:
         factor_version: str | None = None,
     ) -> pd.DataFrame:
         root = self.feature_root(factor_name, factor_version=factor_version)
-        files = [
-            path
-            for path in sorted(root.glob("**/*.parquet"))
-            if self._matches_feature_filters(
-                path,
-                exchange=exchange,
-                market_type=market_type,
-                symbol=symbol,
-                timeframe=timeframe,
-            )
-        ]
+        direct_root = self._direct_feature_root(
+            factor_name,
+            factor_version=factor_version,
+            exchange=exchange,
+            market_type=market_type,
+            symbol=symbol,
+            timeframe=timeframe,
+        )
+        if direct_root is not None:
+            files = sorted(direct_root.glob("**/*.parquet"))
+        else:
+            files = [
+                path
+                for path in sorted(root.glob("**/*.parquet"))
+                if self._matches_feature_filters(
+                    path,
+                    exchange=exchange,
+                    market_type=market_type,
+                    symbol=symbol,
+                    timeframe=timeframe,
+                )
+            ]
+        if not files and direct_root is not None and any((exchange, market_type, symbol, timeframe)):
+            # Fall back to the old scan path so legacy non-canonical layouts remain readable.
+            files = [
+                path
+                for path in sorted(root.glob("**/*.parquet"))
+                if self._matches_feature_filters(
+                    path,
+                    exchange=exchange,
+                    market_type=market_type,
+                    symbol=symbol,
+                    timeframe=timeframe,
+                )
+            ]
         if not files:
             return pd.DataFrame()
         frame = pd.concat((pd.read_parquet(path) for path in files), ignore_index=True)
@@ -102,6 +126,31 @@ class FeatureStore:
                 frame = frame.drop_duplicates(subset=dedup, keep="last")
             frame = frame.sort_values([column for column in ("ts", "symbol") if column in frame.columns]).reset_index(drop=True)
         return frame
+
+    def _direct_feature_root(
+        self,
+        factor_name: str,
+        *,
+        exchange: str | None,
+        market_type: str | None,
+        symbol: str | None,
+        timeframe: str | None,
+        factor_version: str | None,
+    ) -> Path | None:
+        if exchange is None:
+            return self.feature_root(factor_name, factor_version=factor_version) if not any((market_type, symbol, timeframe)) else None
+        if market_type is None and any((symbol, timeframe)):
+            return None
+        if symbol is None and timeframe is not None:
+            return None
+        return self.feature_root(
+            factor_name,
+            exchange=exchange,
+            market_type=market_type,
+            symbol=symbol,
+            timeframe=timeframe,
+            factor_version=factor_version,
+        )
 
     def _matches_feature_filters(
         self,

@@ -43,6 +43,19 @@ class SpotCtaPumpConfig:
     trailing_stop_pct: float | None = 0.28
     max_hold_bars: int | None = 36
     cooldown_bars: int = 4
+    entry_confirmation_bars: int = 2
+    max_entry_pullback_pct: float | None = 0.035
+    min_entry_followthrough_pct: float = -0.005
+    max_primary_momentum: float | None = 0.35
+    max_acceleration_momentum: float | None = 0.08
+    age_factor: str | None = "age_bars"
+    min_entry_age_bars: int = 48
+    young_age_bars: int = 240
+    young_min_primary_momentum: float | None = 0.12
+    young_min_volume_surge: float | None = 1.5
+    young_max_rsi: float | None = 88.0
+    failed_followthrough_bars: int | None = 4
+    failed_followthrough_min_profit_pct: float | None = 0.015
 
 
 @register_strategy("spot_cta_pump")
@@ -68,7 +81,7 @@ class SpotCtaPumpStrategy:
         return hashlib.sha256(encoded).hexdigest()[:16]
 
     def required_factors(self) -> list[str]:
-        return [
+        factors = [
             self.config.breakout_factor,
             self.config.primary_momentum_factor,
             self.config.confirmation_momentum_factor,
@@ -76,6 +89,9 @@ class SpotCtaPumpStrategy:
             self.config.volume_factor,
             self.config.rsi_factor,
         ]
+        if self.config.age_factor is not None:
+            factors.append(self.config.age_factor)
+        return factors
 
     def required_liquidation_features(self) -> list[str]:
         return []
@@ -115,7 +131,24 @@ class SpotCtaPumpStrategy:
             & rsi.ge(self.config.min_rsi)
             & rsi.le(self.config.max_rsi)
         )
+        if self.config.max_primary_momentum is not None:
+            eligible &= primary.le(self.config.max_primary_momentum)
+        if self.config.max_acceleration_momentum is not None:
+            eligible &= acceleration.le(self.config.max_acceleration_momentum)
+        age = None
+        if self.config.age_factor is not None:
+            age = factors[self.config.age_factor].reindex_like(breakout)
+            eligible &= age.ge(self.config.min_entry_age_bars)
+            young = age.lt(self.config.young_age_bars)
+            if self.config.young_min_primary_momentum is not None:
+                eligible &= ~young | primary.ge(self.config.young_min_primary_momentum)
+            if self.config.young_min_volume_surge is not None:
+                eligible &= ~young | volume.ge(self.config.young_min_volume_surge)
+            if self.config.young_max_rsi is not None:
+                eligible &= ~young | rsi.le(self.config.young_max_rsi)
         valid = primary.notna() & confirm.notna() & acceleration.notna() & volume.notna() & rsi.notna()
+        if age is not None:
+            valid &= age.notna()
         signal = pd.DataFrame(float("nan"), index=breakout.index, columns=breakout.columns)
         signal = signal.where(~valid, 0.0)
         return signal.where(~eligible, (score + 1.0).clip(lower=0.001))
@@ -136,6 +169,10 @@ class SpotCtaPumpStrategy:
         trail_highs = pd.Series(float("nan"), index=signal_frame.columns, dtype="float64")
         holding_bars = pd.Series(0, index=signal_frame.columns, dtype="int64")
         cooldown_remaining = pd.Series(0, index=signal_frame.columns, dtype="int64")
+        pending = pd.Series(False, index=signal_frame.columns, dtype="bool")
+        pending_prices = pd.Series(float("nan"), index=signal_frame.columns, dtype="float64")
+        pending_scores = pd.Series(float("nan"), index=signal_frame.columns, dtype="float64")
+        pending_bars = pd.Series(0, index=signal_frame.columns, dtype="int64")
 
         for ts in signal_frame.index:
             cooldown_at_start = cooldown_remaining.copy()
@@ -155,13 +192,62 @@ class SpotCtaPumpStrategy:
                     cooldown_remaining.loc[symbol] = self.config.cooldown_bars
 
             open_slots = max(self.config.max_positions - int(current.sum()), 0)
-            if open_slots > 0:
-                candidates = signal_row[signal_row > 0.0].dropna().sort_values(ascending=False)
-                for symbol in candidates.index:
+            if self.config.entry_confirmation_bars > 0:
+                ready: list[tuple[str, float]] = []
+                for symbol in signal_frame.columns:
+                    if not pending.loc[symbol]:
+                        continue
+                    price = price_row.loc[symbol]
+                    if current.loc[symbol] or cooldown_remaining.loc[symbol] > 0 or pd.isna(price):
+                        continue
+                    pending_bars.loc[symbol] += 1
+                    trigger_price = float(pending_prices.loc[symbol])
+                    signal_value = signal_row.loc[symbol]
+                    if (
+                        pd.isna(trigger_price)
+                        or self._entry_pullback_failed(float(price), trigger_price)
+                        or pd.isna(signal_value)
+                        or float(signal_value) <= 0.0
+                    ):
+                        pending.loc[symbol] = False
+                        pending_prices.loc[symbol] = float("nan")
+                        pending_scores.loc[symbol] = float("nan")
+                        pending_bars.loc[symbol] = 0
+                        continue
+                    if int(pending_bars.loc[symbol]) < self.config.entry_confirmation_bars:
+                        continue
+                    if self._entry_followthrough_ok(float(price), trigger_price):
+                        ready.append((symbol, float(signal_value)))
+                    pending.loc[symbol] = False
+                    pending_prices.loc[symbol] = float("nan")
+                    pending_scores.loc[symbol] = float("nan")
+                    pending_bars.loc[symbol] = 0
+
+                for symbol, _ in sorted(ready, key=lambda item: item[1], reverse=True):
                     if open_slots <= 0:
                         break
                     price = price_row.loc[symbol]
                     if current.loc[symbol] or cooldown_remaining.loc[symbol] > 0 or pd.isna(price):
+                        continue
+                    current.loc[symbol] = True
+                    entry_prices.loc[symbol] = float(price)
+                    trail_highs.loc[symbol] = float(price)
+                    holding_bars.loc[symbol] = 0
+                    open_slots -= 1
+
+            if open_slots > 0:
+                candidates = signal_row[signal_row > 0.0].dropna().sort_values(ascending=False)
+                for symbol in candidates.index:
+                    if self.config.entry_confirmation_bars <= 0 and open_slots <= 0:
+                        break
+                    price = price_row.loc[symbol]
+                    if current.loc[symbol] or pending.loc[symbol] or cooldown_remaining.loc[symbol] > 0 or pd.isna(price):
+                        continue
+                    if self.config.entry_confirmation_bars > 0:
+                        pending.loc[symbol] = True
+                        pending_prices.loc[symbol] = float(price)
+                        pending_scores.loc[symbol] = float(candidates.loc[symbol])
+                        pending_bars.loc[symbol] = 0
                         continue
                     current.loc[symbol] = True
                     entry_prices.loc[symbol] = float(price)
@@ -182,11 +268,23 @@ class SpotCtaPumpStrategy:
             raise ValueError("long_allocation must be non-negative")
         if self.config.cooldown_bars < 0:
             raise ValueError("cooldown_bars must be non-negative")
+        if self.config.entry_confirmation_bars < 0:
+            raise ValueError("entry_confirmation_bars must be non-negative")
+        if self.config.min_entry_age_bars < 0:
+            raise ValueError("min_entry_age_bars must be non-negative")
+        if self.config.young_age_bars < 0:
+            raise ValueError("young_age_bars must be non-negative")
         if self.config.max_hold_bars is not None and self.config.max_hold_bars <= 0:
             raise ValueError("max_hold_bars must be positive when provided")
+        if (self.config.failed_followthrough_bars is None) != (self.config.failed_followthrough_min_profit_pct is None):
+            raise ValueError("failed followthrough exit requires both bars and min profit pct")
         for name, value in (
             ("stop_loss_pct", self.config.stop_loss_pct),
             ("trailing_stop_pct", self.config.trailing_stop_pct),
+            ("max_entry_pullback_pct", self.config.max_entry_pullback_pct),
+            ("max_primary_momentum", self.config.max_primary_momentum),
+            ("max_acceleration_momentum", self.config.max_acceleration_momentum),
+            ("failed_followthrough_min_profit_pct", self.config.failed_followthrough_min_profit_pct),
         ):
             if value is not None and value <= 0.0:
                 raise ValueError(f"{name} must be positive when provided")
@@ -198,7 +296,24 @@ class SpotCtaPumpStrategy:
             return False
         if self.config.stop_loss_pct is not None and price <= entry_price * (1.0 - self.config.stop_loss_pct):
             return True
+        if (
+            self.config.failed_followthrough_bars is not None
+            and self.config.failed_followthrough_min_profit_pct is not None
+            and holding_bars >= self.config.failed_followthrough_bars
+            and not pd.isna(trail_high)
+            and float(trail_high) < entry_price * (1.0 + self.config.failed_followthrough_min_profit_pct)
+        ):
+            return True
         return self.config.trailing_stop_pct is not None and not pd.isna(trail_high) and price <= float(trail_high) * (1.0 - self.config.trailing_stop_pct)
+
+    def _entry_pullback_failed(self, price: float, trigger_price: float) -> bool:
+        return (
+            self.config.max_entry_pullback_pct is not None
+            and price < trigger_price * (1.0 - self.config.max_entry_pullback_pct)
+        )
+
+    def _entry_followthrough_ok(self, price: float, trigger_price: float) -> bool:
+        return price >= trigger_price * (1.0 + self.config.min_entry_followthrough_pct)
 
     def _position_weight(self) -> float:
         if self.config.max_positions == 0:

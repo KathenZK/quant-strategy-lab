@@ -6,6 +6,7 @@ from strategy_lab.data.factors import (
     ATRPercentFactor,
     BasisChangeFactor,
     BasisZScoreFactor,
+    BenchmarkReturnFactor,
     DonchianBreakoutFactor,
     FundingRateZScoreFactor,
     OpenInterestZScoreFactor,
@@ -44,6 +45,8 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "ret_12" in names
     assert "ret_72" in names
     assert "ret_168" in names
+    assert "benchmark_ret_24" in names
+    assert "benchmark_ret_72" in names
     assert "ma_distance_48" in names
     assert "atr_pct_14" in names
 
@@ -60,6 +63,14 @@ def test_builtin_factor_providers_are_discovered() -> None:
 def test_trailing_return_factor_uses_pct_change() -> None:
     frame = pd.DataFrame({"close": [100.0, 110.0, 121.0]})
     result = TrailingReturnFactor(periods=1).compute(frame)
+    assert pd.isna(result.iloc[0])
+    assert result.iloc[1] == pytest.approx(0.10)
+    assert result.iloc[2] == pytest.approx(0.10)
+
+
+def test_benchmark_return_factor_uses_benchmark_close() -> None:
+    frame = pd.DataFrame({"close": [50.0, 55.0, 60.5], "benchmark_close": [100.0, 110.0, 121.0]})
+    result = BenchmarkReturnFactor(periods=1).compute(frame)
     assert pd.isna(result.iloc[0])
     assert result.iloc[1] == pytest.approx(0.10)
     assert result.iloc[2] == pytest.approx(0.10)

@@ -105,6 +105,8 @@ def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> 
         "ret_24",
         "volume_surge_20",
         "rsi_14",
+        "benchmark_ret_24",
+        "age_bars",
     ]
     assert strategy.required_liquidation_features() == []
 

@@ -10,11 +10,13 @@ from .engine import compute_factor_bundle, compute_factor_frame
 
 
 _FACTOR_EXPORTS = {
+    "AgeBarsFactor": "strategy_lab.data.factors.lifecycle",
     "AmihudIlliquidityFactor": "strategy_lab.data.factors.liquidity",
     "ATRPercentFactor": "strategy_lab.data.factors.momentum",
     "BasisChangeFactor": "strategy_lab.data.factors.derivatives",
     "BasisFactor": "strategy_lab.data.factors.derivatives",
     "BasisZScoreFactor": "strategy_lab.data.factors.derivatives",
+    "BenchmarkReturnFactor": "strategy_lab.data.factors.momentum",
     "BollingerDistanceFactor": "strategy_lab.data.factors.mean_reversion",
     "BreakoutFactor": "strategy_lab.data.factors.momentum",
     "DonchianBreakoutFactor": "strategy_lab.data.factors.momentum",
@@ -52,11 +54,13 @@ def default_registry() -> FactorRegistry:
 
 
 __all__ = [
+    "AgeBarsFactor",
     "AmihudIlliquidityFactor",
     "ATRPercentFactor",
     "BasisChangeFactor",
     "BasisFactor",
     "BasisZScoreFactor",
+    "BenchmarkReturnFactor",
     "BollingerDistanceFactor",
     "BreakoutFactor",
     "DonchianBreakoutFactor",

@@ -240,10 +240,17 @@ class WorkflowService:
         return symbols
 
     def with_resolved_symbols(self, config: StrategyWorkflowConfig) -> StrategyWorkflowConfig:
-        symbols = self.resolve_symbols(config)
-        if symbols == config.strategy.symbols:
+        if config.metadata.get("symbols_resolved") and config.strategy.symbols:
             return config
-        return replace(config, strategy=replace(config.strategy, symbols=symbols))
+        symbols = self.resolve_symbols(config)
+        metadata = (
+            {**config.metadata, "symbols_resolved": True}
+            if config.universe.enabled
+            else config.metadata
+        )
+        if symbols == config.strategy.symbols:
+            return replace(config, metadata=metadata) if metadata is not config.metadata else config
+        return replace(config, strategy=replace(config.strategy, symbols=symbols), metadata=metadata)
 
     def strategy_instance(self, config: StrategyWorkflowConfig):
         if config.strategy.is_factor_strategy:

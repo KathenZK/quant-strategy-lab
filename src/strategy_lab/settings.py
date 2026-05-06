@@ -8,7 +8,7 @@ import yaml
 
 
 def _project_root() -> Path:
-    return Path(__file__).resolve().parents[3]
+    return Path(__file__).resolve().parents[2]
 
 
 def _coerce_bool(value: Any, *, default: bool) -> bool:
@@ -38,6 +38,13 @@ def _uses_shared_storage(storage: dict[str, Any]) -> bool:
         _looks_like_profile_storage(storage.get(key))
         for key in ("root_dir", "raw_dir", "normalized_dir", "features_dir", "reports_dir", "registry_db_path")
     )
+
+
+def _resolve_storage_path(value: object, *, default: Path, project_root: Path) -> Path:
+    path = Path(value) if value is not None else default
+    if path.is_absolute():
+        return path
+    return project_root / path
 
 
 @dataclass(slots=True)
@@ -102,6 +109,7 @@ def default_settings(project_root: Path | None = None) -> AppSettings:
 
 def load_settings(path: str | Path | None = None) -> AppSettings:
     defaults = default_settings()
+    project_root = _project_root()
     if path is None:
         return defaults
 
@@ -124,13 +132,21 @@ def load_settings(path: str | Path | None = None) -> AppSettings:
         reports_dir = defaults.storage.reports_dir
         registry_db_path = defaults.storage.registry_db_path
     else:
-        root_dir = Path(storage.get("root_dir", defaults.storage.root_dir))
-        raw_dir = Path(storage.get("raw_dir", defaults.storage.raw_dir))
-        normalized_dir = Path(storage.get("normalized_dir", defaults.storage.normalized_dir))
-        features_dir = Path(storage.get("features_dir", defaults.storage.features_dir))
-        reports_dir = Path(storage.get("reports_dir", defaults.storage.reports_dir))
+        root_dir = _resolve_storage_path(storage.get("root_dir"), default=defaults.storage.root_dir, project_root=project_root)
+        raw_dir = _resolve_storage_path(storage.get("raw_dir"), default=defaults.storage.raw_dir, project_root=project_root)
+        normalized_dir = _resolve_storage_path(
+            storage.get("normalized_dir"),
+            default=defaults.storage.normalized_dir,
+            project_root=project_root,
+        )
+        features_dir = _resolve_storage_path(storage.get("features_dir"), default=defaults.storage.features_dir, project_root=project_root)
+        reports_dir = _resolve_storage_path(storage.get("reports_dir"), default=defaults.storage.reports_dir, project_root=project_root)
         registry_db_default = reports_dir / "_registry" / "runs.sqlite"
-        registry_db_path = Path(storage.get("registry_db_path", registry_db_default))
+        registry_db_path = _resolve_storage_path(
+            storage.get("registry_db_path"),
+            default=registry_db_default,
+            project_root=project_root,
+        )
 
     return AppSettings(
         name=project.get("name", defaults.name),

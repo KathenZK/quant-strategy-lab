@@ -5,6 +5,7 @@ from dataclasses import dataclass
 import pandas as pd
 
 from strategy_lab.data import MarketType
+from strategy_lab.data.factors import compute_factor_bundle
 from strategy_lab.data.features import FeatureBuilder
 
 
@@ -41,6 +42,12 @@ def load_multi_factor_panels(
     price_series: dict[str, pd.Series] = {}
     dollar_volume_series: dict[str, pd.Series] = {}
     funding_series: dict[str, pd.Series] = {}
+    factor_inputs = {
+        input_name
+        for factor_name in factor_names
+        for input_name in builder.registry.get(factor_name).metadata.inputs
+    }
+    effective_benchmark_symbol = benchmark_symbol if "benchmark_close" in factor_inputs else None
     liquidation_series: dict[str, dict[str, pd.Series]] = {
         "liq_spike_zscore": {},
         "liq_notional_vs_dollar_volume": {},
@@ -54,20 +61,12 @@ def load_multi_factor_panels(
             symbol=symbol,
             market_type=market_type,
             timeframe=timeframe,
-            benchmark_symbol=benchmark_symbol,
+            benchmark_symbol=effective_benchmark_symbol,
         )
         if market.empty:
             raise ValueError(f"no normalized market data found for {symbol} on {exchange}/{market_type.value}")
 
-        bundle = builder.build_symbol_features(
-            exchange=exchange,
-            symbol=symbol,
-            market_type=market_type,
-            timeframe=timeframe,
-            benchmark_symbol=benchmark_symbol,
-            factor_names=factor_names,
-            market_frame=market,
-        )
+        bundle = compute_factor_bundle(market, builder.registry, factor_names=factor_names)
         missing = [name for name in factor_names if bundle.empty or name not in bundle.columns]
         if missing:
             raise ValueError(f"factors {missing} could not be computed for {symbol}")

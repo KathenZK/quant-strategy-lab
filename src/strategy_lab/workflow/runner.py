@@ -195,7 +195,8 @@ class StrategyRunner:
         liquidation_feature_names = strategy.required_liquidation_features() if strategy else []
         run_id = datetime.now(timezone.utc).strftime("%Y%m%dT%H%M%S%fZ")
         refresh_artifacts = self.refresh_data(config, liquidation_feature_names=liquidation_feature_names)
-        feature_artifacts = self.build_features(config, strategy=strategy)
+        persist_features = bool(config.metadata.get("persist_features", config.refresh.enabled))
+        feature_artifacts = self.build_features(config, strategy=strategy) if persist_features else {}
         run_dir = self.layout.reports_dir / "runs" / config.strategy.name / run_id
         execution_result = self.workflow_service.execute(config, run_dir=run_dir, strategy=strategy)
 

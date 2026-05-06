@@ -191,6 +191,22 @@ def filter_symbols_by_ohlcv(
     return selected
 
 
+def _symbols_from_local_ohlcv_paths(
+    warehouse: DuckDBWarehouse,
+    *,
+    exchange: str,
+    timeframe: str | None,
+) -> list[str]:
+    root = warehouse.layout.dataset_root("normalized", DatasetKind.OHLCV) / f"exchange={exchange.lower()}" / "market_type=spot"
+    if timeframe:
+        root = root / f"timeframe={timeframe.lower()}"
+    symbols = {
+        path.stem.removeprefix("symbol=").upper().replace("_", "/")
+        for path in root.glob("**/symbol=*.parquet")
+    }
+    return sorted(symbols)
+
+
 def select_binance_spot_universe(
     warehouse: DuckDBWarehouse,
     *,
@@ -199,6 +215,14 @@ def select_binance_spot_universe(
     candidate_symbols: list[str] | None = None,
     timeframe: str | None = None,
 ) -> list[str]:
+    if config.min_avg_dollar_volume <= 0.0 and config.min_history_bars <= 1:
+        symbols = _symbols_from_local_ohlcv_paths(warehouse, exchange=exchange, timeframe=timeframe)
+        if candidate_symbols is not None:
+            allowed = {_normalized_symbol(symbol) for symbol in candidate_symbols}
+            symbols = [symbol for symbol in symbols if symbol in allowed]
+        if symbols:
+            return symbols
+
     ohlcv = warehouse.load_dataset(
         layer="normalized",
         kind=DatasetKind.OHLCV,

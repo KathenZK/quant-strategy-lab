@@ -17,7 +17,7 @@ from strategy_lab.data import (
 )
 from strategy_lab.data.pipeline import drop_incomplete_ohlcv
 from strategy_lab.data.features import FeatureBuilder, FeatureStore
-from strategy_lab.data.factors import default_registry
+from strategy_lab.data.factors import compute_factor_bundle, default_registry
 
 
 def _layout(tmp_path: Path) -> DataLakeLayout:
@@ -243,6 +243,58 @@ def test_feature_store_paths_include_data_identity(tmp_path: Path) -> None:
     assert "exchange=binance" in str(path)
     assert "symbol=btc_usdt" in str(path)
     assert "timeframe=1h" in str(path)
+
+
+def test_feature_store_loads_filtered_factor_from_direct_partition(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    store = FeatureStore(layout)
+    frame = pd.DataFrame(
+        {
+            "ts": pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC"),
+            "exchange": ["binance"] * 2,
+            "symbol": ["BTC/USDT"] * 2,
+            "market_type": ["spot"] * 2,
+            "timeframe": ["1h"] * 2,
+            "ret_1": [0.0, 0.01],
+        }
+    )
+    store.write_factor_frame(
+        "ret_1",
+        frame,
+        exchange="binance",
+        market_type="spot",
+        symbol="BTC/USDT",
+        timeframe="1h",
+        factor_version="v1",
+    )
+
+    loaded = store.load_factor_frame(
+        "ret_1",
+        exchange="binance",
+        market_type="spot",
+        symbol="BTC/USDT",
+        timeframe="1h",
+        factor_version="v1",
+    )
+
+    assert loaded["symbol"].tolist() == ["BTC/USDT", "BTC/USDT"]
+    assert loaded["ret_1"].tolist() == [0.0, 0.01]
+
+
+def test_age_bars_factor_increments_per_symbol() -> None:
+    frame = pd.DataFrame(
+        {
+            "ts": pd.date_range("2024-01-01", periods=3, freq="h", tz="UTC"),
+            "exchange": ["binance"] * 3,
+            "symbol": ["BTC/USDT"] * 3,
+            "market_type": ["spot"] * 3,
+            "timeframe": ["1h"] * 3,
+        }
+    )
+
+    bundle = compute_factor_bundle(frame, default_registry(), factor_names=["age_bars"])
+
+    assert bundle["age_bars"].tolist() == [1.0, 2.0, 3.0]
 
 
 def test_drop_incomplete_ohlcv_removes_current_open_bar() -> None:

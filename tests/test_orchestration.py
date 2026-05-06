@@ -460,6 +460,8 @@ strategy:
   market_type: spot
   symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
   benchmark_symbol: BTC/USDT
+metadata:
+  persist_features: true
 refresh:
   enabled: false
 workflow:
@@ -831,6 +833,7 @@ strategy:
   strategy_type: spot_cta_trend
   exchange: binance
   market_type: spot
+  benchmark_symbol: BTC/USDT
   symbols: [BTC/USDT, ETH/USDT, SOL/USDT]
   strategy_params:
     max_positions: 2
@@ -840,6 +843,8 @@ strategy:
     trailing_stop_pct:
     cooldown_bars: 0
     max_rank_hold_positions: 2
+    entry_confirmation_bars: 0
+    age_factor:
 execution:
   fee_bps: 10.0
   slippage_bps: 10.0

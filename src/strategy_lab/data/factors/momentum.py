@@ -24,6 +24,24 @@ class TrailingReturnFactor(PandasFactor):
         return frame[self.price_column].pct_change(self.periods)
 
 
+class BenchmarkReturnFactor(PandasFactor):
+    def __init__(self, periods: int, price_column: str = "benchmark_close") -> None:
+        self.periods = periods
+        self.price_column = price_column
+        self.metadata = FactorMetadata(
+            name=f"benchmark_ret_{periods}",
+            category="momentum",
+            frequency="bar",
+            lookback=periods + 1,
+            inputs=(price_column,),
+            market_types=("spot", "perp"),
+            description=f"Benchmark trailing return over the last {periods} bars.",
+        )
+
+    def compute(self, frame: pd.DataFrame) -> pd.Series:
+        return frame[self.price_column].pct_change(self.periods)
+
+
 class BreakoutFactor(PandasFactor):
     def __init__(self, window: int, price_column: str = "close") -> None:
         self.window = window
@@ -180,6 +198,8 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         TrailingReturnFactor(periods=72),
         TrailingReturnFactor(periods=120),
         TrailingReturnFactor(periods=168),
+        BenchmarkReturnFactor(periods=24),
+        BenchmarkReturnFactor(periods=72),
         BreakoutFactor(window=20),
         DonchianBreakoutFactor(window=10),
         DonchianBreakoutFactor(window=12),
