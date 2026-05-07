@@ -19,6 +19,7 @@ class DatasetKind(StrEnum):
     TICKER = "ticker_or_top_of_book"
     ASSET_METADATA = "asset_metadata"
     ONCHAIN = "onchain_metrics"
+    SQUARE_POSTS = "square_posts"
 
 
 @dataclass(frozen=True, slots=True)
@@ -149,5 +150,10 @@ def dataset_specs() -> dict[DatasetKind, DatasetSpec]:
             kind=DatasetKind.ONCHAIN,
             required_columns=("ts", "chain", "metric_name", "value", "source"),
             partition_columns=("chain", "metric_name", "date"),
+        ),
+        DatasetKind.SQUARE_POSTS: DatasetSpec(
+            kind=DatasetKind.SQUARE_POSTS,
+            required_columns=("ts", "post_id", "author_name", "content", "source"),
+            partition_columns=("source", "date"),
         ),
     }

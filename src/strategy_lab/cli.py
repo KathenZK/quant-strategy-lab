@@ -6,6 +6,7 @@ from datetime import datetime, timedelta, timezone
 from pathlib import Path
 
 import typer
+import pandas as pd
 
 from strategy_lab.journal.batches import BatchRunMode
 from strategy_lab.journal.batches.service import load_batch_for_mode, run_workflow_batch
@@ -16,10 +17,12 @@ from strategy_lab.data.factors import default_registry
 from strategy_lab.data.features import FeatureBuilder, FeatureStore
 from strategy_lab.data.ingest import (
     BinanceSpotUniverseConfig,
+    BinanceSquareClient,
     candidate_symbols_from_markets,
     rank_symbols_by_quote_volume,
     select_binance_spot_universe,
     sync_small_cap_universe,
+    write_square_posts,
 )
 from strategy_lab.data.ingest.market_caps import DEFAULT_MARKET_CAP_THRESHOLD_USD
 from strategy_lab.workflow import (
@@ -275,6 +278,57 @@ def sync_binance_spot_ohlcv(
             typer.echo(f"{symbol}: failed: {type(exc).__name__}: {exc}")
             continue
         typer.echo(f"{symbol}: rows={result['rows']} normalized={result['normalized']}")
+
+
+@app.command()
+def sync_binance_square_posts(
+    pages: int = typer.Option(5, "--pages", min=1, help="Number of latest feed pages to fetch."),
+    page_size: int = typer.Option(20, "--page-size", min=1, max=50, help="Posts requested per page."),
+    sleep_seconds: float = typer.Option(1.0, "--sleep-seconds", min=0.0, help="Delay between page requests."),
+    feed_type: int | None = typer.Option(0, "--feed-type", help="Binance Square feed type. 0 is the chronological public latest feed observed in testing."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path."),
+) -> None:
+    """Sync publicly accessible latest Binance Square posts."""
+    lake, _, _ = _runtime(config)
+    client = BinanceSquareClient()
+    frame = client.fetch_latest_posts(pages=pages, page_size=page_size, sleep_seconds=sleep_seconds, feed_type=feed_type)
+    paths = write_square_posts(lake, frame)
+    typer.echo(f"rows: {len(frame)}")
+    typer.echo(f"unique_posts: {frame['post_id'].nunique() if not frame.empty else 0}")
+    if not frame.empty:
+        typer.echo(f"ts_range: {frame['ts'].min().isoformat()} -> {frame['ts'].max().isoformat()}")
+    for path in paths:
+        typer.echo(f"normalized: {path}")
+
+
+@app.command()
+def backfill_binance_square_posts(
+    hours: float = typer.Option(1.0, "--hours", min=0.01, help="Backfill posts newer than this many hours ago."),
+    max_pages: int = typer.Option(100, "--max-pages", min=1, help="Stop after this many feed pages even if the window is not exhausted."),
+    page_size: int = typer.Option(20, "--page-size", min=1, max=50, help="Posts requested per page."),
+    sleep_seconds: float = typer.Option(1.0, "--sleep-seconds", min=0.0, help="Delay between page requests."),
+    feed_type: int | None = typer.Option(0, "--feed-type", help="Binance Square feed type. 0 is the chronological public latest feed observed in testing."),
+    config: Path | None = typer.Option(None, "--config", "-c", help="Optional YAML config path."),
+) -> None:
+    """Backfill public Binance Square posts until the requested time window is covered."""
+    lake, _, _ = _runtime(config)
+    since = datetime.now(timezone.utc) - timedelta(hours=hours)
+    client = BinanceSquareClient()
+    frame = client.fetch_posts_since(
+        since=pd.Timestamp(since),
+        page_size=page_size,
+        max_pages=max_pages,
+        sleep_seconds=sleep_seconds,
+        feed_type=feed_type,
+    )
+    paths = write_square_posts(lake, frame)
+    typer.echo(f"since: {since.isoformat()}")
+    typer.echo(f"rows: {len(frame)}")
+    typer.echo(f"unique_posts: {frame['post_id'].nunique() if not frame.empty else 0}")
+    if not frame.empty:
+        typer.echo(f"ts_range: {frame['ts'].min().isoformat()} -> {frame['ts'].max().isoformat()}")
+    for path in paths:
+        typer.echo(f"normalized: {path}")
 
 
 def _render_scan_table(title: str, rows) -> None:
