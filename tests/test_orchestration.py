@@ -838,12 +838,8 @@ strategy:
   strategy_params:
     max_positions: 2
     long_allocation: 0.70
-    max_rsi: 100.0
     stop_loss_pct:
-    trailing_stop_pct:
     cooldown_bars: 0
-    max_rank_hold_positions: 2
-    entry_confirmation_bars: 0
     age_factor:
 execution:
   fee_bps: 10.0

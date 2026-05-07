@@ -101,10 +101,6 @@ def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> 
     assert not hasattr(strategy, "allocator")
     assert strategy.required_factors() == [
         "donchian_breakout_20",
-        "ret_72",
-        "ret_24",
-        "volume_surge_20",
-        "rsi_14",
         "benchmark_ret_24",
         "age_bars",
     ]
