@@ -12,6 +12,7 @@ from .engine import compute_factor_bundle, compute_factor_frame
 _FACTOR_EXPORTS = {
     "AgeBarsFactor": "strategy_lab.data.factors.lifecycle",
     "AmihudIlliquidityFactor": "strategy_lab.data.factors.liquidity",
+    "AverageDollarVolumeFactor": "strategy_lab.data.factors.liquidity",
     "ATRPercentFactor": "strategy_lab.data.factors.momentum",
     "BasisChangeFactor": "strategy_lab.data.factors.derivatives",
     "BasisFactor": "strategy_lab.data.factors.derivatives",
@@ -27,6 +28,7 @@ _FACTOR_EXPORTS = {
     "OpenInterestZScoreFactor": "strategy_lab.data.factors.derivatives",
     "PriceOpenInterestRegimeFactor": "strategy_lab.data.factors.derivatives",
     "RelativeStrengthFactor": "strategy_lab.data.factors.cross_sectional",
+    "RollingDollarVolumeFactor": "strategy_lab.data.factors.liquidity",
     "RSIFactor": "strategy_lab.data.factors.momentum",
     "TrailingReturnFactor": "strategy_lab.data.factors.momentum",
     "VolumeSurgeFactor": "strategy_lab.data.factors.liquidity",
@@ -56,6 +58,7 @@ def default_registry() -> FactorRegistry:
 __all__ = [
     "AgeBarsFactor",
     "AmihudIlliquidityFactor",
+    "AverageDollarVolumeFactor",
     "ATRPercentFactor",
     "BasisChangeFactor",
     "BasisFactor",
@@ -78,6 +81,7 @@ __all__ = [
     "PriceOpenInterestRegimeFactor",
     "register_factor_provider",
     "RelativeStrengthFactor",
+    "RollingDollarVolumeFactor",
     "RSIFactor",
     "TrailingReturnFactor",
     "VolumeSurgeFactor",

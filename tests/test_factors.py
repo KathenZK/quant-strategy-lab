@@ -3,6 +3,7 @@ import pytest
 
 from strategy_lab.data.factors import (
     AmihudIlliquidityFactor,
+    AverageDollarVolumeFactor,
     ATRPercentFactor,
     BasisChangeFactor,
     BasisZScoreFactor,
@@ -13,6 +14,7 @@ from strategy_lab.data.factors import (
     RelativeStrengthFactor,
     OpenInterestChangeFactor,
     PriceOpenInterestRegimeFactor,
+    RollingDollarVolumeFactor,
     RSIFactor,
     TrailingReturnFactor,
     compute_factor_bundle,
@@ -41,14 +43,19 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "donchian_breakout_14" in names
     assert "donchian_breakout_20" in names
     assert "donchian_breakout_55" in names
+    assert "donchian_breakout_1200" in names
     assert "ret_6" in names
     assert "ret_12" in names
     assert "ret_72" in names
     assert "ret_168" in names
     assert "benchmark_ret_24" in names
     assert "benchmark_ret_72" in names
+    assert "benchmark_ret_1440" in names
     assert "ma_distance_48" in names
     assert "atr_pct_14" in names
+    assert "avg_dollar_volume_20" in names
+    assert "dollar_volume_24" in names
+    assert "dollar_volume_1440" in names
 
 
 def test_builtin_factor_providers_are_discovered() -> None:
@@ -191,6 +198,19 @@ def test_donchian_breakout_factor_holds_when_inside_range() -> None:
     assert pd.isna(result.iloc[3])
 
 
+def test_donchian_breakout_factor_uses_intrabar_high_for_new_high() -> None:
+    frame = pd.DataFrame(
+        {
+            "close": [100.0, 101.0, 99.0, 100.5],
+            "high": [100.5, 101.5, 99.5, 102.0],
+            "low": [99.5, 100.5, 98.5, 100.0],
+        }
+    )
+    result = DonchianBreakoutFactor(window=3).compute(frame)
+
+    assert result.iloc[3] == pytest.approx(1.0)
+
+
 def test_rsi_factor_handles_one_way_and_flat_markets() -> None:
     up = RSIFactor(window=2).compute(pd.DataFrame({"close": [100.0, 101.0, 102.0]}))
     flat = RSIFactor(window=2).compute(pd.DataFrame({"close": [100.0, 100.0, 100.0]}))
@@ -205,6 +225,24 @@ def test_amihud_illiquidity_factor_is_positive() -> None:
     assert pd.isna(result.iloc[0])
     assert result.iloc[1] > 0
     assert result.iloc[2] > 0
+
+
+def test_average_dollar_volume_factor_uses_close_times_volume() -> None:
+    frame = pd.DataFrame({"close": [10.0, 11.0, 12.0], "volume": [100.0, 200.0, 300.0]})
+    result = AverageDollarVolumeFactor(window=2).compute(frame)
+
+    assert pd.isna(result.iloc[0])
+    assert result.iloc[1] == pytest.approx((1000.0 + 2200.0) / 2.0)
+    assert result.iloc[2] == pytest.approx((2200.0 + 3600.0) / 2.0)
+
+
+def test_rolling_dollar_volume_factor_uses_close_times_volume_sum() -> None:
+    frame = pd.DataFrame({"close": [10.0, 11.0, 12.0], "volume": [100.0, 200.0, 300.0]})
+    result = RollingDollarVolumeFactor(window=2).compute(frame)
+
+    assert pd.isna(result.iloc[0])
+    assert result.iloc[1] == pytest.approx(1000.0 + 2200.0)
+    assert result.iloc[2] == pytest.approx(2200.0 + 3600.0)
 
 
 def test_atr_percent_factor_normalizes_true_range_by_close() -> None:

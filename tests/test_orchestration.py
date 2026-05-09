@@ -809,7 +809,7 @@ def test_strategy_runner_supports_spot_cta_trend_backtest(tmp_path: Path) -> Non
                 "high": [value * 1.01 for value in closes],
                 "low": [value * 0.99 for value in closes],
                 "close": closes,
-                "volume": [2_000_000.0] * len(index),
+                "volume": [20_000.0] * len(index),
                 "source": ["test"] * len(index),
                 "date": [item.date().isoformat() for item in index],
             }
@@ -838,9 +838,7 @@ strategy:
   strategy_params:
     max_positions: 2
     long_allocation: 0.70
-    stop_loss_pct:
-    cooldown_bars: 0
-    age_factor:
+    stop_loss_pct: 0.15
 execution:
   fee_bps: 10.0
   slippage_bps: 10.0

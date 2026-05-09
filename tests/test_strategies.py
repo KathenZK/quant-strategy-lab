@@ -497,6 +497,7 @@ def test_spot_cta_trend_strategy_builds_long_only_trend_weights() -> None:
     factors = {
         "donchian_breakout_20": pd.DataFrame({"BTC": [1.0], "ETH": [1.0], "SOL": [0.0]}, index=index),
         "benchmark_ret_24": pd.DataFrame({"BTC": [0.02], "ETH": [0.02], "SOL": [0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame({"BTC": [20_000_000.0], "ETH": [15_000_000.0], "SOL": [30_000_000.0]}, index=index),
         "ma_distance_120": pd.DataFrame({"BTC": [0.05], "ETH": [0.03], "SOL": [-0.02]}, index=index),
         "volume_surge_20": pd.DataFrame({"BTC": [0.2], "ETH": [0.2], "SOL": [0.2]}, index=index),
         "rsi_14": pd.DataFrame({"BTC": [65.0], "ETH": [70.0], "SOL": [48.0]}, index=index),
@@ -510,7 +511,6 @@ def test_spot_cta_trend_strategy_builds_long_only_trend_weights() -> None:
             max_positions=1,
             long_allocation=0.70,
             stop_loss_pct=None,
-            entry_confirmation_bars=0,
         )
     )
 
@@ -529,6 +529,7 @@ def test_spot_cta_trend_treats_missing_donchian_breakout_as_neutral() -> None:
     factors = {
         "donchian_breakout_20": pd.DataFrame({"BTC": [float("nan")]}, index=index),
         "benchmark_ret_24": pd.DataFrame({"BTC": [0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame({"BTC": [20_000_000.0]}, index=index),
         "age_bars": pd.DataFrame({"BTC": [300.0]}, index=index),
     }
     strategy = SpotCtaTrendStrategy(
@@ -544,6 +545,7 @@ def test_spot_cta_trend_treats_missing_donchian_breakout_as_neutral() -> None:
     assert signal.loc[index[0], "BTC"] == pytest.approx(0.0)
 
 
+@pytest.mark.skip(reason="obsolete: simplified spot CTA now requires Donchian breakout only")
 def test_spot_cta_trend_can_enter_pump_without_fresh_breakout() -> None:
     index = pd.date_range("2024-01-01", periods=1, freq="h", tz="UTC")
     factors = {
@@ -559,6 +561,7 @@ def test_spot_cta_trend_can_enter_pump_without_fresh_breakout() -> None:
         SpotCtaTrendConfig(
             acceleration_momentum_factor="ret_1",
             benchmark_momentum_factor=None,
+            liquidity_rank_factor=None,
             require_breakout=False,
             acceleration_momentum_weight=0.8,
             max_positions=1,
@@ -573,6 +576,7 @@ def test_spot_cta_trend_can_enter_pump_without_fresh_breakout() -> None:
     assert signal.loc[index[0], "ETH"] == pytest.approx(0.0)
 
 
+@pytest.mark.skip(reason="obsolete: simplified spot CTA removed donchian-only mode")
 def test_spot_cta_trend_donchian_only_uses_breakout_factor_only() -> None:
     index = pd.date_range("2024-01-01", periods=3, freq="h", tz="UTC")
     breakout = pd.DataFrame(
@@ -591,6 +595,7 @@ def test_spot_cta_trend_donchian_only_uses_breakout_factor_only() -> None:
     pd.testing.assert_frame_equal(signal, breakout)
 
 
+@pytest.mark.skip(reason="obsolete: simplified spot CTA removed separate Donchian exit")
 def test_spot_cta_trend_donchian_only_can_use_separate_exit_factor() -> None:
     index = pd.date_range("2024-01-01", periods=3, freq="h", tz="UTC")
     entry = pd.DataFrame({"BTC": [1.0, float("nan"), float("nan")]}, index=index)
@@ -615,6 +620,7 @@ def test_spot_cta_trend_donchian_only_can_use_separate_exit_factor() -> None:
     assert signal.loc[index[2], "BTC"] == pytest.approx(-1.0)
 
 
+@pytest.mark.skip(reason="obsolete: simplified spot CTA exits only on fixed stop")
 def test_spot_cta_trend_donchian_only_exits_on_negative_breakout_only() -> None:
     index = pd.date_range("2024-01-01", periods=4, freq="h", tz="UTC")
     signal = pd.DataFrame({"BTC": [1.0, float("nan"), -1.0, float("nan")]}, index=index)
@@ -649,9 +655,6 @@ def test_spot_cta_trend_exits_on_fixed_stop_loss() -> None:
             max_positions=1,
             long_allocation=0.60,
             stop_loss_pct=0.10,
-            cooldown_bars=0,
-            exit_on_signal_loss=False,
-            entry_confirmation_bars=0,
         )
     )
 
@@ -672,9 +675,6 @@ def test_spot_cta_trend_does_not_exit_on_profit_pullback_without_stop_loss() -> 
             max_positions=1,
             long_allocation=0.60,
             stop_loss_pct=None,
-            cooldown_bars=0,
-            exit_on_signal_loss=False,
-            entry_confirmation_bars=0,
         )
     )
 
@@ -686,6 +686,7 @@ def test_spot_cta_trend_does_not_exit_on_profit_pullback_without_stop_loss() -> 
     assert weights.loc[index[3], "BTC"] == pytest.approx(0.60)
 
 
+@pytest.mark.skip(reason="obsolete: simplified spot CTA no longer exits on signal loss")
 def test_spot_cta_trend_strategy_exits_when_signal_is_lost() -> None:
     index = pd.date_range("2024-01-01", periods=8, freq="4h", tz="UTC")
     signal = pd.DataFrame({"BTC": [1.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 1.0]}, index=index)
@@ -715,6 +716,7 @@ def test_spot_cta_trend_holds_after_breakout_without_momentum_exit() -> None:
         "ret_72": pd.DataFrame({"BTC": [0.10, 0.08, -0.01]}, index=index),
         "ret_24": pd.DataFrame({"BTC": [0.04, 0.03, 0.00]}, index=index),
         "benchmark_ret_24": pd.DataFrame({"BTC": [0.02, 0.02, 0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame({"BTC": [20_000_000.0, 20_000_000.0, 20_000_000.0]}, index=index),
         "volume_surge_20": pd.DataFrame({"BTC": [0.2, 0.1, 0.1]}, index=index),
         "rsi_14": pd.DataFrame({"BTC": [65.0, 62.0, 48.0]}, index=index),
         "age_bars": pd.DataFrame({"BTC": [300.0, 301.0, 302.0]}, index=index),
@@ -725,9 +727,6 @@ def test_spot_cta_trend_holds_after_breakout_without_momentum_exit() -> None:
             max_positions=1,
             long_allocation=0.70,
             stop_loss_pct=None,
-            cooldown_bars=0,
-            exit_signal_loss_bars=1,
-            entry_confirmation_bars=0,
         )
     )
 
@@ -748,6 +747,10 @@ def test_spot_cta_trend_enters_breakout_immediately() -> None:
         "ret_72": pd.DataFrame({"BTC": [0.10, 0.09, 0.08, 0.07]}, index=index),
         "ret_24": pd.DataFrame({"BTC": [0.04, 0.04, 0.03, 0.03]}, index=index),
         "benchmark_ret_24": pd.DataFrame({"BTC": [0.02, 0.02, 0.02, 0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame(
+            {"BTC": [20_000_000.0, 20_000_000.0, 20_000_000.0, 20_000_000.0]},
+            index=index,
+        ),
         "volume_surge_20": pd.DataFrame({"BTC": [0.2, 0.2, 0.2, 0.2]}, index=index),
         "rsi_14": pd.DataFrame({"BTC": [65.0, 64.0, 63.0, 62.0]}, index=index),
         "age_bars": pd.DataFrame({"BTC": [300.0, 301.0, 302.0, 303.0]}, index=index),
@@ -758,8 +761,6 @@ def test_spot_cta_trend_enters_breakout_immediately() -> None:
             max_positions=1,
             long_allocation=0.70,
             stop_loss_pct=None,
-            cooldown_bars=0,
-            entry_confirmation_bars=0,
         )
     )
 
@@ -771,11 +772,13 @@ def test_spot_cta_trend_enters_breakout_immediately() -> None:
     assert weights.loc[index[2], "BTC"] == pytest.approx(0.70)
 
 
+@pytest.mark.skip(reason="obsolete: simplified spot CTA buys at breakout bar close")
 def test_spot_cta_trend_waits_one_bar_by_default() -> None:
     index = pd.date_range("2024-01-01", periods=3, freq="h", tz="UTC")
     factors = {
         "donchian_breakout_20": pd.DataFrame({"BTC": [1.0, float("nan"), float("nan")]}, index=index),
         "benchmark_ret_24": pd.DataFrame({"BTC": [0.02, 0.02, 0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame({"BTC": [20_000_000.0, 20_000_000.0, 20_000_000.0]}, index=index),
         "age_bars": pd.DataFrame({"BTC": [300.0, 301.0, 302.0]}, index=index),
     }
     price_frame = pd.DataFrame({"BTC": [100.0, 101.0, 102.0]}, index=index)
@@ -804,6 +807,10 @@ def test_spot_cta_trend_keeps_immediate_entry_after_pullback() -> None:
         "ret_72": pd.DataFrame({"BTC": [0.10, 0.09, 0.08, 0.07]}, index=index),
         "ret_24": pd.DataFrame({"BTC": [0.04, 0.04, 0.03, 0.03]}, index=index),
         "benchmark_ret_24": pd.DataFrame({"BTC": [0.02, 0.02, 0.02, 0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame(
+            {"BTC": [20_000_000.0, 20_000_000.0, 20_000_000.0, 20_000_000.0]},
+            index=index,
+        ),
         "volume_surge_20": pd.DataFrame({"BTC": [0.2, 0.2, 0.2, 0.2]}, index=index),
         "rsi_14": pd.DataFrame({"BTC": [65.0, 64.0, 63.0, 62.0]}, index=index),
         "age_bars": pd.DataFrame({"BTC": [300.0, 301.0, 302.0, 303.0]}, index=index),
@@ -814,8 +821,6 @@ def test_spot_cta_trend_keeps_immediate_entry_after_pullback() -> None:
             max_positions=1,
             long_allocation=0.70,
             stop_loss_pct=None,
-            cooldown_bars=0,
-            entry_confirmation_bars=0,
         )
     )
 
@@ -827,7 +832,8 @@ def test_spot_cta_trend_keeps_immediate_entry_after_pullback() -> None:
     assert weights.loc[index[2], "BTC"] == pytest.approx(0.70)
 
 
-def test_spot_cta_trend_rank_gate_only_allows_strongest_entries() -> None:
+@pytest.mark.skip(reason="obsolete: simplified spot CTA ranks only by 24h dollar volume")
+def test_spot_cta_trend_prioritizes_strongest_entries() -> None:
     index = pd.date_range("2024-01-01", periods=3, freq="h", tz="UTC")
     factors = {
         "donchian_breakout_20": pd.DataFrame(
@@ -850,10 +856,10 @@ def test_spot_cta_trend_rank_gate_only_allows_strongest_entries() -> None:
             stop_loss_pct=None,
             cooldown_bars=0,
             acceleration_momentum_factor="ret_1",
+            liquidity_rank_factor=None,
             acceleration_momentum_weight=1.0,
             entry_confirmation_bars=0,
             entry_rank_limit=1,
-            entry_score_quantile=None,
         )
     )
 
@@ -865,13 +871,58 @@ def test_spot_cta_trend_rank_gate_only_allows_strongest_entries() -> None:
     assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)
 
 
-def test_spot_cta_trend_market_regime_blocks_weak_benchmark() -> None:
+def test_spot_cta_trend_prioritizes_higher_dollar_volume_entries_in_liquidity_band() -> None:
+    index = pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC")
+    factors = {
+        "donchian_breakout_20": pd.DataFrame({"BTC": [1.0, float("nan")], "ETH": [1.0, float("nan")]}, index=index),
+        "benchmark_ret_24": pd.DataFrame({"BTC": [0.02, 0.02], "ETH": [0.02, 0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame(
+            {"BTC": [12_000_000.0, 12_000_000.0], "ETH": [50_000_000.0, 50_000_000.0]},
+            index=index,
+        ),
+        "age_bars": pd.DataFrame({"BTC": [300.0, 301.0], "ETH": [300.0, 301.0]}, index=index),
+    }
+    price_frame = pd.DataFrame({"BTC": [100.0, 101.0], "ETH": [50.0, 51.0]}, index=index)
+    strategy = SpotCtaTrendStrategy(
+        SpotCtaTrendConfig(
+            max_positions=1,
+            long_allocation=0.70,
+            stop_loss_pct=None,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame, factors=factors)
+
+    assert signal.loc[index[0], "ETH"] > signal.loc[index[0], "BTC"]
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.0)
+    assert weights.loc[index[0], "ETH"] == pytest.approx(0.70)
+
+
+def test_spot_cta_trend_blocks_entries_above_liquidity_band() -> None:
+    index = pd.date_range("2024-01-01", periods=1, freq="h", tz="UTC")
+    factors = {
+        "donchian_breakout_20": pd.DataFrame({"BTC": [1.0], "ETH": [1.0]}, index=index),
+        "benchmark_ret_24": pd.DataFrame({"BTC": [0.02], "ETH": [0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame({"BTC": [150_000_000.0], "ETH": [50_000_000.0]}, index=index),
+        "age_bars": pd.DataFrame({"BTC": [300.0], "ETH": [300.0]}, index=index),
+    }
+    strategy = SpotCtaTrendStrategy(SpotCtaTrendConfig())
+
+    signal = strategy.build_signal_frame(factors)
+
+    assert signal.loc[index[0], "BTC"] == pytest.approx(0.0)
+    assert signal.loc[index[0], "ETH"] > 0.0
+
+
+def test_spot_cta_trend_blocks_weak_benchmark_regime() -> None:
     index = pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC")
     factors = {
         "donchian_breakout_20": pd.DataFrame({"BTC": [1.0, 1.0]}, index=index),
         "ret_72": pd.DataFrame({"BTC": [0.10, 0.10]}, index=index),
         "ret_24": pd.DataFrame({"BTC": [0.04, 0.04]}, index=index),
         "benchmark_ret_24": pd.DataFrame({"BTC": [-0.04, -0.02]}, index=index),
+        "dollar_volume_24": pd.DataFrame({"BTC": [20_000_000.0, 20_000_000.0]}, index=index),
         "volume_surge_20": pd.DataFrame({"BTC": [0.2, 0.2]}, index=index),
         "rsi_14": pd.DataFrame({"BTC": [65.0, 65.0]}, index=index),
         "age_bars": pd.DataFrame({"BTC": [300.0, 301.0]}, index=index),

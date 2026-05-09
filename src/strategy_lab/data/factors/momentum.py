@@ -64,36 +64,47 @@ class BreakoutFactor(PandasFactor):
 class DonchianBreakoutFactor(PandasFactor):
     """Richard Donchian's 1960 Commodity Trend Timing breakout signal.
 
-    Emits +1 when the close exceeds the highest close of the prior ``window``
-    bars, -1 when it falls below the lowest close of the prior ``window`` bars,
-    and NaN otherwise so a persistent allocator can hold the existing position.
+    Emits +1 when the current bar's high exceeds the highest high of the prior
+    ``window`` bars, -1 when the low falls below the lowest low of the prior
+    ``window`` bars, and NaN otherwise so a persistent allocator can hold the
+    existing position. If high/low columns are unavailable, it falls back to the
+    configured price column for compatibility with narrow test frames.
     """
 
-    def __init__(self, window: int, price_column: str = "close") -> None:
+    def __init__(
+        self,
+        window: int,
+        price_column: str = "close",
+        high_column: str = "high",
+        low_column: str = "low",
+    ) -> None:
         self.window = window
         self.price_column = price_column
+        self.high_column = high_column
+        self.low_column = low_column
         self.metadata = FactorMetadata(
             name=f"donchian_breakout_{window}",
             category="momentum",
             frequency="bar",
             lookback=window + 1,
-            inputs=(price_column,),
+            inputs=(high_column, low_column),
             market_types=("spot", "perp"),
             description=(
-                "Donchian breakout: +1/-1 when close breaks the previous "
-                f"{window}-bar highest/lowest close, NaN to hold."
+                "Donchian breakout: +1/-1 when intrabar high/low breaks the "
+                f"previous {window}-bar highest/lowest range, NaN to hold."
             ),
         )
 
     def compute(self, frame: pd.DataFrame) -> pd.Series:
-        close = frame[self.price_column]
-        # Previous N-bar high/low of close (exclude the current bar).
-        prior_high = close.shift(1).rolling(self.window, min_periods=self.window).max()
-        prior_low = close.shift(1).rolling(self.window, min_periods=self.window).min()
+        high = frame[self.high_column] if self.high_column in frame else frame[self.price_column]
+        low = frame[self.low_column] if self.low_column in frame else frame[self.price_column]
+        # Previous N-bar range excludes the current bar.
+        prior_high = high.shift(1).rolling(self.window, min_periods=self.window).max()
+        prior_low = low.shift(1).rolling(self.window, min_periods=self.window).min()
 
-        signal = pd.Series(np.nan, index=close.index, dtype="float64")
-        long_break = close.gt(prior_high)
-        short_break = close.lt(prior_low)
+        signal = pd.Series(np.nan, index=high.index, dtype="float64")
+        long_break = high.gt(prior_high)
+        short_break = low.lt(prior_low)
         signal = signal.where(~long_break, 1.0)
         signal = signal.where(~short_break, -1.0)
         return signal
@@ -200,12 +211,14 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         TrailingReturnFactor(periods=168),
         BenchmarkReturnFactor(periods=24),
         BenchmarkReturnFactor(periods=72),
+        BenchmarkReturnFactor(periods=1440),
         BreakoutFactor(window=20),
         DonchianBreakoutFactor(window=10),
         DonchianBreakoutFactor(window=12),
         DonchianBreakoutFactor(window=14),
         DonchianBreakoutFactor(window=20),
         DonchianBreakoutFactor(window=55),
+        DonchianBreakoutFactor(window=1200),
         MovingAverageDistanceFactor(window=20),
         MovingAverageDistanceFactor(window=30),
         MovingAverageDistanceFactor(window=48),

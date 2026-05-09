@@ -24,6 +24,46 @@ class VolumeSurgeFactor(PandasFactor):
         return frame[self.volume_column] / rolling_mean - 1.0
 
 
+class AverageDollarVolumeFactor(PandasFactor):
+    def __init__(self, window: int = 20, close_column: str = "close", volume_column: str = "volume") -> None:
+        self.window = window
+        self.close_column = close_column
+        self.volume_column = volume_column
+        self.metadata = FactorMetadata(
+            name=f"avg_dollar_volume_{window}",
+            category="liquidity",
+            frequency="bar",
+            lookback=window,
+            inputs=(close_column, volume_column),
+            market_types=("spot", "perp"),
+            description="Rolling average traded notional using close times volume.",
+        )
+
+    def compute(self, frame: pd.DataFrame) -> pd.Series:
+        dollar_volume = frame[self.close_column] * frame[self.volume_column]
+        return dollar_volume.rolling(self.window, min_periods=self.window).mean()
+
+
+class RollingDollarVolumeFactor(PandasFactor):
+    def __init__(self, window: int = 24, close_column: str = "close", volume_column: str = "volume") -> None:
+        self.window = window
+        self.close_column = close_column
+        self.volume_column = volume_column
+        self.metadata = FactorMetadata(
+            name=f"dollar_volume_{window}",
+            category="liquidity",
+            frequency="bar",
+            lookback=window,
+            inputs=(close_column, volume_column),
+            market_types=("spot", "perp"),
+            description="Rolling traded notional sum using close times volume.",
+        )
+
+    def compute(self, frame: pd.DataFrame) -> pd.Series:
+        dollar_volume = frame[self.close_column] * frame[self.volume_column]
+        return dollar_volume.rolling(self.window, min_periods=self.window).sum()
+
+
 class AmihudIlliquidityFactor(PandasFactor):
     def __init__(self, return_column: str = "close", volume_column: str = "volume") -> None:
         self.return_column = return_column
@@ -66,6 +106,9 @@ class VWAPDistanceFactor(PandasFactor):
 def builtin_liquidity_factors() -> list[PandasFactor]:
     return [
         VolumeSurgeFactor(window=20),
+        AverageDollarVolumeFactor(window=20),
+        RollingDollarVolumeFactor(window=24),
+        RollingDollarVolumeFactor(window=1440),
         AmihudIlliquidityFactor(),
         VWAPDistanceFactor(),
     ]
