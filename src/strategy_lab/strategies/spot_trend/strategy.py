@@ -25,7 +25,7 @@ class SpotCtaTrendConfig:
     stop_loss_pct: float | None = 0.15
 
 
-@register_strategy("spot_cta_trend")
+@register_strategy("spot_trend")
 @dataclass(slots=True)
 class SpotCtaTrendStrategy:
     """Isolated CTA trend strategy; no shared signal model or allocator."""
@@ -67,7 +67,7 @@ class SpotCtaTrendStrategy:
     def build_signal_frame(self, factors: dict[str, pd.DataFrame]) -> pd.DataFrame:
         missing = [name for name in self.required_factors() if name not in factors]
         if missing:
-            raise ValueError(f"missing factors for spot_cta_trend research strategy: {missing}")
+            raise ValueError(f"missing factors for spot_trend research strategy: {missing}")
 
         breakout = factors[self.config.breakout_factor]
         breakout_signal = breakout.fillna(0.0)

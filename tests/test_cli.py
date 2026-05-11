@@ -31,7 +31,7 @@ def test_cli_local_universe_options_resolve_in_workflow_service() -> None:
             market_type=MarketType.SPOT,
             symbols=["ETH/USDT"],
             benchmark_symbol="BTC/USDT",
-            strategy_type="spot_cta_trend",
+            strategy_type="spot_trend",
         ),
     )
 

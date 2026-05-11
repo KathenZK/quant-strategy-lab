@@ -61,7 +61,7 @@ pip install -e ".[dev]"
 
 ```bash
 ./.venv/bin/quant-strategy-lab run-strategy \
-  --workflow-config configs/workflows/strategies/spot_cta_trend.binance.spot.1h.local.yaml \
+  --workflow-config configs/workflows/strategies/spot_trend.binance.spot.1h.local.yaml \
   --use-local-universe \
   --min-avg-dollar-volume 0 \
   --min-history-bars 120 \

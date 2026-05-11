@@ -108,7 +108,7 @@ _STRATEGY_TEMPLATE_METADATA = {
         "default_timeframe": "5m",
         "default_universe": ["DOGE/USDT", "PEPE/USDT", "WIF/USDT", "BONK/USDT", "FLOKI/USDT"],
     },
-    "spot_cta_trend": {
+    "spot_trend": {
         "name": "Spot CTA 趋势轮动",
         "category": "trend",
         "description": "隔离版现货 CTA 趋势策略，独立管理趋势信号、排名和持仓退出逻辑。",

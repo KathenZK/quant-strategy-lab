@@ -119,7 +119,7 @@ date
 
 ```text
 configs/workflows/strategies/
-  spot_cta_trend.binance.spot.1h.local.yaml
+  spot_trend.binance.spot.1h.local.yaml
   trend_confirmation.mvp.yaml
   ...
 ```
@@ -269,7 +269,7 @@ data/
 
 ```bash
 ./.venv/bin/quant-strategy-lab scan-spot-cta \
-  --workflow-config configs/workflows/strategies/spot_cta_trend.binance.spot.1h.local.yaml \
+  --workflow-config configs/workflows/strategies/spot_trend.binance.spot.1h.local.yaml \
   --use-local-universe \
   --min-avg-dollar-volume 0 \
   --min-history-bars 120 \
@@ -282,7 +282,7 @@ data/
 
 ```bash
 ./.venv/bin/quant-strategy-lab run-strategy \
-  --workflow-config configs/workflows/strategies/spot_cta_trend.binance.spot.1h.local.yaml \
+  --workflow-config configs/workflows/strategies/spot_trend.binance.spot.1h.local.yaml \
   -c configs/environments/binance-spot-1h-local.yaml
 ```
 

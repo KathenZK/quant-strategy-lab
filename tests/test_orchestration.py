@@ -346,7 +346,7 @@ def test_incremental_state_store_isolates_strategy_owners(tmp_path: Path) -> Non
 
     store.update_checkpoint(
         last_ts="2026-05-06T12:00:00Z",
-        owner="spot_cta_trend",
+        owner="spot_trend",
         **common_kwargs,
     )
     store.update_checkpoint(
@@ -361,7 +361,7 @@ def test_incremental_state_store_isolates_strategy_owners(tmp_path: Path) -> Non
         symbol="BTC/USDT",
         market_type=MarketType.SPOT,
         timeframe="1h",
-        owner="spot_cta_trend",
+        owner="spot_trend",
     )
     hold_resolved = store.resolve_since(
         dataset=DatasetKind.OHLCV,
@@ -786,7 +786,7 @@ workflow:
     assert prepared.panels.price is not None
 
 
-def test_strategy_runner_supports_spot_cta_trend_backtest(tmp_path: Path) -> None:
+def test_strategy_runner_supports_spot_trend_backtest(tmp_path: Path) -> None:
     layout = _layout(tmp_path)
     layout.ensure_directories()
 
@@ -830,7 +830,7 @@ def test_strategy_runner_supports_spot_cta_trend_backtest(tmp_path: Path) -> Non
         """
 strategy:
   name: spot_cta_demo
-  strategy_type: spot_cta_trend
+  strategy_type: spot_trend
   exchange: binance
   market_type: spot
   benchmark_symbol: BTC/USDT
@@ -868,7 +868,7 @@ workflow:
     prepared = runner.workflow_service.prepare(workflow)
     backtest = runner.workflow_service.run_backtest(workflow, prepared)
 
-    assert prepared.signal_name == "spot_cta_trend"
+    assert prepared.signal_name == "spot_trend"
     assert prepared.target_weights is not None
     assert prepared.target_weights.max().max() > 0.0
     assert backtest.metrics["cumulative_return"] > 0.0
