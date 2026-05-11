@@ -11,30 +11,43 @@ from strategy_lab.strategies.registry import register_strategy
 
 
 @dataclass(frozen=True, slots=True)
-class SpotCtaTrendConfig:
+class SpotTrendConfig:
     symbols: tuple[str, ...] = ()
-    breakout_factor: str = "donchian_breakout_20"
+    breakout_factor: str = "donchian_breakout_strength_20"
+    exit_breakout_factor: str | None = "donchian_breakout_10"
     liquidity_rank_factor: str = "dollar_volume_24"
     benchmark_momentum_factor: str | None = "benchmark_ret_24"
-    min_breakout_signal: float = 1.0
+    volatility_factor: str | None = "atr_pct_14"
+    min_breakout_signal: float = 1.00
     min_liquidity_rank: float = 10_000_000.0
     max_liquidity_rank: float = 100_000_000.0
     min_benchmark_momentum: float | None = -0.03
     max_positions: int = 7
     long_allocation: float = 1.00
+    max_position_weight: float = 0.20
+    min_volatility_pct: float = 0.005
     stop_loss_pct: float | None = 0.15
+    trailing_atr_multiplier: float | None = 3.0
+    exit_confirmation_bars: int = 3
+    min_hold_bars: int = 6
+    failed_breakout_bars: int | None = 12
+    min_followthrough_pct: float = 0.02
+    cooldown_bars: int = 12
+    refill_interval_bars: int = 12
+    replacement_score_margin: float = 0.25
+    max_replacements_per_bar: int = 0
 
 
 @register_strategy("spot_trend")
 @dataclass(slots=True)
-class SpotCtaTrendStrategy:
-    """Isolated CTA trend strategy; no shared signal model or allocator."""
+class SpotTrendStrategy:
+    """Isolated spot trend strategy; no shared signal model or allocator."""
 
-    config: SpotCtaTrendConfig
+    config: SpotTrendConfig
 
     @classmethod
-    def from_options(cls, options: dict[str, object] | None = None) -> "SpotCtaTrendStrategy":
-        return cls(config=SpotCtaTrendConfig(**(options or {})))
+    def from_options(cls, options: dict[str, object] | None = None) -> "SpotTrendStrategy":
+        return cls(config=SpotTrendConfig(**(options or {})))
 
     @property
     def signal_name(self) -> str:
@@ -49,9 +62,13 @@ class SpotCtaTrendStrategy:
 
     def required_factors(self) -> list[str]:
         factors = [self.config.breakout_factor, self.config.liquidity_rank_factor]
+        if self.config.exit_breakout_factor is not None:
+            factors.append(self.config.exit_breakout_factor)
+        if self.config.volatility_factor is not None:
+            factors.append(self.config.volatility_factor)
         if self.config.benchmark_momentum_factor is not None:
             factors.append(self.config.benchmark_momentum_factor)
-        return factors
+        return list(dict.fromkeys(factors))
 
     def required_liquidation_features(self) -> list[str]:
         return []
@@ -69,23 +86,22 @@ class SpotCtaTrendStrategy:
         if missing:
             raise ValueError(f"missing factors for spot_trend research strategy: {missing}")
 
-        breakout = factors[self.config.breakout_factor]
-        breakout_signal = breakout.fillna(0.0)
-        liquidity_rank = factors[self.config.liquidity_rank_factor].reindex_like(breakout)
+        breakout_score = factors[self.config.breakout_factor]
+        liquidity_rank = factors[self.config.liquidity_rank_factor].reindex_like(breakout_score)
         eligible = (
-            breakout_signal.ge(self.config.min_breakout_signal)
+            breakout_score.gt(self.config.min_breakout_signal)
             & liquidity_rank.ge(self.config.min_liquidity_rank)
             & liquidity_rank.le(self.config.max_liquidity_rank)
         )
         valid = liquidity_rank.notna()
         if self.config.benchmark_momentum_factor is not None:
-            benchmark_momentum = factors[self.config.benchmark_momentum_factor].reindex_like(breakout)
+            benchmark_momentum = factors[self.config.benchmark_momentum_factor].reindex_like(breakout_score)
             valid &= benchmark_momentum.notna()
             if self.config.min_benchmark_momentum is not None:
                 eligible &= benchmark_momentum.ge(self.config.min_benchmark_momentum)
-        signal = pd.DataFrame(float("nan"), index=breakout.index, columns=breakout.columns)
+        signal = pd.DataFrame(float("nan"), index=breakout_score.index, columns=breakout_score.columns)
         signal = signal.where(~valid, 0.0)
-        return signal.where(~eligible, liquidity_rank)
+        return signal.where(~eligible, breakout_score)
 
     def build_weights(
         self,
@@ -95,41 +111,90 @@ class SpotCtaTrendStrategy:
         factors: dict[str, pd.DataFrame] | None = None,
     ) -> pd.DataFrame:
         del liquidation_features
-        del factors
         self._validate()
         close = self._close_frame(signal_frame, price_frame)
+        exit_signal_frame = self._factor_frame(signal_frame, factors, self.config.exit_breakout_factor)
+        volatility_frame = self._factor_frame(signal_frame, factors, self.config.volatility_factor)
         weights = pd.DataFrame(0.0, index=signal_frame.index, columns=signal_frame.columns)
         current = pd.Series(False, index=signal_frame.columns, dtype="bool")
         entry_prices = pd.Series(float("nan"), index=signal_frame.columns, dtype="float64")
+        peak_prices = pd.Series(float("nan"), index=signal_frame.columns, dtype="float64")
+        entry_scores = pd.Series(float("nan"), index=signal_frame.columns, dtype="float64")
+        position_weights = pd.Series(0.0, index=signal_frame.columns, dtype="float64")
+        holding_bars = pd.Series(0, index=signal_frame.columns, dtype="int64")
+        exit_break_counts = pd.Series(0, index=signal_frame.columns, dtype="int64")
+        cooldown_remaining = pd.Series(0, index=signal_frame.columns, dtype="int64")
+        bars_since_refill = self.config.refill_interval_bars
 
         for ts in signal_frame.index:
+            composition_changed = False
+            refilled_this_bar = False
+            cooldown_at_start = cooldown_remaining.copy()
             signal_row = signal_frame.loc[ts]
             price_row = close.loc[ts]
+            exit_signal_row = exit_signal_frame.loc[ts] if exit_signal_frame is not None else None
+            volatility_row = volatility_frame.loc[ts] if volatility_frame is not None else None
 
             for symbol in signal_frame.columns:
                 price = price_row.loc[symbol]
                 if not current.loc[symbol] or pd.isna(price):
                     continue
-                if self._exit_on_price(float(price), entry_prices.loc[symbol]):
-                    current.loc[symbol] = False
-                    entry_prices.loc[symbol] = float("nan")
+                holding_bars.loc[symbol] = holding_bars.loc[symbol] + 1
+                peak_prices.loc[symbol] = self._updated_peak(float(price), peak_prices.loc[symbol])
+                exit_break_counts.loc[symbol] = self._updated_exit_break_count(symbol, exit_signal_row, exit_break_counts)
+
+                if self._should_exit(
+                    symbol=symbol,
+                    price=float(price),
+                    entry_price=entry_prices.loc[symbol],
+                    peak_price=peak_prices.loc[symbol],
+                    holding_bars=int(holding_bars.loc[symbol]),
+                    exit_break_count=int(exit_break_counts.loc[symbol]),
+                    volatility_row=volatility_row,
+                ):
+                    self._clear_position(symbol, current, entry_prices, peak_prices, entry_scores, holding_bars, exit_break_counts)
+                    cooldown_remaining.loc[symbol] = self.config.cooldown_bars
+                    composition_changed = True
 
             open_slots = max(self.config.max_positions - int(current.sum()), 0)
-            if open_slots > 0:
-                candidates = self._entry_candidates(signal_row)
+            candidates = self._entry_candidates(signal_row)
+            if open_slots > 0 and bars_since_refill >= self.config.refill_interval_bars:
                 for symbol in candidates.index:
                     if open_slots <= 0:
                         break
                     price = price_row.loc[symbol]
-                    if current.loc[symbol] or pd.isna(price):
+                    if current.loc[symbol] or cooldown_remaining.loc[symbol] > 0 or pd.isna(price):
                         continue
-                    current.loc[symbol] = True
-                    entry_prices.loc[symbol] = float(price)
+                    self._enter_position(symbol, float(price), float(candidates.loc[symbol]), current, entry_prices, peak_prices, entry_scores, holding_bars, exit_break_counts)
+                    composition_changed = True
+                    refilled_this_bar = True
                     open_slots -= 1
 
+            replacements = 0
+            for symbol in candidates.index:
+                if replacements >= self.config.max_replacements_per_bar:
+                    break
+                price = price_row.loc[symbol]
+                if current.loc[symbol] or cooldown_remaining.loc[symbol] > 0 or pd.isna(price):
+                    continue
+                replace_symbol = self._replacement_symbol(current, entry_scores, holding_bars, float(candidates.loc[symbol]))
+                if replace_symbol is None:
+                    continue
+                self._clear_position(replace_symbol, current, entry_prices, peak_prices, entry_scores, holding_bars, exit_break_counts)
+                cooldown_remaining.loc[replace_symbol] = self.config.cooldown_bars
+                self._enter_position(symbol, float(price), float(candidates.loc[symbol]), current, entry_prices, peak_prices, entry_scores, holding_bars, exit_break_counts)
+                composition_changed = True
+                replacements += 1
+
             active = current[current].index
+            if composition_changed:
+                position_weights.loc[:] = 0.0
+                if len(active) > 0:
+                    position_weights.loc[active] = self._target_weights(active, volatility_row)
             if len(active) > 0:
-                weights.loc[ts, active] = self._position_weight()
+                weights.loc[ts, active] = position_weights.loc[active]
+            cooldown_remaining.loc[cooldown_at_start > 0] = cooldown_remaining.loc[cooldown_at_start > 0] - 1
+            bars_since_refill = 0 if refilled_this_bar else bars_since_refill + 1
 
         return weights
 
@@ -138,6 +203,28 @@ class SpotCtaTrendStrategy:
             raise ValueError("max_positions must be non-negative")
         if self.config.long_allocation < 0.0:
             raise ValueError("long_allocation must be non-negative")
+        if self.config.max_position_weight <= 0.0:
+            raise ValueError("max_position_weight must be positive")
+        if self.config.min_volatility_pct <= 0.0:
+            raise ValueError("min_volatility_pct must be positive")
+        if self.config.cooldown_bars < 0:
+            raise ValueError("cooldown_bars must be non-negative")
+        if self.config.refill_interval_bars < 0:
+            raise ValueError("refill_interval_bars must be non-negative")
+        if self.config.exit_confirmation_bars < 1:
+            raise ValueError("exit_confirmation_bars must be at least 1")
+        if self.config.min_hold_bars < 0:
+            raise ValueError("min_hold_bars must be non-negative")
+        if self.config.failed_breakout_bars is not None and self.config.failed_breakout_bars < 1:
+            raise ValueError("failed_breakout_bars must be at least 1")
+        if self.config.min_followthrough_pct < 0.0:
+            raise ValueError("min_followthrough_pct must be non-negative")
+        if self.config.replacement_score_margin < 0.0:
+            raise ValueError("replacement_score_margin must be non-negative")
+        if self.config.max_replacements_per_bar < 0:
+            raise ValueError("max_replacements_per_bar must be non-negative")
+        if self.config.trailing_atr_multiplier is not None and self.config.trailing_atr_multiplier <= 0.0:
+            raise ValueError("trailing_atr_multiplier must be positive")
         if self.config.min_liquidity_rank < 0.0:
             raise ValueError("min_liquidity_rank must be non-negative")
         if self.config.max_liquidity_rank <= self.config.min_liquidity_rank:
@@ -150,19 +237,154 @@ class SpotCtaTrendStrategy:
             return pd.DataFrame(1.0, index=signal_frame.index, columns=signal_frame.columns)
         return price_frame.reindex(index=signal_frame.index, columns=signal_frame.columns)
 
+    def _factor_frame(
+        self,
+        signal_frame: pd.DataFrame,
+        factors: dict[str, pd.DataFrame] | None,
+        factor_name: str | None,
+    ) -> pd.DataFrame | None:
+        if factor_name is None or factors is None or factor_name not in factors:
+            return None
+        return factors[factor_name].reindex_like(signal_frame)
+
     def _entry_candidates(self, signal_row: pd.Series) -> pd.Series:
         candidates = signal_row[signal_row > 0.0].dropna()
         if candidates.empty:
             return candidates
-        candidates = candidates.sort_values(ascending=False)
-        return candidates.head(self.config.max_positions)
+        return candidates.sort_values(ascending=False)
+
+    def _updated_peak(self, price: float, peak_price: float) -> float:
+        if pd.isna(peak_price):
+            return price
+        return max(price, float(peak_price))
+
+    def _updated_exit_break_count(
+        self,
+        symbol: str,
+        exit_signal_row: pd.Series | None,
+        exit_break_counts: pd.Series,
+    ) -> int:
+        if exit_signal_row is None:
+            return 0
+        signal_value = exit_signal_row.loc[symbol]
+        if not pd.isna(signal_value) and float(signal_value) < 0.0:
+            return int(exit_break_counts.loc[symbol]) + 1
+        return 0
+
+    def _should_exit(
+        self,
+        *,
+        symbol: str,
+        price: float,
+        entry_price: float,
+        peak_price: float,
+        holding_bars: int,
+        exit_break_count: int,
+        volatility_row: pd.Series | None,
+    ) -> bool:
+        if self._exit_on_price(price, entry_price):
+            return True
+        if holding_bars < self.config.min_hold_bars:
+            return False
+        if exit_break_count >= self.config.exit_confirmation_bars:
+            return True
+        if self._exit_on_atr_trailing(symbol, price, peak_price, volatility_row):
+            return True
+        return self._exit_on_failed_breakout(peak_price, entry_price, holding_bars)
 
     def _exit_on_price(self, price: float, entry_price: float) -> bool:
         if pd.isna(entry_price):
             return False
         return self.config.stop_loss_pct is not None and price <= entry_price * (1.0 - self.config.stop_loss_pct)
 
-    def _position_weight(self) -> float:
-        if self.config.max_positions == 0:
-            return 0.0
-        return self.config.long_allocation / self.config.max_positions
+    def _exit_on_atr_trailing(
+        self,
+        symbol: str,
+        price: float,
+        peak_price: float,
+        volatility_row: pd.Series | None,
+    ) -> bool:
+        if self.config.trailing_atr_multiplier is None or volatility_row is None or pd.isna(peak_price):
+            return False
+        volatility = volatility_row.loc[symbol]
+        if pd.isna(volatility) or float(volatility) <= 0.0:
+            return False
+        trailing_stop = float(peak_price) * (1.0 - self.config.trailing_atr_multiplier * float(volatility))
+        return price <= trailing_stop
+
+    def _exit_on_failed_breakout(self, peak_price: float, entry_price: float, holding_bars: int) -> bool:
+        if self.config.failed_breakout_bars is None or pd.isna(peak_price) or pd.isna(entry_price):
+            return False
+        return holding_bars >= self.config.failed_breakout_bars and peak_price < entry_price * (1.0 + self.config.min_followthrough_pct)
+
+    def _enter_position(
+        self,
+        symbol: str,
+        price: float,
+        score: float,
+        current: pd.Series,
+        entry_prices: pd.Series,
+        peak_prices: pd.Series,
+        entry_scores: pd.Series,
+        holding_bars: pd.Series,
+        exit_break_counts: pd.Series,
+    ) -> None:
+        current.loc[symbol] = True
+        entry_prices.loc[symbol] = price
+        peak_prices.loc[symbol] = price
+        entry_scores.loc[symbol] = score
+        holding_bars.loc[symbol] = 0
+        exit_break_counts.loc[symbol] = 0
+
+    def _clear_position(
+        self,
+        symbol: str,
+        current: pd.Series,
+        entry_prices: pd.Series,
+        peak_prices: pd.Series,
+        entry_scores: pd.Series,
+        holding_bars: pd.Series,
+        exit_break_counts: pd.Series,
+    ) -> None:
+        current.loc[symbol] = False
+        entry_prices.loc[symbol] = float("nan")
+        peak_prices.loc[symbol] = float("nan")
+        entry_scores.loc[symbol] = float("nan")
+        holding_bars.loc[symbol] = 0
+        exit_break_counts.loc[symbol] = 0
+
+    def _replacement_symbol(
+        self,
+        current: pd.Series,
+        entry_scores: pd.Series,
+        holding_bars: pd.Series,
+        candidate_score: float,
+    ) -> str | None:
+        replaceable = current[current & holding_bars.ge(self.config.min_hold_bars)].index
+        if len(replaceable) == 0:
+            return None
+        scores = entry_scores.loc[replaceable].dropna()
+        if scores.empty:
+            return None
+        worst_symbol = scores.idxmin()
+        required_score = float(scores.loc[worst_symbol]) * (1.0 + self.config.replacement_score_margin)
+        if candidate_score > required_score:
+            return str(worst_symbol)
+        return None
+
+    def _target_weights(self, active: pd.Index, volatility_row: pd.Series | None) -> pd.Series:
+        if len(active) == 0:
+            return pd.Series(dtype="float64")
+        if volatility_row is None:
+            equal_weight = min(self.config.long_allocation / len(active), self.config.max_position_weight)
+            return pd.Series(equal_weight, index=active, dtype="float64")
+
+        volatility = volatility_row.reindex(active).astype("float64")
+        volatility = volatility.where(volatility.gt(self.config.min_volatility_pct), self.config.min_volatility_pct)
+        if volatility.isna().all():
+            equal_weight = min(self.config.long_allocation / len(active), self.config.max_position_weight)
+            return pd.Series(equal_weight, index=active, dtype="float64")
+        volatility = volatility.fillna(volatility.median())
+        inverse_vol = 1.0 / volatility
+        raw = inverse_vol / inverse_vol.sum() * self.config.long_allocation
+        return raw.clip(upper=self.config.max_position_weight)

@@ -9,8 +9,8 @@ from strategy_lab.strategies import (
     MovingAverageCrossoverStrategy,
     MomentumRotationConfig,
     MomentumRotationStrategy,
-    SpotCtaTrendConfig,
-    SpotCtaTrendStrategy,
+    SpotTrendConfig,
+    SpotTrendStrategy,
     TrendConfirmationConfig,
     TrendConfirmationStrategy,
 )
@@ -90,8 +90,8 @@ def test_momentum_rotation_strategy_exposes_signal_and_allocator_components() ->
 
 
 def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> None:
-    strategy = SpotCtaTrendStrategy(
-        SpotCtaTrendConfig(
+    strategy = SpotTrendStrategy(
+        SpotTrendConfig(
             max_positions=5,
             long_allocation=0.5,
         )
@@ -100,8 +100,18 @@ def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> 
     assert not hasattr(strategy, "signal_model")
     assert not hasattr(strategy, "allocator")
     assert strategy.required_factors() == [
-        "donchian_breakout_20",
+        "donchian_breakout_strength_20",
         "dollar_volume_24",
+        "donchian_breakout_10",
+        "atr_pct_14",
+        "benchmark_ret_24",
+    ]
+    exit_strategy = SpotTrendStrategy(SpotTrendConfig(exit_breakout_factor="donchian_breakout_10"))
+    assert exit_strategy.required_factors() == [
+        "donchian_breakout_strength_20",
+        "dollar_volume_24",
+        "donchian_breakout_10",
+        "atr_pct_14",
         "benchmark_ret_24",
     ]
     assert strategy.required_liquidation_features() == []

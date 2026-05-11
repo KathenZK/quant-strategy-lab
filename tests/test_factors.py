@@ -9,6 +9,7 @@ from strategy_lab.data.factors import (
     BasisZScoreFactor,
     BenchmarkReturnFactor,
     DonchianBreakoutFactor,
+    DonchianBreakoutStrengthFactor,
     FundingRateZScoreFactor,
     OpenInterestZScoreFactor,
     RelativeStrengthFactor,
@@ -43,19 +44,17 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "donchian_breakout_14" in names
     assert "donchian_breakout_20" in names
     assert "donchian_breakout_55" in names
-    assert "donchian_breakout_1200" in names
+    assert "donchian_breakout_strength_20" in names
     assert "ret_6" in names
     assert "ret_12" in names
     assert "ret_72" in names
     assert "ret_168" in names
     assert "benchmark_ret_24" in names
     assert "benchmark_ret_72" in names
-    assert "benchmark_ret_1440" in names
     assert "ma_distance_48" in names
     assert "atr_pct_14" in names
     assert "avg_dollar_volume_20" in names
     assert "dollar_volume_24" in names
-    assert "dollar_volume_1440" in names
 
 
 def test_builtin_factor_providers_are_discovered() -> None:
@@ -256,6 +255,24 @@ def test_atr_percent_factor_normalizes_true_range_by_close() -> None:
     result = ATRPercentFactor(window=2).compute(frame)
     assert pd.isna(result.iloc[0])
     assert result.iloc[1] == pytest.approx(2.0 / 11.0)
+
+
+def test_donchian_breakout_strength_requires_close_confirmed_new_high() -> None:
+    frame = pd.DataFrame(
+        {
+            "high": [10.0, 11.0, 12.0, 13.0, 15.0],
+            "low": [9.0, 9.5, 10.0, 11.0, 13.0],
+            "close": [9.5, 10.5, 11.0, 12.0, 14.0],
+        }
+    )
+    result = DonchianBreakoutStrengthFactor(window=3, atr_window=2).compute(frame)
+
+    assert pd.isna(result.iloc[3])
+    prior_high = 13.0
+    breakout_pct = 14.0 / prior_high - 1.0
+    atr = (2.0 + 3.0) / 2.0
+    atr_pct = atr / 14.0
+    assert result.iloc[4] == pytest.approx(breakout_pct / atr_pct)
 
 
 def test_compute_factor_bundle_adds_expected_columns() -> None:

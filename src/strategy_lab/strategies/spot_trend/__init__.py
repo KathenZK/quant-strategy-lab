@@ -1,3 +1,3 @@
-from .strategy import SpotCtaTrendConfig, SpotCtaTrendStrategy
+from .strategy import SpotTrendConfig, SpotTrendStrategy
 
-__all__ = ["SpotCtaTrendConfig", "SpotCtaTrendStrategy"]
+__all__ = ["SpotTrendConfig", "SpotTrendStrategy"]

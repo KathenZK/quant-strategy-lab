@@ -108,7 +108,6 @@ def builtin_liquidity_factors() -> list[PandasFactor]:
         VolumeSurgeFactor(window=20),
         AverageDollarVolumeFactor(window=20),
         RollingDollarVolumeFactor(window=24),
-        RollingDollarVolumeFactor(window=1440),
         AmihudIlliquidityFactor(),
         VWAPDistanceFactor(),
     ]

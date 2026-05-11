@@ -110,6 +110,58 @@ class DonchianBreakoutFactor(PandasFactor):
         return signal
 
 
+class DonchianBreakoutStrengthFactor(PandasFactor):
+    """Close-confirmed Donchian breakout quality normalized by ATR percent."""
+
+    def __init__(
+        self,
+        window: int,
+        atr_window: int = 14,
+        high_column: str = "high",
+        low_column: str = "low",
+        close_column: str = "close",
+    ) -> None:
+        self.window = window
+        self.atr_window = atr_window
+        self.high_column = high_column
+        self.low_column = low_column
+        self.close_column = close_column
+        self.metadata = FactorMetadata(
+            name=f"donchian_breakout_strength_{window}",
+            category="momentum",
+            frequency="bar",
+            lookback=max(window, atr_window) + 1,
+            inputs=(high_column, low_column, close_column),
+            market_types=("spot", "perp"),
+            description=(
+                "Close-confirmed Donchian breakout distance over the previous "
+                f"{window}-bar high, normalized by {atr_window}-bar ATR percent."
+            ),
+        )
+
+    def compute(self, frame: pd.DataFrame) -> pd.Series:
+        high = frame[self.high_column]
+        low = frame[self.low_column]
+        close = frame[self.close_column]
+        prior_high = high.shift(1).rolling(self.window, min_periods=self.window).max()
+
+        previous_close = close.shift(1)
+        true_range = pd.concat(
+            [
+                high - low,
+                (high - previous_close).abs(),
+                (low - previous_close).abs(),
+            ],
+            axis=1,
+        ).max(axis=1)
+        atr = true_range.rolling(self.atr_window, min_periods=self.atr_window).mean()
+        atr_pct = atr / close.replace(0.0, np.nan)
+
+        breakout_pct = close / prior_high.replace(0.0, np.nan) - 1.0
+        strength = breakout_pct / atr_pct.replace(0.0, np.nan)
+        return strength.where(close.gt(prior_high))
+
+
 class MovingAverageDistanceFactor(PandasFactor):
     def __init__(self, window: int, price_column: str = "close") -> None:
         self.window = window
@@ -211,14 +263,13 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         TrailingReturnFactor(periods=168),
         BenchmarkReturnFactor(periods=24),
         BenchmarkReturnFactor(periods=72),
-        BenchmarkReturnFactor(periods=1440),
         BreakoutFactor(window=20),
         DonchianBreakoutFactor(window=10),
         DonchianBreakoutFactor(window=12),
         DonchianBreakoutFactor(window=14),
         DonchianBreakoutFactor(window=20),
         DonchianBreakoutFactor(window=55),
-        DonchianBreakoutFactor(window=1200),
+        DonchianBreakoutStrengthFactor(window=20),
         MovingAverageDistanceFactor(window=20),
         MovingAverageDistanceFactor(window=30),
         MovingAverageDistanceFactor(window=48),
