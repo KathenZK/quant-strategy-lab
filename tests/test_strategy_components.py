@@ -101,18 +101,8 @@ def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> 
     assert not hasattr(strategy, "allocator")
     assert strategy.required_factors() == [
         "donchian_breakout_strength_20",
-        "dollar_volume_24",
-        "donchian_breakout_10",
+        "dollar_volume_1",
         "atr_pct_14",
-        "benchmark_ret_24",
-    ]
-    exit_strategy = SpotTrendStrategy(SpotTrendConfig(exit_breakout_factor="donchian_breakout_10"))
-    assert exit_strategy.required_factors() == [
-        "donchian_breakout_strength_20",
-        "dollar_volume_24",
-        "donchian_breakout_10",
-        "atr_pct_14",
-        "benchmark_ret_24",
     ]
     assert strategy.required_liquidation_features() == []
 

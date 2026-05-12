@@ -54,6 +54,7 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "ma_distance_48" in names
     assert "atr_pct_14" in names
     assert "avg_dollar_volume_20" in names
+    assert "dollar_volume_1" in names
     assert "dollar_volume_24" in names
 
 

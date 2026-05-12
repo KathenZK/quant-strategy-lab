@@ -26,13 +26,11 @@ from strategy_lab.strategies import (
 def _spot_trend_test_config(**overrides: object) -> SpotTrendConfig:
     defaults: dict[str, object] = {
         "breakout_factor": "donchian_breakout_20",
-        "exit_breakout_factor": None,
+        "liquidity_rank_factor": "dollar_volume_24",
         "volatility_factor": None,
         "min_breakout_signal": 0.5,
         "max_position_weight": 1.0,
         "trailing_atr_multiplier": None,
-        "exit_confirmation_bars": 1,
-        "min_hold_bars": 0,
         "failed_breakout_bars": None,
         "refill_interval_bars": 0,
     }
@@ -683,6 +681,7 @@ def test_spot_trend_exits_on_fixed_stop_loss() -> None:
     assert weights.loc[index[3], "BTC"] == pytest.approx(0.0)
 
 
+@pytest.mark.skip(reason="obsolete: daily spot trend exits use hard stop, ATR trailing, and failed breakout")
 def test_spot_trend_exits_on_negative_exit_breakout() -> None:
     index = pd.date_range("2024-01-01", periods=4, freq="h", tz="UTC")
     factors = {
@@ -710,6 +709,7 @@ def test_spot_trend_exits_on_negative_exit_breakout() -> None:
     assert weights.loc[index[3], "BTC"] == pytest.approx(0.0)
 
 
+@pytest.mark.skip(reason="obsolete: daily spot trend uses portfolio refill throttling instead of symbol cooldown")
 def test_spot_trend_respects_cooldown_after_exit() -> None:
     index = pd.date_range("2024-01-01", periods=5, freq="h", tz="UTC")
     factors = {
@@ -953,7 +953,7 @@ def test_spot_trend_prioritizes_breakout_quality_within_liquidity_band() -> None
         ),
         "donchian_breakout_10": pd.DataFrame({"BTC": [float("nan"), float("nan")], "ETH": [float("nan"), float("nan")]}, index=index),
         "benchmark_ret_24": pd.DataFrame({"BTC": [0.02, 0.02], "ETH": [0.02, 0.02]}, index=index),
-        "dollar_volume_24": pd.DataFrame(
+        "dollar_volume_1": pd.DataFrame(
             {"BTC": [50_000_000.0, 50_000_000.0], "ETH": [12_000_000.0, 12_000_000.0]},
             index=index,
         ),
@@ -967,7 +967,7 @@ def test_spot_trend_prioritizes_breakout_quality_within_liquidity_band() -> None
 
     assert signal.loc[index[0], "ETH"] > signal.loc[index[0], "BTC"]
     assert weights.loc[index[0], "BTC"] == pytest.approx(0.0)
-    assert weights.loc[index[0], "ETH"] == pytest.approx(0.20)
+    assert weights.loc[index[0], "ETH"] == pytest.approx(0.15)
 
 
 def test_spot_trend_sizes_active_positions_by_inverse_volatility() -> None:
@@ -980,7 +980,6 @@ def test_spot_trend_sizes_active_positions_by_inverse_volatility() -> None:
             max_positions=2,
             long_allocation=1.0,
             max_position_weight=1.0,
-            exit_breakout_factor=None,
             trailing_atr_multiplier=None,
             failed_breakout_bars=None,
         )
@@ -992,7 +991,7 @@ def test_spot_trend_sizes_active_positions_by_inverse_volatility() -> None:
     assert weights.loc[index[0], "ETH"] == pytest.approx(1 / 3)
 
 
-def test_spot_trend_replaces_old_position_only_when_new_score_clears_margin() -> None:
+def test_spot_trend_does_not_replace_healthy_position_with_new_signal() -> None:
     index = pd.date_range("2024-01-01", periods=3, freq="h", tz="UTC")
     signal = pd.DataFrame(
         {
@@ -1007,13 +1006,9 @@ def test_spot_trend_replaces_old_position_only_when_new_score_clears_margin() ->
             max_positions=1,
             long_allocation=1.0,
             max_position_weight=1.0,
-            exit_breakout_factor=None,
             volatility_factor=None,
             trailing_atr_multiplier=None,
-            min_hold_bars=1,
             failed_breakout_bars=None,
-            replacement_score_margin=0.25,
-            max_replacements_per_bar=1,
         )
     )
 
@@ -1022,8 +1017,8 @@ def test_spot_trend_replaces_old_position_only_when_new_score_clears_margin() ->
     assert weights.loc[index[0], "BTC"] == pytest.approx(1.0)
     assert weights.loc[index[1], "BTC"] == pytest.approx(1.0)
     assert weights.loc[index[1], "ETH"] == pytest.approx(0.0)
-    assert weights.loc[index[2], "BTC"] == pytest.approx(0.0)
-    assert weights.loc[index[2], "ETH"] == pytest.approx(1.0)
+    assert weights.loc[index[2], "BTC"] == pytest.approx(1.0)
+    assert weights.loc[index[2], "ETH"] == pytest.approx(0.0)
 
 
 def test_spot_trend_throttles_refills_after_exit() -> None:
@@ -1041,7 +1036,6 @@ def test_spot_trend_throttles_refills_after_exit() -> None:
             max_positions=1,
             long_allocation=1.0,
             max_position_weight=1.0,
-            exit_breakout_factor=None,
             volatility_factor=None,
             trailing_atr_multiplier=None,
             failed_breakout_bars=None,
@@ -1059,7 +1053,7 @@ def test_spot_trend_throttles_refills_after_exit() -> None:
     assert weights.loc[index[3], "ETH"] == pytest.approx(1.0)
 
 
-def test_spot_trend_blocks_entries_above_liquidity_band() -> None:
+def test_spot_trend_respects_configured_liquidity_upper_bound() -> None:
     index = pd.date_range("2024-01-01", periods=1, freq="h", tz="UTC")
     factors = {
         "donchian_breakout_20": pd.DataFrame({"BTC": [1.0], "ETH": [1.0]}, index=index),
@@ -1067,7 +1061,7 @@ def test_spot_trend_blocks_entries_above_liquidity_band() -> None:
         "dollar_volume_24": pd.DataFrame({"BTC": [150_000_000.0], "ETH": [50_000_000.0]}, index=index),
         "age_bars": pd.DataFrame({"BTC": [300.0], "ETH": [300.0]}, index=index),
     }
-    strategy = SpotTrendStrategy(_spot_trend_test_config())
+    strategy = SpotTrendStrategy(_spot_trend_test_config(max_liquidity_rank=100_000_000.0))
 
     signal = strategy.build_signal_frame(factors)
 
@@ -1075,13 +1069,13 @@ def test_spot_trend_blocks_entries_above_liquidity_band() -> None:
     assert signal.loc[index[0], "ETH"] > 0.0
 
 
-def test_spot_trend_blocks_weak_benchmark_regime() -> None:
+def test_spot_trend_ignores_weak_benchmark_when_filter_disabled() -> None:
     index = pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC")
     factors = {
         "donchian_breakout_20": pd.DataFrame({"BTC": [1.0, 1.0]}, index=index),
         "ret_72": pd.DataFrame({"BTC": [0.10, 0.10]}, index=index),
         "ret_24": pd.DataFrame({"BTC": [0.04, 0.04]}, index=index),
-        "benchmark_ret_24": pd.DataFrame({"BTC": [-0.04, -0.02]}, index=index),
+        "benchmark_ret_24": pd.DataFrame({"BTC": [-0.06, -0.04]}, index=index),
         "dollar_volume_24": pd.DataFrame({"BTC": [20_000_000.0, 20_000_000.0]}, index=index),
         "volume_surge_20": pd.DataFrame({"BTC": [0.2, 0.2]}, index=index),
         "rsi_14": pd.DataFrame({"BTC": [65.0, 65.0]}, index=index),
@@ -1091,7 +1085,7 @@ def test_spot_trend_blocks_weak_benchmark_regime() -> None:
 
     signal = strategy.build_signal_frame(factors)
 
-    assert signal.loc[index[0], "BTC"] == pytest.approx(0.0)
+    assert signal.loc[index[0], "BTC"] > 0.0
     assert signal.loc[index[1], "BTC"] > 0.0
 
 
