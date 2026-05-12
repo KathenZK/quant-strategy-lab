@@ -19,7 +19,7 @@ class SpotTrendConfig:
     volatility_factor: str | None = "atr_pct_14"
     min_breakout_signal: float = 1.00
     min_liquidity_rank: float = 10_000_000.0
-    max_liquidity_rank: float | None = 200_000_000.0
+    max_liquidity_rank: float | None = 80_000_000.0
     min_benchmark_momentum: float | None = None
     max_positions: int = 7
     long_allocation: float = 1.00
