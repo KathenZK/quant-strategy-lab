@@ -65,6 +65,9 @@ def build_candle_count_signal(frame: pd.DataFrame, config: CandleCountIntrabarBa
 def run_candle_count_intrabar_backtest(
     frame: pd.DataFrame,
     config: CandleCountIntrabarBacktestConfig | None = None,
+    *,
+    trade_start: pd.Timestamp | str | None = None,
+    trade_end: pd.Timestamp | str | None = None,
 ) -> CandleCountIntrabarBacktestResult:
     """Run candle-count strategy using close entries and mark high/low exits.
 
@@ -85,9 +88,10 @@ def run_candle_count_intrabar_backtest(
     mark_high = frame["mark_high"].astype("float64")
     mark_low = frame["mark_low"].astype("float64")
 
+    start_position, end_position = _trade_bounds(frame, trade_start=trade_start, trade_end=trade_end)
     cost_rate = config.fee_rate + config.slippage_rate
     equity = 1.0
-    previous_price = float(close.iloc[0])
+    previous_price = float(close.iloc[start_position])
     current_direction = 0
     entry_price = np.nan
     cooldown_remaining = 0
@@ -103,11 +107,14 @@ def run_candle_count_intrabar_backtest(
     entries = 0
     exits = 0
 
-    for position, ts in enumerate(frame.index):
+    for position in range(start_position, end_position + 1):
+        ts = frame.index[position]
         close_price = float(close.iloc[position])
         bar_return = 0.0
+        exited_this_bar = False
+        cooldown_at_start = cooldown_remaining
 
-        if position > 0 and current_direction != 0:
+        if position > start_position and current_direction != 0:
             exit_price, exit_reason = _intrabar_exit(
                 direction=current_direction,
                 entry_price=float(entry_price),
@@ -136,8 +143,9 @@ def run_candle_count_intrabar_backtest(
                 events.append(CandleCountTradeEvent(ts=pd.Timestamp(ts), event=exit_reason, direction=current_direction, equity=equity))
                 current_direction = 0
                 entry_price = np.nan
+                exited_this_bar = True
                 cooldown_remaining = max(cooldown_remaining, config.cooldown_bars)
-        elif position > 0:
+        elif position > start_position:
             previous_price = close_price
 
         if current_direction != 0:
@@ -146,7 +154,7 @@ def run_candle_count_intrabar_backtest(
             bar_return += funding
             funding_pnl += funding
 
-        if current_direction == 0 and cooldown_remaining == 0:
+        if current_direction == 0 and cooldown_remaining == 0 and not exited_this_bar:
             desired_direction = int(signal.iloc[position])
             if desired_direction != 0 and _entry_allowed(signal, position, desired_direction, config):
                 current_direction = desired_direction
@@ -162,12 +170,13 @@ def run_candle_count_intrabar_backtest(
         equity_values.append(equity)
         period_returns.append(bar_return)
         weights.append(current_direction * config.allocation)
-        if cooldown_remaining > 0:
+        if cooldown_at_start > 0:
             cooldown_remaining -= 1
 
-    equity_curve = pd.Series(equity_values, index=frame.index, name="equity")
-    period_return_series = pd.Series(period_returns, index=frame.index, name="period_return")
-    weight_series = pd.Series(weights, index=frame.index, name="weight")
+    trade_index = frame.index[start_position : end_position + 1]
+    equity_curve = pd.Series(equity_values, index=trade_index, name="equity")
+    period_return_series = pd.Series(period_returns, index=trade_index, name="period_return")
+    weight_series = pd.Series(weights, index=trade_index, name="weight")
     trades = pd.DataFrame([asdict(event) for event in events])
     metrics = _metrics(
         equity_curve=equity_curve,
@@ -196,6 +205,31 @@ def _normalize_frame(frame: pd.DataFrame) -> pd.DataFrame:
         normalized = normalized.set_index("ts")
     normalized.index = pd.to_datetime(normalized.index, utc=True)
     return normalized.sort_index()
+
+
+def _trade_bounds(
+    frame: pd.DataFrame,
+    *,
+    trade_start: pd.Timestamp | str | None,
+    trade_end: pd.Timestamp | str | None,
+) -> tuple[int, int]:
+    index = frame.index
+    mask = pd.Series(True, index=index)
+    if trade_start is not None:
+        mask &= index >= _as_utc_timestamp(trade_start)
+    if trade_end is not None:
+        mask &= index <= _as_utc_timestamp(trade_end)
+    positions = np.flatnonzero(mask.to_numpy())
+    if len(positions) == 0:
+        raise ValueError("trade window has no rows")
+    return int(positions[0]), int(positions[-1])
+
+
+def _as_utc_timestamp(value: pd.Timestamp | str) -> pd.Timestamp:
+    ts = pd.Timestamp(value)
+    if ts.tzinfo is None:
+        return ts.tz_localize("UTC")
+    return ts.tz_convert("UTC")
 
 
 def _validate_config(config: CandleCountIntrabarBacktestConfig) -> None:
