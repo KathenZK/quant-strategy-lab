@@ -1,5 +1,13 @@
 from .base import Strategy
-from .candle_count_short import CandleCountShortConfig, CandleCountShortStrategy
+from .candle_count_short import (
+    CandleCountIntrabarBacktestConfig,
+    CandleCountIntrabarBacktestResult,
+    CandleCountShortConfig,
+    CandleCountShortStrategy,
+    CandleCountTradeEvent,
+    build_candle_count_signal,
+    run_candle_count_intrabar_backtest,
+)
 from .crowding_reversal import CrowdingReversalConfig, CrowdingReversalStrategy
 from .donchian_hold_72h import DonchianHold72hConfig, DonchianHold72hStrategy
 from .donchian_breakout import DonchianBreakoutConfig, DonchianBreakoutStrategy
@@ -14,8 +22,11 @@ from .trend_confirmation import TrendConfirmationConfig, TrendConfirmationStrate
 __all__ = [
     "CrowdingReversalConfig",
     "CrowdingReversalStrategy",
+    "CandleCountIntrabarBacktestConfig",
+    "CandleCountIntrabarBacktestResult",
     "CandleCountShortConfig",
     "CandleCountShortStrategy",
+    "CandleCountTradeEvent",
     "DonchianHold72hConfig",
     "DonchianHold72hStrategy",
     "DonchianBreakoutConfig",
@@ -32,10 +43,12 @@ __all__ = [
     "TrendConfirmationConfig",
     "TrendConfirmationStrategy",
     "create_strategy",
+    "build_candle_count_signal",
     "is_registered_strategy",
     "is_strategy",
     "list_registered_strategies",
     "list_strategies",
     "register_strategy",
+    "run_candle_count_intrabar_backtest",
     "strategy_registry",
 ]

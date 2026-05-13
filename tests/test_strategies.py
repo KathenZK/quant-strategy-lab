@@ -3,6 +3,7 @@ import pytest
 
 from strategy_lab.data import MarketType
 from strategy_lab.strategies import (
+    CandleCountIntrabarBacktestConfig,
     CandleCountShortConfig,
     CandleCountShortStrategy,
     CrowdingReversalConfig,
@@ -22,6 +23,7 @@ from strategy_lab.strategies import (
     create_strategy,
     list_registered_strategies,
     register_strategy,
+    run_candle_count_intrabar_backtest,
 )
 
 
@@ -613,6 +615,39 @@ def test_candle_count_short_strategy_holds_through_opposite_signals_until_exit()
     assert weights.loc[index[1], "HYPE"] == pytest.approx(-3.0)
     assert weights.loc[index[2], "HYPE"] == pytest.approx(-3.0)
     assert weights.loc[index[3], "HYPE"] == pytest.approx(0.0)
+
+
+def test_candle_count_intrabar_backtest_exits_on_mark_price_take_profit() -> None:
+    index = pd.date_range("2024-01-01", periods=4, freq="15min", tz="UTC")
+    frame = pd.DataFrame(
+        {
+            "open": [100.0, 100.0, 100.0, 100.0],
+            "close": [99.0, 98.0, 98.5, 98.2],
+            "mark_high": [100.0, 98.5, 100.0, 99.0],
+            "mark_low": [99.0, 97.5, 98.0, 97.8],
+            "funding_rate": [0.0, 0.0, 0.0, 0.0],
+        },
+        index=index,
+    )
+    result = run_candle_count_intrabar_backtest(
+        frame,
+        CandleCountIntrabarBacktestConfig(
+            lookback=2,
+            min_count=2,
+            allocation=1.0,
+            stop_loss_pct=0.02,
+            take_profit_pct=0.02,
+            cooldown_bars=0,
+            fee_rate=0.0,
+            slippage_rate=0.0,
+        ),
+    )
+
+    assert result.weights.loc[index[1]] == pytest.approx(1.0)
+    assert result.weights.loc[index[2]] == pytest.approx(0.0)
+    assert result.metrics["entries"] == pytest.approx(1.0)
+    assert result.metrics["takes"] == pytest.approx(1.0)
+    assert result.metrics["cumulative_return"] == pytest.approx(0.02)
 
 
 def test_spot_trend_treats_missing_donchian_breakout_as_neutral() -> None:
