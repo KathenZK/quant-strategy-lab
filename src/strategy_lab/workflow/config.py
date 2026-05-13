@@ -107,23 +107,30 @@ def strategy_workflow_from_code(
 ) -> StrategyWorkflowConfig:
     strategy = create_strategy(strategy_type, strategy_params or {})
     resolved_symbols = symbols or strategy.default_symbols(exchange=exchange, market_type=market_type)
+    is_candle_count_short = strategy_type == "candle_count_short"
+    allocation_cap = max(
+        abs(float(getattr(getattr(strategy, "config", None), "long_allocation", 0.0))),
+        abs(float(getattr(getattr(strategy, "config", None), "short_allocation", 0.0))),
+    )
+    max_abs_weight = allocation_cap if is_candle_count_short else 1.0 if strategy_type == "donchian_hold_72h" else 0.20
+    max_leverage = allocation_cap if is_candle_count_short else 1.0
     return StrategyWorkflowConfig(
         strategy=StrategyWorkflowSpec(
             name=name or f"{strategy_type}_{exchange}_{market_type.value}_{timeframe}",
             exchange=exchange,
             market_type=market_type,
             symbols=resolved_symbols,
-            benchmark_symbol=benchmark_symbol,
+            benchmark_symbol=None if is_candle_count_short else benchmark_symbol,
             strategy_type=strategy_type,
             strategy_params=strategy_params or {},
         ),
         refresh=RefreshOptions(
-            enabled=False,
-            incremental=False,
-            include_derivatives=market_type == MarketType.PERP,
+            enabled=is_candle_count_short,
+            incremental=is_candle_count_short,
+            include_derivatives=market_type == MarketType.PERP and not is_candle_count_short,
             timeframe=timeframe,
             limit=1000,
-            overlap_bars=0,
+            overlap_bars=20 if is_candle_count_short else 0,
         ),
         universe=UniverseOptions(
             source="local_binance_spot" if use_local_universe else None,
@@ -132,16 +139,16 @@ def strategy_workflow_from_code(
             max_symbols=max_symbols,
         ),
         execution=ExecutionAssumptions(
-            fee_bps=10.0,
-            slippage_bps=30.0 if market_type == MarketType.SPOT else 10.0,
+            fee_bps=5.0 if is_candle_count_short else 10.0,
+            slippage_bps=2.0 if is_candle_count_short else 30.0 if market_type == MarketType.SPOT else 10.0,
             starting_cash=100_000.0,
         ),
         risk=RiskLimits(
-            max_abs_weight=1.0 if strategy_type == "donchian_hold_72h" else 0.20,
-            max_gross_leverage=1.0,
-            max_net_exposure=1.0,
+            max_abs_weight=max_abs_weight,
+            max_gross_leverage=max_leverage,
+            max_net_exposure=max_leverage,
             min_dollar_volume=0.0,
-            max_drawdown=0.20,
+            max_drawdown=None if is_candle_count_short else 0.20,
         ),
         run_factor_report=run_factor_report,
         run_backtest=run_backtest,

@@ -3,6 +3,8 @@ import pytest
 
 from strategy_lab.data import MarketType
 from strategy_lab.strategies import (
+    CandleCountShortConfig,
+    CandleCountShortStrategy,
     CrowdingReversalConfig,
     CrowdingReversalStrategy,
     DonchianBreakoutConfig,
@@ -537,6 +539,80 @@ def test_spot_trend_strategy_builds_long_only_trend_weights() -> None:
     assert weights.loc[index[0], "BTC"] == pytest.approx(0.70)
     assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)
     assert weights.loc[index[0], "SOL"] == pytest.approx(0.0)
+
+
+def test_candle_count_short_strategy_shorts_bullish_and_longs_bearish_crowding() -> None:
+    index = pd.date_range("2024-01-01", periods=2, freq="15min", tz="UTC")
+    factors = {
+        "bullish_candle_count_10": pd.DataFrame({"HYPE_BULL": [8.0, 0.0], "HYPE_BEAR": [0.0, 0.0]}, index=index),
+        "bearish_candle_count_10": pd.DataFrame({"HYPE_BULL": [0.0, 0.0], "HYPE_BEAR": [8.0, 0.0]}, index=index),
+    }
+    price_frame = pd.DataFrame({"HYPE_BULL": [100.0, 100.5], "HYPE_BEAR": [50.0, 50.5]}, index=index)
+    strategy = CandleCountShortStrategy(CandleCountShortConfig())
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert signal.loc[index[0], "HYPE_BULL"] == pytest.approx(-1.0)
+    assert signal.loc[index[0], "HYPE_BEAR"] == pytest.approx(1.0)
+    assert weights.loc[index[0], "HYPE_BULL"] == pytest.approx(-3.0)
+    assert weights.loc[index[0], "HYPE_BEAR"] == pytest.approx(3.0)
+
+
+def test_candle_count_short_strategy_exits_on_stop_loss_and_take_profit() -> None:
+    index = pd.date_range("2024-01-01", periods=3, freq="15min", tz="UTC")
+    factors = {
+        "bullish_candle_count_10": pd.DataFrame({"STOP": [8.0, 0.0, 0.0], "TAKE": [8.0, 0.0, 0.0]}, index=index),
+        "bearish_candle_count_10": pd.DataFrame({"STOP": [0.0, 0.0, 0.0], "TAKE": [0.0, 0.0, 0.0]}, index=index),
+    }
+    price_frame = pd.DataFrame({"STOP": [100.0, 103.0, 103.0], "TAKE": [100.0, 97.0, 97.0]}, index=index)
+    strategy = CandleCountShortStrategy(CandleCountShortConfig())
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert weights.loc[index[0], "STOP"] == pytest.approx(-3.0)
+    assert weights.loc[index[1], "STOP"] == pytest.approx(0.0)
+    assert weights.loc[index[0], "TAKE"] == pytest.approx(-3.0)
+    assert weights.loc[index[1], "TAKE"] == pytest.approx(0.0)
+
+
+def test_candle_count_short_strategy_exits_long_positions_on_stop_loss_and_take_profit() -> None:
+    index = pd.date_range("2024-01-01", periods=3, freq="15min", tz="UTC")
+    factors = {
+        "bullish_candle_count_10": pd.DataFrame({"STOP": [0.0, 0.0, 0.0], "TAKE": [0.0, 0.0, 0.0]}, index=index),
+        "bearish_candle_count_10": pd.DataFrame({"STOP": [8.0, 0.0, 0.0], "TAKE": [8.0, 0.0, 0.0]}, index=index),
+    }
+    price_frame = pd.DataFrame({"STOP": [100.0, 97.0, 97.0], "TAKE": [100.0, 103.0, 103.0]}, index=index)
+    strategy = CandleCountShortStrategy(CandleCountShortConfig())
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert weights.loc[index[0], "STOP"] == pytest.approx(3.0)
+    assert weights.loc[index[1], "STOP"] == pytest.approx(0.0)
+    assert weights.loc[index[0], "TAKE"] == pytest.approx(3.0)
+    assert weights.loc[index[1], "TAKE"] == pytest.approx(0.0)
+
+
+def test_candle_count_short_strategy_holds_through_opposite_signals_until_exit() -> None:
+    index = pd.date_range("2024-01-01", periods=4, freq="15min", tz="UTC")
+    factors = {
+        "bullish_candle_count_10": pd.DataFrame({"HYPE": [8.0, 0.0, 0.0, 0.0]}, index=index),
+        "bearish_candle_count_10": pd.DataFrame({"HYPE": [0.0, 8.0, 8.0, 8.0]}, index=index),
+    }
+    price_frame = pd.DataFrame({"HYPE": [100.0, 100.5, 100.8, 103.1]}, index=index)
+    strategy = CandleCountShortStrategy(CandleCountShortConfig())
+
+    signal = strategy.build_signal_frame(factors)
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert signal.loc[index[0], "HYPE"] == pytest.approx(-1.0)
+    assert signal.loc[index[1], "HYPE"] == pytest.approx(1.0)
+    assert weights.loc[index[0], "HYPE"] == pytest.approx(-3.0)
+    assert weights.loc[index[1], "HYPE"] == pytest.approx(-3.0)
+    assert weights.loc[index[2], "HYPE"] == pytest.approx(-3.0)
+    assert weights.loc[index[3], "HYPE"] == pytest.approx(0.0)
 
 
 def test_spot_trend_treats_missing_donchian_breakout_as_neutral() -> None:
@@ -1091,6 +1167,7 @@ def test_spot_trend_ignores_weak_benchmark_when_filter_disabled() -> None:
 
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
+    assert "candle_count_short" in names
     assert "trend_confirmation" in names
     assert "crowding_reversal" in names
     assert "ma_crossover" in names
@@ -1101,6 +1178,7 @@ def test_strategy_registry_lists_builtin_strategies() -> None:
 
 
 def test_create_strategy_uses_registry() -> None:
+    candle_count = create_strategy("candle_count_short", {"short_allocation": 10.0})
     trend = create_strategy("trend_confirmation", {"max_long_positions": 1})
     crowding = create_strategy("crowding_reversal", {"max_short_positions": 1})
     crossover = create_strategy("ma_crossover", {"long_allocation": 0.75})
@@ -1108,6 +1186,7 @@ def test_create_strategy_uses_registry() -> None:
     momentum = create_strategy("momentum_rotation", {"long_allocation": 0.75})
     small_cap = create_strategy("small_cap_momentum_breakout", {"long_allocation": 0.25})
     spot_cta = create_strategy("spot_trend", {"long_allocation": 0.70})
+    assert isinstance(candle_count, CandleCountShortStrategy)
     assert isinstance(trend, TrendConfirmationStrategy)
     assert isinstance(crowding, CrowdingReversalStrategy)
     assert isinstance(crossover, MovingAverageCrossoverStrategy)

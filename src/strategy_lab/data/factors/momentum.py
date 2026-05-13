@@ -162,6 +162,46 @@ class DonchianBreakoutStrengthFactor(PandasFactor):
         return strength.where(close.gt(prior_high))
 
 
+class BullishCandleCountFactor(PandasFactor):
+    def __init__(self, window: int, open_column: str = "open", close_column: str = "close") -> None:
+        self.window = window
+        self.open_column = open_column
+        self.close_column = close_column
+        self.metadata = FactorMetadata(
+            name=f"bullish_candle_count_{window}",
+            category="momentum",
+            frequency="bar",
+            lookback=window,
+            inputs=(open_column, close_column),
+            market_types=("spot", "perp"),
+            description=f"Count of bullish candles over the last {window} bars.",
+        )
+
+    def compute(self, frame: pd.DataFrame) -> pd.Series:
+        bullish = frame[self.close_column].gt(frame[self.open_column]).astype("float64")
+        return bullish.rolling(self.window, min_periods=self.window).sum()
+
+
+class BearishCandleCountFactor(PandasFactor):
+    def __init__(self, window: int, open_column: str = "open", close_column: str = "close") -> None:
+        self.window = window
+        self.open_column = open_column
+        self.close_column = close_column
+        self.metadata = FactorMetadata(
+            name=f"bearish_candle_count_{window}",
+            category="momentum",
+            frequency="bar",
+            lookback=window,
+            inputs=(open_column, close_column),
+            market_types=("spot", "perp"),
+            description=f"Count of bearish candles over the last {window} bars.",
+        )
+
+    def compute(self, frame: pd.DataFrame) -> pd.Series:
+        bearish = frame[self.close_column].lt(frame[self.open_column]).astype("float64")
+        return bearish.rolling(self.window, min_periods=self.window).sum()
+
+
 class MovingAverageDistanceFactor(PandasFactor):
     def __init__(self, window: int, price_column: str = "close") -> None:
         self.window = window
@@ -263,6 +303,8 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         TrailingReturnFactor(periods=168),
         BenchmarkReturnFactor(periods=24),
         BenchmarkReturnFactor(periods=72),
+        BullishCandleCountFactor(window=10),
+        BearishCandleCountFactor(window=10),
         BreakoutFactor(window=20),
         DonchianBreakoutFactor(window=10),
         DonchianBreakoutFactor(window=12),

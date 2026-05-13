@@ -1,6 +1,9 @@
 import pandas as pd
 
+from strategy_lab.data import MarketType
 from strategy_lab.strategies import (
+    CandleCountShortConfig,
+    CandleCountShortStrategy,
     CrowdingReversalConfig,
     CrowdingReversalStrategy,
     DonchianBreakoutConfig,
@@ -14,6 +17,7 @@ from strategy_lab.strategies import (
     TrendConfirmationConfig,
     TrendConfirmationStrategy,
 )
+from strategy_lab.workflow.config import strategy_workflow_from_code
 
 
 def test_trend_strategy_exposes_signal_and_allocator_components() -> None:
@@ -105,6 +109,37 @@ def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> 
         "atr_pct_14",
     ]
     assert strategy.required_liquidation_features() == []
+
+
+def test_candle_count_short_strategy_keeps_signal_and_position_logic_inside_strategy() -> None:
+    strategy = CandleCountShortStrategy(CandleCountShortConfig())
+
+    assert not hasattr(strategy, "signal_model")
+    assert not hasattr(strategy, "allocator")
+    assert strategy.required_factors() == [
+        "bullish_candle_count_10",
+        "bearish_candle_count_10",
+    ]
+    assert strategy.required_liquidation_features() == []
+
+
+def test_candle_count_short_code_workflow_uses_embedded_hype_defaults() -> None:
+    workflow = strategy_workflow_from_code(
+        "candle_count_short",
+        market_type=MarketType.PERP,
+        timeframe="15m",
+    )
+
+    assert workflow.strategy.symbols == ["HYPE/USDT:USDT"]
+    assert workflow.strategy.benchmark_symbol is None
+    assert workflow.refresh.enabled is True
+    assert workflow.refresh.include_derivatives is False
+    assert workflow.refresh.timeframe == "15m"
+    assert workflow.execution.fee_bps == 5.0
+    assert workflow.execution.slippage_bps == 2.0
+    assert workflow.risk.max_abs_weight == 3.0
+    assert workflow.risk.max_gross_leverage == 3.0
+    assert workflow.risk.max_net_exposure == 3.0
 
 
 def test_strategy_versions_change_when_allocator_configuration_changes() -> None:

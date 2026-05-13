@@ -5,9 +5,11 @@ from strategy_lab.data.factors import (
     AmihudIlliquidityFactor,
     AverageDollarVolumeFactor,
     ATRPercentFactor,
+    BearishCandleCountFactor,
     BasisChangeFactor,
     BasisZScoreFactor,
     BenchmarkReturnFactor,
+    BullishCandleCountFactor,
     DonchianBreakoutFactor,
     DonchianBreakoutStrengthFactor,
     FundingRateZScoreFactor,
@@ -51,6 +53,8 @@ def test_default_registry_contains_expected_factors() -> None:
     assert "ret_168" in names
     assert "benchmark_ret_24" in names
     assert "benchmark_ret_72" in names
+    assert "bullish_candle_count_10" in names
+    assert "bearish_candle_count_10" in names
     assert "ma_distance_48" in names
     assert "atr_pct_14" in names
     assert "avg_dollar_volume_20" in names
@@ -209,6 +213,22 @@ def test_donchian_breakout_factor_uses_intrabar_high_for_new_high() -> None:
     result = DonchianBreakoutFactor(window=3).compute(frame)
 
     assert result.iloc[3] == pytest.approx(1.0)
+
+
+def test_candle_count_factors_count_recent_bullish_and_bearish_candles() -> None:
+    frame = pd.DataFrame(
+        {
+            "open": [10.0, 10.0, 12.0, 11.0, 10.0, 9.0, 8.0, 8.0, 7.0, 7.0],
+            "close": [11.0, 11.0, 11.0, 12.0, 11.0, 10.0, 7.0, 9.0, 8.0, 6.0],
+        }
+    )
+
+    bullish = BullishCandleCountFactor(window=10).compute(frame)
+    bearish = BearishCandleCountFactor(window=10).compute(frame)
+
+    assert pd.isna(bullish.iloc[8])
+    assert bullish.iloc[9] == pytest.approx(7.0)
+    assert bearish.iloc[9] == pytest.approx(3.0)
 
 
 def test_rsi_factor_handles_one_way_and_flat_markets() -> None:

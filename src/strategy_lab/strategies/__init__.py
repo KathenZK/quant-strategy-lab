@@ -1,4 +1,5 @@
 from .base import Strategy
+from .candle_count_short import CandleCountShortConfig, CandleCountShortStrategy
 from .crowding_reversal import CrowdingReversalConfig, CrowdingReversalStrategy
 from .donchian_hold_72h import DonchianHold72hConfig, DonchianHold72hStrategy
 from .donchian_breakout import DonchianBreakoutConfig, DonchianBreakoutStrategy
@@ -13,6 +14,8 @@ from .trend_confirmation import TrendConfirmationConfig, TrendConfirmationStrate
 __all__ = [
     "CrowdingReversalConfig",
     "CrowdingReversalStrategy",
+    "CandleCountShortConfig",
+    "CandleCountShortStrategy",
     "DonchianHold72hConfig",
     "DonchianHold72hStrategy",
     "DonchianBreakoutConfig",
