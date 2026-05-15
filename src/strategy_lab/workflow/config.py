@@ -40,9 +40,13 @@ def strategy_workflow_from_mapping(payload: dict) -> StrategyWorkflowConfig:
         market_type=MarketType(strategy.get("market_type", "spot")),
         symbols=[symbol.upper() for symbol in strategy.get("symbols", [])],
         benchmark_symbol=strategy.get("benchmark_symbol", None),
-        strategy_type=_first_defined(strategy, "strategy_type", "signal_type", default="factor"),
+        strategy_type=_first_defined(
+            strategy, "strategy_type", "signal_type", default="factor"
+        ),
         factor_name=_first_defined(strategy, "factor_name", "factor"),
-        strategy_params=_first_defined(strategy, "strategy_params", "strategy_options", default={}),
+        strategy_params=_first_defined(
+            strategy, "strategy_params", "strategy_options", default={}
+        ),
     )
 
     return StrategyWorkflowConfig(
@@ -106,13 +110,21 @@ def strategy_workflow_from_code(
     run_paper_trade: bool = False,
 ) -> StrategyWorkflowConfig:
     strategy = create_strategy(strategy_type, strategy_params or {})
-    resolved_symbols = symbols or strategy.default_symbols(exchange=exchange, market_type=market_type)
+    resolved_symbols = symbols or strategy.default_symbols(
+        exchange=exchange, market_type=market_type
+    )
     is_candle_count_short = strategy_type == "candle_count_short"
     allocation_cap = max(
         abs(float(getattr(getattr(strategy, "config", None), "long_allocation", 0.0))),
         abs(float(getattr(getattr(strategy, "config", None), "short_allocation", 0.0))),
     )
-    max_abs_weight = allocation_cap if is_candle_count_short else 1.0 if strategy_type == "donchian_hold_72h" else 0.20
+    max_abs_weight = (
+        allocation_cap
+        if is_candle_count_short
+        else 1.0
+        if strategy_type == "donchian_hold_72h"
+        else 0.20
+    )
     max_leverage = allocation_cap if is_candle_count_short else 1.0
     return StrategyWorkflowConfig(
         strategy=StrategyWorkflowSpec(
@@ -127,10 +139,11 @@ def strategy_workflow_from_code(
         refresh=RefreshOptions(
             enabled=is_candle_count_short,
             incremental=is_candle_count_short,
-            include_derivatives=market_type == MarketType.PERP and not is_candle_count_short,
+            include_derivatives=market_type == MarketType.PERP
+            and not is_candle_count_short,
             timeframe=timeframe,
             limit=1000,
-            overlap_bars=20 if is_candle_count_short else 0,
+            overlap_bars=300 if is_candle_count_short else 0,
         ),
         universe=UniverseOptions(
             source="local_binance_spot" if use_local_universe else None,
@@ -139,8 +152,12 @@ def strategy_workflow_from_code(
             max_symbols=max_symbols,
         ),
         execution=ExecutionAssumptions(
-            fee_bps=5.0 if is_candle_count_short else 10.0,
-            slippage_bps=2.0 if is_candle_count_short else 30.0 if market_type == MarketType.SPOT else 10.0,
+            fee_bps=4.5 if is_candle_count_short else 10.0,
+            slippage_bps=4.0
+            if is_candle_count_short
+            else 30.0
+            if market_type == MarketType.SPOT
+            else 10.0,
             starting_cash=100_000.0,
         ),
         risk=RiskLimits(

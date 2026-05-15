@@ -3,7 +3,11 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from strategy_lab.data.factors.base import FactorMetadata, PandasFactor, register_factor_provider
+from strategy_lab.data.factors.base import (
+    FactorMetadata,
+    PandasFactor,
+    register_factor_provider,
+)
 
 
 class TrailingReturnFactor(PandasFactor):
@@ -57,7 +61,9 @@ class BreakoutFactor(PandasFactor):
         )
 
     def compute(self, frame: pd.DataFrame) -> pd.Series:
-        rolling_high = frame[self.price_column].rolling(self.window, min_periods=self.window).max()
+        rolling_high = (
+            frame[self.price_column].rolling(self.window, min_periods=self.window).max()
+        )
         return frame[self.price_column] / rolling_high - 1.0
 
 
@@ -96,8 +102,16 @@ class DonchianBreakoutFactor(PandasFactor):
         )
 
     def compute(self, frame: pd.DataFrame) -> pd.Series:
-        high = frame[self.high_column] if self.high_column in frame else frame[self.price_column]
-        low = frame[self.low_column] if self.low_column in frame else frame[self.price_column]
+        high = (
+            frame[self.high_column]
+            if self.high_column in frame
+            else frame[self.price_column]
+        )
+        low = (
+            frame[self.low_column]
+            if self.low_column in frame
+            else frame[self.price_column]
+        )
         # Previous N-bar range excludes the current bar.
         prior_high = high.shift(1).rolling(self.window, min_periods=self.window).max()
         prior_low = low.shift(1).rolling(self.window, min_periods=self.window).min()
@@ -163,7 +177,9 @@ class DonchianBreakoutStrengthFactor(PandasFactor):
 
 
 class BullishCandleCountFactor(PandasFactor):
-    def __init__(self, window: int, open_column: str = "open", close_column: str = "close") -> None:
+    def __init__(
+        self, window: int, open_column: str = "open", close_column: str = "close"
+    ) -> None:
         self.window = window
         self.open_column = open_column
         self.close_column = close_column
@@ -183,7 +199,9 @@ class BullishCandleCountFactor(PandasFactor):
 
 
 class BearishCandleCountFactor(PandasFactor):
-    def __init__(self, window: int, open_column: str = "open", close_column: str = "close") -> None:
+    def __init__(
+        self, window: int, open_column: str = "open", close_column: str = "close"
+    ) -> None:
         self.window = window
         self.open_column = open_column
         self.close_column = close_column
@@ -217,7 +235,11 @@ class MovingAverageDistanceFactor(PandasFactor):
         )
 
     def compute(self, frame: pd.DataFrame) -> pd.Series:
-        moving_average = frame[self.price_column].rolling(self.window, min_periods=self.window).mean()
+        moving_average = (
+            frame[self.price_column]
+            .rolling(self.window, min_periods=self.window)
+            .mean()
+        )
         return frame[self.price_column] / moving_average - 1.0
 
 
@@ -239,8 +261,12 @@ class RSIFactor(PandasFactor):
         delta = frame[self.price_column].diff()
         gain = delta.clip(lower=0.0)
         loss = -delta.clip(upper=0.0)
-        avg_gain = gain.ewm(alpha=1 / self.window, adjust=False, min_periods=self.window).mean()
-        avg_loss = loss.ewm(alpha=1 / self.window, adjust=False, min_periods=self.window).mean()
+        avg_gain = gain.ewm(
+            alpha=1 / self.window, adjust=False, min_periods=self.window
+        ).mean()
+        avg_loss = loss.ewm(
+            alpha=1 / self.window, adjust=False, min_periods=self.window
+        ).mean()
         relative_strength = avg_gain / avg_loss.replace(0.0, np.nan)
         rsi = 100.0 - (100.0 / (1.0 + relative_strength))
         rsi = rsi.mask((avg_loss == 0.0) & (avg_gain > 0.0), 100.0)
@@ -299,6 +325,7 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         TrailingReturnFactor(periods=24),
         TrailingReturnFactor(periods=60),
         TrailingReturnFactor(periods=72),
+        TrailingReturnFactor(periods=96),
         TrailingReturnFactor(periods=120),
         TrailingReturnFactor(periods=168),
         BenchmarkReturnFactor(periods=24),
@@ -322,4 +349,7 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         RSIFactor(window=14),
         RSIFactor(window=21),
         ATRPercentFactor(window=14),
+        ATRPercentFactor(window=96),
+        ATRPercentFactor(window=192),
+        ATRPercentFactor(window=288),
     ]

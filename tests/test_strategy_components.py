@@ -28,10 +28,17 @@ def test_trend_strategy_exposes_signal_and_allocator_components() -> None:
         )
     )
 
-    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.trend_confirmation")
-    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.trend_confirmation")
+    assert type(strategy.signal_model).__module__.startswith(
+        "strategy_lab.strategies.trend_confirmation"
+    )
+    assert type(strategy.allocator).__module__.startswith(
+        "strategy_lab.strategies.trend_confirmation"
+    )
     assert strategy.required_factors() == strategy.signal_model.required_factors()
-    assert strategy.required_liquidation_features() == strategy.allocator.required_risk_features()
+    assert (
+        strategy.required_liquidation_features()
+        == strategy.allocator.required_risk_features()
+    )
 
 
 def test_crowding_strategy_exposes_signal_and_allocator_components() -> None:
@@ -42,10 +49,17 @@ def test_crowding_strategy_exposes_signal_and_allocator_components() -> None:
         )
     )
 
-    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.crowding_reversal")
-    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.crowding_reversal")
+    assert type(strategy.signal_model).__module__.startswith(
+        "strategy_lab.strategies.crowding_reversal"
+    )
+    assert type(strategy.allocator).__module__.startswith(
+        "strategy_lab.strategies.crowding_reversal"
+    )
     assert strategy.required_factors() == strategy.signal_model.required_factors()
-    assert strategy.required_liquidation_features() == strategy.allocator.required_risk_features()
+    assert (
+        strategy.required_liquidation_features()
+        == strategy.allocator.required_risk_features()
+    )
 
 
 def test_ma_crossover_strategy_exposes_signal_and_allocator_components() -> None:
@@ -56,8 +70,12 @@ def test_ma_crossover_strategy_exposes_signal_and_allocator_components() -> None
         )
     )
 
-    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.ma_crossover")
-    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.ma_crossover")
+    assert type(strategy.signal_model).__module__.startswith(
+        "strategy_lab.strategies.ma_crossover"
+    )
+    assert type(strategy.allocator).__module__.startswith(
+        "strategy_lab.strategies.ma_crossover"
+    )
     assert strategy.required_factors() == strategy.signal_model.required_factors()
     assert strategy.required_liquidation_features() == []
 
@@ -72,10 +90,17 @@ def test_donchian_breakout_strategy_exposes_signal_and_allocator_components() ->
         )
     )
 
-    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.donchian_breakout")
-    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.donchian_breakout")
+    assert type(strategy.signal_model).__module__.startswith(
+        "strategy_lab.strategies.donchian_breakout"
+    )
+    assert type(strategy.allocator).__module__.startswith(
+        "strategy_lab.strategies.donchian_breakout"
+    )
     assert strategy.required_factors() == strategy.signal_model.required_factors()
-    assert set(strategy.required_factors()) == {"donchian_breakout_14", "ma_distance_120"}
+    assert set(strategy.required_factors()) == {
+        "donchian_breakout_14",
+        "ma_distance_120",
+    }
     assert strategy.required_liquidation_features() == []
 
 
@@ -87,10 +112,17 @@ def test_momentum_rotation_strategy_exposes_signal_and_allocator_components() ->
         )
     )
 
-    assert type(strategy.signal_model).__module__.startswith("strategy_lab.strategies.momentum_rotation")
-    assert type(strategy.allocator).__module__.startswith("strategy_lab.strategies.momentum_rotation")
+    assert type(strategy.signal_model).__module__.startswith(
+        "strategy_lab.strategies.momentum_rotation"
+    )
+    assert type(strategy.allocator).__module__.startswith(
+        "strategy_lab.strategies.momentum_rotation"
+    )
     assert strategy.required_factors() == strategy.signal_model.required_factors()
-    assert strategy.required_liquidation_features() == strategy.allocator.required_risk_features()
+    assert (
+        strategy.required_liquidation_features()
+        == strategy.allocator.required_risk_features()
+    )
 
 
 def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> None:
@@ -111,7 +143,9 @@ def test_spot_cta_strategy_keeps_signal_and_position_logic_inside_strategy() -> 
     assert strategy.required_liquidation_features() == []
 
 
-def test_candle_count_short_strategy_keeps_signal_and_position_logic_inside_strategy() -> None:
+def test_candle_count_short_strategy_keeps_signal_and_position_logic_inside_strategy() -> (
+    None
+):
     strategy = CandleCountShortStrategy(CandleCountShortConfig())
 
     assert not hasattr(strategy, "signal_model")
@@ -119,6 +153,10 @@ def test_candle_count_short_strategy_keeps_signal_and_position_logic_inside_stra
     assert strategy.required_factors() == [
         "bullish_candle_count_10",
         "bearish_candle_count_10",
+        "atr_pct_96",
+        "atr_pct_192",
+        "atr_pct_288",
+        "ret_96",
     ]
     assert strategy.required_liquidation_features() == []
 
@@ -135,16 +173,20 @@ def test_candle_count_short_code_workflow_uses_embedded_hype_defaults() -> None:
     assert workflow.refresh.enabled is True
     assert workflow.refresh.include_derivatives is False
     assert workflow.refresh.timeframe == "15m"
-    assert workflow.execution.fee_bps == 5.0
-    assert workflow.execution.slippage_bps == 2.0
+    assert workflow.execution.fee_bps == 4.5
+    assert workflow.execution.slippage_bps == 4.0
     assert workflow.risk.max_abs_weight == 3.0
     assert workflow.risk.max_gross_leverage == 3.0
     assert workflow.risk.max_net_exposure == 3.0
 
 
 def test_strategy_versions_change_when_allocator_configuration_changes() -> None:
-    baseline = TrendConfirmationStrategy(TrendConfirmationConfig(long_allocation=0.5)).version()
-    updated = TrendConfirmationStrategy(TrendConfirmationConfig(long_allocation=0.8)).version()
+    baseline = TrendConfirmationStrategy(
+        TrendConfirmationConfig(long_allocation=0.5)
+    ).version()
+    updated = TrendConfirmationStrategy(
+        TrendConfirmationConfig(long_allocation=0.8)
+    ).version()
     assert baseline != updated
 
 
