@@ -153,8 +153,6 @@ def test_candle_count_short_strategy_keeps_signal_and_position_logic_inside_stra
     assert strategy.required_factors() == [
         "bullish_candle_count_10",
         "bearish_candle_count_10",
-        "atr_pct_96",
-        "atr_pct_192",
         "atr_pct_288",
         "ret_96",
     ]

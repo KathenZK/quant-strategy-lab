@@ -19,8 +19,8 @@ class CandleCountShortConfig:
     symbols: tuple[str, ...] = ("HYPE/USDT:USDT",)
     bullish_count_factor: str = "bullish_candle_count_10"
     bearish_count_factor: str = "bearish_candle_count_10"
-    allocation_atr_factor: str | None = "atr_pct_96"
-    take_profit_atr_factor: str | None = "atr_pct_192"
+    allocation_atr_factor: str | None = "atr_pct_288"
+    take_profit_atr_factor: str | None = "atr_pct_288"
     stop_loss_atr_factor: str | None = "atr_pct_288"
     trend_filter_factor: str | None = "ret_96"
     min_count: int = 8
@@ -35,8 +35,8 @@ class CandleCountShortConfig:
     max_stop_loss_pct: float = 0.035
     take_profit_pct: float = 0.03
     take_profit_atr_multiplier: float | None = 6.0
-    min_take_profit_pct: float = 0.02
-    max_take_profit_pct: float = 0.04
+    min_take_profit_pct: float = 0.025
+    max_take_profit_pct: float = 0.035
     trend_block_pct: float | None = 0.06
     cooldown_bars: int = 8
     entry_mode: str = "signal_start"
@@ -48,12 +48,13 @@ class CandleCountShortConfig:
 @register_strategy("candle_count_short")
 @dataclass(slots=True)
 class CandleCountShortStrategy:
-    """15m candle-count reversal strategy with V10 risk controls.
+    """15m candle-count reversal strategy with V13 risk controls.
 
     By default, 8 of the last 10 bullish candles open short, and 8 of the
-    last 10 bearish candles open long. V10 sizes entries by ATR96, blocks
-    strong 24h trends, uses ATR-based stop/take distances, and halves risk
-    after consecutive stop losses until a take-profit resets the multiplier.
+    last 10 bearish candles open long. V13 sizes entries by ATR288, blocks
+    strong 24h trends, clips ATR-based stop/take distances to 2.5%-3.5%,
+    and halves risk after consecutive stop losses until a take-profit resets
+    the multiplier.
     """
 
     config: CandleCountShortConfig

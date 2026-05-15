@@ -42,13 +42,13 @@ def _spot_trend_test_config(**overrides: object) -> SpotTrendConfig:
     return SpotTrendConfig(**defaults)
 
 
-def _candle_count_v10_factor_frames(
+def _candle_count_v13_factor_frames(
     index: pd.DatetimeIndex, columns: list[str]
 ) -> dict[str, pd.DataFrame]:
     return {
         "atr_pct_96": pd.DataFrame(0.004, index=index, columns=columns),
         "atr_pct_192": pd.DataFrame(0.005, index=index, columns=columns),
-        "atr_pct_288": pd.DataFrame(0.006, index=index, columns=columns),
+        "atr_pct_288": pd.DataFrame(0.004, index=index, columns=columns),
         "ret_96": pd.DataFrame(0.0, index=index, columns=columns),
     }
 
@@ -671,7 +671,7 @@ def test_candle_count_short_strategy_shorts_bullish_and_longs_bearish_crowding()
     weights = strategy.build_weights(
         signal,
         price_frame=price_frame,
-        factors=_candle_count_v10_factor_frames(index, ["HYPE_BULL", "HYPE_BEAR"]),
+        factors=_candle_count_v13_factor_frames(index, ["HYPE_BULL", "HYPE_BEAR"]),
     )
 
     assert signal.loc[index[0], "HYPE_BULL"] == pytest.approx(-1.0)
@@ -699,7 +699,7 @@ def test_candle_count_short_strategy_exits_on_stop_loss_and_take_profit() -> Non
     weights = strategy.build_weights(
         signal,
         price_frame=price_frame,
-        factors=_candle_count_v10_factor_frames(index, ["STOP", "TAKE"]),
+        factors=_candle_count_v13_factor_frames(index, ["STOP", "TAKE"]),
     )
 
     assert weights.loc[index[0], "STOP"] == pytest.approx(-3.0)
@@ -729,7 +729,7 @@ def test_candle_count_short_strategy_exits_long_positions_on_stop_loss_and_take_
     weights = strategy.build_weights(
         signal,
         price_frame=price_frame,
-        factors=_candle_count_v10_factor_frames(index, ["STOP", "TAKE"]),
+        factors=_candle_count_v13_factor_frames(index, ["STOP", "TAKE"]),
     )
 
     assert weights.loc[index[0], "STOP"] == pytest.approx(3.0)
@@ -757,7 +757,7 @@ def test_candle_count_short_strategy_halves_risk_after_stop_loss() -> None:
     weights = strategy.build_weights(
         signal,
         price_frame=price_frame,
-        factors=_candle_count_v10_factor_frames(index, ["HYPE"]),
+        factors=_candle_count_v13_factor_frames(index, ["HYPE"]),
     )
 
     assert weights.loc[index[0], "HYPE"] == pytest.approx(-3.0)
@@ -784,7 +784,7 @@ def test_candle_count_short_strategy_holds_through_opposite_signals_until_exit()
     weights = strategy.build_weights(
         signal,
         price_frame=price_frame,
-        factors=_candle_count_v10_factor_frames(index, ["HYPE"]),
+        factors=_candle_count_v13_factor_frames(index, ["HYPE"]),
     )
 
     assert signal.loc[index[0], "HYPE"] == pytest.approx(-1.0)

@@ -12,12 +12,12 @@ BarsPerYear = 365 * 24 * 4
 
 @dataclass(frozen=True, slots=True)
 class CandleCountIntrabarBacktestConfig:
-    """Single-symbol HYPE V10 candle-count backtest with mark-price exits."""
+    """Single-symbol HYPE V13 candle-count backtest with mark-price exits."""
 
     min_count: int = 8
     lookback: int = 10
     allocation: float = 3.0
-    allocation_atr_window: int | None = 96
+    allocation_atr_window: int | None = 288
     target_atr_pct: float | None = 0.004
     stop_loss_pct: float = 0.03
     stop_loss_atr_window: int | None = 288
@@ -25,10 +25,10 @@ class CandleCountIntrabarBacktestConfig:
     min_stop_loss_pct: float = 0.025
     max_stop_loss_pct: float = 0.035
     take_profit_pct: float = 0.03
-    take_profit_atr_window: int | None = 192
+    take_profit_atr_window: int | None = 288
     take_profit_atr_multiplier: float | None = 6.0
-    min_take_profit_pct: float = 0.02
-    max_take_profit_pct: float = 0.04
+    min_take_profit_pct: float = 0.025
+    max_take_profit_pct: float = 0.035
     trend_window_bars: int | None = 96
     trend_block_pct: float | None = 0.06
     cooldown_bars: int = 8
