@@ -10,6 +10,8 @@ from strategy_lab.strategies import (
     CrowdingReversalStrategy,
     DonchianBreakoutConfig,
     DonchianBreakoutStrategy,
+    HypePullbackTrendConfig,
+    HypePullbackTrendStrategy,
     MovingAverageCrossoverConfig,
     MovingAverageCrossoverStrategy,
     MomentumRotationConfig,
@@ -18,8 +20,6 @@ from strategy_lab.strategies import (
     SmallCapMomentumBreakoutStrategy,
     SpotTrendConfig,
     SpotTrendStrategy,
-    TrendConfirmationConfig,
-    TrendConfirmationStrategy,
     create_strategy,
     list_registered_strategies,
     register_strategy,
@@ -53,88 +53,18 @@ def _candle_count_v13_factor_frames(
     }
 
 
-def test_trend_confirmation_strategy_builds_signal_and_weights() -> None:
-    index = pd.date_range("2024-01-01", periods=1, freq="D", tz="UTC")
-    factors = {
-        "ret_24": pd.DataFrame(
-            {"BTC": [0.08], "ETH": [-0.06], "SOL": [0.02]}, index=index
-        ),
-        "breakout_20": pd.DataFrame(
-            {"BTC": [0.01], "ETH": [-0.05], "SOL": [0.00]}, index=index
-        ),
-        "oi_change_4": pd.DataFrame(
-            {"BTC": [0.10], "ETH": [0.09], "SOL": [-0.01]}, index=index
-        ),
-        "basis_change_4": pd.DataFrame(
-            {"BTC": [0.07], "ETH": [-0.05], "SOL": [0.01]}, index=index
-        ),
-        "funding_zscore_72": pd.DataFrame(
-            {"BTC": [0.5], "ETH": [0.6], "SOL": [3.5]}, index=index
-        ),
-        "volume_surge_20": pd.DataFrame(
-            {"BTC": [0.4], "ETH": [0.3], "SOL": [0.2]}, index=index
-        ),
+def _hype_pullback_factor_frames(
+    index: pd.DatetimeIndex, columns: list[str]
+) -> dict[str, pd.DataFrame]:
+    return {
+        "ret_48": pd.DataFrame(0.0, index=index, columns=columns),
+        "ret_192": pd.DataFrame(0.0, index=index, columns=columns),
+        "ema_spread_24_96": pd.DataFrame(0.0, index=index, columns=columns),
+        "atr_pct_672": pd.DataFrame(0.005, index=index, columns=columns),
+        "bullish_candle_count_12": pd.DataFrame(0.0, index=index, columns=columns),
+        "bearish_candle_count_12": pd.DataFrame(0.0, index=index, columns=columns),
+        "volume_surge_96": pd.DataFrame(0.0, index=index, columns=columns),
     }
-    strategy = TrendConfirmationStrategy(
-        TrendConfirmationConfig(
-            max_long_positions=1,
-            max_short_positions=1,
-            long_allocation=0.5,
-            short_allocation=0.5,
-        )
-    )
-
-    signal = strategy.build_signal_frame(factors)
-    weights = strategy.build_weights(signal)
-
-    assert signal.loc[index[0], "BTC"] > 0
-    assert signal.loc[index[0], "ETH"] < 0
-    assert pd.isna(signal.loc[index[0], "SOL"])
-    assert weights.loc[index[0], "BTC"] == pytest.approx(0.5)
-    assert weights.loc[index[0], "ETH"] == pytest.approx(-0.5)
-    assert weights.loc[index[0], "SOL"] == pytest.approx(0.0)
-
-
-def test_trend_confirmation_strategy_version_changes_with_config() -> None:
-    baseline = TrendConfirmationStrategy(TrendConfirmationConfig()).version()
-    updated = TrendConfirmationStrategy(
-        TrendConfirmationConfig(max_abs_funding_zscore=1.5)
-    ).version()
-    assert baseline != updated
-
-
-def test_trend_confirmation_strategy_applies_liquidation_overlay() -> None:
-    index = pd.date_range("2024-01-01", periods=1, freq="D", tz="UTC")
-    signal = pd.DataFrame({"BTC": [1.0], "ETH": [-1.0], "SOL": [0.5]}, index=index)
-    strategy = TrendConfirmationStrategy(
-        TrendConfirmationConfig(
-            max_long_positions=2,
-            max_short_positions=1,
-            long_allocation=0.5,
-            short_allocation=0.5,
-            max_liquidation_spike_zscore=2.5,
-            max_liquidation_notional_ratio=0.03,
-            liquidation_weight_scale=0.2,
-            stop_on_event_cooldown=True,
-        )
-    )
-    liquidation_features = {
-        "liq_spike_zscore": pd.DataFrame(
-            {"BTC": [3.0], "ETH": [0.0], "SOL": [0.0]}, index=index
-        ),
-        "liq_notional_vs_dollar_volume": pd.DataFrame(
-            {"BTC": [0.01], "ETH": [0.0], "SOL": [0.05]}, index=index
-        ),
-        "event_cooldown_flag": pd.DataFrame(
-            {"BTC": [0], "ETH": [1], "SOL": [0]}, index=index
-        ),
-    }
-
-    weights = strategy.build_weights(signal, liquidation_features)
-
-    assert weights.loc[index[0], "BTC"] == pytest.approx(0.05)
-    assert weights.loc[index[0], "ETH"] == pytest.approx(0.0)
-    assert weights.loc[index[0], "SOL"] == pytest.approx(0.05)
 
 
 def test_crowding_reversal_strategy_builds_signal_and_weights() -> None:
@@ -793,6 +723,58 @@ def test_candle_count_short_strategy_holds_through_opposite_signals_until_exit()
     assert weights.loc[index[1], "HYPE"] == pytest.approx(-3.0)
     assert weights.loc[index[2], "HYPE"] == pytest.approx(-3.0)
     assert weights.loc[index[3], "HYPE"] == pytest.approx(0.0)
+
+
+def test_hype_pullback_trend_strategy_enters_in_trend_direction() -> None:
+    index = pd.date_range("2026-01-01", periods=2, freq="15min", tz="UTC")
+    factors = _hype_pullback_factor_frames(index, ["HYPE"])
+    factors["ret_48"].loc[index[0], "HYPE"] = -0.006
+    factors["ret_192"].loc[index[0], "HYPE"] = 0.05
+    factors["ema_spread_24_96"].loc[index[0], "HYPE"] = 0.01
+    factors["bearish_candle_count_12"].loc[index[0], "HYPE"] = 6.0
+    factors["ret_48"].loc[index[1], "HYPE"] = 0.006
+    factors["ret_192"].loc[index[1], "HYPE"] = -0.05
+    factors["ema_spread_24_96"].loc[index[1], "HYPE"] = -0.01
+    factors["bullish_candle_count_12"].loc[index[1], "HYPE"] = 6.0
+    strategy = HypePullbackTrendStrategy(
+        HypePullbackTrendConfig(
+            ema_spread_factor="ema_spread_24_96",
+            bullish_count_factor="bullish_candle_count_12",
+            bearish_count_factor="bearish_candle_count_12",
+            min_pullback_return=0.005,
+            min_pullback_count=6,
+            short_enabled=True,
+        )
+    )
+
+    signal = strategy.build_signal_frame(factors)
+
+    assert signal.loc[index[0], "HYPE"] == pytest.approx(1.0)
+    assert signal.loc[index[1], "HYPE"] == pytest.approx(-1.0)
+
+
+def test_hype_pullback_trend_strategy_applies_atr_take_profit() -> None:
+    index = pd.date_range("2026-01-01", periods=3, freq="15min", tz="UTC")
+    factors = _hype_pullback_factor_frames(index, ["HYPE"])
+    signal = pd.DataFrame({"HYPE": [1.0, 0.0, 0.0]}, index=index)
+    price_frame = pd.DataFrame({"HYPE": [100.0, 103.1, 103.1]}, index=index)
+    strategy = HypePullbackTrendStrategy(
+        HypePullbackTrendConfig(
+            target_atr_pct=None,
+            long_allocation=1.0,
+            take_profit_atr_multiplier=6.0,
+            cooldown_bars=1,
+        )
+    )
+
+    weights = strategy.build_weights(
+        signal,
+        price_frame=price_frame,
+        factors=factors,
+    )
+
+    assert weights.loc[index[0], "HYPE"] == pytest.approx(1.0)
+    assert weights.loc[index[1], "HYPE"] == pytest.approx(0.0)
 
 
 def test_candle_count_intrabar_backtest_exits_on_mark_price_take_profit() -> None:
@@ -1479,10 +1461,11 @@ def test_spot_trend_ignores_weak_benchmark_when_filter_disabled() -> None:
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
     assert "candle_count_short" in names
-    assert "trend_confirmation" in names
+    assert "trend_confirmation" not in names
     assert "crowding_reversal" in names
     assert "ma_crossover" in names
     assert "donchian_breakout" in names
+    assert "hype_pullback_trend" in names
     assert "momentum_rotation" in names
     assert "small_cap_momentum_breakout" in names
     assert "spot_trend" in names
@@ -1490,20 +1473,20 @@ def test_strategy_registry_lists_builtin_strategies() -> None:
 
 def test_create_strategy_uses_registry() -> None:
     candle_count = create_strategy("candle_count_short", {"short_allocation": 10.0})
-    trend = create_strategy("trend_confirmation", {"max_long_positions": 1})
     crowding = create_strategy("crowding_reversal", {"max_short_positions": 1})
     crossover = create_strategy("ma_crossover", {"long_allocation": 0.75})
     donchian = create_strategy("donchian_breakout", {"long_allocation": 0.75})
+    hype_pullback = create_strategy("hype_pullback_trend", {"long_allocation": 1.0})
     momentum = create_strategy("momentum_rotation", {"long_allocation": 0.75})
     small_cap = create_strategy(
         "small_cap_momentum_breakout", {"long_allocation": 0.25}
     )
     spot_cta = create_strategy("spot_trend", {"long_allocation": 0.70})
     assert isinstance(candle_count, CandleCountShortStrategy)
-    assert isinstance(trend, TrendConfirmationStrategy)
     assert isinstance(crowding, CrowdingReversalStrategy)
     assert isinstance(crossover, MovingAverageCrossoverStrategy)
     assert isinstance(donchian, DonchianBreakoutStrategy)
+    assert isinstance(hype_pullback, HypePullbackTrendStrategy)
     assert isinstance(momentum, MomentumRotationStrategy)
     assert isinstance(small_cap, SmallCapMomentumBreakoutStrategy)
     assert isinstance(spot_cta, SpotTrendStrategy)

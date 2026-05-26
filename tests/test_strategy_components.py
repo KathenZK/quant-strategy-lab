@@ -14,31 +14,8 @@ from strategy_lab.strategies import (
     MomentumRotationStrategy,
     SpotTrendConfig,
     SpotTrendStrategy,
-    TrendConfirmationConfig,
-    TrendConfirmationStrategy,
 )
 from strategy_lab.workflow.config import strategy_workflow_from_code
-
-
-def test_trend_strategy_exposes_signal_and_allocator_components() -> None:
-    strategy = TrendConfirmationStrategy(
-        TrendConfirmationConfig(
-            max_long_positions=1,
-            long_allocation=0.75,
-        )
-    )
-
-    assert type(strategy.signal_model).__module__.startswith(
-        "strategy_lab.strategies.trend_confirmation"
-    )
-    assert type(strategy.allocator).__module__.startswith(
-        "strategy_lab.strategies.trend_confirmation"
-    )
-    assert strategy.required_factors() == strategy.signal_model.required_factors()
-    assert (
-        strategy.required_liquidation_features()
-        == strategy.allocator.required_risk_features()
-    )
 
 
 def test_crowding_strategy_exposes_signal_and_allocator_components() -> None:
@@ -179,19 +156,19 @@ def test_candle_count_short_code_workflow_uses_embedded_hype_defaults() -> None:
 
 
 def test_strategy_versions_change_when_allocator_configuration_changes() -> None:
-    baseline = TrendConfirmationStrategy(
-        TrendConfirmationConfig(long_allocation=0.5)
+    baseline = MomentumRotationStrategy(
+        MomentumRotationConfig(long_allocation=0.5)
     ).version()
-    updated = TrendConfirmationStrategy(
-        TrendConfirmationConfig(long_allocation=0.8)
+    updated = MomentumRotationStrategy(
+        MomentumRotationConfig(long_allocation=0.8)
     ).version()
     assert baseline != updated
 
 
-def test_ranked_allocator_retains_existing_trend_behavior() -> None:
+def test_ranked_allocator_retains_existing_momentum_behavior() -> None:
     index = pd.date_range("2024-01-01", periods=1, freq="D", tz="UTC")
-    strategy = TrendConfirmationStrategy(
-        TrendConfirmationConfig(
+    strategy = MomentumRotationStrategy(
+        MomentumRotationConfig(
             max_long_positions=1,
             max_short_positions=1,
             long_allocation=0.5,

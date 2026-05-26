@@ -73,13 +73,6 @@ _STRATEGY_TEMPLATE_METADATA = {
         "default_timeframe": "1h",
         "default_universe": ["BTC/USDT", "ETH/USDT"],
     },
-    "trend_confirmation": {
-        "name": "趋势确认",
-        "category": "trend",
-        "description": "综合动量、突破、OI、基差、成交量和资金费率过滤强趋势机会。",
-        "default_timeframe": "4h",
-        "default_universe": ["BTC/USDT:USDT", "ETH/USDT:USDT", "SOL/USDT"],
-    },
     "crowding_reversal": {
         "name": "拥挤度反转",
         "category": "reversal",
@@ -93,6 +86,13 @@ _STRATEGY_TEMPLATE_METADATA = {
         "description": "用 Donchian 通道突破识别趋势启动，并支持止损、追踪止损和金字塔加仓参数。",
         "default_timeframe": "1d",
         "default_universe": ["BTC/USDT", "ETH/USDT", "SOL/USDT"],
+    },
+    "hype_pullback_trend": {
+        "name": "HYPE 趋势回踩",
+        "category": "trend",
+        "description": "基于 HYPE 15m 数据挖掘出的顺大趋势回踩策略，使用 ATR672 控制仓位、止盈止损和持仓时长。",
+        "default_timeframe": "15m",
+        "default_universe": ["HYPE/USDT:USDT"],
     },
     "momentum_rotation": {
         "name": "动量轮动",

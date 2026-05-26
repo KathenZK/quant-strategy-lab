@@ -6,7 +6,7 @@
 
 当前支持的典型对比对象：
 
-- `trend_confirmation`
+- `momentum_rotation`
 - `crowding_reversal`
 
 ## 1. 目标
@@ -57,10 +57,10 @@ CLI 入口：
 
 ```yaml
 comparison:
-  name: trend_vs_crowding_on_trend_baseline
-  description: Compare trend confirmation and crowding reversal on the shared trend MVP baseline dataset.
+  name: momentum_vs_crowding_on_shared_baseline
+  description: Compare momentum rotation and crowding reversal on the shared baseline dataset.
   workflow_configs:
-    - trend_confirmation.mvp.baseline.yaml
+    - momentum_rotation.mvp.baseline.yaml
     - crowding_reversal.mvp.baseline.yaml
 ```
 
@@ -68,9 +68,9 @@ comparison:
 
 ```yaml
 batch:
-  name: trend_vs_crowding_on_trend_baseline
+  name: momentum_vs_crowding_on_shared_baseline
   workflow_configs:
-    - trend_confirmation.mvp.baseline.yaml
+    - momentum_rotation.mvp.baseline.yaml
     - crowding_reversal.mvp.baseline.yaml
 ```
 
@@ -146,7 +146,7 @@ batch:
 
 这套框架最适合：
 
-- 比较 `trend_confirmation` 与 `crowding_reversal`
+- 比较 `momentum_rotation` 与 `crowding_reversal`
 - 检查新策略是不是只是在“特殊数据上看起来更好”
 - 检查某次参数修改是否改变了策略的结构行为
 - 作为回归测试的一部分

@@ -120,7 +120,7 @@ date
 ```text
 configs/workflows/strategies/
   spot_trend.binance.spot.1h.local.yaml
-  trend_confirmation.mvp.yaml
+  momentum_rotation.mvp.yaml
   ...
 ```
 

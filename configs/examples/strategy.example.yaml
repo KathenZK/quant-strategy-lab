@@ -1,6 +1,6 @@
 strategy:
-  name: trend_confirmation_perp_demo
-  strategy_type: trend_confirmation
+  name: momentum_rotation_perp_demo
+  strategy_type: momentum_rotation
   exchange: binance
   market_type: perp
   strategy_params:
@@ -10,8 +10,7 @@ strategy:
       - SOL/USDT:USDT
     max_long_positions: 2
     max_short_positions: 2
-    max_abs_funding_zscore: 2.5
-    breakout_floor: -0.02
+    breakout_floor: -0.01
     min_volume_surge: -0.5
     max_liquidation_spike_zscore: 2.5
     max_liquidation_notional_ratio: 0.03

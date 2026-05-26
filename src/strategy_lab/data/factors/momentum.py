@@ -220,6 +220,43 @@ class BearishCandleCountFactor(PandasFactor):
         return bearish.rolling(self.window, min_periods=self.window).sum()
 
 
+class ExponentialMovingAverageSpreadFactor(PandasFactor):
+    def __init__(
+        self,
+        fast_window: int,
+        slow_window: int,
+        price_column: str = "close",
+    ) -> None:
+        if fast_window >= slow_window:
+            raise ValueError("fast_window must be smaller than slow_window")
+        self.fast_window = fast_window
+        self.slow_window = slow_window
+        self.price_column = price_column
+        self.metadata = FactorMetadata(
+            name=f"ema_spread_{fast_window}_{slow_window}",
+            category="momentum",
+            frequency="bar",
+            lookback=slow_window,
+            inputs=(price_column,),
+            market_types=("spot", "perp"),
+            description="Fast EMA divided by slow EMA minus one.",
+        )
+
+    def compute(self, frame: pd.DataFrame) -> pd.Series:
+        price = frame[self.price_column]
+        fast = price.ewm(
+            span=self.fast_window,
+            adjust=False,
+            min_periods=self.fast_window,
+        ).mean()
+        slow = price.ewm(
+            span=self.slow_window,
+            adjust=False,
+            min_periods=self.slow_window,
+        ).mean()
+        return fast / slow.replace(0.0, np.nan) - 1.0
+
+
 class MovingAverageDistanceFactor(PandasFactor):
     def __init__(self, window: int, price_column: str = "close") -> None:
         self.window = window
@@ -323,15 +360,19 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         TrailingReturnFactor(periods=12),
         TrailingReturnFactor(periods=20),
         TrailingReturnFactor(periods=24),
+        TrailingReturnFactor(periods=48),
         TrailingReturnFactor(periods=60),
         TrailingReturnFactor(periods=72),
         TrailingReturnFactor(periods=96),
         TrailingReturnFactor(periods=120),
         TrailingReturnFactor(periods=168),
+        TrailingReturnFactor(periods=192),
         BenchmarkReturnFactor(periods=24),
         BenchmarkReturnFactor(periods=72),
         BullishCandleCountFactor(window=10),
+        BullishCandleCountFactor(window=12),
         BearishCandleCountFactor(window=10),
+        BearishCandleCountFactor(window=12),
         BreakoutFactor(window=20),
         DonchianBreakoutFactor(window=10),
         DonchianBreakoutFactor(window=12),
@@ -339,6 +380,7 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         DonchianBreakoutFactor(window=20),
         DonchianBreakoutFactor(window=55),
         DonchianBreakoutStrengthFactor(window=20),
+        ExponentialMovingAverageSpreadFactor(fast_window=24, slow_window=96),
         MovingAverageDistanceFactor(window=20),
         MovingAverageDistanceFactor(window=30),
         MovingAverageDistanceFactor(window=48),
@@ -352,4 +394,5 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         ATRPercentFactor(window=96),
         ATRPercentFactor(window=192),
         ATRPercentFactor(window=288),
+        ATRPercentFactor(window=672),
     ]

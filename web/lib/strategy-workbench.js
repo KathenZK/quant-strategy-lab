@@ -1,10 +1,10 @@
 export const STRATEGY_LABELS = Object.freeze({
   crowding_reversal: "拥挤度反转",
   donchian_breakout: "Donchian 突破",
+  hype_pullback_trend: "HYPE 趋势回踩",
   ma_crossover: "双均线交叉",
   momentum_rotation: "动量轮动",
   small_cap_momentum_breakout: "小市值动量突破",
-  trend_confirmation: "趋势确认",
 });
 
 const numberFormat = new Intl.NumberFormat("en-US", {

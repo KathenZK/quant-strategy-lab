@@ -106,6 +106,7 @@ class VWAPDistanceFactor(PandasFactor):
 def builtin_liquidity_factors() -> list[PandasFactor]:
     return [
         VolumeSurgeFactor(window=20),
+        VolumeSurgeFactor(window=96),
         AverageDollarVolumeFactor(window=20),
         RollingDollarVolumeFactor(window=1),
         RollingDollarVolumeFactor(window=24),
