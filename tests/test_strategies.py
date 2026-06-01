@@ -3,6 +3,10 @@ import pytest
 
 from strategy_lab.data import MarketType
 from strategy_lab.strategies import (
+    BtcHourlyTrendConfig,
+    BtcHourlyTrendStrategy,
+    BtcIntradayRegimeConfig,
+    BtcIntradayRegimeStrategy,
     CandleCountIntrabarBacktestConfig,
     CandleCountShortConfig,
     CandleCountShortStrategy,
@@ -728,24 +732,11 @@ def test_candle_count_short_strategy_holds_through_opposite_signals_until_exit()
 def test_hype_pullback_trend_strategy_enters_in_trend_direction() -> None:
     index = pd.date_range("2026-01-01", periods=2, freq="15min", tz="UTC")
     factors = _hype_pullback_factor_frames(index, ["HYPE"])
-    factors["ret_48"].loc[index[0], "HYPE"] = -0.006
+    factors["ret_48"].loc[index[0], "HYPE"] = -0.03
     factors["ret_192"].loc[index[0], "HYPE"] = 0.05
-    factors["ema_spread_24_96"].loc[index[0], "HYPE"] = 0.01
-    factors["bearish_candle_count_12"].loc[index[0], "HYPE"] = 6.0
-    factors["ret_48"].loc[index[1], "HYPE"] = 0.006
+    factors["ret_48"].loc[index[1], "HYPE"] = 0.03
     factors["ret_192"].loc[index[1], "HYPE"] = -0.05
-    factors["ema_spread_24_96"].loc[index[1], "HYPE"] = -0.01
-    factors["bullish_candle_count_12"].loc[index[1], "HYPE"] = 6.0
-    strategy = HypePullbackTrendStrategy(
-        HypePullbackTrendConfig(
-            ema_spread_factor="ema_spread_24_96",
-            bullish_count_factor="bullish_candle_count_12",
-            bearish_count_factor="bearish_candle_count_12",
-            min_pullback_return=0.005,
-            min_pullback_count=6,
-            short_enabled=True,
-        )
-    )
+    strategy = HypePullbackTrendStrategy(HypePullbackTrendConfig())
 
     signal = strategy.build_signal_frame(factors)
 
@@ -775,6 +766,137 @@ def test_hype_pullback_trend_strategy_applies_atr_take_profit() -> None:
 
     assert weights.loc[index[0], "HYPE"] == pytest.approx(1.0)
     assert weights.loc[index[1], "HYPE"] == pytest.approx(0.0)
+
+
+def test_btc_intraday_regime_strategy_builds_long_and_short_signals() -> None:
+    index = pd.date_range("2026-01-01", periods=3, freq="15min", tz="UTC")
+    factors = {
+        "ema_spread_192_672": pd.DataFrame(
+            {"BTC": [0.007, -0.007, 0.001]}, index=index
+        ),
+        "atr_pct_288": pd.DataFrame({"BTC": [0.002] * 3}, index=index),
+    }
+    strategy = BtcIntradayRegimeStrategy(BtcIntradayRegimeConfig())
+
+    signal = strategy.build_signal_frame(factors)
+
+    assert signal.loc[index[0], "BTC"] == pytest.approx(1.0)
+    assert signal.loc[index[1], "BTC"] == pytest.approx(-1.0)
+    assert signal.loc[index[2], "BTC"] == pytest.approx(0.0)
+
+
+def test_btc_intraday_regime_strategy_sizes_by_atr_and_exits_on_regime_loss() -> (
+    None
+):
+    index = pd.date_range("2026-01-01", periods=4, freq="15min", tz="UTC")
+    signal = pd.DataFrame({"BTC": [1.0, 0.0, 0.0, 0.0]}, index=index)
+    price_frame = pd.DataFrame({"BTC": [100.0, 101.0, 102.0, 102.0]}, index=index)
+    factors = {
+        "ema_spread_192_672": pd.DataFrame(
+            {"BTC": [0.007, 0.005, -0.001, -0.001]}, index=index
+        ),
+        "atr_pct_288": pd.DataFrame({"BTC": [0.002] * 4}, index=index),
+    }
+    strategy = BtcIntradayRegimeStrategy(
+        BtcIntradayRegimeConfig(
+            target_atr_pct=0.001,
+            stop_loss_atr_multiplier=None,
+            cooldown_bars=0,
+        )
+    )
+
+    weights = strategy.build_weights(signal, price_frame=price_frame, factors=factors)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(0.5)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(0.5)
+    assert weights.loc[index[2], "BTC"] == pytest.approx(0.0)
+
+
+def test_btc_intraday_regime_strategy_exits_on_stop_loss() -> None:
+    index = pd.date_range("2026-01-01", periods=3, freq="15min", tz="UTC")
+    signal = pd.DataFrame({"BTC": [1.0, 0.0, 0.0]}, index=index)
+    price_frame = pd.DataFrame({"BTC": [100.0, 94.0, 94.0]}, index=index)
+    factors = {
+        "ema_spread_192_672": pd.DataFrame(
+            {"BTC": [0.007, 0.007, 0.007]}, index=index
+        ),
+        "atr_pct_288": pd.DataFrame({"BTC": [0.005] * 3}, index=index),
+    }
+    strategy = BtcIntradayRegimeStrategy(
+        BtcIntradayRegimeConfig(
+            target_atr_pct=None,
+            long_allocation=1.0,
+            stop_loss_atr_multiplier=2.0,
+            min_stop_loss_pct=0.01,
+            max_stop_loss_pct=0.02,
+            cooldown_bars=0,
+        )
+    )
+
+    weights = strategy.build_weights(signal, price_frame=price_frame, factors=factors)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(1.0)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(0.0)
+
+
+def test_btc_hourly_trend_strategy_builds_long_and_short_signals() -> None:
+    index = pd.date_range("2026-01-01", periods=3, freq="h", tz="UTC")
+    factors = {
+        "ema_spread_48_336": pd.DataFrame(
+            {"BTC": [0.002, -0.002, 0.0]}, index=index
+        ),
+        "atr_pct_168": pd.DataFrame({"BTC": [0.004] * 3}, index=index),
+    }
+    strategy = BtcHourlyTrendStrategy(BtcHourlyTrendConfig())
+
+    signal = strategy.build_signal_frame(factors)
+
+    assert signal.loc[index[0], "BTC"] == pytest.approx(1.0)
+    assert signal.loc[index[1], "BTC"] == pytest.approx(-1.0)
+    assert signal.loc[index[2], "BTC"] == pytest.approx(0.0)
+
+
+def test_btc_hourly_trend_strategy_sizes_by_absolute_atr_target() -> None:
+    index = pd.date_range("2026-01-01", periods=3, freq="h", tz="UTC")
+    signal = pd.DataFrame({"BTC": [1.0, 1.0, 1.0]}, index=index)
+    price_frame = pd.DataFrame({"BTC": [100.0, 101.0, 102.0]}, index=index)
+    factors = {
+        "ema_spread_48_336": pd.DataFrame(
+            {"BTC": [0.002, 0.002, 0.002]}, index=index
+        ),
+        "atr_pct_168": pd.DataFrame({"BTC": [0.004] * 3}, index=index),
+    }
+    strategy = BtcHourlyTrendStrategy(
+        BtcHourlyTrendConfig(
+            target_atr_pct=0.006,
+            long_allocation=2.0,
+        )
+    )
+
+    weights = strategy.build_weights(signal, price_frame=price_frame, factors=factors)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(1.5)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(1.5)
+
+
+def test_btc_hourly_trend_strategy_flips_when_regime_reverses() -> None:
+    index = pd.date_range("2026-01-01", periods=3, freq="h", tz="UTC")
+    signal = pd.DataFrame({"BTC": [1.0, -1.0, -1.0]}, index=index)
+    price_frame = pd.DataFrame({"BTC": [100.0, 99.0, 98.0]}, index=index)
+    factors = {
+        "ema_spread_48_336": pd.DataFrame(
+            {"BTC": [0.002, -0.002, -0.002]}, index=index
+        ),
+        "atr_pct_168": pd.DataFrame({"BTC": [0.006] * 3}, index=index),
+    }
+    strategy = BtcHourlyTrendStrategy(
+        BtcHourlyTrendConfig(target_atr_pct=None, long_allocation=1.0, short_allocation=1.0)
+    )
+
+    weights = strategy.build_weights(signal, price_frame=price_frame, factors=factors)
+
+    assert weights.loc[index[0], "BTC"] == pytest.approx(1.0)
+    assert weights.loc[index[1], "BTC"] == pytest.approx(-1.0)
 
 
 def test_candle_count_intrabar_backtest_exits_on_mark_price_take_profit() -> None:
@@ -1460,6 +1582,8 @@ def test_spot_trend_ignores_weak_benchmark_when_filter_disabled() -> None:
 
 def test_strategy_registry_lists_builtin_strategies() -> None:
     names = list_registered_strategies()
+    assert "btc_hourly_trend" in names
+    assert "btc_intraday_regime" in names
     assert "candle_count_short" in names
     assert "trend_confirmation" not in names
     assert "crowding_reversal" in names
@@ -1472,6 +1596,8 @@ def test_strategy_registry_lists_builtin_strategies() -> None:
 
 
 def test_create_strategy_uses_registry() -> None:
+    btc_hourly_trend = create_strategy("btc_hourly_trend", {"long_allocation": 1.0})
+    btc_regime = create_strategy("btc_intraday_regime", {"long_allocation": 0.5})
     candle_count = create_strategy("candle_count_short", {"short_allocation": 10.0})
     crowding = create_strategy("crowding_reversal", {"max_short_positions": 1})
     crossover = create_strategy("ma_crossover", {"long_allocation": 0.75})
@@ -1482,6 +1608,8 @@ def test_create_strategy_uses_registry() -> None:
         "small_cap_momentum_breakout", {"long_allocation": 0.25}
     )
     spot_cta = create_strategy("spot_trend", {"long_allocation": 0.70})
+    assert isinstance(btc_hourly_trend, BtcHourlyTrendStrategy)
+    assert isinstance(btc_regime, BtcIntradayRegimeStrategy)
     assert isinstance(candle_count, CandleCountShortStrategy)
     assert isinstance(crowding, CrowdingReversalStrategy)
     assert isinstance(crossover, MovingAverageCrossoverStrategy)

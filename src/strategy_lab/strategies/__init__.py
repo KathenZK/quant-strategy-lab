@@ -1,4 +1,6 @@
 from .base import Strategy
+from .btc_hourly_trend import BtcHourlyTrendConfig, BtcHourlyTrendStrategy
+from .btc_intraday_regime import BtcIntradayRegimeConfig, BtcIntradayRegimeStrategy
 from .candle_count_short import (
     CandleCountIntrabarBacktestConfig,
     CandleCountIntrabarBacktestResult,
@@ -20,6 +22,10 @@ from .small_cap_momentum_breakout import SmallCapMomentumBreakoutConfig, SmallCa
 from .spot_trend import SpotTrendConfig, SpotTrendStrategy
 
 __all__ = [
+    "BtcHourlyTrendConfig",
+    "BtcHourlyTrendStrategy",
+    "BtcIntradayRegimeConfig",
+    "BtcIntradayRegimeStrategy",
     "CrowdingReversalConfig",
     "CrowdingReversalStrategy",
     "CandleCountIntrabarBacktestConfig",

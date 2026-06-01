@@ -29,9 +29,9 @@ class HypePullbackTrendConfig:
     min_pullback_count: int | None = None
     min_volume_surge: float | None = 0.0
     long_enabled: bool = True
-    short_enabled: bool = False
+    short_enabled: bool = True
     long_allocation: float = 2.0
-    short_allocation: float = 2.0
+    short_allocation: float = 1.0
     target_atr_pct: float | None = 0.008
     stop_loss_atr_multiplier: float = 6.0
     take_profit_atr_multiplier: float = 6.0
