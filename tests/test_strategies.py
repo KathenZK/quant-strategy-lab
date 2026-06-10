@@ -14,6 +14,8 @@ from strategy_lab.strategies import (
     CrowdingReversalStrategy,
     DonchianBreakoutConfig,
     DonchianBreakoutStrategy,
+    HypeEmaCrossoverTrendConfig,
+    HypeEmaCrossoverTrendStrategy,
     HypePullbackTrendConfig,
     HypePullbackTrendStrategy,
     MovingAverageCrossoverConfig,
@@ -68,6 +70,14 @@ def _hype_pullback_factor_frames(
         "bullish_candle_count_12": pd.DataFrame(0.0, index=index, columns=columns),
         "bearish_candle_count_12": pd.DataFrame(0.0, index=index, columns=columns),
         "volume_surge_96": pd.DataFrame(0.0, index=index, columns=columns),
+    }
+
+
+def _hype_ema_crossover_factor_frames(
+    index: pd.DatetimeIndex, columns: list[str]
+) -> dict[str, pd.DataFrame]:
+    return {
+        "ema_spread_96_384": pd.DataFrame(0.0, index=index, columns=columns),
     }
 
 
@@ -727,6 +737,36 @@ def test_candle_count_short_strategy_holds_through_opposite_signals_until_exit()
     assert weights.loc[index[1], "HYPE"] == pytest.approx(-3.0)
     assert weights.loc[index[2], "HYPE"] == pytest.approx(-3.0)
     assert weights.loc[index[3], "HYPE"] == pytest.approx(0.0)
+
+
+def test_hype_ema_crossover_trend_strategy_enters_only_on_crosses() -> None:
+    index = pd.date_range("2026-01-01", periods=5, freq="15min", tz="UTC")
+    factors = _hype_ema_crossover_factor_frames(index, ["HYPE"])
+    factors["ema_spread_96_384"]["HYPE"] = [-0.01, 0.01, 0.02, -0.01, -0.02]
+    strategy = HypeEmaCrossoverTrendStrategy(HypeEmaCrossoverTrendConfig())
+
+    signal = strategy.build_signal_frame(factors)
+
+    assert pd.isna(signal.loc[index[0], "HYPE"])
+    assert signal.loc[index[1], "HYPE"] == pytest.approx(1.0)
+    assert pd.isna(signal.loc[index[2], "HYPE"])
+    assert signal.loc[index[3], "HYPE"] == pytest.approx(-1.0)
+    assert pd.isna(signal.loc[index[4], "HYPE"])
+
+
+def test_hype_ema_crossover_trend_strategy_exits_at_ten_percent_profit() -> None:
+    index = pd.date_range("2026-01-01", periods=5, freq="15min", tz="UTC")
+    signal = pd.DataFrame({"HYPE": [1.0, float("nan"), float("nan"), -1.0, float("nan")]}, index=index)
+    price_frame = pd.DataFrame({"HYPE": [100.0, 105.0, 110.0, 111.0, 99.0]}, index=index)
+    strategy = HypeEmaCrossoverTrendStrategy(HypeEmaCrossoverTrendConfig())
+
+    weights = strategy.build_weights(signal, price_frame=price_frame)
+
+    assert weights.loc[index[0], "HYPE"] == pytest.approx(1.0)
+    assert weights.loc[index[1], "HYPE"] == pytest.approx(1.0)
+    assert weights.loc[index[2], "HYPE"] == pytest.approx(0.0)
+    assert weights.loc[index[3], "HYPE"] == pytest.approx(-1.0)
+    assert weights.loc[index[4], "HYPE"] == pytest.approx(0.0)
 
 
 def test_hype_pullback_trend_strategy_enters_in_trend_direction() -> None:
@@ -1589,6 +1629,7 @@ def test_strategy_registry_lists_builtin_strategies() -> None:
     assert "crowding_reversal" in names
     assert "ma_crossover" in names
     assert "donchian_breakout" in names
+    assert "hype_ema_crossover_trend" in names
     assert "hype_pullback_trend" in names
     assert "momentum_rotation" in names
     assert "small_cap_momentum_breakout" in names
@@ -1602,6 +1643,7 @@ def test_create_strategy_uses_registry() -> None:
     crowding = create_strategy("crowding_reversal", {"max_short_positions": 1})
     crossover = create_strategy("ma_crossover", {"long_allocation": 0.75})
     donchian = create_strategy("donchian_breakout", {"long_allocation": 0.75})
+    hype_ema = create_strategy("hype_ema_crossover_trend", {"long_allocation": 1.0})
     hype_pullback = create_strategy("hype_pullback_trend", {"long_allocation": 1.0})
     momentum = create_strategy("momentum_rotation", {"long_allocation": 0.75})
     small_cap = create_strategy(
@@ -1614,6 +1656,7 @@ def test_create_strategy_uses_registry() -> None:
     assert isinstance(crowding, CrowdingReversalStrategy)
     assert isinstance(crossover, MovingAverageCrossoverStrategy)
     assert isinstance(donchian, DonchianBreakoutStrategy)
+    assert isinstance(hype_ema, HypeEmaCrossoverTrendStrategy)
     assert isinstance(hype_pullback, HypePullbackTrendStrategy)
     assert isinstance(momentum, MomentumRotationStrategy)
     assert isinstance(small_cap, SmallCapMomentumBreakoutStrategy)

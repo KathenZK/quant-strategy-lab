@@ -382,6 +382,7 @@ def builtin_momentum_factors() -> list[PandasFactor]:
         DonchianBreakoutStrengthFactor(window=20),
         ExponentialMovingAverageSpreadFactor(fast_window=24, slow_window=96),
         ExponentialMovingAverageSpreadFactor(fast_window=48, slow_window=336),
+        ExponentialMovingAverageSpreadFactor(fast_window=96, slow_window=384),
         ExponentialMovingAverageSpreadFactor(fast_window=192, slow_window=672),
         MovingAverageDistanceFactor(window=20),
         MovingAverageDistanceFactor(window=30),

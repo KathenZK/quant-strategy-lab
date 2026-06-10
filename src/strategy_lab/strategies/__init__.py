@@ -14,6 +14,10 @@ from .crowding_reversal import CrowdingReversalConfig, CrowdingReversalStrategy
 from .donchian_hold_72h import DonchianHold72hConfig, DonchianHold72hStrategy
 from .donchian_breakout import DonchianBreakoutConfig, DonchianBreakoutStrategy
 from .factory import create_strategy, is_strategy, list_strategies
+from .hype_ema_crossover_trend import (
+    HypeEmaCrossoverTrendConfig,
+    HypeEmaCrossoverTrendStrategy,
+)
 from .hype_pullback_trend import HypePullbackTrendConfig, HypePullbackTrendStrategy
 from .ma_crossover import MovingAverageCrossoverConfig, MovingAverageCrossoverStrategy
 from .momentum_rotation import MomentumRotationConfig, MomentumRotationStrategy
@@ -37,6 +41,8 @@ __all__ = [
     "DonchianHold72hStrategy",
     "DonchianBreakoutConfig",
     "DonchianBreakoutStrategy",
+    "HypeEmaCrossoverTrendConfig",
+    "HypeEmaCrossoverTrendStrategy",
     "HypePullbackTrendConfig",
     "HypePullbackTrendStrategy",
     "MovingAverageCrossoverConfig",
