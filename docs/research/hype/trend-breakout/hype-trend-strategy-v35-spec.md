@@ -1,65 +1,42 @@
-# HYPE V36 可复现参数说明（实盘交付版）
+# HYPE V35 可复现参数说明（实盘交付版）
 
-本文档对应研究台账 **HYPE 趋势突破族 V36**，目标是让任何人（或 AI）仅凭本文档独立复现回测和实盘逻辑。
+本文档对应研究台账 **HYPE 趋势突破族 V35**，目标是让任何人（或 AI）仅凭本文档独立复现回测和实盘逻辑。
 
 ```text
 版本链：V30 -> V31(K2 open 延迟入场) -> V32(去冷却) -> V33(live-realistic 成交口径)
 V34 = V33 + target ATR 提高到 0.020/0.018 + 浮盈 1.5ATR 后关闭指标退出 + 硬止损收紧到 7ATR
-V35 = V34 仅放宽 timeout：最大持仓 192 根(48h) -> 384 根(96h)
-V36 = V35 策略逻辑完全不变，执行从 Binance 搬到 Hyperliquid（跨所执行版）：
-      信号/特征/ATR/仓位/TP-SL 距离用 Binance 数据计算，
-      成交价/TP-SL 触发/funding 用 Hyperliquid
+V35 = V34 仅放宽 timeout：最大持仓 192 根(48h) -> 384 根(96h)，其余完全不变
 ```
 
-注意：不要和 candle-count 策略族的 `hype-v35-overfit-diagnosis.md` 混用，那是另一个策略（10/8 K线计数信号）；本文档是 15m EMA96/384 趋势突破族。
+注意：不要和 candle-count 策略族的 `../candle-count/hype-v35-overfit-diagnosis.md` 混用，那是另一个策略（10/8 K线计数信号）；本文档的 V35 是 15m EMA96/384 趋势突破族。
 
 回测已按 live-realistic 口径修正（无前视：信号收盘确认、入场 ATR 用上一根完成 K、指标退出下一根 open 成交、禁止同 K 平仓再开仓）。
 
-## 0. 为什么是跨所执行（V36 的动机）
+## 0. 实盘风险须知（先读）
 
 ```text
-2025-10-10 闪崩，HYPE 单根 15m K 最大下插：
-  Binance  -41.41%   超过 3x 杠杆约 31% 的强平距离 -> 满杠杆多仓爆仓
-  OKX      -40.75%   同样扛不住
-  HL       -13.86%   HYPE 主场流动性，3x 杠杆可扛
-
-HL native 回测收益低（+484.63%）的原因是 HL K 线算出的信号质量差，不是执行差。
-信号换回 Binance、只在 HL 成交后，收益恢复到同窗口 Binance native 的 86%，
-且交易集合基本不变（91 vs 93 笔）、胜率持平。
-```
-
-## 0.1 实盘风险须知（先读）
-
-```text
-1. V36 是在同一份样本上消融选优后的组合，+5172% 是样本内最优数字，必然高估。
-2. sizing(target ATR) 不产生 alpha，只等比放大盈亏；最大杠杆 3.0x、平均 2.74x。
-3. 单笔最差亏损 -14%（含杠杆）；回测止损按精确价格成交，实盘插针滑点会更差。
-4. 回测最大回撤 -22.40%，由满杠杆止损叠加持仓浮亏构成（mark-to-market 口径，
-   含浮亏）；全样本最大连续亏损仅 2 笔；实盘心理预期按 -25% 准备。
-5. HL 插针浅的证据来自 10-10 单次极端事件；HL 自身有 ADL、oracle 异常等机制
-   风险。V36 大幅降低但不消除尾部风险，逐仓 + 利润定期转出是必选项。
+1. V35 是在同一份样本上消融选优后的组合，+6474% 是样本内最优数字，必然高估。
+2. sizing(target ATR) 不产生 alpha，只等比放大盈亏；100 笔中 47 笔顶格 3x 杠杆。
+3. MFE 1.5ATR / SL 7ATR 是 Binance 特化参数：HL 上回撤反而变差（-36.2%）。
+4. 单笔最差亏损 -14%（含杠杆）；回测止损按精确价格成交，实盘插针滑点会更差。
+5. 回测最大回撤 -23.49% 由 1 笔满杠杆止损(-14%) 叠加下一笔持仓浮亏构成，
+   全样本最大连续亏损仅 2 笔；实盘心理预期按 1~2 笔连续止损 + 浮亏即 -25% 准备。
 6. 实盘建议先降 sizing（见第 12 节），冻结参数，小资金跑 1~3 个月对照回测。
 ```
 
 ## 1. 参数总表
 
 ```yaml
-strategy_id: hype_v36
-signal_symbol: HYPE/USDT:USDT      # Binance
-execution_symbol: HYPE/USDC:USDC   # Hyperliquid
+strategy_id: hype_v35
+symbol: HYPE/USDT:USDT
 timeframe: 15m
 
 data:
-  signal_exchange: binance          # 信号/特征/ATR/仓位/TP-SL 距离
-  execution_exchange: hyperliquid   # 成交价/TP-SL 触发/funding
+  ohlcv_exchange: binance
   market_type: perp
-  backtest_window: 2025-07-27 ~ 2026-06-01 03:00 UTC (两所共同区间)
+  funding_exchange: binance
+  backtest_window: 2025-05-30 ~ 2026-06-01 03:00 UTC
   warmup_min_bars: 1600
-
-cross_exchange:
-  margin_mode: isolated             # 必须逐仓
-  spread_guard: 0.005               # abs(HL close / Binance close - 1) > 0.5% 暂停新开仓
-  spread_guard_scope: entry_only    # 已持仓的 TP/SL 维持不动
 
 execution:                      # live-realistic 口径
   signal_bar: K0 (15m 收盘确认)
@@ -121,22 +98,11 @@ costs:
 
 | 项目 | 值 |
 |---|---|
-| 信号数据源 | Binance `HYPE/USDT:USDT` 永续 15m，字段 `open/high/low/close/volume` |
-| 执行数据源 | Hyperliquid `HYPE/USDC:USDC` 永续，入场/TP/SL/出场全部以 HL 价格成交和触发 |
-| Funding | Hyperliquid funding rate（持仓在 HL），对齐 15m 索引，缺失填 0 |
-| 预热 | Binance 至少 `1600` 根 15m K（约 17 天）再开始交易 |
-| 1h 数据 | 由 Binance 15m resample 得到，不要直接拉 1h K 线（避免口径差异） |
-
-```text
-跨所分工（必须严格遵守）：
-1. 所有指标（EMA/ADX/volume/ATR/1h 确认）只用 Binance 数据计算。
-2. entry_atr 来自 Binance ATR672，但 TP/SL 的价格锚点是 HL 的实际成交价：
-   take = hl_entry_price ± 5.0 * entry_atr
-   stop = hl_entry_price ∓ 7.0 * entry_atr
-   （entry_atr 为 Binance 绝对值 ATR，两所价差常态 <0.05%，直接使用）
-3. TP/SL 触发、指标退出/timeout 的下一根 open 成交，全部按 HL 行情。
-4. 仓位 allocation 用 Binance atr_pct 计算，应用到 HL 仓位名义价值。
-```
+| 主交易所 | Binance `HYPE/USDT:USDT` 永续 |
+| K线周期 | `15m`，字段 `open/high/low/close/volume` |
+| Funding | Binance funding rate，对齐 15m 索引，缺失填 0 |
+| 预热 | 至少 `1600` 根 15m K（约 17 天）再开始交易 |
+| 1h 数据 | 由 15m resample 得到，不要直接拉 1h K 线（避免口径差异） |
 
 ## 3. 指标计算
 
@@ -328,57 +294,41 @@ for each 15m bar i (after warmup):
 
 ## 12. 基准回测结果（验收标准）
 
-复现实现后，回测结果应与下表一致（Binance/HL 共同窗口 2025-07-27 09:00 ~ 2026-06-01 03:00 UTC，共 29,641 根 15m）：
+复现实现后，回测结果应与下表一致（同一数据窗口 2025-05-30 ~ 2026-06-01 03:00 UTC，warmup 1600 根）：
 
-| 场景 | 收益 | 最大回撤 | Sharpe | 交易数 | 胜率 | 退出结构(TP/指标/SL/timeout) |
+| 数据源 | 收益 | 最大回撤 | Sharpe | 交易数 | 胜率 | 退出结构(TP/指标/SL/timeout) |
 |---|---:|---:|---:|---:|---:|---:|
-| **V36 (Binance 信号 + HL 执行)** | `+5171.74%` | `-22.40%` | `4.99` | `91` | `81.3%` | `71 / 7 / 13 / 0` |
-| Binance native V35（同窗口对照） | `+5994.42%` | `-22.16%` | `5.32` | `93` | `80.7%` | - |
-| HL native V35（同窗口对照） | `+484.63%` | `-34.09%` | `2.63` | `81` | `67.9%` | - |
+| Binance | `+6474.19%` | `-23.49%` | `4.94` | `100` | `80.0%` | `77 / 9 / 14 / 0` |
+| Hyperliquid (HYPE/USDC:USDC) | `+543.17%` | `-36.24%` | `2.78` | `82` | `68.3%` | `56 / 7 / 19 / 0` |
+| OKX | `+945.83%` | `-30.76%` | `2.90` | `104` | `68.3%` | `70 / 15 / 19 / 0` |
 
-最大杠杆 `3.0x`、平均杠杆 `2.74x`、单笔最差 `-14.0%`。
-
-分窗口（V36）：
-
-| 窗口 | 收益 | 最大回撤 |
-|---|---:|---:|
-| 最近 1 月 | `+65.15%` | `-22.40%` |
-| 最近 3 月 | `+254.44%` | `-22.40%` |
-| 最近 6 月 | `+1466.04%` | `-22.40%` |
-| 共同窗口全样本 | `+5171.74%` | `-22.40%` |
+V34（timeout 192）对照：Binance `+5840.03% / -23.89% / 4.83`；V35 三家同向改善。
 
 ### 推荐实盘降杠杆档位（信号完全相同，仅 sizing 不同，Binance full）
 
-| sizing (long/short, cap) | 收益 | 最大回撤 | Sharpe | 单笔最差 |
+| sizing (long/short) | 收益 | 最大回撤 | Sharpe | 单笔最差 |
 |---|---:|---:|---:|---:|
-| 0.012 / 0.010, cap 2.0（保守，推荐起步） | `+1076.35%` | `-13.96%` | `4.85` | `-8.4%` |
-| 0.014 / 0.012, cap 2.0（折中） | `+1496.33%` | `-15.96%` | `4.95` | `-9.8%` |
-| 0.016 / 0.014, cap 3.0 | `+2525.25%` | `-18.96%` | `4.80` | `-11.2%` |
-| 0.020 / 0.018, cap 3.0（V36 原版） | `+5171.74%` | `-22.40%` | `4.99` | `-14.0%` |
+| 0.012 / 0.010（保守，推荐起步） | `+1312.14%` | `-15.59%` | `4.59` | `-8.4%` |
+| 0.014 / 0.012（折中） | `+2076.32%` | `-17.91%` | `4.65` | `-9.8%` |
+| 0.016 / 0.014 | `+3215.83%` | `-19.14%` | `4.77` | `-11.2%` |
+| 0.020 / 0.018（V35 原版） | `+6474.19%` | `-23.49%` | `4.94` | `-14.0%` |
 
 ```text
-实盘期望管理：不要以回测 +5172% 为预期。
-合理锚定是保守 sizing 档（0.012/0.010 -> +1076%）的一半以下。
-注意：V36 在 HL 执行下原版 3x 杠杆已可扛 10-10 级闪崩（HL 插针 -13.9% < 强平距离 31%），
-降 sizing 档主要是控制常规回撤和心理负担，不再是爆仓刚需。
+实盘期望管理：不要以 Binance +6474% 为预期。
+更合理的锚是跨交易所最弱口径（HL +543%）再打折，
+或保守 sizing 档（0.012/0.010 -> +1312%）的一半以下。
 ```
 
 ## 13. 实盘实现注意事项
 
 ```text
-1. 信号必须用已收盘的 Binance 15m K 计算；当前未收盘 K 的任何数据都不能参与。
-2. 1h 指标必须用 Binance 15m resample + shift(1)，不要直接订阅 1h K 线流。
-3. 入场在 Hyperliquid 用 K2 开盘市价单；TP/SL 入场后立即在 HL 挂 reduce-only 条件单，
-   价格锚点 = HL 实际成交均价 ± N * entry_atr（entry_atr 来自 Binance）。
+1. 信号必须用已收盘的 15m K 计算；当前未收盘 K 的任何数据都不能参与。
+2. 1h 指标必须用 15m resample + shift(1)，不要直接订阅 1h K 线流。
+3. 入场用 K2 开盘市价单；TP/SL 入场后立即挂 reduce-only 条件单。
 4. 同根 K 内 TP 和 SL 都可能触发时按 SL 处理（回测假设保守，实盘以先触发为准）。
 5. 指标退出 / timeout 是收盘信号，在下一根 K 开盘执行，不要收盘瞬间市价平仓。
-6. 8.5 bps 单边成本假设；HL 实际 taker 费率与滑点需按账户等级和资金量重估。
-7. ATR672 / EMA384 / volume 192 等长窗口指标启动前必须有 >= 1600 根 Binance 15m 历史 K。
-8. 跨所价差熔断：每根 K 收盘检查 abs(HL close / Binance close - 1)，
-   > 0.5% 时暂停新开仓（常态 p99 仅 0.17%，2025-10-10 曾脱钩到 8.19%）；
-   已持仓的 TP/SL 不受影响。
-9. 保证金模式必须逐仓；利润定期从合约账户转出。
-10. 注意 V36 的退出参数（MFE 1.5 / SL 7ATR）是按 Binance 信号 + HL 成交的 cross 口径
-    验证的；如果改用 HL native 信号（不推荐），退出结构需回退 V33 版
-    （disable_after_mfe_atr=2.0, hard_stop_atr=9.0）。
+6. 8.5 bps 单边成本假设 = taker 4.5bps + 滑点 4bps；资金量大需重估 HYPE 盘口深度。
+7. ATR672 / EMA384 / volume 192 等长窗口指标启动前必须有 >= 1600 根 15m 历史 K。
+8. 跨交易所部署：Hyperliquid 用 HYPE/USDC:USDC；HL 上建议退出结构回退到
+   V33 版（disable_after_mfe_atr=2.0, hard_stop_atr=9.0），V34 的退出参数在 HL 上回撤更差。
 ```

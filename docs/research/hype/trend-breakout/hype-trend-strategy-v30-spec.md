@@ -6,7 +6,7 @@
 V30 = V29 去掉 DI 反向指标退出，只保留 ADX<22 指标退出
 ```
 
-不要和旧的反向 K 系列 `hype-v29-reproducible-params.md` 混用；这里的 V30 是 15m 趋势突破策略。
+不要和旧的反向 K 系列 `../candle-count/hype-v29-reproducible-params.md` 混用；这里的 V30 是 15m 趋势突破策略。
 
 ## 1. 参数总表
 
