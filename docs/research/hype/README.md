@@ -37,6 +37,7 @@ HYPE 研究以两个 Canvas 为最高优先级入口，Markdown 文档用于复�
 - `candle-count/hype-v21-reproducible-params.md`：V21 复现参数。
 - `candle-count/hype-v26-reproducible-params.md`：V26 复现参数。
 - `candle-count/hype-v29-reproducible-params.md`：V29 复现参数。
+- `candle-count/hype-v32-reproducible-params.md`：V32 复现参数。
 - `candle-count/hype-v35-reproducible-params.md`：V35 复现参数。
 - `candle-count/hype-v35-overfit-diagnosis.md`：V35 过拟合诊断。
 

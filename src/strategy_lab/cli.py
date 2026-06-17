@@ -38,6 +38,7 @@ from strategy_lab.workflow import (
     load_strategy_workflow,
     strategy_workflow_from_code,
 )
+from strategy_lab.research import CrossQualityConfig, build_cross_quality_dataset
 
 app = typer.Typer(add_completion=False, help="Quant Strategy Lab research platform CLI.")
 
@@ -493,6 +494,54 @@ def build_features(
     typer.echo(f"saved {len(saved)} factor files")
     for name, path in sorted(saved.items()):
         typer.echo(f"{name}: {path['feature_path']} ({path['factor_version']})")
+
+
+@app.command("build-ema-cross-quality-dataset")
+def build_ema_cross_quality_dataset(
+    exchange: str = typer.Option(..., "--exchange"),
+    market_type: str = typer.Option("perp", "--market-type"),
+    timeframe: str = typer.Option("15m", "--timeframe"),
+    symbols: str | None = typer.Option(None, "--symbols", help="Comma-separated symbols. Omit to scan all local symbols."),
+    benchmark_symbol: str | None = typer.Option("BTC/USDT:USDT", "--benchmark-symbol"),
+    horizon_bars: int = typer.Option(384, "--horizon-bars"),
+    target_atr: float = typer.Option(6.0, "--target-atr"),
+    stop_atr: float = typer.Option(3.5, "--stop-atr"),
+    min_bars: int = typer.Option(800, "--min-bars"),
+    max_symbols: int | None = typer.Option(None, "--max-symbols"),
+    output: Path = typer.Option(Path("reports/ema_cross_quality_dataset.parquet"), "--output", "-o"),
+    config: Path | None = typer.Option(None, "--config", "-c"),
+) -> None:
+    """Build a multi-symbol EMA96/EMA384 cross quality event dataset."""
+    lake, _, _ = _runtime(config)
+    symbol_tuple = tuple(_parse_symbols(symbols)) if symbols else None
+    dataset = build_cross_quality_dataset(
+        lake.normalized_dir / "ohlcv",
+        CrossQualityConfig(
+            exchange=exchange,
+            market_type=market_type,
+            timeframe=timeframe,
+            symbols=symbol_tuple,
+            benchmark_symbol=benchmark_symbol,
+            horizon_bars=horizon_bars,
+            target_atr=target_atr,
+            stop_atr=stop_atr,
+            min_bars=min_bars,
+            max_symbols=max_symbols,
+        ),
+    )
+    if dataset.empty:
+        raise typer.BadParameter("no EMA cross events were found for the requested universe")
+
+    output.parent.mkdir(parents=True, exist_ok=True)
+    if output.suffix.lower() == ".csv":
+        dataset.to_csv(output, index=False)
+    else:
+        dataset.to_parquet(output, index=False)
+
+    typer.echo(f"events: {len(dataset)}")
+    typer.echo(f"symbols: {dataset['symbol'].nunique()}")
+    typer.echo(f"target_before_stop_rate: {dataset['target_before_stop'].mean():.6f}")
+    typer.echo(f"output: {output}")
 
 
 @app.command()

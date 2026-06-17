@@ -332,3 +332,56 @@ V34（timeout 192）对照：Binance `+5840.03% / -23.89% / 4.83`；V35 三家�
 8. 跨交易所部署：Hyperliquid 用 HYPE/USDC:USDC；HL 上建议退出结构回退到
    V33 版（disable_after_mfe_atr=2.0, hard_stop_atr=9.0），V34 的退出参数在 HL 上回撤更差。
 ```
+
+## 14. AI 实盘实现强制检查清单
+
+下面这段是给实现 agent / 同事 code review 用的硬约束。只要缺任意一条，就不应切 `live`。
+
+```text
+1. 决策时序
+   - 每根 15m K 收盘后再计算信号。
+   - 入场必须用 K0 信号、跳过完整 K1、K2 open 执行。
+   - entry ATR 必须取 K2 入场前一根已完成 K（K1）的 ATR672。
+   - 指标退出 / timeout 只能在收盘确认，下一根 K open 执行。
+
+2. 订单保护
+   - 入场市价单成交后，必须先确认交易所实际成交均价和成交数量。
+   - TP/SL 价格必须以实际成交均价为锚：
+     take = fill_price ± 5 * entry_atr
+     stop = fill_price ∓ 7 * entry_atr
+   - 必须先挂 closePosition 止损单，再挂 reduce-only 止盈单。
+   - 任一保护单挂单失败，立即 reduce-only 市价平仓，不允许裸仓继续持有。
+   - 每轮持仓对账时必须检查 TP + SL 挂单是否仍在；缺失则补挂，补挂失败则立即平仓。
+
+3. 幂等与单实例
+   - runner 必须有单实例锁，禁止两个进程同时跑同一子账户。
+   - 订单必须带确定性 clientOrderId（例如 strategy + bar + side），避免重启重放时重复下单。
+   - last_processed_bar 必须持久化；重启后不能重复处理已经完成的一根 K。
+
+4. 状态恢复
+   - 交易所仓位是最终真相；本地状态与交易所不一致时，必须 fail closed。
+   - 本地认为空仓但交易所有仓位：立即撤保护单并 reduce-only 市价平仓。
+   - 本地认为有仓但交易所无仓：视为 TP/SL 已成交，撤残留单并清本地仓位。
+
+5. 行情与数据
+   - 必须检查最新已收盘 K 的新鲜度；API 返回旧 K 时跳过本轮，不交易。
+   - 1h 特征必须由 15m 数据 resample + shift(1) + ffill 得到，不允许直接用未确认 1h K。
+   - 至少加载 1600 根 15m 历史 K 后才允许交易。
+
+6. Binance 实盘默认
+   - 建议 isolated margin。
+   - 子账户专用，不要和手动交易或其他策略混用。
+   - 小额实盘建议先用 0.012 / 0.010 / cap 2.0 保守档；V35 原版 cap 3.0 在 Binance 上扛不住 2025-10-10 级 -41% 单根插针。
+```
+
+### 14.1 止损触发价口径
+
+回测的 TP/SL 触发用的是 15m OHLCV 的 `high/low`，本质更接近合约成交价/last price。
+实盘在 Binance 上可以有两种选择：
+
+```text
+更贴近回测：STOP_MARKET workingType = CONTRACT_PRICE
+更抗插针/强平管理：STOP_MARKET workingType = MARK_PRICE
+```
+
+如果目标是逐笔最大化贴近研究回测，使用 `CONTRACT_PRICE`。如果目标是小额线上试跑并降低异常成交价影响，可以使用 `MARK_PRICE`，但这会与回测止损触发口径有轻微偏差。无论选择哪种，必须在实盘日志里记录 `workingType`，并在复盘时固定同一口径。
