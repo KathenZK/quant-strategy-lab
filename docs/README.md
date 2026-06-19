@@ -1,23 +1,22 @@
-# 文档目录
+# Documentation Index
 
-本目录按研究资产优先级归类。HYPE 相关文档是当前主线，平台代码文档只作为复现与实验支撑。
+This documentation tree is organized around data and research evidence, not platform code.
 
-## HYPE 研究
+## Primary Entrypoints
 
-- `research/hype/README.md`：HYPE 研究主索引。
-- `research/hype/canvas-catalog.md`：Cursor Canvas 研究资产目录。
-- `research/hype/trend-breakout/`：15m EMA96/384 趋势突破族。
-- `research/hype/candle-count/`：10/8 反向 K 与 ATR 风控族。
+- `research/README.md`: research archive overview.
+- `research/STRATEGY_INDEX.md`: strategy-family ids and collision rules.
+- `research/hype/AI_CONTEXT.md`: required HYPE reading order.
+- `research/hype/README.md`: HYPE research index.
 
-## 策略文档
+## HYPE Research
 
-- `strategies/crowding-reversal-mvp.md`：拥挤度反转策略 MVP 说明。
+- `research/hype/families/candle-count-reversal/`: `HYPE-CC` family.
+- `research/hype/families/ema-trend-breakout/`: `HYPE-EMA-TB` family.
+- `research/hype/cursor/`: Cursor Canvas and agent artifact indexes.
 
-## 平台约定
+## Platform Notes
 
-- `platform/strategy-lab-data-lake-conventions.md`：数据湖、实验产物、报告与前端展示约定。
-- `platform/strategy-comparison-framework.md`：通用策略对比框架。
+- `platform/strategy-lab-data-lake-conventions.md`: data lake conventions.
 
-## 历史归档
-
-- `archive/mvp-implementation-plan.md`：MVP 实施计划历史记录。
+Old strategy-platform, comparison, workflow, dashboard, and non-HYPE strategy documents live under `archive/`.

@@ -15,4 +15,4 @@ Canvas 本体保留在 Cursor 管理目录：
 - `external-strategies.md`：Minara / 外部策略研究。
 - `platform-other.md`：平台策略与其他实验。
 
-完整 100 个 Canvas 文件名对账见 `../canvas-catalog.md`。
+完整 Canvas 文件名对账见 `../canvas-catalog.md`。

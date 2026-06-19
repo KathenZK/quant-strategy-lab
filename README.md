@@ -1,32 +1,60 @@
 # Quant Strategy Lab
 
-这个仓库的核心资产是 HYPE 策略研究文档与 Canvas 台账；代码主要服务于复现、回测和展示。
+This repository is now a data-first quantitative research archive.
 
-## 核心研究入口
+The durable assets are:
 
-- [HYPE 趋势策略研究](/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-trend-strategy-research.canvas.tsx)：趋势突破族版本台账、结果矩阵、研究结论。
-- [HYPE 15m Strategy Milestone Comparison](/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-strategy-milestone-comparison.canvas.tsx)：K 线计数反转族里程碑对比。
-- `docs/research/hype/README.md`：HYPE Markdown 规格书与诊断文档索引。
-- `docs/research/hype/canvases/README.md`：Cursor Canvas 研究资产分类目录。
-- `docs/README.md`：全项目文档目录。
+- the local data lake under `data/`
+- research documents under `docs/research/`
+- Cursor canvas indexes under `docs/research/hype/cursor/`
+- narrow data/research tooling under `src/strategy_lab/`
 
-## 文档结构
+The old strategy platform, workflow engine, dashboard, and broad backtest layer have been retired into `archive/`.
 
-- `docs/research/hype/trend-breakout/`：HYPE 15m EMA96/384 趋势突破族。
-- `docs/research/hype/candle-count/`：HYPE 10/8 反向 K 与 ATR 风控族。
-- `docs/strategies/`：非 HYPE 策略说明。
-- `docs/platform/`：数据湖、策略对比框架等平台约定。
-- `docs/archive/`：历史实施计划和阶段记录。
+## Read First
 
-## 代码入口
+- `AGENTS.md`: rules for AI agents working in this repository.
+- `docs/research/STRATEGY_INDEX.md`: strategy-family ids and collision rules.
+- `docs/research/hype/AI_CONTEXT.md`: required HYPE reading order.
+- `docs/research/hype/README.md`: HYPE research entrypoint.
+- `docs/platform/strategy-lab-data-lake-conventions.md`: data lake conventions.
 
-- Python 平台代码：`src/strategy_lab/`
-- CLI 入口：`quant-strategy-lab`
-- 策略与实验配置：`configs/`
-- 前端策略实验室：`web/`
-- 测试：`tests/`
+## Active Structure
 
-## 快速开始
+```text
+src/strategy_lab/
+  data/       # data ingestion, normalization, quality, factors, features
+  research/   # narrow reusable research dataset exporters
+  cli.py      # data-first CLI
+
+docs/research/
+  STRATEGY_INDEX.md
+  hype/
+    AI_CONTEXT.md
+    families/
+    cursor/
+
+scripts/data/
+  fetch_polygon_equity_aggregates.py
+
+archive/
+  code/platform/
+  scripts/research/
+  reports/legacy/
+```
+
+## HYPE Family Rule
+
+Do not cite bare version numbers.
+
+Use family ids:
+
+- `HYPE-CC-V35`: candle-count reversal family.
+- `HYPE-EMA-TB-V35`: EMA trend-breakout family.
+
+These are different strategies even when their version numbers match.
+
+## Quick Start
 
 ```bash
 python3 -m venv .venv
@@ -34,7 +62,7 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-查看 CLI：
+Check the data CLI:
 
 ```bash
 ./.venv/bin/quant-strategy-lab --help

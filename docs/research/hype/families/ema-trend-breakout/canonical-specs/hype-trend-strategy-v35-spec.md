@@ -8,7 +8,7 @@ V34 = V33 + target ATR 提高到 0.020/0.018 + 浮盈 1.5ATR 后关闭指标退�
 V35 = V34 仅放宽 timeout：最大持仓 192 根(48h) -> 384 根(96h)，其余完全不变
 ```
 
-注意：不要和 candle-count 策略族的 `../candle-count/hype-v35-overfit-diagnosis.md` 混用，那是另一个策略（10/8 K线计数信号）；本文档的 V35 是 15m EMA96/384 趋势突破族。
+注意：不要和 `HYPE-CC-V35` 混用，那是另一个策略（10/8 K线计数信号）；本文档的 V35 是 `HYPE-EMA-TB-V35`，属于 15m EMA96/384 趋势突破族。
 
 回测已按 live-realistic 口径修正（无前视：信号收盘确认、入场 ATR 用上一根完成 K、指标退出下一根 open 成交、禁止同 K 平仓再开仓）。
 

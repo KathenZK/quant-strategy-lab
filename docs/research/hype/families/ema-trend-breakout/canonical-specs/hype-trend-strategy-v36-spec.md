@@ -11,7 +11,7 @@ V36 = V35 策略逻辑完全不变，执行从 Binance 搬到 Hyperliquid（跨�
       成交价/TP-SL 触发/funding 用 Hyperliquid
 ```
 
-注意：不要和 candle-count 策略族的 `../candle-count/hype-v35-overfit-diagnosis.md` 混用，那是另一个策略（10/8 K线计数信号）；本文档是 15m EMA96/384 趋势突破族。
+注意：不要和 `HYPE-CC-V35` 混用，那是另一个策略（10/8 K线计数信号）；本文档是 `HYPE-EMA-TB` 15m EMA96/384 趋势突破族。
 
 回测已按 live-realistic 口径修正（无前视：信号收盘确认、入场 ATR 用上一根完成 K、指标退出下一根 open 成交、禁止同 K 平仓再开仓）。
 

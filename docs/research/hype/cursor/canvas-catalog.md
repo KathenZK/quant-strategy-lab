@@ -4,7 +4,7 @@ Canvas 根目录：
 
 `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/`
 
-不要移动 `.canvas.tsx` 文件本体；Cursor 只识别这个目录下的扁平 Canvas 文件。本页只做完整文件名对账；按主题拆分的入口见 `canvases/README.md`。
+不要移动 `.canvas.tsx` 文件本体；Cursor 只识别这个目录下的扁平 Canvas 文件。本页只做完整文件名对账；按主题拆分的入口见 `canvas-groups/README.md`。
 
 ## 核心台账
 
