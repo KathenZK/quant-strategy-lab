@@ -1,6 +1,5 @@
 # HYPE 趋势突破族 Canvas
 
-- `hype-ema-crossover-evolution.canvas.tsx`
 - `hype-v2i-parameter-tuning.canvas.tsx`
 - `hype-v2i-5m-execution-backtest.canvas.tsx`
 - `hype-v2m-profit-source-analysis.canvas.tsx`

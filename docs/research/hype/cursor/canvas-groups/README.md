@@ -9,6 +9,7 @@ Canvas 本体保留在 Cursor 管理目录：
 ## 分类
 
 - `core-ledgers.md`：两个核心研究台账。
+- `ema-crossover.md`：HYPE EMA 金叉死叉族 Canvas。
 - `trend-breakout.md`：HYPE 趋势突破族 Canvas。
 - `candle-count.md`：HYPE K 线计数反转族 Canvas。
 - `cross-asset.md`：BTC / XMR / CMC 等迁移验证。

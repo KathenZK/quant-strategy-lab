@@ -11,9 +11,12 @@ Canvas 根目录：
 - [hype-trend-strategy-research.canvas.tsx](/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-trend-strategy-research.canvas.tsx)：HYPE 趋势策略研究总台账。
 - [hype-strategy-milestone-comparison.canvas.tsx](/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-strategy-milestone-comparison.canvas.tsx)：HYPE 15m 里程碑对比总表。
 
-## HYPE 趋势突破族
+## HYPE EMA 金叉死叉族
 
 - `hype-ema-crossover-evolution.canvas.tsx`
+
+## HYPE 趋势突破族
+
 - `hype-v2i-parameter-tuning.canvas.tsx`
 - `hype-v2i-5m-execution-backtest.canvas.tsx`
 - `hype-v2m-profit-source-analysis.canvas.tsx`

@@ -9,7 +9,8 @@ HYPE has multiple strategy families with overlapping version numbers. The main r
 | Family id | Directory | Meaning |
 | --- | --- | --- |
 | `HYPE-CC` | `families/candle-count-reversal/` | 10-of-8 candle color reversal with ATR risk controls and early-exit variants |
-| `HYPE-EMA-TB` | `families/ema-trend-breakout/` | EMA96/EMA384 trend breakout with ADX, volume, 1h confirmation, and cross-exchange execution variants |
+| `HYPE-EMA-X` | `families/ema-crossover/` | EMA golden/death cross strategy line, iterated through V14-era regime, volume, oscillator, state-machine, and late-entry variants |
+| `HYPE-EMA-TB` | `families/ema-trend-breakout/` | Later EMA trend breakout / chase-long-chase-short line with ADX, volume, 1h confirmation, and cross-exchange execution variants |
 
 ## Core Cursor Ledgers
 

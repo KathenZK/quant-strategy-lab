@@ -2,7 +2,9 @@
 
 Family id: `HYPE-EMA-TB`
 
-This family covers HYPE 15m EMA96/EMA384 trend-breakout research with ADX, volume, 1h confirmation, live-realistic execution checks, and cross-exchange execution variants.
+This family covers the later HYPE 15m EMA96/EMA384 trend-breakout / chase-long-chase-short research with ADX, volume, 1h confirmation, live-realistic execution checks, and cross-exchange execution variants.
+
+It is not the earlier `HYPE-EMA-X` golden/death cross family.
 
 ## Canonical Specs
 
@@ -19,6 +21,7 @@ Important documents:
 ## Do Not Mix With
 
 - `HYPE-CC-V35`
+- `HYPE-EMA-X-V14`
 - Any candle-count reversal document under `../candle-count-reversal/`
 
 When citing this family, use names like `HYPE-EMA-TB-V30`, `HYPE-EMA-TB-V35`, or `HYPE-EMA-TB-V36`.

@@ -50,7 +50,9 @@ Do not cite bare version numbers.
 Use family ids:
 
 - `HYPE-CC-V35`: candle-count reversal family.
+- `HYPE-EMA-X-V14`: EMA golden/death cross family.
 - `HYPE-EMA-TB-V35`: EMA trend-breakout family.
+- `MU-HYPE-XFER`: MU transfer research from HYPE trend kernels.
 
 These are different strategies even when their version numbers match.
 

@@ -12,8 +12,10 @@ This documentation tree is organized around data and research evidence, not plat
 ## HYPE Research
 
 - `research/hype/families/candle-count-reversal/`: `HYPE-CC` family.
+- `research/hype/families/ema-crossover/`: `HYPE-EMA-X` family.
 - `research/hype/families/ema-trend-breakout/`: `HYPE-EMA-TB` family.
 - `research/hype/cursor/`: Cursor Canvas and agent artifact indexes.
+- `research/mu/`: `MU-HYPE-XFER` transfer research.
 
 ## Platform Notes
 

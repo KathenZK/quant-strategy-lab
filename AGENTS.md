@@ -14,7 +14,9 @@ HYPE version numbers are only meaningful inside a strategy family.
 Canonical family ids:
 
 - `HYPE-CC`: HYPE candle-count reversal family.
+- `HYPE-EMA-X`: HYPE EMA golden/death cross family, including V14-era research.
 - `HYPE-EMA-TB`: HYPE EMA trend breakout family.
+- `MU-HYPE-XFER`: MU transfer research based on HYPE trend kernels.
 
 Active code policy:
 
