@@ -94,8 +94,10 @@ Best add-signal candidates increased trade count into the 60s, but win rate fell
 
 - `HYPE-EMA-X-V15`: promoted high-win-rate / low-drawdown row, `V17_atr18_trend7_base_age384_d075_pnlm03_either2_stop8`.
 - `HYPE-EMA-X-V16`: promoted high-return row, `V17_atr18_base_age384_pnlm03_either2_stop8`.
+- `HYPE-EMA-X-V17`: promoted V15/V16 hybrid row, `HYBRID_score5_dist04_atr11` / `HYPE_EMA_X_V17`, added after comparing V15 and V16. It keeps V15 high-quality entries and admits only V16 low-score satellite entries with `trend_score` 5-6, `dir_dist_ema96 <= 0.04`, and `atr_ratio96_672 <= 1.1`.
+- `HYPE-EMA-X-V17.1`: promoted V17 sizing-enhanced row, `HYPE_EMA_X_V17__hq_scale=1p1`, added after V17 ablation. It keeps V17 signals unchanged and sets `hq_scale=1.1`, `lq_scale=1.0`.
 
-The main ledger is `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`. Full rules and parameters are mirrored in `v15-v16-promoted-strategy-specs.md`.
+The main ledger is `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`. Full rules and parameters are mirrored in `v15-v16-promoted-strategy-specs.md` and `v17-hybrid-ablation.md`.
 
 ## Interpretation
 

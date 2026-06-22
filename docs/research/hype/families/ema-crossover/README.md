@@ -27,7 +27,9 @@ The main evidence is currently in archived scripts and Cursor Canvas:
 - `archive/scripts/research/research_hype_v15_effective_cross.py`: post-V14 effective-cross quality probe.
 - `archive/scripts/research/research_hype_v16_indicator_expansion.py`: post-V14 RSI/KDJ-style late supplemental entry probe.
 - `archive/scripts/research/research_hype_v17_trend_state_search.py`: broad trend-state search across momentum, volatility, volume, structure, and oscillator indicators.
+- `archive/scripts/research/research_hype_v17_hybrid_ablation.py`: V17 V15/V16 hybrid full parameter ablation.
 - `docs/research/hype/families/ema-crossover/v16-v17-trend-state-search.md`: V16/V17 result note and next research direction.
+- `docs/research/hype/families/ema-crossover/v17-hybrid-ablation.md`: formal V17 hybrid definition, window metrics, and parameter ablation conclusions.
 - `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`: Cursor main ledger for promoted HYPE-EMA-X versions.
 - `docs/research/hype/families/ema-crossover/v15-v16-promoted-strategy-specs.md`: full Chinese rule/parameter spec for promoted V15 and V16.
 
@@ -39,7 +41,7 @@ This Cursor canvas is the main ledger for `HYPE-EMA-X` promoted versions. The re
 
 ## Naming
 
-Use names such as `HYPE-EMA-X-V6`, `HYPE-EMA-X-V10`, `HYPE-EMA-X-V14`, `HYPE-EMA-X-V15`, or `HYPE-EMA-X-V16`.
+Use names such as `HYPE-EMA-X-V6`, `HYPE-EMA-X-V10`, `HYPE-EMA-X-V14`, `HYPE-EMA-X-V15`, `HYPE-EMA-X-V16`, `HYPE-EMA-X-V17`, or `HYPE-EMA-X-V17.1`.
 
 Never call this only `EMA V14` or merge it into `HYPE-EMA-TB-V35`.
 
@@ -47,5 +49,7 @@ Never call this only `EMA V14` or merge it into `HYPE-EMA-TB-V35`.
 
 - `HYPE-EMA-X-V15`: high-win-rate / low-drawdown candidate from V17 search.
 - `HYPE-EMA-X-V16`: high-return candidate from V17 search.
+- `HYPE-EMA-X-V17`: V15/V16 hybrid candidate. It keeps V15 high-quality signals and admits only V16 low-score satellite signals with `trend_score` 5-6, `dir_dist_ema96 <= 0.04`, and `atr_ratio96_672 <= 1.1`.
+- `HYPE-EMA-X-V17.1`: V17 sizing-enhanced candidate. It keeps V17 signals unchanged and sets `hq_scale = 1.1`, `lq_scale = 1.0`.
 
-The search did not find a candidate that satisfies `50x return`, `<20% max drawdown`, and `>80% win rate` simultaneously on the current Binance HYPE 15m slice. V15 and V16 are therefore promoted research candidates, not live-approved production strategies.
+The search and V17 ablation did not find a candidate that satisfies `50x return`, `<20% max drawdown`, and `>80% win rate` simultaneously on the current Binance HYPE 15m slice. V15, V16, V17, and V17.1 are therefore promoted research candidates, not live-approved production strategies.

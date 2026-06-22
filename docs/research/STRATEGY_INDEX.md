@@ -17,7 +17,11 @@ Read `docs/research/hype/AI_CONTEXT.md` before reading any HYPE strategy documen
 - `HYPE-EMA-X`: Cursor canvas `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`
   - `HYPE-EMA-X-V15`: high-win-rate / low-drawdown promoted research candidate.
   - `HYPE-EMA-X-V16`: high-return promoted research candidate.
-- Repo rule mirror: `docs/research/hype/families/ema-crossover/v15-v16-promoted-strategy-specs.md`
+  - `HYPE-EMA-X-V17`: V15/V16 hybrid promoted research candidate, balancing V16-like return with V15 drawdown.
+  - `HYPE-EMA-X-V17.1`: V17 sizing-enhanced promoted research candidate, using `hq_scale=1.1`.
+- Repo rule mirrors:
+  - `docs/research/hype/families/ema-crossover/v15-v16-promoted-strategy-specs.md`
+  - `docs/research/hype/families/ema-crossover/v17-hybrid-ablation.md`
 
 ## Cross-Asset And Transfer Research
 
