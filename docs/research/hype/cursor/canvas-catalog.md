@@ -13,7 +13,7 @@ Canvas 根目录：
 
 ## HYPE EMA 金叉死叉族
 
-- `hype-ema-crossover-evolution.canvas.tsx`
+- [hype-ema-crossover-evolution.canvas.tsx](/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx)：HYPE-EMA-X 主台账，当前 promoted versions 为 V15 高胜率/低回撤版与 V16 高收益版。
 
 ## HYPE 趋势突破族
 

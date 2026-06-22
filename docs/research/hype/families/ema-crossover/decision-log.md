@@ -21,7 +21,16 @@ This is the family-level reading path for HYPE EMA golden/death cross research.
 - `HYPE-EMA-X-V12`: state-machine variants.
 - `HYPE-EMA-X-V13`: late re-entry and missed-trend diagnostics.
 - `HYPE-EMA-X-V14`: main late-entry/backfill/ablation checkpoint.
-- `HYPE-EMA-X-V15`: effective-cross quality probe.
+- `HYPE-EMA-X-V15`: promoted high-win-rate / low-drawdown candidate. Source search row: `V17_atr18_trend7_base_age384_d075_pnlm03_either2_stop8`. Metrics: `+2303.65% / -17.79% / 90.32% / 31 trades`.
+- `HYPE-EMA-X-V16`: promoted high-return candidate. Source search row: `V17_atr18_base_age384_pnlm03_either2_stop8`. Metrics: `+3202.92% / -28.19% / 86.84% / 38 trades`.
+
+The canonical main ledger for these promoted versions is Cursor canvas `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`.
+
+## Research Batch Notes
+
+- `research_hype_v15_effective_cross.py`: effective-cross quality probe; evidence only, not the promoted `HYPE-EMA-X-V15`.
+- `research_hype_v16_indicator_expansion.py`: indicator-expansion probe. Early indicator entries increased trade count but diluted V14 quality; OKX did not confirm enough stability.
+- `research_hype_v17_trend_state_search.py`: broad trend-state search across common indicator families. No candidate satisfied `50x return`, `<20% max drawdown`, and `>80% win rate` simultaneously. Its best low-drawdown and high-return rows are now promoted as `HYPE-EMA-X-V15` and `HYPE-EMA-X-V16`.
 
 ## Evidence Policy
 

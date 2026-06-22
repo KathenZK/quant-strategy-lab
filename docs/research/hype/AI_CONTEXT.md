@@ -20,12 +20,17 @@ Do not read by bare version number. Read by family first.
 4. That family's `decision-log.md`
 5. Only then open canonical specs or diagnostics.
 
+For `HYPE-EMA-X-V15` and `HYPE-EMA-X-V16`, the canonical promoted-candidate main ledger is the Cursor canvas:
+
+1. `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`
+2. Repo rule mirror: `families/ema-crossover/v15-v16-promoted-strategy-specs.md`
+
 ## Hard Rules
 
 - Never answer from `Vxx` alone.
 - Always name the family id, for example `HYPE-CC-V21` or `HYPE-EMA-TB-V36`.
 - Treat `HYPE-EMA-X` and `HYPE-EMA-TB` as separate core directions, not one EMA bucket.
-- Cursor Canvas files are supporting ledgers, not the only source of truth.
+- Cursor Canvas files may be the user's canonical research ledgers; for HYPE-EMA-X, `hype-ema-crossover-evolution.canvas.tsx` is the promoted-candidate main ledger.
 - Archived code under `archive/code/platform/` is historical unless the user asks for code archaeology.
 - Active code under `src/strategy_lab/` is data/research infrastructure, not strategy truth.
 

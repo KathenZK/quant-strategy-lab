@@ -17,5 +17,9 @@ Key historical report names:
 - `hype_v13_*`
 - `hype_v14_*`
 - `hype_v15_effective_cross*`
+- `hype_v16_indicator_expansion*`
+- `hype_v17_trend_state_search*`
 
 Do not use these report names to infer `HYPE-EMA-TB`; this is the `HYPE-EMA-X` lineage unless a document explicitly says otherwise.
+
+`hype_v15_*` and `hype_v16_*` report filenames are historical research batch names. The promoted main-ledger versions `HYPE-EMA-X-V15` and `HYPE-EMA-X-V16` are recorded in the Cursor canvas `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`; the repo rule mirror is `v15-v16-promoted-strategy-specs.md`.

@@ -12,6 +12,13 @@ Read `docs/research/hype/AI_CONTEXT.md` before reading any HYPE strategy documen
 | `HYPE-EMA-X` | `hype/families/ema-crossover/` | EMA golden/death cross family, evolved through V14-era regime, volume, oscillator, late-entry, and state-machine variants | Core historical research line |
 | `HYPE-EMA-TB` | `hype/families/ema-trend-breakout/` | Later 15m EMA96/384 trend breakout / chase-long-chase-short family with ADX, volume, 1h confirmation, and cross-exchange execution variants | Archived/canonical research specs |
 
+## Current Promoted Ledger Entrypoints
+
+- `HYPE-EMA-X`: Cursor canvas `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`
+  - `HYPE-EMA-X-V15`: high-win-rate / low-drawdown promoted research candidate.
+  - `HYPE-EMA-X-V16`: high-return promoted research candidate.
+- Repo rule mirror: `docs/research/hype/families/ema-crossover/v15-v16-promoted-strategy-specs.md`
+
 ## Cross-Asset And Transfer Research
 
 Cross-asset research is not a HYPE strategy family unless a document explicitly says it is a HYPE family variant.
