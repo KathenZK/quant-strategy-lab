@@ -50,7 +50,6 @@
 - `hype-v33-balanced-combo-backtest.canvas.tsx`
 - `hype-v33-full-parameter-ablation.canvas.tsx`
 - `hype-v34-let-profits-run-ablation.canvas.tsx`
-- `hype-v35-cross-exchange-execution.canvas.tsx`
 - `hype-v36-binance-signal-hl-execution.canvas.tsx`
 - `hype-15m-signal-1h-confirm-backtest.canvas.tsx`
 - `hype-15m-signal-1h-confirm-bidirectional.canvas.tsx`

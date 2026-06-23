@@ -33,4 +33,5 @@ When creating new research:
 - Write new research reports in Chinese by default unless the user explicitly requests another language.
 - Do not create research reports, ledgers, or durable analysis in Cursor Canvas files or any project-private Cursor directory.
 - Use Canvas only for transient visualization when explicitly requested; if a Canvas is used, mirror the durable conclusion into the appropriate `docs/research/` Markdown file before treating the work as complete.
+- Treat `legacy-canvas/` directories as frozen historical evidence from migrated Canvas files. Do not create new strategy research there; promote reviewed findings into family ledgers, `canonical-specs/`, `diagnostics/`, or `decision-log.md` instead.
 - Only promote code back into `src/strategy_lab/` if it is reusable data infrastructure or a narrow dataset exporter.

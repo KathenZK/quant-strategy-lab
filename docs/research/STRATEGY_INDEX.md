@@ -29,7 +29,7 @@ Read `docs/research/hype/AI_CONTEXT.md` before reading any HYPE strategy documen
 
 Cross-asset research is not a HYPE strategy family unless a document explicitly says it is a HYPE family variant.
 
-- `MU-HYPE-XFER`: `docs/research/mu/README.md` and `docs/research/mu-v35-session-aware-ledger.md`
+- `MU-HYPE-XFER`: `docs/research/mu/README.md` and `docs/research/mu/mu-hype-xfer-session-aware-ledger.md`
 - Cursor canvas groups under `docs/research/hype/cursor/canvas-groups/cross-asset.md`
 
 ## Core Research Directions

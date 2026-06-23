@@ -10,4 +10,5 @@ alwaysApply: true
 - Do not create durable research content in Cursor Canvas files or Cursor-private project directories.
 - Canvas may be used only as a temporary visualization surface when the user explicitly requests it.
 - If temporary Canvas work produces a durable conclusion, mirror that conclusion into the appropriate `docs/research/` Markdown file before finishing.
+- Treat `legacy-canvas/` directories as frozen historical evidence from migrated Canvas files. Do not create new research reports there.
 - For HYPE material, keep the family id explicit: use `HYPE-CC`, `HYPE-EMA-X`, `HYPE-EMA-TB`, or `MU-HYPE-XFER` instead of bare version numbers.

@@ -22,6 +22,7 @@
 - `hype-v24-param-microsearch.canvas.tsx`
 - `hype-recent-v18-v21-v24-v26-backtest.canvas.tsx`
 - `hype-v26-v28-optimization.canvas.tsx`
+- `hype-v35-cross-exchange-execution.canvas.tsx`
 - `v29-full-parameter-diagnosis.canvas.tsx`
 - `v29-overfit-diagnosis.canvas.tsx`
 - `v30-overfit-diagnosis.canvas.tsx`

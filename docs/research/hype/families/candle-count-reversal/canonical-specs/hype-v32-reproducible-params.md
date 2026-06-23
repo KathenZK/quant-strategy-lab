@@ -1,4 +1,4 @@
-# HYPE V32 可复现参数说明
+# HYPE-CC-V32 可复现参数说明
 
 V32 = `V30 + target_atr_pct 全局 0.006`。
 

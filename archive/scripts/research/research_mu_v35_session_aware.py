@@ -29,7 +29,7 @@ TRADES_PATH = Path("reports/mu_usdt_v35_session_aware_trades.csv")
 EQUITY_PATH = Path("reports/mu_usdt_v35_session_aware_equity.csv")
 LEDGER_JSON_PATH = Path("reports/mu_usdt_v35_session_aware_ledger.json")
 LEDGER_CSV_PATH = Path("reports/mu_usdt_v35_session_aware_ledger.csv")
-LEDGER_MD_PATH = Path("docs/research/mu-v35-session-aware-ledger.md")
+LEDGER_MD_PATH = Path("docs/research/mu/mu-hype-xfer-session-aware-ledger.md")
 ORIGINAL_SESSION_PATH = Path("reports/mu_hype_v35_original_session_filter.json")
 ORIGINAL_SESSION_TRADES_PATH = Path(
     "reports/mu_hype_v35_original_session_filter_trades.csv"

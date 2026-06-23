@@ -1,4 +1,4 @@
-# MUUSDT HYPE V35 Transfer Session-Aware 版本台账
+# MU-HYPE-XFER Session-Aware 版本台账
 
 本台账记录 MUUSDT 在 Binance TRADIFI_PERPETUAL 上迁移 HYPE V35/V6 追趋势内核后的候选版本。所有版本均为 long-only、TP10/SL9，区别在入场时段和 2x/3x 仓位。
 

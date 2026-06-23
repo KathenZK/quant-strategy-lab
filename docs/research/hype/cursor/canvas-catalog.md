@@ -6,7 +6,7 @@ Canvas 根目录：
 
 不要移动 `.canvas.tsx` 文件本体；Cursor 只识别这个目录下的扁平 Canvas 文件。本页只做完整文件名对账；按主题拆分的入口见 `canvas-groups/README.md`。
 
-这些 legacy Canvas 已迁移到仓库 Markdown。完整映射见 `../../legacy-canvas-migration-manifest.md`；后续维护以 Markdown 为准。
+这些 legacy Canvas 已迁移到仓库 Markdown。完整映射已归档到 `../../../../archive/docs/legacy-canvas-migration-manifest.md`；后续维护以 Markdown 为准。
 
 ## 核心台账
 
@@ -67,7 +67,6 @@ Canvas 根目录：
 - `hype-v33-balanced-combo-backtest.canvas.tsx`
 - `hype-v33-full-parameter-ablation.canvas.tsx`
 - `hype-v34-let-profits-run-ablation.canvas.tsx`
-- `hype-v35-cross-exchange-execution.canvas.tsx`
 - `hype-v36-binance-signal-hl-execution.canvas.tsx`
 - `hype-15m-signal-1h-confirm-backtest.canvas.tsx`
 - `hype-15m-signal-1h-confirm-bidirectional.canvas.tsx`
@@ -97,6 +96,7 @@ Canvas 根目录：
 - `hype-v24-param-microsearch.canvas.tsx`
 - `hype-recent-v18-v21-v24-v26-backtest.canvas.tsx`
 - `hype-v26-v28-optimization.canvas.tsx`
+- `hype-v35-cross-exchange-execution.canvas.tsx`
 - `v29-full-parameter-diagnosis.canvas.tsx`
 - `v29-overfit-diagnosis.canvas.tsx`
 - `v30-overfit-diagnosis.canvas.tsx`

@@ -425,22 +425,22 @@
 
 | 项目 | 记录 |
 | --- | --- |
-| 策略文件 | src/strategy_lab/strategies/hype_ema_crossover_trend/strategy.py |
+| 策略文件 | archive/code/platform/src/strategy_lab/strategies/hype_ema_crossover_trend/strategy.py |
 | 基础 factor | ema_spread_96_384 |
 | 当前代码状态 | 已实现 V1 裸交叉策略；V2/V3/V4/V5/V6 仍是研究参数，尚未固化到策略类 |
 | V1 测试 | tests/test_strategies.py 覆盖交叉入场、10% 止盈、registry 创建 |
-| 研究脚本 | scripts/research_hype_ema_cross_strategy.py；结果报告 reports/hype_ema_cross_research.json |
-| 对比脚本 | scripts/compare_hype_ema_v2_v4.py；结果报告 reports/hype_ema_v2_v4_compare.json |
-| V5 脚本 | scripts/research_hype_ema_regime_hold_v5.py；结果报告 reports/hype_ema_v5_data_lake_compare.json |
-| V7 脚本 | scripts/research_hype_ema_volume_exhaustion_v7.py；结果报告 reports/hype_ema_volume_exhaustion_v7.json |
-| V8 脚本 | scripts/research_hype_ema_volume_overlay_v8.py；结果报告 reports/hype_ema_volume_overlay_v8.json |
-| V9/V10 脚本 | scripts/research_hype_ema_htf_rsi_exit_v9.py；scripts/research_hype_ema_oscillator_top_exit_v10.py |
-| V11 诊断 | scripts/research_hype_trade_path_diagnostics_v11.py；reports/hype_trade_path_diagnostics_v11.json |
-| V12 脚本 | scripts/research_hype_state_machine_v12.py；reports/hype_state_machine_v12.json |
-| V12.1 hard exit | scripts/research_hype_state_machine_v12_hard_exit.py；reports/hype_state_machine_v12_hard_exit.json |
+| 研究脚本 | archive/scripts/research/research_hype_ema_cross_strategy.py；结果报告 reports/hype_ema_cross_research.json |
+| 对比脚本 | archive/scripts/research/compare_hype_ema_v2_v4.py；结果报告 reports/hype_ema_v2_v4_compare.json |
+| V5 脚本 | archive/scripts/research/research_hype_ema_regime_hold_v5.py；结果报告 reports/hype_ema_v5_data_lake_compare.json |
+| V7 脚本 | archive/scripts/research/research_hype_ema_volume_exhaustion_v7.py；结果报告 reports/hype_ema_volume_exhaustion_v7.json |
+| V8 脚本 | archive/scripts/research/research_hype_ema_volume_overlay_v8.py；结果报告 reports/hype_ema_volume_overlay_v8.json |
+| V9/V10 脚本 | archive/scripts/research/research_hype_ema_htf_rsi_exit_v9.py；archive/scripts/research/research_hype_ema_oscillator_top_exit_v10.py |
+| V11 诊断 | archive/scripts/research/research_hype_trade_path_diagnostics_v11.py；reports/hype_trade_path_diagnostics_v11.json |
+| V12 脚本 | archive/scripts/research/research_hype_state_machine_v12.py；reports/hype_state_machine_v12.json |
+| V12.1 hard exit | archive/scripts/research/research_hype_state_machine_v12_hard_exit.py；reports/hype_state_machine_v12_hard_exit.json |
 | 主结果补齐 | reports/hype_main_result_backfill_v12.csv；reports/hype_main_result_backfill_v12.json；reports/hype_main_result_backfill_v13.csv；reports/hype_main_result_backfill_v13.json；reports/hype_main_result_backfill_v14.csv；reports/hype_main_result_backfill_v14.json |
-| V13 横向回测 | scripts/research_hype_v13_main_backfill.py；V13 = V12.4 age128 + entry_max_dist_ema96 <= 8% |
-| V14 横向回测 | scripts/research_hype_v14_main_backfill.py；V14 = V13 + same-regime profitable late re-entry |
+| V13 横向回测 | archive/scripts/research/research_hype_v13_main_backfill.py；V13 = V12.4 age128 + entry_max_dist_ema96 <= 8% |
+| V14 横向回测 | archive/scripts/research/research_hype_v14_main_backfill.py；V14 = V13 + same-regime profitable late re-entry |
 | V16/V17 搜索 | archive/scripts/research/research_hype_v16_indicator_expansion.py；archive/scripts/research/research_hype_v17_trend_state_search.py |
 | V15/V16/V17/V17.1 分段回测与消融 | reports/hype_v15_v16_promoted_window_backfill.*；reports/hype_v17_hybrid_ablation*；reports/hype_v17_1_full_ablation* |
 | V6 图表 | reports/hype_ema_v6_binance_trade_chart.html；含 K 线、开平仓文字和交易连线 |

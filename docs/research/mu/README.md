@@ -6,7 +6,7 @@ This direction transfers HYPE trend kernels, especially HYPE V35/V6 style long-o
 
 Main ledger:
 
-- `../mu-v35-session-aware-ledger.md`
+- `mu-hype-xfer-session-aware-ledger.md`
 - `legacy-canvas/`: migrated historical Canvas reports for MU transfer diagnostics and validations.
 
 This is a core research direction, separate from HYPE-only strategy families.

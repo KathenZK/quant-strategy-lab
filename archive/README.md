@@ -5,6 +5,8 @@ This directory keeps historical project material that should not define the acti
 ## Contents
 
 - `code/platform/`: retired strategy platform code, workflow orchestration, journal/reporting code, dashboard API, frontend, and their old tests.
+- `configs/`: retired top-level environment configuration examples.
+- `docs/`: retired planning and implementation documents.
 - `scripts/research/`: one-off historical research, plotting, comparison, and backtest scripts.
 - `reports/legacy/`: small tracked report artifacts that used to live under `reports/`.
 

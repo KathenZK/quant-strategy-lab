@@ -32,7 +32,7 @@ from strategy_lab.settings import load_settings
 
 app = typer.Typer(
     add_completion=False,
-    help="Data-first Quant Strategy Lab CLI. Strategy platform commands are archived.",
+    help="Data-first Quant Strategy Lab CLI. Strategy workflows are archived.",
 )
 
 

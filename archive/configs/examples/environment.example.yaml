@@ -21,3 +21,4 @@ research:
   universe_filters:
     min_avg_dollar_volume: 1000000
     exclude_stablecoins: true
+

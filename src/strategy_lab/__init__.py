@@ -1,4 +1,4 @@
-"""Quant Strategy Lab research platform."""
+"""Quant Strategy Lab data infrastructure package."""
 
 __all__ = ["__version__"]
 
