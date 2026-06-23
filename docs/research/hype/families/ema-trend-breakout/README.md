@@ -12,6 +12,7 @@ Use `canonical-specs/` for reproducible strategy definitions and handoff documen
 
 Important documents:
 
+- `hype-ema-tb-core-ledger.md`: migrated Markdown ledger for the broader HYPE-EMA-TB trend strategy research line.
 - `hype-v2p-strategy-spec.md`: early trend-breakout candidate.
 - `hype-trend-strategy-v30-spec.md`: trend-family baseline.
 - `hype-trend-strategy-v34-spec.md`: high-return/low-drawdown checkpoint.

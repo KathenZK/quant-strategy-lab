@@ -20,12 +20,14 @@ Do not read by bare version number. Read by family first.
 4. That family's `decision-log.md`
 5. Only then open canonical specs or diagnostics.
 
-For `HYPE-EMA-X-V15`, `HYPE-EMA-X-V16`, `HYPE-EMA-X-V17`, and `HYPE-EMA-X-V17.1`, legacy source material exists in the Cursor canvas:
+For `HYPE-EMA-X-V15`, `HYPE-EMA-X-V16`, `HYPE-EMA-X-V17`, and `HYPE-EMA-X-V17.1`, the repository Markdown ledger is:
 
-1. `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`
+1. `families/ema-crossover/hype-ema-x-core-ledger.md`
 2. Repo rule mirrors:
    - `families/ema-crossover/v15-v16-promoted-strategy-specs.md`
    - `families/ema-crossover/v17-hybrid-ablation.md`
+
+Legacy source material exists in `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`, but Markdown under `docs/research/` is the durable entrypoint.
 
 ## Hard Rules
 

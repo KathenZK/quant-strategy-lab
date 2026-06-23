@@ -12,6 +12,12 @@ HYPE has multiple strategy families with overlapping version numbers. The main r
 | `HYPE-EMA-X` | `families/ema-crossover/` | EMA golden/death cross strategy line, iterated through V14-era regime, volume, oscillator, state-machine, and late-entry variants |
 | `HYPE-EMA-TB` | `families/ema-trend-breakout/` | Later EMA trend breakout / chase-long-chase-short line with ADX, volume, 1h confirmation, and cross-exchange execution variants |
 
+## Core Markdown Ledgers
+
+- `families/ema-crossover/hype-ema-x-core-ledger.md`: HYPE-EMA-X promoted-candidate and version-evolution ledger.
+- `families/ema-trend-breakout/hype-ema-tb-core-ledger.md`: HYPE-EMA-TB trend strategy research ledger.
+- `families/candle-count-reversal/hype-cc-15m-milestone-comparison.md`: HYPE-CC 15m milestone comparison ledger.
+
 ## Legacy Cursor Ledgers
 
 Historical Cursor canvas files still live in Cursor's project-private directory. They are migration sources, not canonical storage for new research. The repo-managed indexes are:

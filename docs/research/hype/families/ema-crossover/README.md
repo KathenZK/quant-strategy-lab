@@ -6,9 +6,13 @@ This family covers the HYPE EMA golden/death cross strategy line. It is the long
 
 Do not merge this with `HYPE-EMA-TB`. Both use EMA concepts, but `HYPE-EMA-X` is the earlier EMA cross lineage, while `HYPE-EMA-TB` is the later trend-breakout / chase-long-chase-short lineage.
 
+## Core Ledger
+
+- `hype-ema-x-core-ledger.md`: migrated Markdown ledger for HYPE-EMA-X version evolution, promoted V15/V16/V17/V17.1 candidates, ablations, and implementation status.
+
 ## Evidence Surface
 
-The main evidence is currently in archived scripts and Cursor Canvas:
+The main evidence is currently in repo Markdown and archived scripts:
 
 - `archive/scripts/research/research_hype_ema_cross_strategy.py`: base EMA cross research.
 - `archive/scripts/research/compare_hype_ema_v2_v4.py`: early EMA version comparison.
@@ -30,14 +34,15 @@ The main evidence is currently in archived scripts and Cursor Canvas:
 - `archive/scripts/research/research_hype_v17_hybrid_ablation.py`: V17 V15/V16 hybrid full parameter ablation.
 - `docs/research/hype/families/ema-crossover/v16-v17-trend-state-search.md`: V16/V17 result note and next research direction.
 - `docs/research/hype/families/ema-crossover/v17-hybrid-ablation.md`: formal V17 hybrid definition, window metrics, and parameter ablation conclusions.
-- `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`: Cursor main ledger for promoted HYPE-EMA-X versions.
+- `docs/research/hype/families/ema-crossover/hype-ema-x-core-ledger.md`: main Markdown ledger for promoted HYPE-EMA-X versions.
+- `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`: legacy Cursor source for the migrated ledger.
 - `docs/research/hype/families/ema-crossover/v15-v16-promoted-strategy-specs.md`: full Chinese rule/parameter spec for promoted V15 and V16.
 
 ## Cursor
 
 - `hype-ema-crossover-evolution.canvas.tsx`
 
-This Cursor canvas is the main ledger for `HYPE-EMA-X` promoted versions. The repo docs mirror and explain the rules, but do not replace the canvas ledger.
+This Cursor canvas is a legacy source. The canonical durable ledger is now `hype-ema-x-core-ledger.md`.
 
 ## Naming
 

@@ -4,6 +4,7 @@ Reports are local artifacts under `reports/` and are ignored by git.
 
 Use this file as the durable pointer layer:
 
+- The migrated core milestone ledger is `hype-cc-15m-milestone-comparison.md`.
 - HYPE candle-count reports generally use filenames beginning with `hype_v`, `hype_15m`, or `hyperliquid_hype`.
 - Family identity must be checked from the linked document or canvas before using a report.
 - Do not infer family identity from `v35` alone.

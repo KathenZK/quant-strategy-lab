@@ -40,9 +40,9 @@ When a Canvas mixes multiple families, split it into separate Markdown files rat
 ## Conversion Priority
 
 1. Core ledgers and promoted candidates:
-   - `hype-ema-crossover-evolution.canvas.tsx`
-   - `hype-trend-strategy-research.canvas.tsx`
-   - `hype-strategy-milestone-comparison.canvas.tsx`
+   - `hype-ema-crossover-evolution.canvas.tsx` -> `hype/families/ema-crossover/hype-ema-x-core-ledger.md`
+   - `hype-trend-strategy-research.canvas.tsx` -> `hype/families/ema-trend-breakout/hype-ema-tb-core-ledger.md`
+   - `hype-strategy-milestone-comparison.canvas.tsx` -> `hype/families/candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 2. Family decision material that affects canonical specs or live candidates.
 3. Diagnostics, ablations, and robustness checks referenced by existing `reports-index.md` files.
 4. Cross-asset transfer research.
@@ -51,6 +51,7 @@ When a Canvas mixes multiple families, split it into separate Markdown files rat
 ## Conversion Rules
 
 - Convert rendered content, not TSX source. `H1/H2/H3` become Markdown headings, `Text` becomes paragraphs, `Callout` becomes a blockquote with a bold title, and `Table` becomes a Markdown table.
+- Write generated research reports in Chinese by default unless the user explicitly requests another language.
 - Preserve original Canvas filename in a short source note near the top of each migrated file.
 - Do not cite bare version numbers in migrated filenames or headings when a family id is known. Prefer forms such as `HYPE-EMA-X-V17`, `HYPE-EMA-TB-V35`, and `HYPE-CC-V21`.
 - If the Canvas contains charts, preserve the underlying chart data as a table and add a short note that the original rendering was visual.

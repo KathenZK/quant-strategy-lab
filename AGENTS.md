@@ -30,6 +30,7 @@ When creating new research:
 - Prefer a document-first workflow.
 - Use generated one-off scripts for exploration.
 - Preserve final results in the relevant family docs as repository-tracked Markdown files.
+- Write new research reports in Chinese by default unless the user explicitly requests another language.
 - Do not create research reports, ledgers, or durable analysis in Cursor Canvas files or any project-private Cursor directory.
 - Use Canvas only for transient visualization when explicitly requested; if a Canvas is used, mirror the durable conclusion into the appropriate `docs/research/` Markdown file before treating the work as complete.
 - Only promote code back into `src/strategy_lab/` if it is reusable data infrastructure or a narrow dataset exporter.

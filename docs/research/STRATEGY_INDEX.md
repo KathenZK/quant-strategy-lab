@@ -14,11 +14,13 @@ Read `docs/research/hype/AI_CONTEXT.md` before reading any HYPE strategy documen
 
 ## Current Promoted Ledger Entrypoints
 
-- `HYPE-EMA-X`: Cursor canvas `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`
+- `HYPE-EMA-X`: `hype/families/ema-crossover/hype-ema-x-core-ledger.md`
   - `HYPE-EMA-X-V15`: high-win-rate / low-drawdown promoted research candidate.
   - `HYPE-EMA-X-V16`: high-return promoted research candidate.
   - `HYPE-EMA-X-V17`: V15/V16 hybrid promoted research candidate, balancing V16-like return with V15 drawdown.
   - `HYPE-EMA-X-V17.1`: V17 sizing-enhanced promoted research candidate, using `hq_scale=1.1`.
+- `HYPE-EMA-TB`: `hype/families/ema-trend-breakout/hype-ema-tb-core-ledger.md`
+- `HYPE-CC`: `hype/families/candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 - Repo rule mirrors:
   - `docs/research/hype/families/ema-crossover/v15-v16-promoted-strategy-specs.md`
   - `docs/research/hype/families/ema-crossover/v17-hybrid-ablation.md`

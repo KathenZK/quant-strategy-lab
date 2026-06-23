@@ -10,6 +10,7 @@ Use `canonical-specs/` for reproducible strategy definitions and parameter recor
 
 Important documents:
 
+- `hype-cc-15m-milestone-comparison.md`: migrated Markdown ledger for the HYPE-CC 15m milestone comparison.
 - `hype-v13-strategy-spec.md`: core V13 specification.
 - `hype-v18-atr672-strategy-spec.md`: ATR672 robust baseline.
 - `hype-v21-bidirectional-opposite-three-exit-strategy-spec.md`: bidirectional early-exit variant.
