@@ -8,7 +8,7 @@ Ledger id：`HYPE-5M-PBTR`
 
 ## 测试目的
 
-上一份 `hype-5m-r05732-strategy-ablation-2026-06-23.md` 显示，若只做单参数消融，几个方向可能同时改善策略：
+上一份 `../ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md` 显示，若只做单参数消融，几个方向可能同时改善策略：
 
 - 放宽 `pullback_buffer`。
 - 收紧 `stop_atr`。

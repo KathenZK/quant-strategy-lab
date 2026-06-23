@@ -45,7 +45,7 @@ When a Canvas mixes multiple families, split it into separate Markdown files rat
    - `hype-strategy-milestone-comparison.canvas.tsx` -> `hype/families/candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 2. Family decision material that affects canonical specs or live candidates:
    - migrated under each family `legacy-canvas/` directory.
-3. Diagnostics, ablations, and robustness checks referenced by existing `reports-index.md` files:
+3. Diagnostics, ablations, and robustness checks referenced by existing family `README.md` files:
    - migrated under each family `legacy-canvas/` directory.
 4. Cross-asset transfer research:
    - migrated under `hype/transfer/legacy-canvas/` and `mu/legacy-canvas/`.
@@ -61,7 +61,7 @@ The full migration mapping is recorded in `legacy-canvas-migration-manifest.md`.
 - Preserve original Canvas filename in a short source note near the top of each migrated file.
 - Do not cite bare version numbers in migrated filenames or headings when a family id is known. Prefer forms such as `HYPE-EMA-X-V17`, `HYPE-EMA-TB-V35`, and `HYPE-CC-V21`.
 - If the Canvas contains charts, preserve the underlying chart data as a table and add a short note that the original rendering was visual.
-- After migrating a report, update the relevant family `reports-index.md` or `decision-log.md`.
+- After migrating a report, update the relevant family `README.md` or `decision-log.md`.
 - Do not delete legacy Canvas files until the Markdown migration has been reviewed.
 
 ## Automation Boundary

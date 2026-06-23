@@ -104,14 +104,14 @@
 
 每个达标组合都有一份中文实盘代码规格文档，包含指标定义、信号生成、开仓、持有、平仓、子腿参数和消融实验。
 
-- 规格索引：`docs/research/hype/families/5m-pullback-trail/ensemble-specs/README.md`
-- `HYPE-5M-ENS-S01`: `ensemble-specs/hype-5m-ensemble-s01-8l-4x-live-spec.md`
-- `HYPE-5M-ENS-S02`: `ensemble-specs/hype-5m-ensemble-s02-16l-2p5x-live-spec.md`
-- `HYPE-5M-ENS-S03`: `ensemble-specs/hype-5m-ensemble-s03-8l-3x-live-spec.md`
-- `HYPE-5M-ENS-S04`: `ensemble-specs/hype-5m-ensemble-s04-12l-2p5x-live-spec.md`
-- `HYPE-5M-ENS-S05`: `ensemble-specs/hype-5m-ensemble-s05-5l-3x-live-spec.md`
-- `HYPE-5M-ENS-S06`: `ensemble-specs/hype-5m-ensemble-s06-16l-2x-live-spec.md`
-- `HYPE-5M-ENS-S07`: `ensemble-specs/hype-5m-ensemble-s07-8l-2p5x-live-spec.md`
+- 规格索引：`../live-specs/ensemble-specs/README.md`
+- `HYPE-5M-ENS-S01`: `../live-specs/ensemble-specs/hype-5m-ensemble-s01-8l-4x-live-spec.md`
+- `HYPE-5M-ENS-S02`: `../live-specs/ensemble-specs/hype-5m-ensemble-s02-16l-2p5x-live-spec.md`
+- `HYPE-5M-ENS-S03`: `../live-specs/ensemble-specs/hype-5m-ensemble-s03-8l-3x-live-spec.md`
+- `HYPE-5M-ENS-S04`: `../live-specs/ensemble-specs/hype-5m-ensemble-s04-12l-2p5x-live-spec.md`
+- `HYPE-5M-ENS-S05`: `../live-specs/ensemble-specs/hype-5m-ensemble-s05-5l-3x-live-spec.md`
+- `HYPE-5M-ENS-S06`: `../live-specs/ensemble-specs/hype-5m-ensemble-s06-16l-2x-live-spec.md`
+- `HYPE-5M-ENS-S07`: `../live-specs/ensemble-specs/hype-5m-ensemble-s07-8l-2p5x-live-spec.md`
 
 消融覆盖三类：
 

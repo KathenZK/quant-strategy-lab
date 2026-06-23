@@ -306,8 +306,8 @@ V2 实盘验收线：
 
 ## Reports
 
-- `hype-5m-r05732-strategy-ablation-2026-06-23.md`
-- `hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
+- `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`
+- `research-notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
 
 ## Reproduction
 

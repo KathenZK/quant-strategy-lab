@@ -32,3 +32,20 @@ Important documents:
 - Any candle-count reversal document under `../candle-count-reversal/`
 
 When citing this family, use names like `HYPE-EMA-TB-V30`, `HYPE-EMA-TB-V35`, or `HYPE-EMA-TB-V36`.
+
+## Local Report Artifacts
+
+Reports are local artifacts under `reports/` and are ignored by git. Use this README as the durable pointer layer for HYPE-EMA-TB report artifacts.
+
+Trend-breakout reports often use filenames such as:
+
+- `hype_ema_*`
+- `hype_v30_*`
+- `hype_v34_*`
+- `hype_v35_*`
+- `hype_v36_*`
+- `hype_v15_effective_cross_*`
+
+Family identity must be checked from the target document or migrated Canvas note. Do not infer family identity from `v35` alone.
+
+Binance HYPE `5m` strategy research has moved to the independent `HYPE-5M-PBTR` family under `../5m-pullback-trail/README.md`.

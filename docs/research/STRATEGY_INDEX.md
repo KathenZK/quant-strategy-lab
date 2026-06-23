@@ -24,7 +24,7 @@ Read `docs/research/hype/AI_CONTEXT.md` before reading any HYPE strategy documen
 - `HYPE-5M-PBTR`: `hype/families/5m-pullback-trail/hype-5m-pullback-trail-core-ledger.md`
   - Independent Binance HYPE `5m` pullback + ATR trailing-stop research line.
   - Its local `V1/V2` numbers are not the legacy 15m `HYPE-EMA-TB` V1/V2/V35 sequence.
-  - V2 implementation handoff spec: `hype/families/5m-pullback-trail/hype-5m-pullback-trail-v2-live-spec.md`.
+  - V2 implementation handoff spec: `hype/families/5m-pullback-trail/live-specs/hype-5m-pullback-trail-v2-live-spec.md`.
 - `HYPE-CC`: `hype/families/candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 - Repo rule mirrors:
   - `docs/research/hype/families/ema-crossover/v15-v16-promoted-strategy-specs.md`

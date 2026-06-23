@@ -27,3 +27,18 @@ Use `diagnostics/` for overfit analysis and caveats.
 - Any trend-breakout document under `../ema-trend-breakout/`
 
 When citing this family, use names like `HYPE-CC-V13`, `HYPE-CC-V21`, or `HYPE-CC-V35`.
+
+## Local Report Artifacts
+
+Reports are local artifacts under `reports/` and are ignored by git. Use this README as the durable pointer layer for HYPE-CC report artifacts.
+
+Historical report filename families observed for this lineage:
+
+- `hype_v13_*`
+- `hype_v18_*`
+- `hype_v21_*`
+- `hype_v24_*`
+- `hype_v35_*`
+- `hyperliquid_hype_v13_v15_v18_*`
+
+Family identity must be checked from the linked document or migrated Canvas note before using a report. Do not infer family identity from `v35` alone.
