@@ -36,14 +36,11 @@ The main evidence is currently in repo Markdown and archived scripts:
 - `docs/research/hype/families/ema-crossover/v16-v17-trend-state-search.md`: V16/V17 result note and next research direction.
 - `docs/research/hype/families/ema-crossover/v17-hybrid-ablation.md`: formal V17 hybrid definition, window metrics, and parameter ablation conclusions.
 - `docs/research/hype/families/ema-crossover/hype-ema-x-core-ledger.md`: main Markdown ledger for promoted HYPE-EMA-X versions.
-- `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`: legacy Cursor source for the migrated ledger.
 - `docs/research/hype/families/ema-crossover/v15-v16-promoted-strategy-specs.md`: full Chinese rule/parameter spec for promoted V15 and V16.
 
-## Cursor
+## Archived Cursor Source
 
-- `hype-ema-crossover-evolution.canvas.tsx`
-
-This Cursor canvas is a legacy source. The canonical durable ledger is now `hype-ema-x-core-ledger.md`.
+The former Cursor canvas source for this family has been migrated. The canonical durable ledger is now `hype-ema-x-core-ledger.md`; migration evidence is archived under `../../../../../archive/docs/hype-cursor-artifacts/`.
 
 ## Naming
 

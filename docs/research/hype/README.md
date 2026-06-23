@@ -18,24 +18,20 @@ HYPE has multiple strategy families with overlapping version numbers. The main r
 - `families/ema-trend-breakout/hype-ema-tb-core-ledger.md`: HYPE-EMA-TB trend strategy research ledger.
 - `families/candle-count-reversal/hype-cc-15m-milestone-comparison.md`: HYPE-CC 15m milestone comparison ledger.
 
-## Legacy Cursor Ledgers
+## Transfer Notes
 
-Historical Cursor canvas files still live in Cursor's project-private directory. They are migration sources, not canonical storage for new research. The repo-managed indexes are:
+- `transfer/`: legacy cross-asset checks that apply HYPE kernels to BTC, XMR, XAU, TradFi perpetuals, or broad CMC universes. This directory is currently retained for review and should not be treated as a fourth HYPE strategy family.
+- New promoted transfer research should get an explicit direction or asset family, as `MU-HYPE-XFER` does under `../mu/`.
 
-- `cursor/canvas-catalog.md`: full canvas filename catalog.
-- `cursor/canvas-groups/README.md`: canvas groups by research theme.
-- `cursor/agent-artifacts.md`: transcript/tool artifact management rules.
+## Archived Cursor Indexes
 
-Legacy core canvas files:
-
-- [HYPE Trend Strategy Research](/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-trend-strategy-research.canvas.tsx)
-- [HYPE 15m Strategy Milestone Comparison](/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-strategy-milestone-comparison.canvas.tsx)
+Historical Cursor Canvas and agent artifact indexes have been archived under `../../../archive/docs/hype-cursor-artifacts/`. They are migration evidence, not active research entrypoints.
 
 ## Reading Rules
 
 1. Start with `AI_CONTEXT.md`.
 2. Choose a family.
 3. Read that family's `README.md` and `decision-log.md`.
-4. Only then open specs, diagnostics, reports indexes, or Canvas files.
+4. Only then open specs, diagnostics, or reports indexes.
 
 New HYPE research reports and durable conclusions must be saved as Markdown under the relevant `families/` directory. Canvas may only be used as a temporary visualization surface when explicitly requested.

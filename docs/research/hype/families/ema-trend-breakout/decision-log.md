@@ -27,4 +27,4 @@ This is the family-level reading path for HYPE EMA trend-breakout research.
 
 ## Evidence Policy
 
-Use family docs first, Cursor Canvas ledgers second, and archived scripts/code only for reproduction archaeology.
+Use family docs first. Archived Cursor indexes and archived scripts/code are only for migration evidence or reproduction archaeology.

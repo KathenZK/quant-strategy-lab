@@ -751,8 +751,8 @@ on_position_closed(exit_reason):
 
 当前 Python 策略参数来源：
 
-- `src/strategy_lab/strategies/candle_count_short/strategy.py`
-- `src/strategy_lab/strategies/candle_count_short/intrabar_backtest.py`
+- `archive/code/platform/src/strategy_lab/strategies/candle_count_short/strategy.py`
+- `archive/code/platform/src/strategy_lab/strategies/candle_count_short/intrabar_backtest.py`
 
 当前因子定义来源：
 

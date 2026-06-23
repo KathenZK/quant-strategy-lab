@@ -4,9 +4,12 @@ This directory keeps historical project material that should not define the acti
 
 ## Contents
 
-- `code/platform/`: retired strategy platform code, workflow orchestration, journal/reporting code, dashboard API, frontend, and their old tests.
+- `code/platform/`: retired strategy platform code, workflow orchestration, dashboard API, backtest/paper-trading helpers, journal/reporting code, and old platform tests.
+- `code/web/`: retired Dashboard frontend source.
+- `code/web-root/`: retired Dashboard root package/workspace wrapper.
 - `configs/`: retired top-level environment configuration examples.
-- `docs/`: retired planning and implementation documents.
+- `docs/`: retired planning, migration, and Cursor artifact index documents.
+- `research/`: retired strategy research and platform experiment documents.
 - `scripts/research/`: one-off historical research, plotting, comparison, and backtest scripts.
 - `reports/legacy/`: small tracked report artifacts that used to live under `reports/`.
 

@@ -8,8 +8,9 @@ This folder contains the old strategy-platform layer:
 - journal, experiment, comparison, and reporting code
 - dashboard API
 - previous frontend code under `archive/code/web/`
-- previous platform tests under `tests/`
+- previous platform tests under `archive/code/platform/tests/`
 
 The active package under `src/strategy_lab/` now keeps only data and narrow research infrastructure.
+The root `tests/` directory covers the active data layer, CLI, settings, and narrow research infrastructure.
 
 Use this code only for historical reference or deliberate code recovery.

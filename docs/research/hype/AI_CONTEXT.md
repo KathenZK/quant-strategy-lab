@@ -27,7 +27,7 @@ For `HYPE-EMA-X-V15`, `HYPE-EMA-X-V16`, `HYPE-EMA-X-V17`, and `HYPE-EMA-X-V17.1`
    - `families/ema-crossover/v15-v16-promoted-strategy-specs.md`
    - `families/ema-crossover/v17-hybrid-ablation.md`
 
-Legacy source material exists in `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`, but Markdown under `docs/research/` is the durable entrypoint.
+Legacy Cursor source material was migrated into repository Markdown. Markdown under `docs/research/` is the durable entrypoint.
 
 ## Hard Rules
 
@@ -39,10 +39,6 @@ Legacy source material exists in `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-q
 - Archived code under `archive/code/platform/` is historical unless the user asks for code archaeology.
 - Active code under `src/strategy_lab/` is data/research infrastructure, not strategy truth.
 
-## Cursor Assets
+## Archived Cursor Assets
 
-Legacy Cursor canvas files are stored outside the repo at:
-
-`/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/`
-
-Use `cursor/canvas-catalog.md` and `cursor/canvas-groups/` only as migration indexes for those hidden files.
+Legacy Cursor canvas files are stored outside the repository in Cursor-managed project-private storage. The former repo-managed Canvas and agent artifact indexes have been archived under `../../../archive/docs/hype-cursor-artifacts/`. Treat them as migration evidence, not active research entrypoints.

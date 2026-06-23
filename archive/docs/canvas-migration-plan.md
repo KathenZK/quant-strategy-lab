@@ -14,10 +14,10 @@ Legacy Canvas files currently live outside the repo:
 
 `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/`
 
-The existing repo indexes are:
+The former repo indexes are now archived at:
 
-- `docs/research/hype/cursor/canvas-catalog.md`
-- `docs/research/hype/cursor/canvas-groups/`
+- `archive/docs/hype-cursor-artifacts/canvas-catalog.md`
+- `archive/docs/hype-cursor-artifacts/canvas-groups/`
 
 Treat those indexes as migration inventories, not canonical research entrypoints.
 

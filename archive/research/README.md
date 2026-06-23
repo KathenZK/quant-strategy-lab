@@ -1,0 +1,12 @@
+# Archived Research
+
+This directory keeps historical strategy research and platform experiment notes
+that should not define current research entrypoints.
+
+- `legacy-strategies/`: historical or abandoned strategy research, including migrated legacy Canvas reports for external/non-core strategies.
+- `platform-experiments/`: historical platform, workflow, dashboard, and generic strategy experiments.
+
+Use active research documents under `docs/research/` first. Treat this archive
+as evidence for past exploration unless a current research index explicitly
+promotes a document back into scope.
+

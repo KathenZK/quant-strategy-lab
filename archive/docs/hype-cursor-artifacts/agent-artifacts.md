@@ -1,4 +1,4 @@
-# Cursor Agent Artifacts
+# Archived Cursor Agent Artifacts
 
 Cursor project-private artifacts for this repository live at:
 
@@ -12,9 +12,9 @@ Known subdirectories:
 - `agent-tools/`: Cursor tool-output text files.
 - `terminals/`: Cursor terminal state.
 
-Management rules:
+Archived management rules:
 
 - Do not make canonical research depend only on hidden Cursor state.
 - Summarize important findings into `docs/research/`.
-- Use `canvas-catalog.md` and `canvas-groups/` as the repo-managed index.
+- Use `canvas-catalog.md` and `canvas-groups/` only as historical migration indexes.
 - Treat transcripts and tool files as process evidence, not stable strategy specs.

@@ -4,7 +4,7 @@ Date: 2026-06-22
 
 Canonical main ledger:
 
-`/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`
+`hype-ema-x-core-ledger.md`
 
 ## Version Identity
 

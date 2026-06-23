@@ -14,7 +14,7 @@
 - `research/hype/families/candle-count-reversal/`：`HYPE-CC` 家族。
 - `research/hype/families/ema-crossover/`：`HYPE-EMA-X` 家族。
 - `research/hype/families/ema-trend-breakout/`：`HYPE-EMA-TB` 家族。
-- `research/hype/cursor/`：Cursor Canvas 和 agent 历史产物索引。
+- `research/hype/transfer/`：暂保留的 HYPE 跨资产迁移验证历史材料，不是新的 HYPE 策略家族。
 - `research/mu/`：`MU-HYPE-XFER` 迁移研究。
 
 旧策略平台、比较框架、工作流、Dashboard 和非 HYPE 策略文档统一归档在顶层 `archive/`。
@@ -39,12 +39,24 @@ data/
   normalized/
   features/
   _state/
+  cache/
+  external/
+  reports/
+  strategy_lab.duckdb
 
 reports/
   _registry/
   runs/
   experiments/
 ```
+
+说明：
+
+- `data/raw`、`data/normalized`、`data/features` 是研究默认使用的数据湖核心层。
+- `data/cache` 和 `data/external` 保存下载缓存或第三方外部数据。
+- `data/reports` 只放和数据处理直接相关的本地产物。
+- 顶层 `reports/` 是研究脚本和旧 run registry 的本地产物目录，已被 git 忽略；它不是长期知识入口。
+- `strategy_lab.duckdb` 是本地仓库级查询/缓存数据库文件，默认不作为研究结论引用。
 
 ## OHLCV 分区
 

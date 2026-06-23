@@ -1,13 +1,13 @@
 # HYPE-EMA-X V15 / V16 正式候选规则说明
 
-本文解释 Cursor 主台账中的两个正式候选：
+本文解释 `hype-ema-x-core-ledger.md` 中的两个正式候选：
 
 - `HYPE-EMA-X-V15`：高胜率 / 低回撤版
 - `HYPE-EMA-X-V16`：高收益版
 
-两者都来自 V17 trend-state search，但 Cursor 主台账版本号按正式候选重新编号。主台账文件是 `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`；本文是 repo 内的规则说明镜像。
+两者都来自 V17 trend-state search，但主台账版本号按正式候选重新编号。当前主台账是 `hype-ema-x-core-ledger.md`；本文是 repo 内的规则说明镜像。
 
-`HYPE-EMA-X-V17` 已在同一 Cursor 主台账中正式登记为 V15/V16 合体平衡版；`HYPE-EMA-X-V17.1` 也已登记为 V17 的仓位增强版。两者定义和全参数消融见 `v17-hybrid-ablation.md`。
+`HYPE-EMA-X-V17` 已在同一 Markdown 主台账中正式登记为 V15/V16 合体平衡版；`HYPE-EMA-X-V17.1` 也已登记为 V17 的仓位增强版。两者定义和全参数消融见 `v17-hybrid-ablation.md`。
 
 ## 一句话区别
 
