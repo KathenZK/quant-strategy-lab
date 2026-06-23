@@ -61,8 +61,13 @@ def build_chart_html(frame: pd.DataFrame, trades: pd.DataFrame, result: dict[str
         entry_time = unix_seconds(trade.entry_ts)
         exit_time = unix_seconds(trade.exit_ts)
         entry_label = "开多" if is_long else "开空"
-        entry_kind = getattr(trade, "entry_kind", "")
-        kind_label = " late" if entry_kind == "late" else ""
+        entry_kind = str(getattr(trade, "entry_kind", "") or "")
+        if "_" in entry_kind:
+            kind_label = f" {entry_kind.replace('_', ' ')}"
+        elif entry_kind:
+            kind_label = f" {entry_kind}"
+        else:
+            kind_label = ""
         exit_label = "平多" if is_long else "平空"
         entry_color = "#22c55e" if is_long else "#ef4444"
         exit_color = "#86efac" if trade.pnl_pct > 0 else "#fb7185"

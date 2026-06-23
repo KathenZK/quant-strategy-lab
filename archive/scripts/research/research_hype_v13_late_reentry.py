@@ -176,6 +176,7 @@ def run_late_reentry(
     signal_override: np.ndarray | None = None,
     signal_kind_override: np.ndarray | None = None,
     entry_allocation_scale: dict[str, float] | None = None,
+    max_entry_allocation: float | None = None,
 ) -> dict[str, Any]:
     ts_series = pd.to_datetime(frame.ts, utc=True)
     if start_ts is None:
@@ -303,6 +304,8 @@ def run_late_reentry(
                     if pending_entry_kind.startswith(prefix):
                         next_allocation *= scale
                         break
+            if max_entry_allocation is not None:
+                next_allocation = min(max_entry_allocation, next_allocation)
             if next_allocation > 0:
                 pos = pending_entry
                 allocation = next_allocation
