@@ -7,7 +7,7 @@ from typing import Any
 import pandas as pd
 
 
-DOC_DIR = Path("docs/research/hype/families/ema-trend-breakout/ensemble-specs")
+DOC_DIR = Path("docs/research/hype/families/5m-pullback-trail/ensemble-specs")
 SUMMARY_PATH = Path("reports/hype_5m_ensemble_ablation_summary.csv")
 DROP_LEG_PATH = Path("reports/hype_5m_ensemble_ablation_drop_leg.csv")
 LEVERAGE_PATH = Path("reports/hype_5m_ensemble_ablation_leverage.csv")
@@ -178,7 +178,7 @@ def combo_id(legs: int, leverage: float) -> str:
 
 def filename_for(strategy_id: str, legs: int, leverage: float) -> str:
     leverage_text = f"{leverage:g}".replace(".", "p")
-    return f"hype-ema-tb-5m-ensemble-{strategy_id.lower()}-{legs}l-{leverage_text}x-live-spec.md"
+    return f"hype-5m-ensemble-{strategy_id.lower()}-{legs}l-{leverage_text}x-live-spec.md"
 
 
 def pct(value: Any) -> str:
@@ -446,11 +446,11 @@ def render_doc(
     exec_rows: pd.DataFrame,
 ) -> str:
     cid = combo_id(count, leverage)
-    title = f"# HYPE-EMA-TB-5M-ENS-{strategy_id}: {count} 子腿 / {leverage:g}x 实盘代码规格"
+    title = f"# HYPE-5M-ENS-{strategy_id}: {count} 子腿 / {leverage:g}x 实盘代码规格"
     primary_bias = "只做空为主，含少量多空双向子腿" if (legs["side_mode"] == "both").any() else "只做空"
     return f"""{title}
 
-Family id: `HYPE-EMA-TB`
+Family id: `HYPE-5M-PBTR`
 
 状态：研究候选规格，不是已晋升线上版本。本文用于让 AI 直接生成实盘代码骨架和策略逻辑；上线前必须另做 dry-run、风控和交易所复核。
 
@@ -546,7 +546,7 @@ def main() -> None:
         path.write_text(re.sub(r"\n{3,}", "\n\n", content).strip() + "\n")
         index_rows.append(
             [
-                f"`HYPE-EMA-TB-5M-ENS-{strategy_id}`",
+                f"`HYPE-5M-ENS-{strategy_id}`",
                 f"[{filename}]({filename})",
                 count,
                 f"{lev:g}x",
@@ -557,7 +557,7 @@ def main() -> None:
             ]
         )
 
-    index = f"""# HYPE-EMA-TB 5m Ensemble 实盘规格文档索引
+    index = f"""# HYPE-5M-PBTR Ensemble 实盘规格文档索引
 
 这些文档对应当前报告里全部 7 个 `target_pass=True` 的 one-position ensemble 组合。它们不是 7 个互不相关的策略家族，而是同一批精筛子腿在不同子腿数量和杠杆下的 7 个达标配置。
 

@@ -4,8 +4,6 @@
 
 Ledger id：`HYPE-5M-PBTR`
 
-Parent routing family：`HYPE-EMA-TB`
-
 > 注意：`HYPE-5M-PBTR` 是新的 HYPE 5m 回踩-追踪止损研究线。本文中的 V1/V2 只在 `HYPE-5M-PBTR` 主账内有效，不等于原 `hype-ema-tb-core-ledger.md` 里的 15m V1/V2/V35 系列。
 
 ## 测试目的

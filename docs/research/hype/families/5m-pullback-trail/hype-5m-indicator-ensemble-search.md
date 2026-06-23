@@ -104,7 +104,7 @@
 
 每个达标组合都有一份中文实盘代码规格文档，包含指标定义、信号生成、开仓、持有、平仓、子腿参数和消融实验。
 
-- 规格索引：`docs/research/hype/families/ema-trend-breakout/ensemble-specs/README.md`
+- 规格索引：`docs/research/hype/families/5m-pullback-trail/ensemble-specs/README.md`
 - `HYPE-5M-ENS-S01`: `ensemble-specs/hype-5m-ensemble-s01-8l-4x-live-spec.md`
 - `HYPE-5M-ENS-S02`: `ensemble-specs/hype-5m-ensemble-s02-16l-2p5x-live-spec.md`
 - `HYPE-5M-ENS-S03`: `ensemble-specs/hype-5m-ensemble-s03-8l-3x-live-spec.md`

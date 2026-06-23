@@ -1,6 +1,6 @@
 # HYPE-5M-ENS-S02: 16 子腿 / 2.5x 实盘代码规格
 
-Family id: `HYPE-EMA-TB`
+Family id: `HYPE-5M-PBTR`
 
 状态：研究候选规格，不是已晋升线上版本。本文用于让 AI 直接生成实盘代码骨架和策略逻辑；上线前必须另做 dry-run、风控和交易所复核。
 

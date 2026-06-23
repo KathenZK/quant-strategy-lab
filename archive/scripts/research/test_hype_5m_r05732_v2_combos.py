@@ -194,7 +194,7 @@ def main() -> None:
     REPORT_PATH.write_text(
         json.dumps(
             {
-                "strategy_line": "HYPE-EMA-TB 5m R05732",
+                "strategy_line": "HYPE-5M-PBTR R05732",
                 "source": "synchronous tweaks from R05732 full-parameter ablation",
                 "constraints": {
                     "min_slice_win_rate": MIN_SLICE_WIN,
