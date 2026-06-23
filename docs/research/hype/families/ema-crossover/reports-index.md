@@ -21,6 +21,8 @@ Key historical report names:
 - `hype_v17_trend_state_search*`
 - `hype_v17_hybrid_ablation*`
 
+Migrated legacy Canvas reports live under `legacy-canvas/`.
+
 Do not use these report names to infer `HYPE-EMA-TB`; this is the `HYPE-EMA-X` lineage unless a document explicitly says otherwise.
 
 `hype_v15_*` and `hype_v16_*` report filenames are historical research batch names. The promoted main-ledger versions `HYPE-EMA-X-V15`, `HYPE-EMA-X-V16`, `HYPE-EMA-X-V17`, and `HYPE-EMA-X-V17.1` are recorded in `hype-ema-x-core-ledger.md`; supporting repo mirrors are `v15-v16-promoted-strategy-specs.md` and `v17-hybrid-ablation.md`. The old Cursor canvas remains only as a legacy source.

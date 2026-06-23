@@ -5,7 +5,7 @@ This is the family-level reading path for HYPE EMA golden/death cross research.
 ## Current Boundary
 
 - This is one of the four core research directions in this repository.
-- It is mostly preserved through archived scripts and Cursor Canvas rather than polished canonical specs.
+- It is preserved through repository Markdown ledgers and archived scripts rather than polished canonical specs.
 - It should not be treated as a failed shallow attempt.
 - It should not be collapsed into `HYPE-EMA-TB`.
 
@@ -26,7 +26,7 @@ This is the family-level reading path for HYPE EMA golden/death cross research.
 - `HYPE-EMA-X-V17`: promoted V15/V16 hybrid candidate. Source row: `HYBRID_score5_dist04_atr11` / `HYPE_EMA_X_V17`. Metrics: `+2910.74% / -17.79% / 90.91% / 33 trades`.
 - `HYPE-EMA-X-V17.1`: promoted V17 sizing-enhanced candidate. Source row: `HYPE_EMA_X_V17__hq_scale=1p1`. Metrics: `+3861.48% / -19.44% / 90.91% / 33 trades`.
 
-The canonical main ledger for these promoted versions is Cursor canvas `/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-ema-crossover-evolution.canvas.tsx`.
+The canonical main ledger for these promoted versions is `hype-ema-x-core-ledger.md`. The old Cursor canvas is retained only as a legacy source.
 
 ## Research Batch Notes
 
@@ -37,4 +37,4 @@ The canonical main ledger for these promoted versions is Cursor canvas `/Users/Z
 
 ## Evidence Policy
 
-Use the archived script names and Cursor Canvas title to reconstruct the lineage. If a polished spec is needed later, create it under `canonical-specs/` from these evidence files.
+Use `hype-ema-x-core-ledger.md`, `legacy-canvas/`, and the archived script names to reconstruct the lineage. If a polished spec is needed later, create it under `canonical-specs/` from these evidence files.

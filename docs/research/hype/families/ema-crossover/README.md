@@ -9,6 +9,7 @@ Do not merge this with `HYPE-EMA-TB`. Both use EMA concepts, but `HYPE-EMA-X` is
 ## Core Ledger
 
 - `hype-ema-x-core-ledger.md`: migrated Markdown ledger for HYPE-EMA-X version evolution, promoted V15/V16/V17/V17.1 candidates, ablations, and implementation status.
+- `legacy-canvas/`: migrated historical Canvas reports for HYPE-EMA-X experiments and diagnostics.
 
 ## Evidence Surface
 

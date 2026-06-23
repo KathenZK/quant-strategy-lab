@@ -43,10 +43,16 @@ When a Canvas mixes multiple families, split it into separate Markdown files rat
    - `hype-ema-crossover-evolution.canvas.tsx` -> `hype/families/ema-crossover/hype-ema-x-core-ledger.md`
    - `hype-trend-strategy-research.canvas.tsx` -> `hype/families/ema-trend-breakout/hype-ema-tb-core-ledger.md`
    - `hype-strategy-milestone-comparison.canvas.tsx` -> `hype/families/candle-count-reversal/hype-cc-15m-milestone-comparison.md`
-2. Family decision material that affects canonical specs or live candidates.
-3. Diagnostics, ablations, and robustness checks referenced by existing `reports-index.md` files.
-4. Cross-asset transfer research.
-5. Abandoned platform or external-strategy experiments.
+2. Family decision material that affects canonical specs or live candidates:
+   - migrated under each family `legacy-canvas/` directory.
+3. Diagnostics, ablations, and robustness checks referenced by existing `reports-index.md` files:
+   - migrated under each family `legacy-canvas/` directory.
+4. Cross-asset transfer research:
+   - migrated under `hype/transfer/legacy-canvas/` and `mu/legacy-canvas/`.
+5. Abandoned platform or external-strategy experiments:
+   - migrated under `archive/research/legacy-strategies/legacy-canvas/` or `archive/research/platform-experiments/legacy-canvas/`.
+
+The full migration mapping is recorded in `legacy-canvas-migration-manifest.md`.
 
 ## Conversion Rules
 

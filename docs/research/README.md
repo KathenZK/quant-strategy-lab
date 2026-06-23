@@ -6,6 +6,7 @@ Use these entrypoints:
 
 - `STRATEGY_INDEX.md`: global strategy-family map and naming rules.
 - `canvas-migration-plan.md`: migration plan for legacy Cursor Canvas research assets.
+- `legacy-canvas-migration-manifest.md`: full mapping from migrated legacy Canvas files to repository Markdown.
 - `hype/AI_CONTEXT.md`: HYPE-specific reading rules.
 - `hype/families/`: strategy-family archives.
 - `hype/cursor/`: Cursor canvas and AI-process artifact indexes.

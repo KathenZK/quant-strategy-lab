@@ -6,6 +6,8 @@ Canvas 根目录：
 
 不要移动 `.canvas.tsx` 文件本体；Cursor 只识别这个目录下的扁平 Canvas 文件。本页只做完整文件名对账；按主题拆分的入口见 `canvas-groups/README.md`。
 
+这些 legacy Canvas 已迁移到仓库 Markdown。完整映射见 `../../legacy-canvas-migration-manifest.md`；后续维护以 Markdown 为准。
+
 ## 核心台账
 
 - [hype-trend-strategy-research.canvas.tsx](/Users/ZK/.cursor/projects/Users-ZK-OpenCode-quant-strategy-lab/canvases/hype-trend-strategy-research.canvas.tsx)：legacy HYPE 趋势策略研究总台账；已迁移到 `../families/ema-trend-breakout/hype-ema-tb-core-ledger.md`。
