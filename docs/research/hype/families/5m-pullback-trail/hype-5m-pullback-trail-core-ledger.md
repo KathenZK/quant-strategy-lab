@@ -45,6 +45,7 @@ Created：2026-06-23
 | --- | ---------------------------------------------------- |
 | V1  | 第一版可实盘观察基线，来自 `HYPE_PP_R05732__dir_htf_ge_0.688442`。 |
 | V2  | 基于 V1 全参数消融后的同步微调版本。                                 |
+| V2.1 | 基于 V2 实盘成本消融后的参数简化和候选分支；不改变 `HYPE-5M-PBTR` 核心机制。       |
 | 后缀  | 若后续只是改变过滤强度或执行保护，可用 V2A/V2B；若改变核心机制，再升 V3。           |
 
 
@@ -55,6 +56,11 @@ Created：2026-06-23
 | ----------------- | --------------------------------------------------------------------------------------------------- | ------------------------------- | ------ | --------- | -------- | ------ | -------- | -------- | --------------------------------- |
 | `HYPE-5M-PBTR-V1` | R05732 基线：`pullback_buffer=0.0025`，`tp_atr=1.875`，`stop_atr=0.75`，`dir_htf>=0.688442`               | live dry-run candidate          | `1340` | `29.07x`  | `59.18%` | `2.58` | `-7.70%` | `58.29%` | 胜率体验更好，频率中等，适合作为第一版基线。            |
 | `HYPE-5M-PBTR-V2` | 同步微调：`pullback_buffer=0.01`，删除固定止盈，`stop_atr=0.5`，`roc_window=96`，`min_efficiency=0`，`dir_htf>=0.5` | research live-dry-run candidate | `2515` | `548.67x` | `57.46%` | `2.79` | `-6.85%` | `56.23%` | 频率和收益显著提高，胜率略降；建议与 V1 并行 dry-run。 |
+| `HYPE-5M-PBTR-V2.1-clean` | V2 实盘成本口径简化：固定/移除不生效参数，保留核心入场与 ATR trailing exit。                                      | preferred simplified V2 expression | `2521` | `181.96x` | `52.44%` | `2.77` | `-7.01%` | 见报告 | 与 V2 实盘成本表现几乎一致，适合作为新解释/实现基线。 |
+| `HYPE-5M-PBTR-V2.1A` | 在 V2.1-clean 上放开 RSI 上下界。                                                                      | return candidate                | `3146` | `352.15x` | `51.40%` | `2.64` | `-6.62%` | 见报告 | 收益最高、回撤改善，但胜率下降；适合继续 dry-run 观察。 |
+| `HYPE-5M-PBTR-V2.1B` | 在 V2.1-clean 上去掉 `min_dir_roc`。                                                                  | clean-plus candidate            | `2537` | `185.51x` | `52.38%` | `2.77` | `-7.01%` | 见报告 | 低风险进一步简化，收益略升，行为接近 V2.1-clean。 |
+| `HYPE-5M-PBTR-V2.1C-HTF` | 在 V2.1-clean 上提高最终 `dir_htf` 阈值到 `0.688442`。                                                  | stable candidate                | `1823` | `71.37x`  | `53.70%` | `2.85` | `-7.27%` | 见报告 | 胜率和盈亏比提高，但交易数和收益显著下降，回撤略变差。 |
+| `HYPE-5M-PBTR-V2.1C-ADX14` | 在 V2.1-clean 上加入 `min_adx=14`。                                                               | stable candidate                | `2351` | `153.61x` | `53.08%` | `2.79` | `-7.01%` | 见报告 | 更温和的稳定版，胜率提高且回撤不变，收益低于 clean。 |
 
 
 ## V1 Specification
@@ -169,6 +175,138 @@ ema21_96_pb0.01_tp99_sl0.5_chop62_eff0_rsi55_roc96_htf0.5
 - 空头：`1151` 笔，胜率 `58.04%`，payoff `2.90`，profit factor `4.01`。
 - 退出：全部为 trailing stop，因为固定止盈被等效删除。
 - 平均持仓：`7.22` 根 5m K，约 `36.1` 分钟。
+
+## V2.1 Live-Cost Variant Ledger
+
+来源报告：`ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`。
+
+成本口径来自实盘统计，不同于旧研究默认成本：
+
+```text
+fee = 4.1466 bps / turnover
+entry_slippage = +10.73 bps
+exit_slippage = -2.64 bps
+net_slippage = +4.0449 bps / total turnover
+```
+
+V2.1 系列的目的不是改变 `HYPE-5M-PBTR` 核心机制，而是在 V2 实盘成本消融后拆分两个动作：
+
+1. 先得到可解释性更干净的 `HYPE-5M-PBTR-V2.1-clean`。
+2. 再在 V2.1-clean 上测试收益增强、进一步简化、稳定性增强分支。
+
+### V2.1-clean
+
+Canonical name：`HYPE-5M-PBTR-V2.1-clean`
+
+相对 V2：
+
+| 参数 | V2.1-clean 处理 |
+| --- | --- |
+| `max_regime_age` | 固定/移除，设为 `100000`，不再作为真实约束 |
+| `max_dist_ema` | 固定/移除，设为 `99.0`，不再作为真实约束 |
+| `min_dir_cmf` | 固定/移除，设为 `-99.0`，不再作为真实约束 |
+| `max_hold_bars` | 固定为 `96`；上一轮显示 `96/576/100000` 结果相同 |
+| `exit_ema` | 保持 `0`，不引入 EMA 退出 |
+| `require_htf` | 保持 `false`，只使用最终 `dir_htf >= threshold` |
+
+仍保留：
+
+```text
+EMA21/EMA96
+pullback_resume
+pullback_buffer = 0.01
+roc_window = 96
+min_regime_age = 3
+min_dir_roc = -0.01
+max_chop = 62
+min_efficiency = 0
+stop_atr = 0.5
+tp_atr = 99
+trail_atr = 0.75
+min_hold_bars = 6
+final dir_htf >= 0.5
+```
+
+表现：
+
+| 交易数 | 累计收益 | 年化 | 胜率 | payoff | profit factor | 最大回撤 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `2521` | `+25330.23%` | `181.96x` | `52.44%` | `2.77` | `3.06` | `-7.01%` |
+
+结论：V2.1-clean 与 V2 实盘成本基线几乎完全一致，适合作为后续解释和实现基线。
+
+### V2.1A: RSI 放开
+
+Canonical name：`HYPE-5M-PBTR-V2.1A`
+
+相对 V2.1-clean：
+
+```text
+min_dir_rsi = 0
+max_dir_rsi = 100
+```
+
+表现：
+
+| 交易数 | 累计收益 | 年化 | 胜率 | payoff | profit factor | 最大回撤 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `3146` | `+51249.39%` | `352.15x` | `51.40%` | `2.64` | `2.79` | `-6.62%` |
+
+结论：当前实盘成本口径下收益最高且最大回撤改善，但胜率下降、周度盈利占比降到 `98.21%`。这是收益增强候选，不应直接视为生产批准。
+
+### V2.1B: 去掉 ROC
+
+Canonical name：`HYPE-5M-PBTR-V2.1B`
+
+相对 V2.1-clean：
+
+```text
+min_dir_roc = -99
+```
+
+表现：
+
+| 交易数 | 累计收益 | 年化 | 胜率 | payoff | profit factor | 最大回撤 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `2537` | `+25857.87%` | `185.51x` | `52.38%` | `2.77` | `3.05` | `-7.01%` |
+
+结论：低风险进一步简化，收益略高于 V2.1-clean，胜率基本不变。可作为 clean-plus 候选。
+
+### V2.1C: HTF 提高
+
+Canonical name：`HYPE-5M-PBTR-V2.1C-HTF`
+
+相对 V2.1-clean：
+
+```text
+final dir_htf >= 0.688442
+```
+
+表现：
+
+| 交易数 | 累计收益 | 年化 | 胜率 | payoff | profit factor | 最大回撤 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `1823` | `+9291.22%` | `71.37x` | `53.70%` | `2.85` | `3.31` | `-7.27%` |
+
+结论：胜率和盈亏比提高，但交易数与收益显著下降，最大回撤略变差。更适合作为胜率体验分支，而不是主收益分支。
+
+### V2.1C: ADX14
+
+Canonical name：`HYPE-5M-PBTR-V2.1C-ADX14`
+
+相对 V2.1-clean：
+
+```text
+min_adx = 14
+```
+
+表现：
+
+| 交易数 | 累计收益 | 年化 | 胜率 | payoff | profit factor | 最大回撤 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `2351` | `+21135.18%` | `153.61x` | `53.08%` | `2.79` | `3.16` | `-7.01%` |
+
+结论：比 HTF 提高更温和，胜率和 profit factor 提高，最大回撤不变，但收益低于 V2.1-clean。若目标是实盘体验优化，优先级高于 `V2.1C-HTF`。
 
 ## Signal Logic
 
@@ -293,8 +431,11 @@ trail_stop = min(initial_stop, previous_trough + trail_atr * ATR14(current_bar))
 当前建议：
 
 1. `HYPE-5M-PBTR-V1` 作为胜率体验基线 dry-run。
-2. `HYPE-5M-PBTR-V2` 作为主收益候选 dry-run。
-3. V2 不应直接大资金上线，先跑 `300-500` 笔。
+2. `HYPE-5M-PBTR-V2.1-clean` 作为 V2 的首选简化表达，用于后续解释、实现和 dry-run 对照。
+3. `HYPE-5M-PBTR-V2.1A` 作为高收益候选 dry-run，但需要接受胜率下降和周度波动增加。
+4. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
+5. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。
+6. V2/V2.1 系列都不应直接大资金上线，先跑 `300-500` 笔。
 
 V2 实盘验收线：
 
@@ -308,11 +449,17 @@ V2 实盘验收线：
 
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`
 - `research-notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
+- `ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`
+- `ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`
 
 ## Reproduction
 
 - `archive/scripts/research/ablate_hype_5m_r05732.py`
 - `archive/scripts/research/test_hype_5m_r05732_v2_combos.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v2_live_cost_ablation_slices.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v21_live_cost_variants.py`
 - `reports/hype_5m_r05732_ablation.json`
 - `reports/hype_5m_r05732_v2_combo_test.json`
+- `reports/hype_5m_pbtr_v2_live_cost_ablation_slices.json`
+- `reports/hype_5m_pbtr_v21_live_cost_variants.json`
 

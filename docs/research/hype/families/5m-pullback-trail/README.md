@@ -17,6 +17,7 @@ It is independent from:
 - `live-specs/hype-5m-pullback-trail-v2-live-spec.md`: detailed V2 reproduction and small live dry-run handoff spec.
 - `ablations/hype-5m-pullback-trail-v2-ablation-slices-2026-06-23.md`: V2 full ablation, weekly slices, and rolling 1w/1m/3m/6m/full performance.
 - `ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`: V2 full ablation and time-slice performance rerun with observed live fee/slippage.
+- `ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`: V2.1 parameter simplification and V2.1A/B/C candidate tests under observed live costs.
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`: V1/R05732 full parameter explanation and ablation.
 
 ## Supporting Research
@@ -48,6 +49,7 @@ Scripts:
 - `archive/scripts/research/test_hype_5m_r05732_v2_combos.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v2_ablation_slices.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v2_live_cost_ablation_slices.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v21_live_cost_variants.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v1_v2_slice_compare.py`
 - `archive/scripts/research/render_hype_5m_ensemble_specs.py`
 
@@ -78,3 +80,7 @@ Report files:
 - `reports/hype_5m_pbtr_v2_live_cost_ablation_validation_slices.csv`
 - `reports/hype_5m_pbtr_v2_live_cost_weekly_slices.csv`
 - `reports/hype_5m_pbtr_v2_live_cost_rolling_windows.csv`
+- `reports/hype_5m_pbtr_v21_live_cost_variants.json`
+- `reports/hype_5m_pbtr_v21_live_cost_variant_summary.csv`
+- `reports/hype_5m_pbtr_v21_live_cost_variant_rolling_windows.csv`
+- `reports/hype_5m_pbtr_v21_live_cost_variant_weekly_slices.csv`

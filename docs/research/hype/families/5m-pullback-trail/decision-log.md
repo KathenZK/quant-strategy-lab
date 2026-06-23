@@ -24,9 +24,11 @@ This is the family-level reading path for Binance HYPE `5m` pullback/resume and 
 - `live-specs/hype-5m-pullback-trail-v2-live-spec.md`: detailed `HYPE-5M-PBTR-V2` reproduction spec for an implementation AI, including indicator formulas, signal construction, one-position execution, ATR trailing-stop management, restart recovery, and acceptance metrics.
 - `ablations/hype-5m-pullback-trail-v2-ablation-slices-2026-06-23.md`: full-parameter ablation on V2, `56` weekly slices, rolling 1w/1m/3m/6m/full stats, and V1/V2 side-by-side comparison.
 - `ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`: reran V2 full-parameter ablation and time slices using observed live execution costs: fee `4.1466 bps/turnover`, entry slippage `+10.73 bps`, exit slippage `-2.64 bps`, net slippage `+4.0449 bps/total turnover`.
+- `ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`: promoted a simplified `HYPE-5M-PBTR-V2.1-clean` expression by fixing/removing inactive V2 parameters, then tested V2.1A return, V2.1B clean-plus, and V2.1C stable candidates under the same live-cost model.
 
 ## Current Decision
 
 - `HYPE-5M-PBTR-V1`: keep as the cleaner win-rate baseline dry-run candidate.
 - `HYPE-5M-PBTR-V2`: current main return candidate for dry-run, higher frequency and payoff but slightly lower win rate.
+- `HYPE-5M-PBTR-V2.1-clean`: preferred simplified expression of V2 under the observed live-cost analysis; performance is effectively identical to V2 while removing inactive explanatory parameters.
 - Both V1 and V2 require live dry-run evidence before production sizing.
