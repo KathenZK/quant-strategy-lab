@@ -1,8 +1,8 @@
-# HYPE-EMA-TB 5m Positive Payoff Search 2026-06-23
+# HYPE-5M-PBTR Positive Payoff Search 2026-06-23
 
 日期：2026-06-23
 
-Family id：`HYPE-EMA-TB`
+Family id：`HYPE-5M-PBTR`
 
 本轮研究回应“少赚多亏的策略活不下去”的问题。搜索目标不再追求高胜率小止盈，而是要求每个验证切片都满足：
 

@@ -1,4 +1,4 @@
-# HYPE-EMA-TB-5M-ENS-S02: 16 子腿 / 2.5x 实盘代码规格
+# HYPE-5M-ENS-S02: 16 子腿 / 2.5x 实盘代码规格
 
 Family id: `HYPE-EMA-TB`
 

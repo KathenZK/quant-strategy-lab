@@ -20,10 +20,15 @@ Important documents:
 - `hype-trend-strategy-v35-spec.md`: timeout-relaxed variant.
 - `hype-trend-strategy-v36-spec.md`: Binance signal plus Hyperliquid execution.
 
+## Moved Out
+
+- `HYPE-5M-PBTR`: Binance HYPE `5m` pullback + ATR trailing-stop research now lives under `../5m-pullback-trail/`.
+
 ## Do Not Mix With
 
 - `HYPE-CC-V35`
 - `HYPE-EMA-X-V14`
+- `HYPE-5M-PBTR-V1` / `HYPE-5M-PBTR-V2`
 - Any candle-count reversal document under `../candle-count-reversal/`
 
 When citing this family, use names like `HYPE-EMA-TB-V30`, `HYPE-EMA-TB-V35`, or `HYPE-EMA-TB-V36`.

@@ -1,8 +1,8 @@
-# HYPE-EMA-TB 5m R05732 Strategy And Parameter Ablation 2026-06-23
+# HYPE-5M-PBTR R05732 Strategy And Parameter Ablation 2026-06-23
 
 日期：2026-06-23
 
-Family id：`HYPE-EMA-TB`
+Family id：`HYPE-5M-PBTR`
 
 策略候选：`HYPE_PP_R05732__dir_htf_ge_0.688442`
 

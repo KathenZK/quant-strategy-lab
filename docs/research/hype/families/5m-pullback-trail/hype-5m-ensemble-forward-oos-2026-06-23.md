@@ -1,8 +1,8 @@
-# HYPE-EMA-TB 5m Ensemble Forward OOS 2026-06-23
+# HYPE-5M-PBTR Ensemble Forward OOS 2026-06-23
 
 日期：2026-06-23
 
-Family id：`HYPE-EMA-TB`
+Family id：`HYPE-5M-PBTR`
 
 这份记录复测 `2026-06-01` 之后新增的 Binance HYPE 永续 `5m` 数据。它用于检验此前 7 个达标 one-position ensemble 组合在未参与搜索的新样本中的表现。
 

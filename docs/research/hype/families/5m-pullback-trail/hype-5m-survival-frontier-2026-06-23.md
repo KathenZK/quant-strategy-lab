@@ -1,8 +1,8 @@
-# HYPE-EMA-TB 5m Survival Frontier 2026-06-23
+# HYPE-5M-PBTR Survival Frontier 2026-06-23
 
 日期：2026-06-23
 
-Family id：`HYPE-EMA-TB`
+Family id：`HYPE-5M-PBTR`
 
 本报告按“先活下来，再谈收益”的标准，复用 `hype-5m-positive-payoff-search-2026-06-23.md` 的候选池，分析在每个时间切片都满足生存约束后，真实还能做到多少年化。
 

@@ -1,8 +1,8 @@
-# HYPE-EMA-TB 5m 指标组合 Ensemble 搜索
+# HYPE-5M-PBTR 指标组合 Ensemble 搜索
 
 日期：2026-06-22
 
-家族 id：`HYPE-EMA-TB`
+家族 id：`HYPE-5M-PBTR`
 
 这是一轮 Binance HYPE 永续合约 `5m` 指标组合研究批次。它不是新的 `V35` 或 `V36` 定义，也不应并入更早的 `HYPE-EMA-X` EMA 金叉/死叉家族。
 
@@ -105,13 +105,13 @@
 每个达标组合都有一份中文实盘代码规格文档，包含指标定义、信号生成、开仓、持有、平仓、子腿参数和消融实验。
 
 - 规格索引：`docs/research/hype/families/ema-trend-breakout/ensemble-specs/README.md`
-- `HYPE-EMA-TB-5M-ENS-S01`: `ensemble-specs/hype-ema-tb-5m-ensemble-s01-8l-4x-live-spec.md`
-- `HYPE-EMA-TB-5M-ENS-S02`: `ensemble-specs/hype-ema-tb-5m-ensemble-s02-16l-2p5x-live-spec.md`
-- `HYPE-EMA-TB-5M-ENS-S03`: `ensemble-specs/hype-ema-tb-5m-ensemble-s03-8l-3x-live-spec.md`
-- `HYPE-EMA-TB-5M-ENS-S04`: `ensemble-specs/hype-ema-tb-5m-ensemble-s04-12l-2p5x-live-spec.md`
-- `HYPE-EMA-TB-5M-ENS-S05`: `ensemble-specs/hype-ema-tb-5m-ensemble-s05-5l-3x-live-spec.md`
-- `HYPE-EMA-TB-5M-ENS-S06`: `ensemble-specs/hype-ema-tb-5m-ensemble-s06-16l-2x-live-spec.md`
-- `HYPE-EMA-TB-5M-ENS-S07`: `ensemble-specs/hype-ema-tb-5m-ensemble-s07-8l-2p5x-live-spec.md`
+- `HYPE-5M-ENS-S01`: `ensemble-specs/hype-5m-ensemble-s01-8l-4x-live-spec.md`
+- `HYPE-5M-ENS-S02`: `ensemble-specs/hype-5m-ensemble-s02-16l-2p5x-live-spec.md`
+- `HYPE-5M-ENS-S03`: `ensemble-specs/hype-5m-ensemble-s03-8l-3x-live-spec.md`
+- `HYPE-5M-ENS-S04`: `ensemble-specs/hype-5m-ensemble-s04-12l-2p5x-live-spec.md`
+- `HYPE-5M-ENS-S05`: `ensemble-specs/hype-5m-ensemble-s05-5l-3x-live-spec.md`
+- `HYPE-5M-ENS-S06`: `ensemble-specs/hype-5m-ensemble-s06-16l-2x-live-spec.md`
+- `HYPE-5M-ENS-S07`: `ensemble-specs/hype-5m-ensemble-s07-8l-2p5x-live-spec.md`
 
 消融覆盖三类：
 
