@@ -15,6 +15,9 @@ Key report families observed historically:
 - `hype_5m_filter_refinement*`
 - `hype_5m_ensemble_combo*`
 - `hype_5m_ensemble_ablation*`
+- `hype_5m_ensemble_forward_oos*`
+- `hype_5m_positive_payoff_search*`
+- `hype_5m_survival_frontier*`
 - `hype_v30_*`
 - `hype_v34_*`
 - `hype_v35_*`
@@ -24,17 +27,29 @@ Key report families observed historically:
 ## Current 5m Indicator Ensemble Batch
 
 - Research note: `hype-5m-indicator-ensemble-search.md`
+- Forward OOS note: `hype-5m-ensemble-forward-oos-2026-06-23.md`
+- Positive-payoff note: `hype-5m-positive-payoff-search-2026-06-23.md`
+- Survival frontier note: `hype-5m-survival-frontier-2026-06-23.md`
+- R05732 strategy and ablation note: `hype-5m-r05732-strategy-ablation-2026-06-23.md`
 - Scripts:
   - `archive/scripts/research/research_hype_5m_indicator_search.py`
   - `archive/scripts/research/research_hype_5m_filter_refinement.py`
   - `archive/scripts/research/research_hype_5m_ensemble_combo.py`
   - `archive/scripts/research/research_hype_5m_ensemble_ablation.py`
+  - `archive/scripts/research/research_hype_5m_ensemble_forward_oos.py`
+  - `archive/scripts/research/research_hype_5m_positive_payoff_search.py`
+  - `archive/scripts/research/analyze_hype_5m_survival_frontier.py`
+  - `archive/scripts/research/ablate_hype_5m_r05732.py`
   - `archive/scripts/research/render_hype_5m_ensemble_specs.py`
 - Main report files:
   - `reports/hype_5m_indicator_search.json`
   - `reports/hype_5m_filter_refinement.json`
   - `reports/hype_5m_ensemble_combo.json`
   - `reports/hype_5m_ensemble_ablation.json`
+  - `reports/hype_5m_ensemble_forward_oos.json`
+  - `reports/hype_5m_positive_payoff_search.json`
+  - `reports/hype_5m_survival_frontier.json`
+  - `reports/hype_5m_r05732_ablation.json`
 - Live-code handoff specs:
   - `ensemble-specs/README.md`
   - `ensemble-specs/hype-ema-tb-5m-ensemble-s01-8l-4x-live-spec.md`
