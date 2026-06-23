@@ -14,6 +14,7 @@ It is independent from:
 
 - `hype-5m-pullback-trail-core-ledger.md`: main ledger for `HYPE-5M-PBTR-V1/V2`.
 - `hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`: synchronous parameter test that promoted V2.
+- `hype-5m-pullback-trail-v2-live-spec.md`: detailed V2 reproduction and small live dry-run handoff spec.
 - `hype-5m-r05732-strategy-ablation-2026-06-23.md`: V1/R05732 full parameter explanation and ablation.
 
 ## Supporting Research

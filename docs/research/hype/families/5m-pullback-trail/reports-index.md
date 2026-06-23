@@ -7,6 +7,7 @@ Use this file as the durable pointer layer for HYPE Binance `5m` research.
 ## Documents
 
 - Main ledger: `hype-5m-pullback-trail-core-ledger.md`
+- V2 live reproduction spec: `hype-5m-pullback-trail-v2-live-spec.md`
 - V2 combo test: `hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
 - R05732 strategy and ablation: `hype-5m-r05732-strategy-ablation-2026-06-23.md`
 - Survival frontier: `hype-5m-survival-frontier-2026-06-23.md`

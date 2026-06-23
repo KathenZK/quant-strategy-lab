@@ -21,6 +21,7 @@ This is the family-level reading path for Binance HYPE `5m` pullback/resume and 
 - `hype-5m-r05732-strategy-ablation-2026-06-23.md`: promoted R05732 into `HYPE-5M-PBTR-V1` candidate form. The ablation showed `trail_atr=0.75` and `min_hold_bars=6` are core; deleting final `dir_htf` greatly increases frequency and return but lowers worst-slice win; `pullback_buffer=0.01` and removing/raising fixed take profit were the best follow-up directions.
 - `hype-5m-pullback-trail-core-ledger.md`: main ledger for `HYPE-5M-PBTR-V1/V2`.
 - `hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`: tested `10240` synchronous combinations around V1 ablation findings; `1568` passed V2 gate. Promoted `HYPE-5M-PBTR-V2` with `pullback_buffer=0.01`, `tp_atr=99`, `stop_atr=0.5`, `roc_window=96`, `min_efficiency=0`, and `dir_htf>=0.5`.
+- `hype-5m-pullback-trail-v2-live-spec.md`: detailed `HYPE-5M-PBTR-V2` reproduction spec for an implementation AI, including indicator formulas, signal construction, one-position execution, ATR trailing-stop management, restart recovery, and acceptance metrics.
 
 ## Current Decision
 

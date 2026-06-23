@@ -25,7 +25,8 @@ For the newer Binance HYPE `5m` pullback + ATR trailing-stop research line, use:
 
 1. `families/5m-pullback-trail/README.md`
 2. `families/5m-pullback-trail/hype-5m-pullback-trail-core-ledger.md`
-3. `families/5m-pullback-trail/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
+3. `families/5m-pullback-trail/hype-5m-pullback-trail-v2-live-spec.md`
+4. `families/5m-pullback-trail/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
 
 Its local `HYPE-5M-PBTR-V1/V2` version numbers are independent from the legacy 15m `HYPE-EMA-TB` V1/V2/V35 sequence.
 
