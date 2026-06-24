@@ -32,6 +32,8 @@ Family id：`HYPE-5M-PBTR`
 - `diagnostics/hype-5m-pbtr-v32-clean-entry-filters-2026-06-24.md`：根据外部审计意见删除 V3.1 中剩余无贡献/负贡献入场过滤器，形成 `HYPE-5M-PBTR-V3.2`。V3.2 仅保留方向、pullback/resume、`min_hold_bars=9` 和 ATR trailing exit，样本内收益和回撤均优于 V3.1，是当前更简洁的 paper/dry-run 首选表达。
 - `ablations/hype-5m-pbtr-v32-full-parameter-ablation-2026-06-24.md`：对 V3.2 重做全参数消融。结论是旧入场过滤器不应加回，核心入场仍是 `pullback_resume`，核心退出仍是 `min_hold + ATR trailing`；`trail_atr=0.5`、`min_hold_bars=12`、`stop_atr=0.25` 只作为下一轮 V3.3 研究方向。
 - `live-specs/hype-5m-pbtr-v3-2-live-spec.md`：面向同事实盘/paper 复现的 V3.2 完整参数与执行规格，包含入场、持仓、平仓、成本、状态恢复和 dry-run 验收线。
+- `diagnostics/hype-5m-pbtr-v3-3-minimal-2026-06-24.md`：将 V3.2 中所有兼容保留、关闭、有限值保护和基本不触发参数彻底移除，形成 `HYPE-5M-PBTR-V3.3` 最小复现表达。回测与 V3.2 几乎一致，仅多出 `2` 笔交易，说明 V3.2 大参数表可以从交接规格中删除。
+- `live-specs/hype-5m-pbtr-v3-3-live-spec.md`：面向同事实盘/paper 复现的 V3.3 最小规格，只保留 `EMA21/EMA96`、`pullback_buffer=0.01`、`stop_atr=0.5`、`trail_atr=0.75` 和 `min_hold_bars=9`。
 
 ## 当前决策
 
@@ -40,5 +42,6 @@ Family id：`HYPE-5M-PBTR`
 - `HYPE-5M-PBTR-V2.1-clean`：在观测实盘成本分析下，作为 V2 的首选简化表达；表现与 V2 基本一致，同时移除了不活跃解释参数。
 - `HYPE-5M-PBTR-V3`：来自 V2.1A、关闭 final HTF 的独立高频研究候选；与 `V3-lite = V2.1A + dir_htf >= 0` 并行测试，不作为生产直接替代版本。
 - `HYPE-5M-PBTR-V3.1`：来自 V3，将 `min_hold_bars` 提高到 `9`；作为高收益研究候选单独 dry-run，重点观察真实回撤是否显著扩张。
-- `HYPE-5M-PBTR-V3.2`：来自 V3.1，删除剩余入场过滤器；作为当前首选 clean 高频表达进入 paper/dry-run，重点验证新增交易子集和真实执行成本。
-- V1/V2/V2.1/V3/V3.1/V3.2 候选在生产 sizing 前都必须先有 live dry-run 证据。
+- `HYPE-5M-PBTR-V3.2`：来自 V3.1，删除剩余入场过滤器；保留为 clean 高频表达历史记录。
+- `HYPE-5M-PBTR-V3.3`：来自 V3.2，删除所有兼容/关闭/保护/基本不触发参数；作为当前同事实盘复现和 paper/dry-run 的首选最小表达。
+- V1/V2/V2.1/V3/V3.1/V3.2/V3.3 候选在生产 sizing 前都必须先有 live dry-run 证据。
