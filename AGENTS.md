@@ -25,6 +25,16 @@ Active code policy:
 - Historical one-off research scripts live under `archive/scripts/research/`.
 - Do not treat archived code as the current source of truth unless the user explicitly asks to inspect history.
 
+Live-executable research policy:
+
+- This repository studies strategies that can be traded online with real orders, not beautiful backtest illusions.
+- Do not promote any strategy to live, paper-live, dry-run, handoff, or candidate status until its order timing and execution assumptions are audited.
+- Treat impossible fills, crossed stops filled at stale stop prices, lookahead stop updates, unavailable intrabar decisions, and unfillable order assumptions as hard failures.
+- If a strategy uses `min_hold_bars`, delayed exits, trailing stops, protection stops, or lockout periods, audit the protected interval and unlock behavior before discussing performance.
+- A promotion write-up must cover fees, slippage, stop placement validity, stop-market behavior, sizing, emergency stop or kill switch, restart recovery, missing data behavior, and whether a live runner can reproduce the state machine.
+- Negative live-feasibility findings must be written into `docs/research/` immediately and should downgrade the candidate instead of being hidden behind more parameter search.
+- This rule exists because this repository has repeatedly made the same mistake, including earlier trend-strategy research and the HYPE-5M-PBTR V2.1A/V3.3/V4 lockout-stop audits. Live feasibility comes before performance storytelling.
+
 When creating new research:
 
 - Prefer a document-first workflow.
