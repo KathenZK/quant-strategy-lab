@@ -9,6 +9,7 @@ Family id：`HYPE-5M-PBTR`
 - 这是一个独立的 HYPE 策略家族。
 - 不要把新的 `HYPE-5M-PBTR` 研究存放到 `families/ema-trend-breakout/`。
 - 不要从裸版本号 `V1`、`V2`、`V35` 或其他版本号推断策略身份。
+- 后续新建文件若包含带小数点的版本号，必须用连字符保留层级，例如 `HYPE-5M-PBTR-V3.2` 写作 `v3-2`，不要写成 `v32`，避免和未来 `V32` 混淆。
 - 活跃 package 代码仍只承载数据与研究基础设施；策略事实以本 Markdown 家族树和一次性研究脚本为准。
 
 ## 研究批次记录
@@ -29,6 +30,8 @@ Family id：`HYPE-5M-PBTR`
 - `diagnostics/hype-5m-pbtr-v3-ablation-audit-2026-06-24.md`：正式将该高频候选记录为 `HYPE-5M-PBTR-V3`，包含全参数消融、周/月/滚动时间切片，以及对不真实年化的资深量化审计。V3 不是 V2.1A 的替代版本，需要小资金 dry-run 和执行压力测试。
 - `diagnostics/hype-5m-pbtr-v31-min-hold-9-2026-06-24.md`：将 V3 消融中表现最强的 `min_hold_bars=9` 固化为 `HYPE-5M-PBTR-V3.1` 研究候选，并生成 HTML 交易路径图。V3.1 样本内显著提高胜率/PF，但最大回撤扩大，不能直接替代 V3。
 - `diagnostics/hype-5m-pbtr-v32-clean-entry-filters-2026-06-24.md`：根据外部审计意见删除 V3.1 中剩余无贡献/负贡献入场过滤器，形成 `HYPE-5M-PBTR-V3.2`。V3.2 仅保留方向、pullback/resume、`min_hold_bars=9` 和 ATR trailing exit，样本内收益和回撤均优于 V3.1，是当前更简洁的 paper/dry-run 首选表达。
+- `ablations/hype-5m-pbtr-v32-full-parameter-ablation-2026-06-24.md`：对 V3.2 重做全参数消融。结论是旧入场过滤器不应加回，核心入场仍是 `pullback_resume`，核心退出仍是 `min_hold + ATR trailing`；`trail_atr=0.5`、`min_hold_bars=12`、`stop_atr=0.25` 只作为下一轮 V3.3 研究方向。
+- `live-specs/hype-5m-pbtr-v3-2-live-spec.md`：面向同事实盘/paper 复现的 V3.2 完整参数与执行规格，包含入场、持仓、平仓、成本、状态恢复和 dry-run 验收线。
 
 ## 当前决策
 

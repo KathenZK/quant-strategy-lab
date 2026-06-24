@@ -32,6 +32,8 @@ It is independent from:
 
 `HYPE-5M-PBTR-V1/V2` are local to this family. Never merge or compare them by bare version number with `HYPE-EMA-TB-V35`, `HYPE-EMA-X-V17`, or `HYPE-CC-V35`.
 
+File naming rule for dotted versions: for newly created files, preserve the dot as a hyphen in file names. For example, `HYPE-5M-PBTR-V3.2` should use `v3-2` in Markdown/script/report file names, not `v32`, to avoid confusion with a future `V32`.
+
 ## Local Report Artifacts
 
 Reports are local artifacts under `reports/` and are ignored by git. Use this README as the durable pointer layer for HYPE Binance `5m` research.

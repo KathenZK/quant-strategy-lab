@@ -52,6 +52,8 @@ Created：2026-06-23
 | V3 | 独立高频候选：来自 `V2.1A`，移除 final `dir_htf` 过滤；不直接替代 V2.1A。       |
 | 后缀  | 若后续只是改变过滤强度或执行保护，可用 V3-lite/V3.1；若改变核心机制，再升 V4。           |
 
+文件命名规则：后续新建文件若包含带小数点的版本号，必须用连字符保留层级，例如 `HYPE-5M-PBTR-V3.2` 写作 `v3-2`，不要写成 `v32`，避免和未来 `V32` 混淆。
+
 
 ## Version Table
 
@@ -364,6 +366,8 @@ Canonical name：`HYPE-5M-PBTR-V3.2`
 
 来源报告：`diagnostics/hype-5m-pbtr-v32-clean-entry-filters-2026-06-24.md`。
 
+全参数消融：`ablations/hype-5m-pbtr-v32-full-parameter-ablation-2026-06-24.md`。
+
 相对 V3.1：
 
 ```text
@@ -401,6 +405,13 @@ min_hold_bars = 9
 | `8025` | `+511233263595.07%` | `1324019761.54x` | `55.66%` | `3.31` | `4.15` | `-8.69%` |
 
 结论：V3.2 达成参数简化目标，入场侧只保留方向和 pullback/resume 结构，样本内相对 V3.1 交易数增加、胜率略升、回撤改善，PF 仅小幅下降。它更适合作为 V3.1 的干净表达进入 paper/dry-run，但仍必须验证新增交易在真实执行中的滑点、订单失败和容量影响。
+
+全参数消融补充：
+
+- 恢复 `final_htf`、`min_regime_age`、`min_dir_roc`、`max_chop`、`RSI`、`CMF`、`MACD/OBV/HTF require` 等旧入场过滤器，整体都降低总收益；V3.2 不应加回这些过滤器。
+- 换入场形态会显著降收益，说明核心入场仍是 `pullback_resume`。
+- 删除 `min_hold` 或 trailing 会显著破坏表现，说明收益仍来自 `min_hold + ATR trailing` 的路径管理。
+- `trail_atr=0.5`、`min_hold_bars=12`、`stop_atr=0.25` 是下一轮 V3.3 研究候选，不在本轮直接替代 V3.2。
 
 ### V2.1B: 去掉 ROC
 
@@ -619,6 +630,8 @@ V3/V3.1/V3.2 高频验收线：
 - `diagnostics/hype-5m-pbtr-v31-min-hold-9-2026-06-24.md`
 - `diagnostics/hype-5m-pbtr-v31-min-hold-9-trade-path-2026-06-24.html`
 - `diagnostics/hype-5m-pbtr-v32-clean-entry-filters-2026-06-24.md`
+- `ablations/hype-5m-pbtr-v32-full-parameter-ablation-2026-06-24.md`
+- `live-specs/hype-5m-pbtr-v3-2-live-spec.md`
 
 ## Reproduction
 
@@ -628,6 +641,7 @@ V3/V3.1/V3.2 高频验收线：
 - `archive/scripts/research/research_hype_5m_pbtr_v21_live_cost_variants.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v31_min_hold_9.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v32_clean_entry_filters.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v32_full_ablation.py`
 - `reports/hype_5m_r05732_ablation.json`
 - `reports/hype_5m_r05732_v2_combo_test.json`
 - `reports/hype_5m_pbtr_v2_live_cost_ablation_slices.json`
@@ -637,4 +651,5 @@ V3/V3.1/V3.2 高频验收线：
 - `reports/hype_5m_pbtr_v3_audit_metrics.json`
 - `reports/hype_5m_pbtr_v31_min_hold_9.json`
 - `reports/hype_5m_pbtr_v32_clean_entry_filters.json`
+- `reports/hype_5m_pbtr_v32_full_ablation.json`
 
