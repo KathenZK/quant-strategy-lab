@@ -19,6 +19,10 @@ It is independent from:
 - `ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`: V2 full ablation and time-slice performance rerun with observed live fee/slippage.
 - `ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`: V2.1 parameter simplification and V2.1A/B/C candidate tests under observed live costs.
 - `live-specs/hype-5m-pbtr-v3-3-live-spec.md`: minimal V3.3 reproduction spec after removing V3.2 compatibility/disabled/protection parameters.
+- `ablations/hype-5m-pbtr-v3-3-full-parameter-ablation-2026-06-24.md`: V3.3 six-parameter ablation under observed live costs.
+- `diagnostics/hype-5m-pbtr-v3-4-combo-candidates-2026-06-24.md`: source combo test that promoted the V3.3 improvement candidate to V4.
+- `diagnostics/hype-5m-pbtr-v4-live-viability-audit-2026-06-24.md`: V4 live-viability audit covering cost stress, stop execution, and lockout risk.
+- `diagnostics/hype-5m-pbtr-live-realistic-trailing-2026-06-24.md`: strict live-realistic trailing audit for V3.3 and V4, showing both fail when crossed unlock stops are executed as market exits.
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`: V1/R05732 full parameter explanation and ablation.
 
 ## Supporting Research
@@ -55,6 +59,10 @@ Scripts:
 - `archive/scripts/research/research_hype_5m_pbtr_v21_live_cost_variants.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v1_v2_slice_compare.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v3-3_minimal.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v3-3_full_ablation.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v3-4_combo_candidates.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v4_live_viability_audit.py`
+- `archive/scripts/research/research_hype_5m_pbtr_live_realistic_trailing.py`
 - `archive/scripts/research/render_hype_5m_ensemble_specs.py`
 
 Report files:
@@ -89,3 +97,7 @@ Report files:
 - `reports/hype_5m_pbtr_v21_live_cost_variant_rolling_windows.csv`
 - `reports/hype_5m_pbtr_v21_live_cost_variant_weekly_slices.csv`
 - `reports/hype_5m_pbtr_v3-3_minimal.json`
+- `reports/hype_5m_pbtr_v3-3_full_ablation.json`
+- `reports/hype_5m_pbtr_v3-4_combo_candidates.json`
+- `reports/hype_5m_pbtr_v4_live_viability_audit.json`
+- `reports/hype_5m_pbtr_live_realistic_trailing.json`

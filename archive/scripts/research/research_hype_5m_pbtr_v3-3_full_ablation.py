@@ -292,15 +292,16 @@ def render_variant_table(rows: pd.DataFrame) -> list[str]:
 def render_markdown(summary: pd.DataFrame, rolling: pd.DataFrame, weekly: pd.DataFrame, monthly: pd.DataFrame) -> str:
     baseline = row_for(summary, "baseline_v33")
     variants = summary.loc[~summary["label"].eq("baseline_v33")].copy()
+    valid_variants = variants.loc[variants["is_valid_candidate"]].copy()
     ranked_bad = variants.sort_values("delta_full_total_return").head(12)
-    ranked_good = variants.sort_values("delta_full_total_return", ascending=False).head(12)
-    grouped_best = variants.sort_values("delta_full_total_return", ascending=False).groupby("parameter", sort=False).head(1)
+    ranked_good = valid_variants.sort_values("delta_full_total_return", ascending=False).head(12)
+    grouped_best = valid_variants.sort_values("delta_full_total_return", ascending=False).groupby("parameter", sort=False).head(1)
     worst_week = weekly.sort_values("total_return").iloc[0]
     best_week = weekly.sort_values("total_return", ascending=False).iloc[0]
     worst_month = monthly.sort_values("total_return").iloc[0]
     best_month = monthly.sort_values("total_return", ascending=False).iloc[0]
 
-    no_trail = row_for(summary, "trail_atr_0p0")
+    degenerate_trail = row_for(summary, "trail_atr_0p0")
     no_hold = row_for(summary, "min_hold_bars_0")
     tight_trail = row_for(summary, "trail_atr_0p5")
     hold_12 = row_for(summary, "min_hold_bars_12")
@@ -323,9 +324,13 @@ def render_markdown(summary: pd.DataFrame, rolling: pd.DataFrame, weekly: pd.Dat
         "",
         *render_variant_table(ranked_bad),
         "",
-        "## 样本内改善最大的改动",
+        "## 样本内改善最大的有效改动",
         "",
         *render_variant_table(ranked_good),
+        "",
+        "无效边界：",
+        "",
+        f"- `trail_atr=0` 产生年化 `{mult(float(degenerate_trail['full_annualized_multiple']))}`、PF `{num(float(degenerate_trail['full_profit_factor']))}` 的异常结果，但它会把 trailing stop 贴到前高/前低，实盘中 stop 可能在下单瞬间已经越过市场价，成交假设不成立。因此该行只作为边界警示，不作为 V3.4 候选。",
         "",
         "## 每个参数的最佳单因子结果",
         "",
@@ -333,7 +338,7 @@ def render_markdown(summary: pd.DataFrame, rolling: pd.DataFrame, weekly: pd.Dat
         "",
         "## 核心参数判断",
         "",
-        f"- `trail_atr` 是最核心退出参数：`trail_atr=0` 后交易数 `{int(no_trail['full_trades'])}`，PF `{num(float(no_trail['full_profit_factor']))}`，最大回撤 `{pct(float(no_trail['full_max_dd']))}`。",
+        "- `trail_atr` 是最核心退出参数，但 `trail_atr=0` 是不可实盘执行的退化边界，不应解释为有效改善。",
         f"- `min_hold_bars` 仍是核心路径参数：`min_hold_bars=0` 后交易数 `{int(no_hold['full_trades'])}`，PF `{num(float(no_hold['full_profit_factor']))}`，最大回撤 `{pct(float(no_hold['full_max_dd']))}`。",
         f"- 当前样本里 `trail_atr=0.5` 是最强单因子收益增强之一：年化 `{mult(float(tight_trail['full_annualized_multiple']))}`，PF `{num(float(tight_trail['full_profit_factor']))}`，最大回撤 `{pct(float(tight_trail['full_max_dd']))}`。",
         f"- 当前样本里 `min_hold_bars=12` 继续增强收益：年化 `{mult(float(hold_12['full_annualized_multiple']))}`，PF `{num(float(hold_12['full_profit_factor']))}`，最大回撤 `{pct(float(hold_12['full_max_dd']))}`。",
@@ -360,7 +365,7 @@ def render_markdown(summary: pd.DataFrame, rolling: pd.DataFrame, weekly: pd.Dat
             "",
             "V3.3 的 6 个参数都是真正参与行为的参数，不能再像 V3.2 中的兼容项那样直接删除。消融显示，`EMA21/EMA96 + pullback_buffer` 决定入场样本，`min_hold_bars + trail_atr` 决定收益路径，`stop_atr` 决定初始容错。",
             "",
-            "`trail_atr=0.5`、`min_hold_bars=12`、`stop_atr=0.25` 在样本内继续给出更高收益，但它们都属于退出路径更激进/更紧的优化方向，不能仅凭单次样本内消融直接替代 V3.3。下一步若要升级，应把这些作为 `V3.4` 候选组合做组合消融、成本压力和 paper-live 对照。",
+            "`trail_atr=0.5`、`min_hold_bars=12`、`stop_atr=0.25` 在样本内继续给出更高收益，但它们都属于退出路径更激进/更紧的优化方向，不能仅凭单次样本内消融直接替代 V3.3。`trail_atr=0` 虽然数学结果最强，但属于不可实盘复现的退化边界，必须剔除。下一步若要升级，应把有效候选作为 `V3.4` 组合做组合消融、成本压力和 paper-live 对照。",
             "",
             "## 产物",
             "",
@@ -397,6 +402,12 @@ def main() -> None:
     baseline = summary_df.loc[summary_df["label"].eq("baseline_v33")].iloc[0]
     for column in ("full_total_return", "full_annualized_multiple", "full_equity_multiple", "full_max_dd", "full_win_rate", "full_profit_factor", "full_payoff_ratio"):
         summary_df[f"delta_{column}"] = summary_df[column] - baseline[column]
+    summary_df["is_valid_candidate"] = ~summary_df["label"].isin(["trail_atr_0p0"])
+    summary_df["invalid_reason"] = np.where(
+        summary_df["label"].eq("trail_atr_0p0"),
+        "trail_atr=0 places the stop at the previous peak/trough and is not a realistic live stop assumption",
+        "",
+    )
     slices_df = pd.DataFrame(slice_rows)
     if baseline_frame is None:
         raise RuntimeError("baseline frame was not captured")
@@ -438,7 +449,8 @@ def main() -> None:
         encoding="utf-8",
     )
     print(f"markdown={MARKDOWN_PATH}")
-    print(summary_df.sort_values("delta_full_total_return", ascending=False).head(12)[["label", "full_trades", "full_annualized_multiple", "full_win_rate", "full_profit_factor", "full_max_dd", "delta_full_total_return"]].to_string(index=False))
+    printable = summary_df.loc[summary_df["is_valid_candidate"]].sort_values("delta_full_total_return", ascending=False).head(12)
+    print(printable[["label", "full_trades", "full_annualized_multiple", "full_win_rate", "full_profit_factor", "full_max_dd", "delta_full_total_return"]].to_string(index=False))
 
 
 if __name__ == "__main__":

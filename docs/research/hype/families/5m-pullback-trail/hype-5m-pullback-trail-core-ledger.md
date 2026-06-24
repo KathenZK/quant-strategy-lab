@@ -71,6 +71,7 @@ Created：2026-06-23
 | `HYPE-5M-PBTR-V3.1` | V3 上将 `min_hold_bars` 从 `6` 提高到 `9`。                                                        | high-frequency research candidate | `7263` | `212733795.80x` | `55.43%` | `3.38` | `-10.03%` | 见诊断 | 样本内显著增强胜率/PF，但回撤扩大；必须先小资金或 paper 验证。 |
 | `HYPE-5M-PBTR-V3.2` | V3.1 上删除剩余无贡献/负贡献入场过滤器，仅保留方向、pullback、min-hold 和 trailing。                             | preferred clean V3 expression | `8025` | `1324019761.54x` | `55.66%` | `3.31` | `-8.69%` | 见诊断 | 参数更简洁，收益和回撤均优于 V3.1；先作为 paper/dry-run 首选表达验证。 |
 | `HYPE-5M-PBTR-V3.3` | V3.2 的最小复现表达：删除所有兼容/关闭/保护/基本不触发参数，退出仅保留 `min_hold + ATR trailing`。 | preferred minimal V3 expression | `8027` | `1327928815.51x` | `55.66%` | `3.31` | `-8.69%` | 见诊断 | 与 V3.2 几乎等价，但 live spec 更干净；优先给同事按 V3.3 复现和 dry-run。 |
+| `HYPE-5M-PBTR-V4` | V3.3 有效单因子增强项组合：`EMA9/96 + stop_atr=0.25 + trail_atr=0.5 + min_hold_bars=18`。 | paper-live audit candidate | `5053` | `28884173450807.53x` | `72.95%` | `7.39` | `-11.27%` | 见审计 | 样本内显著强于 V3.3，但高度依赖锁仓期和 stop 成交质量；只能 paper-live/极小资金审计。 |
 
 注：上表从 `2026-06-24` 起采用线上实盘成本口径。早期 V1/V2 小节中的历史切片表来自旧默认成本报告，仅作为研究来源记录；当前候选横向比较以上表和实盘成本诊断为准。
 
@@ -422,6 +423,8 @@ Canonical name：`HYPE-5M-PBTR-V3.3`
 
 实盘规格：`live-specs/hype-5m-pbtr-v3-3-live-spec.md`。
 
+全参数消融：`ablations/hype-5m-pbtr-v3-3-full-parameter-ablation-2026-06-24.md`。
+
 相对 V3.2，V3.3 删除所有已经证明无贡献、仅兼容保留、关闭、有限值保护或基本不触发的参数：
 
 ```text
@@ -448,6 +451,57 @@ min_hold_bars = 9
 | `8027` | `+512839871573.17%` | `1327928815.51x` | `55.66%` | `3.31` | `4.15` | `-8.69%` |
 
 结论：V3.3 与 V3.2 的样本内行为几乎一致，仅因移除旧代码中额外 NaN 预热保护多出 `2` 笔交易；这证明 V3.2 live spec 中的兼容/关闭/保护项可以从实盘交接文档中完全移除。后续同事实盘复现优先按 V3.3，而不是 V3.2 的大参数表。
+
+全参数消融补充：
+
+- V3.3 的 6 个参数都是真正参与行为的参数，不能再像 V3.2 兼容项那样继续删除。
+- `min_hold_bars=0/3/6` 明显破坏表现，其中 `min_hold_bars=0` 使策略接近归零；`min_hold_bars` 是核心路径参数。
+- `trail_atr=1.0/1.5/2.0` 明显削弱收益；`trail_atr=0.5` 是有效样本内增强候选，但需要组合消融和 paper-live 验证。
+- `trail_atr=0` 虽数学结果极强，但会把 stop 贴到前高/前低，属于不可实盘复现的退化边界，必须剔除。
+- `stop_atr=0.25`、`min_hold_bars=12/18` 也是样本内增强候选，但都属于更激进/更紧的退出路径，不能直接替代 V3.3。
+
+### V4: Combo Candidate Live-Viability Audit
+
+Canonical name：`HYPE-5M-PBTR-V4`
+
+组合测试：`diagnostics/hype-5m-pbtr-v3-4-combo-candidates-2026-06-24.md`。
+
+实盘可行性审计：`diagnostics/hype-5m-pbtr-v4-live-viability-audit-2026-06-24.md`。
+
+组合测试来自 V3.3 全参数消融中的有效单因子增强项，排除：
+
+```text
+trail_atr = 0      # 不可实盘复现的退化边界
+min_hold_bars = 24 # 样本内回撤过大
+```
+
+当前最强实用候选：
+
+```text
+ema_fast = 9
+ema_slow = 96
+pullback_buffer = 0.01
+stop_atr = 0.25
+trail_atr = 0.5
+min_hold_bars = 18
+```
+
+表现：
+
+| 交易数 | 累计收益 | 年化 | 胜率 | payoff | profit factor | 最大回撤 | 最差切片 PF |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `5053` | `+21205868389324788.00%` | `28884173450807.53x` | `72.95%` | `7.39` | `19.92` | `-11.27%` | `16.59` |
+
+实盘可行性审计补充：
+
+- V4 入场只依赖 EMA、K 线和 ATR，不是不可计算策略。
+- V4 基础压力下仍能承受较高额外成本；例如 `entry_slippage=3x` 后 PF 仍约 `9.64`，`stop_extra=20bps` 后 PF 仍约 `5.53`。
+- 但 V4 几乎完全依赖 stop/trailing stop 成交，stop 出场占比约 `99.98%`。
+- `stop_atr=0.25` 的初始止损非常紧，初始止损距离中位数约 `10.30 bps`。
+- 前 `18` 根 K 的锁仓期内，约 `98.89%` 的交易曾触及 `0.25 ATR` 初始止损。
+- 若实盘从开仓即挂 `0.25 ATR` 保护止损，反事实回测会变成 PF `0.17`、最大回撤约 `-100%`。
+
+结论：V4 不是明显的回测代码幻觉，但它确实依赖一个关键执行假设：开仓后前 `18` 根 K 不按 `0.25 ATR` 保护止损出场。它可以进入 paper-live / 极小资金 dry-run，但不能直接生产；必须先定义锁仓期保护风控，并审计真实 stop 滑点、保护止损触发率和订单失败率。
 
 ### V2.1B: 去掉 ROC
 
@@ -632,10 +686,11 @@ trail_stop = min(initial_stop, previous_trough + trail_atr * ATR14(current_bar))
 5. `HYPE-5M-PBTR-V3.1` 作为 V3 的 `min_hold_bars=9` 高收益研究候选，不替代 V3；先用小资金或 paper 跑 `300-500` 笔，重点观察回撤是否扩张。
 6. `HYPE-5M-PBTR-V3.2` 作为 V3.1 的 clean 表达保留历史记录。
 7. `HYPE-5M-PBTR-V3.3` 作为 V3.2 的最小复现表达进入 paper/dry-run；同事实盘交接优先使用 V3.3 live spec。
-8. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
-9. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
-10. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。
-11. V2/V2.1/V3/V3.1/V3.2/V3.3 系列都不应直接大资金上线，先跑 `300-500` 笔。
+8. `HYPE-5M-PBTR-V4` 记录自原 V3.4-candidate；样本内显著强于 V3.3，但锁仓期保护止损政策是核心实盘风险，只允许 paper-live / 极小资金审计，不替代 V3.3 交接规格。
+9. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
+10. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
+11. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。
+12. V2/V2.1/V3/V3.1/V3.2/V3.3/V4 系列都不应直接大资金上线，先跑 `300-500` 笔。
 
 V2 实盘验收线：
 
@@ -645,7 +700,7 @@ V2 实盘验收线：
 - 多头和空头都不能单边失效。
 - 实际滑点若超过回测假设 `2x`，必须重新压测。
 
-V3/V3.1/V3.2/V3.3 高频验收线：
+V3/V3.1/V3.2/V3.3/V4 高频验收线：
 
 - `300-500` 笔后 profit factor `>=1.8`。
 - payoff `>=2.2`。
@@ -655,6 +710,7 @@ V3/V3.1/V3.2/V3.3 高频验收线：
 - V3.1 额外要求：实盘/paper 最大闭合权益回撤不能显著劣于 V3，同期回撤若超过 `1.5x` 应暂停升级。
 - V3.2 额外要求：新增交易不能单独失效；paper 中新增交易子集 PF 若低于 `1.5`，应回退到 V3.1。
 - V3.3 额外要求：paper-live 交易流应与 V3.2 参考实现基本一致；若实盘复现少算/多算大量信号，优先检查 EMA/ATR 预热、K 线收盘确认和连续同向信号去重。
+- V4 额外要求：必须单独审计 `stop_atr=0.25`、`trail_atr=0.5` 和前 `18` 根 K 锁仓期的真实风控；若从开仓即挂保护止损导致大面积扫损，或不挂保护止损导致尾部风险不可接受，应回退 V3.3。
 
 ## Reports
 
@@ -672,6 +728,9 @@ V3/V3.1/V3.2/V3.3 高频验收线：
 - `live-specs/hype-5m-pbtr-v3-2-live-spec.md`
 - `diagnostics/hype-5m-pbtr-v3-3-minimal-2026-06-24.md`
 - `live-specs/hype-5m-pbtr-v3-3-live-spec.md`
+- `ablations/hype-5m-pbtr-v3-3-full-parameter-ablation-2026-06-24.md`
+- `diagnostics/hype-5m-pbtr-v3-4-combo-candidates-2026-06-24.md`
+- `diagnostics/hype-5m-pbtr-v4-live-viability-audit-2026-06-24.md`
 
 ## Reproduction
 
@@ -683,6 +742,9 @@ V3/V3.1/V3.2/V3.3 高频验收线：
 - `archive/scripts/research/research_hype_5m_pbtr_v32_clean_entry_filters.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v32_full_ablation.py`
 - `archive/scripts/research/research_hype_5m_pbtr_v3-3_minimal.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v3-3_full_ablation.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v3-4_combo_candidates.py`
+- `archive/scripts/research/research_hype_5m_pbtr_v4_live_viability_audit.py`
 - `reports/hype_5m_r05732_ablation.json`
 - `reports/hype_5m_r05732_v2_combo_test.json`
 - `reports/hype_5m_pbtr_v2_live_cost_ablation_slices.json`
@@ -694,4 +756,7 @@ V3/V3.1/V3.2/V3.3 高频验收线：
 - `reports/hype_5m_pbtr_v32_clean_entry_filters.json`
 - `reports/hype_5m_pbtr_v32_full_ablation.json`
 - `reports/hype_5m_pbtr_v3-3_minimal.json`
+- `reports/hype_5m_pbtr_v3-3_full_ablation.json`
+- `reports/hype_5m_pbtr_v3-4_combo_candidates.json`
+- `reports/hype_5m_pbtr_v4_live_viability_audit.json`
 
