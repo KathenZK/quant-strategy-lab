@@ -1,6 +1,6 @@
-"""Research helpers that are reusable across strategy experiments."""
+"""Narrow research dataset exporters built on the data lake."""
 
-from strategy_lab.research.ema_cross_quality import (
+from strategy_lab.data.exporters.ema_cross_quality import (
     CrossQualityConfig,
     build_cross_quality_dataset,
     extract_cross_events,

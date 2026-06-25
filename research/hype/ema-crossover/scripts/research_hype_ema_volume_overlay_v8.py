@@ -27,9 +27,9 @@ from research_hype_ema_volume_exhaustion_v7 import (
 )
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_ema_volume_overlay_v8.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_ema_volume_overlay_v8_ranking.csv")
-TOP_TRADES_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_ema_volume_overlay_v8_top_trades.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_ema_volume_overlay_v8.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_ema_volume_overlay_v8_ranking.csv")
+TOP_TRADES_PATH = Path("research/hype/ema-crossover/artifacts/hype_ema_volume_overlay_v8_top_trades.csv")
 
 
 @dataclass(frozen=True, slots=True)

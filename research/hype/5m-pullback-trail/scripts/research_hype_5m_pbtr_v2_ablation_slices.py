@@ -15,11 +15,11 @@ from research_hype_5m_indicator_search import SearchConfig, Trade, add_features,
 from research_hype_5m_positive_payoff_search import load_all_hype_5m, metric_from_trades, validation_slices
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_ablation_slices.json")
-ABLATION_SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_ablation_summary.csv")
-ABLATION_SLICE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_ablation_validation_slices.csv")
-WEEKLY_SLICE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_weekly_slices.csv")
-ROLLING_WINDOW_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_rolling_windows.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_ablation_slices.json")
+ABLATION_SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_ablation_summary.csv")
+ABLATION_SLICE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_ablation_validation_slices.csv")
+WEEKLY_SLICE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_weekly_slices.csv")
+ROLLING_WINDOW_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_rolling_windows.csv")
 
 LEVERAGE = 1.0
 FINAL_FILTER_THRESHOLD = 0.5

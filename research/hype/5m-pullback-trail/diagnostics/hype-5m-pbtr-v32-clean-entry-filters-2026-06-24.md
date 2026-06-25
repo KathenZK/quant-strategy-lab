@@ -60,7 +60,7 @@ V3.2 达到了“更简洁且样本内不劣于 V3.1”的目标。相对 V3.1�
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v32_clean_entry_filters.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v32_clean_entry_filters.py`
 - JSON：`artifacts/hype_5m_pbtr_v32_clean_entry_filters.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v32_clean_entry_filters_summary.csv`
 - 滚动切片：`artifacts/hype_5m_pbtr_v32_clean_entry_filters_rolling.csv`

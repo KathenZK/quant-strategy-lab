@@ -186,7 +186,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--end-date", type=str, required=True)
     parser.add_argument("--refresh-data", action="store_true")
     parser.add_argument("--cache-dir", type=Path, default=Path("data/cache/hype_ema_x_1m_live_search"))
-    parser.add_argument("--output-dir", type=Path, default=Path("research/hype/families/ema-crossover/artifacts/hype_ema_x_1m_live_search"))
+    parser.add_argument("--output-dir", type=Path, default=Path("research/hype/ema-crossover/artifacts/hype_ema_x_1m_live_search"))
     parser.add_argument("--stage1-keep", type=int, default=500)
     parser.add_argument("--stage2-keep", type=int, default=1000)
     parser.add_argument("--top", type=int, default=100)

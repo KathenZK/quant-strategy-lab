@@ -20,7 +20,7 @@ from research_hype_ema_cross_strategy import (
 DATA_LAKE_ROOT = Path(
     "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
 )
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_ema_v5_data_lake_compare.json")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_ema_v5_data_lake_compare.json")
 MAX_ALLOCATION = 3.0
 LONG_TARGET_ATR_PCT = 0.016
 SHORT_TARGET_ATR_PCT = 0.014

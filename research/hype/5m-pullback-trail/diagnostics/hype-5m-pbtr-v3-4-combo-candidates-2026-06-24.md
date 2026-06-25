@@ -105,7 +105,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-4_combo_candidates.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-4_combo_candidates.py`
 - JSON：`artifacts/hype_5m_pbtr_v3-4_combo_candidates.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v3-4_combo_candidates_summary.csv`
 - 验证切片 CSV：`artifacts/hype_5m_pbtr_v3-4_combo_candidates_validation_slices.csv`

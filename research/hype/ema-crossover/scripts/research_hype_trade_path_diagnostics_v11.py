@@ -20,10 +20,10 @@ from research_hype_ema_volume_exhaustion_v7 import add_volume_features
 from research_hype_ema_volume_overlay_v8 import V8Spec, run_v8
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_trade_path_diagnostics_v11.json")
-DETAIL_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_trade_path_diagnostics_v11_detail.csv")
-SUMMARY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_trade_path_diagnostics_v11_summary.csv")
-CATEGORY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_trade_path_diagnostics_v11_categories.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_trade_path_diagnostics_v11.json")
+DETAIL_PATH = Path("research/hype/ema-crossover/artifacts/hype_trade_path_diagnostics_v11_detail.csv")
+SUMMARY_PATH = Path("research/hype/ema-crossover/artifacts/hype_trade_path_diagnostics_v11_summary.csv")
+CATEGORY_PATH = Path("research/hype/ema-crossover/artifacts/hype_trade_path_diagnostics_v11_categories.csv")
 
 
 def v8_baseline_spec() -> V8Spec:

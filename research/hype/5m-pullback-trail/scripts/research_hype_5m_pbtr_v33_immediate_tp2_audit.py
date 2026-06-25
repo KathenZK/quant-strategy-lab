@@ -14,10 +14,10 @@ from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 v33 = tp_audit.v33
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_immediate_tp2_audit.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_immediate_tp2_audit_summary.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_immediate_tp2_audit.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_immediate_tp2_audit_summary.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v33-immediate-tp2-audit-2026-06-25.md"
 )
 
@@ -84,7 +84,7 @@ def render_markdown(summary: pd.DataFrame, old_reasons: dict[str, int], live_rea
             "",
             "## 产物",
             "",
-            "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_immediate_tp2_audit.py`",
+            "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_immediate_tp2_audit.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
         ]

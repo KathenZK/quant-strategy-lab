@@ -13,10 +13,10 @@ from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 v33 = tp_audit.v33
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_immediate_tp_grid.json")
-GRID_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_immediate_tp_grid.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_immediate_tp_grid.json")
+GRID_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_immediate_tp_grid.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v33-immediate-tp-grid-2026-06-25.md"
 )
 
@@ -122,7 +122,7 @@ def render_markdown(grid: pd.DataFrame) -> str:
             "",
             "## 产物",
             "",
-            "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_immediate_tp_grid.py`",
+            "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_immediate_tp_grid.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 网格 CSV：`{GRID_PATH}`",
         ]

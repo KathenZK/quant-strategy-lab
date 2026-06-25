@@ -13,14 +13,14 @@ import pandas as pd
 
 SOURCE_PATH = Path(__file__).with_name("research_hype_5m_pbtr_v3-3_full_ablation.py")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_summary.csv")
-TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_trades.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_weekly.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_monthly.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_summary.csv")
+TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_trades.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_weekly.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_staged_tp_stop_monthly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v33-staged-tp-stop-2026-06-25.md"
 )
 
@@ -263,7 +263,7 @@ def render_markdown(summary: pd.DataFrame, trades: pd.DataFrame, rolling: pd.Dat
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_staged_tp_stop.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_staged_tp_stop.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 交易明细 CSV：`{TRADES_PATH}`",

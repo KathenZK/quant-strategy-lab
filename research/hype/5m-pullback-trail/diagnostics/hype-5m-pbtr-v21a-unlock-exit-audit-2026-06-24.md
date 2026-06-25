@@ -70,7 +70,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_unlock_exit_audit.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_unlock_exit_audit.py`
 - JSON：`artifacts/hype_5m_pbtr_v21a_unlock_exit_audit.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v21a_unlock_exit_audit_summary.csv`
 - 最近窗口 CSV：`artifacts/hype_5m_pbtr_v21a_unlock_exit_audit_recent.csv`

@@ -97,7 +97,7 @@ Recommended next step: V5.2 should model signal quality as a walk-forward event-
 
 ## Outputs
 
-- Script: `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v51_event_quality.py`
+- Script: `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v51_event_quality.py`
 - JSON: `artifacts/hype_5m_pbtr_v51_event_quality.json`
 - Baseline CSV: `artifacts/hype_5m_pbtr_v51_event_quality_summary.csv`
 - Exact rule CSV: `artifacts/hype_5m_pbtr_v51_event_quality_exact_rules.csv`

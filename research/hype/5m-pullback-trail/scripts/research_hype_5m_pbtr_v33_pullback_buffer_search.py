@@ -13,13 +13,13 @@ import pandas as pd
 
 SOURCE_PATH = Path(__file__).with_name("research_hype_5m_pbtr_v3-3_full_ablation.py")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search_summary.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search_weekly.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search_monthly.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search_summary.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search_weekly.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_pullback_buffer_search_monthly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v33-pullback-buffer-search-2026-06-25.md"
 )
 
@@ -136,7 +136,7 @@ def render_markdown(summary: pd.DataFrame, rolling: pd.DataFrame) -> str:
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_pullback_buffer_search.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_pullback_buffer_search.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- rolling CSV：`{ROLLING_PATH}`",

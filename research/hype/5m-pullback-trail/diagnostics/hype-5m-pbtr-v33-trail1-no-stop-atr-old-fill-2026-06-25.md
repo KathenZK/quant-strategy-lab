@@ -56,7 +56,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_trail1_no_stop_atr_old_fill.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_trail1_no_stop_atr_old_fill.py`
 - JSON：`artifacts/hype_5m_pbtr_v33_trail1_no_stop_atr_old_fill.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v33_trail1_no_stop_atr_old_fill_summary.csv`
 - 交易诊断 CSV：`artifacts/hype_5m_pbtr_v33_trail1_no_stop_atr_old_fill_trade_diagnostics.csv`

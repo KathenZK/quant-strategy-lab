@@ -21,11 +21,11 @@ from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 END_TS = pd.Timestamp("2026-06-23T04:15:00Z")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v5_executable_search.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v5_executable_search_summary.csv")
-SLICES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v5_executable_search_slices.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v5_executable_search.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v5_executable_search_summary.csv")
+SLICES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v5_executable_search_slices.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v5-executable-search-2026-06-24.md"
 )
 
@@ -581,7 +581,7 @@ def render_markdown(summary: pd.DataFrame) -> str:
             "",
             "## Outputs",
             "",
-            "- Script: `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v5_executable_search.py`",
+            "- Script: `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v5_executable_search.py`",
             f"- JSON: `{REPORT_PATH}`",
             f"- Summary CSV: `{SUMMARY_PATH}`",
             f"- Slice CSV: `{SLICES_PATH}`",

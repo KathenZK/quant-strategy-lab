@@ -14,10 +14,10 @@ import pandas as pd
 
 DATA_ROOT = Path("data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=5m")
 SYMBOL_FILE = "symbol=hype_usdt_usdt.parquet"
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_indicator_search.json")
-RANKING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_indicator_search_ranking.csv")
-TARGET_HITS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_indicator_search_target_hits.csv")
-TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_indicator_search_top_trades.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_indicator_search.json")
+RANKING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_indicator_search_ranking.csv")
+TARGET_HITS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_indicator_search_target_hits.csv")
+TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_indicator_search_top_trades.csv")
 
 START_TS = pd.Timestamp("2025-06-01T00:00:00Z")
 END_TS = pd.Timestamp("2026-06-01T00:00:00Z")

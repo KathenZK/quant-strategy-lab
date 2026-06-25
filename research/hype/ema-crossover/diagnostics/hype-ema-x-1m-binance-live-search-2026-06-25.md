@@ -38,7 +38,7 @@ Funding, liquidation constraints, order-book depth, API outage behavior, and acc
 
 Script:
 
-`research/hype/families/ema-crossover/scripts/research_hype_ema_x_1m_live_search.py`
+`research/hype/ema-crossover/scripts/research_hype_ema_x_1m_live_search.py`
 
 Report artifacts:
 

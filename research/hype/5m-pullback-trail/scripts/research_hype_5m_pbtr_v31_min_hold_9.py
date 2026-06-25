@@ -23,18 +23,18 @@ from research_hype_5m_indicator_search import Trade, add_features
 
 END_TS = pd.Timestamp("2026-06-23T04:15:00Z")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_summary.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_weekly.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_monthly.csv")
-TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_trades.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_summary.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_weekly.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_monthly.csv")
+TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v31_min_hold_9_trades.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v31-min-hold-9-2026-06-24.md"
 )
 HTML_PATH = Path(
-    "research/hype/families/5m-pullback-trail/artifacts/"
+    "research/hype/5m-pullback-trail/artifacts/"
     "hype-5m-pbtr-v31-min-hold-9-trade-path-2026-06-24.html"
 )
 
@@ -517,7 +517,7 @@ def render_markdown(
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v31_min_hold_9.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v31_min_hold_9.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 滚动切片：`{ROLLING_PATH}`",

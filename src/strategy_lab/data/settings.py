@@ -8,7 +8,7 @@ import yaml
 
 
 def _project_root() -> Path:
-    return Path(__file__).resolve().parents[2]
+    return Path(__file__).resolve().parents[3]
 
 
 def _coerce_bool(value: Any, *, default: bool) -> bool:

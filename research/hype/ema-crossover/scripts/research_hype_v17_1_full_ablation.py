@@ -34,14 +34,14 @@ from research_hype_v17_hybrid_ablation import (
 from research_hype_v17_trend_state_search import SignalPlan, build_signal
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_1_full_ablation.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_1_full_ablation_ranking.csv")
-SENSITIVITY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_1_full_ablation_sensitivity.csv")
-WINDOWS_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_1_full_ablation_top_windows.csv")
-ATTRIBUTION_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_1_full_ablation_trade_attribution.csv")
-DIAG_BASE_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_1_full_ablation_base_diagnostics_summary.csv")
-DIAG_BEST_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_1_full_ablation_best_diagnostics_summary.csv")
-DIAG_DETAIL_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_1_full_ablation_best_diagnostics_detail.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_1_full_ablation.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_1_full_ablation_ranking.csv")
+SENSITIVITY_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_1_full_ablation_sensitivity.csv")
+WINDOWS_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_1_full_ablation_top_windows.csv")
+ATTRIBUTION_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_1_full_ablation_trade_attribution.csv")
+DIAG_BASE_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_1_full_ablation_base_diagnostics_summary.csv")
+DIAG_BEST_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_1_full_ablation_best_diagnostics_summary.csv")
+DIAG_DETAIL_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_1_full_ablation_best_diagnostics_detail.csv")
 
 
 def _keep_imported_paths_referenced() -> tuple[Path, ...]:

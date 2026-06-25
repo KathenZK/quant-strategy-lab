@@ -30,7 +30,7 @@ dev = [
 ]
 
 [project.scripts]
-quant-strategy-lab = "strategy_lab.cli:main"
+quant-strategy-lab = "strategy_lab.data.cli:main"
 
 [tool.setuptools]
 package-dir = { "" = "src" }

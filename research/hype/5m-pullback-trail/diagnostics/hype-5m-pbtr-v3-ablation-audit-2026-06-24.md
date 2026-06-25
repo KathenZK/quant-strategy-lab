@@ -143,7 +143,7 @@ V3 可以记入主账，但定位应是高频研究候选，而不是生产批�
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3_ablation_audit.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3_ablation_audit.py`
 - JSON：`artifacts/hype_5m_pbtr_v3_ablation_audit.json`
 - 审计 JSON：`artifacts/hype_5m_pbtr_v3_audit_metrics.json`
 - 消融汇总：`artifacts/hype_5m_pbtr_v3_ablation_summary.csv`

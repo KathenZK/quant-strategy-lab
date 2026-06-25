@@ -37,11 +37,11 @@
 
 ## 脚本
 
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_indicator_search.py`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_filter_refinement.py`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_ensemble_combo.py`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_ensemble_ablation.py`
-- `research/hype/families/5m-pullback-trail/scripts/render_hype_5m_ensemble_specs.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_indicator_search.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_filter_refinement.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_ensemble_combo.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_ensemble_ablation.py`
+- `research/hype/5m-pullback-trail/scripts/render_hype_5m_ensemble_specs.py`
 
 ## 报告产物
 

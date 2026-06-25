@@ -15,11 +15,11 @@ from research_hype_5m_indicator_search import add_features, build_signal, simula
 
 DATA_ROOT = Path("data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=5m")
 SYMBOL_FILE = "symbol=hype_usdt_usdt.parquet"
-LEGS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos_summary.csv")
-TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos_trades.csv")
-LEG_TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos_leg_trades.csv")
+LEGS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos_summary.csv")
+TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos_trades.csv")
+LEG_TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos_leg_trades.csv")
 
 ORIGINAL_END_TS = pd.Timestamp("2026-06-01T00:00:00Z")
 FORWARD_START_TS = pd.Timestamp("2026-06-01T00:00:00Z")

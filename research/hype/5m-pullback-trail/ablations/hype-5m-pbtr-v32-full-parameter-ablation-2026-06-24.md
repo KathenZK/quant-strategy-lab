@@ -102,7 +102,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v32_full_ablation.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v32_full_ablation.py`
 - JSON：`artifacts/hype_5m_pbtr_v32_full_ablation.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v32_full_ablation_summary.csv`
 - 消融切片：`artifacts/hype_5m_pbtr_v32_full_ablation_validation_slices.csv`

@@ -76,7 +76,7 @@ V4 不是明显的代码错误或不可计算策略：入场只用 EMA、K 线�
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v4_live_viability_audit.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v4_live_viability_audit.py`
 - JSON：`artifacts/hype_5m_pbtr_v4_live_viability_audit.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v4_live_viability_summary.csv`
 - 成本压力 CSV：`artifacts/hype_5m_pbtr_v4_live_viability_cost_stress.csv`

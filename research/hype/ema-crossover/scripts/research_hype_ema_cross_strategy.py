@@ -60,7 +60,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument(
         "--output",
         type=Path,
-        default=Path("research/hype/families/ema-crossover/artifacts/hype_ema_cross_research.json"),
+        default=Path("research/hype/ema-crossover/artifacts/hype_ema_cross_research.json"),
         help="JSON report output path.",
     )
     parser.add_argument(

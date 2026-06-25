@@ -38,7 +38,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_lockout_high_low_mean_trailing.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_lockout_high_low_mean_trailing.py`
 - JSON：`artifacts/hype_5m_pbtr_v33_lockout_high_low_mean_trailing.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v33_lockout_high_low_mean_trailing_summary.csv`
 - 交易诊断 CSV：`artifacts/hype_5m_pbtr_v33_lockout_high_low_mean_trailing_trade_diagnostics.csv`

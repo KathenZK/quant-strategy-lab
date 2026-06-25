@@ -115,8 +115,8 @@ Family id: `HYPE-5M-PBTR`
 
 ## 产物
 
-- 上一轮 V2 实盘成本消融：`research/hype/families/5m-pullback-trail/ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`
-- 本报告：`research/hype/families/5m-pullback-trail/ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`
+- 上一轮 V2 实盘成本消融：`research/hype/5m-pullback-trail/ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`
+- 本报告：`research/hype/5m-pullback-trail/ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`
 - JSON：`artifacts/hype_5m_pbtr_v21_live_cost_variants.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v21_live_cost_variant_summary.csv`
 - 最近窗口 CSV：`artifacts/hype_5m_pbtr_v21_live_cost_variant_rolling_windows.csv`

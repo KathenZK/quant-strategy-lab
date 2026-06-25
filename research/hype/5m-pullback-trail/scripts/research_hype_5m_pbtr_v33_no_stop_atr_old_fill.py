@@ -22,15 +22,15 @@ from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 END_TS = pd.Timestamp("2026-06-23T04:15:00Z")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_summary.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_weekly.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_monthly.csv")
-DIAGNOSTICS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_trade_diagnostics.csv")
-CROSSED_BREAKDOWN_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_crossed_breakdown.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_summary.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_weekly.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_monthly.csv")
+DIAGNOSTICS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_trade_diagnostics.csv")
+CROSSED_BREAKDOWN_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_stop_atr_old_fill_crossed_breakdown.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v33-no-stop-atr-old-fill-2026-06-25.md"
 )
 
@@ -415,7 +415,7 @@ def render_markdown(
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_no_stop_atr_old_fill.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_no_stop_atr_old_fill.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 交易诊断 CSV：`{DIAGNOSTICS_PATH}`",

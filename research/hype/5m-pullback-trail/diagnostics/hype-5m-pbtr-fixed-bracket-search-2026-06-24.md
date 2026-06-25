@@ -58,7 +58,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_fixed_bracket_search.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_fixed_bracket_search.py`
 - JSON：`artifacts/hype_5m_pbtr_fixed_bracket_search.json`
 - 信号 CSV：`artifacts/hype_5m_pbtr_fixed_bracket_search_signals.csv`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_fixed_bracket_search_summary.csv`

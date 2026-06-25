@@ -45,23 +45,20 @@ research/
   STRATEGY_INDEX.md
   hype/
     AI_CONTEXT.md
-    families/
-      5m-pullback-trail/
-        scripts/    # 该家族的一次性复现、审计、搜索脚本
-        artifacts/  # 该家族需要保留的 JSON/CSV/HTML 研究产物
-      ema-crossover/
-      ema-trend-breakout/
-      candle-count-reversal/
+    5m-pullback-trail/
+      scripts/    # 该策略的一次性复现、审计、搜索脚本
+      artifacts/  # 该策略需要保留的 JSON/CSV/HTML 研究产物
+    ema-crossover/
+    ema-trend-breakout/
+    candle-count-reversal/
     transfer/
   mu/
 
 src/strategy_lab/
   data/       # 数据抓取、归一化、质量检查、因子和特征
-  research/   # 可复用的窄口径研究数据集导出工具
-  cli.py      # 数据优先的 CLI
-
-scripts/data/
-  fetch_polygon_equity_aggregates.py
+    cli.py    # 数据优先的 CLI 入口
+    ingest/   # 交易所、数据源和外部市场数据抓取
+    exporters/ # 可复用的窄口径研究数据集导出工具
 
 tests/              # active 数据层和 CLI 测试
 
@@ -95,7 +92,7 @@ data/normalized/ohlcv/
 
 ## 研究资产规则
 
-新的策略研究默认在 `research/<topic>/` 或 `research/hype/families/<family>/` 内自管理：
+新的策略研究默认在 `research/<topic>/` 或 `research/hype/<family>/` 内自管理：
 
 - `README.md`、主账和 `decision-log.md` 记录持久结论。
 - `diagnostics/`、`ablations/`、`live-specs/`、`research-notes/` 按研究性质分类放 Markdown。

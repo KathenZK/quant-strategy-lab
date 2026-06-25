@@ -21,10 +21,10 @@ from research_hype_v13_late_reentry import LateReentrySpec, run_late_reentry
 from research_hype_v14_main_backfill import v14_spec
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_trend_state_search.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_trend_state_search_ranking.csv")
-CONSTRAINT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_trend_state_search_constraints.csv")
-TRADES_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v17_trend_state_search_top_trades.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_trend_state_search.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_trend_state_search_ranking.csv")
+CONSTRAINT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_trend_state_search_constraints.csv")
+TRADES_PATH = Path("research/hype/ema-crossover/artifacts/hype_v17_trend_state_search_top_trades.csv")
 
 TARGET_RETURN = 50.0
 TARGET_DD = -0.20

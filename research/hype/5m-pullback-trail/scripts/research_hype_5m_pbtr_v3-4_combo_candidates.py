@@ -12,14 +12,14 @@ import pandas as pd
 
 
 SOURCE_PATH = Path(__file__).with_name("research_hype_5m_pbtr_v3-3_full_ablation.py")
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_summary.csv")
-SLICES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_validation_slices.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_weekly.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_monthly.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_summary.csv")
+SLICES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_validation_slices.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_weekly.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-4_combo_candidates_monthly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v3-4-combo-candidates-2026-06-24.md"
 )
 
@@ -207,7 +207,7 @@ def render_markdown(summary: pd.DataFrame, rolling: pd.DataFrame, weekly: pd.Dat
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-4_combo_candidates.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-4_combo_candidates.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 验证切片 CSV：`{SLICES_PATH}`",

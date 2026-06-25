@@ -22,10 +22,10 @@ from research_hype_5m_indicator_search import (
 )
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search.json")
-RANKING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search_ranking.csv")
-TARGET_HITS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search_target_hits.csv")
-TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search_top_trades.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search.json")
+RANKING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search_ranking.csv")
+TARGET_HITS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search_target_hits.csv")
+TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search_top_trades.csv")
 
 TARGET_ANNUALIZED_MULTIPLE = 20.0
 TARGET_WIN_RATE = 0.60

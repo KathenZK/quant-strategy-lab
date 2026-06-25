@@ -16,11 +16,11 @@ from research_hype_5m_pbtr_v2_live_cost_ablation_slices import ENTRY_SLIPPAGE_RA
 from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_unlock_exit_audit.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_unlock_exit_audit_summary.csv")
-RECENT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_unlock_exit_audit_recent.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_unlock_exit_audit.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_unlock_exit_audit_summary.csv")
+RECENT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_unlock_exit_audit_recent.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v21a-unlock-exit-audit-2026-06-24.md"
 )
 
@@ -323,7 +323,7 @@ def render_markdown(summary: pd.DataFrame, subset: pd.DataFrame, recent: pd.Data
             "",
             "## 产物",
             "",
-            "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_unlock_exit_audit.py`",
+            "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_unlock_exit_audit.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 最近窗口 CSV：`{RECENT_PATH}`",

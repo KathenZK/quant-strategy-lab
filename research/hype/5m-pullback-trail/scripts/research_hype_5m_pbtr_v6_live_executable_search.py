@@ -19,13 +19,13 @@ from research_hype_5m_pbtr_v2_live_cost_ablation_slices import (
 from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_search.json")
-PRESCREEN_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_prescreen.csv")
-CANDIDATE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_candidates.csv")
-SLICE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_slices.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_monthly.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_search.json")
+PRESCREEN_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_prescreen.csv")
+CANDIDATE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_candidates.csv")
+SLICE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_slices.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_live_executable_monthly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v6-live-executable-search-2026-06-25.md"
 )
 
@@ -823,7 +823,7 @@ def render_markdown(
             "",
             "## 产物",
             "",
-            "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_live_executable_search.py`",
+            "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_live_executable_search.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- prescreen CSV：`{PRESCREEN_PATH}`",
             f"- candidates CSV：`{CANDIDATE_PATH}`",

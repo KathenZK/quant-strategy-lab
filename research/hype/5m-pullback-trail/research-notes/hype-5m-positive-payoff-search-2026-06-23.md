@@ -108,7 +108,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 复现产物
 
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_positive_payoff_search.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_positive_payoff_search.py`
 - `artifacts/hype_5m_positive_payoff_search.json`
 - `artifacts/hype_5m_positive_payoff_search_ranking.csv`
 - `artifacts/hype_5m_positive_payoff_search_target_hits.csv`

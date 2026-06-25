@@ -103,7 +103,7 @@ V17.1 window backfill:
 
 Script:
 
-`research/hype/families/ema-crossover/scripts/research_hype_v17_hybrid_ablation.py`
+`research/hype/ema-crossover/scripts/research_hype_v17_hybrid_ablation.py`
 
 The run tested `144` candidates: the official baseline plus single-parameter or single-module changes across these groups:
 

@@ -110,7 +110,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_live_executable_search.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_live_executable_search.py`
 - JSON：`artifacts/hype_5m_pbtr_v6_live_executable_search.json`
 - prescreen CSV：`artifacts/hype_5m_pbtr_v6_live_executable_prescreen.csv`
 - candidates CSV：`artifacts/hype_5m_pbtr_v6_live_executable_candidates.csv`

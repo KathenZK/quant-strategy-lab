@@ -8,7 +8,7 @@ import pandas as pd
 from strategy_lab.data.lake import DataLakeLayout
 from strategy_lab.data.models import DatasetKind, MarketType, dataset_specs
 from strategy_lab.data.normalize import normalize_dataset
-from strategy_lab.fs import atomic_write_path
+from strategy_lab.data.fs import atomic_write_path
 
 
 def _ensure_ohlcv_columns(frame: pd.DataFrame) -> pd.DataFrame:

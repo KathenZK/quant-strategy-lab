@@ -15,8 +15,8 @@ from research_hype_state_machine_v12 import add_structure_features
 from research_hype_v13_late_reentry import LateReentrySpec, base_v13_spec, run_late_reentry
 
 
-CSV_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_main_result_backfill_v14.csv")
-JSON_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_main_result_backfill_v14.json")
+CSV_PATH = Path("research/hype/ema-crossover/artifacts/hype_main_result_backfill_v14.csv")
+JSON_PATH = Path("research/hype/ema-crossover/artifacts/hype_main_result_backfill_v14.json")
 
 
 WINDOWS = {

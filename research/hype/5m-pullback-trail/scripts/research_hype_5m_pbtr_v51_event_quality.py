@@ -25,11 +25,11 @@ from research_hype_5m_pbtr_v5_executable_search import (
 from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_event_quality.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_event_quality_summary.csv")
-EXACT_RULES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_event_quality_exact_rules.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_event_quality.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_event_quality_summary.csv")
+EXACT_RULES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_event_quality_exact_rules.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v5-1-event-quality-2026-06-24.md"
 )
 
@@ -585,7 +585,7 @@ def render_markdown(baselines: pd.DataFrame, exact: pd.DataFrame) -> str:
             "",
             "## Outputs",
             "",
-            "- Script: `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v51_event_quality.py`",
+            "- Script: `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v51_event_quality.py`",
             f"- JSON: `{REPORT_PATH}`",
             f"- Baseline CSV: `{SUMMARY_PATH}`",
             f"- Exact rule CSV: `{EXACT_RULES_PATH}`",

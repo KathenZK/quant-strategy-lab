@@ -231,7 +231,7 @@ V2 可以记录为 `HYPE-5M-PBTR-V2`，但状态应为“research live-dry-run c
 
 ## 复现产物
 
-- `research/hype/families/5m-pullback-trail/scripts/test_hype_5m_r05732_v2_combos.py`
+- `research/hype/5m-pullback-trail/scripts/test_hype_5m_r05732_v2_combos.py`
 - `artifacts/hype_5m_r05732_v2_combo_test.json`
 - `artifacts/hype_5m_r05732_v2_combo_test_ranking.csv`
 - `artifacts/hype_5m_r05732_v2_combo_test_slices.csv`

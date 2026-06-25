@@ -23,13 +23,13 @@ V1_FINAL_THRESHOLD = 0.688442
 
 V1_CONFIG = replace(V1_BASE_CONFIG, name="HYPE-5M-PBTR-V1")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_v2_slice_compare.json")
-V1_WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_weekly_slices.csv")
-V1_ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_rolling_windows.csv")
-V2_WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_weekly_slices.csv")
-V2_ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_rolling_windows.csv")
-COMPARE_ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_v2_rolling_compare.csv")
-COMPARE_WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_v2_weekly_compare.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_v2_slice_compare.json")
+V1_WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_weekly_slices.csv")
+V1_ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_rolling_windows.csv")
+V2_WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_weekly_slices.csv")
+V2_ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_rolling_windows.csv")
+COMPARE_ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_v2_rolling_compare.csv")
+COMPARE_WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v1_v2_weekly_compare.csv")
 
 
 def run_trades(frame: pd.DataFrame, cfg: SearchConfig, *, threshold: float) -> list[Trade]:

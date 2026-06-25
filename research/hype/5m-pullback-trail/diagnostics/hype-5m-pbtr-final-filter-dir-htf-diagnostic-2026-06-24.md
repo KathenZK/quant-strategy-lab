@@ -110,10 +110,10 @@ V2 绝对阈值扫面：
 
 已复核相关脚本：
 
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_indicator_search.py`
-- `research/hype/families/5m-pullback-trail/scripts/ablate_hype_5m_r05732.py`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_ablation_slices.py`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_live_cost_ablation_slices.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_indicator_search.py`
+- `research/hype/5m-pullback-trail/scripts/ablate_hype_5m_r05732.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_ablation_slices.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_live_cost_ablation_slices.py`
 
 未发现导致该现象的明显未来函数：
 

@@ -27,9 +27,9 @@ Use these targets when converting Canvas reports to Markdown:
 
 | Canvas group | Markdown target |
 | --- | --- |
-| HYPE EMA golden/death cross | `research/hype/families/ema-crossover/` |
-| HYPE EMA trend breakout | `research/hype/families/ema-trend-breakout/` |
-| HYPE candle-count reversal | `research/hype/families/candle-count-reversal/` |
+| HYPE EMA golden/death cross | `research/hype/ema-crossover/` |
+| HYPE EMA trend breakout | `research/hype/ema-trend-breakout/` |
+| HYPE candle-count reversal | `research/hype/candle-count-reversal/` |
 | MU transfer research | `research/mu/` |
 | Cross-asset HYPE transfer checks | `research/hype/transfer/` or the relevant promoted asset family if one exists |
 | External or abandoned strategy research | `archive/research/legacy-strategies/` |
@@ -40,9 +40,9 @@ When a Canvas mixes multiple families, split it into separate Markdown files rat
 ## Conversion Priority
 
 1. Core ledgers and promoted candidates:
-   - `hype-ema-crossover-evolution.canvas.tsx` -> `hype/families/ema-crossover/hype-ema-x-core-ledger.md`
-   - `hype-trend-strategy-research.canvas.tsx` -> `hype/families/ema-trend-breakout/hype-ema-tb-core-ledger.md`
-   - `hype-strategy-milestone-comparison.canvas.tsx` -> `hype/families/candle-count-reversal/hype-cc-15m-milestone-comparison.md`
+   - `hype-ema-crossover-evolution.canvas.tsx` -> `hype/ema-crossover/hype-ema-x-core-ledger.md`
+   - `hype-trend-strategy-research.canvas.tsx` -> `hype/ema-trend-breakout/hype-ema-tb-core-ledger.md`
+   - `hype-strategy-milestone-comparison.canvas.tsx` -> `hype/candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 2. Family decision material that affects canonical specs or live candidates:
    - migrated under each family `legacy-canvas/` directory.
 3. Diagnostics, ablations, and robustness checks referenced by existing family `README.md` files:

@@ -19,11 +19,11 @@ from research_hype_state_machine_v12_hard_exit import spec as focused_spec
 from research_hype_v13_main_backfill import v13_spec
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_missed_trends.json")
-CANDIDATE_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_missed_trends_candidates.csv")
-REGIME_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_missed_trends_regimes.csv")
-SKIPPED_TRADE_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_missed_trends_skipped_v12_3_trades.csv")
-REJECTED_EPISODE_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_missed_trends_rejected_signal_episodes.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_missed_trends.json")
+CANDIDATE_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_missed_trends_candidates.csv")
+REGIME_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_missed_trends_regimes.csv")
+SKIPPED_TRADE_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_missed_trends_skipped_v12_3_trades.csv")
+REJECTED_EPISODE_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_missed_trends_rejected_signal_episodes.csv")
 
 
 def make_spec(name: str, *, age: int, dist: float = 0.0, move48: float = 0.0) -> V12Spec:

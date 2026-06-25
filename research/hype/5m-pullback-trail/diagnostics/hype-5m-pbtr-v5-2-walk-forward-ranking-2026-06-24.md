@@ -83,7 +83,7 @@ The important diagnostic is the gap between the fixed V5.1 benchmark and walk-fo
 
 ## Outputs
 
-- Script: `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v52_walk_forward_ranking.py`
+- Script: `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v52_walk_forward_ranking.py`
 - JSON: `artifacts/hype_5m_pbtr_v52_walk_forward_ranking.json`
 - Summary CSV: `artifacts/hype_5m_pbtr_v52_walk_forward_ranking_summary.csv`
 - Segment CSV: `artifacts/hype_5m_pbtr_v52_walk_forward_ranking_segments.csv`

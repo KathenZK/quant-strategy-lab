@@ -27,13 +27,13 @@ from research_hype_5m_pbtr_v2_live_cost_ablation_slices import (
 from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit_summary.csv")
-TRADE_DIAG_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit_trade_diagnostics.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit_weekly.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit_summary.csv")
+TRADE_DIAG_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit_trade_diagnostics.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_live_realistic_audit_weekly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v21a-live-realistic-audit-2026-06-24.md"
 )
 
@@ -417,7 +417,7 @@ def render_markdown(summary: pd.DataFrame, diag: pd.DataFrame, rolling: pd.DataF
         "",
         "## 产物",
         "",
-        "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_live_realistic_audit.py`",
+        "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_live_realistic_audit.py`",
         f"- JSON：`{REPORT_PATH}`",
         f"- 汇总 CSV：`{SUMMARY_PATH}`",
         f"- 交易诊断 CSV：`{TRADE_DIAG_PATH}`",

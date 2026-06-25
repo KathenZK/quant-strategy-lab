@@ -332,6 +332,6 @@ V3.3 与 V3.2 基本一致，仅因移除旧代码中的额外 NaN 预热保护�
 ## 复现入口
 
 ```text
-research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3_minimal.py
-research/hype/families/5m-pullback-trail/diagnostics/hype-5m-pbtr-v3-3-minimal-2026-06-24.md
+research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3_minimal.py
+research/hype/5m-pullback-trail/diagnostics/hype-5m-pbtr-v3-3-minimal-2026-06-24.md
 ```

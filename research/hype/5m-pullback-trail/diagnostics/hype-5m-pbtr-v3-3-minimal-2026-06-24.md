@@ -51,7 +51,7 @@ V3.3 用最小逻辑重写后表现与 V3.2 几乎一致，说明 V3.2 中所有
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3_minimal.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3_minimal.py`
 - JSON：`artifacts/hype_5m_pbtr_v3-3_minimal.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v3-3_minimal_summary.csv`
 - 滚动切片：`artifacts/hype_5m_pbtr_v3-3_minimal_rolling.csv`

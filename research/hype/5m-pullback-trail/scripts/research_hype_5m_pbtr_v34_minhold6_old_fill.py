@@ -24,15 +24,15 @@ from research_hype_5m_pbtr_v33_no_stop_atr_old_fill import (
 from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_summary.csv")
-DIAGNOSTICS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_trade_diagnostics.csv")
-CROSSED_SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_crossed_summary.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_weekly.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_monthly.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_summary.csv")
+DIAGNOSTICS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_trade_diagnostics.csv")
+CROSSED_SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_crossed_summary.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_weekly.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v34_minhold6_old_fill_monthly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v3-4-minhold6-old-fill-2026-06-25.md"
 )
 
@@ -165,7 +165,7 @@ def render_markdown(summary: pd.DataFrame, crossed_summary: pd.DataFrame, rollin
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v34_minhold6_old_fill.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v34_minhold6_old_fill.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 交易诊断 CSV：`{DIAGNOSTICS_PATH}`",

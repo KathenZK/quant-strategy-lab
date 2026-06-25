@@ -21,9 +21,9 @@ from research_hype_ema_regime_hold_v5 import (
 )
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_ema_volume_exhaustion_v7.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_ema_volume_exhaustion_v7_ranking.csv")
-TOP_TRADES_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_ema_volume_exhaustion_v7_top_trades.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_ema_volume_exhaustion_v7.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_ema_volume_exhaustion_v7_ranking.csv")
+TOP_TRADES_PATH = Path("research/hype/ema-crossover/artifacts/hype_ema_volume_exhaustion_v7_top_trades.csv")
 
 
 @dataclass(frozen=True, slots=True)

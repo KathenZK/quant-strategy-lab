@@ -21,10 +21,10 @@ from research_hype_5m_pbtr_v51_event_quality import (
 from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_candidate_ablation.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_candidate_ablation_summary.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_candidate_ablation.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v51_candidate_ablation_summary.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v5-1-candidate-ablation-2026-06-24.md"
 )
 
@@ -301,7 +301,7 @@ def render_markdown(summary: pd.DataFrame) -> str:
             "",
             "## Outputs",
             "",
-            "- Script: `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v51_candidate_ablation.py`",
+            "- Script: `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v51_candidate_ablation.py`",
             f"- JSON: `{REPORT_PATH}`",
             f"- Summary CSV: `{SUMMARY_PATH}`",
         ]

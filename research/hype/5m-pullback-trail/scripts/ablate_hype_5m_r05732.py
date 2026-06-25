@@ -22,9 +22,9 @@ from research_hype_5m_indicator_search import (
 from research_hype_5m_positive_payoff_search import load_all_hype_5m, metric_from_trades, validation_slices
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_r05732_ablation.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_r05732_ablation_summary.csv")
-SLICE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_r05732_ablation_slices.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_r05732_ablation.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_r05732_ablation_summary.csv")
+SLICE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_r05732_ablation_slices.csv")
 
 LEVERAGE = 1.0
 FINAL_FILTER_NAME = "dir_htf_ge_0.688442"

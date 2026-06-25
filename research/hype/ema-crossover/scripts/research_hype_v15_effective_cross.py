@@ -21,11 +21,11 @@ from research_hype_v14_atr_dynamic_entry import add_regime_id, summarize_large_r
 from research_hype_v14_main_backfill import v14_spec
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v15_effective_cross.json")
-CROSS_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v15_effective_cross_events.csv")
-RULE_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v15_effective_cross_rule_stats.csv")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v15_effective_cross_ranking.csv")
-REGIME_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v15_effective_cross_regimes.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v15_effective_cross.json")
+CROSS_PATH = Path("research/hype/ema-crossover/artifacts/hype_v15_effective_cross_events.csv")
+RULE_PATH = Path("research/hype/ema-crossover/artifacts/hype_v15_effective_cross_rule_stats.csv")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_v15_effective_cross_ranking.csv")
+REGIME_PATH = Path("research/hype/ema-crossover/artifacts/hype_v15_effective_cross_regimes.csv")
 
 
 @dataclass(frozen=True, slots=True)

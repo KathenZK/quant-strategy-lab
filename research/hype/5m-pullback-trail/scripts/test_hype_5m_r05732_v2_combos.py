@@ -16,9 +16,9 @@ from research_hype_5m_indicator_search import SearchConfig, add_features, build_
 from research_hype_5m_positive_payoff_search import load_all_hype_5m, metric_from_trades, validation_slices
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_r05732_v2_combo_test.json")
-RANKING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_r05732_v2_combo_test_ranking.csv")
-SLICE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_r05732_v2_combo_test_slices.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_r05732_v2_combo_test.json")
+RANKING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_r05732_v2_combo_test_ranking.csv")
+SLICE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_r05732_v2_combo_test_slices.csv")
 
 LEVERAGE = 1.0
 

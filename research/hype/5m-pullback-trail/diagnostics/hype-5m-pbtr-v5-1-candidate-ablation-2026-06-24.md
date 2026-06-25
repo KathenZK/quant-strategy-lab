@@ -131,6 +131,6 @@ Do not send V5.1 to real-money execution yet. It is now a legitimate research ca
 
 ## Outputs
 
-- Script: `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v51_candidate_ablation.py`
+- Script: `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v51_candidate_ablation.py`
 - JSON: `artifacts/hype_5m_pbtr_v51_candidate_ablation.json`
 - Summary CSV: `artifacts/hype_5m_pbtr_v51_candidate_ablation_summary.csv`

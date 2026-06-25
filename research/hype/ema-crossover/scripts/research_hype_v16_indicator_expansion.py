@@ -21,10 +21,10 @@ from research_hype_v13_late_reentry import LateReentrySpec, run_late_reentry
 from research_hype_v14_main_backfill import v14_spec
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v16_indicator_expansion.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v16_indicator_expansion_ranking.csv")
-TRADES_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v16_indicator_expansion_trades.csv")
-SIGNAL_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v16_indicator_expansion_signal_counts.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v16_indicator_expansion.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_v16_indicator_expansion_ranking.csv")
+TRADES_PATH = Path("research/hype/ema-crossover/artifacts/hype_v16_indicator_expansion_trades.csv")
+SIGNAL_PATH = Path("research/hype/ema-crossover/artifacts/hype_v16_indicator_expansion_signal_counts.csv")
 
 DATA_LAKE = Path("data/normalized/ohlcv")
 

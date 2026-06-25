@@ -51,7 +51,7 @@ HTML 图包含 V3/V3.1 闭合交易权益曲线、回撤路径、V3.1 月度复�
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v31_min_hold_9.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v31_min_hold_9.py`
 - JSON：`artifacts/hype_5m_pbtr_v31_min_hold_9.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v31_min_hold_9_summary.csv`
 - 滚动切片：`artifacts/hype_5m_pbtr_v31_min_hold_9_rolling.csv`

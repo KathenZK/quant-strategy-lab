@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from strategy_lab.settings import default_settings, load_settings
+from strategy_lab.data.settings import default_settings, load_settings
 
 
 def test_default_storage_paths_live_under_repository_root() -> None:

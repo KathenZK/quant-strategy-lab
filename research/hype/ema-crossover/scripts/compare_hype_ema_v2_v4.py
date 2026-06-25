@@ -419,7 +419,7 @@ def main() -> None:
             for variant in variants
         },
     }
-    output = Path("research/hype/families/ema-crossover/artifacts/hype_ema_v2_v4_compare.json")
+    output = Path("research/hype/ema-crossover/artifacts/hype_ema_v2_v4_compare.json")
     output.write_text(json.dumps(report, ensure_ascii=False, indent=2) + "\n")
     print(json.dumps(report, ensure_ascii=False, indent=2))
     print(f"wrote={output}")

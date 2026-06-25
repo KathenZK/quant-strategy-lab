@@ -20,10 +20,10 @@ from research_hype_v14_atr_dynamic_entry import add_regime_id, summarize_large_r
 from research_hype_v14_main_backfill import v14_spec
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_slow_trend_entry.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_slow_trend_entry_ranking.csv")
-REGIME_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_slow_trend_entry_regimes.csv")
-TRADE_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_slow_trend_entry_best_trades.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_slow_trend_entry.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_slow_trend_entry_ranking.csv")
+REGIME_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_slow_trend_entry_regimes.csv")
+TRADE_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_slow_trend_entry_best_trades.csv")
 
 
 @dataclass(frozen=True, slots=True)

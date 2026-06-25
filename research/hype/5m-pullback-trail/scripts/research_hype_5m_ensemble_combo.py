@@ -9,12 +9,12 @@ import numpy as np
 import pandas as pd
 
 
-RANKING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_filter_refinement_ranking.csv")
-TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_filter_refinement_top_trades.csv")
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo.json")
-RANKING_OUT = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_ranking.csv")
-LEGS_OUT = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
-TRADES_OUT = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_selected_trades.csv")
+RANKING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_filter_refinement_ranking.csv")
+TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_filter_refinement_top_trades.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo.json")
+RANKING_OUT = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_ranking.csv")
+LEGS_OUT = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
+TRADES_OUT = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_selected_trades.csv")
 
 START_TS = pd.Timestamp("2025-06-01T00:00:00Z")
 END_TS = pd.Timestamp("2026-06-01T00:00:00Z")

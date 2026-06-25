@@ -24,14 +24,14 @@ from research_hype_5m_positive_payoff_search import load_all_hype_5m, validation
 
 END_TS = pd.Timestamp("2026-06-23T04:15:00Z")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_ablation_audit.json")
-ABLATION_SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_ablation_summary.csv")
-ABLATION_SLICES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_ablation_validation_slices.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_weekly_slices.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_monthly_slices.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_rolling_windows.csv")
-AUDIT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_audit_metrics.json")
-MARKDOWN_PATH = Path("research/hype/families/5m-pullback-trail/diagnostics/hype-5m-pbtr-v3-ablation-audit-2026-06-24.md")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_ablation_audit.json")
+ABLATION_SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_ablation_summary.csv")
+ABLATION_SLICES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_ablation_validation_slices.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_weekly_slices.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_monthly_slices.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_rolling_windows.csv")
+AUDIT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3_audit_metrics.json")
+MARKDOWN_PATH = Path("research/hype/5m-pullback-trail/diagnostics/hype-5m-pbtr-v3-ablation-audit-2026-06-24.md")
 
 
 V3_CONFIG = replace(
@@ -696,7 +696,7 @@ def render_markdown(summary: pd.DataFrame, weekly: pd.DataFrame, monthly: pd.Dat
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3_ablation_audit.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3_ablation_audit.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 审计 JSON：`{AUDIT_PATH}`",
             f"- 消融汇总：`{ABLATION_SUMMARY_PATH}`",

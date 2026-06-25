@@ -22,14 +22,14 @@ from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 END_TS = pd.Timestamp("2026-06-23T04:15:00Z")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_summary.csv")
-SLICES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_validation_slices.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_weekly.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_monthly.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_summary.csv")
+SLICES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_validation_slices.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_weekly.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v3-3_full_ablation_monthly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/ablations/"
+    "research/hype/5m-pullback-trail/ablations/"
     "hype-5m-pbtr-v3-3-full-parameter-ablation-2026-06-24.md"
 )
 
@@ -369,7 +369,7 @@ def render_markdown(summary: pd.DataFrame, rolling: pd.DataFrame, weekly: pd.Dat
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3_full_ablation.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3_full_ablation.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 验证切片 CSV：`{SLICES_PATH}`",

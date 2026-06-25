@@ -8,8 +8,8 @@ Family id: `HYPE-5M-PBTR`
 
 脚本:
 
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_ablation_slices.py`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v1_v2_slice_compare.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_ablation_slices.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v1_v2_slice_compare.py`
 
 ## 摘要
 

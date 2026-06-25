@@ -37,7 +37,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_staged_tp_stop.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_staged_tp_stop.py`
 - JSON：`artifacts/hype_5m_pbtr_v33_staged_tp_stop.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v33_staged_tp_stop_summary.csv`
 - 交易明细 CSV：`artifacts/hype_5m_pbtr_v33_staged_tp_stop_trades.csv`

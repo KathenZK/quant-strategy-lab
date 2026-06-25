@@ -3,7 +3,7 @@ from __future__ import annotations
 import numpy as np
 import pandas as pd
 
-from strategy_lab.research.ema_cross_quality import (
+from strategy_lab.data.exporters.ema_cross_quality import (
     CrossQualityConfig,
     discover_symbol_files,
     extract_cross_events,

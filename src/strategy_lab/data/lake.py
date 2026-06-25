@@ -4,7 +4,7 @@ from dataclasses import dataclass
 from datetime import date
 from pathlib import Path
 
-from strategy_lab.settings import AppSettings
+from strategy_lab.data.settings import AppSettings
 from strategy_lab.data.models import DatasetKind, MarketType
 
 

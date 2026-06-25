@@ -122,7 +122,7 @@ Recommendation: do not keep widening stops or adding simple filters around this 
 
 ## Outputs
 
-- Script: `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v5_executable_search.py`
+- Script: `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v5_executable_search.py`
 - JSON: `artifacts/hype_5m_pbtr_v5_executable_search.json`
 - Summary CSV: `artifacts/hype_5m_pbtr_v5_executable_search_summary.csv`
 - Slice CSV: `artifacts/hype_5m_pbtr_v5_executable_search_slices.csv`

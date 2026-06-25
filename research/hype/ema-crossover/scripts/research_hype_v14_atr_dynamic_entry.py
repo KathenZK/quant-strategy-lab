@@ -19,10 +19,10 @@ from research_hype_v13_late_reentry import run_late_reentry
 from research_hype_v14_main_backfill import v14_spec
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_atr_dynamic_entry.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_atr_dynamic_entry_ranking.csv")
-MISS_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_atr_dynamic_entry_missed_regimes.csv")
-FAILURE_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_atr_dynamic_entry_signal_failures.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_atr_dynamic_entry.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_atr_dynamic_entry_ranking.csv")
+MISS_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_atr_dynamic_entry_missed_regimes.csv")
+FAILURE_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_atr_dynamic_entry_signal_failures.csv")
 
 
 @dataclass(frozen=True, slots=True)

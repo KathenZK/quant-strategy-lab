@@ -63,6 +63,6 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_dryrun_ledger_audit.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_dryrun_ledger_audit.py`
 - JSON：`artifacts/hype_5m_pbtr_v21a_dryrun_ledger_audit.json`
 - 逐笔 CSV：`artifacts/hype_5m_pbtr_v21a_dryrun_ledger_audit_trades.csv`

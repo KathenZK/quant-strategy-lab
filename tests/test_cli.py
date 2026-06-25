@@ -1,6 +1,6 @@
 from typer.testing import CliRunner
 
-from strategy_lab.cli import app
+from strategy_lab.data.cli import app
 
 
 def test_cli_exposes_data_first_commands() -> None:

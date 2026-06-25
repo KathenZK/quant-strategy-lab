@@ -7,12 +7,12 @@ from typing import Any
 import pandas as pd
 
 
-DOC_DIR = Path("research/hype/families/5m-pullback-trail/ensemble-specs")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_summary.csv")
-DROP_LEG_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_drop_leg.csv")
-LEVERAGE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_leverage.csv")
-EXECUTION_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_execution.csv")
-LEGS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
+DOC_DIR = Path("research/hype/5m-pullback-trail/ensemble-specs")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_summary.csv")
+DROP_LEG_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_drop_leg.csv")
+LEVERAGE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_leverage.csv")
+EXECUTION_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_execution.csv")
+LEGS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
 
 TARGET_COMBOS: tuple[tuple[str, int, float], ...] = (
     ("S01", 8, 4.0),
@@ -472,7 +472,7 @@ Family id: `HYPE-5M-PBTR`
 
 ## 子腿列表
 
-本策略使用 `research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv` 的前 `{count}` 条子腿。
+本策略使用 `research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv` 的前 `{count}` 条子腿。
 
 {leg_table(legs)}
 
@@ -565,11 +565,11 @@ def main() -> None:
 
 复现来源：
 
-- `research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_ranking.csv`
-- `research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv`
-- `research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_*.csv`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_ensemble_combo.py`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_ensemble_ablation.py`
+- `research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_ranking.csv`
+- `research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv`
+- `research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_*.csv`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_ensemble_combo.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_ensemble_ablation.py`
 """
     (DOC_DIR / "README.md").write_text(index.strip() + "\n")
     print(f"wrote={DOC_DIR}")

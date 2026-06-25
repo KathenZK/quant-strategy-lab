@@ -31,12 +31,12 @@ from research_hype_5m_pbtr_v2_live_cost_ablation_slices import (
 from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21_live_cost_variants.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21_live_cost_variant_summary.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21_live_cost_variant_rolling_windows.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21_live_cost_variant_weekly_slices.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21_live_cost_variants.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21_live_cost_variant_summary.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21_live_cost_variant_rolling_windows.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21_live_cost_variant_weekly_slices.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/ablations/"
+    "research/hype/5m-pullback-trail/ablations/"
     "hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md"
 )
 

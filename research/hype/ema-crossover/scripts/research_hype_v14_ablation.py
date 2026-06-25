@@ -18,13 +18,13 @@ from research_hype_v13_late_reentry import LateReentrySpec, run_late_reentry
 from research_hype_v14_main_backfill import v14_spec
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_ablation.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_ablation_ranking.csv")
-SENSITIVITY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_ablation_sensitivity.csv")
-WINDOWS_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_ablation_top_windows.csv")
-DIAG_BASE_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_ablation_base_diagnostics_summary.csv")
-DIAG_BEST_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_ablation_best_diagnostics_summary.csv")
-DIAG_DETAIL_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v14_ablation_best_diagnostics_detail.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_ablation.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_ablation_ranking.csv")
+SENSITIVITY_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_ablation_sensitivity.csv")
+WINDOWS_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_ablation_top_windows.csv")
+DIAG_BASE_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_ablation_base_diagnostics_summary.csv")
+DIAG_BEST_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_ablation_best_diagnostics_summary.csv")
+DIAG_DETAIL_PATH = Path("research/hype/ema-crossover/artifacts/hype_v14_ablation_best_diagnostics_detail.csv")
 
 WINDOWS = {
     "1W": pd.Timedelta(days=7),

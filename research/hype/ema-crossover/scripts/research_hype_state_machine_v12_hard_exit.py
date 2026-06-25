@@ -16,11 +16,11 @@ from research_hype_state_machine_v12 import V12Spec, add_structure_features, run
 from research_hype_trade_path_diagnostics_v11 import diagnose_trade, summarize, trade_frame_from_result
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_hard_exit.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_hard_exit_ranking.csv")
-SUMMARY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_hard_exit_diagnostics_summary.csv")
-CATEGORY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_hard_exit_diagnostics_categories.csv")
-DETAIL_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_hard_exit_diagnostics_detail.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_hard_exit.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_hard_exit_ranking.csv")
+SUMMARY_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_hard_exit_diagnostics_summary.csv")
+CATEGORY_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_hard_exit_diagnostics_categories.csv")
+DETAIL_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_hard_exit_diagnostics_detail.csv")
 
 
 def spec(

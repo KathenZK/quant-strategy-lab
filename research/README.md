@@ -6,7 +6,7 @@
 
 - `STRATEGY_INDEX.md`：全局策略家族地图和命名规则。
 - `hype/AI_CONTEXT.md`：阅读 HYPE 材料前必须先看的上下文。
-- `hype/families/`：HYPE 策略家族档案。
+- `hype/`：HYPE 策略家族档案。
 - `hype/transfer/`：HYPE 内核迁移验证历史材料，暂保留 review，不是新的 HYPE 策略家族。
 - `mu/README.md`：`MU-HYPE-XFER` 迁移研究入口。
 

@@ -119,7 +119,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 复现产物
 
-- `research/hype/families/5m-pullback-trail/scripts/analyze_hype_5m_survival_frontier.py`
+- `research/hype/5m-pullback-trail/scripts/analyze_hype_5m_survival_frontier.py`
 - `artifacts/hype_5m_survival_frontier.json`
 - `artifacts/hype_5m_survival_frontier_summary.csv`
 - `artifacts/hype_5m_survival_frontier_best_rows.csv`

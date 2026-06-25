@@ -13,10 +13,10 @@ import pandas as pd
 
 
 DB_PATH = Path("/Users/ZK/OpenCode/hype-pullback/state/hype_pullback.sqlite3")
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_dryrun_ledger_audit.json")
-TRADE_CSV_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_dryrun_ledger_audit_trades.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_dryrun_ledger_audit.json")
+TRADE_CSV_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_dryrun_ledger_audit_trades.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v21a-dryrun-ledger-audit-2026-06-24.md"
 )
 SYMBOL = "HYPEUSDT"
@@ -284,7 +284,7 @@ def render_markdown(df: pd.DataFrame, summary: dict[str, Any], events: dict[str,
             "",
             "## 产物",
             "",
-            "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_dryrun_ledger_audit.py`",
+            "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_dryrun_ledger_audit.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 逐笔 CSV：`{TRADE_CSV_PATH}`",
         ]

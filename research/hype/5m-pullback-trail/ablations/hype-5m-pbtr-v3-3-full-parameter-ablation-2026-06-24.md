@@ -103,7 +103,7 @@ V3.3 的 6 个参数都是真正参与行为的参数，不能再像 V3.2 中的
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3_full_ablation.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3_full_ablation.py`
 - JSON：`artifacts/hype_5m_pbtr_v3-3_full_ablation.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v3-3_full_ablation_summary.csv`
 - 验证切片 CSV：`artifacts/hype_5m_pbtr_v3-3_full_ablation_validation_slices.csv`

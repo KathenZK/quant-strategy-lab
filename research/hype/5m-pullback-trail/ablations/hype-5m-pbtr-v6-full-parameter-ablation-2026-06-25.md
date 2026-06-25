@@ -122,7 +122,7 @@ V6 的核心不是旧 V3.3/V4 的 `min_hold_bars + trailing`，而是强动量�
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_full_ablation.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_full_ablation.py`
 - JSON：`artifacts/hype_5m_pbtr_v6_full_ablation.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v6_full_ablation_summary.csv`
 - 验证切片 CSV：`artifacts/hype_5m_pbtr_v6_full_ablation_validation_slices.csv`

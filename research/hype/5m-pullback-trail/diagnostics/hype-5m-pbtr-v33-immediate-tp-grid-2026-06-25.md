@@ -40,6 +40,6 @@ Family id：`HYPE-5M-PBTR`
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_immediate_tp_grid.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_immediate_tp_grid.py`
 - JSON：`artifacts/hype_5m_pbtr_v33_immediate_tp_grid.json`
 - 网格 CSV：`artifacts/hype_5m_pbtr_v33_immediate_tp_grid.csv`

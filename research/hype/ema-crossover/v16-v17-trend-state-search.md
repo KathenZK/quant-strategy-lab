@@ -14,8 +14,8 @@ Target constraints:
 
 ## Scripts
 
-- `research/hype/families/ema-crossover/scripts/research_hype_v16_indicator_expansion.py`
-- `research/hype/families/ema-crossover/scripts/research_hype_v17_trend_state_search.py`
+- `research/hype/ema-crossover/scripts/research_hype_v16_indicator_expansion.py`
+- `research/hype/ema-crossover/scripts/research_hype_v17_trend_state_search.py`
 
 ## Report Artifacts
 

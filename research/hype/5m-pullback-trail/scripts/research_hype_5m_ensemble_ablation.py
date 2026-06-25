@@ -10,14 +10,14 @@ import pandas as pd
 from research_hype_5m_ensemble_combo import END_TS, IS_END_TS, START_TS, choose_one_position, metric_from_rows
 
 
-LEGS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
-TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_filter_refinement_top_trades.csv")
-RANKING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_ranking.csv")
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation.json")
-SUMMARY_OUT = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_summary.csv")
-DROP_LEG_OUT = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_drop_leg.csv")
-LEVERAGE_OUT = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_leverage.csv")
-EXECUTION_OUT = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_execution.csv")
+LEGS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
+TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_filter_refinement_top_trades.csv")
+RANKING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_ranking.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation.json")
+SUMMARY_OUT = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_summary.csv")
+DROP_LEG_OUT = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_drop_leg.csv")
+LEVERAGE_OUT = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_leverage.csv")
+EXECUTION_OUT = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_ablation_execution.csv")
 
 TARGET_COMBOS: tuple[tuple[int, float], ...] = (
     (8, 4.0),

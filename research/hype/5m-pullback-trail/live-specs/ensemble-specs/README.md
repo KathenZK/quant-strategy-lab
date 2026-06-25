@@ -17,5 +17,5 @@
 - `artifacts/hype_5m_ensemble_combo_ranking.csv`
 - `artifacts/hype_5m_ensemble_combo_legs.csv`
 - `artifacts/hype_5m_ensemble_ablation_*.csv`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_ensemble_combo.py`
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_ensemble_ablation.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_ensemble_combo.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_ensemble_ablation.py`

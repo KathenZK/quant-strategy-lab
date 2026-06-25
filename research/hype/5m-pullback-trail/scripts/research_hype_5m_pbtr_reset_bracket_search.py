@@ -13,14 +13,14 @@ import pandas as pd
 
 V4_AUDIT_PATH = Path(__file__).with_name("research_hype_5m_pbtr_v4_live_viability_audit.py")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_summary.csv")
-SIGNALS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_signals.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_weekly.csv")
-TRADE_DIAG_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_trade_diagnostics.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_summary.csv")
+SIGNALS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_signals.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_weekly.csv")
+TRADE_DIAG_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_reset_bracket_search_trade_diagnostics.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-reset-bracket-search-2026-06-24.md"
 )
 
@@ -313,7 +313,7 @@ def render_markdown(signal_summary: pd.DataFrame, grid_summary: pd.DataFrame, ro
             "",
             "## 产物",
             "",
-            "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_reset_bracket_search.py`",
+            "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_reset_bracket_search.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 信号 CSV：`{SIGNALS_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",

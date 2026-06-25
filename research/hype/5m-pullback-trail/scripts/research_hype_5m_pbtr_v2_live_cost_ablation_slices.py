@@ -23,13 +23,13 @@ from research_hype_5m_pbtr_v2_ablation_slices import (
 from research_hype_5m_positive_payoff_search import load_all_hype_5m, metric_from_trades, validation_slices
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_ablation_slices.json")
-ABLATION_SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_ablation_summary.csv")
-ABLATION_SLICE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_ablation_validation_slices.csv")
-WEEKLY_SLICE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_weekly_slices.csv")
-ROLLING_WINDOW_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_rolling_windows.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_ablation_slices.json")
+ABLATION_SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_ablation_summary.csv")
+ABLATION_SLICE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_ablation_validation_slices.csv")
+WEEKLY_SLICE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_weekly_slices.csv")
+ROLLING_WINDOW_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v2_live_cost_rolling_windows.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/ablations/"
+    "research/hype/5m-pullback-trail/ablations/"
     "hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md"
 )
 
@@ -279,7 +279,7 @@ def render_markdown(summary: pd.DataFrame, weekly_df: pd.DataFrame, rolling_df: 
         "",
         "脚本:",
         "",
-        "- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_live_cost_ablation_slices.py`",
+        "- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_live_cost_ablation_slices.py`",
         "",
         "## 成本口径",
         "",

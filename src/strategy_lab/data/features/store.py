@@ -8,7 +8,7 @@ import pandas as pd
 
 from strategy_lab.data.lake import DataLakeLayout
 from strategy_lab.data.features.manifest import FactorArtifactManifest
-from strategy_lab.fs import atomic_write_path
+from strategy_lab.data.fs import atomic_write_path
 
 
 @dataclass(slots=True)

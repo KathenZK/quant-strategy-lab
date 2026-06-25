@@ -58,10 +58,10 @@ X 轴：美东时段；Y 轴：15m 收益差绝对值，单位 bps。常规盘�
 
 | 文件 | 内容 |
 | --- | --- |
-| scripts/fetch_polygon_equity_aggregates.py | Polygon US stock aggregate 下载脚本 |
+| src/strategy_lab/data/ingest/polygon_equity_aggregates.py | Polygon US stock aggregate 下载脚本 |
 | data/external/us_equities/polygon/symbol=mu/timeframe=15m/mu_15m_2025-06-17_2026-06-17_adjusted.parquet | MU 一年 15m Polygon 数据 |
 | reports/mu_us_equity_polygon_15m_2025-06-17_2026-06-17_summary.json | Polygon 数据覆盖与价格统计 |
-| scripts/compare_mu_binance_polygon_alignment.py | Binance vs Polygon 对齐脚本 |
+| research/mu/scripts/compare_mu_binance_polygon_alignment.py | Binance vs Polygon 对齐脚本 |
 | reports/mu_binance_polygon_15m_alignment.json | 整体与分时段对齐统计 |
 | reports/mu_binance_polygon_15m_aligned.csv | UTC 15m 对齐明细 |
 | reports/mu_binance_polygon_15m_alignment_by_session.csv | 分时段统计 |

@@ -28,11 +28,11 @@ from research_hype_5m_indicator_search import (
 )
 
 
-BASE_RANKING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_indicator_search_ranking.csv")
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_filter_refinement.json")
-RANKING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_filter_refinement_ranking.csv")
-TARGET_HITS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_filter_refinement_target_hits.csv")
-REFINED_TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_filter_refinement_top_trades.csv")
+BASE_RANKING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_indicator_search_ranking.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_filter_refinement.json")
+RANKING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_filter_refinement_ranking.csv")
+TARGET_HITS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_filter_refinement_target_hits.csv")
+REFINED_TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_filter_refinement_top_trades.csv")
 
 
 def parse_args() -> argparse.Namespace:

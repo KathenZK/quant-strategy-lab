@@ -291,7 +291,7 @@ HYPE_PP_R05732__dir_htf_ge_0.688442
 
 ## 复现产物
 
-- `research/hype/families/5m-pullback-trail/scripts/ablate_hype_5m_r05732.py`
+- `research/hype/5m-pullback-trail/scripts/ablate_hype_5m_r05732.py`
 - `artifacts/hype_5m_r05732_ablation.json`
 - `artifacts/hype_5m_r05732_ablation_summary.csv`
 - `artifacts/hype_5m_r05732_ablation_slices.csv`

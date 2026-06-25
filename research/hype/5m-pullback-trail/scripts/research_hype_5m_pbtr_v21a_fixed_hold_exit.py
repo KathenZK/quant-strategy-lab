@@ -27,13 +27,13 @@ from research_hype_5m_pbtr_v21_live_cost_variants import variant_specs
 from research_hype_5m_positive_payoff_search import load_all_hype_5m
 
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit_summary.csv")
-SLICE_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit_slices.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit_monthly.csv")
-RECENT_TRADES_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit_recent_trades.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit_summary.csv")
+SLICE_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit_slices.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit_monthly.csv")
+RECENT_TRADES_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v21a_fixed_hold_exit_recent_trades.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v21a-fixed-hold-exit-2026-06-24.md"
 )
 
@@ -631,7 +631,7 @@ def render_markdown(
             "",
             "## 产物",
             "",
-            "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_fixed_hold_exit.py`",
+            "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v21a_fixed_hold_exit.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 切片 CSV：`{SLICE_PATH}`",

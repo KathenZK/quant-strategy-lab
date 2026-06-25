@@ -7,7 +7,7 @@ import json
 
 import pandas as pd
 
-from strategy_lab.fs import atomic_write_text
+from strategy_lab.data.fs import atomic_write_text
 
 
 def fingerprint_payload(payload: dict) -> str:

@@ -387,13 +387,13 @@ slippage
 研究脚本：
 
 ```text
-research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v32_clean_entry_filters.py
-research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v32_full_ablation.py
+research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v32_clean_entry_filters.py
+research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v32_full_ablation.py
 ```
 
 研究报告：
 
 ```text
-research/hype/families/5m-pullback-trail/diagnostics/hype-5m-pbtr-v32-clean-entry-filters-2026-06-24.md
-research/hype/families/5m-pullback-trail/ablations/hype-5m-pbtr-v32-full-parameter-ablation-2026-06-24.md
+research/hype/5m-pullback-trail/diagnostics/hype-5m-pbtr-v32-clean-entry-filters-2026-06-24.md
+research/hype/5m-pullback-trail/ablations/hype-5m-pbtr-v32-full-parameter-ablation-2026-06-24.md
 ```

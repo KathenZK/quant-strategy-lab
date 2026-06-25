@@ -13,12 +13,12 @@ import pandas as pd
 
 REINIT_PATH = Path(__file__).with_name("research_hype_5m_pbtr_v33_reinit_trailing.py")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_crossing_exit_search.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_crossing_exit_search_summary.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_crossing_exit_search_rolling.csv")
-TRADE_DIAG_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_crossing_exit_search_trade_diagnostics.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_crossing_exit_search.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_crossing_exit_search_summary.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_crossing_exit_search_rolling.csv")
+TRADE_DIAG_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v33_no_crossing_exit_search_trade_diagnostics.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v33-no-crossing-exit-search-2026-06-25.md"
 )
 
@@ -328,7 +328,7 @@ def render_markdown(summary: pd.DataFrame) -> str:
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_no_crossing_exit_search.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_no_crossing_exit_search.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 交易诊断 CSV：`{TRADE_DIAG_PATH}`",

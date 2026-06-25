@@ -87,7 +87,7 @@ Family id：`HYPE-5M-PBTR`
 
 ## 复现产物
 
-- `research/hype/families/5m-pullback-trail/scripts/research_hype_5m_ensemble_forward_oos.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_ensemble_forward_oos.py`
 - `artifacts/hype_5m_ensemble_forward_oos.json`
 - `artifacts/hype_5m_ensemble_forward_oos_summary.csv`
 - `artifacts/hype_5m_ensemble_forward_oos_trades.csv`

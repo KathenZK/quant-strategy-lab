@@ -7,11 +7,11 @@ from typing import Any
 import pandas as pd
 
 
-MAIN_RANKING = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search_ranking.csv")
-TARGETED_RANKING = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_positive_payoff_targeted_r05578.csv")
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_survival_frontier.json")
-FRONTIER_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_survival_frontier_summary.csv")
-BEST_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_survival_frontier_best_rows.csv")
+MAIN_RANKING = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_positive_payoff_search_ranking.csv")
+TARGETED_RANKING = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_positive_payoff_targeted_r05578.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_survival_frontier.json")
+FRONTIER_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_survival_frontier_summary.csv")
+BEST_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_survival_frontier_best_rows.csv")
 
 SLICE_PREFIXES = [
     "full",

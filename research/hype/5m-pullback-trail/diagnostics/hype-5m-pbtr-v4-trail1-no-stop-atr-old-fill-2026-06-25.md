@@ -58,7 +58,7 @@ V4 去掉 `stop_atr` 后旧口径仍很强：PF 从基准行降到 `12.92`，但
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v4_trail1_no_stop_atr_old_fill.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v4_trail1_no_stop_atr_old_fill.py`
 - JSON：`artifacts/hype_5m_pbtr_v4_trail1_no_stop_atr_old_fill.json`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_v4_trail1_no_stop_atr_old_fill_summary.csv`
 - 交易诊断 CSV：`artifacts/hype_5m_pbtr_v4_trail1_no_stop_atr_old_fill_trade_diagnostics.csv`

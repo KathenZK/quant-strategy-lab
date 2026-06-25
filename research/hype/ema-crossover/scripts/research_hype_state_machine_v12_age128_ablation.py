@@ -17,11 +17,11 @@ from research_hype_state_machine_v12_hard_exit import spec as focused_spec
 from research_hype_trade_path_diagnostics_v11 import diagnose_trade, summarize, trade_frame_from_result
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation_ranking.csv")
-SENSITIVITY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation_sensitivity.csv")
-DIAG_SUMMARY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation_diagnostics_summary.csv")
-DIAG_DETAIL_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation_diagnostics_detail.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation_ranking.csv")
+SENSITIVITY_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation_sensitivity.csv")
+DIAG_SUMMARY_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation_diagnostics_summary.csv")
+DIAG_DETAIL_PATH = Path("research/hype/ema-crossover/artifacts/hype_state_machine_v12_age128_ablation_diagnostics_detail.csv")
 
 
 def baseline_spec() -> V12Spec:

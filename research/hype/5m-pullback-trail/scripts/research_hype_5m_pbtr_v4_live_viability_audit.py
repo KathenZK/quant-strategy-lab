@@ -13,15 +13,15 @@ import pandas as pd
 
 SOURCE_PATH = Path(__file__).with_name("research_hype_5m_pbtr_v3-3_full_ablation.py")
 
-REPORT_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_audit.json")
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_summary.csv")
-COST_STRESS_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_cost_stress.csv")
-TRADE_DIAG_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_trade_diagnostics.csv")
-ROLLING_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_rolling.csv")
-WEEKLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_weekly.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_monthly.csv")
+REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_audit.json")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_summary.csv")
+COST_STRESS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_cost_stress.csv")
+TRADE_DIAG_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_trade_diagnostics.csv")
+ROLLING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_rolling.csv")
+WEEKLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_weekly.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v4_live_viability_monthly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v4-live-viability-audit-2026-06-24.md"
 )
 
@@ -299,7 +299,7 @@ def render_markdown(summary: pd.DataFrame, stress: pd.DataFrame, diag: pd.DataFr
             "",
             "## 产物",
             "",
-            f"- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v4_live_viability_audit.py`",
+            f"- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v4_live_viability_audit.py`",
             f"- JSON：`{REPORT_PATH}`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 成本压力 CSV：`{COST_STRESS_PATH}`",

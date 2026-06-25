@@ -60,7 +60,7 @@ V4 的最佳组合全样本收益仍为负，且同样依赖极少数超长持�
 
 ## 产物
 
-- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_reset_bracket_search.py`
+- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_reset_bracket_search.py`
 - JSON：`artifacts/hype_5m_pbtr_reset_bracket_search.json`
 - 信号 CSV：`artifacts/hype_5m_pbtr_reset_bracket_search_signals.csv`
 - 汇总 CSV：`artifacts/hype_5m_pbtr_reset_bracket_search_summary.csv`

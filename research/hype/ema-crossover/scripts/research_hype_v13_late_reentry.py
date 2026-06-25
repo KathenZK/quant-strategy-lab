@@ -32,11 +32,11 @@ from research_hype_state_machine_v12_hard_exit import spec as focused_spec
 from research_hype_trade_path_diagnostics_v11 import diagnose_trade, summarize, trade_frame_from_result
 
 
-REPORT_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_late_reentry.json")
-RANKING_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_late_reentry_ranking.csv")
-TRADES_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_late_reentry_trades.csv")
-DIAG_SUMMARY_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_late_reentry_diagnostics_summary.csv")
-DIAG_DETAIL_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_v13_late_reentry_diagnostics_detail.csv")
+REPORT_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_late_reentry.json")
+RANKING_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_late_reentry_ranking.csv")
+TRADES_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_late_reentry_trades.csv")
+DIAG_SUMMARY_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_late_reentry_diagnostics_summary.csv")
+DIAG_DETAIL_PATH = Path("research/hype/ema-crossover/artifacts/hype_v13_late_reentry_diagnostics_detail.csv")
 
 
 @dataclass(frozen=True, slots=True)

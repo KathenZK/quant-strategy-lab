@@ -27,10 +27,10 @@ from research_hype_5m_pbtr_v6_live_executable_search import (
 )
 
 
-SUMMARY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_candidate_robustness.csv")
-MONTHLY_PATH = Path("research/hype/families/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_candidate_robustness_monthly.csv")
+SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_candidate_robustness.csv")
+MONTHLY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6_candidate_robustness_monthly.csv")
 MARKDOWN_PATH = Path(
-    "research/hype/families/5m-pullback-trail/diagnostics/"
+    "research/hype/5m-pullback-trail/diagnostics/"
     "hype-5m-pbtr-v6-candidate-robustness-2026-06-25.md"
 )
 
@@ -298,7 +298,7 @@ def render_markdown(frame: pd.DataFrame, summary: pd.DataFrame, monthly: pd.Data
             "",
             "## 产物",
             "",
-            "- 脚本：`research/hype/families/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_candidate_robustness.py`",
+            "- 脚本：`research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_candidate_robustness.py`",
             f"- 汇总 CSV：`{SUMMARY_PATH}`",
             f"- 月度 CSV：`{MONTHLY_PATH}`",
         ]

@@ -15,8 +15,8 @@ from research_hype_state_machine_v12 import V12Spec, add_structure_features, run
 from research_hype_state_machine_v12_hard_exit import spec as focused_spec
 
 
-CSV_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_main_result_backfill_v13.csv")
-JSON_PATH = Path("research/hype/families/ema-crossover/artifacts/hype_main_result_backfill_v13.json")
+CSV_PATH = Path("research/hype/ema-crossover/artifacts/hype_main_result_backfill_v13.csv")
+JSON_PATH = Path("research/hype/ema-crossover/artifacts/hype_main_result_backfill_v13.json")
 
 
 WINDOWS = {
