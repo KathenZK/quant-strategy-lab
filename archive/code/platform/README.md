@@ -1,16 +1,17 @@
-# Retired Platform Code
+# Historical Strategy Code Snapshots
 
-This folder contains the old strategy-platform layer:
+This folder is not a runnable platform archive. It only keeps the small set of
+historical strategy source snapshots that are still cited by durable research
+documents:
 
-- strategy registry and strategy implementations
-- workflow orchestration
-- backtest and paper-trading execution helpers
-- journal, experiment, comparison, and reporting code
-- dashboard API
-- previous frontend code under `archive/code/web/`
-- previous platform tests under `archive/code/platform/tests/`
+- `src/strategy_lab/strategies/candle_count_short/`
+- `src/strategy_lab/strategies/hype_ema_crossover_trend/`
 
-The active package under `src/strategy_lab/` now keeps only data and narrow research infrastructure.
-The root `tests/` directory covers the active data layer, CLI, settings, and narrow research infrastructure.
+Deleted from this archive: the retired dashboard, workflow orchestration,
+journal, comparison/reporting, execution helpers, old platform tests, and
+uncited strategy examples.
 
-Use this code only for historical reference or deliberate code recovery.
+The active package under `src/strategy_lab/` now keeps only data infrastructure
+and narrow research dataset exporters. Use these archived snapshots only as
+document evidence when reading older HYPE reports; do not recover or extend them
+unless the user explicitly asks for code archaeology.

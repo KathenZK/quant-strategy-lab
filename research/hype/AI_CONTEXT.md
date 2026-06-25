@@ -48,7 +48,7 @@ Legacy Cursor source material was migrated into repository Markdown. Markdown un
 - Treat `HYPE-5M-PBTR` as a separate 5m family, not as a subdocument of `HYPE-EMA-TB`.
 - Durable HYPE research reports and ledgers must be repository-tracked Markdown under `research/`.
 - Cursor Canvas files are legacy/private research assets, not canonical storage for new reports. If a Canvas is used for temporary visualization, mirror the durable conclusion into the relevant Markdown file before finishing.
-- Archived code under `archive/code/platform/` is historical unless the user asks for code archaeology.
+- Archived code under `archive/code/platform/` is limited to historical strategy source snapshots cited by research docs; it is not strategy truth or runnable platform code.
 - Active code under `src/strategy_lab/` is data/research infrastructure, not strategy truth.
 
 ## Archived Cursor Assets

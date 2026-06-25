@@ -63,9 +63,7 @@ src/strategy_lab/
 tests/              # active 数据层和 CLI 测试
 
 archive/
-  code/platform/    # 旧策略平台、工作流和平台测试
-  code/web/         # 旧 Dashboard 前端
-  code/web-root/    # 旧 Dashboard 根 package/workspace
+  code/platform/    # 少量被研究文档引用的历史策略源码快照
   configs/          # 旧顶层环境配置示例
   docs/             # 旧规划和实施文档
   research/         # 旧策略研究和平台实验文档

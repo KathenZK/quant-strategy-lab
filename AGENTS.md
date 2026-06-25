@@ -21,7 +21,7 @@ Canonical family ids:
 Active code policy:
 
 - Active package code is limited to data ingestion, data normalization, data quality checks, feature construction, and narrow research dataset exporters.
-- Archived strategy, workflow, dashboard, journal, and backtest platform code lives under `archive/code/platform/`.
+- `archive/code/platform/` keeps only small historical strategy source snapshots cited by durable research docs; it is not an active or runnable platform.
 - Current one-off research scripts live under the relevant research topic or family `scripts/` directory.
 - Historical one-off research scripts that no longer define an active research line live under `archive/scripts/research/`.
 - Do not treat archived code as the current source of truth unless the user explicitly asks to inspect history.
