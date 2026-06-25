@@ -1,8 +1,10 @@
-# HYPE-EMA-X 1m Binance Live-Executable EMA Search
+# HYPE-1M-EMA-Crossover Binance Live-Executable Search
 
 Date: 2026-06-25
 
-Family id: `HYPE-EMA-X`
+Family name: `HYPE-1M-EMA-Crossover`
+
+Historical alias: `HYPE-1M-EMA-X`
 
 Status: diagnostic / paper-live candidate only. Do not promote directly to live.
 
@@ -24,7 +26,7 @@ Annualized factor is measured as `final_equity ** (365.25 / window_days)`, not a
 - Rows: `133,007`
 - Source: Binance public daily archive for `2026-03-25` through `2026-06-24`; Binance futures REST fallback for partial `2026-06-25`.
 - Missing full days: none.
-- Local cache: `data/cache/hype_ema_x_1m_live_search/HYPEUSDT_1m_2026-03-25_2026-06-25.parquet`
+- Local cache: `data/cache/hype_1m_ema_crossover_live_search/HYPEUSDT_1m_2026-03-25_2026-06-25.parquet`
 
 Cost assumption:
 
@@ -38,13 +40,13 @@ Funding, liquidation constraints, order-book depth, API outage behavior, and acc
 
 Script:
 
-`research/hype/15m-ema-crossover/scripts/research_hype_ema_x_1m_live_search.py`
+`research/hype/1m-ema-crossover/scripts/research_hype_1m_ema_crossover_live_search.py`
 
 Report artifacts:
 
-- `artifacts/hype_ema_x_1m_live_search/hype_ema_x_1m_live_search.json`
-- `artifacts/hype_ema_x_1m_live_search/hype_ema_x_1m_live_search_ranking.csv`
-- `artifacts/hype_ema_x_1m_live_search/hype_ema_x_1m_live_search_top_trades.csv`
+- `research/hype/1m-ema-crossover/artifacts/hype_1m_ema_crossover_live_search.json`
+- `research/hype/1m-ema-crossover/artifacts/hype_1m_ema_crossover_live_search_ranking.csv`
+- `research/hype/1m-ema-crossover/artifacts/hype_1m_ema_crossover_live_search_top_trades.csv`
 
 Search counts:
 
@@ -75,7 +77,7 @@ Live-executable assumptions:
 
 Candidate id:
 
-`HYPE_EMA_X_1M_FAST144_SLOW1597_trail_act140p0_trail180p0_sl140p0_hold1440_adx18_ret60-30p0_atrmin3p5_atrmax100p0_cool30`
+`HYPE_1M_EMA_CROSSOVER_FAST144_SLOW1597_trail_act140p0_trail180p0_sl140p0_hold1440_adx18_ret60-30p0_atrmin3p5_atrmax100p0_cool30`
 
 Rule summary:
 
@@ -142,7 +144,7 @@ The split is encouraging but not enough for live approval, because the same thre
 
 Candidate id:
 
-`HYPE_EMA_X_1M_FAST233_SLOW1597_fixed_tp700p0_sl280p0_hold1440_adx18_rvol1_ret60-30p0`
+`HYPE_1M_EMA_CROSSOVER_FAST233_SLOW1597_fixed_tp700p0_sl280p0_hold1440_adx18_rvol1_ret60-30p0`
 
 Rule summary:
 
@@ -181,7 +183,7 @@ Do not promote this directly to live production.
 
 A live-executable state machine can reproduce the rules, but the evidence is still an in-sample three-month search on one symbol and one venue. The proper status is:
 
-`HYPE-EMA-X-1M-TRAIL-144-1597`: paper-live candidate, preferred trial sizing `2x`, hard cap `3x`.
+`HYPE-1M-EMA-Crossover-TRAIL-144-1597`: paper-live candidate, preferred trial sizing `2x`, hard cap `3x`.
 
 Required before any real-order promotion:
 

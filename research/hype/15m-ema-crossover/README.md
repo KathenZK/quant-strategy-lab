@@ -35,7 +35,6 @@ The main evidence is currently in repo Markdown and archived scripts:
 - `research/hype/15m-ema-crossover/scripts/research_hype_v17_hybrid_ablation.py`: V17 V15/V16 hybrid full parameter ablation.
 - `research/hype/15m-ema-crossover/v16-v17-trend-state-search.md`: V16/V17 result note and next research direction.
 - `research/hype/15m-ema-crossover/v17-hybrid-ablation.md`: formal V17 hybrid definition, window metrics, and parameter ablation conclusions.
-- `research/hype/15m-ema-crossover/diagnostics/hype-ema-x-1m-binance-live-search-2026-06-25.md`: Binance HYPEUSDT `1m` live-executable EMA cross search; diagnostic / paper-live candidate only, not a live-approved promotion.
 - `research/hype/15m-ema-crossover/hype-ema-x-core-ledger.md`: main Markdown ledger for promoted HYPE-EMA-X versions.
 - `research/hype/15m-ema-crossover/v15-v16-promoted-strategy-specs.md`: full Chinese rule/parameter spec for promoted V15 and V16.
 

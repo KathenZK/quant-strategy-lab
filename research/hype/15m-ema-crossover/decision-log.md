@@ -34,7 +34,6 @@ The canonical main ledger for these promoted versions is `hype-ema-x-core-ledger
 - `research_hype_v16_indicator_expansion.py`: indicator-expansion probe. Early indicator entries increased trade count but diluted V14 quality; OKX did not confirm enough stability.
 - `research_hype_v17_trend_state_search.py`: broad trend-state search across common indicator families. No candidate satisfied `50x return`, `<20% max drawdown`, and `>80% win rate` simultaneously. Its best low-drawdown and high-return rows are now promoted as `HYPE-EMA-X-V15` and `HYPE-EMA-X-V16`.
 - `research_hype_v17_hybrid_ablation.py`: full single-parameter/single-module ablation around `HYPE-EMA-X-V17`. Baseline V17 remains the signal-layer official version; the best ablation row is `hq_scale=1.1` at `+3861.48% / -19.44% / 90.91% / 33 trades`, now recorded as `HYPE-EMA-X-V17.1`.
-- `research_hype_ema_x_1m_live_search.py`: Binance HYPEUSDT `1m` EMA cross search over `2026-03-25` to `2026-06-25`. It found a paper-live trailing candidate (`EMA144/1597`, `2x` baseline) that clears `20x` annualized factor, `>=50%` win rate, and `<20%` drawdown in-sample, but it is not live-approved because it needs forward validation, funding/slippage audit, and runner restart/idempotency checks.
 
 ## Evidence Policy
 

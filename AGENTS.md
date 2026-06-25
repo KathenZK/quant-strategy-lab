@@ -15,6 +15,7 @@ HYPE 版本号只有放在具体策略家族里才有意义。
 
 - `HYPE-Candle-Count-Reversal`（历史别名：`HYPE-CC`）：HYPE K 线数量反转家族。
 - `HYPE-EMA-Crossover`（历史别名：`HYPE-EMA-X`）：HYPE EMA 金叉/死叉家族，包括 V14 时代研究。
+- `HYPE-1M-EMA-Crossover`（历史别名：`HYPE-1M-EMA-X`）：Binance HYPEUSDT `1m` EMA 金叉/死叉家族。
 - `HYPE-EMA-Trend-Breakout`（历史别名：`HYPE-EMA-TB`）：HYPE EMA 趋势突破家族。
 - `HYPE-5M-Pullback-Trail`（历史别名：`HYPE-5M-PBTR`）：Binance HYPE `5m` 回踩/恢复入场 + ATR trailing-stop 家族。
 - `MU-HYPE-Transfer`（历史别名：`MU-HYPE-XFER`）：基于 HYPE trend kernel 的 MU 迁移研究。

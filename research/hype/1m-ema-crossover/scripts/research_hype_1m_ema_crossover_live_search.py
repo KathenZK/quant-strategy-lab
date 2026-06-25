@@ -180,13 +180,13 @@ def value_slug(value: float) -> str:
 
 def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
-        description="Search live-executable HYPE-EMA-X 1m Binance futures EMA cross variants."
+        description="Search live-executable HYPE-1M-EMA-Crossover Binance futures variants."
     )
     parser.add_argument("--start-date", type=str, required=True)
     parser.add_argument("--end-date", type=str, required=True)
     parser.add_argument("--refresh-data", action="store_true")
-    parser.add_argument("--cache-dir", type=Path, default=Path("data/cache/hype_ema_x_1m_live_search"))
-    parser.add_argument("--output-dir", type=Path, default=Path("research/hype/15m-ema-crossover/artifacts/hype_ema_x_1m_live_search"))
+    parser.add_argument("--cache-dir", type=Path, default=Path("data/cache/hype_1m_ema_crossover_live_search"))
+    parser.add_argument("--output-dir", type=Path, default=Path("research/hype/1m-ema-crossover/artifacts"))
     parser.add_argument("--stage1-keep", type=int, default=500)
     parser.add_argument("--stage2-keep", type=int, default=1000)
     parser.add_argument("--top", type=int, default=100)
@@ -883,7 +883,7 @@ def evaluate_trades(
     score = math.log(max(annualized_factor, 1e-9)) + win_rate - drawdown_penalty - trade_penalty
     if meets_target:
         score += 10
-    name = f"HYPE_EMA_X_1M_FAST{fast}_SLOW{slow}_{exit_spec.name}_{filter_spec.name}_x{value_slug(exposure)}"
+    name = f"HYPE_1M_EMA_CROSSOVER_FAST{fast}_SLOW{slow}_{exit_spec.name}_{filter_spec.name}_x{value_slug(exposure)}"
     return SearchResult(
         name=name,
         fast_ema=fast,
@@ -1116,11 +1116,11 @@ def main() -> None:
     final_results = top_results(final_results, final_keep)
     ranking = top_results(final_results, args.top)
     ranking_frame = pd.DataFrame([asdict(result) for result in ranking])
-    ranking_path = args.output_dir / "hype_ema_x_1m_live_search_ranking.csv"
+    ranking_path = args.output_dir / "hype_1m_ema_crossover_live_search_ranking.csv"
     ranking_frame.to_csv(ranking_path, index=False)
 
     best = ranking[0] if ranking else None
-    top_trade_path = args.output_dir / "hype_ema_x_1m_live_search_top_trades.csv"
+    top_trade_path = args.output_dir / "hype_1m_ema_crossover_live_search_top_trades.csv"
     if best is not None:
         best_exit = next(spec for spec in full_exits if spec.name == best.exit_name)
         best_filter = next(spec for spec in filters if spec.name == best.filter_name)
@@ -1162,7 +1162,7 @@ def main() -> None:
         "ranking_csv": str(ranking_path),
         "top_trades_csv": str(top_trade_path) if best is not None else None,
     }
-    summary_path = args.output_dir / "hype_ema_x_1m_live_search.json"
+    summary_path = args.output_dir / "hype_1m_ema_crossover_live_search.json"
     summary_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False))
     print(json.dumps(summary, indent=2, ensure_ascii=False))
 
