@@ -1,49 +1,51 @@
-# Repository Rules For AI Agents
+# AI Agent 仓库规则
 
-This repository is a data-first research archive, not a general strategy platform.
+本仓库是 data-first 的策略研究档案，不是通用策略平台。
 
-Before reading any HYPE strategy material, open:
+阅读任何 HYPE 策略材料前，必须先打开：
 
-1. `research/STRATEGY_INDEX.md`
+1. `research/README.md`
 2. `research/hype/AI_CONTEXT.md`
-3. The relevant family `README.md`
+3. 对应策略家族的 `README.md`
 
-Do not infer strategy identity from a bare version number such as `V13`, `V21`, `V35`, or `V36`.
-HYPE version numbers are only meaningful inside a strategy family.
+不要根据 `V13`、`V21`、`V35`、`V36` 这类裸版本号判断策略身份。
+HYPE 版本号只有放在具体策略家族里才有意义。
 
-Canonical family ids:
+标准 family id：
 
-- `HYPE-CC`: HYPE candle-count reversal family.
-- `HYPE-EMA-X`: HYPE EMA golden/death cross family, including V14-era research.
-- `HYPE-EMA-TB`: HYPE EMA trend breakout family.
-- `MU-HYPE-XFER`: MU transfer research based on HYPE trend kernels.
+- `HYPE-CC`：HYPE candle-count reversal family。
+- `HYPE-EMA-X`：HYPE EMA golden/death cross family，包括 V14 时代研究。
+- `HYPE-EMA-TB`：HYPE EMA trend breakout family。
+- `MU-HYPE-XFER`：基于 HYPE trend kernel 的 MU 迁移研究。
 
-Active code policy:
+## Active 代码规则
 
-- Active package code is limited to data ingestion, data normalization, data quality checks, feature construction, and narrow research dataset exporters.
-- `archive/code/platform/` keeps only small historical strategy source snapshots cited by durable research docs; it is not an active or runnable platform.
-- Current one-off research scripts live under the relevant research topic or family `scripts/` directory.
-- Historical one-off research scripts that no longer define an active research line live under `archive/scripts/research/`.
-- Do not treat archived code as the current source of truth unless the user explicitly asks to inspect history.
+- Active package code 只限于数据抓取、数据归一化、数据质量检查、特征构建和窄口径研究数据集导出器。
+- `archive/code/platform/` 只保留少量被长期研究文档引用的历史策略源码快照；它不是 active 平台，也不是可运行平台。
+- 当前一次性研究脚本必须放在对应 research topic 或 family 的 `scripts/` 目录。
+- 已不再定义 active research line 的历史一次性研究脚本放在 `archive/scripts/research/`。
+- 除非用户明确要求考古历史实现，否则不要把 archive 里的代码当作当前事实来源。
 
-Live-executable research policy:
+## Live-Executable 研究规则
 
-- This repository studies strategies that can be traded online with real orders, not beautiful backtest illusions.
-- Do not promote any strategy to live, paper-live, dry-run, handoff, or candidate status until its order timing and execution assumptions are audited.
-- Treat impossible fills, crossed stops filled at stale stop prices, lookahead stop updates, unavailable intrabar decisions, and unfillable order assumptions as hard failures.
-- If a strategy uses `min_hold_bars`, delayed exits, trailing stops, protection stops, or lockout periods, audit the protected interval and unlock behavior before discussing performance.
-- A promotion write-up must cover fees, slippage, stop placement validity, stop-market behavior, sizing, emergency stop or kill switch, restart recovery, missing data behavior, and whether a live runner can reproduce the state machine.
-- Negative live-feasibility findings must be written into `research/` immediately and should downgrade the candidate instead of being hidden behind more parameter search.
-- This rule exists because this repository has repeatedly made the same mistake, including earlier trend-strategy research and the HYPE-5M-PBTR V2.1A/V3.3/V4 lockout-stop audits. Live feasibility comes before performance storytelling.
+- 本仓库研究的是可以真实在线下单交易的策略，不是漂亮但无法交易的回测幻觉。
+- 在审计订单时序和执行假设之前，不要把任何策略提升为 live、paper-live、dry-run、handoff 或 candidate 状态。
+- 不可能成交、价格已经穿越后仍按旧 stop 价成交、lookahead stop 更新、不可用的 intrabar 决策、不可成交的订单假设，都必须视为硬失败。
+- 如果策略使用 `min_hold_bars`、延迟退出、trailing stop、保护止损或锁仓期，讨论收益前必须先审计受保护区间和解锁行为。
+- promotion write-up 必须覆盖手续费、滑点、stop placement 有效性、stop-market 行为、仓位、emergency stop 或 kill switch、重启恢复、缺失数据行为，以及 live runner 是否能复现状态机。
+- 负面的 live-feasibility 发现必须立即写入 `research/`，并应下调候选状态，不要用更多参数搜索掩盖问题。
+- 这条规则存在是因为本仓库已经多次犯过同类错误，包括早期 trend-strategy research，以及近期 `HYPE-5M-PBTR` V2.1A/V3.3/V4 的 lockout-stop 审计。Live feasibility 必须先于 performance storytelling。
 
-When creating new research:
+## 新研究规则
 
-- Prefer a document-first workflow.
-- Use generated one-off scripts for exploration, stored under the relevant `research/.../scripts/` directory.
-- Preserve final results in the relevant family docs as repository-tracked Markdown files under `research/`.
-- Store retained JSON, CSV, HTML, and trade-path outputs under the relevant `research/.../artifacts/` directory; use top-level `reports/` only for scratch or legacy local cache.
-- Write new research reports in Chinese by default unless the user explicitly requests another language.
-- Do not create research reports, ledgers, or durable analysis in Cursor Canvas files or any project-private Cursor directory.
-- Use Canvas only for transient visualization when explicitly requested; if a Canvas is used, mirror the durable conclusion into the appropriate `research/` Markdown file before treating the work as complete.
-- Treat `legacy-canvas/` directories as frozen historical evidence from migrated Canvas files. Do not create new strategy research there; promote reviewed findings into family ledgers, `canonical-specs/`, `diagnostics/`, or `decision-log.md` instead.
-- Only promote code back into `src/strategy_lab/` if it is reusable data infrastructure or a narrow dataset exporter.
+- 优先使用 document-first 工作流。
+- 探索产生的一次性脚本放在对应 `research/.../scripts/` 目录。
+- 最终结论必须保存到对应 family 的 repository-tracked Markdown 文档中，位置在 `research/` 下。
+- 需要保留的 JSON、CSV、HTML 和 trade-path 输出放在对应 `research/.../artifacts/` 目录；顶层 `reports/` 只用于 scratch 或 legacy local cache。
+- 如果 Markdown 报告引用了某个生成文件，该文件就是 durable evidence，应放在同一 topic/family 的 `artifacts/` 目录，而不是顶层 `reports/`。
+- 不要把 `reports/` 里的所有文件整批提升到 `artifacts/`；只迁移被引用或明确需要保留的证据，并把 Markdown 链接从 `reports/...` 改掉。
+- 新研究报告默认使用中文，除非用户明确要求其他语言。
+- 不要在 Cursor Canvas 文件或 Cursor 私有项目目录里创建研究报告、台账或长期分析。
+- Canvas 只能在用户明确要求时作为临时可视化界面；如果 Canvas 产生了可持久化结论，完成前必须同步写回对应 `research/` Markdown 文件。
+- `legacy-canvas/` 目录是迁移后冻结的历史证据。不要在那里创建新的策略研究；经过复核的发现应提升到 family 台账、`canonical-specs/`、`diagnostics/` 或 `decision-log.md`。
+- 只有当代码是可复用的数据基础设施或窄口径数据集导出器时，才可以提升回 `src/strategy_lab/`。

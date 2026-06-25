@@ -116,24 +116,24 @@
 | `hype-v36-binance-signal-hl-execution.canvas.tsx` | `research/hype/ema-trend-breakout/legacy-canvas/hype-v36-binance-signal-hl-execution.md` |  |
 | `hyperliquid-v2m-backtest.canvas.tsx` | `research/hype/ema-trend-breakout/legacy-canvas/hyperliquid-v2m-backtest.md` |  |
 | `trend-confirmation-backtest.canvas.tsx` | `research/hype/ema-trend-breakout/legacy-canvas/trend-confirmation-backtest.md` |  |
-| `aster-binance-original-v35-diagnostic.canvas.tsx` | `research/hype/transfer/legacy-canvas/aster-binance-original-v35-diagnostic.md` |  |
-| `btc-binance-trend-research.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-binance-trend-research.md` | manual review: chart |
-| `btc-hourly-trend-research.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-hourly-trend-research.md` | manual review: summary |
-| `btc-rsi-mean-reversion-validation.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-rsi-mean-reversion-validation.md` |  |
-| `btc-v13-parameter-research.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-v13-parameter-research.md` |  |
-| `btc-v14-transfer.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-v14-transfer.md` |  |
-| `btc-v2a-keltner-adx-backtest.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-v2a-keltner-adx-backtest.md` |  |
-| `btc-v2r-migration-backtest.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-v2r-migration-backtest.md` |  |
-| `btc-v2r-tweak-search.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-v2r-tweak-search.md` |  |
-| `btc-v4-atr-take-backtest.canvas.tsx` | `research/hype/transfer/legacy-canvas/btc-v4-atr-take-backtest.md` |  |
-| `cmc-top50-v13-v18-comparison.canvas.tsx` | `research/hype/transfer/legacy-canvas/cmc-top50-v13-v18-comparison.md` |  |
-| `skhynix-binance-v2-v4-transfer.canvas.tsx` | `research/hype/transfer/legacy-canvas/skhynix-binance-v2-v4-transfer.md` |  |
-| `tradfi-binance-v35-batch.canvas.tsx` | `research/hype/transfer/legacy-canvas/tradfi-binance-v35-batch.md` |  |
-| `tradfi-binance-v5-regular-batch.canvas.tsx` | `research/hype/transfer/legacy-canvas/tradfi-binance-v5-regular-batch.md` |  |
-| `tradfi-binance-v5-regular-overnight-batch.canvas.tsx` | `research/hype/transfer/legacy-canvas/tradfi-binance-v5-regular-overnight-batch.md` |  |
-| `xau-binance-original-v35-diagnostic.canvas.tsx` | `research/hype/transfer/legacy-canvas/xau-binance-original-v35-diagnostic.md` |  |
-| `xmr-v13-3y-robustness.canvas.tsx` | `research/hype/transfer/legacy-canvas/xmr-v13-3y-robustness.md` |  |
-| `xmr-v13-drawdown-mitigation.canvas.tsx` | `research/hype/transfer/legacy-canvas/xmr-v13-drawdown-mitigation.md` |  |
+| `aster-binance-original-v35-diagnostic.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/aster-binance-original-v35-diagnostic.md` |  |
+| `btc-binance-trend-research.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-binance-trend-research.md` | manual review: chart |
+| `btc-hourly-trend-research.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-hourly-trend-research.md` | manual review: summary |
+| `btc-rsi-mean-reversion-validation.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-rsi-mean-reversion-validation.md` |  |
+| `btc-v13-parameter-research.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-v13-parameter-research.md` |  |
+| `btc-v14-transfer.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-v14-transfer.md` |  |
+| `btc-v2a-keltner-adx-backtest.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-v2a-keltner-adx-backtest.md` |  |
+| `btc-v2r-migration-backtest.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-v2r-migration-backtest.md` |  |
+| `btc-v2r-tweak-search.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-v2r-tweak-search.md` |  |
+| `btc-v4-atr-take-backtest.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/btc-v4-atr-take-backtest.md` |  |
+| `cmc-top50-v13-v18-comparison.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/cmc-top50-v13-v18-comparison.md` |  |
+| `skhynix-binance-v2-v4-transfer.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/skhynix-binance-v2-v4-transfer.md` |  |
+| `tradfi-binance-v35-batch.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/tradfi-binance-v35-batch.md` |  |
+| `tradfi-binance-v5-regular-batch.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/tradfi-binance-v5-regular-batch.md` |  |
+| `tradfi-binance-v5-regular-overnight-batch.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/tradfi-binance-v5-regular-overnight-batch.md` |  |
+| `xau-binance-original-v35-diagnostic.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/xau-binance-original-v35-diagnostic.md` |  |
+| `xmr-v13-3y-robustness.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/xmr-v13-3y-robustness.md` |  |
+| `xmr-v13-drawdown-mitigation.canvas.tsx` | `archive/research/hype-transfer/legacy-canvas/xmr-v13-drawdown-mitigation.md` |  |
 | `mu-binance-polygon-alignment.canvas.tsx` | `research/mu/legacy-canvas/mu-binance-polygon-alignment.md` |  |
 | `mu-binance-yahoo-alignment.canvas.tsx` | `research/mu/legacy-canvas/mu-binance-yahoo-alignment.md` |  |
 | `mu-polygon-dynamic-leverage-backtest.canvas.tsx` | `research/mu/legacy-canvas/mu-polygon-dynamic-leverage-backtest.md` |  |

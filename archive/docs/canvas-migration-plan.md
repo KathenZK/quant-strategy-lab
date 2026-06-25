@@ -31,7 +31,7 @@ Use these targets when converting Canvas reports to Markdown:
 | HYPE EMA trend breakout | `research/hype/ema-trend-breakout/` |
 | HYPE candle-count reversal | `research/hype/candle-count-reversal/` |
 | MU transfer research | `research/mu/` |
-| Cross-asset HYPE transfer checks | `research/hype/transfer/` or the relevant promoted asset family if one exists |
+| Cross-asset HYPE transfer checks | `archive/research/hype-transfer/` or the relevant promoted asset family if one exists |
 | External or abandoned strategy research | `archive/research/legacy-strategies/` |
 | Platform or workflow experiments | `archive/research/platform-experiments/` |
 
@@ -48,7 +48,7 @@ When a Canvas mixes multiple families, split it into separate Markdown files rat
 3. Diagnostics, ablations, and robustness checks referenced by existing family `README.md` files:
    - migrated under each family `legacy-canvas/` directory.
 4. Cross-asset transfer research:
-   - migrated under `hype/transfer/legacy-canvas/` and `mu/legacy-canvas/`.
+   - migrated under `archive/research/hype-transfer/legacy-canvas/` and `mu/legacy-canvas/`.
 5. Abandoned platform or external-strategy experiments:
    - migrated under `archive/research/legacy-strategies/legacy-canvas/` or `archive/research/platform-experiments/legacy-canvas/`.
 

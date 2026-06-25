@@ -28,10 +28,9 @@
 ## 先读这些
 
 - `AGENTS.md`：AI agent 在本仓库工作的规则。
-- `research/STRATEGY_INDEX.md`：策略家族 id 和版本号防串线规则。
+- `research/README.md`：研究档案总入口、策略家族 id 和版本号防串线规则。
 - `research/hype/AI_CONTEXT.md`：阅读 HYPE 研究材料前必须先看的上下文。
 - `research/hype/README.md`：HYPE 研究入口。
-- `research/README.md`：研究档案总入口。
 
 ## 当前结构
 
@@ -42,7 +41,6 @@ data/
 
 research/
   README.md
-  STRATEGY_INDEX.md
   hype/
     AI_CONTEXT.md
     5m-pullback-trail/
@@ -51,7 +49,6 @@ research/
     ema-crossover/
     ema-trend-breakout/
     candle-count-reversal/
-    transfer/
   mu/
 
 src/strategy_lab/
@@ -66,7 +63,7 @@ archive/
   code/platform/    # 少量被研究文档引用的历史策略源码快照
   configs/          # 旧顶层环境配置示例
   docs/             # 旧规划和实施文档
-  research/         # 旧策略研究和平台实验文档
+  research/         # 旧策略研究、HYPE transfer 和平台实验文档
   scripts/research/ # 少量仍未归入 active research 的历史脚本
   reports/legacy/   # 少量曾经入库的旧报告产物
 ```

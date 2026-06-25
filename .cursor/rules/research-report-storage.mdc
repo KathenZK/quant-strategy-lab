@@ -9,6 +9,8 @@ alwaysApply: true
 - Write generated research reports in Chinese by default unless the user explicitly requests another language.
 - Store current one-off research scripts under the relevant `research/.../scripts/` directory, not under `archive/scripts/research/`.
 - Store retained JSON, CSV, HTML, and trade-path outputs under the relevant `research/.../artifacts/` directory. Use top-level `reports/` only for scratch runs or legacy local cache.
+- If a Markdown report cites a generated file, treat that file as durable evidence: place it under the same topic/family `artifacts/` directory and update the Markdown link away from `reports/...`.
+- Do not bulk-promote every file from top-level `reports/` into `artifacts/`; migrate only cited or intentionally retained evidence.
 - Do not create durable research content in Cursor Canvas files or Cursor-private project directories.
 - Canvas may be used only as a temporary visualization surface when the user explicitly requests it.
 - If temporary Canvas work produces a durable conclusion, mirror that conclusion into the appropriate `research/` Markdown file before finishing.

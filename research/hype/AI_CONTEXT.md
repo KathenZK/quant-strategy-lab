@@ -15,7 +15,7 @@ Do not read by bare version number. Read by family first.
 
 ## Required Reading Order
 
-1. `../STRATEGY_INDEX.md`
+1. `../README.md`
 2. This file
 3. The target family `README.md`
 4. That family's `decision-log.md`

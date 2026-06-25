@@ -22,7 +22,7 @@ HYPE has multiple strategy families with overlapping version numbers. The main r
 
 ## Transfer Notes
 
-- `transfer/`: legacy cross-asset checks that apply HYPE kernels to BTC, XMR, XAU, TradFi perpetuals, or broad CMC universes. This directory is currently retained for review and should not be treated as a fourth HYPE strategy family.
+- Legacy cross-asset checks that applied HYPE kernels to BTC, XMR, XAU, TradFi perpetuals, or broad CMC universes have been archived under `../../archive/research/hype-transfer/`.
 - New promoted transfer research should get an explicit direction or asset family, as `MU-HYPE-XFER` does under `../mu/`.
 
 ## Archived Cursor Indexes
