@@ -5,18 +5,21 @@
 阅读任何 HYPE 策略材料前，必须先打开：
 
 1. `research/README.md`
-2. `research/hype/AI_CONTEXT.md`
+2. `research/hype/README.md`
 3. 对应策略家族的 `README.md`
 
 不要根据 `V13`、`V21`、`V35`、`V36` 这类裸版本号判断策略身份。
 HYPE 版本号只有放在具体策略家族里才有意义。
 
-标准 family id：
+标准 family name 使用展开写法；短 id 只作为历史别名：
 
-- `HYPE-CC`：HYPE candle-count reversal family。
-- `HYPE-EMA-X`：HYPE EMA golden/death cross family，包括 V14 时代研究。
-- `HYPE-EMA-TB`：HYPE EMA trend breakout family。
-- `MU-HYPE-XFER`：基于 HYPE trend kernel 的 MU 迁移研究。
+- `HYPE-Candle-Count-Reversal`（历史别名：`HYPE-CC`）：HYPE K 线数量反转家族。
+- `HYPE-EMA-Crossover`（历史别名：`HYPE-EMA-X`）：HYPE EMA 金叉/死叉家族，包括 V14 时代研究。
+- `HYPE-EMA-Trend-Breakout`（历史别名：`HYPE-EMA-TB`）：HYPE EMA 趋势突破家族。
+- `HYPE-5M-Pullback-Trail`（历史别名：`HYPE-5M-PBTR`）：Binance HYPE `5m` 回踩/恢复入场 + ATR trailing-stop 家族。
+- `MU-HYPE-Transfer`（历史别名：`MU-HYPE-XFER`）：基于 HYPE trend kernel 的 MU 迁移研究。
+
+新研究、README 和 decision log 优先使用完整 family name；旧报告里已经存在的短 id 不需要机械重写，但引用时应补充完整名称。
 
 ## Active 代码规则
 

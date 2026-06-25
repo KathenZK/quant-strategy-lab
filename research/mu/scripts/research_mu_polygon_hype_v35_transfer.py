@@ -7,7 +7,7 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from research_hype_ema_cross_strategy import build_features
+from mu_hype_xfer_kernel import build_features
 from research_mu_v35_session_aware import (
     HARD_STOP_ATR,
     TAKE_PROFIT_ATR,

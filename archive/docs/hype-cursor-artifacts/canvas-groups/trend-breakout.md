@@ -1,6 +1,6 @@
 # HYPE 趋势突破族 Canvas
 
-本组 legacy Canvas 已迁移到 `../../../../research/hype/ema-trend-breakout/legacy-canvas/`；核心台账已迁移到 `../../../../research/hype/ema-trend-breakout/hype-ema-tb-core-ledger.md`。
+本组 legacy Canvas 已迁移到 `../../../../research/hype/15m-ema-trend-breakout/legacy-canvas/`；核心台账已迁移到 `../../../../research/hype/15m-ema-trend-breakout/hype-ema-tb-core-ledger.md`。
 
 - `hype-v2i-parameter-tuning.canvas.tsx`
 - `hype-v2i-5m-execution-backtest.canvas.tsx`

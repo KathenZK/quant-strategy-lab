@@ -4,9 +4,7 @@ This directory keeps historical project material that should not define the acti
 
 ## Contents
 
-- `code/platform/`: retired strategy platform code, workflow orchestration, dashboard API, backtest/paper-trading helpers, journal/reporting code, and old platform tests.
-- `code/web/`: retired Dashboard frontend source.
-- `code/web-root/`: retired Dashboard root package/workspace wrapper.
+- `code/platform/`: small historical strategy source snapshots cited by durable research docs; not a runnable platform archive.
 - `configs/`: retired top-level environment configuration examples.
 - `docs/`: retired planning, migration, and Cursor artifact index documents.
 - `research/`: retired strategy research and platform experiment documents.
@@ -22,4 +20,4 @@ Read active project docs first:
 - `README.md`
 - `AGENTS.md`
 - `research/README.md`
-- `research/hype/AI_CONTEXT.md`
+- `research/hype/README.md`

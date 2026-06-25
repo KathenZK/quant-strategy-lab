@@ -23,14 +23,13 @@
 - `min_hold_bars`、锁仓期、延迟退出、trailing stop 是否隐藏了不可承受或不可复现的路径风险。
 - 手续费、滑点、stop-market 滑点、订单失败、缺失 K 线、重启恢复、仓位和 emergency stop 是否已经进入验收口径。
 
-之前趋势策略已经犯过“回测漂亮但不能实盘”的错误；近期 `HYPE-5M-PBTR-V2.1A/V3.3/V4` 又暴露了同类锁仓止损问题。以后任何不能通过 live-realistic 执行审计的策略，都必须明确降级为失败或待修复研究，不允许包装成可交接版本。
+之前趋势策略已经犯过“回测漂亮但不能实盘”的错误；近期 `HYPE-5M-Pullback-Trail`（历史别名：`HYPE-5M-PBTR`）V2.1A/V3.3/V4 又暴露了同类锁仓止损问题。以后任何不能通过 live-realistic 执行审计的策略，都必须明确降级为失败或待修复研究，不允许包装成可交接版本。
 
 ## 先读这些
 
 - `AGENTS.md`：AI agent 在本仓库工作的规则。
 - `research/README.md`：研究档案总入口、策略家族 id 和版本号防串线规则。
-- `research/hype/AI_CONTEXT.md`：阅读 HYPE 研究材料前必须先看的上下文。
-- `research/hype/README.md`：HYPE 研究入口。
+- `research/hype/README.md`：HYPE 研究入口与阅读上下文。
 
 ## 当前结构
 
@@ -42,13 +41,13 @@ data/
 research/
   README.md
   hype/
-    AI_CONTEXT.md
+    README.md
     5m-pullback-trail/
       scripts/    # 该策略的一次性复现、审计、搜索脚本
       artifacts/  # 该策略需要保留的 JSON/CSV/HTML 研究产物
-    ema-crossover/
-    ema-trend-breakout/
-    candle-count-reversal/
+    15m-ema-crossover/
+    15m-ema-trend-breakout/
+    15m-candle-count-reversal/
   mu/
 
 src/strategy_lab/
@@ -100,12 +99,13 @@ data/normalized/ohlcv/
 
 不要只引用裸版本号。
 
-请使用明确的家族 id：
+请优先使用展开后的完整家族名；短 id 只作为历史别名：
 
-- `HYPE-CC-V35`：K 线计数反转家族。
-- `HYPE-EMA-X-V14`：EMA 金叉/死叉家族。
-- `HYPE-EMA-TB-V35`：EMA 趋势突破家族。
-- `MU-HYPE-XFER`：从 HYPE 趋势内核迁移到 MU 的研究方向。
+- `HYPE-Candle-Count-Reversal-V35`（别名：`HYPE-CC-V35`）：K 线计数反转家族。
+- `HYPE-EMA-Crossover-V14`（别名：`HYPE-EMA-X-V14`）：EMA 金叉/死叉家族。
+- `HYPE-EMA-Trend-Breakout-V35`（别名：`HYPE-EMA-TB-V35`）：EMA 趋势突破家族。
+- `HYPE-5M-Pullback-Trail-V2`（别名：`HYPE-5M-PBTR-V2`）：Binance HYPE `5m` 回踩/恢复 + ATR trailing stop 家族。
+- `MU-HYPE-Transfer`（别名：`MU-HYPE-XFER`）：从 HYPE 趋势内核迁移到 MU 的研究方向。
 
 即使版本号相同，它们也是不同策略，不应串联引用。
 

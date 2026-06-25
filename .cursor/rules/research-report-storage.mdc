@@ -15,4 +15,4 @@ alwaysApply: true
 - Canvas may be used only as a temporary visualization surface when the user explicitly requests it.
 - If temporary Canvas work produces a durable conclusion, mirror that conclusion into the appropriate `research/` Markdown file before finishing.
 - Treat `legacy-canvas/` directories as frozen historical evidence from migrated Canvas files. Do not create new research reports there.
-- For HYPE material, keep the family id explicit: use `HYPE-CC`, `HYPE-EMA-X`, `HYPE-EMA-TB`, or `MU-HYPE-XFER` instead of bare version numbers.
+- For HYPE material, keep the family name explicit. Prefer full names such as `HYPE-Candle-Count-Reversal`, `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, `HYPE-5M-Pullback-Trail`, or `MU-HYPE-Transfer`; short ids like `HYPE-CC`, `HYPE-EMA-X`, `HYPE-EMA-TB`, `HYPE-5M-PBTR`, and `MU-HYPE-XFER` are historical aliases.

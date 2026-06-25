@@ -8,15 +8,15 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
-from compare_hype_ema_v2_v4 import entry_signal
-from research_hype_ema_cross_strategy import (
+from mu_hype_xfer_kernel import (
     PERIODS_PER_YEAR,
     SLIPPAGE,
     TRADE_COST,
     build_features,
+    entry_signal,
     true_range,
+    v6_variant,
 )
-from research_hype_ema_volume_overlay_v8 import v6_variant
 
 
 DATA_LAKE_ROOT = Path(

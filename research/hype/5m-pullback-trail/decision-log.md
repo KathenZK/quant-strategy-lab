@@ -7,7 +7,7 @@ Family id：`HYPE-5M-PBTR`
 ## 当前边界
 
 - 这是一个独立的 HYPE 策略家族。
-- 不要把新的 `HYPE-5M-PBTR` 研究存放到 `ema-trend-breakout/`。
+- 不要把新的 `HYPE-5M-PBTR` 研究存放到 `15m-ema-trend-breakout/`。
 - 不要从裸版本号 `V1`、`V2`、`V35` 或其他版本号推断策略身份。
 - 后续新建文件若包含带小数点的版本号，必须用连字符保留层级，例如 `HYPE-5M-PBTR-V3.2` 写作 `v3-2`，不要写成 `v32`，避免和未来 `V32` 混淆。
 - 活跃 package 代码仍只承载数据与研究基础设施；策略事实以本 Markdown 家族树和一次性研究脚本为准。

@@ -1,6 +1,6 @@
 # HYPE K 线计数反转族 Canvas
 
-本组 legacy Canvas 已迁移到 `../../../../research/hype/candle-count-reversal/legacy-canvas/`；核心里程碑台账已迁移到 `../../../../research/hype/candle-count-reversal/hype-cc-15m-milestone-comparison.md`。
+本组 legacy Canvas 已迁移到 `../../../../research/hype/15m-candle-count-reversal/legacy-canvas/`；核心里程碑台账已迁移到 `../../../../research/hype/15m-candle-count-reversal/hype-cc-15m-milestone-comparison.md`。
 
 - `hype-strategy-rationale.canvas.tsx`
 - `hype-15m-optimization.canvas.tsx`
