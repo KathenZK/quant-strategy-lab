@@ -21,5 +21,5 @@ Read active project docs first:
 
 - `README.md`
 - `AGENTS.md`
-- `docs/research/STRATEGY_INDEX.md`
-- `docs/research/hype/AI_CONTEXT.md`
+- `research/STRATEGY_INDEX.md`
+- `research/hype/AI_CONTEXT.md`

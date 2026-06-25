@@ -1,0 +1,85 @@
+# HYPE-5M-PBTR 决策日志
+
+Family id：`HYPE-5M-PBTR`
+
+这是 Binance HYPE `5m` 回踩恢复入场与 ATR trailing-stop 研究的家族级阅读路径。
+
+## 当前边界
+
+- 这是一个独立的 HYPE 策略家族。
+- 不要把新的 `HYPE-5M-PBTR` 研究存放到 `families/ema-trend-breakout/`。
+- 不要从裸版本号 `V1`、`V2`、`V35` 或其他版本号推断策略身份。
+- 后续新建文件若包含带小数点的版本号，必须用连字符保留层级，例如 `HYPE-5M-PBTR-V3.2` 写作 `v3-2`，不要写成 `v32`，避免和未来 `V32` 混淆。
+- 活跃 package 代码仍只承载数据与研究基础设施；策略事实以本 Markdown 家族树和一次性研究脚本为准。
+
+## 研究批次记录
+
+- `research-notes/hype-5m-indicator-ensemble-search.md`：在 `2025-06-01` 到 `2026-06-01` 的 Binance HYPE 永续 `5m` 数据上进行指标组合搜索。单条原始或精炼策略均未达到 `20x 年化 / >=80% 胜率 / >-20% 回撤`；一个由高胜率 EMA/Bollinger 回归腿组成的单仓 ensemble 达到全样本目标。该批次只作为研究前身，存在明显过拟合风险，不是已提升的 live 版本。
+- `live-specs/ensemble-specs/README.md`：记录最初 `7` 个 `target_pass=True` 的 HYPE Binance `5m` 单仓 ensemble 组合作为 live-code 交接规格。它们共享相同精炼腿，只是腿数和杠杆不同；当前仅保留为历史支撑材料，不是现行提升路线。
+- `research-notes/hype-5m-ensemble-forward-oos-2026-06-23.md`：加入 `2026-06-01` 到 `2026-06-23 04:00 UTC` 的 Binance HYPE `5m` 数据后，早期 7 个 ensemble 配置无法保持 `>=80%` 胜率和 `<20%` 回撤。这否定了高胜率小利润路径作为 live-ready 方向。
+- `research-notes/hype-5m-positive-payoff-search-2026-06-23.md`：要求 `payoff_ratio > 1`、每个切片胜率 `>=60%`、每个切片年化 `>=20x` 后，基础搜索没有命中。定向 refinement 虽产生数学命中，但回撤不可接受；结论是在讨论收益前必须加入生存约束。
+- `research-notes/hype-5m-survival-frontier-2026-06-23.md`：生存前沿要求每个切片 `payoff_ratio > 1`、交易数、胜率底线 `55%/58%/60%`，以及回撤底线 `-20%/-25%/-30%`。最有用的中间候选是 `HYPE_PP_R05732__dir_htf_ge_0.688442`，全样本年化 `29.07x`，最差切片年化 `9.75x`，最差切片胜率 `58.29%`，payoff `2.19`。
+- `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`：将 R05732 提升为 `HYPE-5M-PBTR-V1` 候选。消融显示 `trail_atr=0.75` 和 `min_hold_bars=6` 是核心；删除最终 `dir_htf` 会显著提高频率和收益，但降低最差切片胜率；`pullback_buffer=0.01` 以及删除/提高固定止盈是最佳后续方向。
+- `hype-5m-pullback-trail-core-ledger.md`：`HYPE-5M-PBTR-V1/V2` 主账。
+- `research-notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`：围绕 V1 消融发现测试 `10240` 个同步组合，`1568` 个通过 V2 门槛。提升 `HYPE-5M-PBTR-V2`，参数为 `pullback_buffer=0.01`、`tp_atr=99`、`stop_atr=0.5`、`roc_window=96`、`min_efficiency=0`、`dir_htf>=0.5`。
+- `live-specs/hype-5m-pullback-trail-v2-live-spec.md`：`HYPE-5M-PBTR-V2` 的详细复现规格，供实现 AI 使用，包含指标公式、信号构造、单仓执行、ATR trailing-stop 管理、重启恢复和验收指标。
+- `ablations/hype-5m-pullback-trail-v2-ablation-slices-2026-06-23.md`：V2 全参数消融，包含 `56` 个周切片、滚动 1w/1m/3m/6m/full 统计，以及 V1/V2 横向对比。
+- `ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`：用观测到的实盘执行成本重跑 V2 全参数消融和时间切片，成本为手续费 `4.1466 bps/turnover`、开仓滑点 `+10.73 bps`、平仓滑点 `-2.64 bps`、净滑点 `+4.0449 bps/total turnover`。
+- `ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`：通过固定/删除 V2 中不活跃参数，提升简化表达 `HYPE-5M-PBTR-V2.1-clean`，随后在同一实盘成本模型下测试 V2.1A 收益分支、V2.1B clean-plus 分支和 V2.1C 稳定分支。
+- `diagnostics/hype-5m-pbtr-v21a-live-realistic-audit-2026-06-24.md`：按严格实盘订单时序重测已进入实盘/实盘 dry-run 的 `HYPE-5M-PBTR-V2.1A`。原始实盘成本回测 PF `2.79`，但若开仓即挂 `0.5 ATR` 初始保护止损，PF 降至 `0.46`；若锁仓期不挂策略止损、解锁时穿越 stop 则市价退出，PF 降至 `0.54`。结论是 V2.1A 也存在 `min_hold_bars + trailing` 出口不可执行假设问题。
+- `diagnostics/hype-5m-pbtr-v21a-unlock-exit-audit-2026-06-24.md`：专门复核 V2.1A dry-run 中“持有 6 根、第 7 根 trailing 触发退出”的现象。原始回测中第 7 根 stop 子集 `2746` 笔、PF `1.98`，说明现象成立；但第 7 根开盘直接平仓、解锁 trailing 市价平仓、收盘 trailing 平仓三种可执行口径 PF 均约 `0.54`，因此 14 笔 dry-run 盈利必须逐笔对账，不能证明旧状态机可放大。
+- `diagnostics/hype-5m-pbtr-v21a-fixed-hold-exit-2026-06-24.md`：作为 unlock-exit 审计补充，测试纯固定持有 `1-24` 根 K。固定持有 6 根、第 7 根开盘平仓 PF `0.54`、平均每笔 `-0.20%`；第 7 根原始 stop 中约 `79.10%` 在开盘时已经穿越 stop，说明问题不是 ATR 是否用当前 K，而是旧 stop 价大多已不可成交。
+- `diagnostics/hype-5m-pbtr-v21a-dryrun-ledger-audit-2026-06-24.md`：复核 `/Users/ZK/OpenCode/hype-pullback` paper-live dry-run SQLite。SQLite 只有 `13` 笔已关闭交易，全部 short，账面 stop 价成交净赚 `+0.3672 USDT`；但 `11/13` 笔在 runner 设置 stop 的那根闭合 K 收盘时已经越过 stop，若按下一根开盘价退出则总计 `-0.0851 USDT`，按下一根收盘价退出则 `-0.1614 USDT`。结论是 dry-run 盈利来自 stop 已不可按旧价成交时仍按 `current_stop` 入账，不能作为可实盘证据。
+- `diagnostics/hype-5m-pbtr-v21a-immediate-tp-audit-2026-06-25.md`：测试开仓后立即挂 `1 * ATR14` 固定止盈、不挂初始止损，前 `6` 根只允许止盈，第 `6` 根后再启用 trailing stop。即时止盈使约 `42.85%` 的交易在前 6 根止盈；旧 stop 价成交口径仍有 PF `1.86`，但 live-realistic 口径 PF 只有 `0.53`，总收益约 `-99.89%`。结论是即时 1ATR 止盈不能修复 V2.1A 的可执行性问题。
+- `diagnostics/hype-5m-pbtr-v21a-remove-final-htf-live-cost-2026-06-24.md`：接受 `remove_final_filter_dir_htf` 作为来自 V2.1A 的独立高频候选，并使用观测实盘成本复核。
+- `diagnostics/hype-5m-pbtr-v3-ablation-audit-2026-06-24.md`：正式将该高频候选记录为 `HYPE-5M-PBTR-V3`，包含全参数消融、周/月/滚动时间切片，以及对不真实年化的资深量化审计。V3 不是 V2.1A 的替代版本，需要小资金 dry-run 和执行压力测试。
+- `diagnostics/hype-5m-pbtr-v31-min-hold-9-2026-06-24.md`：将 V3 消融中表现最强的 `min_hold_bars=9` 固化为 `HYPE-5M-PBTR-V3.1` 研究候选，并生成 HTML 交易路径图。V3.1 样本内显著提高胜率/PF，但最大回撤扩大，不能直接替代 V3。
+- `diagnostics/hype-5m-pbtr-v32-clean-entry-filters-2026-06-24.md`：根据外部审计意见删除 V3.1 中剩余无贡献/负贡献入场过滤器，形成 `HYPE-5M-PBTR-V3.2`。V3.2 仅保留方向、pullback/resume、`min_hold_bars=9` 和 ATR trailing exit，样本内收益和回撤均优于 V3.1，是当前更简洁的 paper/dry-run 首选表达。
+- `ablations/hype-5m-pbtr-v32-full-parameter-ablation-2026-06-24.md`：对 V3.2 重做全参数消融。结论是旧入场过滤器不应加回，核心入场仍是 `pullback_resume`，核心退出仍是 `min_hold + ATR trailing`；`trail_atr=0.5`、`min_hold_bars=12`、`stop_atr=0.25` 只作为下一轮 V3.3 研究方向。
+- `live-specs/hype-5m-pbtr-v3-2-live-spec.md`：面向同事实盘/paper 复现的 V3.2 完整参数与执行规格，包含入场、持仓、平仓、成本、状态恢复和 dry-run 验收线。
+- `diagnostics/hype-5m-pbtr-v3-3-minimal-2026-06-24.md`：将 V3.2 中所有兼容保留、关闭、有限值保护和基本不触发参数彻底移除，形成 `HYPE-5M-PBTR-V3.3` 最小复现表达。回测与 V3.2 几乎一致，仅多出 `2` 笔交易，说明 V3.2 大参数表可以从交接规格中删除。
+- `live-specs/hype-5m-pbtr-v3-3-live-spec.md`：面向同事实盘/paper 复现的 V3.3 最小规格，只保留 `EMA21/EMA96`、`pullback_buffer=0.01`、`stop_atr=0.5`、`trail_atr=0.75` 和 `min_hold_bars=9`。
+- `ablations/hype-5m-pbtr-v3-3-full-parameter-ablation-2026-06-24.md`：对 V3.3 的 6 个有效参数做单因子全参数消融。结论是 6 个参数都是真正生效参数，不能继续删除；`trail_atr=0.5`、`min_hold_bars=12/18`、`stop_atr=0.25` 是样本内增强候选，但 `trail_atr=0` 是不可实盘复现的退化边界，必须剔除。
+- `diagnostics/hype-5m-pbtr-v33-reinit-trailing-2026-06-24.md`：测试 V3.3 方案 2：锁仓期只观察，不把锁仓期峰谷带入 trailing，第 10 根 K 重新初始化 stop。该机制能消除解锁即 stop 已穿越的不可挂单问题，但在 V3.3 原参数下仍失败，最佳 PF 仅约 `0.61`，说明必须在可执行状态机上重新搜索更宽 trailing/更短锁仓/应急止损参数。
+- `diagnostics/hype-5m-pbtr-v33-immediate-tp-audit-2026-06-25.md`：把 V2.1A 的即时 `1 * ATR14` 止盈补救迁移到 V3.3。即时止盈使约 `50.19%` 的交易在 `min_hold_bars=9` 锁仓期内先止盈；旧 stop 价成交口径 PF `2.38`，但 live-realistic 口径 PF 仅 `0.55`，总收益约 `-100%`。结论是 V3.3 也不能靠入场即挂 1ATR 止盈修复。
+- `diagnostics/hype-5m-pbtr-v33-immediate-tp2-audit-2026-06-25.md`：测试 V3.3 开仓即时 `2 * ATR14` 止盈。锁仓期止盈率降至 `25.76%`，旧 stop 价成交口径 PF `3.40`，但 live-realistic 口径 PF 只有 `0.60`，总收益仍约 `-100%`。结论是扩大即时止盈到 2ATR 也不能修复 V3.3。
+- `diagnostics/hype-5m-pbtr-v33-immediate-tp-grid-2026-06-25.md`：完整搜索 V3.3 即时止盈 ATR 倍数，`tp_atr=0.25..8.00` 步长 `0.25`，并附加 `10/12`。live-realistic PF 最佳为 `2.5ATR`，PF `0.615`，总收益和最大回撤仍约 `-100%`。结论是问题不是 TP 倍数没调准，而是未止盈交易解锁后的退出状态机本身负期望。
+- `diagnostics/hype-5m-pbtr-v3-4-combo-candidates-2026-06-24.md`：对 V3.3 单因子有效增强项做组合测试，最强实用候选为 `EMA9/96 + pullback_buffer=0.01 + stop_atr=0.25 + trail_atr=0.5 + min_hold_bars=18`，样本内胜率 `72.95%`、PF `19.92`、最大回撤 `-11.27%`。该组合提升记录为 `HYPE-5M-PBTR-V4`，但仍需实盘可行性审计。
+- `diagnostics/hype-5m-pbtr-v4-live-viability-audit-2026-06-24.md`：对 `HYPE-5M-PBTR-V4` 做实盘可行性审计。结论是 V4 不是不可计算策略，成本压力下仍有较强缓冲；但若从开仓即挂 `0.25 ATR` 保护止损，反事实回测会变成 PF `0.17`、最大回撤约 `-100%`。V4 只能进入 paper-live / 极小资金审计，不能直接生产。
+- `diagnostics/hype-5m-pbtr-live-realistic-trailing-2026-06-24.md`：按严格实盘订单时序重测 `HYPE-5M-PBTR-V3.3` 与 `HYPE-5M-PBTR-V4`：锁仓期不挂策略止损，解锁时若 `active_stop` 已被穿越则市价平仓，否则挂 reduce-only stop-market 并继续 trailing。结果 V3.3 live-realistic PF `0.58`、V4 live-realistic PF `0.67`，两者均坍缩为亏损结构，说明当前 `min_hold_bars + trailing` 退出路径不能直接交接实盘。
+- `diagnostics/hype-5m-pbtr-fixed-bracket-search-2026-06-24.md`：对 V3.3/V4 信号测试入场即挂固定 ATR bracket order，不使用 `min_hold_bars` 或 trailing。V3.3 原始信号 `21289` 个，V4 原始信号 `22774` 个；`TP=5ATR/SL=3ATR` 分别 PF `0.79`/`0.76`，最佳组合也只有 PF `1.05`/`1.06` 且总收益为负、回撤深，说明固定止盈止损不能救活这两个信号。
+- `diagnostics/hype-5m-pbtr-reset-bracket-search-2026-06-24.md`：对 V3.3/V4 信号测试每根 5m K 收盘后围绕最新 close/ATR 重设 TP/SL。该状态机可实盘执行，但 V3.3 最佳 PF `2.22` 只来自 `24` 笔超长持仓，中位持仓约 `2984` 根 5m K，最大回撤 `-69.21%`，最近 1 个月无交易；V4 最佳组合全样本仍亏损。结论是动态 bracket 也不能直接救活 V3.3/V4。
+- `diagnostics/hype-5m-pbtr-reset-bracket-maxhold48-2026-06-24.md`：在动态 bracket 上加入 `max_hold_bars=48`，即最多持仓约 4 小时。V3.3 原最佳 `TP=6/SL=10` PF 从 `2.22` 降至 `0.79`，最大回撤 `-98.90%`；全网格最佳也只有 V3.3 PF `0.81`、V4 PF `0.83`。这确认此前改善主要来自十天级超长持仓，不是 5m 信号本身。
+- `diagnostics/hype-5m-pbtr-live-repair-plan-2026-06-24.md`：根据 V2.1A/V3.3/V4 的 live-realistic 失败和一次小型 reinit 参数探测，提出下一轮 `HYPE-5M-PBTR-V5` 应从可执行状态机重新开始：开仓即保护止损，或先观察后入场；不再接受 crossed stop 按旧 stop 价成交的回测口径。
+- `diagnostics/hype-5m-pbtr-v5-executable-search-2026-06-24.md`：执行 first-pass `HYPE-5M-PBTR-V5` 搜索，测试 `1980` 个可实盘状态机组合，包括开仓即保护止损与观察后入场。无候选通过 gate，且无 watchlist；最佳 PF 约 `0.69`。附加单特征事件质量探测也没有找到 PF `>1` 的子集，说明当前 pullback-trailing 直接规则不应继续交接实盘。
+- `diagnostics/hype-5m-pbtr-v5-1-event-quality-2026-06-24.md`：把原始 pullback 触发器降级为高频事件源，新增 observation-confirmed 事件质量筛选层，并在筛选后重新做 exact executable replay。找到一个很窄的候选：`opp_wick_atr <= 0` 且 `abs_ema_spread_bps <= 92.9084`，全样本 `180` 笔、PF `1.25`、验证 PF `1.29`、forward PF `1.06`、最大回撤 `-10.37%`。
+- `diagnostics/hype-5m-pbtr-v5-1-candidate-ablation-2026-06-24.md`：对 V5.1 候选做删除过滤器和邻域参数消融，测试 `9736` 行。真正通过 candidate gate 的只有同一规则的重复入口；一旦放宽 `opp_wick_atr`，交易频率上升但 PF 快速跌破 `1`。月度稳定性不足，`2026-04` PF 仅 `0.10`，所以 V5.1 不能进入真实资金执行，只能作为 paper/audit 候选。
+- `diagnostics/hype-5m-pbtr-v5-2-walk-forward-ranking-2026-06-24.md`：接受“不要写真钱 live spec，先做 walk-forward event ranking 和 paper audit runner”的方向后，将 V5.1 固定筛选层改为 live-feasible 月度 walk-forward 排名器。测试 `96` 个配置，全部低于 PF `1`，最高 walk-forward PF `0.93`，平均每笔仍为负；生成 `artifacts/hype_5m_pbtr_v52_paper_audit_events.csv` 记录所有 observation-confirmed 事件的接受/拒绝、阈值、分数和 paper 订单状态。结论：当前评分器无法在线学到 V5.1 的事后阈值条件，不应 paper 部署。
+- `diagnostics/hype-5m-pbtr-v6-live-executable-search-2026-06-25.md`：按用户要求重新参考 V3.3 的信号触发方式探索可实盘盈利组合，并将 Binance HYPE `5m` 数据湖补到 `2026-06-25 05:50 UTC` 最后一根已闭合 K。搜索 `216` 个信号形态与 `78` 个退出形态，prescreen 只按 `2025-05-30 -> 2026-03-01` 样本内排序，随后对 top `80` 组合做 exact executable replay。原始搜索产生 `2120` 行精筛候选和 `179` 个宽松 gate 通过项；默认 full-PF top 不是最终选择，必须结合后续稳健性复核阅读。
+- `diagnostics/hype-5m-pbtr-v6-candidate-robustness-2026-06-25.md`：围绕 V6 最强可执行基座做邻域复核，测试 `2464` 行 exact replay，`112` 行通过严格 robust pass。当前最值得 paper 的候选是 `EMA21/EMA55` 多头回踩恢复、`pullback_buffer=0.01`、无 candle 方向过滤、`dir_htf >= 0.5`、`dir_ret192_bps >= 788.123`，入场后立即挂 `TP=3ATR14 / SL=7ATR14`，无 trailing，`36` 根 K 超时 open 平仓。全样本 `147` 笔、总收益 `+76.43%`、年化倍数 `1.70x`、PF `1.72`、胜率 `59.86%`、payoff `1.15`、最大回撤 `-11.28%`；`2026-06-01 -> 2026-06-25 05:55 UTC` OOS `10` 笔、`+2.07%`、PF `1.45`。这是 paper/live-dry-run 候选，不是生产 sizing 版本。
+- `ablations/hype-5m-pbtr-v6-full-parameter-ablation-2026-06-25.md`：正式将上一轮 paper 候选记录为 `HYPE-5M-PBTR-V6`，并对 `51` 个单因子变体做全参数消融，`13` 个变体通过 V6 robust gate。核心结论：删除质量过滤后 PF 降至 `0.806`、最大回撤 `-66.09%`；`side_mode=short/both` 失败；`quality_window=192` 是唯一通过的动量窗口；`EMA21/55` 是当前最稳趋势定义；`SL=6/7/8/10ATR` 与 `TP=2.5/3ATR` 有邻域稳定性；加回 trailing 或将 timeout 缩到 `12` 根 K 会显著削弱。V6 定义保持 `TP=3ATR/SL=7ATR/timeout=36`，暂不因单因子小增益升级。
+
+## 当前决策
+
+- `HYPE-5M-PBTR-V1`：保留为更干净的胜率体验基线 dry-run 候选。
+- `HYPE-5M-PBTR-V2`：当前主要收益 dry-run 候选，频率和 payoff 更高，但胜率略低。
+- `HYPE-5M-PBTR-V2.1-clean`：在观测实盘成本分析下，作为 V2 的首选简化表达；表现与 V2 基本一致，同时移除了不活跃解释参数。
+- `HYPE-5M-PBTR-V2.1A`：已经进入实盘/实盘 dry-run 的收益候选；严格 live-realistic 口径下 PF 降至 `0.54`。unlock-exit、fixed-hold、本地 dry-run ledger 与 immediate-TP 审计确认第 7 根附近 stop 子集赚钱依赖旧 stop 价成交；即时 1ATR 止盈也不能修复。不应扩大仓位，只能作为极小资金监控样本，并先修正 runner 记账/退出口径。
+- `HYPE-5M-PBTR-V3`：来自 V2.1A、关闭 final HTF 的独立高频研究候选；与 `V3-lite = V2.1A + dir_htf >= 0` 并行测试，不作为生产直接替代版本。
+- `HYPE-5M-PBTR-V3.1`：来自 V3，将 `min_hold_bars` 提高到 `9`；作为高收益研究候选单独 dry-run，重点观察真实回撤是否显著扩张。
+- `HYPE-5M-PBTR-V3.2`：来自 V3.1，删除剩余入场过滤器；保留为 clean 高频表达历史记录。
+- `HYPE-5M-PBTR-V3.3`：来自 V3.2，删除所有兼容/关闭/保护/基本不触发参数；已不再作为当前同事实盘复现首选，因为严格 live-realistic trailing 口径下 PF 降至 `0.58`，即时 TP 网格最佳 `2.5ATR` 也只有 PF `0.615`。
+- `HYPE-5M-PBTR-V3.3-reinit-trailing`：方案 2 的机制修复记录；可执行性改善，但原参数 PF 仍约 `0.61`，不是可交接版本。
+- `HYPE-5M-PBTR-V4`：来自 V3.3 有效单因子组合测试；样本内显著强于 V3.3，但严格 live-realistic trailing 口径下 PF 降至 `0.67`，不应进入直接 paper-live 交接。
+- `HYPE-5M-PBTR-fixed-bracket`：固定 ATR 止盈止损修复尝试；退出完全可执行，但 V3.3/V4 信号没有恢复稳健正期望，记录为 no-go。
+- `HYPE-5M-PBTR-reset-bracket`：每 5m 重设 TP/SL 修复尝试；V3.3 表面 PF 改善依赖极少数超长持仓和深回撤，V4 仍亏损，记录为 no-go。
+- `HYPE-5M-PBTR-reset-bracket-maxhold48`：对 reset bracket 加 48 根 K 最长持仓后，V3.3/V4 均失效，确认超长持仓假改善不可用。
+- `HYPE-5M-PBTR-live-repair-plan`：当前建议；冻结 V3.3/V4 实盘交接，下一轮按 executable-first V5 重做，不再围绕旧锁仓回测继续调参。
+- `HYPE-5M-PBTR-V5-executable-search`：已完成首轮，结论为 no-go；直接规则和简单事件过滤都没有实盘正期望，下一步若继续应改为 leakage-safe 事件质量建模，或者放弃这条 5m pullback-trailing 线。
+- `HYPE-5M-PBTR-V5.1-event-quality`：已完成首轮事件质量筛选和候选消融；发现了可执行、正期望但边际很薄的 observation-confirmed 候选。当前结论是“有研究价值，但不是实盘版本”；必须继续做 walk-forward/ranking 化、paper audit，并在线记录所有 rejected trigger。
+- `HYPE-5M-PBTR-V5.2-walk-forward-ranking`：已完成首轮；ranking 方法没有复现 V5.1 固定阈值的正期望，记录为 no-go for paper deployment。V5.1 固定阈值只能当作可疑研究线索，不能当作 live 规则。
+- `HYPE-5M-PBTR-V6-live-executable-search`：已完成泄漏控制搜索。原始搜索用于发现候选，不直接作为 live spec；后续必须优先阅读 V6 candidate robustness 和 V6 full-parameter ablation。
+- `HYPE-5M-PBTR-V6`：当前最可执行的新候选，已正式进入主账。它放弃旧 `min_hold_bars + trailing`，改成闭合 K 信号、下一根 open 入场、入场即固定 TP/SL、36 根 K 时间退出。允许进入 paper audit / 极小资金 dry-run 设计，但生产 sizing 前必须先验证真实盘口滑点、reduce-only bracket 维护、重启恢复、以及至少连续 `30-50` 笔 paper 订单的 live/outcome 偏差。
+- `HYPE-5M-executable-broad-search-2026-06-25`：按用户提出的 `>=20x` 年化、`>=50%` 胜率、最大回撤优于 `-20%`、可实盘四项硬条件，对旧 indicator entry styles 做 `13134` 个入场即 bracket 的严格可执行搜索。无命中；即使不设最低交易数，最高年化也只有约 `1.18x`，`>=100` 笔交易时最高年化约 `1.05x`。V6 paper candidate 是目前最接近“可实盘 + 胜率/回撤达标”的候选，但年化远低于 `20x`，不能包装成满足本次目标的策略。
+- 下一轮 `HYPE-5M-PBTR` 研究优先级：第一是把 V6 paper candidate 写成 paper audit runner，记录所有原始触发、过滤器拒绝原因、接受信号、虚拟 TP/SL/timeout 成交和真实盘口可成交性；第二是对 `dir_ret192_bps` 动量过滤做 walk-forward 固化，确认 `788.123 bps` 不是事后阈值；第三才是考虑极小资金 dry-run。不要再把旧 `min_hold_bars + trailing` 回测当作实盘依据。
+- V1/V2/V2.1/V3/V3.1/V3.2/V3.3/V4/V5.1/V5.2/V6 候选在生产 sizing 前都必须先有 live dry-run 或 paper audit 证据。

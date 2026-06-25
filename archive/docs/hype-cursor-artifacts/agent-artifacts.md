@@ -15,6 +15,6 @@ Known subdirectories:
 Archived management rules:
 
 - Do not make canonical research depend only on hidden Cursor state.
-- Summarize important findings into `docs/research/`.
+- Summarize important findings into `research/`.
 - Use `canvas-catalog.md` and `canvas-groups/` only as historical migration indexes.
 - Treat transcripts and tool files as process evidence, not stable strategy specs.

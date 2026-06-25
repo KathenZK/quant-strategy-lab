@@ -1,6 +1,6 @@
 # Cursor Canvas Migration Plan
 
-This repository now treats Markdown under `docs/research/` as the durable research surface. Cursor Canvas files are legacy/private assets and should be migrated into repo-tracked Markdown when their content is still useful.
+This repository now treats Markdown under `research/` as the durable research surface. Cursor Canvas files are legacy/private assets and should be migrated into repo-tracked Markdown when their content is still useful.
 
 ## Goals
 
@@ -27,11 +27,11 @@ Use these targets when converting Canvas reports to Markdown:
 
 | Canvas group | Markdown target |
 | --- | --- |
-| HYPE EMA golden/death cross | `docs/research/hype/families/ema-crossover/` |
-| HYPE EMA trend breakout | `docs/research/hype/families/ema-trend-breakout/` |
-| HYPE candle-count reversal | `docs/research/hype/families/candle-count-reversal/` |
-| MU transfer research | `docs/research/mu/` |
-| Cross-asset HYPE transfer checks | `docs/research/hype/transfer/` or the relevant promoted asset family if one exists |
+| HYPE EMA golden/death cross | `research/hype/families/ema-crossover/` |
+| HYPE EMA trend breakout | `research/hype/families/ema-trend-breakout/` |
+| HYPE candle-count reversal | `research/hype/families/candle-count-reversal/` |
+| MU transfer research | `research/mu/` |
+| Cross-asset HYPE transfer checks | `research/hype/transfer/` or the relevant promoted asset family if one exists |
 | External or abandoned strategy research | `archive/research/legacy-strategies/` |
 | Platform or workflow experiments | `archive/research/platform-experiments/` |
 
