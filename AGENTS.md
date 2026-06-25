@@ -43,6 +43,10 @@ HYPE 版本号只有放在具体策略家族里才有意义。
 ## 新研究规则
 
 - 优先使用 document-first 工作流。
+- 启动新策略研究前，先查 `research/README.md` 和对应资产目录的 `README.md`，确认是否已有相同 family。
+- 如果是新的时间片或新的策略机制，必须新建独立目录，命名为 `research/<asset>/<timeframe>-<strategy-family-slug>/`，例如 `research/hype/1m-ema-crossover/`、`research/hype/15m-ema-crossover/`、`research/hype/5m-pullback-trail/`。
+- 不要因为指标相似就把新时间片研究塞进旧 family；例如 `1m` EMA crossover 不能放进 `15m-ema-crossover/`。
+- 新 family 目录创建时至少包含 `README.md`、`decision-log.md`、`scripts/`、`artifacts/`；按需要再建 `diagnostics/`、`ablations/`、`live-specs/`、`research-notes/`。
 - 探索产生的一次性脚本放在对应 `research/.../scripts/` 目录。
 - 最终结论必须保存到对应 family 的 repository-tracked Markdown 文档中，位置在 `research/` 下。
 - 需要保留的 JSON、CSV、HTML 和 trade-path 输出放在对应 `research/.../artifacts/` 目录；顶层 `reports/` 只用于 scratch 或 legacy local cache。

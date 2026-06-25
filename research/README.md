@@ -81,8 +81,12 @@
 
 ## 研究目录约定
 
-新的策略研究默认由对应 topic 或 family 自管理：
+新的策略研究默认由对应资产下的时间片策略目录自管理；非资产专属研究可放在独立 topic 目录：
 
+- 启动前先查本文件和对应资产目录的 `README.md`，确认是否已有相同 family。
+- 新时间片或新策略机制必须新建独立目录，格式为 `research/<asset>/<timeframe>-<strategy-family-slug>/`。
+- 示例：`research/hype/1m-ema-crossover/`、`research/hype/15m-ema-crossover/`、`research/hype/5m-pullback-trail/`。
+- 不要因为指标相似就把新时间片研究塞进旧 family；`1m` EMA crossover 与 `15m` EMA crossover 必须分开。
 - `README.md`、主账和 `decision-log.md`：长期入口和决策记录。
 - `diagnostics/`、`ablations/`、`live-specs/`、`research-notes/`：按研究性质分类的 Markdown。
 - `scripts/`：只服务当前研究的一次性复现、搜索、审计、报告生成脚本。

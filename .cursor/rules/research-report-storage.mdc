@@ -7,6 +7,8 @@ alwaysApply: true
 
 - Durable research reports, strategy ledgers, experiment conclusions, and decision records must be saved as Markdown under `research/`.
 - Write generated research reports in Chinese by default unless the user explicitly requests another language.
+- Before starting a new strategy research line, check `research/README.md` and the relevant asset `README.md`. If the timeframe or strategy mechanism is new, create a separate directory named `research/<asset>/<timeframe>-<strategy-family-slug>/`, for example `research/hype/1m-ema-crossover/`, `research/hype/15m-ema-crossover/`, or `research/hype/5m-pullback-trail/`.
+- Do not place a new timeframe into an existing family only because the indicators are similar; initialize a new family directory with at least `README.md`, `decision-log.md`, `scripts/`, and `artifacts/`.
 - Store current one-off research scripts under the relevant `research/.../scripts/` directory, not under `archive/scripts/research/`.
 - Store retained JSON, CSV, HTML, and trade-path outputs under the relevant `research/.../artifacts/` directory. Use top-level `reports/` only for scratch runs or legacy local cache.
 - If a Markdown report cites a generated file, treat that file as durable evidence: place it under the same topic/family `artifacts/` directory and update the Markdown link away from `reports/...`.
@@ -15,4 +17,4 @@ alwaysApply: true
 - Canvas may be used only as a temporary visualization surface when the user explicitly requests it.
 - If temporary Canvas work produces a durable conclusion, mirror that conclusion into the appropriate `research/` Markdown file before finishing.
 - Treat `legacy-canvas/` directories as frozen historical evidence from migrated Canvas files. Do not create new research reports there.
-- For HYPE material, keep the family name explicit. Prefer full names such as `HYPE-Candle-Count-Reversal`, `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, `HYPE-5M-Pullback-Trail`, or `MU-HYPE-Transfer`; short ids like `HYPE-CC`, `HYPE-EMA-X`, `HYPE-EMA-TB`, `HYPE-5M-PBTR`, and `MU-HYPE-XFER` are historical aliases.
+- For HYPE material, keep the family name explicit. Prefer full names such as `HYPE-Candle-Count-Reversal`, `HYPE-EMA-Crossover`, `HYPE-1M-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, `HYPE-5M-Pullback-Trail`, or `MU-HYPE-Transfer`; short ids like `HYPE-CC`, `HYPE-EMA-X`, `HYPE-1M-EMA-X`, `HYPE-EMA-TB`, `HYPE-5M-PBTR`, and `MU-HYPE-XFER` are historical aliases.

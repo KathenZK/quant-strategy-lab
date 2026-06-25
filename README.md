@@ -28,7 +28,7 @@
 ## 先读这些
 
 - `AGENTS.md`：AI agent 在本仓库工作的规则。
-- `research/README.md`：研究档案总入口、策略家族 id 和版本号防串线规则。
+- `research/README.md`：研究档案总入口、策略家族名称和版本号防串线规则。
 - `research/hype/README.md`：HYPE 研究入口与阅读上下文。
 
 ## 当前结构
@@ -45,6 +45,7 @@ research/
     5m-pullback-trail/
       scripts/    # 该策略的一次性复现、审计、搜索脚本
       artifacts/  # 该策略需要保留的 JSON/CSV/HTML 研究产物
+    1m-ema-crossover/
     15m-ema-crossover/
     15m-ema-trend-breakout/
     15m-candle-count-reversal/
@@ -86,7 +87,7 @@ data/normalized/ohlcv/
 
 ## 研究资产规则
 
-新的策略研究默认在 `research/<topic>/` 或 `research/hype/<family>/` 内自管理：
+新的策略研究默认在 `research/<asset>/<timeframe>-<strategy-family-slug>/` 内自管理；非资产专属研究可放在 `research/<topic>/`：
 
 - `README.md`、主账和 `decision-log.md` 记录持久结论。
 - `diagnostics/`、`ablations/`、`live-specs/`、`research-notes/` 按研究性质分类放 Markdown。
@@ -103,6 +104,7 @@ data/normalized/ohlcv/
 
 - `HYPE-Candle-Count-Reversal-V35`（别名：`HYPE-CC-V35`）：K 线计数反转家族。
 - `HYPE-EMA-Crossover-V14`（别名：`HYPE-EMA-X-V14`）：EMA 金叉/死叉家族。
+- `HYPE-1M-EMA-Crossover`（别名：`HYPE-1M-EMA-X`）：Binance HYPEUSDT `1m` EMA 金叉/死叉家族。
 - `HYPE-EMA-Trend-Breakout-V35`（别名：`HYPE-EMA-TB-V35`）：EMA 趋势突破家族。
 - `HYPE-5M-Pullback-Trail-V2`（别名：`HYPE-5M-PBTR-V2`）：Binance HYPE `5m` 回踩/恢复 + ATR trailing stop 家族。
 - `MU-HYPE-Transfer`（别名：`MU-HYPE-XFER`）：从 HYPE 趋势内核迁移到 MU 的研究方向。
