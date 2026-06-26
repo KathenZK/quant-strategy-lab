@@ -18,6 +18,12 @@ For the newer Binance HYPE `5m` pullback + ATR trailing-stop research line, use:
 4. `5m-pullback-trail/live-specs/hype-5m-pullback-trail-v2-live-spec.md`
 5. `5m-pullback-trail/research-notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
 
+For the Binance HYPEUSDT `5m` micro-scalp research line, use:
+
+1. `5m-micro-scalp/README.md`
+2. `5m-micro-scalp/decision-log.md`
+3. `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`
+
 For `HYPE-EMA-Crossover-V15`, `HYPE-EMA-Crossover-V16`, `HYPE-EMA-Crossover-V17`, and `HYPE-EMA-Crossover-V17.1`, start from `15m-ema-crossover/hype-ema-x-core-ledger.md`, then use the repo rule mirrors `15m-ema-crossover/v15-v16-promoted-strategy-specs.md` and `15m-ema-crossover/v17-hybrid-ablation.md` when needed.
 
 For the Binance HYPEUSDT `1m` EMA cross research line, use:
@@ -36,6 +42,7 @@ For the Binance HYPEUSDT `1m` EMA cross research line, use:
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | `1m-ema-crossover/` | Binance HYPEUSDT `1m` EMA cross lineage with live-executable next-bar entries, fixed TP, and trailing TP | Do not merge this with `15m-ema-crossover` just because both are EMA cross research |
 | `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `15m-ema-trend-breakout/` | Later EMA trend breakout / chase-long-chase-short lineage with ADX, volume, 1h confirmation, and cross-exchange execution variants | `V35` here is not candle-count `V35` or EMA-cross `V14` |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `5m-pullback-trail/` | Binance HYPE `5m` pullback/resume entries with ATR trailing-stop exits | Local `V1/V2` here are not legacy 15m `HYPE-EMA-Trend-Breakout` V1/V2 |
+| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `5m-micro-scalp/` | Binance HYPEUSDT `5m` high-frequency micro-profit scalp search with immediate executable TP/SL brackets | Do not treat high win-rate no-go rows as pullback-trail or live candidates |
 
 ## Core Markdown Ledgers
 
@@ -45,6 +52,7 @@ For the Binance HYPEUSDT `1m` EMA cross research line, use:
 - `15m-ema-trend-breakout/hype-ema-tb-core-ledger.md`: `HYPE-EMA-Trend-Breakout` trend strategy research ledger.
 - `15m-candle-count-reversal/hype-cc-15m-milestone-comparison.md`: `HYPE-Candle-Count-Reversal` 15m milestone comparison ledger.
 - `5m-pullback-trail/hype-5m-pullback-trail-core-ledger.md`: `HYPE-5M-Pullback-Trail` active `5m` pullback-trail ledger.
+- `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`: `HYPE-5M-Micro-Scalp` first executable broad search; no-go for live/paper candidate promotion.
 
 ## Hard Rules
 
@@ -54,6 +62,7 @@ For the Binance HYPEUSDT `1m` EMA cross research line, use:
 - Treat `HYPE-15M-Multi-Indicator-Intraday` as a broad indicator-search family, not a version of `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, or `HYPE-Candle-Count-Reversal`.
 - Treat `HYPE-1M-EMA-Crossover` as a separate `1m` family, not as a subdocument or version of `HYPE-EMA-Crossover`.
 - Treat `HYPE-5M-Pullback-Trail` as a separate `5m` family, not as a subdocument of `HYPE-EMA-Trend-Breakout`.
+- Treat `HYPE-5M-Micro-Scalp` as a separate `5m` family, not as a version of `HYPE-5M-Pullback-Trail` or `HYPE-15M-Multi-Indicator-Intraday`.
 - Durable HYPE research reports and ledgers must be repository-tracked Markdown under `research/`.
 - Cursor Canvas files are legacy/private research assets, not canonical storage for new reports. If Canvas is used for temporary visualization, mirror the durable conclusion into the relevant Markdown file before finishing.
 - Archived code under `archive/code/platform/` is limited to historical strategy source snapshots cited by research docs; it is not strategy truth or runnable platform code.
