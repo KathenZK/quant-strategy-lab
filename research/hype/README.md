@@ -32,6 +32,7 @@ For the Binance HYPEUSDT `1m` EMA cross research line, use:
 | --- | --- | --- | --- | --- |
 | `HYPE-Candle-Count-Reversal` | `HYPE-CC` | `15m-candle-count-reversal/` | 10-of-8 candle color reversal with ATR risk controls and early-exit variants | `V35` here is not trend breakout `V35` |
 | `HYPE-EMA-Crossover` | `HYPE-EMA-X` | `15m-ema-crossover/` | EMA golden/death cross lineage, evolved through V14-era filters, exits, state machine, late re-entry, and effective-cross scoring | Do not merge this with later `HYPE-EMA-Trend-Breakout` just because both use EMA96/384 |
+| `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | `15m-multi-indicator-intraday/` | Binance HYPEUSDT `15m` broad RSI/MACD/EMA/ADX/ATR/volume/structure intraday search | Do not relabel broad indicator-search results as existing EMA-X, EMA-TB, or candle-count versions |
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | `1m-ema-crossover/` | Binance HYPEUSDT `1m` EMA cross lineage with live-executable next-bar entries, fixed TP, and trailing TP | Do not merge this with `15m-ema-crossover` just because both are EMA cross research |
 | `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `15m-ema-trend-breakout/` | Later EMA trend breakout / chase-long-chase-short lineage with ADX, volume, 1h confirmation, and cross-exchange execution variants | `V35` here is not candle-count `V35` or EMA-cross `V14` |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `5m-pullback-trail/` | Binance HYPE `5m` pullback/resume entries with ATR trailing-stop exits | Local `V1/V2` here are not legacy 15m `HYPE-EMA-Trend-Breakout` V1/V2 |
@@ -39,6 +40,7 @@ For the Binance HYPEUSDT `1m` EMA cross research line, use:
 ## Core Markdown Ledgers
 
 - `15m-ema-crossover/hype-ema-x-core-ledger.md`: `HYPE-EMA-Crossover` promoted-candidate and version-evolution ledger.
+- `15m-multi-indicator-intraday/README.md`: `HYPE-15M-Multi-Indicator-Intraday` exploratory broad-indicator `15m` intraday search entry.
 - `1m-ema-crossover/diagnostics/hype-1m-ema-crossover-live-search-2026-06-25.md`: `HYPE-1M-EMA-Crossover` first diagnostic / paper-live search report.
 - `15m-ema-trend-breakout/hype-ema-tb-core-ledger.md`: `HYPE-EMA-Trend-Breakout` trend strategy research ledger.
 - `15m-candle-count-reversal/hype-cc-15m-milestone-comparison.md`: `HYPE-Candle-Count-Reversal` 15m milestone comparison ledger.
@@ -49,6 +51,7 @@ For the Binance HYPEUSDT `1m` EMA cross research line, use:
 - Never answer from `Vxx` alone.
 - Always name the full family name, for example `HYPE-Candle-Count-Reversal-V21` or `HYPE-EMA-Trend-Breakout-V36`.
 - Treat `HYPE-EMA-Crossover` and `HYPE-EMA-Trend-Breakout` as separate core directions, not one EMA bucket.
+- Treat `HYPE-15M-Multi-Indicator-Intraday` as a broad indicator-search family, not a version of `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, or `HYPE-Candle-Count-Reversal`.
 - Treat `HYPE-1M-EMA-Crossover` as a separate `1m` family, not as a subdocument or version of `HYPE-EMA-Crossover`.
 - Treat `HYPE-5M-Pullback-Trail` as a separate `5m` family, not as a subdocument of `HYPE-EMA-Trend-Breakout`.
 - Durable HYPE research reports and ledgers must be repository-tracked Markdown under `research/`.
