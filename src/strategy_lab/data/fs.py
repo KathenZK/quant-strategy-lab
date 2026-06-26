@@ -24,6 +24,11 @@ def file_lock(path: Path) -> Iterator[None]:
         finally:
             if fcntl is not None:
                 fcntl.flock(handle.fileno(), fcntl.LOCK_UN)
+    try:
+        if lock_path.exists() and lock_path.stat().st_size == 0:
+            lock_path.unlink()
+    except OSError:
+        pass
 
 
 def atomic_write_path(path: Path, writer: Callable[[Path], None]) -> Path:
