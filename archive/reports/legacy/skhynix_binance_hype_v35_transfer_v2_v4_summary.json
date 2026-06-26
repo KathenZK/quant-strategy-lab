@@ -1,0 +1,75 @@
+{
+  "symbol": "SKHYNIX/USDT:USDT",
+  "source": "binance",
+  "data": {
+    "rows": 1556,
+    "start": "2026-06-02 03:00:00+00:00",
+    "end": "2026-06-18 07:45:00+00:00",
+    "warmup_bars": 672,
+    "backtest_start_after_warmup": "2026-06-09 03:00:00+00:00",
+    "regular_overnight_bars_after_warmup": 426,
+    "signal_bars_after_warmup": 5
+  },
+  "results": {
+    "V2_fixed3_regular_overnight": {
+      "name": "skhynix_v2_fixed3_regular_overnight",
+      "return_pct": -25.09,
+      "max_dd_pct": -25.09,
+      "sharpe": -12.47,
+      "closed_trades": 1,
+      "win_rate_pct": 0.0,
+      "avg_trade_pct": -26.45,
+      "median_trade_pct": -26.45,
+      "best_trade_pct": -26.45,
+      "worst_trade_pct": -26.45,
+      "signal_bars_after_warmup": 5,
+      "non_regular_signal_bars_after_warmup": 0,
+      "regular_entry_trades": 1,
+      "exit_reasons": {
+        "stop_loss": 1
+      },
+      "version": "V2"
+    },
+    "V4_dynamic125bps_max3_regular_overnight": {
+      "name": "skhynix_v4_dynamic125bps_max3_regular_overnight",
+      "return_pct": -11.39,
+      "max_dd_pct": -11.39,
+      "sharpe": -12.46,
+      "closed_trades": 1,
+      "win_rate_pct": 0.0,
+      "avg_trade_pct": -11.31,
+      "median_trade_pct": -11.31,
+      "best_trade_pct": -11.31,
+      "worst_trade_pct": -11.31,
+      "avg_allocation": 1.282,
+      "median_allocation": 1.282,
+      "min_allocation": 1.282,
+      "max_allocation_used": 1.282,
+      "avg_estimated_stop_loss_pct": 11.25,
+      "signal_bars_after_warmup": 5,
+      "non_regular_signal_bars_after_warmup": 0,
+      "regular_entry_trades": 1,
+      "exit_reasons": {
+        "stop_loss": 1
+      },
+      "version": "V4"
+    },
+    "buy_hold": {
+      "return_pct": 27.67,
+      "max_dd_pct": -13.97,
+      "start": "2026-06-09 03:00:00+00:00",
+      "end": "2026-06-18 07:45:00+00:00",
+      "start_close": 1372.99,
+      "end_close": 1752.86
+    }
+  },
+  "artifacts": {
+    "trades": "reports/skhynix_binance_hype_v35_transfer_v2_v4_trades.csv",
+    "equity": "reports/skhynix_binance_hype_v35_transfer_v2_v4_equity.csv"
+  },
+  "notes": [
+    "SKHYNIXUSDT has much shorter Binance history than MUUSDT in this data pull.",
+    "Used 672 warmup bars because only 1556 total 15m bars were available; this is the minimum ATR672-ready diagnostic window.",
+    "This is a short-sample diagnostic, not a production-grade validation."
+  ]
+}

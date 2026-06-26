@@ -124,4 +124,4 @@ The next serious iteration should convert this into an event-quality model:
 - Exchange holdout validation
 - Model outputs used as entry quality score and allocation scale
 
-This follows the existing `build-ema-cross-quality-dataset` direction and is more likely to improve trend-start detection without overfitting a single HYPE year.
+This follows the historical EMA-cross quality-dataset direction and is more likely to improve trend-start detection without overfitting a single HYPE year. The old generic active exporter has since been removed from `src/`; any renewed dataset export should live as an explicit family script under this research directory.

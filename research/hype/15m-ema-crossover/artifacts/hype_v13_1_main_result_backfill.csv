@@ -1,0 +1,2 @@
+version,1W_return,1W_max_dd,1M_return,1M_max_dd,3M_return,3M_max_dd,6M_return,6M_max_dd,1Y_return,1Y_max_dd,trades,late_trades,win_rate,stop_loss,other_exit,sharpe,exit_reasons
+V13.1,+0.00%,+0.00%,+94.11%,-20.39%,+247.41%,-20.39%,+761.85%,-24.66%,+2191.92%,-24.66%,33,6,+81.82%,1,32,4.298150318564434,"{'warning_confirm_volume': 25, 'hard_swing96': 7, 'stop_loss': 1}"

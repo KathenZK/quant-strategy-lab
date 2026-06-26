@@ -14,9 +14,9 @@ from research_hype_state_machine_v12 import add_structure_features, run_v12
 from research_hype_v13_main_backfill import v13_spec
 
 
-CHART_PATH = Path("reports/hype_v13_trade_chart.html")
-TRADES_PATH = Path("reports/hype_v13_trades.csv")
-SUMMARY_PATH = Path("reports/hype_v13_trade_chart_summary.json")
+CHART_PATH = Path("archive/reports/legacy/hype_v13_trade_chart.html")
+TRADES_PATH = Path("archive/reports/legacy/hype_v13_trades.csv")
+SUMMARY_PATH = Path("archive/reports/legacy/hype_v13_trade_chart_summary.json")
 
 
 def pct(value: float) -> str:

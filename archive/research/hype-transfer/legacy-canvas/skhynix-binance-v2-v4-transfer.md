@@ -30,8 +30,8 @@ Source: Binance FAPI · 15m · 2026-06-02 03:00 UTC → 2026-06-18 07:45 UTC · 
 | --- | --- |
 | scripts/fetch_binance_perp_symbol_data.py | Binance FAPI 分页下载脚本 |
 | scripts/research_skhynix_binance_v2_v4_transfer.py | SKHYNIX V2/V4 对照回测脚本 |
-| reports/skhynix_binance_hype_v35_transfer_v2_v4_summary.json | 结构化摘要 |
-| reports/skhynix_binance_hype_v35_original_summary.json | 原版 HYPE V35 诊断摘要 |
-| reports/skhynix_binance_hype_v35_original_trades.csv | 原版 HYPE V35 交易明细 |
-| reports/skhynix_binance_hype_v35_transfer_v2_v4_trades.csv | 交易明细 |
+| archive/reports/legacy/skhynix_binance_hype_v35_transfer_v2_v4_summary.json | 结构化摘要 |
+| archive/reports/legacy/skhynix_binance_hype_v35_original_summary.json | 原版 HYPE V35 诊断摘要 |
+| archive/reports/legacy/skhynix_binance_hype_v35_original_trades.csv | 原版 HYPE V35 交易明细 |
+| archive/reports/legacy/skhynix_binance_hype_v35_transfer_v2_v4_trades.csv | 交易明细 |
 | data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m/date=2026-04-01/symbol=skhynix_usdt_usdt.parquet | SKHYNIXUSDT 15m OHLCV |

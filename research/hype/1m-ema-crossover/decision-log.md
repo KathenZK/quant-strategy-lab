@@ -14,6 +14,7 @@ Historical alias: `HYPE-1M-EMA-X`
 ## Research Batch Notes
 
 - `research_hype_1m_ema_crossover_live_search.py`: first Binance HYPEUSDT `1m` EMA cross search over `2026-03-25` to `2026-06-25`. It tested live-executable next-bar entries, fixed take-profit, trailing take-profit, hard stops, conservative same-candle stop priority, cost assumptions, and common filters.
+- `2026-06-26`: promote the first `1m` dataset from downloader cache into the standard data lake, then refresh it through `2026-06-26 04:23:00 UTC`: raw and normalized candles under `data/raw|normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1m/date=*/symbol=hype_usdt_usdt.parquet`, plus search feature factors under `data/features/factor=*/version=hype_1m_ema_crossover_live_search_2026_06_25/...`.
 
 ## Candidate Notes
 

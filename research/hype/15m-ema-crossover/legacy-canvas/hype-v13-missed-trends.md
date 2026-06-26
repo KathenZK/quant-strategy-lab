@@ -115,9 +115,9 @@ V13 路径诊断：早退率 66.67%，但平均退出后 96 根延续只有 +5.0
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_v13_missed_trends.py | V13 漏趋势诊断脚本 |
-| reports/hype_v13_missed_trends_candidates.csv | 更多吃趋势候选参数 |
-| reports/hype_v13_missed_trends_regimes.csv | EMA regime 级别趋势覆盖 |
-| reports/hype_v13_missed_trends_rejected_signal_episodes.csv | 被 V13 过滤的信号片段 |
-| reports/hype_v13_missed_trends_skipped_v12_3_trades.csv | V12.3 有做、V13 跳过的交易 |
-| reports/hype_v13_exit_delay_candidates.csv | 延后退出候选结果 |
-| reports/hype_v13_trade_path_diagnostics_summary.csv | V13 交易路径诊断摘要 |
+| artifacts/hype_v13_missed_trends_candidates.csv | 更多吃趋势候选参数 |
+| artifacts/hype_v13_missed_trends_regimes.csv | EMA regime 级别趋势覆盖 |
+| artifacts/hype_v13_missed_trends_rejected_signal_episodes.csv | 被 V13 过滤的信号片段 |
+| artifacts/hype_v13_missed_trends_skipped_v12_3_trades.csv | V12.3 有做、V13 跳过的交易 |
+| artifacts/hype_v13_exit_delay_candidates.csv | 延后退出候选结果 |
+| artifacts/hype_v13_trade_path_diagnostics_summary.csv | V13 交易路径诊断摘要 |

@@ -54,4 +54,4 @@
 
 V22 与 V21 完全一致，说明 V21 每次触发时本来就已经浮亏；加“浮亏才平”没有任何过滤效果。 V23 把触发从 26 次降到 21 次，但全样本收益从 +1530.17% 降到 +1044.35%，说明被过滤掉的 5 次里有重要保护单。 V24 后4根触发很少，回撤略优于 V21，但收益明显低于 V21。若追求低误杀和更保守，V24 可作为备选； 若追求收益/回撤综合，V21 仍是当前最强。
 
-生成文件：reports/hype_v21_misfire_reduction_variants.json、 reports/hype_v21_misfire_reduction_variants.csv、 reports/hype_v21_misfire_reduction_rolling_summary.csv。
+生成文件：artifacts/hype_v21_misfire_reduction_variants.json、 artifacts/hype_v21_misfire_reduction_variants.csv、 artifacts/hype_v21_misfire_reduction_rolling_summary.csv。

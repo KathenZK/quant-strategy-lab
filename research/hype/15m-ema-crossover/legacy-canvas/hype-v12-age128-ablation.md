@@ -5,7 +5,7 @@
 
 Baseline：V12.4 cap35 + swing96 hard exit + no_mfi_div + entry_max_regime_age=128。每次只改一个参数；segment 这类默认关闭模块用合理启用组合测试。
 
-Source: Binance HYPEUSDT perp 15m data lake · 2025-05-30 10:30 UTC → 2026-06-01 03:00 UTC · reports/hype_state_machine_v12_age128_ablation.json.
+Source: Binance HYPEUSDT perp 15m data lake · 2025-05-30 10:30 UTC → 2026-06-01 03:00 UTC · artifacts/hype_state_machine_v12_age128_ablation.json.
 
 > **结论**
 > age128 + entry_max_dist_ema96<=8% 是本轮最值得继续推进的版本：1Y 收益 +1573.15%，最大回撤 -20.39%，Sharpe 4.28，交易 27 笔。它不是靠放宽交易数量抬收益，而是过滤离 EMA96 过远的追高/追空入场。
@@ -98,7 +98,7 @@ X 轴：参数；Y 轴：同参数候选的收益跨度，单位为净值倍数�
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_state_machine_v12_age128_ablation.py | V12.4 age128 单因子全参数消融脚本 |
-| reports/hype_state_machine_v12_age128_ablation_ranking.csv | 全候选排名 |
-| reports/hype_state_machine_v12_age128_ablation_sensitivity.csv | 按参数聚合的敏感度 |
-| reports/hype_state_machine_v12_age128_ablation.json | 结构化报告 |
-| reports/hype_state_machine_v12_age128_ablation_diagnostics_summary.csv | baseline 交易路径诊断摘要 |
+| artifacts/hype_state_machine_v12_age128_ablation_ranking.csv | 全候选排名 |
+| artifacts/hype_state_machine_v12_age128_ablation_sensitivity.csv | 按参数聚合的敏感度 |
+| artifacts/hype_state_machine_v12_age128_ablation.json | 结构化报告 |
+| artifacts/hype_state_machine_v12_age128_ablation_diagnostics_summary.csv | baseline 交易路径诊断摘要 |

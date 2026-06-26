@@ -93,8 +93,8 @@ X 轴：候选；Y 轴：百分比。回撤显示绝对值。
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_v15_effective_cross.py | 有效金叉/死叉诊断和 V15 gate 实验脚本 |
-| reports/hype_v15_effective_cross_events.csv | 每次交叉后的 MFE/MAE 标签 |
-| reports/hype_v15_effective_cross_rule_stats.csv | 交叉过滤规则有效率 |
-| reports/hype_v15_effective_cross_ranking.csv | V15 候选回测排名 |
-| reports/hype_v15_effective_cross_regimes.csv | 大趋势 regime 覆盖对比 |
-| reports/hype_v15_effective_cross.json | 结构化报告 |
+| artifacts/hype_v15_effective_cross_events.csv | 每次交叉后的 MFE/MAE 标签 |
+| artifacts/hype_v15_effective_cross_rule_stats.csv | 交叉过滤规则有效率 |
+| artifacts/hype_v15_effective_cross_ranking.csv | V15 候选回测排名 |
+| artifacts/hype_v15_effective_cross_regimes.csv | 大趋势 regime 覆盖对比 |
+| artifacts/hype_v15_effective_cross.json | 结构化报告 |

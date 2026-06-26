@@ -52,9 +52,9 @@ V21 是当前同组规则里表现最强的版本：
 
 验证文件：
 
-- `reports/hype_v21_robustness_validation.json`
-- `reports/hype_v21_rolling_windows.csv`
-- `reports/hype_v21_rule_sensitivity.csv`
+- `artifacts/hype_v21_robustness_validation.json`
+- `artifacts/hype_v21_rolling_windows.csv`
+- `artifacts/hype_v21_rule_sensitivity.csv`
 
 ### 5.1 固定窗口
 

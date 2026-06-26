@@ -1,0 +1,12 @@
+---
+description: Treat research data quality as a hard precondition for strategy conclusions
+alwaysApply: true
+---
+
+# Data Quality First
+
+- Data quality is the first priority in this repository. Do not run, promote, or summarize a strategy result as trustworthy until the input data source, exchange, market type, symbol, timeframe, UTC range, and schema are clear.
+- Never fabricate, guess, or silently fill market data. Missing bars, duplicated keys, raw/normalized mismatches, unknown `source`, unreliable `is_closed`, invalid OHLC, null quote volume/trade count/vwap, or stale cache inputs are data-quality blockers.
+- Before using data lake candles for research, check timestamp continuity, duplicate unique keys, raw vs normalized OHLCV/quote_volume/trade_count/vwap equality, critical nulls, UTC timestamps, and whether the dataset is in the standard data lake rather than only in cache/scratch.
+- For Binance/HYPE and other key datasets, verify gaps or suspicious rows against exchange APIs, Binance Vision, or retained raw evidence. If the issue cannot be verified, document it as a blocker instead of continuing parameter search.
+- If a data-quality issue changes or weakens a prior conclusion, record the impact and repair status in the relevant `research/` document or decision log.

@@ -1,0 +1,13 @@
+{
+  "return": 21.919177103470986,
+  "max_dd": -0.24655341994276858,
+  "sharpe": 4.298150318564434,
+  "trades": 33,
+  "late_trades": 6,
+  "win_rate": 0.8181818181818182,
+  "exit_reasons": {
+    "warning_confirm_volume": 25,
+    "hard_swing96": 7,
+    "stop_loss": 1
+  }
+}

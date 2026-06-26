@@ -5,7 +5,7 @@
 
 V12 将量能衰竭和震荡指标降级为 warning，只有价格结构 confirm 后才退出，目标是减少 V8/V10 的过早平仓。
 
-Source: Binance HYPEUSDT perp 15m data lake · 2025-05-30 10:30 UTC → 2026-06-01 03:00 UTC · reports/hype_state_machine_v12.json.
+Source: Binance HYPEUSDT perp 15m data lake · 2025-05-30 10:30 UTC → 2026-06-01 03:00 UTC · artifacts/hype_state_machine_v12.json.
 
 > **结论**
 > V12.6 把 age128 和 segment ADX 叠加后，低回撤进一步成立，但收益被明显砍掉。age128 单独已经能把坏入场率降到 14.29%、回撤降到 -29.47%；再叠加 ADX 分段不会进一步降低回撤，只会切掉利润。
@@ -166,13 +166,13 @@ X 轴：V12 候选；Y 轴：交易占比。分类沿用 V11 诊断规则。
 | --- | --- |
 | scripts/research_hype_state_machine_v12.py | V12 状态机回测与参数网格 |
 | scripts/research_hype_state_machine_v12_hard_exit.py | V12.1 hard trend invalidation focused 测试 |
-| reports/hype_state_machine_v12.json | V12 结构化结果报告 |
-| reports/hype_state_machine_v12_ranking.csv | 完整参数排名 |
-| reports/hype_state_machine_v12_hard_exit.json | V12.1 硬趋势失效测试报告 |
-| reports/hype_state_machine_v12_hard_exit_ranking.csv | V12.1 hard-exit 参数排名 |
-| reports/hype_state_machine_v12_1_early_exit_analysis.json | V12.1 早退原因拆解 |
-| reports/hype_state_machine_v12_1_early_exit_detail.csv | V12.1 早退逐笔特征 |
-| reports/hype_state_machine_v12_top_trades.csv | 最高收益 V12 逐笔交易 |
-| reports/hype_state_machine_v12_diagnostics.json | V12 候选交易路径诊断 |
-| reports/hype_state_machine_v12_diagnostics_detail.csv | V12 候选逐笔 MFE / MAE / 捕获率明细 |
+| artifacts/hype_state_machine_v12.json | V12 结构化结果报告 |
+| artifacts/hype_state_machine_v12_ranking.csv | 完整参数排名 |
+| artifacts/hype_state_machine_v12_hard_exit.json | V12.1 硬趋势失效测试报告 |
+| artifacts/hype_state_machine_v12_hard_exit_ranking.csv | V12.1 hard-exit 参数排名 |
+| artifacts/hype_state_machine_v12_1_early_exit_analysis.json | V12.1 早退原因拆解 |
+| artifacts/hype_state_machine_v12_1_early_exit_detail.csv | V12.1 早退逐笔特征 |
+| artifacts/hype_state_machine_v12_top_trades.csv | 最高收益 V12 逐笔交易 |
+| artifacts/hype_state_machine_v12_diagnostics.json | V12 候选交易路径诊断 |
+| artifacts/hype_state_machine_v12_diagnostics_detail.csv | V12 候选逐笔 MFE / MAE / 捕获率明细 |
 | hype-ema-crossover-evolution.canvas.tsx | 主版本台账已补 V9-V12 |

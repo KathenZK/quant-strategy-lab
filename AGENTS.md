@@ -24,11 +24,20 @@ HYPE 版本号只有放在具体策略家族里才有意义。
 
 ## Active 代码规则
 
-- Active package code 只限于数据抓取、数据归一化、数据质量检查、特征构建和窄口径研究数据集导出器。
+- Active package code 只限于最小数据湖内核、数据归一化、数据质量检查、特征构建和因子计算。
+- 交易所抓取、补洞、研究搜索和一次性导出脚本不再放进 `src/strategy_lab/data/`，必须放在对应 `research/.../scripts/` 或明确的研究维护目录，并记录数据来源与质量校验。
 - `archive/code/platform/` 只保留少量被长期研究文档引用的历史策略源码快照；它不是 active 平台，也不是可运行平台。
 - 当前一次性研究脚本必须放在对应 research topic 或 family 的 `scripts/` 目录。
 - 已不再定义 active research line 的历史一次性研究脚本放在 `archive/scripts/research/`。
 - 除非用户明确要求考古历史实现，否则不要把 archive 里的代码当作当前事实来源。
+
+## 数据质量硬规则
+
+- 数据质量是本仓库的第一优先级。任何策略研究、回测、candidate 讨论或结论都必须先确认数据来源、时间范围、周期、symbol、交易所、market type 和字段口径。
+- 禁止编造、补猜或静默填充行情数据。缺口、重复、字段空值、raw/normalized 不一致、source 不明、`is_closed` 不可靠、OHLC 不合法、成交量/quote volume 异常时，必须先核实并记录，不得继续把结果包装成可信回测。
+- 使用数据湖前至少检查：时间戳连续性、唯一键重复、raw 与 normalized 的 OHLCV/quote_volume/trade_count/vwap 对齐、关键字段空值、`source`、`is_closed`、UTC 时间、以及是否有未迁入标准数据湖的 cache/scratch 数据。
+- 对 Binance/HYPE 等关键研究数据，发现缺口或异常时优先用交易所公共 API / Binance Vision / retained raw evidence 复核；不能核实时要明确降级为 data-quality blocker。
+- 如果数据质量问题影响已有研究结论，必须在对应 `research/` 文档或 decision log 中记录影响范围和修复状态；不要用参数搜索掩盖数据问题。
 
 ## Live-Executable 研究规则
 

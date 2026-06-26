@@ -1,0 +1,15 @@
+{
+  "return": 38.61482121553608,
+  "max_dd": -0.19444849785685892,
+  "sharpe": 4.765596511826483,
+  "trades": 33,
+  "late_trades": 7,
+  "win_rate": 0.9090909090909091,
+  "exit_reasons": {
+    "warning_confirm_volume": 19,
+    "warning_confirm_osc": 10,
+    "hard_swing96": 4
+  },
+  "hq_scale": 1.1,
+  "lq_scale": 1.0
+}

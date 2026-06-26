@@ -1,0 +1,5084 @@
+{
+  "lab_until_2026_06_01": {
+    "data": {
+      "ohlcv_path": "data/ohlcv_lab.csv",
+      "funding_path": "data/funding_lab.csv",
+      "rows": 35203,
+      "start": "2025-05-30 10:30:00+00:00",
+      "end": "2026-06-01 03:00:00+00:00",
+      "warmup_bars": 1600
+    },
+    "baseline": {
+      "name": "baseline_v35",
+      "mode": "none",
+      "side_filter": "none",
+      "trend_index": "none",
+      "max_rolls_per_chain": 0,
+      "return_pct": 6474.19,
+      "max_dd_pct": -23.49,
+      "sharpe": 4.94,
+      "closed": 100,
+      "win_rate_pct": 80.0,
+      "reasons": {
+        "stop_loss": 14,
+        "take_profit": 77,
+        "indicator_exit": 9
+      },
+      "roll_count": 0,
+      "side": {
+        "long": {
+          "trades": 76,
+          "pnl_sum_pct": 384.11,
+          "win_rate_pct": 80.26,
+          "rolls": 0,
+          "stops": 10
+        },
+        "short": {
+          "trades": 24,
+          "pnl_sum_pct": 123.34,
+          "win_rate_pct": 79.17,
+          "rolls": 0,
+          "stops": 4
+        }
+      }
+    },
+    "watchlist": [
+      {
+        "name": "baseline_v35",
+        "mode": "none",
+        "side_filter": "none",
+        "trend_index": "none",
+        "max_rolls_per_chain": 0,
+        "return_pct": 6474.19,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.94,
+        "closed": 100,
+        "win_rate_pct": 80.0,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9
+        },
+        "roll_count": 0,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_both_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 3673.87,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.44,
+        "closed": 101,
+        "win_rate_pct": 78.22,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_same_notional": 31,
+          "take_profit": 45,
+          "indicator_exit": 9
+        },
+        "roll_count": 31,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 318.08,
+            "win_rate_pct": 77.63,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_both_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 4298.08,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.49,
+        "closed": 104,
+        "win_rate_pct": 77.88,
+        "reasons": {
+          "stop_loss": 17,
+          "take_profit_roll_same_notional": 24,
+          "take_profit": 54,
+          "indicator_exit": 9
+        },
+        "roll_count": 24,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 340.35,
+            "win_rate_pct": 77.22,
+            "rolls": 19,
+            "stops": 13
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_long_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "long",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 3469.98,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.38,
+        "closed": 100,
+        "win_rate_pct": 78.0,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_same_notional": 26,
+          "take_profit": 49,
+          "indicator_exit": 9
+        },
+        "roll_count": 26,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 318.08,
+            "win_rate_pct": 77.63,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 4065.82,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.36,
+        "closed": 101,
+        "win_rate_pct": 78.22,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 31,
+          "take_profit": 45,
+          "indicator_exit": 9
+        },
+        "roll_count": 31,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 333.81,
+            "win_rate_pct": 77.63,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 4214.26,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.38,
+        "closed": 104,
+        "win_rate_pct": 77.88,
+        "reasons": {
+          "stop_loss": 17,
+          "take_profit_roll_reinvest": 24,
+          "take_profit": 54,
+          "indicator_exit": 9
+        },
+        "roll_count": 24,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 340.74,
+            "win_rate_pct": 77.22,
+            "rolls": 19,
+            "stops": 13
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_long_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "long",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 3810.1,
+        "max_dd_pct": -31.99,
+        "sharpe": 4.3,
+        "closed": 100,
+        "win_rate_pct": 78.0,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 26,
+          "take_profit": 49,
+          "indicator_exit": 9
+        },
+        "roll_count": 26,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 333.81,
+            "win_rate_pct": 77.63,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 4413.19,
+        "max_dd_pct": -27.63,
+        "sharpe": 4.45,
+        "closed": 102,
+        "win_rate_pct": 78.43,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 30,
+          "take_profit": 47,
+          "indicator_exit": 9
+        },
+        "roll_count": 30,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 342.92,
+            "win_rate_pct": 77.92,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 3704.51,
+        "max_dd_pct": -31.88,
+        "sharpe": 4.28,
+        "closed": 100,
+        "win_rate_pct": 78.0,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 23,
+          "take_profit": 52,
+          "indicator_exit": 9
+        },
+        "roll_count": 23,
+        "side": {
+          "long": {
+            "trades": 75,
+            "pnl_sum_pct": 323.76,
+            "win_rate_pct": 77.33,
+            "rolls": 19,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      }
+    ],
+    "top_return": [
+      {
+        "name": "reinvest_short_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 6904.18,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6904.18,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6904.18,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6904.18,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 6873.61,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6873.61,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6873.61,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6873.61,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": null,
+        "return_pct": 6077.21,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.88,
+        "closed": 101,
+        "win_rate_pct": 79.21,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 71,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6077.21,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.88,
+        "closed": 101,
+        "win_rate_pct": 79.21,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 71,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6077.21,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.88,
+        "closed": 101,
+        "win_rate_pct": 79.21,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 71,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6077.21,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.88,
+        "closed": 101,
+        "win_rate_pct": 79.21,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 71,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      }
+    ],
+    "top_return_better_mdd": [
+      {
+        "name": "reinvest_short_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 6904.18,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6904.18,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6904.18,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6904.18,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6904.15,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 6873.61,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6873.61,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6873.61,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6873.61,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6849.66,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.0,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 73,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 384.11,
+            "win_rate_pct": 80.26,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      }
+    ]
+  },
+  "local_until_2026_06_11": {
+    "data": {
+      "ohlcv_path": "data/ohlcv_15m.csv",
+      "funding_path": "data/funding.csv",
+      "rows": 36184,
+      "start": "2025-05-30 10:30:00+00:00",
+      "end": "2026-06-11 08:15:00+00:00",
+      "warmup_bars": 1600
+    },
+    "baseline": {
+      "name": "baseline_v35",
+      "mode": "none",
+      "side_filter": "none",
+      "trend_index": "none",
+      "max_rolls_per_chain": 0,
+      "return_pct": 7079.82,
+      "max_dd_pct": -23.49,
+      "sharpe": 4.9,
+      "closed": 101,
+      "win_rate_pct": 80.2,
+      "reasons": {
+        "stop_loss": 14,
+        "take_profit": 78,
+        "indicator_exit": 9
+      },
+      "roll_count": 0,
+      "side": {
+        "long": {
+          "trades": 77,
+          "pnl_sum_pct": 394.11,
+          "win_rate_pct": 80.52,
+          "rolls": 0,
+          "stops": 10
+        },
+        "short": {
+          "trades": 24,
+          "pnl_sum_pct": 123.34,
+          "win_rate_pct": 79.17,
+          "rolls": 0,
+          "stops": 4
+        }
+      }
+    },
+    "watchlist": [
+      {
+        "name": "baseline_v35",
+        "mode": "none",
+        "side_filter": "none",
+        "trend_index": "none",
+        "max_rolls_per_chain": 0,
+        "return_pct": 7079.82,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.9,
+        "closed": 101,
+        "win_rate_pct": 80.2,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 78,
+          "indicator_exit": 9
+        },
+        "roll_count": 0,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_both_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 4021.52,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.42,
+        "closed": 102,
+        "win_rate_pct": 78.43,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_same_notional": 31,
+          "take_profit": 46,
+          "indicator_exit": 9
+        },
+        "roll_count": 31,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 328.08,
+            "win_rate_pct": 77.92,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_both_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 4703.24,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.47,
+        "closed": 105,
+        "win_rate_pct": 78.1,
+        "reasons": {
+          "stop_loss": 17,
+          "take_profit_roll_same_notional": 24,
+          "take_profit": 55,
+          "indicator_exit": 9
+        },
+        "roll_count": 24,
+        "side": {
+          "long": {
+            "trades": 80,
+            "pnl_sum_pct": 350.35,
+            "win_rate_pct": 77.5,
+            "rolls": 19,
+            "stops": 13
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_long_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "long",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 3798.85,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.36,
+        "closed": 101,
+        "win_rate_pct": 78.22,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_same_notional": 26,
+          "take_profit": 50,
+          "indicator_exit": 9
+        },
+        "roll_count": 26,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 328.08,
+            "win_rate_pct": 77.92,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 4449.59,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.34,
+        "closed": 102,
+        "win_rate_pct": 78.43,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 31,
+          "take_profit": 46,
+          "indicator_exit": 9
+        },
+        "roll_count": 31,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 343.81,
+            "win_rate_pct": 77.92,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 4611.69,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.36,
+        "closed": 105,
+        "win_rate_pct": 78.1,
+        "reasons": {
+          "stop_loss": 17,
+          "take_profit_roll_reinvest": 24,
+          "take_profit": 55,
+          "indicator_exit": 9
+        },
+        "roll_count": 24,
+        "side": {
+          "long": {
+            "trades": 80,
+            "pnl_sum_pct": 350.74,
+            "win_rate_pct": 77.5,
+            "rolls": 19,
+            "stops": 13
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_long_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "long",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 4170.3,
+        "max_dd_pct": -31.99,
+        "sharpe": 4.28,
+        "closed": 101,
+        "win_rate_pct": 78.22,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 26,
+          "take_profit": 50,
+          "indicator_exit": 9
+        },
+        "roll_count": 26,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 343.81,
+            "win_rate_pct": 77.92,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 4828.96,
+        "max_dd_pct": -27.63,
+        "sharpe": 4.43,
+        "closed": 103,
+        "win_rate_pct": 78.64,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 30,
+          "take_profit": 48,
+          "indicator_exit": 9
+        },
+        "roll_count": 30,
+        "side": {
+          "long": {
+            "trades": 78,
+            "pnl_sum_pct": 352.92,
+            "win_rate_pct": 78.21,
+            "rolls": 26,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 4054.99,
+        "max_dd_pct": -31.88,
+        "sharpe": 4.27,
+        "closed": 101,
+        "win_rate_pct": 78.22,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 23,
+          "take_profit": 53,
+          "indicator_exit": 9
+        },
+        "roll_count": 23,
+        "side": {
+          "long": {
+            "trades": 76,
+            "pnl_sum_pct": 333.76,
+            "win_rate_pct": 77.63,
+            "rolls": 19,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      }
+    ],
+    "top_return": [
+      {
+        "name": "reinvest_short_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 7549.41,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7549.41,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7549.41,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7549.41,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 7516.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.97,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7516.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.97,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7516.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.97,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7516.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.97,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": null,
+        "return_pct": 6646.27,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.85,
+        "closed": 102,
+        "win_rate_pct": 79.41,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 72,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 1,
+        "return_pct": 6646.27,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.85,
+        "closed": 102,
+        "win_rate_pct": 79.41,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 72,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 2,
+        "return_pct": 6646.27,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.85,
+        "closed": 102,
+        "win_rate_pct": 79.41,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 72,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 3,
+        "return_pct": 6646.27,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.85,
+        "closed": 102,
+        "win_rate_pct": 79.41,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 72,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      }
+    ],
+    "top_return_better_mdd": [
+      {
+        "name": "reinvest_short_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 7549.41,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7549.41,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7549.41,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7549.41,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7549.39,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 7516.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.97,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7516.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.97,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7516.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.97,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7516.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.97,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 75,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7489.87,
+        "max_dd_pct": -23.49,
+        "sharpe": 4.96,
+        "closed": 102,
+        "win_rate_pct": 80.39,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 77,
+            "pnl_sum_pct": 394.11,
+            "win_rate_pct": 80.52,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      }
+    ]
+  },
+  "latest_until_2026_06_16": {
+    "data": {
+      "ohlcv_path": "/tmp/hype_v35_latest_data/ohlcv_15m.csv",
+      "funding_path": "/tmp/hype_v35_latest_data/funding.csv",
+      "rows": 36659,
+      "start": "2025-05-30 10:30:00+00:00",
+      "end": "2026-06-16 07:00:00+00:00",
+      "warmup_bars": 1600
+    },
+    "baseline": {
+      "name": "baseline_v35",
+      "mode": "none",
+      "side_filter": "none",
+      "trend_index": "none",
+      "max_rolls_per_chain": 0,
+      "return_pct": 8519.04,
+      "max_dd_pct": -23.49,
+      "sharpe": 5.03,
+      "closed": 103,
+      "win_rate_pct": 80.58,
+      "reasons": {
+        "stop_loss": 14,
+        "take_profit": 80,
+        "indicator_exit": 9
+      },
+      "roll_count": 0,
+      "side": {
+        "long": {
+          "trades": 79,
+          "pnl_sum_pct": 414.11,
+          "win_rate_pct": 81.01,
+          "rolls": 0,
+          "stops": 10
+        },
+        "short": {
+          "trades": 24,
+          "pnl_sum_pct": 123.34,
+          "win_rate_pct": 79.17,
+          "rolls": 0,
+          "stops": 4
+        }
+      }
+    },
+    "watchlist": [
+      {
+        "name": "baseline_v35",
+        "mode": "none",
+        "side_filter": "none",
+        "trend_index": "none",
+        "max_rolls_per_chain": 0,
+        "return_pct": 8519.04,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.03,
+        "closed": 103,
+        "win_rate_pct": 80.58,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 80,
+          "indicator_exit": 9
+        },
+        "roll_count": 0,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_both_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 4788.91,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.55,
+        "closed": 104,
+        "win_rate_pct": 78.85,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_same_notional": 32,
+          "take_profit": 47,
+          "indicator_exit": 9
+        },
+        "roll_count": 32,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 346.73,
+            "win_rate_pct": 78.48,
+            "rolls": 27,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_both_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 5597.55,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.59,
+        "closed": 107,
+        "win_rate_pct": 78.5,
+        "reasons": {
+          "stop_loss": 17,
+          "take_profit_roll_same_notional": 25,
+          "take_profit": 56,
+          "indicator_exit": 9
+        },
+        "roll_count": 25,
+        "side": {
+          "long": {
+            "trades": 82,
+            "pnl_sum_pct": 369.0,
+            "win_rate_pct": 78.05,
+            "rolls": 20,
+            "stops": 13
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_long_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "long",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 4524.77,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.49,
+        "closed": 103,
+        "win_rate_pct": 78.64,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_same_notional": 27,
+          "take_profit": 51,
+          "indicator_exit": 9
+        },
+        "roll_count": 27,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 346.73,
+            "win_rate_pct": 78.48,
+            "rolls": 27,
+            "stops": 12
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 5360.78,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.47,
+        "closed": 104,
+        "win_rate_pct": 78.85,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 32,
+          "take_profit": 47,
+          "indicator_exit": 9
+        },
+        "roll_count": 32,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 363.81,
+            "win_rate_pct": 78.48,
+            "rolls": 27,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 5555.36,
+        "max_dd_pct": -31.81,
+        "sharpe": 4.49,
+        "closed": 107,
+        "win_rate_pct": 78.5,
+        "reasons": {
+          "stop_loss": 17,
+          "take_profit_roll_reinvest": 25,
+          "take_profit": 56,
+          "indicator_exit": 9
+        },
+        "roll_count": 25,
+        "side": {
+          "long": {
+            "trades": 82,
+            "pnl_sum_pct": 370.74,
+            "win_rate_pct": 78.05,
+            "rolls": 20,
+            "stops": 13
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_long_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "long",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 5025.56,
+        "max_dd_pct": -31.99,
+        "sharpe": 4.41,
+        "closed": 103,
+        "win_rate_pct": 78.64,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 27,
+          "take_profit": 51,
+          "indicator_exit": 9
+        },
+        "roll_count": 27,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 363.81,
+            "win_rate_pct": 78.48,
+            "rolls": 27,
+            "stops": 12
+          },
+          "short": {
+            "trades": 24,
+            "pnl_sum_pct": 123.34,
+            "win_rate_pct": 79.17,
+            "rolls": 0,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 5816.14,
+        "max_dd_pct": -27.63,
+        "sharpe": 4.56,
+        "closed": 105,
+        "win_rate_pct": 79.05,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 31,
+          "take_profit": 49,
+          "indicator_exit": 9
+        },
+        "roll_count": 31,
+        "side": {
+          "long": {
+            "trades": 80,
+            "pnl_sum_pct": 372.92,
+            "win_rate_pct": 78.75,
+            "rolls": 27,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_both_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "both",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 4887.15,
+        "max_dd_pct": -31.88,
+        "sharpe": 4.4,
+        "closed": 103,
+        "win_rate_pct": 78.64,
+        "reasons": {
+          "stop_loss": 16,
+          "take_profit_roll_reinvest": 24,
+          "take_profit": 54,
+          "indicator_exit": 9
+        },
+        "roll_count": 24,
+        "side": {
+          "long": {
+            "trades": 78,
+            "pnl_sum_pct": 353.76,
+            "win_rate_pct": 78.21,
+            "rolls": 20,
+            "stops": 12
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      }
+    ],
+    "top_return": [
+      {
+        "name": "reinvest_short_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 9082.77,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 9082.77,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 9082.77,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 9082.77,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 9042.7,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 9042.7,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 9042.7,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 9042.7,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": null,
+        "return_pct": 7998.59,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.97,
+        "closed": 104,
+        "win_rate_pct": 79.81,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 1,
+        "return_pct": 7998.59,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.97,
+        "closed": 104,
+        "win_rate_pct": 79.81,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 2,
+        "return_pct": 7998.59,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.97,
+        "closed": 104,
+        "win_rate_pct": 79.81,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i0_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i0",
+        "max_rolls_per_chain": 3,
+        "return_pct": 7998.59,
+        "max_dd_pct": -24.8,
+        "sharpe": 4.97,
+        "closed": 104,
+        "win_rate_pct": 79.81,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 74,
+          "indicator_exit": 10,
+          "take_profit_roll_reinvest": 6
+        },
+        "roll_count": 6,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 117.52,
+            "win_rate_pct": 76.0,
+            "rolls": 6,
+            "stops": 4
+          }
+        }
+      }
+    ],
+    "top_return_better_mdd": [
+      {
+        "name": "reinvest_short_i1_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 9082.77,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 9082.77,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 9082.77,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i1_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 9082.77,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_unlimited",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap1",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap2",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "reinvest_short_i2_cap3",
+        "mode": "reinvest",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 9082.74,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_reinvest": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 130.33,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": null,
+        "return_pct": 9042.7,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 1,
+        "return_pct": 9042.7,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 2,
+        "return_pct": 9042.7,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i1_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i1",
+        "max_rolls_per_chain": 3,
+        "return_pct": 9042.7,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 77,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 4
+        },
+        "roll_count": 4,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.71,
+            "win_rate_pct": 80.0,
+            "rolls": 4,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_unlimited",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": null,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap1",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 1,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap2",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 2,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      },
+      {
+        "name": "same_notional_short_i2_cap3",
+        "mode": "same_notional",
+        "side_filter": "short",
+        "trend_index": "i2",
+        "max_rolls_per_chain": 3,
+        "return_pct": 9011.29,
+        "max_dd_pct": -23.49,
+        "sharpe": 5.09,
+        "closed": 104,
+        "win_rate_pct": 80.77,
+        "reasons": {
+          "stop_loss": 14,
+          "take_profit": 76,
+          "indicator_exit": 9,
+          "take_profit_roll_same_notional": 5
+        },
+        "roll_count": 5,
+        "side": {
+          "long": {
+            "trades": 79,
+            "pnl_sum_pct": 414.11,
+            "win_rate_pct": 81.01,
+            "rolls": 0,
+            "stops": 10
+          },
+          "short": {
+            "trades": 25,
+            "pnl_sum_pct": 129.32,
+            "win_rate_pct": 80.0,
+            "rolls": 5,
+            "stops": 4
+          }
+        }
+      }
+    ]
+  }
+}

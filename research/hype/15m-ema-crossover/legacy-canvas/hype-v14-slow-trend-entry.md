@@ -107,7 +107,7 @@ X 轴：候选；Y 轴：覆盖数量或胜率百分比。
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_v14_slow_trend_entry.py | 慢趋势补入场 / scout 实验脚本 |
-| reports/hype_v14_slow_trend_entry_ranking.csv | 慢趋势候选排名 |
-| reports/hype_v14_slow_trend_entry_regimes.csv | 大趋势 regime 信号覆盖 |
-| reports/hype_v14_slow_trend_entry_best_trades.csv | 最佳候选逐笔交易 |
-| reports/hype_v14_slow_trend_entry.json | 结构化报告 |
+| artifacts/hype_v14_slow_trend_entry_ranking.csv | 慢趋势候选排名 |
+| artifacts/hype_v14_slow_trend_entry_regimes.csv | 大趋势 regime 信号覆盖 |
+| artifacts/hype_v14_slow_trend_entry_best_trades.csv | 最佳候选逐笔交易 |
+| artifacts/hype_v14_slow_trend_entry.json | 结构化报告 |

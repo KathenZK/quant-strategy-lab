@@ -5,7 +5,7 @@
 
 使用项目内已有 Hyperliquid 15m trade/funding parquet 回测 V2M，并单独标注官方 1m 数据湖当前不能独立回测 V2M 的原因。
 
-Source: reports/hyperliquid_hype_15m_all_trade_funding.parquet, 2026-03-29 to 2026-05-20 UTC. Costs use the existing V2 backtest 8.5 bps round-trip setting.
+Source: research/hype/15m-candle-count-reversal/artifacts/hyperliquid_hype_15m_all_trade_funding.parquet, 2026-03-29 to 2026-05-20 UTC. Costs use the existing V2 backtest 8.5 bps round-trip setting.
 
 ## 核心结果
 

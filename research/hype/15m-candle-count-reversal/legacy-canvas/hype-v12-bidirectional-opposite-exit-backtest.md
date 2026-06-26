@@ -32,4 +32,4 @@
 
 这条规则加在 V12 上效果不好：全样本收益从 +602.38% 降到 +441.41%，近90/120/180/270天都明显拖累。 它确实在部分窗口降低回撤，例如近30天回撤从 -22.58% 降到 -19.58%，但代价是长期收益被截断。 原因大概率是 V12 的止盈上限更宽到 4%，很多“入场后三反向”的仓位后面仍有机会跑到较大的 ATR 止盈； 提前平仓在 V12 上误杀更多，不像在 V18/V21 那样主要过滤坏单。
 
-生成文件：reports/hype_v12_v21_exit_backtest.json、reports/hype_v12_v21_exit_backtest.csv、 reports/hype_v12_v21_exit_rolling_summary.csv。
+生成文件：artifacts/hype_v12_v21_exit_backtest.json、artifacts/hype_v12_v21_exit_backtest.csv、 artifacts/hype_v12_v21_exit_rolling_summary.csv。

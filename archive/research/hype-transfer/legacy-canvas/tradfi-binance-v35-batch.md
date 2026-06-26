@@ -76,7 +76,7 @@ Source: Binance FAPI · since 2026-04-01 UTC · Result files in reports/tradfi_b
 | --- | --- |
 | scripts/research_tradfi_binance_original_v35_batch.py | 批量识别、下载、回测脚本 |
 | scripts/fetch_binance_perp_symbol_data.py | Binance FAPI OHLCV/funding 抓取脚本，funding 已改为分窗 |
-| reports/tradfi_binance_hype_v35_original_batch_final.csv | 100 个合约 x B0/去周末诊断 的最终总表 |
-| reports/tradfi_binance_hype_v35_original_batch_final.json | 最终 JSON 结果 |
-| reports/tradfi_binance_hype_v35_original_batch_trades_final.csv | 全部交易明细 |
+| archive/reports/legacy/tradfi_binance_hype_v35_original_batch_final.csv | 100 个合约 x B0/去周末诊断 的最终总表 |
+| archive/reports/legacy/tradfi_binance_hype_v35_original_batch_final.json | 最终 JSON 结果 |
+| archive/reports/legacy/tradfi_binance_hype_v35_original_batch_trades_final.csv | 全部交易明细 |
 | research/tradfi-binance-v35-batch.md | Markdown 台账 |

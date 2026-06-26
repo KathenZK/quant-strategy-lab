@@ -26,7 +26,11 @@ Annualized factor is measured as `final_equity ** (365.25 / window_days)`, not a
 - Rows: `133,007`
 - Source: Binance public daily archive for `2026-03-25` through `2026-06-24`; Binance futures REST fallback for partial `2026-06-25`.
 - Missing full days: none.
-- Local cache: `data/cache/hype_1m_ema_crossover_live_search/HYPEUSDT_1m_2026-03-25_2026-06-25.parquet`
+- Standard raw lake: `data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1m/date=*/symbol=hype_usdt_usdt.parquet`
+- Standard normalized lake: `data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1m/date=*/symbol=hype_usdt_usdt.parquet`
+- Standard feature lake: `data/features/factor=*/version=hype_1m_ema_crossover_live_search_2026_06_25/exchange=binance/market_type=perp/symbol=hype_usdt_usdt/timeframe=1m/`
+- Current standard lake coverage after the `2026-06-26` refresh: `2026-03-25 00:00:00 UTC` to `2026-06-26 04:23:00 UTC`, `134,184` continuous `1m` bars.
+- Original downloader cache: `data/cache/hype_1m_ema_crossover_live_search/HYPEUSDT_1m_2026-03-25_2026-06-25.parquet`
 
 Cost assumption:
 

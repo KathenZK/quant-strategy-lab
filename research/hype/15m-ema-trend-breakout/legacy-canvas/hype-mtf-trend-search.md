@@ -5,7 +5,7 @@
 
 Search over 15m execution, 1h breakout signals, and 4h trend filters. Pure trend here means breakout/EMA continuation, not the V1 pullback entry.
 
-Source: local Binance HYPE perpetual data lake · 15m execution validation · includes 8.5 bps turnover cost · research output from reports/hype_multi_timeframe_trend_search.py.
+Source: local Binance HYPE perpetual data lake · 15m execution validation · includes 8.5 bps turnover cost · research output from scripts/hype_multi_timeframe_trend_search.py.
 
 ### 关键指标
 

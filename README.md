@@ -52,12 +52,9 @@ research/
   mu/
 
 src/strategy_lab/
-  data/       # 数据抓取、归一化、质量检查、因子和特征
-    cli.py    # 数据优先的 CLI 入口
-    ingest/   # 交易所、数据源和外部市场数据抓取
-    exporters/ # 可复用的窄口径研究数据集导出工具
+  data/       # 最小数据湖内核：layout/schema/normalize/read-write/quality/features/factors
 
-tests/              # active 数据层和 CLI 测试
+tests/              # active 数据湖内核测试
 
 archive/
   code/platform/    # 少量被研究文档引用的历史策略源码快照
@@ -94,7 +91,7 @@ data/normalized/ohlcv/
 - `scripts/` 放只服务该研究的一次性复现、搜索、审计脚本。
 - `artifacts/` 放需要随报告保留的 JSON、CSV、HTML、交易路径图等产物。
 
-只有可复用的数据抓取、归一化、质量审计、特征构建或窄口径数据集导出工具，才应进入 `src/strategy_lab/`。顶层 `reports/` 仍被 git 忽略，只能作为临时草稿或旧脚本缓存，不再作为 active research 的引用入口。
+只有可复用的数据湖内核、归一化、质量审计、特征构建或因子计算工具，才应进入 `src/strategy_lab/`。交易所抓取、补洞、回测搜索和一次性导出默认放在对应 `research/.../scripts/`，并必须记录数据来源与质量校验。顶层 `reports/` 仍被 git 忽略，只能作为临时草稿或旧脚本缓存，不再作为 active research 的引用入口。
 
 ## HYPE 家族规则
 
@@ -119,10 +116,4 @@ source .venv/bin/activate
 pip install -e ".[dev]"
 ```
 
-检查数据 CLI：
-
-```bash
-./.venv/bin/quant-strategy-lab --help
-./.venv/bin/quant-strategy-lab layout
-./.venv/bin/quant-strategy-lab factors
-```
+本仓库不再提供通用数据同步 CLI。研究数据维护应使用对应 `research/.../scripts/` 下的明确脚本，并在研究文档或 decision log 中记录数据来源、覆盖范围和质量检查结果。

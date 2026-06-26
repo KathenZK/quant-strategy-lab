@@ -23,4 +23,4 @@
 
 用当前数据湖全量重跑后，V21 全样本收益为 +1537.79%，V18 为 +899.87%，收益差 +637.92%。 短窗口仍不稳定：最近 7 天 V21 弱于 V18；但 30 天、60 天、90 天和全样本都明显跑赢。 全样本提前平仓触发 26 次，最大回撤为 -26.48%。
 
-生成文件：reports/hype_v18_v21_updated_data_backtest.json 和 reports/hype_v18_v21_updated_data_backtest.csv。
+生成文件：artifacts/hype_v18_v21_updated_data_backtest.json 和 artifacts/hype_v18_v21_updated_data_backtest.csv。

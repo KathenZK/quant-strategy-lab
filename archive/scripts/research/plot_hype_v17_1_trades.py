@@ -11,9 +11,9 @@ from research_hype_v17_hybrid_ablation import load_frame, run_candidate
 from research_hype_v17_trend_state_search import SignalPlan, build_signal
 
 
-CHART_PATH = Path("reports/hype_ema_x_v17_1_binance_trade_chart.html")
-TRADES_PATH = Path("reports/hype_ema_x_v17_1_trades.csv")
-SUMMARY_PATH = Path("reports/hype_ema_x_v17_1_trade_chart_summary.json")
+CHART_PATH = Path("archive/reports/legacy/hype_ema_x_v17_1_binance_trade_chart.html")
+TRADES_PATH = Path("archive/reports/legacy/hype_ema_x_v17_1_trades.csv")
+SUMMARY_PATH = Path("archive/reports/legacy/hype_ema_x_v17_1_trade_chart_summary.json")
 
 
 def main() -> None:

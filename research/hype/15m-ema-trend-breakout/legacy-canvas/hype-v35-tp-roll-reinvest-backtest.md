@@ -82,5 +82,5 @@ X 轴：数据窗口；Y 轴：收益百分比。双向复投在三个窗口都�
 
 | 文件 | 内容 |
 | --- | --- |
-| reports/hype_v35_tp_roll_reinvest_summary.json | 精简对比结果 |
-| reports/hype_v35_tp_roll_reinvest_all.json | 所有 variant 结果 |
+| artifacts/hype_v35_tp_roll_reinvest_summary.json | 精简对比结果 |
+| artifacts/hype_v35_tp_roll_reinvest_all.json | 所有 variant 结果 |

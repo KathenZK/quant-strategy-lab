@@ -15,9 +15,9 @@ from research_hype_v13_late_reentry import run_late_reentry
 from research_hype_v14_main_backfill import v14_spec
 
 
-CHART_PATH = Path("reports/hype_v14_trade_chart.html")
-TRADES_PATH = Path("reports/hype_v14_trades.csv")
-SUMMARY_PATH = Path("reports/hype_v14_trade_chart_summary.json")
+CHART_PATH = Path("archive/reports/legacy/hype_v14_trade_chart.html")
+TRADES_PATH = Path("archive/reports/legacy/hype_v14_trades.csv")
+SUMMARY_PATH = Path("archive/reports/legacy/hype_v14_trade_chart_summary.json")
 
 
 def main() -> None:

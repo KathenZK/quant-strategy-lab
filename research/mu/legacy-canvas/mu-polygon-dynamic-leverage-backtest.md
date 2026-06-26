@@ -5,7 +5,7 @@
 
 在 Polygon MU 一年 15m 真股数据上测试 HYPE 风格动态仓位：allocation = min(max_allocation, target_atr_pct / atr_pct672)。V 系列仍为 long-only、TP10/SL9。
 
-Source: reports/mu_polygon_hype_v35_dynamic_leverage_ledger.csv · backtest after warmup 2025-07-24 15:45 UTC → 2026-06-16 23:45 UTC · Polygon 无 20:00-04:00 ET overnight bars。
+Source: research/mu/artifacts/mu_polygon_hype_v35_dynamic_leverage_ledger.csv · backtest after warmup 2025-07-24 15:45 UTC → 2026-06-16 23:45 UTC · Polygon 无 20:00-04:00 ET overnight bars。
 
 > **结论**
 > 动态 max3 值得替代固定 3x，但 target 不能太高。target 1.25% max3 的平均实际杠杆为 2.37x，ALL 收益 +610.92%，MDD -27.98%，比固定 3x 的 +923.81% / -40.07% 稳很多，也比固定 2x 的 +415.63% / -28.16% 更有收益弹性。
@@ -86,7 +86,7 @@ X 轴：regular 动态版本；Y 轴：实际 allocation。target 2% 已基本�
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_mu_polygon_hype_v35_transfer.py | 已加入动态杠杆回测逻辑 |
-| reports/mu_polygon_hype_v35_dynamic_leverage_summary.json | 动态杠杆汇总 |
-| reports/mu_polygon_hype_v35_dynamic_leverage_ledger.csv | 1W/1M/3M/ALL 动态杠杆台账 |
-| reports/mu_polygon_hype_v35_dynamic_leverage_trades.csv | 动态杠杆交易明细 |
-| reports/mu_polygon_hype_v35_dynamic_leverage_equity.csv | 动态杠杆权益曲线 |
+| research/mu/artifacts/mu_polygon_hype_v35_dynamic_leverage_summary.json | 动态杠杆汇总 |
+| research/mu/artifacts/mu_polygon_hype_v35_dynamic_leverage_ledger.csv | 1W/1M/3M/ALL 动态杠杆台账 |
+| research/mu/artifacts/mu_polygon_hype_v35_dynamic_leverage_trades.csv | 动态杠杆交易明细 |
+| research/mu/artifacts/mu_polygon_hype_v35_dynamic_leverage_equity.csv | 动态杠杆权益曲线 |

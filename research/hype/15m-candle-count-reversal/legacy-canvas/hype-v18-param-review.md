@@ -61,4 +61,4 @@
 | 20 bps | +225.61% | -41.69% | 139 / 178 |
 | 50 bps | +18.77% | -52.60% | 158 / 156 |
 
-生成文件：reports/hype_v18_param_review/variant_full_metrics.csv、variant_window_metrics.csv、 baseline_candidate_filter_trade_impact.csv、entry_slippage_sensitivity.csv。
+生成文件：artifacts/hype_v18_param_review/variant_full_metrics.csv、variant_window_metrics.csv、 baseline_candidate_filter_trade_impact.csv、entry_slippage_sensitivity.csv。

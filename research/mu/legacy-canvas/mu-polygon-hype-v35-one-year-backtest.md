@@ -60,7 +60,7 @@ X 轴：版本；Y 轴：闭合交易数量与胜率。盘前/盘后放开后交
 
 ## 分窗口表现
 
-Source: reports/mu_polygon_hype_v35_transfer_ledger.csv。1W 只有未平仓权益变化、无闭合交易；ALL 受 MU 一年大牛市影响很大。
+Source: research/mu/artifacts/mu_polygon_hype_v35_transfer_ledger.csv。1W 只有未平仓权益变化、无闭合交易；ALL 受 MU 一年大牛市影响很大。
 
 | 版本 | 1W | 1M | 3M | ALL | ALL MDD |
 | --- | --- | --- | --- | --- | --- |
@@ -78,8 +78,8 @@ Source: reports/mu_polygon_hype_v35_transfer_ledger.csv。1W 只有未平仓权�
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_mu_polygon_hype_v35_transfer.py | Polygon 一年回测脚本 |
-| reports/mu_polygon_hype_v35_transfer_summary.json | 汇总结果 |
-| reports/mu_polygon_hype_v35_transfer_ledger.csv | 1W/1M/3M/ALL 分窗口台账 |
-| reports/mu_polygon_hype_v35_transfer_trades.csv | V 系列交易明细 |
-| reports/mu_polygon_hype_v35_original_summary.json | B0 原版 HYPE V35 诊断 |
-| reports/mu_polygon_hype_v35_transfer_equity.csv | V 系列权益曲线 |
+| research/mu/artifacts/mu_polygon_hype_v35_transfer_summary.json | 汇总结果 |
+| research/mu/artifacts/mu_polygon_hype_v35_transfer_ledger.csv | 1W/1M/3M/ALL 分窗口台账 |
+| research/mu/artifacts/mu_polygon_hype_v35_transfer_trades.csv | V 系列交易明细 |
+| research/mu/artifacts/mu_polygon_hype_v35_original_summary.json | B0 原版 HYPE V35 诊断 |
+| research/mu/artifacts/mu_polygon_hype_v35_transfer_equity.csv | V 系列权益曲线 |

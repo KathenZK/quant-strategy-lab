@@ -69,4 +69,4 @@
 
 暂时不要直接信：胜率 100% 但交易数很少的策略、Moon Phases 这类解释性弱的信号、刚过 10% 门槛的 15m/5m 策略。
 
-已经本地验证过的排名第一策略脚本在 `reports/minara_rsi2065_btc_hype_backtest.py`； 结果显示它在 BTC/HYPE 最近 90 天没有复现原文强表现。
+已经本地验证过的排名第一策略脚本在 `archive/reports/legacy/minara_rsi2065_btc_hype_backtest.py`； 结果显示它在 BTC/HYPE 最近 90 天没有复现原文强表现。

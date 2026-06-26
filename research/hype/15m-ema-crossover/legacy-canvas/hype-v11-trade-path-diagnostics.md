@@ -5,7 +5,7 @@
 
 对 V6、V8、V8 clean、V10 逐笔交易做路径归因，判断当前瓶颈是入场、退出还是再入场。
 
-Source: Binance HYPEUSDT perp 15m data lake · 2025-05-30 10:30 UTC → 2026-06-01 03:00 UTC · reports/hype_trade_path_diagnostics_v11.json.
+Source: Binance HYPEUSDT perp 15m data lake · 2025-05-30 10:30 UTC → 2026-06-01 03:00 UTC · artifacts/hype_trade_path_diagnostics_v11.json.
 
 > **核心结论**
 > 当前最大问题不是缺少 RSI/KDJ/MACD，而是退出和再入场结构：V8/V8 clean 有 56.7% 交易属于早退后继续同向运行，V10 虽然更干净但仍有 54.9% 早退。下一步应该做 warning/confirm 双阶段退出和结构化再入场。
@@ -86,7 +86,7 @@ X 轴：策略；Y 轴：交易数。分类来自 MFE、捕获率、退出后 96
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_trade_path_diagnostics_v11.py | V11 交易路径诊断脚本 |
-| reports/hype_trade_path_diagnostics_v11.json | 结构化诊断报告 |
-| reports/hype_trade_path_diagnostics_v11_detail.csv | 逐笔 MFE / MAE / 捕获率明细 |
-| reports/hype_trade_path_diagnostics_v11_summary.csv | 策略级汇总 |
-| reports/hype_trade_path_diagnostics_v11_categories.csv | 问题分类汇总 |
+| artifacts/hype_trade_path_diagnostics_v11.json | 结构化诊断报告 |
+| artifacts/hype_trade_path_diagnostics_v11_detail.csv | 逐笔 MFE / MAE / 捕获率明细 |
+| artifacts/hype_trade_path_diagnostics_v11_summary.csv | 策略级汇总 |
+| artifacts/hype_trade_path_diagnostics_v11_categories.csv | 问题分类汇总 |

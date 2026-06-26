@@ -108,4 +108,4 @@ V21 的全年收益提升很大，但不是每个短窗口都赢。它在滚动 
 | 2025-06-10 多 | -1.27% | 原会止盈 +3.50% | -4.77% |
 | 2026-03-31 空 | -1.23% | 原会止盈 +3.50% | -4.73% |
 
-判断：V21 不是无脑增强。它的强项是在长窗口里过滤一批反转失败单，尤其 2025 年 6-9 月贡献明显； 弱点是在 2026 年 2-3 月会误杀一些后来能止盈的单。当前更适合作为主候选继续观察，而不是直接断言已经过拟合风险很低。 生成文件：reports/hype_v21_robustness_validation.json、reports/hype_v21_rolling_windows.csv、reports/hype_v21_rule_sensitivity.csv。
+判断：V21 不是无脑增强。它的强项是在长窗口里过滤一批反转失败单，尤其 2025 年 6-9 月贡献明显； 弱点是在 2026 年 2-3 月会误杀一些后来能止盈的单。当前更适合作为主候选继续观察，而不是直接断言已经过拟合风险很低。 生成文件：artifacts/hype_v21_robustness_validation.json、artifacts/hype_v21_rolling_windows.csv、artifacts/hype_v21_rule_sensitivity.csv。

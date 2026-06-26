@@ -41,4 +41,4 @@
 
 由于 Hyperliquid HYPE 当前只有约 52 天 15m 原生历史，3个月、半年、1年窗口暂时无法有效验证。 在这 52 天里 V18 表现最好，全量收益 +71.03%，最大回撤 -29.58%；V13 全量收益 +57.12%，最大回撤 -30.46%。 但 1月窗口三组都是负收益，说明这段样本仍然很短，不能替代 Binance 长周期验证。
 
-明细文件：reports/hyperliquid_hype_15m_all_trade_funding.parquet， reports/hyperliquid_hype_v13_v15_v18_backtest.csv。
+明细文件：artifacts/hyperliquid_hype_15m_all_trade_funding.parquet， artifacts/hyperliquid_hype_v13_v15_v18_backtest.csv。

@@ -25,5 +25,5 @@ Source: Binance FAPI · 2026-04-01 00:00 UTC → 2026-06-18 07:45 UTC · 7,520 b
 | scripts/fetch_binance_perp_symbol_data.py | Binance FAPI 分页下载脚本 |
 | data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m/date=2026-04-01/symbol=xau_usdt_usdt.parquet | XAUUSDT 15m OHLCV |
 | data/normalized/funding_rates/exchange=binance/market_type=perp/date=2026-04-01/symbol=xau_usdt_usdt.parquet | XAUUSDT funding |
-| reports/xau_binance_hype_v35_original_summary.json | 原版 HYPE V35 诊断摘要 |
-| reports/xau_binance_hype_v35_original_trades.csv | 原版 HYPE V35 交易明细 |
+| archive/reports/legacy/xau_binance_hype_v35_original_summary.json | 原版 HYPE V35 诊断摘要 |
+| archive/reports/legacy/xau_binance_hype_v35_original_trades.csv | 原版 HYPE V35 交易明细 |

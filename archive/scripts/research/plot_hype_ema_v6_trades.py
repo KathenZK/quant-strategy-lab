@@ -14,9 +14,9 @@ from research_hype_ema_regime_hold_v5 import (
 )
 
 
-CHART_PATH = Path("reports/hype_ema_v6_binance_trade_chart.html")
-TRADES_PATH = Path("reports/hype_ema_v6_trades.csv")
-EQUITY_PATH = Path("reports/hype_ema_v6_equity.csv")
+CHART_PATH = Path("archive/reports/legacy/hype_ema_v6_binance_trade_chart.html")
+TRADES_PATH = Path("archive/reports/legacy/hype_ema_v6_trades.csv")
+EQUITY_PATH = Path("archive/reports/legacy/hype_ema_v6_equity.csv")
 
 
 def run_v6(frame: pd.DataFrame) -> tuple[pd.DataFrame, pd.DataFrame]:

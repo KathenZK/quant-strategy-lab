@@ -114,7 +114,7 @@ X 轴：时间窗口；Y 轴：收益百分比。
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_v14_ablation.py | V14 全参数单因素消融脚本 |
-| reports/hype_v14_ablation_ranking.csv | 所有候选排名 |
-| reports/hype_v14_ablation_sensitivity.csv | 参数敏感性 |
-| reports/hype_v14_ablation_top_windows.csv | Top 候选窗口表现 |
-| reports/hype_v14_ablation.json | 完整结构化报告 |
+| artifacts/hype_v14_ablation_ranking.csv | 所有候选排名 |
+| artifacts/hype_v14_ablation_sensitivity.csv | 参数敏感性 |
+| artifacts/hype_v14_ablation_top_windows.csv | Top 候选窗口表现 |
+| artifacts/hype_v14_ablation.json | 完整结构化报告 |

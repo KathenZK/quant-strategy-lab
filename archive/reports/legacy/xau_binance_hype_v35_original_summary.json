@@ -1,0 +1,70 @@
+{
+  "symbol": "XAU/USDT:USDT",
+  "source": "binance",
+  "data": {
+    "rows": 7520,
+    "start": "2026-04-01 00:00:00+00:00",
+    "end": "2026-06-18 07:45:00+00:00",
+    "warmup_bars": 1600,
+    "backtest_start_after_warmup": "2026-04-17 16:00:00+00:00"
+  },
+  "results": [
+    {
+      "name": "B0_xau_hype_v35_original",
+      "return_pct": -5.42,
+      "max_dd_pct": -7.96,
+      "sharpe": -1.11,
+      "closed_trades": 18,
+      "win_rate_pct": 55.56,
+      "exit_reasons": {
+        "indicator_exit": 4,
+        "take_profit": 10,
+        "stop_loss": 4
+      },
+      "side_summary": {
+        "long": {
+          "trades": 8,
+          "return_sum_pct": 0.24,
+          "win_rate_pct": 50.0
+        },
+        "short": {
+          "trades": 10,
+          "return_sum_pct": 3.4,
+          "win_rate_pct": 60.0
+        }
+      }
+    },
+    {
+      "name": "B0w_xau_hype_v35_weekend_filtered",
+      "return_pct": -4.0,
+      "max_dd_pct": -7.96,
+      "sharpe": -0.77,
+      "closed_trades": 17,
+      "win_rate_pct": 58.82,
+      "exit_reasons": {
+        "indicator_exit": 3,
+        "take_profit": 10,
+        "stop_loss": 4
+      },
+      "side_summary": {
+        "long": {
+          "trades": 7,
+          "return_sum_pct": 1.09,
+          "win_rate_pct": 57.14
+        },
+        "short": {
+          "trades": 10,
+          "return_sum_pct": 3.4,
+          "win_rate_pct": 60.0
+        }
+      }
+    }
+  ],
+  "buy_hold_after_warmup": {
+    "return_pct": -11.83,
+    "max_dd_pct": -17.17
+  },
+  "notes": [
+    "Original HYPE V35 diagnostic on Binance XAUUSDT TRADIFI_PERPETUAL."
+  ]
+}

@@ -1,0 +1,70 @@
+{
+  "symbol": "ASTER/USDT:USDT",
+  "source": "binance",
+  "data": {
+    "rows": 7520,
+    "start": "2026-04-01 00:00:00+00:00",
+    "end": "2026-06-18 07:45:00+00:00",
+    "warmup_bars": 1600,
+    "backtest_start_after_warmup": "2026-04-17 16:00:00+00:00"
+  },
+  "results": [
+    {
+      "name": "B0_aster_hype_v35_original",
+      "return_pct": -39.41,
+      "max_dd_pct": -45.35,
+      "sharpe": -2.37,
+      "closed_trades": 37,
+      "win_rate_pct": 51.35,
+      "exit_reasons": {
+        "indicator_exit": 5,
+        "take_profit": 19,
+        "stop_loss": 13
+      },
+      "side_summary": {
+        "long": {
+          "trades": 29,
+          "return_sum_pct": 19.33,
+          "win_rate_pct": 62.07
+        },
+        "short": {
+          "trades": 8,
+          "return_sum_pct": -41.34,
+          "win_rate_pct": 12.5
+        }
+      }
+    },
+    {
+      "name": "B0w_aster_hype_v35_weekend_filtered",
+      "return_pct": -29.0,
+      "max_dd_pct": -31.64,
+      "sharpe": -2.5,
+      "closed_trades": 18,
+      "win_rate_pct": 50.0,
+      "exit_reasons": {
+        "take_profit": 9,
+        "stop_loss": 7,
+        "indicator_exit": 2
+      },
+      "side_summary": {
+        "long": {
+          "trades": 13,
+          "return_sum_pct": 2.16,
+          "win_rate_pct": 61.54
+        },
+        "short": {
+          "trades": 5,
+          "return_sum_pct": -22.94,
+          "win_rate_pct": 20.0
+        }
+      }
+    }
+  ],
+  "buy_hold_after_warmup": {
+    "return_pct": -2.09,
+    "max_dd_pct": -23.44
+  },
+  "notes": [
+    "Original HYPE V35 diagnostic on Binance ASTERUSDT TRADIFI_PERPETUAL."
+  ]
+}

@@ -5,7 +5,7 @@
 
 固定当前 V8 基线，只替换一个参数，观察收益、回撤、Sharpe、交易数和退出结构变化。
 
-Source: Binance HYPEUSDT perp 15m data lake · 2025-05-30 10:30 UTC → 2026-06-01 03:00 UTC · reports/hype_ema_volume_overlay_v8_ablation.json.
+Source: Binance HYPEUSDT perp 15m data lake · 2025-05-30 10:30 UTC → 2026-06-01 03:00 UTC · artifacts/hype_ema_volume_overlay_v8_ablation.json.
 
 > **结论**
 > 最干净的改进是 wick_min=0.55：1Y 收益从 +493.56% 提升到 +530.65%，最大回撤保持 -27.63%。adx_exit=18 收益最高，但最大回撤扩大到 -32.13%，不建议直接替换当前基线。
@@ -78,9 +78,9 @@ full_exit、half_reduce、no_overlay 在同一数据窗口下比较。
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_ema_volume_overlay_v8_ablation.py | V8 单因素消融脚本 |
-| reports/hype_ema_volume_overlay_v8_ablation.json | 结构化消融报告 |
-| reports/hype_ema_volume_overlay_v8_ablation_summary.csv | 参数敏感度汇总 |
-| reports/hype_ema_volume_overlay_v8_ablation_detail.csv | 每个参数候选值的完整明细 |
+| artifacts/hype_ema_volume_overlay_v8_ablation.json | 结构化消融报告 |
+| artifacts/hype_ema_volume_overlay_v8_ablation_summary.csv | 参数敏感度汇总 |
+| artifacts/hype_ema_volume_overlay_v8_ablation_detail.csv | 每个参数候选值的完整明细 |
 
 ## 自动转换复核提示
 

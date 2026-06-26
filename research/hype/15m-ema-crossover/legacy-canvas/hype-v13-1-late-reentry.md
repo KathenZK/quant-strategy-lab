@@ -103,8 +103,8 @@ X 轴：候选；Y 轴：百分比。回撤显示绝对值。
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_v13_late_reentry.py | V13.1 late re-entry 实验脚本 |
-| reports/hype_v13_late_reentry_ranking.csv | V13.1 参数组合排名 |
-| reports/hype_v13_late_reentry_trades.csv | 最佳 V13.1 逐笔交易 |
-| reports/hype_v13_late_reentry.json | 结构化实验报告 |
-| reports/hype_v13_1_main_result_backfill.csv | V13.1 横向窗口表 |
-| reports/hype_v13_late_reentry_diagnostics_summary.csv | 最佳 V13.1 交易路径诊断 |
+| artifacts/hype_v13_late_reentry_ranking.csv | V13.1 参数组合排名 |
+| artifacts/hype_v13_late_reentry_trades.csv | 最佳 V13.1 逐笔交易 |
+| artifacts/hype_v13_late_reentry.json | 结构化实验报告 |
+| artifacts/hype_v13_1_main_result_backfill.csv | V13.1 横向窗口表 |
+| artifacts/hype_v13_late_reentry_diagnostics_summary.csv | 最佳 V13.1 交易路径诊断 |

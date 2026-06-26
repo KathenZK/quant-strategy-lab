@@ -24,6 +24,15 @@ Do not merge this with `HYPE-EMA-Crossover` just because both use EMA cross logi
 - `artifacts/hype_1m_ema_crossover_live_search_ranking.csv`: top-ranked candidate table.
 - `artifacts/hype_1m_ema_crossover_live_search_top_trades.csv`: trade path for the top search row.
 
+## Data Lake
+
+- Standard raw candles: `data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1m/date=*/symbol=hype_usdt_usdt.parquet`.
+- Standard normalized candles: `data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1m/date=*/symbol=hype_usdt_usdt.parquet`.
+- Standard feature factors: `data/features/factor=*/version=hype_1m_ema_crossover_live_search_2026_06_25/exchange=binance/market_type=perp/symbol=hype_usdt_usdt/timeframe=1m/`.
+- Current lake coverage after the `2026-06-26` refresh: `2026-03-25 00:00:00 UTC` to `2026-06-26 04:23:00 UTC`, `134,184` continuous `1m` bars.
+- First search window: `2026-03-25 00:00:00 UTC` to `2026-06-25 08:46:00 UTC`, `133,007` continuous `1m` bars.
+- The old `data/cache/hype_1m_ema_crossover_live_search/` parquet is retained only as the original downloader cache; new research should read the standard data lake paths above.
+
 ## Naming
 
 Use names such as:

@@ -58,7 +58,7 @@
 
 成本：HyperLiquid taker 0.045% 每边；未建模滑点、资金费和订单簿冲击。
 
-结果文件：`reports/minara_rsi2065_btc_hype.json`、`_summary.csv`、 `_trades.csv`、`_equity.csv`。
+结果文件：`archive/reports/legacy/minara_rsi2065_btc_hype.json`、`_summary.csv`、 `_trades.csv`、`_equity.csv`。
 
 ## 数据覆盖
 

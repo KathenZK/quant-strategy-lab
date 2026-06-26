@@ -106,7 +106,7 @@ X 轴：候选；Y 轴：数量或百分比。覆盖指 20 个大趋势 regime �
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_hype_v14_atr_dynamic_entry.py | ATR 分层动态入场门槛实验脚本 |
-| reports/hype_v14_atr_dynamic_entry_ranking.csv | 动态入场候选排名 |
-| reports/hype_v14_atr_dynamic_entry_missed_regimes.csv | 大趋势 regime 信号覆盖统计 |
-| reports/hype_v14_atr_dynamic_entry_signal_failures.csv | 大趋势中 ADX/量能/h1 失败率拆解 |
-| reports/hype_v14_atr_dynamic_entry.json | 结构化报告 |
+| artifacts/hype_v14_atr_dynamic_entry_ranking.csv | 动态入场候选排名 |
+| artifacts/hype_v14_atr_dynamic_entry_missed_regimes.csv | 大趋势 regime 信号覆盖统计 |
+| artifacts/hype_v14_atr_dynamic_entry_signal_failures.csv | 大趋势中 ADX/量能/h1 失败率拆解 |
+| artifacts/hype_v14_atr_dynamic_entry.json | 结构化报告 |
