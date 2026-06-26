@@ -18,17 +18,31 @@ It is independent from:
 - Data: Binance HYPEUSDT perpetual `5m` normalized OHLCV under the repository data lake.
 - Execution model: closed-bar signal, next-bar open entry, immediate fixed TP/SL bracket, conservative stop-first ordering when one candle can hit both target and stop.
 - Cost model: observed Binance live cost from `HYPE-5M-Pullback-Trail` audits, recorded explicitly in each search report.
-- Frequency goal: roughly `3-5` completed trades per day.
-- Status: first executable broad search is no-go; do not promote to live, paper-live, or dry-run candidate without a new audit that overcomes the 2026-06-26 findings.
+- Original frequency goal: roughly `3-5` completed trades per day.
+- Current relaxed-search boundary: profitable candidates appeared only after relaxing frequency down to roughly `0.3-0.5` trades/day. This family has paper-audit candidates, but no live-ready strategy yet.
 
 ## Canonical Entrypoints
 
 - `decision-log.md`: family decision history.
 - `diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`: first executable broad search report.
+- `diagnostics/hype-5m-micro-scalp-relaxed-rounds-2026-06-26.md`: round-by-round relaxed-constraint search.
+- `diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`: parameter-neighborhood robustness check for the relaxed candidates.
 
 ## Current Finding
 
-The 2026-06-26 search found many high-win and frequency-matched rows, but none with positive expectancy under the executable order model and observed Binance cost model. The best `3-5` trades/day row annualized only `0.23x`, and `0` configs passed the hard or audit gate.
+The first 2026-06-26 strict search found many high-win and frequency-matched rows, but none with positive expectancy under the executable order model and observed Binance cost model. The best `3-5` trades/day row annualized only `0.23x`, and `0` configs passed the hard or audit gate.
+
+The follow-up relaxed search changed one constraint at a time:
+
+- `R1_relax_frequency`: frequency relaxed from `3-5/day` to `0.10-1.00/day`, leaving `32` round-gate candidates.
+- `R2_relax_winrate_payoff`: win-rate requirement relaxed to `45%+` while requiring stronger PF/payoff, leaving `20` round-gate candidates.
+- `R3_live_candidate_gate`: high-win micro-profit framing removed, keeping only executable positive profitability and split robustness, leaving `36` round-gate candidates.
+
+The subsequent robustness sweep tested `749` local neighborhood configs around the better sample-size candidates. `407` passed the robust gate and `396` also passed the monthly gate. The current best balanced paper-audit candidate is:
+
+- `R1_relax_frequency_R01242__tp_sl_0011`: `vwap_revert`, both sides, `188` trades, `0.48` trades/day, annualized `1.32x`, win rate `85.11%`, PF `1.468`, average trade `16.67 bps`, maxDD `-8.16%`, VAL PF `5.445`, FWD PF `3.550`, recent 30d return `10.46%`, `3/14` negative months.
+
+This is a candidate for paper audit / live-spec drafting only. It still needs per-trade path review, order maintenance audit, restart-state audit, and paper/live-dry-run reconciliation before any real capital deployment.
 
 ## Directory Rules
 

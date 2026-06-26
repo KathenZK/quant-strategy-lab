@@ -20,10 +20,12 @@
 | `HYPE-Candle-Count-Reversal` | `HYPE-CC` | `hype/15m-candle-count-reversal/` | 10-of-8 candle color reversal with ATR risk controls and early exits | Archived/canonical research specs |
 | `HYPE-EMA-Crossover` | `HYPE-EMA-X` | `hype/15m-ema-crossover/` | EMA golden/death cross family, evolved through V14-era regime, volume, oscillator, late-entry, and state-machine variants | Core historical research line |
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | `hype/1m-ema-crossover/` | Binance HYPEUSDT `1m` EMA golden/death cross research with live-executable next-bar entries and fixed/trailing exits | Diagnostic / paper-live candidate only |
+| `HYPE-1M-MA-Pullback-Scalp` | - | `hype/1m-ma-pullback-scalp/` | Binance HYPEUSDT `1m` two-MA pullback/end-of-correction scalp with HH/HL or LL/LH structure and fixed brackets | No-go after first executable search |
 | `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `hype/15m-ema-trend-breakout/` | Later 15m EMA96/384 trend breakout / chase-long-chase-short family with ADX, volume, 1h confirmation, and cross-exchange execution variants | Archived/canonical research specs |
 | `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | `hype/15m-multi-indicator-intraday/` | Binance HYPEUSDT `15m` broad RSI/MACD/EMA/ADX/ATR/structure intraday search with live-realistic next-bar execution | Exploratory research |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `hype/5m-pullback-trail/` | Binance HYPE `5m` pullback/resume entries with ATR trailing-stop exits | Active research candidate |
-| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `hype/5m-micro-scalp/` | Binance HYPEUSDT `5m` high-frequency micro-profit scalp search with immediate executable TP/SL brackets | Exploratory no-go after first search |
+| `HYPE-5M-MA-Pullback-Scalp` | - | `hype/5m-ma-pullback-scalp/` | Binance HYPEUSDT `5m` two-MA pullback/end-of-correction scalp with HH/HL or LL/LH structure and fixed brackets | Paper-audit candidates only |
+| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `hype/5m-micro-scalp/` | Binance HYPEUSDT `5m` high-frequency micro-profit scalp search with immediate executable TP/SL brackets | Exploratory; relaxed-search paper-audit candidates only |
 
 ## 核心台账入口
 
@@ -34,19 +36,30 @@
   - `HYPE-EMA-Crossover-V17.1`（alias `HYPE-EMA-X-V17.1`）: V17 sizing-enhanced promoted research candidate, using `hq_scale=1.1`.
 - `HYPE-1M-EMA-Crossover`（`HYPE-1M-EMA-X`）: `hype/1m-ema-crossover/README.md`
   - `HYPE-1M-EMA-Crossover-TRAIL-144-1597`: first diagnostic / paper-live candidate; not live-approved.
+- `HYPE-1M-MA-Pullback-Scalp`: `hype/1m-ma-pullback-scalp/README.md`
+  - First executable search: `hype/1m-ma-pullback-scalp/diagnostics/hype-1m-ma-pullback-scalp-search-2026-06-26.md`.
+  - Current status: no paper-live or live candidate; no profitable config at `>=60` trades under the tested executable/cost model.
 - `HYPE-EMA-Trend-Breakout`（`HYPE-EMA-TB`）: `hype/15m-ema-trend-breakout/hype-ema-tb-core-ledger.md`
 - `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）: `hype/15m-multi-indicator-intraday/README.md`
   - Independent Binance HYPEUSDT `15m` broad multi-indicator intraday research line.
   - It is not a version of `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, or `HYPE-Candle-Count-Reversal`.
+  - Full ablation and time-slice diagnostic: `hype/15m-multi-indicator-intraday/ablations/hype-15m-mii-full-ablation-2026-06-26.md`.
+  - Surface-improvement combo optimization: `hype/15m-multi-indicator-intraday/ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`.
 - `HYPE-5M-Pullback-Trail`（`HYPE-5M-PBTR`）: `hype/5m-pullback-trail/hype-5m-pullback-trail-core-ledger.md`
   - Independent Binance HYPE `5m` pullback + ATR trailing-stop research line.
   - Its local `V1/V2` numbers are not the legacy 15m `HYPE-EMA-Trend-Breakout` V1/V2/V35 sequence.
   - V2 implementation handoff spec: `hype/5m-pullback-trail/live-specs/hype-5m-pullback-trail-v2-live-spec.md`.
   - V6 paper candidate and full ablation: `hype/5m-pullback-trail/ablations/hype-5m-pbtr-v6-full-parameter-ablation-2026-06-25.md`.
+- `HYPE-5M-MA-Pullback-Scalp`: `hype/5m-ma-pullback-scalp/README.md`
+  - First executable search: `hype/5m-ma-pullback-scalp/diagnostics/hype-5m-ma-pullback-scalp-search-2026-06-26.md`.
+  - Neighborhood robustness: `hype/5m-ma-pullback-scalp/diagnostics/hype-5m-ma-pullback-scalp-robustness-2026-06-26.md`.
+  - Current status: paper-audit candidates only; no live-ready strategy.
 - `HYPE-5M-Micro-Scalp`（`HYPE-5M-MS`）: `hype/5m-micro-scalp/README.md`
   - Independent Binance HYPEUSDT `5m` high-frequency micro-profit scalp research line.
   - First executable broad search: `hype/5m-micro-scalp/diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`.
-  - Current status: no-go for live/paper candidate; do not confuse high win-rate rows with positive expectancy.
+  - Relaxed constraint search: `hype/5m-micro-scalp/diagnostics/hype-5m-micro-scalp-relaxed-rounds-2026-06-26.md`.
+  - Candidate robustness check: `hype/5m-micro-scalp/diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`.
+  - Current status: original `3-5` trades/day strict shape remains no-go; relaxed low-frequency VWAP/BB mean-reversion candidates may advance to paper audit only.
 - `HYPE-Candle-Count-Reversal`（`HYPE-CC`）: `hype/15m-candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 - Repo rule mirrors:
   - `hype/15m-ema-crossover/v15-v16-promoted-strategy-specs.md`
@@ -66,11 +79,13 @@
 1. `HYPE-Candle-Count-Reversal`（`HYPE-CC`）：HYPE candle-count technical reversal.
 2. `HYPE-EMA-Crossover`（`HYPE-EMA-X`）：HYPE EMA golden/death cross family, iterated through V14-era research.
 3. `HYPE-1M-EMA-Crossover`（`HYPE-1M-EMA-X`）：HYPE Binance `1m` EMA cross paper-live research.
-4. `HYPE-EMA-Trend-Breakout`（`HYPE-EMA-TB`）：HYPE EMA trend breakout / chase-long-chase-short family.
-5. `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）：Binance HYPEUSDT `15m` broad multi-indicator intraday search.
-6. `HYPE-5M-Pullback-Trail`（`HYPE-5M-PBTR`）：HYPE Binance `5m` pullback + ATR trailing-stop family.
-7. `HYPE-5M-Micro-Scalp`（`HYPE-5M-MS`）：Binance HYPEUSDT `5m` high-frequency micro-profit scalp family.
-8. `MU-HYPE-Transfer`（`MU-HYPE-XFER`）：MU transfer research from HYPE trend kernels.
+4. `HYPE-1M-MA-Pullback-Scalp`：HYPE Binance `1m` two-MA pullback scalp no-go research.
+5. `HYPE-EMA-Trend-Breakout`（`HYPE-EMA-TB`）：HYPE EMA trend breakout / chase-long-chase-short family.
+6. `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）：Binance HYPEUSDT `15m` broad multi-indicator intraday search.
+7. `HYPE-5M-Pullback-Trail`（`HYPE-5M-PBTR`）：HYPE Binance `5m` pullback + ATR trailing-stop family.
+8. `HYPE-5M-MA-Pullback-Scalp`：HYPE Binance `5m` two-MA pullback scalp paper-audit family.
+9. `HYPE-5M-Micro-Scalp`（`HYPE-5M-MS`）：Binance HYPEUSDT `5m` high-frequency micro-profit scalp family.
+10. `MU-HYPE-Transfer`（`MU-HYPE-XFER`）：MU transfer research from HYPE trend kernels.
 
 ## 历史或浅层研究
 
@@ -86,9 +101,11 @@
 - If a document path contains `15m-candle-count-reversal`, use `HYPE-Candle-Count-Reversal` and optionally note alias `HYPE-CC`.
 - If a document path contains `15m-ema-crossover`, use `HYPE-EMA-Crossover` and optionally note alias `HYPE-EMA-X`.
 - If a document path contains `1m-ema-crossover`, use `HYPE-1M-EMA-Crossover` and optionally note alias `HYPE-1M-EMA-X`.
+- If a document path contains `1m-ma-pullback-scalp`, use `HYPE-1M-MA-Pullback-Scalp`.
 - If a document path contains `15m-ema-trend-breakout`, use `HYPE-EMA-Trend-Breakout` and optionally note alias `HYPE-EMA-TB`.
 - If a document path contains `15m-multi-indicator-intraday`, use `HYPE-15M-Multi-Indicator-Intraday` and optionally note alias `HYPE-15M-MII`.
 - If a document path contains `5m-pullback-trail`, use `HYPE-5M-Pullback-Trail` and optionally note alias `HYPE-5M-PBTR`.
+- If a document path contains `5m-ma-pullback-scalp`, use `HYPE-5M-MA-Pullback-Scalp`.
 - If a document path contains `5m-micro-scalp`, use `HYPE-5M-Micro-Scalp` and optionally note alias `HYPE-5M-MS`.
 - If a document lives under `archive/`, treat it as historical evidence, not the current entrypoint.
 
