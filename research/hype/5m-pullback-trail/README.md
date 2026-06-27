@@ -48,6 +48,7 @@ It is independent from:
 - `diagnostics/hype-5m-pbtr-v6-1-tp-trigger-trailing-2026-06-27.md`: tests replacing V6.1 fixed TP with a trailing trigger. Fixed TP remains stronger than all tested trailing overlays.
 - `diagnostics/hype-5m-pbtr-v6-1-short-combo-search-2026-06-27.md`: searches short-only executable bracket candidates and combines them with V6.1 long-only under a one-position constraint; source report for the later V6.2 promotion.
 - `ablations/hype-5m-pbtr-v6-2-full-parameter-ablation-2026-06-28.md`: promotes `combo_short_rank2` to `HYPE-5M-PBTR-V6.2` after full parameter ablation; paper/live-dry-run candidate only, preferably 1x or tiny notional first.
+- `ablations/hype-5m-pbtr-v6-2-tp4-htf0-combo-probe-2026-06-28.md`: tests combining `long_tp_atr=4.0` with `long_htf_threshold=0.0`; it passes robust gate but does not outperform V6.2.1 `TP=2.5ATR + htf_spread>=0`.
 - `diagnostics/hype-5m-executable-broad-search-2026-06-25.md`: broad executable-only HYPE `5m` search across old indicator entry styles with entry-time bracket protection. Tests `13134` configurations against `>=20x` annualized, `>=50%` win rate, and `>-20%` drawdown. No configuration comes close; the best `>=100` trade row annualizes only about `1.05x`.
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`: V1/R05732 full parameter explanation and ablation.
 - `diagnostics/hype-5m-pbtr-v1-strict-live-audit-2026-06-27.md`: strict live-realistic audit for V1/R05732. Confirms the legacy stop-price fill backtest remains profitable, but V1 collapses under executable unlock stop/target handling and is not a rollback live candidate.
@@ -112,6 +113,7 @@ Scripts:
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_1_tp_trigger_trailing.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_1_short_combo_search.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_full_ablation.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_tp4_htf0_combo_probe.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_ml_event_quality.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3-1_armed_pyramiding.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3-1_pb005_arm4.py`

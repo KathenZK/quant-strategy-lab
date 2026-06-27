@@ -36,7 +36,7 @@
 ```text
 data/
   raw/ normalized/ features/  # 本地数据湖核心层
-  cache/ external/ reports/   # 本地缓存、外部数据和数据相关产物
+  cache/ external/            # 本地缓存和外部数据
 
 research/
   README.md

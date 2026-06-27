@@ -17,5 +17,9 @@ web/.next/
 *.egg-info/
 /data/
 /reports/
+# Research artifacts: only Markdown is tracked; regenerate other outputs from scripts/
+**/artifacts/**
+!**/artifacts/**/
+!**/artifacts/**/*.md
 .coverage
 htmlcov/
