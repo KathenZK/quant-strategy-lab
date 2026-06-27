@@ -29,9 +29,14 @@ For the Binance HYPEUSDT `5m` micro-scalp research line, use:
 For the Binance HYPEUSDT `5m` event-quality scoring research line, use:
 
 1. `5m-event-quality-scoring/README.md`
-2. `5m-event-quality-scoring/decision-log.md`
-3. `5m-event-quality-scoring/diagnostics/hype-5m-event-quality-v0-2026-06-27.md`
-4. `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`
+2. `5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md`
+3. `5m-event-quality-scoring/decision-log.md`
+4. `5m-event-quality-scoring/diagnostics/hype-5m-event-quality-v0-2026-06-27.md`
+5. `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`
+6. `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v01-style-prune-2026-06-27.md`
+7. `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v01-full-ablation-2026-06-27.md`
+8. `5m-event-quality-scoring/diagnostics/hype-5m-seeded-v1-live-feasibility-2026-06-27.md`
+9. `5m-event-quality-scoring/diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md`
 
 For the Binance HYPEUSDT `5m` two-MA pullback scalp research line, use:
 
@@ -87,6 +92,10 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 - `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`: parameter-neighborhood robustness check; current relaxed candidates are paper-audit only, not live-ready.
 - `5m-event-quality-scoring/diagnostics/hype-5m-event-quality-v0-2026-06-27.md`: generic event-quality scoring diagnostic; no paper-audit candidate.
 - `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`: seeded source-mean event ranker; `seeded_source_mean_q80` is paper-audit only, not live-ready.
+- `5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md`: `HYPE-5M-Event-Quality-Scoring` core ledger; Base is Seeded V0, fixed seed-universe V1 failed strict seed audit.
+- `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v01-full-ablation-2026-06-27.md`: Seeded V0.1 full parameter ablation; fixed seed-universe lead was `no_wick_no_breakout__cfg_side_88_12__q80`.
+- `5m-event-quality-scoring/diagnostics/hype-5m-seeded-v1-live-feasibility-2026-06-27.md`: `HYPE-5M-Event-Quality-Scoring-Seeded-V1` live-feasibility audit; superseded by strict seed audit failure, not live-ready.
+- `5m-event-quality-scoring/diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md`: strict rolling seed-generation audit; V1 failed anti-leakage validation and is downgraded to fixed seed-universe diagnostic only.
 
 ## Hard Rules
 

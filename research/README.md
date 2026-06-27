@@ -5,6 +5,7 @@
 ## 入口
 
 - `hype/README.md`：HYPE 策略家族档案与阅读上下文。
+- `binance/README.md`：Binance 跨资产研究入口。
 - `mu/README.md`：`MU-HYPE-Transfer`（历史别名：`MU-HYPE-XFER`）迁移研究入口。
 
 已经不作为 active research 入口的历史策略研究位于 `../archive/research/`，其中旧 HYPE cross-asset transfer 材料位于 `../archive/research/hype-transfer/`。
@@ -26,7 +27,7 @@
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `hype/5m-pullback-trail/` | Binance HYPE `5m` pullback/resume entries with ATR trailing-stop exits | Active research candidate |
 | `HYPE-5M-MA-Pullback-Scalp` | - | `hype/5m-ma-pullback-scalp/` | Binance HYPEUSDT `5m` two-MA pullback/end-of-correction scalp with HH/HL or LL/LH structure and fixed brackets | Paper-audit candidates only |
 | `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `hype/5m-micro-scalp/` | Binance HYPEUSDT `5m` high-frequency micro-profit scalp search with immediate executable TP/SL brackets | Exploratory; relaxed-search paper-audit candidates only |
-| `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | `hype/5m-event-quality-scoring/` | Binance HYPEUSDT `5m` event-quality scoring over candidate events and seeded micro-scalp signals | Seeded V0 paper-audit candidate only |
+| `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | `hype/5m-event-quality-scoring/` | Binance HYPEUSDT `5m` event-quality scoring over candidate events and seeded micro-scalp signals | Fixed seed-universe diagnostics only; V1 failed strict seed audit |
 
 ## 核心台账入口
 
@@ -62,9 +63,14 @@
   - Candidate robustness check: `hype/5m-micro-scalp/diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`.
   - Current status: original `3-5` trades/day strict shape remains no-go; relaxed low-frequency VWAP/BB mean-reversion candidates may advance to paper audit only.
 - `HYPE-5M-Event-Quality-Scoring`（`HYPE-5M-EQS`）: `hype/5m-event-quality-scoring/README.md`
+  - Core ledger: `hype/5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md`.
   - Generic event-quality V0: `hype/5m-event-quality-scoring/diagnostics/hype-5m-event-quality-v0-2026-06-27.md`.
   - Seeded V0: `hype/5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`.
-  - Current status: `seeded_source_mean_q80` is a paper-audit candidate only; not live-ready.
+  - Seeded V0.1 style-prune: `hype/5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v01-style-prune-2026-06-27.md`.
+  - Seeded V0.1 full ablation: `hype/5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v01-full-ablation-2026-06-27.md`.
+  - Seeded V1 live-feasibility audit: `hype/5m-event-quality-scoring/diagnostics/hype-5m-seeded-v1-live-feasibility-2026-06-27.md`.
+  - Seeded V1 strict seed audit: `hype/5m-event-quality-scoring/diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md`.
+  - Current status: V1 failed strict anti-leakage seed generation; this family has no paper-live/live-ready candidate.
 - `HYPE-Candle-Count-Reversal`（`HYPE-CC`）: `hype/15m-candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 - Repo rule mirrors:
   - `hype/15m-ema-crossover/v15-v16-promoted-strategy-specs.md`
@@ -74,6 +80,7 @@
 
 跨资产研究不是 HYPE 策略家族，除非文档明确把它提升为某个 HYPE family variant。
 
+- `Binance-1D-Turtle-Breakout`: `binance/1d-turtle-breakout/README.md`，覆盖 Binance USD-M Futures `BTCUSDT`、`ETHUSDT`、`HYPEUSDT` 日线 20/10 turtle breakout 诊断。
 - `MU-HYPE-Transfer`（`MU-HYPE-XFER`）: `mu/README.md` and `mu/mu-hype-xfer-session-aware-ledger.md`
 - Old HYPE cross-asset transfer checks: archived under `../archive/research/hype-transfer/`.
 

@@ -47,6 +47,8 @@ It is independent from:
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`: V1/R05732 full parameter explanation and ablation.
 - `diagnostics/hype-5m-pbtr-v1-strict-live-audit-2026-06-27.md`: strict live-realistic audit for V1/R05732. Confirms the legacy stop-price fill backtest remains profitable, but V1 collapses under executable unlock stop/target handling and is not a rollback live candidate.
 - `diagnostics/hype-5m-pbtr-ml-event-quality-2026-06-27.md`: V3.3.1 walk-forward ML event-quality rescue attempt. Slightly raises trailing-positive / armed quality but remains PF < 1 across exact replay modes.
+- `diagnostics/hype-5m-pbtr-v3-3-1-armed-pyramiding-2026-06-27.md`: V3.3.1 armed-after pyramiding test. Adding leverage after stop-arm/trailing success does not improve PF; the add leg is still negative expectancy.
+- `diagnostics/hype-5m-pbtr-v3-3-1-pb005-arm4-2026-06-27.md`: V3.3.1 `pullback_buffer=0.005` plus arm-from-4th-bar test. Earlier trailing increases armed rate but worsens PF across all replay modes.
 
 ## Supporting Research
 
@@ -101,6 +103,8 @@ Scripts:
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_candidate_robustness.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_full_ablation.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_ml_event_quality.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3-1_armed_pyramiding.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3-1_pb005_arm4.py`
 - `research/hype/5m-pullback-trail/scripts/render_hype_5m_ensemble_specs.py`
 
 Report files:
@@ -185,3 +189,10 @@ Report files:
 - `artifacts/hype_5m_pbtr_ml_event_quality_scores_2026-06-27.csv`
 - `artifacts/hype_5m_pbtr_ml_event_quality_exact_2026-06-27.csv`
 - `artifacts/hype_5m_pbtr_ml_event_quality_v1_events_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v3-3-1_armed_pyramiding_2026-06-27.json`
+- `artifacts/hype_5m_pbtr_v3-3-1_armed_pyramiding_summary_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v3-3-1_armed_pyramiding_robust_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v3-3-1_armed_pyramiding_diag_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v3-3-1_pb005_arm4_2026-06-27.json`
+- `artifacts/hype_5m_pbtr_v3-3-1_pb005_arm4_summary_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v3-3-1_pb005_arm4_diag_2026-06-27.csv`
