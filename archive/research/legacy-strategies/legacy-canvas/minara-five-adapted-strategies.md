@@ -57,6 +57,6 @@
 
 ## 产物
 
-搜索脚本：`reports/minara_five_adapt_search.py`、`reports/minara_five_adapt_refine.py`
+搜索脚本：`../../../scripts/research/minara_five_adapt_search.py`、`../../../scripts/research/minara_five_adapt_refine.py`
 
 结果文件：`archive/reports/legacy/minara_five_adapt_btc_hype_refined.json`、 `archive/reports/legacy/minara_five_adapt_btc_hype_refined_top_by_group.csv`。

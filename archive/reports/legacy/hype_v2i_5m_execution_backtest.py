@@ -75,7 +75,7 @@ def main() -> None:
             "entries": 145,
         },
     }
-    out = Path("reports/hype_v2i_5m_execution_backtest.json")
+    out = Path("archive/reports/legacy/hype_v2i_5m_execution_backtest.json")
     out.write_text(json.dumps(result, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
     print(json.dumps(result, indent=2, ensure_ascii=False, default=str))
 

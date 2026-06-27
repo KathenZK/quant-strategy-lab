@@ -21,7 +21,7 @@ Source: Binance data lake + Polygon aggregates · Polygon span 2025-06-17 08:00 
 
 ## 分时段收益相关性
 
-X 轴：美东时段；Y 轴：15m 收益相关性与方向一致率。Source: reports/mu_binance_polygon_15m_alignment_by_session.csv。
+X 轴：美东时段；Y 轴：15m 收益相关性与方向一致率。Source: ../artifacts/mu_binance_polygon_15m_alignment_by_session.csv。
 
 原 Canvas 使用图表展示；这里保留图表底层数据。
 
@@ -59,8 +59,8 @@ X 轴：美东时段；Y 轴：15m 收益差绝对值，单位 bps。常规盘�
 | 文件 | 内容 |
 | --- | --- |
 | data/external/us_equities/polygon/symbol=mu/timeframe=15m/mu_15m_2025-06-17_2026-06-17_adjusted.parquet | MU 一年 15m Polygon 数据；原 active downloader 已在数据层瘦身中移除 |
-| reports/mu_us_equity_polygon_15m_2025-06-17_2026-06-17_summary.json | Polygon 数据覆盖与价格统计 |
+| ../artifacts/mu_us_equity_polygon_15m_2025-06-17_2026-06-17_summary.json | Polygon 数据覆盖与价格统计 |
 | research/mu/scripts/compare_mu_binance_polygon_alignment.py | Binance vs Polygon 对齐脚本 |
-| reports/mu_binance_polygon_15m_alignment.json | 整体与分时段对齐统计 |
-| reports/mu_binance_polygon_15m_aligned.csv | UTC 15m 对齐明细 |
-| reports/mu_binance_polygon_15m_alignment_by_session.csv | 分时段统计 |
+| ../artifacts/mu_binance_polygon_15m_alignment.json | 整体与分时段对齐统计 |
+| ../artifacts/mu_binance_polygon_15m_aligned.csv | UTC 15m 对齐明细 |
+| ../artifacts/mu_binance_polygon_15m_alignment_by_session.csv | 分时段统计 |

@@ -146,4 +146,4 @@
 
 Cursor Canvas 和 Cursor 私有项目目录不是 canonical storage。Canvas 只能在用户明确要求时作为临时可视化界面；任何可持久化结论都必须同步写回对应 Markdown。
 
-顶层 `reports/` 是 git 忽略的临时运行缓存或旧脚本兼容目录，不再作为 active research 的引用入口。
+顶层 `reports/` 已退役，不再作为临时缓存、旧脚本兼容目录或 durable evidence 入口；需要保留的产物必须进入对应 `artifacts/` 或明确归档路径。

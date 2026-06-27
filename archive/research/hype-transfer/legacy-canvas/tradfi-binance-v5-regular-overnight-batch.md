@@ -5,7 +5,7 @@
 
 全部 Binance TradFi USDT perpetual，使用 V5 多空动态杠杆，只允许 regular+overnight 时段开仓，并按 24/5 去掉周末。
 
-Source: local Binance 15m data lake · funding not included to match existing V5 diagnostic · reports/tradfi_binance_v5_regular_overnight_batch.*
+Source: local Binance 15m data lake · funding not included to match existing V5 diagnostic · ../artifacts/tradfi_binance_v5_regular_overnight_batch.*
 
 > **主结论**
 > V5 regular+overnight 对 MU 很强，但不能直接推广到全 TradFi：100 个里只有 21 个正收益，35 个跑赢买持。它更适合筛候选，而不是统一上线。
@@ -66,7 +66,7 @@ Source: local Binance 15m data lake · funding not included to match existing V5
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_tradfi_binance_v5_regular_overnight_batch.py | V5 regular+overnight 全 TradFi 批量脚本 |
-| reports/tradfi_binance_v5_regular_overnight_batch.csv | 100 个合约最终总表 |
-| reports/tradfi_binance_v5_regular_overnight_batch.json | JSON 摘要和配置 |
-| reports/tradfi_binance_v5_regular_overnight_batch_trades.csv | 逐笔交易，含 open_at_end |
+| ../artifacts/tradfi_binance_v5_regular_overnight_batch.csv | 100 个合约最终总表 |
+| ../artifacts/tradfi_binance_v5_regular_overnight_batch.json | JSON 摘要和配置 |
+| ../artifacts/tradfi_binance_v5_regular_overnight_batch_trades.csv | 逐笔交易，含 open_at_end |
 | research/tradfi-binance-v5-regular-overnight-batch.md | Markdown 台账 |

@@ -21,7 +21,7 @@ Source: Binance data lake + Yahoo Finance chart API · aligned 2026-04-07 13:30 
 
 ## 分时段收益相关性
 
-X 轴：美东时段；Y 轴：15m 收益相关性与方向一致率。Source: reports/mu_binance_yahoo_15m_alignment_by_session.csv。
+X 轴：美东时段；Y 轴：15m 收益相关性与方向一致率。Source: ../artifacts/mu_binance_yahoo_15m_alignment_by_session.csv。
 
 原 Canvas 使用图表展示；这里保留图表底层数据。
 
@@ -59,7 +59,7 @@ X 轴：美东时段；Y 轴：15m 收益差绝对值，单位 bps。数值越�
 | 文件 | 内容 |
 | --- | --- |
 | scripts/compare_mu_binance_yahoo_alignment.py | 可重复对齐脚本 |
-| reports/mu_binance_yahoo_15m_alignment.json | 整体与分时段统计 |
-| reports/mu_binance_yahoo_15m_aligned.csv | 按 UTC 15m 对齐后的明细 |
-| reports/mu_binance_yahoo_15m_alignment_by_session.csv | premarket / regular / afterhours 分桶统计 |
+| ../artifacts/mu_binance_yahoo_15m_alignment.json | 整体与分时段统计 |
+| ../artifacts/mu_binance_yahoo_15m_aligned.csv | 按 UTC 15m 对齐后的明细 |
+| ../artifacts/mu_binance_yahoo_15m_alignment_by_session.csv | premarket / regular / afterhours 分桶统计 |
 | data/external/us_equities/yahoo/symbol=mu/timeframe=15m/mu_15m_60d_include_prepost.parquet | Yahoo MU 15m includePrePost 原始拉取结果 |

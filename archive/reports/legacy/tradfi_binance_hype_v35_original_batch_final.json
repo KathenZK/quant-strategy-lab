@@ -13730,7 +13730,7 @@
     }
   ],
   "artifacts": {
-    "csv": "reports/tradfi_binance_hype_v35_original_batch_final.csv",
-    "trades": "reports/tradfi_binance_hype_v35_original_batch_trades_final.csv"
+    "csv": "archive/reports/legacy/tradfi_binance_hype_v35_original_batch_final.csv",
+    "trades": "archive/reports/legacy/tradfi_binance_hype_v35_original_batch_trades_final.csv"
   }
 }

@@ -18,5 +18,5 @@ This is the family-level reading path for Binance HYPEUSDT `15m` multi-indicator
 ## Evidence Policy
 
 - Prefer this family README, durable Markdown reports, and artifacts over scratch outputs.
-- Top-level `reports/` is not durable evidence for this family.
+- Top-level `reports/` is retired and is not durable evidence for this family.
 - Negative findings should be written here or in a durable diagnostic note instead of hidden by additional parameter search.

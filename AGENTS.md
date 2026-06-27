@@ -58,9 +58,9 @@ HYPE 版本号只有放在具体策略家族里才有意义。
 - 新 family 目录创建时至少包含 `README.md`、`decision-log.md`、`scripts/`、`artifacts/`；按需要再建 `diagnostics/`、`ablations/`、`live-specs/`、`research-notes/`。
 - 探索产生的一次性脚本放在对应 `research/.../scripts/` 目录。
 - 最终结论必须保存到对应 family 的 repository-tracked Markdown 文档中，位置在 `research/` 下。
-- 需要保留的 JSON、CSV、HTML 和 trade-path 输出放在对应 `research/.../artifacts/` 目录；顶层 `reports/` 只用于 scratch 或 legacy local cache。
+- 需要保留的 JSON、CSV、HTML 和 trade-path 输出放在对应 `research/.../artifacts/` 目录；顶层 `reports/` 已退役，不再用于 scratch、cache 或 durable evidence。
 - 如果 Markdown 报告引用了某个生成文件，该文件就是 durable evidence，应放在同一 topic/family 的 `artifacts/` 目录，而不是顶层 `reports/`。
-- 不要把 `reports/` 里的所有文件整批提升到 `artifacts/`；只迁移被引用或明确需要保留的证据，并把 Markdown 链接从 `reports/...` 改掉。
+- 不要从已退役的顶层 `reports/` 批量提升所有旧文件；只迁移被引用或明确需要保留的证据，并把 Markdown 链接改到目标 `artifacts/` 或归档路径。
 - 新研究报告默认使用中文，除非用户明确要求其他语言。
 - 不要在 Cursor Canvas 文件或 Cursor 私有项目目录里创建研究报告、台账或长期分析。
 - Canvas 只能在用户明确要求时作为临时可视化界面；如果 Canvas 产生了可持久化结论，完成前必须同步写回对应 `research/` Markdown 文件。

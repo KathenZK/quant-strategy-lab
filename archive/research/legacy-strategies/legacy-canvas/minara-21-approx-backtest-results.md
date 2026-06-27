@@ -71,6 +71,6 @@
 
 ## 产物
 
-脚本：`reports/minara_21_approx_backtest.py`
+脚本：`../../../scripts/research/minara_21_approx_backtest.py`
 
 结果：`archive/reports/legacy/minara_21_approx_btc_hype.json`、 `archive/reports/legacy/minara_21_approx_btc_hype_summary.csv`、 `archive/reports/legacy/minara_21_approx_btc_hype_trades.csv`。

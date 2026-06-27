@@ -45,7 +45,7 @@
 
 ## 报告产物
 
-保留型报告文件位于 `artifacts/`；临时草稿才放顶层 `reports/`：
+保留型报告文件位于 `artifacts/`；顶层 `reports/` 已退役，不再作为临时草稿目录：
 
 - `hype_5m_indicator_search.json`
 - `hype_5m_indicator_search_ranking.csv`

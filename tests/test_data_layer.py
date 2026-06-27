@@ -22,7 +22,7 @@ def _layout(tmp_path: Path) -> DataLakeLayout:
         raw_dir=tmp_path / "data" / "raw",
         normalized_dir=tmp_path / "data" / "normalized",
         features_dir=tmp_path / "data" / "features",
-        reports_dir=tmp_path / "reports",
+        cache_dir=tmp_path / "cache",
     )
 
 

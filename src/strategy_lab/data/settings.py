@@ -27,7 +27,7 @@ def _looks_like_profile_storage(value: object) -> bool:
     path = Path(value)
     if path.is_absolute():
         return False
-    return len(path.parts) >= 2 and path.parts[0] in {"data", "reports"}
+    return len(path.parts) >= 2 and path.parts[0] == "data"
 
 
 def _uses_shared_storage(storage: dict[str, Any]) -> bool:
@@ -36,7 +36,7 @@ def _uses_shared_storage(storage: dict[str, Any]) -> bool:
         return _coerce_bool(explicit, default=True)
     return any(
         _looks_like_profile_storage(storage.get(key))
-        for key in ("root_dir", "raw_dir", "normalized_dir", "features_dir", "reports_dir", "registry_db_path")
+        for key in ("root_dir", "raw_dir", "normalized_dir", "features_dir", "cache_dir", "registry_db_path")
     )
 
 
@@ -53,7 +53,7 @@ class StorageConfig:
     raw_dir: Path
     normalized_dir: Path
     features_dir: Path
-    reports_dir: Path
+    cache_dir: Path
     registry_db_path: Path
 
 
@@ -91,8 +91,8 @@ def default_settings(project_root: Path | None = None) -> AppSettings:
             raw_dir=root / "data" / "raw",
             normalized_dir=root / "data" / "normalized",
             features_dir=root / "data" / "features",
-            reports_dir=root / "reports",
-            registry_db_path=root / "reports" / "_registry" / "runs.sqlite",
+            cache_dir=root / "data" / "cache",
+            registry_db_path=root / "data" / "cache" / "_registry" / "runs.sqlite",
         ),
         exchanges=[
             ExchangeConfig(name="binance", quote_assets=["USDT", "USDC"]),
@@ -129,7 +129,7 @@ def load_settings(path: str | Path | None = None) -> AppSettings:
         raw_dir = defaults.storage.raw_dir
         normalized_dir = defaults.storage.normalized_dir
         features_dir = defaults.storage.features_dir
-        reports_dir = defaults.storage.reports_dir
+        cache_dir = defaults.storage.cache_dir
         registry_db_path = defaults.storage.registry_db_path
     else:
         root_dir = _resolve_storage_path(storage.get("root_dir"), default=defaults.storage.root_dir, project_root=project_root)
@@ -140,8 +140,8 @@ def load_settings(path: str | Path | None = None) -> AppSettings:
             project_root=project_root,
         )
         features_dir = _resolve_storage_path(storage.get("features_dir"), default=defaults.storage.features_dir, project_root=project_root)
-        reports_dir = _resolve_storage_path(storage.get("reports_dir"), default=defaults.storage.reports_dir, project_root=project_root)
-        registry_db_default = reports_dir / "_registry" / "runs.sqlite"
+        cache_dir = _resolve_storage_path(storage.get("cache_dir"), default=defaults.storage.cache_dir, project_root=project_root)
+        registry_db_default = cache_dir / "_registry" / "runs.sqlite"
         registry_db_path = _resolve_storage_path(
             storage.get("registry_db_path"),
             default=registry_db_default,
@@ -156,7 +156,7 @@ def load_settings(path: str | Path | None = None) -> AppSettings:
             raw_dir=raw_dir,
             normalized_dir=normalized_dir,
             features_dir=features_dir,
-            reports_dir=reports_dir,
+            cache_dir=cache_dir,
             registry_db_path=registry_db_path,
         ),
         exchanges=[

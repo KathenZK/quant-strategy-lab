@@ -18,10 +18,10 @@ from research_hype_v14_main_backfill import v14_spec
 
 DATA_LAKE_ROOT = Path("data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m")
 SYMBOL_FILE = "symbol=btc_usdt_usdt.parquet"
-CSV_PATH = Path("reports/btc_v14_transfer.csv")
-JSON_PATH = Path("reports/btc_v14_transfer.json")
-TRADES_PATH = Path("reports/btc_v14_transfer_trades.csv")
-SENSITIVITY_PATH = Path("reports/btc_v14_transfer_allocation_sensitivity.csv")
+CSV_PATH = Path("archive/research/hype-transfer/artifacts/btc_v14_transfer.csv")
+JSON_PATH = Path("archive/research/hype-transfer/artifacts/btc_v14_transfer.json")
+TRADES_PATH = Path("archive/research/hype-transfer/artifacts/btc_v14_transfer_trades.csv")
+SENSITIVITY_PATH = Path("archive/research/hype-transfer/artifacts/btc_v14_transfer_allocation_sensitivity.csv")
 
 WINDOWS = {
     "1W": pd.Timedelta(days=7),

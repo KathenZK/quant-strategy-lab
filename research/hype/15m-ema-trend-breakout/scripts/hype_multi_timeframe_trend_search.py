@@ -57,7 +57,8 @@ def main() -> None:
         "top_hourly_candidates": candidates[:20],
         "top_15m_validated": validated[:20],
     }
-    out = Path("reports/hype_multi_timeframe_trend_search.json")
+    out = Path("research/hype/15m-ema-trend-breakout/artifacts/hype_multi_timeframe_trend_search.json")
+    out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(result, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
     print(json.dumps(result, indent=2, ensure_ascii=False, default=str))
 

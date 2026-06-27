@@ -91,7 +91,7 @@ data/normalized/ohlcv/
 - `scripts/` 放只服务该研究的一次性复现、搜索、审计脚本。
 - `artifacts/` 放需要随报告保留的 JSON、CSV、HTML、交易路径图等产物。
 
-只有可复用的数据湖内核、归一化、质量审计、特征构建或因子计算工具，才应进入 `src/strategy_lab/`。交易所抓取、补洞、回测搜索和一次性导出默认放在对应 `research/.../scripts/`，并必须记录数据来源与质量校验。顶层 `reports/` 仍被 git 忽略，只能作为临时草稿或旧脚本缓存，不再作为 active research 的引用入口。
+只有可复用的数据湖内核、归一化、质量审计、特征构建或因子计算工具，才应进入 `src/strategy_lab/`。交易所抓取、补洞、回测搜索和一次性导出默认放在对应 `research/.../scripts/`，并必须记录数据来源与质量校验。不要创建顶层 `reports/` 或任何全局报告缓存目录；临时实验输出和需要保留的证据都应由对应研究目录本地管理，保留型 JSON/CSV/HTML/交易路径图进入该目录的 `artifacts/`。
 
 ## HYPE 家族规则
 

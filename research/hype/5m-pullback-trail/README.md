@@ -72,7 +72,7 @@ File naming rule for dotted versions: for newly created files, preserve the dot 
 
 ## Local Report Artifacts
 
-Retained report artifacts live under `artifacts/`. Use top-level `reports/` only for scratch runs; cite `artifacts/` when a JSON, CSV, or HTML file supports a durable report.
+Retained report artifacts live under `artifacts/`. Top-level `reports/` is retired; cite `artifacts/` when a JSON, CSV, or HTML file supports a durable report.
 
 Scripts:
 

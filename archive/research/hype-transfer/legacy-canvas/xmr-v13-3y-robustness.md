@@ -3,7 +3,7 @@
 > 迁移说明：本文由 legacy Cursor Canvas `xmr-v13-3y-robustness.canvas.tsx` 自动转换为 Markdown；原 Canvas 未删除，仅作为历史来源。
 > 归类：Cross-asset / transfer legacy Canvas。
 
-本页使用 Binance XMRUSDT 永续 15m trade K、mark K 和 funding。数据已写入本地数据湖， 回测缓存为 reports/xmr_binance_futures_15m_3y_trade_mark_funding.parquet。 数据范围 2023-05-07 08:45 UTC 至 2026-05-20 08:45 UTC。
+本页使用 Binance XMRUSDT 永续 15m trade K、mark K 和 funding。数据已写入本地数据湖， 回测缓存为 ../artifacts/xmr_binance_futures_15m_3y_trade_mark_funding.parquet。 数据范围 2023-05-07 08:45 UTC 至 2026-05-20 08:45 UTC。
 
 ### 关键指标
 
@@ -95,4 +95,4 @@
 
 结论上，XMR 的最近一年结果不能代表三年稳定性。参数层面，24h 趋势禁入需要比 HYPE 更紧， 三年网格更偏向 3% 而不是 4% 或 6%；ATR窗口从 288 改到 384 也更适合三年样本。 但即使这样，早期 365 天切片仍有较大亏损。XMR 若要实盘，应继续增加 regime 过滤， 或采用低仓 ATR384 trend3 版本作为保守观察对象。
 
-明细文件：reports/xmr_v13_3y_parameter_robustness_oneway.csv， reports/xmr_v13_3y_parameter_robustness_grid.csv， reports/xmr_v13_3y_time_slice_backtests.csv， reports/xmr_v13_3y_time_slice_summary.csv。
+明细文件：../artifacts/xmr_v13_3y_parameter_robustness_oneway.csv， ../artifacts/xmr_v13_3y_parameter_robustness_grid.csv， ../artifacts/xmr_v13_3y_time_slice_backtests.csv， ../artifacts/xmr_v13_3y_time_slice_summary.csv。

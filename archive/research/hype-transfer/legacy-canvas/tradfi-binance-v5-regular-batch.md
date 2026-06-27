@@ -5,7 +5,7 @@
 
 全部 Binance TradFi USDT perpetual，使用 V5 多空动态杠杆，只允许美股 regular session 开仓。
 
-Source: local Binance 15m data lake · funding not included · reports/tradfi_binance_v5_regular_batch.*
+Source: local Binance 15m data lake · funding not included · ../artifacts/tradfi_binance_v5_regular_batch.*
 
 > **主结论**
 > regular-only 全板块更稳：正收益和跑赢买持略多，平均收益和中位 MDD 都优于 regular+overnight。但 MU、WDC、MRVL 这类标的夜盘贡献很大，不能一刀切关闭 overnight。
@@ -86,7 +86,7 @@ Source: local Binance 15m data lake · funding not included · reports/tradfi_bi
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_tradfi_binance_v5_regular_batch.py | V5 regular-only 批量脚本 |
-| reports/tradfi_binance_v5_regular_batch.csv | 100 个合约 regular-only 总表 |
-| reports/tradfi_binance_v5_regular_batch.json | JSON 摘要和配置 |
-| reports/tradfi_binance_v5_regular_batch_trades.csv | 逐笔交易 |
+| ../artifacts/tradfi_binance_v5_regular_batch.csv | 100 个合约 regular-only 总表 |
+| ../artifacts/tradfi_binance_v5_regular_batch.json | JSON 摘要和配置 |
+| ../artifacts/tradfi_binance_v5_regular_batch_trades.csv | 逐笔交易 |
 | research/tradfi-binance-v5-regular-batch.md | Markdown 台账 |

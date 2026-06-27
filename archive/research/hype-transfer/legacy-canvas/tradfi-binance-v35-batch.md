@@ -5,7 +5,7 @@
 
 自动筛选 Binance USD-M `TRADIFI_PERPETUAL` USDT 合约，拉取 15m K线并运行原版 HYPE V35。去周末诊断表示原版 B0 只过滤周末开仓。
 
-Source: Binance FAPI · since 2026-04-01 UTC · Result files in reports/tradfi_binance_hype_v35_original_batch_final.*
+Source: Binance FAPI · since 2026-04-01 UTC · Result files in archive/reports/legacy/tradfi_binance_hype_v35_original_batch_final.*
 
 > **主结论**
 > 原版 V35 不能直接泛化到整个 TradFi 板块：B0 去周末诊断只有 23 个正收益、34 个跑赢买持。商品类整体最差；权益类分化明显，适合先作为候选池筛选，再逐个做 session-aware 和动态杠杆迁移。

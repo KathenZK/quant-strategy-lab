@@ -30,7 +30,7 @@ When citing this family, use names like `HYPE-CC-V13`, `HYPE-CC-V21`, or `HYPE-C
 
 ## Local Report Artifacts
 
-New retained artifacts for this family should live under `artifacts/`. Historical migrated Canvas notes may still mention old `reports/` filenames as source context.
+New retained artifacts for this family should live under `artifacts/`. Top-level `reports/` is retired; migrated Canvas notes should point to retained `artifacts/` or explicit archive paths.
 
 Historical report filename families observed for this lineage:
 

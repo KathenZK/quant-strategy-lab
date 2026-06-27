@@ -9,8 +9,8 @@ def test_default_storage_paths_live_under_repository_root() -> None:
     settings = default_settings()
 
     assert settings.storage.root_dir == repository_root / "data"
-    assert settings.storage.reports_dir == repository_root / "reports"
-    assert settings.storage.registry_db_path == repository_root / "reports" / "_registry" / "runs.sqlite"
+    assert settings.storage.cache_dir == repository_root / "data" / "cache"
+    assert settings.storage.registry_db_path == repository_root / "data" / "cache" / "_registry" / "runs.sqlite"
 
 
 def test_relative_profile_storage_converges_to_shared_paths(tmp_path: Path) -> None:
@@ -24,7 +24,7 @@ storage:
   raw_dir: data/binance-recent1y/raw
   normalized_dir: data/binance-recent1y/normalized
   features_dir: data/binance-recent1y/features
-  reports_dir: reports/binance-recent1y
+  cache_dir: data/cache/binance-recent1y
 """.strip(),
         encoding="utf-8",
     )
@@ -34,7 +34,7 @@ storage:
 
     assert settings.storage.root_dir == defaults.storage.root_dir
     assert settings.storage.normalized_dir == defaults.storage.normalized_dir
-    assert settings.storage.reports_dir == defaults.storage.reports_dir
+    assert settings.storage.cache_dir == defaults.storage.cache_dir
     assert settings.storage.registry_db_path == defaults.storage.registry_db_path
 
 
@@ -50,7 +50,7 @@ storage:
   raw_dir: data/raw
   normalized_dir: data/normalized
   features_dir: data/features
-  reports_dir: reports
+  cache_dir: data/cache
 """.strip(),
         encoding="utf-8",
     )
@@ -62,8 +62,8 @@ storage:
     assert settings.storage.raw_dir == repository_root / "data" / "raw"
     assert settings.storage.normalized_dir == repository_root / "data" / "normalized"
     assert settings.storage.features_dir == repository_root / "data" / "features"
-    assert settings.storage.reports_dir == repository_root / "reports"
-    assert settings.storage.registry_db_path == repository_root / "reports" / "_registry" / "runs.sqlite"
+    assert settings.storage.cache_dir == repository_root / "data" / "cache"
+    assert settings.storage.registry_db_path == repository_root / "data" / "cache" / "_registry" / "runs.sqlite"
 
 
 def test_absolute_storage_paths_remain_isolated_for_tests(tmp_path: Path) -> None:
@@ -77,7 +77,7 @@ storage:
   raw_dir: {tmp_path / "data" / "raw"}
   normalized_dir: {tmp_path / "data" / "normalized"}
   features_dir: {tmp_path / "data" / "features"}
-  reports_dir: {tmp_path / "reports"}
+  cache_dir: {tmp_path / "cache"}
 """.strip(),
         encoding="utf-8",
     )
@@ -85,5 +85,5 @@ storage:
     settings = load_settings(config_path)
 
     assert settings.storage.root_dir == tmp_path / "data"
-    assert settings.storage.reports_dir == tmp_path / "reports"
-    assert settings.storage.registry_db_path == tmp_path / "reports" / "_registry" / "runs.sqlite"
+    assert settings.storage.cache_dir == tmp_path / "cache"
+    assert settings.storage.registry_db_path == tmp_path / "cache" / "_registry" / "runs.sqlite"

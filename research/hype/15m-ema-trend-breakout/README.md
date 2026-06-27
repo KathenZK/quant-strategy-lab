@@ -35,7 +35,7 @@ When citing this family, use names like `HYPE-EMA-TB-V30`, `HYPE-EMA-TB-V35`, or
 
 ## Local Report Artifacts
 
-New retained artifacts for this family should live under `artifacts/`. Historical migrated Canvas notes may still mention old `reports/` filenames as source context.
+New retained artifacts for this family should live under `artifacts/`. Top-level `reports/` is retired; migrated Canvas notes should point to retained `artifacts/` or explicit archive paths.
 
 Trend-breakout reports often use filenames such as:
 

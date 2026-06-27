@@ -55,7 +55,7 @@ def main() -> None:
         "lower_drawdown_candidates": [row for row in candidates if row["full"]["max_drawdown"] > BASE_MAX_DRAWDOWN][:20],
         "top_candidates": candidates[:50],
     }
-    out = Path("reports/hype_v2i_parameter_tuning_search.json")
+    out = Path("archive/reports/legacy/hype_v2i_parameter_tuning_search.json")
     out.write_text(json.dumps(result, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
     print(json.dumps(result, indent=2, ensure_ascii=False, default=str))
 

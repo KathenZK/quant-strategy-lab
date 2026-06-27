@@ -59,7 +59,7 @@ The search and V17 ablation did not find a candidate that satisfies `50x return`
 
 ## Local Report Artifacts
 
-Retained report artifacts live under `artifacts/`. Use top-level `reports/` only for scratch runs; cite `artifacts/` when a JSON, CSV, or HTML file supports a durable report.
+Retained report artifacts live under `artifacts/`. Top-level `reports/` is retired; cite `artifacts/` when a JSON, CSV, or HTML file supports a durable report.
 
 Key historical report filename families:
 

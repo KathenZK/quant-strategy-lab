@@ -48,4 +48,4 @@ Window: 2026-02-13 06:15 UTC to 2026-05-13 06:15 UTC. Strategy remains 3x long/s
 > **Sanity Check**
 > On the full available Binance sample from 2025-05-30, the optimized defaults are still positive at +138.05%, but max drawdown is -92.65%. This is a high-risk, recent-regime-sensitive rule, not a production-ready system.
 
-Report: reports/runs/candle_count_short_binance_perp_15m_3m_optimized/20260513T070113646054Z/backtest_report.md
+Report: ../artifacts/runs/candle_count_short_binance_perp_15m_3m_optimized/20260513T070113646054Z/backtest_report.md

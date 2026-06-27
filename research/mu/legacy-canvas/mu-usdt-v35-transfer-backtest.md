@@ -66,6 +66,6 @@ X 轴：退出原因；Y 轴：交易次数与该类交易 PnL 合计百分比�
 | --- | --- |
 | data/normalized/ohlcv/.../symbol=mu_usdt_usdt.parquet | MUUSDT 15m OHLCV normalized data lake partitions |
 | data/normalized/funding_rates/.../symbol=mu_usdt_usdt.parquet | MUUSDT funding normalized data lake partitions |
-| reports/mu_usdt_data_lake_summary.json | 数据湖写入摘要 |
-| reports/mu_usdt_v35_backtest_summary.json | V35 回测结构化结果 |
-| reports/mu_usdt_v35_backtest_trades.csv | 34 笔交易明细 |
+| ../artifacts/mu_usdt_data_lake_summary.json | 数据湖写入摘要 |
+| ../artifacts/mu_usdt_v35_backtest_summary.json | V35 回测结构化结果 |
+| ../artifacts/mu_usdt_v35_backtest_trades.csv | 34 笔交易明细 |

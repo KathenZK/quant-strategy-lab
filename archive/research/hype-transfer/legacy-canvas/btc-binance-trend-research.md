@@ -30,7 +30,7 @@ Source: local data lake · Binance BTCUSDT perpetual 15m · 2025-05-15 to 2026-0
 
 > 图表数据未能完全自动解析，请按源 Canvas 复核。
 
-Chart: end-of-month equity multiple. X-axis: month. Y-axis: equity multiple. Source: reports/btc_trend_strategy_equity.csv and Binance BTC 15m close series.
+Chart: end-of-month equity multiple. X-axis: month. Y-axis: equity multiple. Source: ../artifacts/btc_trend_strategy_equity.csv and Binance BTC 15m close series.
 
 ### 年化倍数对比
 

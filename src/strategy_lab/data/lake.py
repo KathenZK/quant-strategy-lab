@@ -14,7 +14,7 @@ class DataLakeLayout:
     raw_dir: Path
     normalized_dir: Path
     features_dir: Path
-    reports_dir: Path
+    cache_dir: Path
     registry_db_path: Path | None = None
 
     @classmethod
@@ -24,12 +24,12 @@ class DataLakeLayout:
             raw_dir=settings.storage.raw_dir,
             normalized_dir=settings.storage.normalized_dir,
             features_dir=settings.storage.features_dir,
-            reports_dir=settings.storage.reports_dir,
+            cache_dir=settings.storage.cache_dir,
             registry_db_path=settings.storage.registry_db_path,
         )
 
     def ensure_directories(self) -> None:
-        for path in (self.root_dir, self.raw_dir, self.normalized_dir, self.features_dir, self.reports_dir):
+        for path in (self.root_dir, self.raw_dir, self.normalized_dir, self.features_dir, self.cache_dir):
             path.mkdir(parents=True, exist_ok=True)
 
     def dataset_root(self, layer: str, kind: DatasetKind) -> Path:
@@ -75,10 +75,10 @@ class DataLakeLayout:
             "raw_dir": str(self.raw_dir),
             "normalized_dir": str(self.normalized_dir),
             "features_dir": str(self.features_dir),
-            "reports_dir": str(self.reports_dir),
+            "cache_dir": str(self.cache_dir),
             "registry_db_path": str(self.run_registry_db_path),
         }
 
     @property
     def run_registry_db_path(self) -> Path:
-        return self.registry_db_path or (self.reports_dir / "_registry" / "runs.sqlite")
+        return self.registry_db_path or (self.cache_dir / "_registry" / "runs.sqlite")

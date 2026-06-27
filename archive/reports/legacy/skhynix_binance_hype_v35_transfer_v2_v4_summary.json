@@ -64,8 +64,8 @@
     }
   },
   "artifacts": {
-    "trades": "reports/skhynix_binance_hype_v35_transfer_v2_v4_trades.csv",
-    "equity": "reports/skhynix_binance_hype_v35_transfer_v2_v4_equity.csv"
+    "trades": "archive/reports/legacy/skhynix_binance_hype_v35_transfer_v2_v4_trades.csv",
+    "equity": "archive/reports/legacy/skhynix_binance_hype_v35_transfer_v2_v4_equity.csv"
   },
   "notes": [
     "SKHYNIXUSDT has much shorter Binance history than MUUSDT in this data pull.",

@@ -8,7 +8,7 @@ storage:
   raw_dir: data/raw
   normalized_dir: data/normalized
   features_dir: data/features
-  reports_dir: reports
+  reports_dir: data/reports
 
 exchanges:
   - name: binance

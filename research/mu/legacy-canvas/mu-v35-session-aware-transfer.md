@@ -55,12 +55,12 @@ V1-V3 来自 Binance MUUSDT；V4 同时记录 Binance regular+overnight 补跑�
 | --- | --- |
 | research/mu/scripts/research_mu_v35_session_aware.py | Binance MUUSDT session-aware 研究脚本 |
 | research/mu/scripts/research_mu_polygon_hype_v35_transfer.py | Polygon 一年真股与动态杠杆验证脚本 |
-| reports/mu_usdt_v35_session_aware_ledger.csv | V1-V14 Binance 时段版本台账 |
+| ../artifacts/mu_usdt_v35_session_aware_ledger.csv | V1-V14 Binance 时段版本台账 |
 | research/mu/artifacts/mu_polygon_hype_v35_dynamic_leverage_summary.json | V4 动态杠杆验证摘要 |
 | research/mu/artifacts/mu_polygon_hype_v35_dynamic_leverage_ledger.csv | 动态杠杆 1W/1M/3M/ALL 台账 |
-| reports/mu_binance_dynamic_regular_overnight_summary.json | V4 Binance regular+overnight 动态补跑摘要 |
-| reports/mu_binance_dynamic_regular_overnight_ledger.csv | V2 fixed vs V4 dynamic Binance 对照台账 |
+| ../artifacts/mu_binance_dynamic_regular_overnight_summary.json | V4 Binance regular+overnight 动态补跑摘要 |
+| ../artifacts/mu_binance_dynamic_regular_overnight_ledger.csv | V2 fixed vs V4 dynamic Binance 对照台账 |
 | research/mu/artifacts/mu_polygon_hype_v35_dynamic_long_short_summary.json | V4 加空头对照诊断 |
 | research/mu/mu-hype-xfer-session-aware-ledger.md | Markdown 主账 |
-| reports/mu_usdt_v35_session_aware_trades.csv | Binance 候选交易明细 |
+| ../artifacts/mu_usdt_v35_session_aware_trades.csv | Binance 候选交易明细 |
 | research/mu/artifacts/mu_polygon_hype_v35_dynamic_leverage_trades.csv | 动态杠杆交易明细 |

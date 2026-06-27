@@ -82,7 +82,7 @@ X 轴：V14 动态仓位缩放；Y 轴：近 1 年收益/回撤百分比。
 | 文件 | 内容 |
 | --- | --- |
 | scripts/research_btc_v14_transfer.py | BTC V14 迁移回测脚本 |
-| reports/btc_v14_transfer.csv | 窗口表现 |
-| reports/btc_v14_transfer_allocation_sensitivity.csv | 仓位缩放敏感性 |
-| reports/btc_v14_transfer_trades.csv | 近 1 年交易明细 |
-| reports/btc_v14_transfer.json | 完整结构化结果 |
+| ../artifacts/btc_v14_transfer.csv | 窗口表现 |
+| ../artifacts/btc_v14_transfer_allocation_sensitivity.csv | 仓位缩放敏感性 |
+| ../artifacts/btc_v14_transfer_trades.csv | 近 1 年交易明细 |
+| ../artifacts/btc_v14_transfer.json | 完整结构化结果 |

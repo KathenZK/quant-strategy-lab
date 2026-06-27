@@ -10,9 +10,9 @@ alwaysApply: true
 - Before starting a new strategy research line, check `research/README.md` and the relevant asset `README.md`. If the timeframe or strategy mechanism is new, create a separate directory named `research/<asset>/<timeframe>-<strategy-family-slug>/`, for example `research/hype/1m-ema-crossover/`, `research/hype/15m-ema-crossover/`, or `research/hype/5m-pullback-trail/`.
 - Do not place a new timeframe into an existing family only because the indicators are similar; initialize a new family directory with at least `README.md`, `decision-log.md`, `scripts/`, and `artifacts/`.
 - Store current one-off research scripts under the relevant `research/.../scripts/` directory, not under `archive/scripts/research/`.
-- Store retained JSON, CSV, HTML, and trade-path outputs under the relevant `research/.../artifacts/` directory. Use top-level `reports/` only for scratch runs or legacy local cache.
+- Store retained JSON, CSV, HTML, and trade-path outputs under the relevant `research/.../artifacts/` directory. Top-level `reports/` is retired and must not be used for scratch runs, caches, or durable evidence.
 - If a Markdown report cites a generated file, treat that file as durable evidence: place it under the same topic/family `artifacts/` directory and update the Markdown link away from `reports/...`.
-- Do not bulk-promote every file from top-level `reports/` into `artifacts/`; migrate only cited or intentionally retained evidence.
+- Do not bulk-promote every old top-level `reports/` file into `artifacts/`; migrate only cited or intentionally retained evidence.
 - Do not create durable research content in Cursor Canvas files or Cursor-private project directories.
 - Canvas may be used only as a temporary visualization surface when the user explicitly requests it.
 - If temporary Canvas work produces a durable conclusion, mirror that conclusion into the appropriate `research/` Markdown file before finishing.

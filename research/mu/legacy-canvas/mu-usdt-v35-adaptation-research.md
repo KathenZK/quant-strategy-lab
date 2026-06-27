@@ -80,7 +80,7 @@ X 轴：候选策略；Y 轴：前半段/后半段收益百分比，用于观察
 
 | 文件 | 内容 |
 | --- | --- |
-| reports/mu_usdt_v35_adaptation_research.json | 低自由度改造全量候选结果 |
-| reports/mu_usdt_v35_adaptation_targeted.json | TP10/SL9 附近仓位与冷却敏感性 |
-| reports/mu_usdt_v35_backtest_trades.csv | V35 原版交易明细 |
-| reports/mu_usdt_v35_backtest_summary.json | V35 原版结构化摘要 |
+| ../artifacts/mu_usdt_v35_adaptation_research.json | 低自由度改造全量候选结果 |
+| ../artifacts/mu_usdt_v35_adaptation_targeted.json | TP10/SL9 附近仓位与冷却敏感性 |
+| ../artifacts/mu_usdt_v35_backtest_trades.csv | V35 原版交易明细 |
+| ../artifacts/mu_usdt_v35_backtest_summary.json | V35 原版结构化摘要 |

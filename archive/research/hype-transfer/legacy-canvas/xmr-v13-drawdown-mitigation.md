@@ -3,7 +3,7 @@
 > 迁移说明：本文由 legacy Cursor Canvas `xmr-v13-drawdown-mitigation.canvas.tsx` 自动转换为 Markdown；原 Canvas 未删除，仅作为历史来源。
 > 归类：Cross-asset / transfer legacy Canvas。
 
-数据源为 Binance XMRUSDT 永续 15m trade K、mark K 和 funding，缓存文件为 reports/xmr_binance_futures_15m_trade_mark_funding.parquet。回测窗口统一截止到 2026-05-20 07:30 UTC，滚动窗口为 1周、1月、3个月、半年、1年。
+数据源为 Binance XMRUSDT 永续 15m trade K、mark K 和 funding，缓存文件为 ../artifacts/xmr_binance_futures_15m_trade_mark_funding.parquet。回测窗口统一截止到 2026-05-20 07:30 UTC，滚动窗口为 1周、1月、3个月、半年、1年。
 
 ### 关键指标
 
@@ -68,4 +68,4 @@
 
 当前最值得继续验证的是 V13 2x+trend4 稳健版。它把 XMR 原始 V13 的 1年最大回撤从 -42.37% 压到 -21.24%，同时 1年收益仍有 +372.52%。如果希望多保留进攻性， V13 target0.30+trend4 均衡版是第二候选，1年收益 +463.97%，最大回撤 -23.65%。 单独 trend4 版本收益最高，但更像进攻观察版，不建议只看这一年结果直接定为主版本。
 
-完整明细 CSV：reports/xmr_v13_drawdown_mitigation_windows.csv。最大回撤诊断： reports/xmr_v13_drawdown_diagnostics.json。
+完整明细 CSV：../artifacts/xmr_v13_drawdown_mitigation_windows.csv。最大回撤诊断： ../artifacts/xmr_v13_drawdown_diagnostics.json。
