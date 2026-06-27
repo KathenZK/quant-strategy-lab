@@ -1,0 +1,67 @@
+{
+  "family_id": "HYPE-5M-PBTR",
+  "strategy": "HYPE-5M-PBTR-V6.1",
+  "definition": {
+    "base": {
+      "strategy_name": "HYPE-5M-PBTR-V6",
+      "style": "pullback_reclaim",
+      "ema_fast": 21,
+      "ema_slow": 55,
+      "pullback_buffer": 0.01,
+      "side_mode": "long",
+      "require_candle": false,
+      "htf_threshold": 0.5,
+      "quality_feature": "dir_ret_bps",
+      "quality_window": 192,
+      "quality_threshold": 788.123,
+      "tp_atr": 2.5,
+      "sl_atr": 7.0,
+      "trail_atr": 0.0,
+      "time_exit_bars": 36
+    },
+    "leverage": 3.0
+  },
+  "summary": {
+    "strategy": "HYPE-5M-PBTR-V6.1",
+    "base": {
+      "strategy_name": "HYPE-5M-PBTR-V6",
+      "style": "pullback_reclaim",
+      "ema_fast": 21,
+      "ema_slow": 55,
+      "pullback_buffer": 0.01,
+      "side_mode": "long",
+      "require_candle": false,
+      "htf_threshold": 0.5,
+      "quality_feature": "dir_ret_bps",
+      "quality_window": 192,
+      "quality_threshold": 788.123,
+      "tp_atr": 2.5,
+      "sl_atr": 7.0,
+      "trail_atr": 0.0,
+      "time_exit_bars": 36
+    },
+    "leverage": 3.0,
+    "raw_signal_count": 1705,
+    "filtered_signal_count": 331,
+    "reason_counts": {
+      "target": 87,
+      "time_open": 68,
+      "stop_market": 2
+    },
+    "trades": 157.0,
+    "total_return": 4.08946063431773,
+    "max_dd": -0.2562982919069061,
+    "avg_trade": 0.011512907806098472,
+    "win_rate": 0.6369426751592356,
+    "profit_factor": 1.7732692611737462,
+    "payoff_ratio": 1.0107634788690352,
+    "worst_trade": -0.14810811847370753,
+    "best_trade": 0.09230243912687061
+  },
+  "outputs": {
+    "html": "research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6-1_trade_paths_2026-06-27.html",
+    "markdown": "research/hype/5m-pullback-trail/diagnostics/hype-5m-pbtr-v6-1-trade-paths-2026-06-27.md",
+    "trades": "research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6-1_trades_2026-06-27.csv",
+    "summary": "research/hype/5m-pullback-trail/artifacts/hype_5m_pbtr_v6-1_summary_2026-06-27.csv"
+  }
+}

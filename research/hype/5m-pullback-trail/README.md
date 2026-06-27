@@ -43,6 +43,11 @@ It is independent from:
 - `diagnostics/hype-5m-pbtr-v6-live-executable-search-2026-06-25.md`: leakage-aware executable-first V6 search using closed-bar signals, next-open entry, immediate bracket orders, conservative TP/SL ordering, and train-ranked candidate refinement.
 - `diagnostics/hype-5m-pbtr-v6-candidate-robustness-2026-06-25.md`: V6 neighborhood robustness check around the strongest executable base. Promotes a paper-only candidate built from EMA21/55 long pullback-reclaim, 16h momentum filter, fixed TP/SL, and a 36-bar time exit.
 - `ablations/hype-5m-pbtr-v6-full-parameter-ablation-2026-06-25.md`: formally records the V6 strategy definition and ablates every active parameter under the same live-executable bracket/timeout model.
+- `diagnostics/hype-5m-pbtr-v6-tp25-sizing-2026-06-27.md`: V6 sizing diagnostic for `TP=2.5ATR` with fixed and volatility-scaled leverage.
+- `diagnostics/hype-5m-pbtr-v6-1-trade-paths-2026-06-27.md`: promotes `TP=2.5ATR + fixed 3x` as `HYPE-5M-PBTR-V6.1` paper sizing variant and links the per-trade K-line HTML.
+- `diagnostics/hype-5m-pbtr-v6-1-tp-trigger-trailing-2026-06-27.md`: tests replacing V6.1 fixed TP with a trailing trigger. Fixed TP remains stronger than all tested trailing overlays.
+- `diagnostics/hype-5m-pbtr-v6-1-short-combo-search-2026-06-27.md`: searches short-only executable bracket candidates and combines them with V6.1 long-only under a one-position constraint; source report for the later V6.2 promotion.
+- `ablations/hype-5m-pbtr-v6-2-full-parameter-ablation-2026-06-28.md`: promotes `combo_short_rank2` to `HYPE-5M-PBTR-V6.2` after full parameter ablation; paper/live-dry-run candidate only, preferably 1x or tiny notional first.
 - `diagnostics/hype-5m-executable-broad-search-2026-06-25.md`: broad executable-only HYPE `5m` search across old indicator entry styles with entry-time bracket protection. Tests `13134` configurations against `>=20x` annualized, `>=50%` win rate, and `>-20%` drawdown. No configuration comes close; the best `>=100` trade row annualizes only about `1.05x`.
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`: V1/R05732 full parameter explanation and ablation.
 - `diagnostics/hype-5m-pbtr-v1-strict-live-audit-2026-06-27.md`: strict live-realistic audit for V1/R05732. Confirms the legacy stop-price fill backtest remains profitable, but V1 collapses under executable unlock stop/target handling and is not a rollback live candidate.
@@ -102,6 +107,11 @@ Scripts:
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_live_executable_search.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_candidate_robustness.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_full_ablation.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_tp25_sizing.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_1_trade_paths.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_1_tp_trigger_trailing.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_1_short_combo_search.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_full_ablation.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_ml_event_quality.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3-1_armed_pyramiding.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3-1_pb005_arm4.py`
@@ -184,6 +194,23 @@ Report files:
 - `artifacts/hype_5m_pbtr_v6_full_ablation_rolling.csv`
 - `artifacts/hype_5m_pbtr_v6_full_ablation_weekly.csv`
 - `artifacts/hype_5m_pbtr_v6_full_ablation_monthly.csv`
+- `artifacts/hype_5m_pbtr_v6_tp25_sizing_2026-06-27.json`
+- `artifacts/hype_5m_pbtr_v6_tp25_sizing_summary_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6_tp25_sizing_trades_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-1_2026-06-27.json`
+- `artifacts/hype_5m_pbtr_v6-1_summary_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-1_trades_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-1_trade_paths_2026-06-27.html`
+- `artifacts/hype_5m_pbtr_v6-1_tp_trigger_trailing_2026-06-27.json`
+- `artifacts/hype_5m_pbtr_v6-1_tp_trigger_trailing_summary_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-1_tp_trigger_trailing_trades_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-1_short_search_summary_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-1_short_combo_extended_summary_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-1_short_combo_side_breakdown_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-1_short_combo_slice_breakdown_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v6-2_full_ablation_2026-06-28.json`
+- `artifacts/hype_5m_pbtr_v6-2_full_ablation_summary_2026-06-28.csv`
+- `artifacts/hype_5m_pbtr_v6-2_baseline_trades_2026-06-28.csv`
 - `artifacts/hype_5m_pbtr_ml_event_quality_2026-06-27.json`
 - `artifacts/hype_5m_pbtr_ml_event_quality_events_2026-06-27.csv`
 - `artifacts/hype_5m_pbtr_ml_event_quality_scores_2026-06-27.csv`
