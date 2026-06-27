@@ -46,11 +46,12 @@ Created：2026-06-23
 
 | 层级  | 说明                                                   |
 | --- | ---------------------------------------------------- |
-| V1  | 第一版可实盘观察基线，来自 `HYPE_PP_R05732__dir_htf_ge_0.688442`。 |
+| V1  | 第一版历史基线，来自 `HYPE_PP_R05732__dir_htf_ge_0.688442`；strict live audit 后不再是可实盘观察候选。 |
 | V2  | 基于 V1 全参数消融后的同步微调版本。                                 |
 | V2.1 | 基于 V2 实盘成本消融后的参数简化和候选分支；不改变 `HYPE-5M-PBTR` 核心机制。       |
 | V3 | 独立高频候选：来自 `V2.1A`，移除 final `dir_htf` 过滤；不直接替代 V2.1A。       |
 | V4 | 来自 V3.3 样本内增强组合；严格 live-realistic trailing 口径下不再作为实盘交接版本。 |
+| V3.3.1 | V3.3 的实盘 stop-arm retry overlay 记录版；修复订单可审计性，但回测仍为 no-go。 |
 | V5 | executable-first 修复批次；V5/V5.1/V5.2 均未形成可交接生产版本。 |
 | V6 | 当前可实盘表达的 paper 候选：强动量多头回踩恢复 + 入场即固定 bracket + 时间退出。 |
 | 后缀  | 若后续只是改变过滤强度或执行保护，可用 V6.x；若改变核心机制，再升 V7。           |
@@ -63,7 +64,7 @@ Created：2026-06-23
 
 | 版本                | 核心变化                                                                                                | 状态                              | 全样本交易  | 年化        | 胜率       | payoff | 最大回撤     | 最差切片胜率   | 结论                                |
 | ----------------- | --------------------------------------------------------------------------------------------------- | ------------------------------- | ------ | --------- | -------- | ------ | -------- | -------- | --------------------------------- |
-| `HYPE-5M-PBTR-V1` | R05732 基线：`pullback_buffer=0.0025`，`tp_atr=1.875`，`stop_atr=0.75`，`dir_htf>=0.688442`               | live dry-run candidate          | `1341` | `14.97x`  | `54.29%` | `2.37` | `-7.77%` | `52.74%` | 实盘成本下收益仍为正，但胜率体验弱于旧默认成本口径。            |
+| `HYPE-5M-PBTR-V1` | R05732 基线：`pullback_buffer=0.0025`，`tp_atr=1.875`，`stop_atr=0.75`，`dir_htf>=0.688442`               | archived / strict no-go          | `1358` | `14.91x`  | `54.20%` | `2.37` | `-7.77%` | 见诊断 | 旧 stop-price fill 口径仍赚钱；strict live-realistic PF `0.637`、总收益 `-87.29%`，不能作为回退上线版本。            |
 | `HYPE-5M-PBTR-V2` | 同步微调：`pullback_buffer=0.01`，删除固定止盈，`stop_atr=0.5`，`roc_window=96`，`min_efficiency=0`，`dir_htf>=0.5` | research live-dry-run candidate | `2519` | `181.87x` | `52.44%` | `2.77` | `-7.01%` | `50.49%` | 实盘成本下仍明显优于 V1，频率和收益提高但胜率下降。 |
 | `HYPE-5M-PBTR-V2.1-clean` | V2 实盘成本口径简化：固定/移除不生效参数，保留核心入场与 ATR trailing exit。                                      | preferred simplified V2 expression | `2521` | `181.96x` | `52.44%` | `2.77` | `-7.01%` | 见报告 | 与 V2 实盘成本表现几乎一致，适合作为新解释/实现基线。 |
 | `HYPE-5M-PBTR-V2.1A` | 在 V2.1-clean 上放开 RSI 上下界。                                                                      | live monitor only                | `3146` | `352.15x` | `51.40%` | `2.64` | `-6.62%` | 见报告 | 严格 live-realistic 口径 PF 降至 `0.54`；本地 dry-run ledger 与即时 1ATR 止盈审计均未修复旧 stop 价入账问题，不应扩仓。 |
@@ -74,6 +75,7 @@ Created：2026-06-23
 | `HYPE-5M-PBTR-V3.1` | V3 上将 `min_hold_bars` 从 `6` 提高到 `9`。                                                        | high-frequency research candidate | `7263` | `212733795.80x` | `55.43%` | `3.38` | `-10.03%` | 见诊断 | 样本内显著增强胜率/PF，但回撤扩大；必须先小资金或 paper 验证。 |
 | `HYPE-5M-PBTR-V3.2` | V3.1 上删除剩余无贡献/负贡献入场过滤器，仅保留方向、pullback、min-hold 和 trailing。                             | preferred clean V3 expression | `8025` | `1324019761.54x` | `55.66%` | `3.31` | `-8.69%` | 见诊断 | 参数更简洁，收益和回撤均优于 V3.1；先作为 paper/dry-run 首选表达验证。 |
 | `HYPE-5M-PBTR-V3.3` | V3.2 的最小复现表达：删除所有兼容/关闭/保护/基本不触发参数，退出仅保留 `min_hold + ATR trailing`。 | archived research candidate | `8027` | `1327928815.51x` | `55.66%` | `3.31` | `-8.69%` | 见诊断 | 严格 live-realistic PF 降至 `0.58`；即时 TP 网格最佳 `2.5ATR` PF 仅 `0.615`，不再作为交接版本。 |
+| `HYPE-5M-PBTR-V3.3.1` | V3.3 + 实盘 stop-arm retry overlay：第 7 根尝试挂 stop，穿越时重试，第 10 根兜底市价。 | live monitor / no-go research | `8426` | `0.00x` | `40.17%` | `0.86` | `-100.00%` | 见诊断 | 1m 乐观口径 PF `0.580`；修复进程崩溃和审计问题，但保守/乐观 PF 均低于 `1`，上一单平仓价、五类入场过滤、退出 overlay 和轻量 ML 事件质量筛选均无效。 |
 | `HYPE-5M-PBTR-V4` | V3.3 有效单因子增强项组合：`EMA9/96 + stop_atr=0.25 + trail_atr=0.5 + min_hold_bars=18`。 | paper-live audit candidate | `5053` | `28884173450807.53x` | `72.95%` | `7.39` | `-11.27%` | 见审计 | 样本内显著强于 V3.3，但高度依赖锁仓期和 stop 成交质量；只能 paper-live/极小资金审计。 |
 | `HYPE-5M-PBTR-V6` | 可执行修复版：`EMA21/55` 多头回踩恢复 + `dir_ret192_bps>=788.123` + 入场即 `TP=3ATR/SL=7ATR` + `36` 根 K 超时。 | paper audit candidate | `147` | `1.70x` | `59.86%` | `1.15` | `-11.28%` | OOS PF `1.45` | 放弃旧 `min_hold + trailing` 成交假设，当前只允许 paper audit / 极小资金 dry-run，不是生产 sizing 版本。 |
 
@@ -130,6 +132,18 @@ Source candidate：`HYPE_PP_R05732__dir_htf_ge_0.688442`
 
 - 全样本约 `3.45` 笔/天，`24.13` 笔/周，`104.92` 笔/月。
 - forward 约 `6.27` 笔/天。
+
+strict live audit：`diagnostics/hype-5m-pbtr-v1-strict-live-audit-2026-06-27.md`。
+
+更新到 `2026-06-26 04:15 UTC` 的严格可执行复核结果：
+
+| 口径 | 交易数 | 总收益 | 年化 | 胜率 | PF | payoff | 最大回撤 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `legacy stop-price fill` | `1358` | `+1713.55%` | `14.91x` | `54.20%` | `2.806` | `2.372` | `-7.77%` |
+| `live-realistic` | `1357` | `-87.29%` | `0.15x` | `39.50%` | `0.637` | `0.976` | `-88.27%` |
+| `entry protective stop` | `1852` | `-94.87%` | `0.06x` | `21.00%` | `0.510` | `1.918` | `-94.98%` |
+
+结论：V1 旧口径确实赚钱，但严格 live-realistic 口径不赚钱。解锁时 stop 可正常挂上的比例只有 `31.47%`，`68.53%` 需要解锁市价退出；锁仓期曾触及初始 stop 的比例 `73.54%`，开仓即保护也会把 PF 压到 `0.510`。因此 V1 不是被后续版本简单“改坏”后才失效，V1 机制本身已经依赖 crossed/stale stop 或 target 的不可实盘成交假设，不能作为回退上线版本。
 
 ## V2 Specification
 
@@ -464,6 +478,88 @@ min_hold_bars = 9
 - `trail_atr=0` 虽数学结果极强，但会把 stop 贴到前高/前低，属于不可实盘复现的退化边界，必须剔除。
 - `stop_atr=0.25`、`min_hold_bars=12/18` 也是样本内增强候选，但都属于更激进/更紧的退出路径，不能直接替代 V3.3。
 
+### V3.3.1: Retry-Arm Overlay
+
+Canonical name：`HYPE-5M-PBTR-V3.3.1`
+
+基础报告：`diagnostics/hype-5m-pbtr-v33-retry-arm-2026-06-26.md`。
+
+上一单平仓价过滤测试：`diagnostics/hype-5m-pbtr-v3-3-1-prev-exit-filter-2026-06-27.md`。
+
+no-initial-stop + pullback buffer 网格：`diagnostics/hype-5m-pbtr-v3-3-1-no-initial-stop-buffer-grid-2026-06-27.md`。
+
+rescue search：`diagnostics/hype-5m-pbtr-v3-3-1-rescue-search-2026-06-27.md`。
+
+rescue neighborhood：`diagnostics/hype-5m-pbtr-v3-3-1-rescue-neighborhood-2026-06-27.md`。
+
+range10 早停止盈：`diagnostics/hype-5m-pbtr-v3-3-1-range10-take-profit-2026-06-27.md`。
+
+combo overlay search：`diagnostics/hype-5m-pbtr-v3-3-1-combo-overlay-2026-06-27.md`。
+
+filter directions：`diagnostics/hype-5m-pbtr-v3-3-1-filter-directions-2026-06-27.md`。
+
+ML event quality：`diagnostics/hype-5m-pbtr-ml-event-quality-2026-06-27.md`。
+
+V3.3.1 是 V3.3 的实盘执行 overlay 记录版，不改变原始入场信号和 trailing 公式，只改变 stop arming 的线上状态机：
+
+```text
+第 1-6 根：不挂策略 trailing stop。
+第 7 根开始：按原 trailing 规则计算 desired_stop 并尝试挂 reduce-only STOP_MARKET。
+若 Binance 返回 -2021 / Order would immediately trigger：记录 stop_arm_rejected，并按短间隔 retry。
+每根 5m K 收盘后仍按原 trailing 规则只允许收紧 stop。
+第 9 根收盘后仍未 arm：第 10 根处理周期 reduce-only 市价平仓。
+一旦 arm 成功：回到原 trailing stop 维护路径。
+```
+
+retry-arm 近似回测结果：
+
+| 口径 | 交易数 | 胜率 | PF | payoff | 最大回撤 | armed | deadline |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `5m_conservative` | `8344` | `40.33%` | `0.583` | `0.862` | `-100.00%` | `41.69%` | `58.31%` |
+| `5m_optimistic` | `8752` | `39.41%` | `0.566` | `0.871` | `-100.00%` | `55.06%` | `44.94%` |
+| `1m_conservative` | `8389` | `40.04%` | `0.574` | `0.860` | `-100.00%` | `43.96%` | `56.04%` |
+| `1m_optimistic` | `8426` | `40.17%` | `0.580` | `0.863` | `-100.00%` | `45.10%` | `54.90%` |
+
+上一单平仓价过滤规则：
+
+```text
+第一笔交易：无上一笔平仓价，允许入场。
+后续 long：entry_price > previous_exit_price 才允许入场。
+后续 short：entry_price < previous_exit_price 才允许入场。
+比较使用含成本的模拟成交 entry_price / exit_price。
+```
+
+过滤测试结果：
+
+| 口径 | 交易数 | 胜率 | PF | payoff | 最大回撤 | filter reject |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `5m_conservative_prev_exit_filter` | `6587` | `40.06%` | `0.581` | `0.869` | `-100.00%` | `39.09%` |
+| `5m_optimistic_prev_exit_filter` | `6758` | `38.86%` | `0.560` | `0.881` | `-100.00%` | `40.35%` |
+| `1m_conservative_prev_exit_filter` | `6613` | `39.69%` | `0.568` | `0.863` | `-100.00%` | `39.10%` |
+| `1m_optimistic_prev_exit_filter` | `6612` | `39.75%` | `0.571` | `0.866` | `-100.00%` | `39.57%` |
+
+结论：V3.3.1 修复的是实盘 stop-arm 失败时的进程稳定性、重试行为和审计字段，不修复 V3.3 原始优势依赖 stale/crossed stop 成交的问题。上一单平仓价过滤减少约 `39%-40%` 候选入场，但 PF 没有改善，仍不应提升为 paper/live 候选。
+
+附加诊断：去掉初始止损价 floor 后，正向或轻微负向 `pullback_buffer` 大多仍为亏损结构；`pullback_buffer=-0.0100` 在四个 retry-arm 近似口径下均为正收益且 PF `>1`，其中 5m 乐观为 `37` 笔、累计收益 `+9.27%`、PF `1.477`、最大回撤 `-10.30%`。但该区域交易数极少，`-0.0125` 已转亏，`-0.0150` 只剩 `7` 笔，`-0.0200` 只剩 `1` 笔。因此这只能作为极严格深回踩事件质量线索，不是 V3.3.1 的可提升版本。
+
+rescue search 进一步确认，V3.3.1 的可执行线索不在原始高频双向信号，而在低频 long-only 深回踩子集：
+
+| 门槛 | 代表配置 | 四口径最少交易 | 四口径最差收益 | 四口径最差 PF | 最差回撤 |
+| --- | --- | ---: | ---: | ---: | ---: |
+| `>=30` | `pullback_buffer=-0.0075`、long-only、`ret192>=250`、`spread<=225` | `35` | `+16.93%` | `2.207` | `-4.58%` |
+| `>=50` | `pullback_buffer=-0.0060`、long-only、`ret192>=250`、`spread<=150`、`close_pos>=0.55` | `53` | `+14.44%` | `1.602` | `-8.77%` |
+| `>=60` | `pullback_buffer=-0.0060`、long-only、`ret192>=200`、`spread<=125` | `61` | `+9.66%` | `1.318` | `-9.14%` |
+
+这些结果把“救活方向”从旧 V3.3.1 改写为事件质量筛选线索：深回踩、只做多、要求 16h 方向动量和 EMA spread 不过宽。样本仍只有几十笔到六十余笔，不能直接提升为 paper/live；下一步若继续，应做 walk-forward 阈值固化和月度切片，而不是扩大原始 V3.3.1 双向高频策略。
+
+range10 早停止盈测试显示，开仓后若浮盈达到信号 K 最近 10 根 5m K 的平均振幅就提前平仓，不能修复原始 V3.3.1。5m/1m 重叠样本中，该 overlay 让约 `49%-51%` 交易提前止盈，胜率提升到约 `51%-53%`，但 payoff 降到约 `0.50-0.54`，四口径 PF 只有约 `0.55-0.56`，累计收益约 `-97%`。结论是它改善胜率观感但破坏盈亏比，不作为后续 rescue 方向。
+
+组合式 overlay（入场即 emergency stop、浮盈后推保本、更高浮盈后 range10 trailing、早期无推进则 time exit）在全量 V3.3.1 上也失败。5m/1m 重叠样本中，四口径最优配置仍只有 min PF `0.285`、min total `-99.92%`、worst drawdown `-99.92%`。这说明全量原始信号质量太低，单靠退出 overlay 会变成大量小亏/止损，不能把噪声信号变成正期望。
+
+昨晚实盘复盘提出的五类入场过滤方向也不能救回全量 V3.3.1。反抽实体强度、EMA21 斜率同向、回踩深度上限、ATR 稳定、1h EMA 大周期确认，以及少量组合过滤，在 `2026-03-25 00:00 UTC` 到 `2026-06-26 04:15 UTC` 的 1m/5m 重叠样本四口径复核中，全部 min PF 低于 `1`。最强 `combo_ret_spread` 最少 `690` 笔、min total `-66.01%`、min PF `0.634`；`ret192_same_ge_250` 最少 `879` 笔、min PF `0.633`。这些过滤能降噪，但仍是稳定负期望，只能作为低频 rescue 子集的特征，不是上线修复。
+
+ML event-quality 测试也没有救回全量 V3.3.1。该实验对 `21451` 个 V3.3.1 触发事件生成 strict retry-arm 独立标签，使用 walk-forward `numpy` logistic/ridge 模型预测 `positive_net`、`bad_unlock`、`trailing_positive` 和 clipped `net_ret_1x`，每月只用历史训练，再选择 top `5%/10%/20%/30%` 事件做单仓 exact replay。最强 robust 行为 `ml_top_20pct` 四口径 min PF `0.585`、min total `-98.35%`、最少 `549` 笔；单口径最高 PF 为 `0.659`。模型确实把 trailing-positive rate 从 baseline 的 `27.35%` 小幅提高到最高 `29.61%`，但 bad unlock/deadline 仍约 `60%-62%`，说明“增加 trailing/armed 概率”不是充分目标。全量 V3.3.1 不应继续靠 ML 阈值救援；若继续 ML，只能转向 deep pullback long-only + 强动量/spread 的低频事件质量路线。
+
 ### V4: Combo Candidate Live-Viability Audit
 
 Canonical name：`HYPE-5M-PBTR-V4`
@@ -780,19 +876,20 @@ trail_stop = min(initial_stop, previous_trough + trail_atr * ATR14(current_bar))
 
 当前建议：
 
-1. `HYPE-5M-PBTR-V1` 作为胜率体验基线 dry-run。
+1. `HYPE-5M-PBTR-V1` 仅作为历史旧口径胜率体验基线；strict live audit 已证明 live-realistic PF `0.637`，不再作为 dry-run 或回退上线候选。
 2. `HYPE-5M-PBTR-V2.1-clean` 作为 V2 的首选简化表达，用于后续解释、实现和 dry-run 对照。
 3. `HYPE-5M-PBTR-V2.1A` 已进入实盘/实盘 dry-run，但严格 live-realistic 口径失效；不应扩仓，只能极小资金监控并用真实成交日志重新验收。
 4. `HYPE-5M-PBTR-V3` 作为独立高频候选 dry-run，不替代 V2.1A；先用小资金或 paper 跑 `300-500` 笔。
 5. `HYPE-5M-PBTR-V3.1` 作为 V3 的 `min_hold_bars=9` 高收益研究候选，不替代 V3；先用小资金或 paper 跑 `300-500` 笔，重点观察回撤是否扩张。
 6. `HYPE-5M-PBTR-V3.2` 作为 V3.1 的 clean 表达保留历史记录。
-7. `HYPE-5M-PBTR-V3.3` 作为 V3.2 的最小复现表达进入 paper/dry-run；同事实盘交接优先使用 V3.3 live spec。
-8. `HYPE-5M-PBTR-V4` 记录自原 V3.4-candidate；样本内显著强于 V3.3，但严格 live-realistic 口径已失效，不应进入直接 paper-live 交接。
-9. `HYPE-5M-PBTR-V6` 正式记录为当前最可执行的 paper audit candidate。它放弃旧 `min_hold_bars + trailing`，使用强动量多头回踩恢复、入场即固定 bracket、36 根 K 时间退出；下一步优先写 paper audit runner。
-10. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
-11. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
-12. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。
-13. V2/V2.1/V3/V3.1/V3.2/V3.3/V4/V6 系列都不应直接大资金上线；V6 的下一步不是直接真钱生产，而是 paper runner 和 walk-forward 阈值固化。
+7. `HYPE-5M-PBTR-V3.3` 作为 V3.2 的最小复现表达保留历史记录；严格 live-realistic 口径已证明不适合作为交接版本。
+8. `HYPE-5M-PBTR-V3.3.1` 记录当前 V3.3 retry-arm 实盘 overlay；它可作为小额实盘风控/审计机制，但保守/乐观回测、上一单平仓价过滤、五类入场过滤方向和退出 overlay 测试均低于 PF `1`，不提升为 paper/live 候选。
+9. `HYPE-5M-PBTR-V4` 记录自原 V3.4-candidate；样本内显著强于 V3.3，但严格 live-realistic 口径已失效，不应进入直接 paper-live 交接。
+10. `HYPE-5M-PBTR-V6` 正式记录为当前最可执行的 paper audit candidate。它放弃旧 `min_hold_bars + trailing`，使用强动量多头回踩恢复、入场即固定 bracket、36 根 K 时间退出；下一步优先写 paper audit runner。
+11. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
+12. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
+13. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。
+14. V2/V2.1/V3/V3.1/V3.2/V3.3/V3.3.1/V4/V6 系列都不应直接大资金上线；V6 的下一步不是直接真钱生产，而是 paper runner 和 walk-forward 阈值固化。
 
 V2 实盘验收线：
 
@@ -848,6 +945,8 @@ V6 paper audit 验收线：
 - `diagnostics/hype-5m-pbtr-v6-live-executable-search-2026-06-25.md`
 - `diagnostics/hype-5m-pbtr-v6-candidate-robustness-2026-06-25.md`
 - `ablations/hype-5m-pbtr-v6-full-parameter-ablation-2026-06-25.md`
+- `diagnostics/hype-5m-pbtr-v33-retry-arm-2026-06-26.md`
+- `diagnostics/hype-5m-pbtr-v3-3-1-prev-exit-filter-2026-06-27.md`
 
 ## Reproduction
 
@@ -870,6 +969,8 @@ V6 paper audit 验收线：
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_live_executable_search.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_candidate_robustness.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_full_ablation.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v33_retry_arm.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3-1_prev_exit_filter.py`
 - `artifacts/hype_5m_r05732_ablation.json`
 - `artifacts/hype_5m_r05732_v2_combo_test.json`
 - `artifacts/hype_5m_pbtr_v2_live_cost_ablation_slices.json`
@@ -892,3 +993,5 @@ V6 paper audit 验收线：
 - `artifacts/hype_5m_pbtr_fixed_bracket_search.json`
 - `artifacts/hype_5m_pbtr_reset_bracket_search.json`
 - `artifacts/hype_5m_pbtr_reset_bracket_maxhold48.json`
+- `artifacts/hype_5m_pbtr_v33_retry_arm_2026-06-26.json`
+- `artifacts/hype_5m_pbtr_v3-3-1_prev_exit_filter_2026-06-27.json`

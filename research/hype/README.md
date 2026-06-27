@@ -26,6 +26,13 @@ For the Binance HYPEUSDT `5m` micro-scalp research line, use:
 4. `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-relaxed-rounds-2026-06-26.md`
 5. `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`
 
+For the Binance HYPEUSDT `5m` event-quality scoring research line, use:
+
+1. `5m-event-quality-scoring/README.md`
+2. `5m-event-quality-scoring/decision-log.md`
+3. `5m-event-quality-scoring/diagnostics/hype-5m-event-quality-v0-2026-06-27.md`
+4. `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`
+
 For the Binance HYPEUSDT `5m` two-MA pullback scalp research line, use:
 
 1. `5m-ma-pullback-scalp/README.md`
@@ -60,6 +67,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `5m-pullback-trail/` | Binance HYPE `5m` pullback/resume entries with ATR trailing-stop exits | Local `V1/V2` here are not legacy 15m `HYPE-EMA-Trend-Breakout` V1/V2 |
 | `HYPE-5M-MA-Pullback-Scalp` | - | `5m-ma-pullback-scalp/` | Binance HYPEUSDT `5m` slow/fast MA trend-pullback scalp with HH/HL or LL/LH structure and fixed brackets | Do not merge this with `HYPE-5M-Micro-Scalp`; current candidates are paper-audit only |
 | `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `5m-micro-scalp/` | Binance HYPEUSDT `5m` high-frequency micro-profit scalp search with immediate executable TP/SL brackets | Do not treat high win-rate no-go rows as pullback-trail or live candidates |
+| `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | `5m-event-quality-scoring/` | Binance HYPEUSDT `5m` event-quality scoring over candidate events and seeded micro-scalp signals | Do not treat seeded paper-audit rows as generic micro-scalp or live-ready candidates |
 
 ## Core Markdown Ledgers
 
@@ -77,6 +85,8 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 - `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`: `HYPE-5M-Micro-Scalp` first executable broad search; no-go for the original `3-5` trades/day strict shape.
 - `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-relaxed-rounds-2026-06-26.md`: relaxed-constraint search that found low-frequency profitable candidates.
 - `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`: parameter-neighborhood robustness check; current relaxed candidates are paper-audit only, not live-ready.
+- `5m-event-quality-scoring/diagnostics/hype-5m-event-quality-v0-2026-06-27.md`: generic event-quality scoring diagnostic; no paper-audit candidate.
+- `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`: seeded source-mean event ranker; `seeded_source_mean_q80` is paper-audit only, not live-ready.
 
 ## Hard Rules
 
@@ -89,6 +99,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 - Treat `HYPE-5M-Pullback-Trail` as a separate `5m` family, not as a subdocument of `HYPE-EMA-Trend-Breakout`.
 - Treat `HYPE-5M-MA-Pullback-Scalp` as a separate `5m` family, not as a version of `HYPE-5M-Micro-Scalp` or `HYPE-5M-Pullback-Trail`.
 - Treat `HYPE-5M-Micro-Scalp` as a separate `5m` family, not as a version of `HYPE-5M-Pullback-Trail` or `HYPE-15M-Multi-Indicator-Intraday`.
+- Treat `HYPE-5M-Event-Quality-Scoring` as a separate `5m` family, not as a version of `HYPE-5M-Micro-Scalp` or `HYPE-5M-Pullback-Trail`.
 - Durable HYPE research reports and ledgers must be repository-tracked Markdown under `research/`.
 - Cursor Canvas files are legacy/private research assets, not canonical storage for new reports. If Canvas is used for temporary visualization, mirror the durable conclusion into the relevant Markdown file before finishing.
 - Archived code under `archive/code/platform/` is limited to historical strategy source snapshots cited by research docs; it is not strategy truth or runnable platform code.

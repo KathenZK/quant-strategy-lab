@@ -1,0 +1,118 @@
+{
+  "run_date": "2026-06-27",
+  "family": "HYPE-5M-Event-Quality-Scoring",
+  "mode": "seeded_v0",
+  "quality": {
+    "data_root": "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=5m",
+    "raw_root": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=5m",
+    "symbol_file": "symbol=hype_usdt_usdt.parquet",
+    "rows": 112822,
+    "start_ts": "2025-05-30 10:30:00+00:00",
+    "end_ts": "2026-06-26 04:15:00+00:00",
+    "expected_bars": 112822,
+    "missing_bars": 0,
+    "nulls": {
+      "open": 0,
+      "high": 0,
+      "low": 0,
+      "close": 0,
+      "volume": 0,
+      "quote_volume": 0,
+      "trade_count": 0,
+      "vwap": 0,
+      "is_closed": 0,
+      "source": 0
+    },
+    "ohlcv_violations": {
+      "high_lt_max_open_close": 0,
+      "low_gt_min_open_close": 0,
+      "nonpositive_ohlc": 0,
+      "negative_volume": 0,
+      "negative_quote_volume": 0,
+      "vwap_outside_hilo_nonzero_vol": 0
+    },
+    "source_counts": {
+      "binance_futures_kline_api": 101956,
+      "ccxt": 8423,
+      "binance_futures_api": 2443
+    },
+    "is_closed_counts": {
+      "True": 112822
+    },
+    "zero_volume_bars": 3,
+    "raw_alignment": {
+      "raw_rows": 112822,
+      "raw_duplicate_ts": 0,
+      "normalized_rows": 112822,
+      "normalized_duplicate_ts": 0,
+      "same_ts_sequence": true,
+      "max_abs_diff": {
+        "open": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "close": 0.0,
+        "volume": 0.0,
+        "quote_volume": 0.0,
+        "trade_count": 0.0,
+        "vwap": 0.0
+      }
+    }
+  },
+  "seed_source_path": "research/hype/5m-micro-scalp/artifacts/hype_5m_micro_scalp_relaxed_rounds_summary_2026-06-26.csv",
+  "seed_selection": {
+    "train_prefix": "train_2025_05_30_to_2026_03_01",
+    "max_seed_configs": 100,
+    "selected_seed_configs": 100,
+    "rules": {
+      "train_2025_05_30_to_2026_03_01_trades": ">= 40",
+      "train_2025_05_30_to_2026_03_01_total_return": "> 0",
+      "train_2025_05_30_to_2026_03_01_profit_factor": ">= 1.15",
+      "train_2025_05_30_to_2026_03_01_max_dd": ">= -0.25"
+    }
+  },
+  "event_count": 23464,
+  "unique_signal_bars": 11945,
+  "paper_candidate_pass_count": 3,
+  "top_candidate": {
+    "candidate_id": "seeded_source_mean_q80",
+    "quantile": 0.8,
+    "selected_events": 623,
+    "oos_trades": 184,
+    "oos_days": 117.17708333333333,
+    "oos_trades_per_day": 1.5702729131478355,
+    "oos_total_return_1x": 0.28889205158247266,
+    "oos_annualized_1x": 1.2045416965508418,
+    "oos_win_rate": 0.5271739130434783,
+    "oos_profit_factor": 1.2224086342842233,
+    "oos_avg_trade_bps": 15.470200682850551,
+    "oos_max_drawdown_1x": -0.15383991348547632,
+    "recent_90d_trades": 139,
+    "recent_90d_days": 90.0,
+    "recent_90d_trades_per_day": 1.5444444444444445,
+    "recent_90d_total_return_1x": 0.1363125909048133,
+    "recent_90d_annualized_1x": 0.6790919819244337,
+    "recent_90d_win_rate": 0.49640287769784175,
+    "recent_90d_profit_factor": 1.1478581312225191,
+    "recent_90d_avg_trade_bps": 11.013961537790081,
+    "recent_90d_max_drawdown_1x": -0.14554006442210032,
+    "recent_30d_trades": 56,
+    "recent_30d_days": 30.0,
+    "recent_30d_trades_per_day": 1.8666666666666667,
+    "recent_30d_total_return_1x": 0.2717894124625091,
+    "recent_30d_annualized_1x": 17.6373858531094,
+    "recent_30d_win_rate": 0.5714285714285714,
+    "recent_30d_profit_factor": 1.5870560010875103,
+    "recent_30d_avg_trade_bps": 45.651504121592765,
+    "recent_30d_max_drawdown_1x": -0.10536880954648642,
+    "active_months": 4,
+    "negative_active_months": 1,
+    "paper_gate": true
+  },
+  "artifact_paths": {
+    "summary": "research/hype/5m-event-quality-scoring/artifacts/hype_5m_seeded_event_quality_v0_summary_2026-06-27.csv",
+    "monthly": "research/hype/5m-event-quality-scoring/artifacts/hype_5m_seeded_event_quality_v0_monthly_2026-06-27.csv",
+    "events": "research/hype/5m-event-quality-scoring/artifacts/hype_5m_seeded_event_quality_v0_events_2026-06-27.csv",
+    "top_trades": "research/hype/5m-event-quality-scoring/artifacts/hype_5m_seeded_event_quality_v0_top_trades_2026-06-27.csv",
+    "markdown": "research/hype/5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md"
+  }
+}

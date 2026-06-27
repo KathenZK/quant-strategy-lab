@@ -45,6 +45,8 @@ It is independent from:
 - `ablations/hype-5m-pbtr-v6-full-parameter-ablation-2026-06-25.md`: formally records the V6 strategy definition and ablates every active parameter under the same live-executable bracket/timeout model.
 - `diagnostics/hype-5m-executable-broad-search-2026-06-25.md`: broad executable-only HYPE `5m` search across old indicator entry styles with entry-time bracket protection. Tests `13134` configurations against `>=20x` annualized, `>=50%` win rate, and `>-20%` drawdown. No configuration comes close; the best `>=100` trade row annualizes only about `1.05x`.
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`: V1/R05732 full parameter explanation and ablation.
+- `diagnostics/hype-5m-pbtr-v1-strict-live-audit-2026-06-27.md`: strict live-realistic audit for V1/R05732. Confirms the legacy stop-price fill backtest remains profitable, but V1 collapses under executable unlock stop/target handling and is not a rollback live candidate.
+- `diagnostics/hype-5m-pbtr-ml-event-quality-2026-06-27.md`: V3.3.1 walk-forward ML event-quality rescue attempt. Slightly raises trailing-positive / armed quality but remains PF < 1 across exact replay modes.
 
 ## Supporting Research
 
@@ -74,6 +76,7 @@ Scripts:
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_positive_payoff_search.py`
 - `research/hype/5m-pullback-trail/scripts/analyze_hype_5m_survival_frontier.py`
 - `research/hype/5m-pullback-trail/scripts/ablate_hype_5m_r05732.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v1_strict_live_audit.py`
 - `research/hype/5m-pullback-trail/scripts/test_hype_5m_r05732_v2_combos.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_ablation_slices.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v2_live_cost_ablation_slices.py`
@@ -97,6 +100,7 @@ Scripts:
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_live_executable_search.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_candidate_robustness.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_full_ablation.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_ml_event_quality.py`
 - `research/hype/5m-pullback-trail/scripts/render_hype_5m_ensemble_specs.py`
 
 Report files:
@@ -109,6 +113,12 @@ Report files:
 - `artifacts/hype_5m_positive_payoff_search.json`
 - `artifacts/hype_5m_survival_frontier.json`
 - `artifacts/hype_5m_r05732_ablation.json`
+- `artifacts/hype_5m_pbtr_v1_strict_live_audit_2026-06-27.json`
+- `artifacts/hype_5m_pbtr_v1_strict_live_audit_summary_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v1_strict_live_audit_trade_diag_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v1_strict_live_audit_rolling_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v1_strict_live_audit_weekly_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_v1_strict_live_audit_monthly_2026-06-27.csv`
 - `artifacts/hype_5m_r05732_v2_combo_test.json`
 - `artifacts/hype_5m_r05732_v2_combo_test_ranking.csv`
 - `artifacts/hype_5m_r05732_v2_combo_test_slices.csv`
@@ -170,3 +180,8 @@ Report files:
 - `artifacts/hype_5m_pbtr_v6_full_ablation_rolling.csv`
 - `artifacts/hype_5m_pbtr_v6_full_ablation_weekly.csv`
 - `artifacts/hype_5m_pbtr_v6_full_ablation_monthly.csv`
+- `artifacts/hype_5m_pbtr_ml_event_quality_2026-06-27.json`
+- `artifacts/hype_5m_pbtr_ml_event_quality_events_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_ml_event_quality_scores_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_ml_event_quality_exact_2026-06-27.csv`
+- `artifacts/hype_5m_pbtr_ml_event_quality_v1_events_2026-06-27.csv`

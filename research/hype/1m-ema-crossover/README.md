@@ -19,10 +19,18 @@ Do not merge this with `HYPE-EMA-Crossover` just because both use EMA cross logi
 ## Evidence Surface
 
 - `diagnostics/hype-1m-ema-crossover-live-search-2026-06-25.md`: first live-executable Binance HYPEUSDT `1m` EMA search report.
+- `diagnostics/hype-1m-ema-deviation-take-profit-2026-06-27.md`: EMA8/21, EMA13/48, EMA21/55, EMA21/72, EMA21/96, and EMA30/120 deviation/take-profit state-machine diagnostic; no paper-live candidate.
+- `diagnostics/hype-1m-ema-v35-filter-overlay-2026-06-27.md`: `HYPE-EMA-Trend-Breakout-V35` strength-filter transfer diagnostic over the same `1m` EMA cross + deviation take-profit shape; no paper-live candidate.
 - `scripts/research_hype_1m_ema_crossover_live_search.py`: reproducible one-off downloader/search script for the first report.
+- `scripts/research_hype_1m_ema_deviation_take_profit.py`: reproducible one-off backtest for ATR-normalized fast-EMA deviation arming, high/low-water drawdown exits, exhaustion confirmation, and staged partial take-profit.
+- `scripts/research_hype_1m_ema_v35_filter_overlay.py`: reproducible one-off backtest that translates `HYPE-EMA-Trend-Breakout-V35` style 15m/1h ADX, EMA, and volume filters onto `1m` EMA cross signals.
 - `artifacts/hype_1m_ema_crossover_live_search.json`: summary JSON for the first search.
 - `artifacts/hype_1m_ema_crossover_live_search_ranking.csv`: top-ranked candidate table.
 - `artifacts/hype_1m_ema_crossover_live_search_top_trades.csv`: trade path for the top search row.
+- `artifacts/hype_1m_ema_deviation_take_profit_2026-06-27.json`: summary JSON for the deviation take-profit diagnostic.
+- `artifacts/hype_1m_ema_deviation_take_profit_summary_2026-06-27.csv`: full ranking table for the deviation take-profit diagnostic.
+- `artifacts/hype_1m_ema_v35_filter_overlay_2026-06-27.json`: summary JSON for the V35 filter overlay diagnostic.
+- `artifacts/hype_1m_ema_v35_filter_overlay_summary_2026-06-27.csv`: full ranking table for the V35 filter overlay diagnostic.
 
 ## Data Lake
 
