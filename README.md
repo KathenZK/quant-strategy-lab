@@ -8,7 +8,7 @@
 
 - `data/` 下的本地数据湖。
 - `research/` 下的研究文档和策略家族台账。
-- `src/strategy_lab/` 下较窄范围的数据、归一化、质量检查、特征和研究导出工具。
+- `src/strategy_lab/` 下较窄范围、可复用且有稳定接口的数据湖、归一化、质量检查、特征和因子工具。
 
 旧策略平台、工作流引擎、Dashboard、泛化回测层和早期规划文档已经归档到 `archive/`。
 
@@ -27,7 +27,7 @@
 
 ## 先读这些
 
-- `AGENTS.md`：AI agent 在本仓库工作的规则。
+- `AGENTS.md` 和 `.cursor/rules/`：AI agent 在本仓库工作的约束；细则以这些文件为准。
 - `research/README.md`：研究档案总入口、策略家族名称和版本号防串线规则。
 - `research/hype/README.md`：HYPE 研究入口与阅读上下文。
 
@@ -91,7 +91,9 @@ data/normalized/ohlcv/
 - `scripts/` 放只服务该研究的一次性复现、搜索、审计脚本。
 - `artifacts/` 放需要随报告保留的 JSON、CSV、HTML、交易路径图等产物。
 
-只有可复用的数据湖内核、归一化、质量审计、特征构建或因子计算工具，才应进入 `src/strategy_lab/`。交易所抓取、补洞、回测搜索和一次性导出默认放在对应 `research/.../scripts/`，并必须记录数据来源与质量校验。不要创建顶层 `reports/` 或任何全局报告缓存目录；临时实验输出和需要保留的证据都应由对应研究目录本地管理，保留型 JSON/CSV/HTML/交易路径图进入该目录的 `artifacts/`。
+只有可复用、有稳定接口的数据湖内核、归一化、质量审计、特征构建或因子计算工具，才应进入 `src/strategy_lab/`。交易所抓取、补洞、回测搜索和一次性研究导出默认放在对应 `research/.../scripts/`，并必须记录数据来源与质量校验。
+
+不要创建顶层 `reports/` 或任何全局报告缓存目录。临时实验输出放系统临时目录或对应研究目录下明确标记为 scratch/local 的位置，不在文档中引用；被报告引用或需要复现的 JSON/CSV/HTML/交易路径图等证据进入对应研究目录的 `artifacts/`。
 
 ## HYPE 家族规则
 
@@ -99,11 +101,11 @@ data/normalized/ohlcv/
 
 请优先使用展开后的完整家族名；短 id 只作为历史别名：
 
-- `HYPE-Candle-Count-Reversal-V35`（别名：`HYPE-CC-V35`）：K 线计数反转家族。
-- `HYPE-EMA-Crossover-V14`（别名：`HYPE-EMA-X-V14`）：EMA 金叉/死叉家族。
+- `HYPE-Candle-Count-Reversal`（别名：`HYPE-CC`）：K 线计数反转家族，包含 V35 等历史版本。
+- `HYPE-EMA-Crossover`（别名：`HYPE-EMA-X`）：EMA 金叉/死叉家族，包含 V14 等历史版本。
 - `HYPE-1M-EMA-Crossover`（别名：`HYPE-1M-EMA-X`）：Binance HYPEUSDT `1m` EMA 金叉/死叉家族。
-- `HYPE-EMA-Trend-Breakout-V35`（别名：`HYPE-EMA-TB-V35`）：EMA 趋势突破家族。
-- `HYPE-5M-Pullback-Trail-V2`（别名：`HYPE-5M-PBTR-V2`）：Binance HYPE `5m` 回踩/恢复 + ATR trailing stop 家族。
+- `HYPE-EMA-Trend-Breakout`（别名：`HYPE-EMA-TB`）：EMA 趋势突破家族，包含 V35 等历史版本。
+- `HYPE-5M-Pullback-Trail`（别名：`HYPE-5M-PBTR`）：Binance HYPE `5m` 回踩/恢复 + ATR trailing stop 家族，包含 V2 等历史版本。
 - `MU-HYPE-Transfer`（别名：`MU-HYPE-XFER`）：从 HYPE 趋势内核迁移到 MU 的研究方向。
 
 即使版本号相同，它们也是不同策略，不应串联引用。

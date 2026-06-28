@@ -11,6 +11,7 @@ alwaysApply: true
 - Do not place a new timeframe into an existing family only because the indicators are similar; initialize a new family directory with at least `README.md`, `decision-log.md`, `scripts/`, and `artifacts/`.
 - Store current one-off research scripts under the relevant `research/.../scripts/` directory, not under `archive/scripts/research/`.
 - Store retained JSON, CSV, HTML, and trade-path outputs under the relevant `research/.../artifacts/` directory. Top-level `reports/` is retired and must not be used for scratch runs, caches, or durable evidence.
+- Put temporary experiment output in a system temporary directory or in a clearly marked scratch/local path under the relevant research directory. Do not cite scratch/local output from durable reports; promote cited or reproducible evidence into `artifacts/`.
 - If a Markdown report cites a generated file, treat that file as durable evidence: place it under the same topic/family `artifacts/` directory and update the Markdown link away from `reports/...`.
 - Do not bulk-promote every old top-level `reports/` file into `artifacts/`; migrate only cited or intentionally retained evidence.
 - Do not create durable research content in Cursor Canvas files or Cursor-private project directories.
