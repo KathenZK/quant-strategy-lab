@@ -24,9 +24,11 @@ Use `diagnostics/` for overfit analysis and caveats.
 Current diagnostics:
 
 - `diagnostics/hype-v35-overfit-diagnosis.md`: V35 parameter sensitivity and overfit-risk checkpoint.
+- `diagnostics/hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md`: V35 parameter-level overfit re-diagnosis after June OOS proxy and live underperformance evidence.
 - `diagnostics/hype-cc-v35-live-underperformance-review-2026-06-29.md`: V35 Binance live underperformance review; downgrades V35 to live-underperformance / execution-risk diagnostic until live-realistic replay is complete.
 - `scripts/replay_hype_cc_v35_oos_proxy_2026_06_29.py`: one-off replay script for the 2026-06 OOS OHLCV proxy check.
 - `artifacts/hype_cc_v35_oos_proxy_review_2026-06-29.json`: retained output from the 2026-06 OOS proxy replay.
+- `artifacts/hype_pulse_aliyun_live_audit_2026-06-29.json`: retained Aliyun HypePulse live DB / log / exchange snapshot audit for the same underperformance review.
 
 ## Do Not Mix With
 
