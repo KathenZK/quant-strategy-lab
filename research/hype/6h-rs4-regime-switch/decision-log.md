@@ -1,4 +1,4 @@
-# HYPE-6H-RS4-Regime-Switch Decision Log
+# HYPE-6H-RS4-Regime-Switch 决策日志
 
 ## 2026-06-26：启动同事 RS4 策略独立复现
 

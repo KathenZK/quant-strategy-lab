@@ -1,36 +1,36 @@
-# HYPE-1M-EMA-Crossover Decision Log
+# HYPE-1M-EMA-Crossover 决策日志
 
-Family name: `HYPE-1M-EMA-Crossover`
+家族名称：`HYPE-1M-EMA-Crossover`
 
-Historical alias: `HYPE-1M-EMA-X`
+历史别名：`HYPE-1M-EMA-X`
 
-## Current Boundary
+## 当前边界
 
-- This is a separate HYPE strategy family for Binance HYPEUSDT `1m` EMA cross research.
-- It is not a sub-version of `HYPE-EMA-Crossover` / `15m-ema-crossover`.
-- It is not a live-approved strategy line yet.
-- Its first candidate must be treated as paper-live only until forward validation and live execution audits are complete.
+- 这是一个独立的 HYPE 策略家族，用于 Binance HYPEUSDT `1m` EMA cross 研究。
+- 它不是 `HYPE-EMA-Crossover` / `15m-ema-crossover` 的子版本。
+- 它还不是 live-approved strategy line。
+- 在 forward validation 和 live execution audits 完成前，其第一个 candidate 必须仅视为 paper-live。
 
-## Research Batch Notes
+## 研究批次记录
 
-- `research_hype_1m_ema_crossover_live_search.py`: first Binance HYPEUSDT `1m` EMA cross search over `2026-03-25` to `2026-06-25`. It tested live-executable next-bar entries, fixed take-profit, trailing take-profit, hard stops, conservative same-candle stop priority, cost assumptions, and common filters.
-- `2026-06-26`: promote the first `1m` dataset from downloader cache into the standard data lake, then refresh it through `2026-06-26 04:23:00 UTC`: raw and normalized candles under `data/raw|normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1m/date=*/symbol=hype_usdt_usdt.parquet`, plus search feature factors under `data/features/factor=*/version=hype_1m_ema_crossover_live_search_2026_06_25/...`.
-- `2026-06-27`: `research_hype_1m_ema_deviation_take_profit.py` tested the requested short-cycle EMA cross shape (`8/21`, `13/48`, `21/55`, `21/72`, `21/96`, `30/120`) with ATR-normalized fast-EMA deviation arming, high/low-water drawdown exits, exhaustion confirmation, and staged partial take-profit. Data quality passed on `134,184` continuous Binance HYPEUSDT `1m` bars from `2026-03-25 00:00:00 UTC` to `2026-06-26 04:23:00 UTC`, but `0` rows passed the paper gate.
-- `2026-06-27`: `research_hype_1m_ema_v35_filter_overlay.py` translated `HYPE-EMA-Trend-Breakout-V35` strength filters onto the `1m` EMA cross + deviation take-profit shape: closed 15m EMA96/384 direction, 15m ADX28, 15m volume_surge, closed 1h confirmation, and relaxed/early-ADX variants. The overlay reduced noise dramatically versus the unfiltered short-cycle cross, but still produced `0` paper-gate rows. Best full-sample rows were only near flat to `+1.05%` and failed forward/recent slices; the `EMA21/96` positive rows had only `2` trades.
+- `research_hype_1m_ema_crossover_live_search.py`：首次 Binance HYPEUSDT `1m` EMA cross 搜索，覆盖 `2026-03-25` 到 `2026-06-25`。它测试了 live-executable next-bar entries、fixed take-profit、trailing take-profit、hard stops、保守 same-candle stop priority、cost assumptions 和 common filters。
+- `2026-06-26`：将首个 `1m` 数据集从 downloader cache 提升到标准数据湖，然后刷新到 `2026-06-26 04:23:00 UTC`：raw 和 normalized candles 位于 `data/raw|normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1m/date=*/symbol=hype_usdt_usdt.parquet`，search feature factors 位于 `data/features/factor=*/version=hype_1m_ema_crossover_live_search_2026_06_25/...`。
+- `2026-06-27`：`research_hype_1m_ema_deviation_take_profit.py` 测试用户要求的 short-cycle EMA cross 形态（`8/21`、`13/48`、`21/55`、`21/72`、`21/96`、`30/120`），包含 ATR-normalized fast-EMA deviation arming、high/low-water drawdown exits、exhaustion confirmation 和 staged partial take-profit。数据质量在 `134,184` 根连续 Binance HYPEUSDT `1m` K 线上通过，范围为 `2026-03-25 00:00:00 UTC` 到 `2026-06-26 04:23:00 UTC`，但通过 paper gate 的行数为 `0`。
+- `2026-06-27`：`research_hype_1m_ema_v35_filter_overlay.py` 将 `HYPE-EMA-Trend-Breakout-V35` strength filters 迁移到 `1m` EMA cross + deviation take-profit 形态上：closed 15m EMA96/384 direction、15m ADX28、15m volume_surge、closed 1h confirmation，以及 relaxed/early-ADX variants。该 overlay 相比未过滤 short-cycle cross 显著降噪，但 paper-gate rows 仍为 `0`。最佳全样本行仅接近持平到 `+1.05%`，且未通过 forward/recent slices；`EMA21/96` 正收益行只有 `2` 笔交易。
 
-## Candidate Notes
+## 候选记录
 
-- `HYPE-1M-EMA-Crossover-TRAIL-144-1597`: first preferred paper-live candidate. It uses EMA144/EMA1597 cross entries, ADX/ret60/ATR/cooldown filters, a `1.4%` hard stop, `1.4%` trailing activation, `1.8%` trail distance, and `1,440` bar max hold. The `2x` exposure version clears the requested `20x` annualized factor with lower drawdown than the `3x` search winner.
-- `HYPE-1M-EMA-Crossover-FIXED-233-1597`: secondary fixed take-profit reference. It had fewer trades and required higher exposure to clear the return target, so it is less preferred than the trailing candidate.
-- `HYPE-1M-EMA-Crossover-DEVIATION-TP-SHORT-CYCLE`: no-go diagnostic, not a candidate. The requested `EMA21/96` subset was materially negative even before leverage; its best tested row was approximately `-74%` full-sample return at `1x`, with forward and recent slices also negative. The result supports keeping deviation as an exit-state concept, but not using short-cycle EMA cross chasing as a standalone candidate under the current cost model.
-- `HYPE-1M-EMA-Crossover-V35-FILTER-OVERLAY`: no-go diagnostic, not a candidate. V35-style 15m/1h trend-quality filters are useful for suppressing false 1m crosses, but the profitable mechanism in `HYPE-EMA-Trend-Breakout-V35` is still the 15m trend-breakout entry plus ATR bracket, not the 1m cross itself.
+- `HYPE-1M-EMA-Crossover-TRAIL-144-1597`：第一个优先 paper-live candidate。它使用 EMA144/EMA1597 cross entries、ADX/ret60/ATR/cooldown filters、`1.4%` hard stop、`1.4%` trailing activation、`1.8%` trail distance，以及 `1,440` bar max hold。`2x` exposure 版本达到用户要求的 `20x` annualized factor，并且回撤低于 `3x` search winner。
+- `HYPE-1M-EMA-Crossover-FIXED-233-1597`：次要 fixed take-profit 参考。它交易更少，并需要更高 exposure 才能达到收益目标，因此优先级低于 trailing candidate。
+- `HYPE-1M-EMA-Crossover-DEVIATION-TP-SHORT-CYCLE`：no-go diagnostic，不是 candidate。用户要求的 `EMA21/96` 子集在加杠杆前已经显著为负；其最佳测试行为 `1x` 全样本收益约 `-74%`，forward 和 recent slices 也为负。结果支持把 deviation 保留为 exit-state 概念，但不支持在当前 cost model 下将 short-cycle EMA cross chasing 作为独立 candidate。
+- `HYPE-1M-EMA-Crossover-V35-FILTER-OVERLAY`：no-go diagnostic，不是 candidate。V35-style 15m/1h trend-quality filters 有助于压制虚假 1m crosses，但 `HYPE-EMA-Trend-Breakout-V35` 的盈利机制仍是 15m trend-breakout entry 加 ATR bracket，而不是 1m cross 本身。
 
-## Live Feasibility Gate
+## 实盘可行性门槛
 
-Before any promotion beyond paper-live:
+在任何超过 paper-live 的 promotion 之前：
 
-- Add funding-rate accounting.
-- Re-run on a later forward window without changing parameters.
-- Re-run after `2026-06-25` closes so the final day is not partial.
-- Audit real Binance account fee tier and live slippage from fills.
-- Implement restart recovery, reduce-only protective orders, duplicate-order/idempotency handling, missing-data behavior, and an emergency flat/kill switch.
+- 增加 funding-rate accounting。
+- 不改参数，在更晚的 forward window 上重跑。
+- 在 `2026-06-25` 收盘后重跑，确保最后一天不是 partial。
+- 审计真实 Binance account fee tier 和成交中的 live slippage。
+- 实现 restart recovery、reduce-only protective orders、duplicate-order/idempotency handling、missing-data behavior，以及 emergency flat/kill switch。

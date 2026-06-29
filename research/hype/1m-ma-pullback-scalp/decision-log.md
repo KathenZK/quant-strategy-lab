@@ -1,21 +1,21 @@
-# HYPE-1M-MA-Pullback-Scalp Decision Log
+# HYPE-1M-MA-Pullback-Scalp 决策日志
 
-Family id: `HYPE-1M-MA-Pullback-Scalp`
+家族 id：`HYPE-1M-MA-Pullback-Scalp`
 
-## Current Boundary
+## 当前边界
 
-- This is a separate Binance HYPEUSDT perpetual `1m` family for moving-average pullback scalp research.
-- It is not a version of `HYPE-1M-EMA-Crossover`, because the entry is pullback-end structure confirmation rather than EMA cross event timing.
-- It is not a version of `HYPE-5M-Micro-Scalp`, because timeframe, signal mechanics, cost sensitivity, and holding-time assumptions are different.
-- Research conclusions must be stored under this directory, with durable JSON/CSV evidence in `artifacts/`.
-- No strategy from this family may be called live-ready until order timing, bracket maintenance, restart behavior, cost sensitivity, and paper/live-dry-run reconciliation are audited.
+- 这是一个独立的 Binance HYPEUSDT perpetual `1m` moving-average pullback scalp 研究家族。
+- 它不是 `HYPE-1M-EMA-Crossover` 的版本，因为入场是 pullback-end structure confirmation，而不是 EMA cross event timing。
+- 它不是 `HYPE-5M-Micro-Scalp` 的版本，因为 timeframe、signal mechanics、cost sensitivity 和 holding-time assumptions 都不同。
+- 研究结论必须保存在本目录下，持久 JSON/CSV 证据放入 `artifacts/`。
+- 在完成 order timing、bracket maintenance、restart behavior、cost sensitivity 与 paper/live-dry-run reconciliation 审计前，本家族任何策略都不能称为 live-ready。
 
-## Research Batches
+## 研究批次
 
-- Initial scaffold: `scripts/research_hype_1m_ma_pullback_scalp.py` implements the two-MA pullback structure pattern with closed-bar signals, next-open entries, fixed TP/SL brackets, stop-first same-bar ordering, and max-hold timeout.
-- `diagnostics/hype-1m-ma-pullback-scalp-search-2026-06-26.md`: first executable search. Tested `6,740` configs across `reclaim`, `platform_break`, and `engulf_reclaim` triggers on Binance HYPEUSDT perpetual `1m`; data quality passed with `134,184` continuous bars, raw/normalized OHLCV alignment mismatch counts all `0`, and no missing/duplicate/OHLCV hard violations. Result: `0` paper candidate passes. At `>=60` trades, `0` configs were profitable; at `>=1` trade/day, highest full-sample annualized multiple was `0.57x`. Best enough-sample score row was `HYPE_1M_MA_PBS_R03037`, `platform_break` long, EMA `13/89`, TP/SL/hold `260/130/30`, `72` trades, annualized `0.73x`, PF `0.769`, win `45.83%`, maxDD `-10.30%`, recent 30d `-2.62%`.
+- Initial scaffold：`scripts/research_hype_1m_ma_pullback_scalp.py` 实现 two-MA pullback structure pattern，采用 closed-bar signals、next-open entries、fixed TP/SL brackets、stop-first same-bar ordering 和 max-hold timeout。
+- `diagnostics/hype-1m-ma-pullback-scalp-search-2026-06-26.md`：首次 executable search。在 Binance HYPEUSDT perpetual `1m` 上测试 `6,740` 个配置，覆盖 `reclaim`、`platform_break` 和 `engulf_reclaim` 触发器；数据质量通过，包含 `134,184` 根连续 K 线，raw/normalized OHLCV alignment mismatch counts 全部为 `0`，且没有 missing/duplicate/OHLCV hard violations。结果：paper candidate passes 为 `0`。在 `>=60` 笔交易条件下，盈利配置为 `0`；在 `>=1` 笔/天条件下，全样本最高年化倍数只有 `0.57x`。样本数足够的最佳得分行为 `HYPE_1M_MA_PBS_R03037`，`platform_break` long，EMA `13/89`，TP/SL/hold `260/130/30`，`72` 笔，年化 `0.73x`，PF `0.769`，胜率 `45.83%`，maxDD `-10.30%`，recent 30d `-2.62%`。
 
-## Current Decision
+## 当前决策
 
-- No-go for promoting this exact two-MA pullback scalp shape to paper-live or live.
-- The strategy can be written and backtested, but current evidence does not support saying it is profitable or real-capital ready on the available HYPEUSDT `1m` sample.
+- 不提升这个精确 two-MA pullback scalp 形态到 paper-live 或 live，结论为 no-go。
+- 该策略可以写成规则并回测，但在可用 HYPEUSDT `1m` 样本上，当前证据不支持说它盈利或具备 real-capital ready 条件。

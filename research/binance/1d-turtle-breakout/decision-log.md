@@ -1,4 +1,4 @@
-# Binance-1D-Turtle-Breakout Decision Log
+# Binance-1D-Turtle-Breakout 决策日志
 
 ## 2026-06-27
 

@@ -1,22 +1,22 @@
-# HYPE-15M-MII Decision Log
+# HYPE-15M-MII 决策日志
 
-This is the family-level reading path for Binance HYPEUSDT `15m` multi-indicator intraday research.
+这是 Binance HYPEUSDT `15m` multi-indicator intraday 研究的家族级阅读路径。
 
-## Current Boundary
+## 当前边界
 
-- This is a new exploratory research family, not a promoted live strategy.
-- It exists because the requested search allows broad indicator combinations rather than a pure EMA crossover, trend-breakout, or candle-count rule.
-- Any candidate must be judged after live-realistic order timing, stop/target feasibility, fees, slippage, time-slice stability, and restart/state-machine reproducibility checks.
+- 这是一个新的探索性研究家族，不是已提升的 live strategy。
+- 它之所以单独存在，是因为本次搜索允许广泛的指标组合，而不是纯 EMA crossover、trend-breakout 或 candle-count 规则。
+- 任何 candidate 都必须在完成 live-realistic order timing、stop/target 可行性、费用、滑点、时间切片稳定性、以及重启/state-machine 可复现性检查后再判断。
 
-## Decisions
+## 决策
 
-- `2026-06-25`: create a separate family `HYPE-15M-Multi-Indicator-Intraday` (`HYPE-15M-MII`) rather than overloading existing 15m EMA or candle-count families.
-- `2026-06-25`: first broad Binance HYPEUSDT `15m` multi-indicator intraday search is negative. Best combined candidate reached `+141.92%` annual return, `-18.88%` max drawdown, `76.90%` win rate, and `0.94` trades/day, but failed the `>= 2000%` annual return target and degraded to `-5.26%` annualized in the last `90d`. Do not promote.
-- `2026-06-26`: full parameter ablation and expanded time-slice backtests confirmed the same negative boundary. The baseline reproduced exactly, but `0/55` baseline/variant rows met the full gate; the only higher annualized rows either breached drawdown, failed recent stability, or reduced frequency. Data quality checks on `data/cache/hypeusdt_15m_fapi.csv` found no gaps/duplicates/OHLC errors, but the input is still cache-only and lacks `quote_volume/trade_count/vwap/source/is_closed`, so it is not a standard data-lake promotion dataset. Do not promote.
-- `2026-06-26`: combining surface-improvement ablation parameters did not produce an optimized strategy. The grid evaluated `594` non-baseline combinations; `0` achieved both higher annualized return and no-worse max drawdown while also passing trade-shape and recent-stability gates. Highest-return combo improved annualized return to `+174.81%` but worsened max drawdown to `-23.24%`; the best compromise reached `+153.01%` with `-19.94%` max drawdown. Do not promote; do not treat higher leverage or TP widening as optimization.
+- `2026-06-25`：创建独立家族 `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`），而不是挤入既有 `15m` EMA 或 candle-count 家族。
+- `2026-06-25`：首次广泛的 Binance HYPEUSDT `15m` multi-indicator intraday 搜索结果为负。最佳组合 candidate 达到 `+141.92%` 年收益、`-18.88%` 最大回撤、`76.90%` 胜率和 `0.94` 笔/天，但未达到 `>= 2000%` 年收益目标，并且在最近 `90d` 退化为年化 `-5.26%`。不提升。
+- `2026-06-26`：全参数消融和扩展时间切片回测确认了相同的负面边界。baseline 可以精确复现，但 `0/55` 个 baseline/variant 行满足完整 gate；唯一年化更高的行不是突破回撤，就是未通过近期稳定性，或降低了频率。对 `data/cache/hypeusdt_15m_fapi.csv` 的数据质量检查没有发现 gaps/duplicates/OHLC errors，但输入仍只是 cache-only，并缺少 `quote_volume/trade_count/vwap/source/is_closed`，因此不是可用于标准数据湖 promotion 的数据集。不提升。
+- `2026-06-26`：组合 surface-improvement 消融参数没有得到优化策略。网格评估了 `594` 个非 baseline 组合；`0` 个组合同时实现更高年化收益、不更差最大回撤，并通过 trade-shape 与 recent-stability gate。最高收益组合把年化收益提高到 `+174.81%`，但最大回撤恶化到 `-23.24%`；最佳折中达到 `+153.01%`、最大回撤 `-19.94%`。不提升；不要把更高杠杆或扩大 TP 当作优化。
 
-## Evidence Policy
+## 证据政策
 
-- Prefer this family README, durable Markdown reports, and artifacts over scratch outputs.
-- Top-level `reports/` is retired and is not durable evidence for this family.
-- Negative findings should be written here or in a durable diagnostic note instead of hidden by additional parameter search.
+- 优先使用本家族 README、持久 Markdown 报告和 artifacts，而不是 scratch outputs。
+- 顶层 `reports/` 已退役，不是本家族的 durable evidence。
+- 负面发现应写在这里或持久 diagnostic note 中，而不是被后续参数搜索掩盖。

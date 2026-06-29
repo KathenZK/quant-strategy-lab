@@ -1,278 +1,202 @@
-# HYPE-5M-Event-Quality-Scoring Decision Log
+# HYPE-5M-Event-Quality-Scoring 决策日志
 
-## 2026-06-27 - Create independent event-quality scoring line
+## 2026-06-27 - 创建独立事件质量打分线
 
-Status: `active diagnostic`
+状态：`active diagnostic`
 
-Decision:
+决策：
 
-- Create `HYPE-5M-Event-Quality-Scoring` as a new family instead of placing the
-  work under `HYPE-5M-Micro-Scalp` or `HYPE-5M-Pullback-Trail`.
-- Treat indicator rules as candidate event sources, not as final strategies.
-- Start with an interpretable walk-forward ranking model before adding heavier
-  machine learning dependencies.
+- 创建 `HYPE-5M-Event-Quality-Scoring` 作为新家族，而不是把工作放在 `HYPE-5M-Micro-Scalp` 或 `HYPE-5M-Pullback-Trail` 下。
+- 将指标规则视为候选事件源，而不是最终策略。
+- 在加入更重的机器学习依赖前，先从可解释的 walk-forward ranking model 开始。
 
-Reasoning:
+原因：
 
-- Existing `1m` EMA-crossover diagnostics show that adding exits or transferred
-  strength filters does not rescue raw cross-chasing.
-- Existing `5m` fixed-rule scalp research found paper-audit candidates only
-  after relaxing frequency, so the next useful question is whether event quality
-  can be selected rather than whether one more static rule can be found.
+- 既有 `1m` EMA-crossover 诊断显示，增加 exits 或迁移 strength filters 不能救回原始 cross-chasing。
+- 既有 `5m` fixed-rule scalp 研究只有在放宽频率后才找到 paper-audit candidates，因此下一个有用问题不是再找一个静态规则，而是能否选择事件质量。
 
-Required V0 standards:
+V0 必需标准：
 
-- Validate data continuity, closed-bar status, OHLC legality, and raw vs
-  normalized alignment before reporting performance.
-- Use closed-bar signals and next-open entries only.
-- Use a purge window between training labels and test months.
-- Preserve JSON/CSV artifacts and a Markdown diagnostic under this family.
+- 报告性能前，验证数据连续性、closed-bar 状态、OHLC 合法性，以及 raw vs normalized alignment。
+- 只使用 closed-bar signals 和 next-open entries。
+- 在训练标签和测试月份之间使用 purge window。
+- 在本家族下保留 JSON/CSV artifacts 和 Markdown diagnostic。
 
-## 2026-06-27 - Generic V0 no-go; seeded V0 paper-audit candidate
+## 2026-06-27 - Generic V0 no-go；seeded V0 paper-audit candidate
 
-Status: `paper-audit candidate`
+状态：`paper-audit candidate`
 
-Evidence:
+证据：
 
-- Generic V0 report:
+- Generic V0 report：
   `diagnostics/hype-5m-event-quality-v0-2026-06-27.md`
-- Seeded V0 report:
+- Seeded V0 report：
   `diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`
 
-Decision:
+决策：
 
-- Do not promote the generic multi-source event pool. It produced `252,277`
-  candidate events but `0` paper-gate passes; the best ranked row was still
-  negative OOS.
-- Preserve `seeded_source_mean_q80` as a paper-audit candidate only.
+- 不提升 generic multi-source event pool。它产生了 `252,277` 个 candidate events，但 paper-gate pass 为 `0`；排名最好的行在 OOS 仍为负。
+- 仅将 `seeded_source_mean_q80` 保留为 paper-audit candidate。
 
-Seeded V0 headline:
+Seeded V0 摘要：
 
-- Seed selection used `HYPE-5M-Micro-Scalp` relaxed-rounds configs but filtered
-  seeds only by `train_2025_05_30_to_2026_03_01` metrics.
-- OOS window starts at `2026-03-01 00:00:00+00:00`.
-- Best row `seeded_source_mean_q80`: `184` OOS trades, `1.57` trades/day,
-  `28.89%` 1x return, `1.222` PF, `15.47 bps` average trade, `-15.38%`
-  max drawdown, and `27.18%` recent-30d return.
+- Seed selection 使用 `HYPE-5M-Micro-Scalp` relaxed-rounds 配置，但仅按 `train_2025_05_30_to_2026_03_01` 指标筛选 seeds。
+- OOS window 从 `2026-03-01 00:00:00+00:00` 开始。
+- 最佳行 `seeded_source_mean_q80`：`184` 笔 OOS trades，`1.57` 笔/天，`28.89%` 1x return，`1.222` PF，`15.47 bps` average trade，`-15.38%` max drawdown，`27.18%` recent-30d return。
 
-Boundary:
+边界：
 
-- This is not live-ready. The config universe was inherited from prior
-  `HYPE-5M-Micro-Scalp` research, so the next step must be an anti-leakage
-  seed-generation audit plus cost stress and paper-runner reconciliation.
+- 这不是 live-ready。config universe 继承自先前的 `HYPE-5M-Micro-Scalp` 研究，因此下一步必须是 anti-leakage seed-generation audit，加上 cost stress 和 paper-runner reconciliation。
 
 ## 2026-06-27 - Seeded V0 score/quantile ablation
 
-Status: `paper-audit candidate unchanged`
+状态：`paper-audit candidate unchanged`
 
-Evidence:
+证据：
 
-- Ablation report:
+- Ablation report：
   `diagnostics/hype-5m-seeded-event-quality-v0-ablation-2026-06-27.md`
-- Full-year segment diagnostic:
+- Full-year segment diagnostic：
   `diagnostics/hype-5m-seeded-event-quality-v0-q80-full-year-segments-2026-06-27.md`
 
-Decision:
+决策：
 
-- Do not replace `current_70_20_10__q80` with the highest full-year return row.
-- Keep `current_70_20_10__q80` as the balanced paper-audit row for follow-up
-  audit, while treating high-return `q50/q60` rows as unstable diagnostics.
+- 不要用全年收益最高的行替换 `current_70_20_10__q80`。
+- 保留 `current_70_20_10__q80` 作为后续审计的均衡 paper-audit 行，同时将高收益 `q50/q60` 行视为不稳定诊断。
 
-Findings:
+发现：
 
-- `current_70_20_10__q80`: `633` fixed-seed full-year replay trades,
-  `61.81%` return, `1.128` PF, `9.30 bps` average trade, `-26.94%` max drawdown,
-  `13.63%` recent-3m return, and `6/13` negative active months.
-- `cfg_only__q60`: highest full-year return at `179.93%`, with `1.206` PF and
-  `14.32 bps` average trade, but recent-3m return was `-6.39%` and max drawdown
-  reached `-30.50%`, so it failed the stability gate.
-- The ablation suggests much of the full-year edge comes from `cfg_name`
-  historical means; `style` and `side` are secondary. This increases the need
-  for anti-leakage seed-generation audit before any live or paper-live promotion.
+- `current_70_20_10__q80`：`633` 笔 fixed-seed full-year replay trades，`61.81%` return，`1.128` PF，`9.30 bps` average trade，`-26.94%` max drawdown，`13.63%` recent-3m return，`6/13` 个 active months 为负。
+- `cfg_only__q60`：全年收益最高，为 `179.93%`，PF `1.206`，average trade `14.32 bps`；但 recent-3m return 为 `-6.39%`，max drawdown 达到 `-30.50%`，因此未通过 stability gate。
+- 消融显示，全年 edge 的大部分来自 `cfg_name` 历史均值；`style` 和 `side` 是次要项。这提高了任何 live 或 paper-live promotion 前进行 anti-leakage seed-generation audit 的必要性。
 
-Boundary:
+边界：
 
-- The ablation is a fixed seed-universe retrospective diagnostic, not strict
-  anti-leakage OOS before `2026-03-01`. The seeds were still selected using
-  `train_2025_05_30_to_2026_03_01` metrics.
+- 该消融是 fixed seed-universe retrospective diagnostic，不是 `2026-03-01` 前严格 anti-leakage OOS。seeds 仍然使用 `train_2025_05_30_to_2026_03_01` 指标筛选。
 
-## 2026-06-27 - Create core ledger and Seeded V0.1 style-prune
+## 2026-06-27 - 创建主账并进行 Seeded V0.1 style-prune
 
-Status: `paper-audit candidate refined`
+状态：`paper-audit candidate refined`
 
-Evidence:
+证据：
 
-- Core ledger:
+- Core ledger：
   `hype-5m-event-quality-scoring-core-ledger.md`
-- Style-prune report:
+- Style-prune report：
   `diagnostics/hype-5m-seeded-event-quality-v01-style-prune-2026-06-27.md`
 
-Decision:
+决策：
 
-- Treat `HYPE-5M-Event-Quality-Scoring-Seeded-V0` / `current_70_20_10__q80`
-  as the Base version.
-- Promote `no_wick_no_breakout__q80` to the current refined diagnostic
-  candidate for follow-up paper audit.
-- Keep `bb_vwap_only__q85` as a lower-drawdown simplified alternative.
-- Do not continue treating `wick_reject` and `micro_breakout` as required
-  baseline event sources; they should remain removed unless a later focused
-  audit proves a constrained version is useful.
+- 将 `HYPE-5M-Event-Quality-Scoring-Seeded-V0` / `current_70_20_10__q80` 视为 Base version。
+- 将 `no_wick_no_breakout__q80` 提升为当前 refined diagnostic candidate，用于后续 paper audit。
+- 保留 `bb_vwap_only__q85` 作为低回撤简化替代项。
+- 不再继续把 `wick_reject` 和 `micro_breakout` 视为必需的 baseline event sources；除非后续 focused audit 证明受约束版本有用，否则它们应保持移除。
 
-Findings:
+发现：
 
-- Base `base_all__q80`: `633` trades, `61.81%` full-year return, `1.128` PF,
-  `9.30 bps` average trade, `-26.94%` max drawdown, and `6/13` negative months.
-- Refined `no_wick_no_breakout__q80`: `545` trades, `238.78%` full-year return,
-  `1.383` PF, `24.05 bps` average trade, `-16.75%` max drawdown, `25.33%`
-  recent-3m return, and `2/13` negative months.
-- Lower-drawdown `bb_vwap_only__q85`: `347` trades, `194.31%` full-year return,
-  `1.489` PF, `33.06 bps` average trade, `-10.79%` max drawdown, `34.77%`
-  recent-3m return, and `1/13` negative months.
+- Base `base_all__q80`：`633` 笔，`61.81%` full-year return，`1.128` PF，`9.30 bps` average trade，`-26.94%` max drawdown，`6/13` 个负收益月份。
+- Refined `no_wick_no_breakout__q80`：`545` 笔，`238.78%` full-year return，`1.383` PF，`24.05 bps` average trade，`-16.75%` max drawdown，`25.33%` recent-3m return，`2/13` 个负收益月份。
+- Lower-drawdown `bb_vwap_only__q85`：`347` 笔，`194.31%` full-year return，`1.489` PF，`33.06 bps` average trade，`-10.79%` max drawdown，`34.77%` recent-3m return，`1/13` 个负收益月份。
 
-Boundary:
+边界：
 
-- These results are still fixed seed-universe diagnostics, not strict
-  anti-leakage OOS before `2026-03-01`. Next steps must be seed audit, cost
-  stress, drawdown-control ablation, and paper-runner reconciliation.
+- 这些结果仍是 fixed seed-universe diagnostics，不是 `2026-03-01` 前严格 anti-leakage OOS。下一步必须是 seed audit、cost stress、drawdown-control ablation 和 paper-runner reconciliation。
 
 ## 2026-06-27 - Seeded V0.1 full parameter ablation
 
-Status: `paper-audit candidate refined`
+状态：`paper-audit candidate refined`
 
-Evidence:
+证据：
 
-- Full parameter ablation:
+- Full parameter ablation：
   `diagnostics/hype-5m-seeded-event-quality-v01-full-ablation-2026-06-27.md`
 
-Decision:
+决策：
 
-- Confirm that `no_wick_no_breakout` remains the best event-source set under
-  the wider parameter search.
-- Preserve `no_wick_no_breakout__current_70_20_10__q80` as the Base-score
-  V0.1 control.
-- Promote `no_wick_no_breakout__cfg_side_88_12__q80` as the current V0.1
-  full-ablation lead for follow-up audit.
-- Do not treat `style_only` or `side_only` as viable simplified models; both
-  failed the stricter stability gate.
+- 确认在更宽参数搜索下，`no_wick_no_breakout` 仍是最佳 event-source set。
+- 保留 `no_wick_no_breakout__current_70_20_10__q80` 作为 Base-score V0.1 control。
+- 将 `no_wick_no_breakout__cfg_side_88_12__q80` 提升为当前 V0.1 full-ablation lead，用于后续审计。
+- 不要把 `style_only` 或 `side_only` 当作可用的简化模型；二者都未通过更严格的 stability gate。
 
-Findings:
+发现：
 
-- Full grid: `6` style sets × `7` score variants × `7` quantile thresholds.
-- Lead row `no_wick_no_breakout__cfg_side_88_12__q80`: `549` trades,
-  `287.61%` full-year return, `1.425` PF, `26.33 bps` average trade,
-  `-16.30%` max drawdown, `24.59%` recent-3m return, and `1/13` negative months.
-- Base-score control `no_wick_no_breakout__current_70_20_10__q80`: `545`
-  trades, `238.78%` return, `1.383` PF, `24.05 bps` average trade,
-  `-16.75%` max drawdown, `25.33%` recent-3m return, and `2/13` negative months.
-- Low-drawdown alternative `bb_vwap_only__current_70_20_10__q85`: `347`
-  trades, `194.31%` return, `1.489` PF, `33.06 bps` average trade,
-  `-10.79%` max drawdown, and `34.77%` recent-3m return.
-- The best score variants are `cfg_side_88_12` and `cfg_only`; removing
-  `style_mean` after style pruning improves results. This supports the view that
-  the strategy is still driven by historical config quality ranking, with side
-  as a small auxiliary term.
+- Full grid：`6` 个 style sets × `7` 个 score variants × `7` 个 quantile thresholds。
+- Lead row `no_wick_no_breakout__cfg_side_88_12__q80`：`549` 笔，`287.61%` full-year return，`1.425` PF，`26.33 bps` average trade，`-16.30%` max drawdown，`24.59%` recent-3m return，`1/13` 个负收益月份。
+- Base-score control `no_wick_no_breakout__current_70_20_10__q80`：`545` 笔，`238.78%` return，`1.383` PF，`24.05 bps` average trade，`-16.75%` max drawdown，`25.33%` recent-3m return，`2/13` 个负收益月份。
+- Low-drawdown alternative `bb_vwap_only__current_70_20_10__q85`：`347` 笔，`194.31%` return，`1.489` PF，`33.06 bps` average trade，`-10.79%` max drawdown，`34.77%` recent-3m return。
+- 最好的 score variants 是 `cfg_side_88_12` 和 `cfg_only`；style pruning 后移除 `style_mean` 会改善结果。这支持一个判断：策略仍主要由历史 config quality ranking 驱动，side 只是小的辅助项。
 
-Boundary:
+边界：
 
-- This is still a fixed seed-universe diagnostic, not strict anti-leakage OOS
-  before `2026-03-01`. It must not be promoted before seed audit, cost stress,
-  drawdown-control ablation, and paper-runner reconciliation.
+- 这仍是 fixed seed-universe diagnostic，不是 `2026-03-01` 前严格 anti-leakage OOS。在 seed audit、cost stress、drawdown-control ablation 和 paper-runner reconciliation 之前，不能提升。
 
-## 2026-06-27 - Register Seeded V1 and block live promotion
+## 2026-06-27 - 登记 Seeded V1 并阻止 live promotion
 
-Status: `research lead / paper-audit lead only`
+状态：`research lead / paper-audit lead only`
 
-Evidence:
+证据：
 
-- Live feasibility audit:
+- Live feasibility audit：
   `diagnostics/hype-5m-seeded-v1-live-feasibility-2026-06-27.md`
 
-Decision:
+决策：
 
-- Register `no_wick_no_breakout__cfg_side_88_12__q80` as
-  `HYPE-5M-Event-Quality-Scoring-Seeded-V1`.
-- Do not mark V1 as live-ready, paper-live-ready, or dry-run handoff.
-- Require seed-generation anti-leakage, paper-runner reconciliation,
-  order-maintenance audit, cost/slippage stress, restart recovery, and kill
-  switch definition before any live or paper-live promotion.
+- 将 `no_wick_no_breakout__cfg_side_88_12__q80` 登记为 `HYPE-5M-Event-Quality-Scoring-Seeded-V1`。
+- 不要将 V1 标记为 live-ready、paper-live-ready 或 dry-run handoff。
+- 任何 live 或 paper-live promotion 之前，必须完成 seed-generation anti-leakage、paper-runner reconciliation、order-maintenance audit、cost/slippage stress、restart recovery 和 kill switch definition。
 
-V1 headline:
+V1 摘要：
 
-- Score: `0.875 * cfg_mean + 0.125 * side_mean`.
-- Event styles: keep `bb_revert`, `macd_flip`, `trend_rsi_snapback`,
-  `vwap_revert`; remove `wick_reject` and `micro_breakout`.
-- Fixed seed-universe full-year replay: `549` trades, `287.61%` return,
-  `1.425` PF, `26.33 bps` average trade, `-16.30%` max drawdown.
-- Recent 90d: `112` trades, `24.59%` return, `1.303` PF, `-16.30%` max DD.
-- Recent 30d: `51` trades, `46.29%` return, `2.209` PF, `-5.24%` max DD.
+- Score：`0.875 * cfg_mean + 0.125 * side_mean`。
+- Event styles：保留 `bb_revert`、`macd_flip`、`trend_rsi_snapback`、`vwap_revert`；移除 `wick_reject` 和 `micro_breakout`。
+- Fixed seed-universe full-year replay：`549` 笔，`287.61%` return，`1.425` PF，`26.33 bps` average trade，`-16.30%` max drawdown。
+- Recent 90d：`112` 笔，`24.59%` return，`1.303` PF，`-16.30%` max DD。
+- Recent 30d：`51` 笔，`46.29%` return，`2.209` PF，`-5.24%` max DD。
 
-Live-feasibility blockers:
+实盘可行性阻塞项：
 
-- Fixed seed universe still comes from prior `HYPE-5M-Micro-Scalp` search;
-  strict anti-leakage seed generation has not been demonstrated.
-- Backtest entry is next-open plus observed slippage; live latency after candle
-  close and real market-order fill need paper-runner reconciliation.
-- Backtest assumes immediate TP/SL bracket after entry; live unprotected window
-  between entry fill and bracket confirmation is not audited.
-- Stop-market behavior is conservative in backtest, but real Binance trigger,
-  slippage, reduce-only order handling, orphan-order cleanup, and restart
-  recovery are not audited.
-- Additional roundtrip cost stress: `10 bps` still leaves `124.08%` return and
-  `1.247` PF, but `20 bps` drops to `29.47%` return / `1.090` PF and `30 bps`
-  turns negative. Position-size slippage is not modeled.
+- Fixed seed universe 仍来自之前的 `HYPE-5M-Micro-Scalp` 搜索；严格 anti-leakage seed generation 尚未证明。
+- Backtest entry 是 next-open 加观测滑点；K 线收盘后的 live latency 和真实 market-order fill 需要 paper-runner reconciliation。
+- Backtest 假设入场后立即挂 TP/SL bracket；entry fill 和 bracket confirmation 之间的 live unprotected window 尚未审计。
+- Stop-market behavior 在回测中是保守的，但真实 Binance trigger、slippage、reduce-only order handling、orphan-order cleanup 和 restart recovery 尚未审计。
+- 额外 roundtrip cost stress：`10 bps` 仍有 `124.08%` return 和 `1.247` PF，但 `20 bps` 降至 `29.47%` return / `1.090` PF，`30 bps` 转负。Position-size slippage 未建模。
 
-Boundary:
+边界：
 
-- V1 is a strong research lead, not a tradable deployment spec.
+- V1 是强 research lead，不是可交易 deployment spec。
 
-## 2026-06-27 - Seeded V1 strict seed-generation audit failed
+## 2026-06-27 - Seeded V1 strict seed-generation audit 失败
 
-Status: `fixed-seed diagnostic / anti-leakage failed`
+状态：`fixed-seed diagnostic / anti-leakage failed`
 
-Evidence:
+证据：
 
-- Strict seed audit:
+- Strict seed audit：
   `diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md`
-- Script:
+- Script：
   `scripts/research_hype_5m_seeded_v1_strict_seed_audit.py`
 
-Decision:
+决策：
 
-- Downgrade `HYPE-5M-Event-Quality-Scoring-Seeded-V1` from paper-audit lead to
-  fixed seed-universe diagnostic only.
-- Do not proceed to paper-runner reconciliation, paper-live, dry-run handoff, or
-  live deployment from V1.
-- Treat the previous fixed seed-universe V1 result as likely containing material
-  config-universe / seed-selection bias.
+- 将 `HYPE-5M-Event-Quality-Scoring-Seeded-V1` 从 paper-audit lead 下调为仅 fixed seed-universe diagnostic。
+- 不要从 V1 继续推进 paper-runner reconciliation、paper-live、dry-run handoff 或 live deployment。
+- 将此前 fixed seed-universe V1 结果视为很可能包含实质性 config-universe / seed-selection bias。
 
-Strict audit method:
+严格审计方法：
 
-- Generate a fixed no-data config universe from the relaxed-rounds targeted
-  random generator, but disable `seed_configs_from_previous()` and do not read
-  any historical summary seed list.
-- Use `2000` configs per relaxed round, `6000` total configs, restricted to the
-  V1 allowed styles: `bb_revert`, `macd_flip`, `trend_rsi_snapback`,
-  `vwap_revert`.
-- For each test month, select up to `100` seed configs using only trades before
-  that month minus a `12h` purge window.
-- Then generate that month's events from the selected seeds and trade them with
-  the V1 scorer `0.875 * cfg_mean + 0.125 * side_mean` at `q80`.
-- OOS starts at `2025-08-01` because the data starts on `2025-05-30` and the
-  audit reserves `60` days of minimum seed-selection history.
+- 从 relaxed-rounds targeted random generator 生成固定 no-data config universe，但禁用 `seed_configs_from_previous()`，也不读取任何 historical summary seed list。
+- 每个 relaxed round 使用 `2000` 个配置，共 `6000` 个配置，并限制在 V1 允许的 styles：`bb_revert`、`macd_flip`、`trend_rsi_snapback`、`vwap_revert`。
+- 对每个测试月，只使用该月之前且扣除 `12h` purge window 的交易，选择最多 `100` 个 seed configs。
+- 然后用选出的 seeds 生成该月事件，并以 V1 scorer `0.875 * cfg_mean + 0.125 * side_mean` 在 `q80` 交易。
+- OOS 从 `2025-08-01` 开始，因为数据从 `2025-05-30` 开始，审计保留 `60` 天最低 seed-selection history。
 
-Findings:
+发现：
 
-- Strict audit result: `493` trades, `-61.16%` return, `0.843` PF,
-  `-16.58 bps` average trade, and `-65.94%` max drawdown.
-- Only `2025_08`, `2025_11`, and `2026_03` were positive; most months were
-  negative, including `2026_01` at `-32.35%`.
-- This contradicts fixed seed-universe V1, which had `549` trades, `287.61%`
-  return, `1.425` PF, and `-16.30%` max drawdown.
+- Strict audit result：`493` 笔，`-61.16%` return，`0.843` PF，`-16.58 bps` average trade，`-65.94%` max drawdown。
+- 只有 `2025_08`、`2025_11` 和 `2026_03` 为正；大多数月份为负，包括 `2026_01` 的 `-32.35%`。
+- 这与 fixed seed-universe V1 矛盾，后者为 `549` 笔、`287.61%` return、`1.425` PF、`-16.30%` max drawdown。
 
-Boundary:
+边界：
 
-- The strict audit uses a bounded `6000`-config universe, not the full original
-  `21000` relaxed-round scale. Expanding the strict universe can be a follow-up,
-  but the current evidence is already a promotion blocker.
-- Any future continuation should be a new strict rolling-seed V2 search, not a
-  parameter tweak on fixed-seed V1.
+- 严格审计使用的是有界 `6000`-config universe，不是原始完整 `21000` relaxed-round 规模。扩展 strict universe 可以作为后续工作，但当前证据已经是 promotion blocker。
+- 未来如果继续，应是新的 strict rolling-seed V2 search，而不是在 fixed-seed V1 上做参数调整。

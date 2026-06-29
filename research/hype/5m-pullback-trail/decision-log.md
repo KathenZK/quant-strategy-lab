@@ -1,6 +1,6 @@
 # HYPE-5M-PBTR 决策日志
 
-Family id：`HYPE-5M-PBTR`
+家族 id：`HYPE-5M-PBTR`
 
 这是 Binance HYPE `5m` 回踩恢复入场与 ATR trailing-stop 研究的家族级阅读路径。
 
