@@ -142,7 +142,7 @@
 
 研究报告、策略主账、实验结论和持久 decision record 必须以 Markdown 保存在 `research/` 内。
 
-新生成的研究报告默认使用中文，除非用户明确要求其他语言。
+所有新增或更新的长期研究文档默认使用中文，除非用户明确要求其他语言。这个规则包括 `decision-log.md`、README、策略主账、diagnostics、ablations、live specs、research notes、实验结论和交接文档；策略名、版本号、参数、路径、指标名和状态术语可以保留英文原文。
 
 Cursor Canvas 和 Cursor 私有项目目录不是 canonical storage。Canvas 只能在用户明确要求时作为临时可视化界面；任何可持久化结论都必须同步写回对应 Markdown。
 

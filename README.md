@@ -91,6 +91,8 @@ data/normalized/ohlcv/
 - `scripts/` 放只服务该研究的一次性复现、搜索、审计脚本。
 - `artifacts/` 放需要随报告保留的 JSON、CSV、HTML、交易路径图等产物。
 
+所有新增或更新的长期研究文档默认使用中文，包括 `decision-log.md`、README、策略主账、diagnostics、ablations、live specs、research notes、实验结论和交接文档；策略名、版本号、参数、路径、指标名和状态术语可以保留英文原文。
+
 只有可复用、有稳定接口的数据湖内核、归一化、质量审计、特征构建或因子计算工具，才应进入 `src/strategy_lab/`。交易所抓取、补洞、回测搜索和一次性研究导出默认放在对应 `research/.../scripts/`，并必须记录数据来源与质量校验。
 
 不要创建顶层 `reports/` 或任何全局报告缓存目录。临时实验输出放系统临时目录或对应研究目录下明确标记为 scratch/local 的位置，不在文档中引用；被报告引用或需要复现的 JSON/CSV/HTML/交易路径图等证据进入对应研究目录的 `artifacts/`。

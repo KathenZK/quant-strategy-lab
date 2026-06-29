@@ -14,6 +14,8 @@
 
 标准 family name 使用展开写法，优先包含资产、周期和机制；短 id 只作为历史别名。新研究、README 和 decision log 优先使用完整 family name；旧报告里已经存在的短 id 不需要机械重写，但引用时应补充完整名称。
 
+所有新增或更新的长期研究文档默认使用中文，除非用户明确要求其他语言。这个规则包括 `decision-log.md`、README、策略主账、diagnostics、ablations、live specs、research notes、实验结论和交接文档；策略名、版本号、参数、路径、指标名和状态术语可以保留英文原文。
+
 ## 当前 HYPE 命名口径
 
 HYPE 是当前已有历史材料最多的研究线，引用时特别注意不要把不同 family 的同名版本号串起来：

@@ -6,7 +6,7 @@ alwaysApply: true
 # Research Report Storage
 
 - Durable research reports, strategy ledgers, experiment conclusions, and decision records must be saved as Markdown under `research/`.
-- Write generated research reports in Chinese by default unless the user explicitly requests another language.
+- Write all newly created or updated durable research documents in Chinese by default unless the user explicitly requests another language. This includes `decision-log.md`, `README.md`, strategy ledgers, diagnostics, ablations, live specs, research notes, experiment conclusions, and handoff documents.
 - Before starting a new strategy research line, check `research/README.md` and the relevant asset `README.md`. If the timeframe or strategy mechanism is new, create a separate directory named `research/<asset>/<timeframe>-<strategy-family-slug>/`, for example `research/hype/1m-ema-crossover/`, `research/hype/15m-ema-crossover/`, or `research/hype/5m-pullback-trail/`.
 - Do not place a new timeframe into an existing family only because the indicators are similar; initialize a new family directory with at least `README.md`, `decision-log.md`, `scripts/`, and `artifacts/`.
 - Store current one-off research scripts under the relevant `research/.../scripts/` directory, not under `archive/scripts/research/`.
