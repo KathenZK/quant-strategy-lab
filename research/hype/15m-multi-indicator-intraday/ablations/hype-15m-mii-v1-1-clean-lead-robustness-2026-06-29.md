@@ -4,6 +4,8 @@ Family：`HYPE-15M-Multi-Indicator-Intraday`（alias：`HYPE-15M-MII`）
 
 状态：`diagnostic evolution lead / not promoted / not live-ready`
 
+注：本文中的 `V1.1 diagnostic lead` 是 `2026-06-29` 的临时命名，已被当前主账中的 `HYPE-15M-MII-V1.1`（`clean_rsi7_40_60_atrmin75_rvol1_h10_rsi14b0_tp120_sl360_hold16_x2`）supersede。本文保留为历史稳健性证据，不再定义当前 `V1.1`。
+
 ## 结论
 
 本轮选择的不是演化年化最高或 exposure 最高版本，而是通过 K+1/K+2 联合筛选的 `2x` 低频高质量 Pareto 成员。随后对全部生效参数做细粒度 OAT，并补成本、延迟、方向、月度和滚动窗口压力。

@@ -18,11 +18,12 @@ For the newer Binance HYPE `5m` pullback + ATR trailing-stop research line, use:
 4. `5m-pullback-trail/live-specs/hype-5m-pullback-trail-v2-live-spec.md`
 5. `5m-pullback-trail/research-notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
 
-For the Binance HYPEUSDT `15m` pullback + delayed trailing migration diagnostic, use:
+For the Binance HYPEUSDT `15m` pullback event-source research line, use:
 
 1. `15m-pullback-trail/README.md`
 2. `15m-pullback-trail/decision-log.md`
-3. `15m-pullback-trail/diagnostics/hype-15m-pullback-trail-v3-3-migration-2026-06-30.md`
+3. `15m-pullback-trail/diagnostics/hype-15m-pullback-trail-bracket-search-2026-06-30.md`
+4. `15m-pullback-trail/diagnostics/hype-15m-pullback-trail-v3-3-migration-2026-06-30.md`
 
 For the Binance HYPEUSDT `5m` micro-scalp research line, use:
 
@@ -78,7 +79,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 | `HYPE-1M-MA-Pullback-Scalp` | - | `1m-ma-pullback-scalp/` | Binance HYPEUSDT `1m` slow/fast MA trend-pullback scalp with HH/HL or LL/LH structure and fixed brackets | Do not merge this with `HYPE-1M-EMA-Crossover`; first executable search is no-go |
 | `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `15m-ema-trend-breakout/` | Later EMA trend breakout / chase-long-chase-short lineage with ADX, volume, 1h confirmation, and cross-exchange execution variants | `V35` here is not candle-count `V35` or EMA-cross `V14` |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `5m-pullback-trail/` | Binance HYPE `5m` pullback/resume entries with ATR trailing-stop exits | Local `V1/V2` here are not legacy 15m `HYPE-EMA-Trend-Breakout` V1/V2 |
-| `HYPE-15M-Pullback-Trail` | - | `15m-pullback-trail/` | Binance HYPEUSDT `15m` migration diagnostic for the V3.3 pullback + delayed trailing idea from the 5m PBTR family | Diagnostic only; do not treat as a 5m PBTR promoted version |
+| `HYPE-15M-Pullback-Trail` | - | `15m-pullback-trail/` | Binance HYPEUSDT `15m` pullback event-source research; includes V3.3 delayed trailing migration and executable bracket search | V3.3 migration is no-go; bracket candidate is paper-audit only, not a 5m PBTR promoted version |
 | `HYPE-5M-MA-Pullback-Scalp` | - | `5m-ma-pullback-scalp/` | Binance HYPEUSDT `5m` slow/fast MA trend-pullback scalp with HH/HL or LL/LH structure and fixed brackets | Do not merge this with `HYPE-5M-Micro-Scalp`; current candidates are paper-audit only |
 | `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `5m-micro-scalp/` | Binance HYPEUSDT `5m` high-frequency micro-profit scalp search with immediate executable TP/SL brackets | Do not treat high win-rate no-go rows as pullback-trail or live candidates |
 | `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | `5m-event-quality-scoring/` | Binance HYPEUSDT `5m` event-quality scoring over candidate events and seeded micro-scalp signals | Do not treat seeded paper-audit rows as generic micro-scalp or live-ready candidates |
@@ -86,6 +87,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 ## Core Markdown Ledgers
 
 - `15m-ema-crossover/hype-ema-x-core-ledger.md`: `HYPE-EMA-Crossover` promoted-candidate and version-evolution ledger.
+- `15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md`: `HYPE-15M-Multi-Indicator-Intraday` core ledger；当前 `HYPE-15M-MII-V1.1` 为 diagnostic observation only，不是 live-ready；HTML 交易路径图在 `15m-multi-indicator-intraday/artifacts/hype_15m_mii_v1_1_trade_paths_2026-06-30.html`；动态止盈测试见 `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`。
 - `15m-multi-indicator-intraday/README.md`: `HYPE-15M-Multi-Indicator-Intraday` exploratory broad-indicator `15m` intraday search entry.
 - `15m-multi-indicator-intraday/canonical-specs/hype-15m-mii-v1-baseline-spec.md`：`HYPE-15M-Multi-Indicator-Intraday-V1` 固定基线；仅 diagnostic，不是实盘候选。
 - `15m-multi-indicator-intraday/ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`：V1 标准数据湖可执行时序与全参数消融，完整 gate `0/62`。
@@ -95,6 +97,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 - `15m-multi-indicator-intraday/research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`：放宽回撤高收益选择；样本内 aggressive diagnostic，不是 promotion。
 - `15m-multi-indicator-intraday/research-notes/hype-15m-mii-fast-validation-frequency-ranking-2026-06-30.md`：快速验证频率综合排名；严格 `1-3` 笔/天版本收益或近期稳定性偏弱。
 - `15m-multi-indicator-intraday/research-notes/hype-15m-mii-balanced-leverage-stress-2026-06-30.md`：放弃频率后的均衡观察版本 `1.75x/2x/3x` 暴露阶梯；`2x` 均衡，`3x` 仅 aggressive diagnostic。
+- `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`：`HYPE-15M-MII-V1.1` 动态止盈测试；单纯 trailing 未改善固定 TP baseline。
 - `15m-multi-indicator-intraday/ablations/hype-15m-mii-full-ablation-2026-06-26.md`: `HYPE-15M-Multi-Indicator-Intraday` best-search-candidate time-slice and full ablation diagnostic; still no-go.
 - `15m-multi-indicator-intraday/ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`: `HYPE-15M-Multi-Indicator-Intraday` surface-improvement combination optimization diagnostic; still no-go.
 - `1m-ema-crossover/diagnostics/hype-1m-ema-crossover-live-search-2026-06-25.md`: `HYPE-1M-EMA-Crossover` first diagnostic / paper-live search report.
@@ -102,6 +105,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 - `15m-ema-trend-breakout/hype-ema-tb-core-ledger.md`: `HYPE-EMA-Trend-Breakout` trend strategy research ledger.
 - `15m-candle-count-reversal/hype-cc-15m-milestone-comparison.md`: `HYPE-Candle-Count-Reversal` 15m milestone comparison ledger.
 - `5m-pullback-trail/hype-5m-pullback-trail-core-ledger.md`: `HYPE-5M-Pullback-Trail` active `5m` pullback-trail ledger.
+- `15m-pullback-trail/diagnostics/hype-15m-pullback-trail-bracket-search-2026-06-30.md`: `HYPE-15M-Pullback-Trail` 15m 回踩事件源 + 入场即 bracket / emergency stop / timeout 搜索；找到 paper-audit candidate，但不是 live-ready。
 - `15m-pullback-trail/diagnostics/hype-15m-pullback-trail-v3-3-migration-2026-06-30.md`: `HYPE-15M-Pullback-Trail` V3.3 migration diagnostic; no-go under live-realistic trailing.
 - `5m-ma-pullback-scalp/diagnostics/hype-5m-ma-pullback-scalp-search-2026-06-26.md`: `HYPE-5M-MA-Pullback-Scalp` first executable two-MA pullback scalp search.
 - `5m-ma-pullback-scalp/diagnostics/hype-5m-ma-pullback-scalp-robustness-2026-06-26.md`: `HYPE-5M-MA-Pullback-Scalp` neighborhood robustness; current candidates are paper-audit only.

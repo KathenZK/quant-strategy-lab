@@ -4,6 +4,8 @@ Family id：`HYPE-15M-MII`
 
 本家族研究 Binance HYPEUSDT perpetual `15m` 多指标日内策略，允许组合趋势、动量、波动、成交量和价格结构指标，并要求闭合 K 信号、下一根 open 入场等可执行时序。
 
+主账：`hype-15m-mii-core-ledger.md`。
+
 不要与以下家族混用：
 
 - `HYPE-EMA-Crossover`：较早的 EMA 金叉/死叉家族。
@@ -28,6 +30,15 @@ Family id：`HYPE-15M-MII`
 
 V1 规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`。
 
+## 当前观察基线
+
+`HYPE-15M-MII-V1base` 当前记录为：
+
+- 名称：`clean_rsi7_40_60_atrmin75_rvol1_h10_rsi14b0_tp120_sl360_hold16_x2`。
+- 参数：`RSI(7)` 上穿 `40` 做多、下穿 `60` 做空；`MACD(12,26,9)` 方向过滤；`ATR96 pct >= 0.75%`；`min_rvol96=1.0`；无 `1h confirm`；无 `RSI14 band`；`TP=1.20%`、`SL=3.60%`、最长 `16` 根 `15m` K；权益暴露 `2x`。
+- 表现：K+1 年化 `272.30%`、回撤 `-21.12%`、胜率 `80.75%`、PF `2.158`、Last90 年化 `457.15%`；K+2 年化 `96.51%`、回撤 `-36.28%`、胜率 `78.01%`、PF `1.446`。
+- 状态：`V1base diagnostic observation only / not live-ready`；不改变本家族 `NO-GO` 状态。
+
 ## 当前结论
 
 - `2026-06-25`：首次广泛搜索完成；没有候选同时达到年化 `>=2000%`、最大回撤 `<=20%`、胜率 `>=70%`。
@@ -38,22 +49,31 @@ V1 规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`。
 - `2026-06-30`：放宽回撤后存在更激进版本：`DD<=25%` 首位 `337.95%` 年化、`-23.18%` 回撤、`80.71%` 胜率；`DD<=30%` 首位 `356.74%` 年化、`-26.94%` 回撤、`86.71%` 胜率，但 Last90 仅 `0.63%`，且高收益版本不具备 K+2 稳健性。
 - `2026-06-30`：快速验证频率综合排名显示，严格 `1-3` 笔/天的版本收益或近期稳定性偏弱；综合第一是接近 `1` 笔/天的 `clean_rsi7_40_55_atrmin75_rvol0p75_h10_rsi14b0_tp120_sl320_hold32_x1`，K+1 年化 `97.07%`、回撤 `-20.13%`、胜率 `81.45%`，K+2 年化 `32.03%`。
 - `2026-06-30`：放弃频率后，均衡观察版本选择 `clean_rsi7_40_60_atrmin105_rvol0_h10_rsi14b0_tp120_sl450_hold32_x2`；K+1 年化 `216.81%`、总收益 `244.44%`、回撤 `-15.65%`、胜率 `91.60%`，K+2 年化 `101.73%`、回撤 `-27.39%`。`3x` K+1 年化 `443.62%`，但 K+2 回撤 `-39.22%`，只作为 aggressive diagnostic。
+- `2026-06-30`：按用户指定，将 `clean_rsi7_40_60_atrmin75_rvol1_h10_rsi14b0_tp120_sl360_hold16_x2` 记录为 `HYPE-15M-MII-V1base` 诊断观察基线；K+1 收益高、Last90 强，但 K+2 回撤扩大到 `-36.28%`，因此仍不是 promotion。
+- `2026-06-30`：将干净参数登记为 `HYPE-15M-MII-V1.1`：仅保留 RSI、MACD、ATR/RVOL、固定 TP/SL/hold、2x 暴露和成本项；分窗口回测显示 K+1 最近 `1w` 无交易、最近 `1m` 总收益 `34.40%`、最近 `3m` 总收益 `52.69%`、全样本总收益 `309.54%`，但 K+2 全样本回撤仍为 `-36.28%`。另生成 HTML 交易路径图，可逐笔对照 K 线、RSI(7) 和 MACD(12,26,9)。
+- `2026-06-30`：测试 V1.1 动态止盈（取消固定 `TP=1.20%`，activation 后 trailing stop）。`264` 个动态 trailing 配置中 `0` 个同时超过固定 TP baseline 的收益、回撤和胜率形状；综合第一 `trail_act150_trail30_sl360_hold16` K+1 年化 `205.74%`、回撤 `-36.08%`、胜率 `71.35%`，弱于固定 TP baseline。结论：V1.1 更像短促反转，不适合单纯放开利润奔跑。
+- `2026-06-30`：把 V1.1 直接套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据做跨资产诊断。BTC K+1 全样本只有 `2` 笔，年化 `3.46%`、总收益 `3.71%`，交易数过少；ETH K+1 全样本年化 `-37.95%`、总收益 `-40.06%`、回撤 `-42.74%`。结论：HYPE 参数没有自然迁移到 BTC/ETH。
 - 实盘判断：`NO-GO`。没有生产 runner、真实 stop-market/滑点证据、资金费核算、重启恢复、交易所对账、missing-bar fail-closed 和 kill switch。
 
 ## 阅读顺序
 
-1. `canonical-specs/hype-15m-mii-v1-baseline-spec.md`
-2. `ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`
-3. `live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md`
-4. `research-notes/hype-15m-mii-clean-parameter-evolution-2026-06-29.md`
-5. `research-notes/hype-15m-mii-delay-aware-selection-2026-06-29.md`
-6. `research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`
-7. `research-notes/hype-15m-mii-fast-validation-frequency-ranking-2026-06-30.md`
-8. `research-notes/hype-15m-mii-balanced-leverage-stress-2026-06-30.md`
-9. `ablations/hype-15m-mii-v1-1-clean-lead-robustness-2026-06-29.md`
-10. `diagnostics/hype-15m-mii-search-2026-06-25.md`
-11. `ablations/hype-15m-mii-full-ablation-2026-06-26.md`
-12. `ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`
+1. `hype-15m-mii-core-ledger.md`
+2. `canonical-specs/hype-15m-mii-v1-baseline-spec.md`
+3. `ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`
+4. `live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md`
+5. `research-notes/hype-15m-mii-clean-parameter-evolution-2026-06-29.md`
+6. `research-notes/hype-15m-mii-delay-aware-selection-2026-06-29.md`
+7. `research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`
+8. `research-notes/hype-15m-mii-fast-validation-frequency-ranking-2026-06-30.md`
+9. `research-notes/hype-15m-mii-balanced-leverage-stress-2026-06-30.md`
+10. `research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`
+11. `research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`
+12. `research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`
+13. `research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
+14. `ablations/hype-15m-mii-v1-1-clean-lead-robustness-2026-06-29.md`
+15. `diagnostics/hype-15m-mii-search-2026-06-25.md`
+16. `ablations/hype-15m-mii-full-ablation-2026-06-26.md`
+17. `ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`
 
 ## 证据规则
 

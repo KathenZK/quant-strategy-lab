@@ -42,6 +42,7 @@ SUMMARY_CSV = ARTIFACT_DIR / f"hype_15m_pbtr_bracket_search_summary_{DATE_TAG}.c
 SLICES_CSV = ARTIFACT_DIR / f"hype_15m_pbtr_bracket_search_slices_{DATE_TAG}.csv"
 MONTHLY_CSV = ARTIFACT_DIR / f"hype_15m_pbtr_bracket_search_monthly_{DATE_TAG}.csv"
 TRADES_CSV = ARTIFACT_DIR / f"hype_15m_pbtr_bracket_search_best_trades_{DATE_TAG}.csv"
+COST_STRESS_CSV = ARTIFACT_DIR / f"hype_15m_pbtr_bracket_search_cost_stress_{DATE_TAG}.csv"
 REPORT_MD = DIAG_DIR / f"hype-15m-pullback-trail-bracket-search-{DATE_TAG}.md"
 
 LEVERAGE = 1.0
@@ -560,7 +561,50 @@ def trades_to_frame(trades: list[Trade], label: str) -> pd.DataFrame:
     )
 
 
-def render_markdown(data_quality: dict[str, Any], prescreen: pd.DataFrame, summary: pd.DataFrame, slices: pd.DataFrame, monthly: pd.DataFrame) -> str:
+def cost_stress_frame(frame: pd.DataFrame, filtered_signal: np.ndarray, exit_spec: ExitSpec, label: str) -> pd.DataFrame:
+    global FEE_RATE_PER_FILL, ENTRY_SLIPPAGE_RATE, EXIT_SLIPPAGE_RATE
+    original = (FEE_RATE_PER_FILL, ENTRY_SLIPPAGE_RATE, EXIT_SLIPPAGE_RATE)
+    models = [
+        ("observed_v33", original[0], original[1], original[2]),
+        ("binance_default_10bp_fee_4bp_slip", 0.001, 0.0004, 0.0004),
+        ("stress_10bp_fee_8bp_slip", 0.001, 0.0008, 0.0008),
+        ("low_fee_4bp_fee_4bp_slip", 0.0004, 0.0004, 0.0004),
+    ]
+    rows: list[dict[str, Any]] = []
+    start = pd.Timestamp(frame["ts"].iloc[0])
+    end = pd.Timestamp(frame["ts"].iloc[-1]) + pd.Timedelta(minutes=15)
+    oos_start = pd.Timestamp("2026-06-01T00:00:00Z")
+    try:
+        for name, fee_rate, entry_slip, exit_slip in models:
+            FEE_RATE_PER_FILL = fee_rate
+            ENTRY_SLIPPAGE_RATE = entry_slip
+            EXIT_SLIPPAGE_RATE = exit_slip
+            trades = simulate_bracket(frame, filtered_signal, exit_spec, f"{label}__{name}")
+            full = metric_from_trades(trades, start=start, end=end)
+            oos = metric_from_trades(trades, start=oos_start, end=end)
+            rows.append(
+                {
+                    "cost_model": name,
+                    "fee_rate_per_fill": fee_rate,
+                    "entry_slippage_rate": entry_slip,
+                    "exit_slippage_rate": exit_slip,
+                    **{f"full_{key}": value for key, value in full.items()},
+                    **{f"oos_{key}": value for key, value in oos.items()},
+                }
+            )
+    finally:
+        FEE_RATE_PER_FILL, ENTRY_SLIPPAGE_RATE, EXIT_SLIPPAGE_RATE = original
+    return pd.DataFrame(rows)
+
+
+def render_markdown(
+    data_quality: dict[str, Any],
+    prescreen: pd.DataFrame,
+    summary: pd.DataFrame,
+    slices: pd.DataFrame,
+    monthly: pd.DataFrame,
+    cost_stress: pd.DataFrame,
+) -> str:
     final = summary.sort_values(["balanced_pass", "score", "full_total_return"], ascending=False).copy()
     passed = final[final["balanced_pass"]].copy()
     top = final.head(12)
@@ -627,6 +671,22 @@ def render_markdown(data_quality: dict[str, Any], prescreen: pd.DataFrame, summa
             f"| `{row['slice']}` | `{int(row['trades'])}` | `{pct(float(row['total_return']))}` | `{pct(float(row['win_rate']))}` | "
             f"`{num(float(row['profit_factor']))}` | `{num(float(row['payoff_ratio']))}` | `{pct(float(row['max_dd']))}` |"
         )
+    lines.extend(
+        [
+            "",
+            "### 成本压力",
+            "",
+            "| cost model | 交易数 | 收益 | 胜率 | PF | payoff | 回撤 | OOS收益 | OOS PF |",
+            "| --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |",
+        ]
+    )
+    for row in cost_stress.to_dict(orient="records"):
+        lines.append(
+            f"| `{row['cost_model']}` | `{int(row['full_trades'])}` | `{pct(float(row['full_total_return']))}` | "
+            f"`{pct(float(row['full_win_rate']))}` | `{num(float(row['full_profit_factor']))}` | "
+            f"`{num(float(row['full_payoff_ratio']))}` | `{pct(float(row['full_max_dd']))}` | "
+            f"`{pct(float(row['oos_total_return']))}` | `{num(float(row['oos_profit_factor']))}` |"
+        )
     if len(passed):
         conclusion = "本轮找到了满足宽松 balanced gate 的 bracket 候选，但它仍只能作为 paper-audit 研究候选，原因是 OOS 样本较短，且参数来自同一资产同一历史窗口搜索。"
     else:
@@ -649,6 +709,7 @@ def render_markdown(data_quality: dict[str, Any], prescreen: pd.DataFrame, summa
             f"- slices CSV：`{SLICES_CSV.relative_to(ROOT)}`",
             f"- monthly CSV：`{MONTHLY_CSV.relative_to(ROOT)}`",
             f"- best trades CSV：`{TRADES_CSV.relative_to(ROOT)}`",
+            f"- cost stress CSV：`{COST_STRESS_CSV.relative_to(ROOT)}`",
         ]
     )
     return "\n".join(lines) + "\n"
@@ -736,6 +797,12 @@ def main() -> None:
         exit_spec = ExitSpec(float(top["exit_tp_atr"]), float(top["exit_sl_atr"]), int(top["exit_timeout_bars"]))
         filtered = filtered_cache[(signal_spec.label, filter_spec.label)]
         best_trades = simulate_bracket(frame, filtered, exit_spec, best_label)
+    top = summary.iloc[0]
+    best_signal_spec = next(item for item in signal_objects if item.label == str(top["signal_spec"]))
+    best_filter_spec = next(item for item in filter_objects if item.label == str(top["filter_spec"]))
+    best_exit_spec = ExitSpec(float(top["exit_tp_atr"]), float(top["exit_sl_atr"]), int(top["exit_timeout_bars"]))
+    best_filtered = filtered_cache[(best_signal_spec.label, best_filter_spec.label)]
+    cost_stress = cost_stress_frame(frame, best_filtered, best_exit_spec, best_label)
 
     monthly_rows: list[dict[str, Any]] = []
     for label in summary.head(20)["label"].tolist():
@@ -754,7 +821,8 @@ def main() -> None:
     slices.to_csv(SLICES_CSV, index=False)
     monthly.to_csv(MONTHLY_CSV, index=False)
     trades_to_frame(best_trades, best_label).to_csv(TRADES_CSV, index=False)
-    REPORT_MD.write_text(render_markdown(data_quality, prescreen, summary, slices, monthly), encoding="utf-8")
+    cost_stress.to_csv(COST_STRESS_CSV, index=False)
+    REPORT_MD.write_text(render_markdown(data_quality, prescreen, summary, slices, monthly, cost_stress), encoding="utf-8")
     REPORT_JSON.write_text(
         json.dumps(
             {
@@ -784,6 +852,7 @@ def main() -> None:
                     "slices": str(SLICES_CSV.relative_to(ROOT)),
                     "monthly": str(MONTHLY_CSV.relative_to(ROOT)),
                     "best_trades": str(TRADES_CSV.relative_to(ROOT)),
+                    "cost_stress": str(COST_STRESS_CSV.relative_to(ROOT)),
                 },
             },
             ensure_ascii=False,
