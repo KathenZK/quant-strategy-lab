@@ -815,6 +815,8 @@ Canonical name：`HYPE-5M-PBTR-V6.2.1`
 
 来源：V6.2 full parameter ablation 的 `long_htf_threshold_0p0` 行。
 
+专项全参数消融：`ablations/hype-5m-pbtr-v6-2-1-full-parameter-ablation-2026-06-29.md`。
+
 V6.2.1 只改变 V6.2 的 long leg HTF 阈值：
 
 ```text
@@ -843,6 +845,8 @@ long_first on same signal bar
 ```
 
 fixed `3x` ablation 结果：`219` 笔、总收益 `+1022.25%`、PF `1.804`、胜率 `64.38%`、payoff `0.998`、最大回撤 `-22.35%`、OOS `15` 笔 / PF `1.439`、short `53` 笔 / PF `1.764`。它比 V6.2 基线增加 `9` 笔交易并提高总收益，回撤几乎不变。
+
+2026-06-29 专项消融补充：本轮以 V6.2.1 为 baseline，重跑与 V6.2 相同的 `75` 个单因子/组合/sizing 变体，除 baseline 外 `37/74` 个通过 robust gate。把 long HTF 阈值收紧回 `0.5` 会退回 V6.2 的 `210` 笔、`+833.71%`、PF `1.771`；完全删除 long HTF 过滤为 `220` 笔、`+895.91%`、PF `1.745`、最大回撤 `-24.10%`，弱于 `htf_spread>=0`。`long_tp_atr=4.0` 为 `191` 笔、`+876.75%`、PF `1.781`，仍不替换 `TP=2.5ATR`。最高的未通过 gate 正收益行是 `short_htf_threshold_0p5`，总收益 `+1146.53%`、PF `1.970`，但 short OOS 只有 `3` 笔，不作为替换候选。
 
 实盘状态：V6.2.1 进入 `hype-pullback-enhance` runner 的默认实现，但状态只允许 dry-run / 极小 notional live audit。原因是收益提升主要来自 long HTF 阈值放宽，short leg 的 OOS 仍只有 `5` 笔，且 fixed `3x` 的历史最大回撤约 `-22%`；本地默认配置使用 `1x` 和小 notional，先验证真实 bracket 下单、单边成交后撤单、timeout、重启恢复和 SQLite 复盘口径。
 
@@ -1034,10 +1038,11 @@ trail_stop = min(initial_stop, previous_trough + trail_atr * ATR14(current_bar))
 10. `HYPE-5M-PBTR-V6` 正式记录为当前最可执行的 paper audit candidate。它放弃旧 `min_hold_bars + trailing`，使用强动量多头回踩恢复、入场即固定 bracket、36 根 K 时间退出；下一步优先写 paper audit runner。
 11. `HYPE-5M-PBTR-V6.1` 记录为 V6 的 `TP=2.5ATR + fixed 3x` sizing/exit 变体；回测收益高但回撤和单笔风险已明显放大，只能 paper audit，不能直接生产 sizing。
 12. `HYPE-5M-PBTR-V6.2` 记录为 short-only 组合后的 paper/live-dry-run 候选：`combo_short_rank2` 在严格单仓组合下把 V6.1 fixed `3x` 从 `+408.95%/-25.63% DD` 改善到 `+833.71%/-22.38% DD`，但 short OOS 只有 `5` 笔；小额实盘应从 `1x` 或极小 notional 验证订单偏差，不直接生产。
-13. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
-14. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
-15. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。
-16. V2/V2.1/V3/V3.1/V3.2/V3.3/V3.3.1/V4/V6/V6.1/V6.2 系列都不应直接大资金上线；V6/V6.1/V6.2 的下一步不是直接真钱生产，而是 paper runner、极小资金 live-dry-run 和 walk-forward 阈值固化。
+13. `HYPE-5M-PBTR-V6.2.1` 记录为 V6.2 的默认 dry-run 表达：long `htf_spread>=0` 在 2026-06-29 专项全参数消融中仍优于收紧回 `0.5` 和完全删除 HTF 过滤；fixed `3x` 只是横向比较口径，真实观察仍从 `1x` 或极小 notional 开始。
+14. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
+15. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
+16. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。
+17. V2/V2.1/V3/V3.1/V3.2/V3.3/V3.3.1/V4/V6/V6.1/V6.2/V6.2.1 系列都不应直接大资金上线；V6/V6.1/V6.2/V6.2.1 的下一步不是直接真钱生产，而是 paper runner、极小资金 live-dry-run 和 walk-forward 阈值固化。
 
 V2 实盘验收线：
 
@@ -1097,6 +1102,7 @@ V6 paper audit 验收线：
 - `diagnostics/hype-5m-pbtr-v3-3-1-prev-exit-filter-2026-06-27.md`
 - `diagnostics/hype-5m-pbtr-v6-1-short-combo-search-2026-06-27.md`
 - `ablations/hype-5m-pbtr-v6-2-full-parameter-ablation-2026-06-28.md`
+- `ablations/hype-5m-pbtr-v6-2-1-full-parameter-ablation-2026-06-29.md`
 
 ## Reproduction
 
@@ -1123,6 +1129,7 @@ V6 paper audit 验收线：
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v3-3-1_prev_exit_filter.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_1_short_combo_search.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_full_ablation.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_1_full_ablation.py`
 - `artifacts/hype_5m_r05732_ablation.json`
 - `artifacts/hype_5m_r05732_v2_combo_test.json`
 - `artifacts/hype_5m_pbtr_v2_live_cost_ablation_slices.json`
@@ -1133,6 +1140,8 @@ V6 paper audit 验收线：
 - `artifacts/hype_5m_pbtr_v6-1_short_combo_extended_summary_2026-06-27.csv`
 - `artifacts/hype_5m_pbtr_v6-2_full_ablation_2026-06-28.json`
 - `artifacts/hype_5m_pbtr_v6-2_full_ablation_summary_2026-06-28.csv`
+- `artifacts/hype_5m_pbtr_v6-2-1_full_ablation_2026-06-29.json`
+- `artifacts/hype_5m_pbtr_v6-2-1_full_ablation_summary_2026-06-29.csv`
 - `artifacts/hype_5m_pbtr_v21_live_cost_variants.json`
 - `artifacts/hype_5m_pbtr_v21a_live_realistic_audit.json`
 - `artifacts/hype_5m_pbtr_v21a_remove_final_htf_live_cost_diagnostic.json`

@@ -48,5 +48,6 @@ HYPE 是当前已有历史材料最多的研究线，引用时特别注意不要
 
 - `data-quality-first.mdc`：数据来源、字段口径、缺口/重复/空值、raw/normalized 对齐和 data-quality blocker。
 - `live-executable-strategy-research.mdc`：订单时序、成交假设、stop/lockout 审计和 promotion 前置条件。
+- `backtest-execution-costs.mdc`：Binance 回测默认手续费 `0.001`、滑点 `4 bps`；其他市场等待明确成本口径，并要求报告中声明执行成本假设。
 - `research-report-storage.mdc`：新研究目录、Markdown 结论、脚本和 artifacts 的存放位置，以及 Canvas/legacy-canvas 边界。
 

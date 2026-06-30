@@ -9,3 +9,4 @@ Current scripts:
 - `research_hype_5m_micro_scalp_search.py`: strict first search for the original `3-5` trades/day high-win micro-scalp target.
 - `research_hype_5m_micro_scalp_relaxed_rounds.py`: round-by-round relaxed-constraint search.
 - `research_hype_5m_micro_scalp_candidate_robustness.py`: local neighborhood robustness check for the better relaxed candidates.
+- `research_hype_5m_micro_scalp_v1_full_ablation.py`: `HYPE-5M-Micro-Scalp-V1` baseline reproduction and one-at-a-time full parameter ablation.

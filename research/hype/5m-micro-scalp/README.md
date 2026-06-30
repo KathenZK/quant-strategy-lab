@@ -27,6 +27,8 @@ It is independent from:
 - `diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`: first executable broad search report.
 - `diagnostics/hype-5m-micro-scalp-relaxed-rounds-2026-06-26.md`: round-by-round relaxed-constraint search.
 - `diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`: parameter-neighborhood robustness check for the relaxed candidates.
+- `canonical-specs/hype-5m-micro-scalp-v1-baseline-spec.md`: `HYPE-5M-Micro-Scalp-V1` baseline spec and parameter explanation.
+- `ablations/hype-5m-micro-scalp-v1-full-parameter-ablation-2026-06-29.md`: V1 one-at-a-time full parameter ablation.
 
 ## Current Finding
 
@@ -42,7 +44,9 @@ The subsequent robustness sweep tested `749` local neighborhood configs around t
 
 - `R1_relax_frequency_R01242__tp_sl_0011`: `vwap_revert`, both sides, `188` trades, `0.48` trades/day, annualized `1.32x`, win rate `85.11%`, PF `1.468`, average trade `16.67 bps`, maxDD `-8.16%`, VAL PF `5.445`, FWD PF `3.550`, recent 30d return `10.46%`, `3/14` negative months.
 
-This is a candidate for paper audit / live-spec drafting only. It still needs per-trade path review, order maintenance audit, restart-state audit, and paper/live-dry-run reconciliation before any real capital deployment.
+This candidate is now recorded as `HYPE-5M-Micro-Scalp-V1` baseline. The 2026-06-29 full parameter ablation tested `103` configs (`1` baseline + `102` one-at-a-time variants): V1 is most dependent on keeping `entry_style=vwap_revert`, `require_trend=true`, `ema_slow=96`, and `vwap_dev_bps=75`; TP/SL, hold/cooldown, ATR bounds, and distance filters have wider viable neighborhoods.
+
+This is still a candidate for paper audit / live-spec drafting only. It still needs per-trade path review, order maintenance audit, restart-state audit, and paper/live-dry-run reconciliation before any real capital deployment.
 
 ## Directory Rules
 
