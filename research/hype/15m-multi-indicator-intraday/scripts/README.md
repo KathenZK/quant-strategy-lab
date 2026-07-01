@@ -24,4 +24,8 @@
 - `research_hype_15m_mii_v1_1_window_backtest.py`：把 `HYPE-15M-MII-V1base` 登记为 `HYPE-15M-MII-V1.1` 干净参数，并回测最近 `1w/1m/3m/6m/1y/all` 的 K+1 与 K+2 表现。
 - `research_hype_15m_mii_v1_1_trade_path_chart.py`：生成 `HYPE-15M-MII-V1.1` 逐笔交易路径 HTML，包含局部 15m K 线、入场/出场连线、RSI(7) 与 MACD(12,26,9)。
 - `research_hype_15m_mii_v1_1_dynamic_take_profit.py`：测试 `HYPE-15M-MII-V1.1` 固定 TP 改为 activation 后 trailing stop 的动态止盈，并输出 K+1/K+2 排名与出场原因。
+- `research_hype_15m_mii_v1_2_atr_bracket_exit.py`：把 `HYPE-15M-MII-V1.1` 的固定 TP/SL 改为入场时按 `ATR96%` 设置固定 bracket，并记录为 `HYPE-15M-MII-V1.2`；输出 K+1/K+2 排名与出场原因。
+- `research_hype_15m_mii_v1_2_window_slice_backtest.py`：对 `HYPE-15M-MII-V1.2` 做最近 `1w/1m/3m/6m/1y/all` 固定窗口、`30/90/180d` 滚动窗口和随机切片回测，并输出交易数、收益、回撤、Sharpe/Sortino/Calmar 等指标。
+- `research_hype_15m_mii_v1_2_atr_rvol_filter_ablation.py`：保持 `HYPE-15M-MII-V1.2` 信号、MACD、ATR bracket 出场、成本和单仓状态机不变，分别去掉 `ATR96 >= 0.75%`、`RVOL96 >= 1.0`，以及同时去掉二者，评估开单数、收益和回撤变化。
+- `research_hype_15m_mii_v1_2_macd_filter_ablation.py`：保持 `HYPE-15M-MII-V1.2` 的 ATR/RVOL 过滤、ATR bracket 出场、成本和单仓状态机不变，只去掉 `MACD(12,26,9)` 方向过滤，评估漏入信号和回测质量。
 - `research_hype_15m_mii_v1_1_btc_eth_cross_asset.py`：把 `HYPE-15M-MII-V1.1` 直接套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，做跨资产迁移诊断；该脚本不使用标准数据湖，结果不得作为 promotion 证据。

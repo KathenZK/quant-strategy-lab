@@ -817,6 +817,12 @@ Canonical name：`HYPE-5M-PBTR-V6.2.1`
 
 专项全参数消融：`ablations/hype-5m-pbtr-v6-2-1-full-parameter-ablation-2026-06-29.md`。
 
+实盘可行性专项审计：`diagnostics/hype-5m-pbtr-v6-2-1-live-feasibility-audit-2026-06-30.md`。
+
+实盘复现规格：`live-specs/hype-5m-pbtr-v6-2-1-live-spec.md`。
+
+动态 ATR TP/SL 测试：`diagnostics/hype-5m-pbtr-v6-2-1-dynamic-atr-bracket-2026-06-30.md`。
+
 V6.2.1 只改变 V6.2 的 long leg HTF 阈值：
 
 ```text
@@ -847,6 +853,12 @@ long_first on same signal bar
 fixed `3x` ablation 结果：`219` 笔、总收益 `+1022.25%`、PF `1.804`、胜率 `64.38%`、payoff `0.998`、最大回撤 `-22.35%`、OOS `15` 笔 / PF `1.439`、short `53` 笔 / PF `1.764`。它比 V6.2 基线增加 `9` 笔交易并提高总收益，回撤几乎不变。
 
 2026-06-29 专项消融补充：本轮以 V6.2.1 为 baseline，重跑与 V6.2 相同的 `75` 个单因子/组合/sizing 变体，除 baseline 外 `37/74` 个通过 robust gate。把 long HTF 阈值收紧回 `0.5` 会退回 V6.2 的 `210` 笔、`+833.71%`、PF `1.771`；完全删除 long HTF 过滤为 `220` 笔、`+895.91%`、PF `1.745`、最大回撤 `-24.10%`，弱于 `htf_spread>=0`。`long_tp_atr=4.0` 为 `191` 笔、`+876.75%`、PF `1.781`，仍不替换 `TP=2.5ATR`。最高的未通过 gate 正收益行是 `short_htf_threshold_0p5`，总收益 `+1146.53%`、PF `1.970`，但 short OOS 只有 `3` 笔，不作为替换候选。
+
+2026-06-30 实盘可行性审计补充：在当前已闭合数据湖范围 `2025-05-30T10:30Z` 到 `2026-06-30T06:15Z` 上，未发现明确未来函数、同 K TP/SL 乐观顺序、或旧 V3/V4 delayed trailing crossed stale stop 价格成交问题。截断重算 `EMA/ATR/HTF/ret/volume ratio` 共 `91` 个 feature-point，失败 `0` 个；baseline fixed `3x` 为 `220` 笔、总收益 `+1054.07%`、PF `1.813`、最大回撤 `-22.35%`，退出分布为 target `129`、time_open `72`、stop_market `19`，baseline 没有 stop/target open-gap 退出，也没有同根 TP/SL 同触发。若假设 bracket 延迟一根 5m K 才生效，仍为 `220` 笔、总收益 `+1030.87%`、PF `1.803`、最大回撤 `-23.73%`；说明策略不完全依赖入场 K 的不可成交瞬间，但入场 K 内有 `3` 笔触及 bracket，真实 runner 必须记录下单延迟、reduce-only bracket 成对维护、单边成交撤单和 timeout 市价平仓偏差。
+
+2026-06-30 交接规格补充：为同事实盘观察创建 `live-specs/hype-5m-pbtr-v6-2-1-live-spec.md`。该 spec 将 long/short leg 参数、EMA/ATR/HTF/dir_ret 公式、相邻信号抑制、组合单仓、入场即 TP/SL bracket、timeout open、持久化字段、重启恢复和 `30-50` 笔订单审计 gate 写成单文件复现规格；实现方应按该 spec 复现，不应继承旧 V2/V3/V4 delayed trailing 或 min-hold 逻辑。
+
+2026-06-30 动态 ATR TP/SL 测试补充：V6.2.1 默认不是 trailing，也不是持仓中动态重算 TP/SL；它是入场时用信号 K `ATR14` 一次性计算固定 bracket。本轮测试 `entry_anchor_dynamic_atr`、`entry_anchor_no_widen_stop`、`close_reset_dynamic_atr`、`close_reset_no_widen_stop` 四类可执行动态 ATR bracket，并扫描 `TP scale=0.75/1.0/1.25/1.5`、`SL scale=0.75/1.0/1.25`。当前数据湖 fixed baseline 为 `220` 笔、`+1054.07%`、PF `1.813`、DD `-22.35%`；最高收益动态行为 `entry_anchor_dynamic_atr__tp1p5__sl1p0` 为 `190` 笔、`+1124.81%`、PF `1.870`，但 DD 扩大到 `-29.89%`，且 `186` 笔实际发生止损放宽。最好的低回撤动态行 `close_reset_dynamic_atr__tp0p75__sl1p25` 为 `+882.65%`、PF `1.838`、DD `-20.25%`，收益低于 baseline。结论：没有动态版本在收益、PF、回撤三者上同时稳健优于固定 bracket；默认继续保留 fixed entry-ATR bracket。
 
 实盘状态：V6.2.1 进入 `hype-pullback-enhance` runner 的默认实现，但状态只允许 dry-run / 极小 notional live audit。原因是收益提升主要来自 long HTF 阈值放宽，short leg 的 OOS 仍只有 `5` 笔，且 fixed `3x` 的历史最大回撤约 `-22%`；本地默认配置使用 `1x` 和小 notional，先验证真实 bracket 下单、单边成交后撤单、timeout、重启恢复和 SQLite 复盘口径。
 
@@ -1103,6 +1115,9 @@ V6 paper audit 验收线：
 - `diagnostics/hype-5m-pbtr-v6-1-short-combo-search-2026-06-27.md`
 - `ablations/hype-5m-pbtr-v6-2-full-parameter-ablation-2026-06-28.md`
 - `ablations/hype-5m-pbtr-v6-2-1-full-parameter-ablation-2026-06-29.md`
+- `diagnostics/hype-5m-pbtr-v6-2-1-live-feasibility-audit-2026-06-30.md`
+- `live-specs/hype-5m-pbtr-v6-2-1-live-spec.md`
+- `diagnostics/hype-5m-pbtr-v6-2-1-dynamic-atr-bracket-2026-06-30.md`
 
 ## Reproduction
 
@@ -1130,6 +1145,8 @@ V6 paper audit 验收线：
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_1_short_combo_search.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_full_ablation.py`
 - `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_1_full_ablation.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_1_dynamic_atr_bracket.py`
+- `research/hype/5m-pullback-trail/scripts/research_hype_5m_pbtr_v6_2_1_live_feasibility_audit.py`
 - `artifacts/hype_5m_r05732_ablation.json`
 - `artifacts/hype_5m_r05732_v2_combo_test.json`
 - `artifacts/hype_5m_pbtr_v2_live_cost_ablation_slices.json`
@@ -1142,6 +1159,8 @@ V6 paper audit 验收线：
 - `artifacts/hype_5m_pbtr_v6-2_full_ablation_summary_2026-06-28.csv`
 - `artifacts/hype_5m_pbtr_v6-2-1_full_ablation_2026-06-29.json`
 - `artifacts/hype_5m_pbtr_v6-2-1_full_ablation_summary_2026-06-29.csv`
+- `artifacts/hype_5m_pbtr_v6-2-1_live_feasibility_2026-06-30.json`
+- `artifacts/hype_5m_pbtr_v6-2-1_live_feasibility_summary_2026-06-30.csv`
 - `artifacts/hype_5m_pbtr_v21_live_cost_variants.json`
 - `artifacts/hype_5m_pbtr_v21a_live_realistic_audit.json`
 - `artifacts/hype_5m_pbtr_v21a_remove_final_htf_live_cost_diagnostic.json`

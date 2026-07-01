@@ -14,8 +14,8 @@ Created：2026-06-30
 
 ## 当前状态
 
-- 当前主观察基线：`HYPE-15M-MII-V1.1`。
-- 当前实现名：`clean_rsi7_40_60_atrmin75_rvol1_h10_rsi14b0_tp120_sl360_hold16_x2`。
+- 当前登记观察版本：`HYPE-15M-MII-V1.2`。
+- 当前实现名：`clean_rsi7_40_60_atrmin75_rvol1_h10_rsi14b0_tp120_sl360_hold16_x2` + `ATR96` 入场固定 bracket。
 - 当前状态：`diagnostic observation only / not live-ready`。
 - 家族实盘判断：`NO-GO`。
 - 原因：仍缺资金费核算、盘口级 stop-market 证据、真实成交滑点、生产 runner、重启恢复、交易所对账、missing-bar fail-closed 和 kill switch。
@@ -39,6 +39,7 @@ Created：2026-06-30
 | `HYPE-15M-MII-V1` | 首个冻结研究基线，来自早期最佳综合策略；修复不可执行时序后完整 gate `0/62`，实盘审计 `NO-GO`。 |
 | `HYPE-15M-MII-V1base` | 当前主观察基线，按用户指定登记为 `sl360` 高收益诊断表达；只用于后续复现、审计和小额观察讨论，不是 promotion。 |
 | `HYPE-15M-MII-V1.1` | `V1base` 的干净参数登记版，只保留实际生效项；策略行为与 `V1base` 相同，不是 promotion。此命名 supersede 早前 `V1.1 diagnostic lead` 的临时口径。 |
+| `HYPE-15M-MII-V1.2` | 沿用 `V1.1` 信号与过滤，把固定 `TP/SL` 改为入场时按 `ATR96%` 设定的一次性 bracket；仍是 diagnostic observation，不是 promotion。 |
 
 ## 版本台账
 
@@ -46,7 +47,8 @@ Created：2026-06-30
 | --- | --- | --- | --- | --- |
 | `HYPE-15M-MII-V1` | diagnostic baseline / not live-ready | `RSI(7)` 上穿 `30` 做多、下穿 `60` 做空；MACD 方向过滤；ATR96 pct `0.60%-2.80%`；`TP=0.90%`、`SL=2.80%`、`hold=16`、`1.5x` | `canonical-specs/hype-15m-mii-v1-baseline-spec.md`；`ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`；`live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md` | 可执行口径年化 `18.66%`、回撤 `-31.84%`、Last90 年化 `-41.44%`；`NO-GO` |
 | `HYPE-15M-MII-V1base` | diagnostic observation / not live-ready | `RSI(7)` 上穿 `40` 做多、下穿 `60` 做空；MACD 方向过滤；`ATR96 pct >= 0.75%`；`min_rvol96=1.0`；`TP=1.20%`、`SL=3.60%`、`hold=16`、`2x` | `research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`；补算 K+2 延迟压力 | K+1 年化高、Last90 强，但 K+2 回撤扩大到 `-36.28%`；保留为主观察基线，不提升为 candidate/paper-live/dry-run/handoff/live |
-| `HYPE-15M-MII-V1.1` | clean diagnostic expression / not live-ready | 去掉未启用的 `1h confirm`、`RSI14 band`、ADX、H4、ret、churn、cooldown 等表达噪音，只保留生效项 | `research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md` | 行为等同 `V1base`；最近 1 周无交易，K+1 最近 1 月总收益 `34.40%`，全样本总收益 `309.54%`；动态止盈 `0/264` 超过 baseline 形状；BTC/ETH 跨资产诊断未证明可迁移；仍为 `NO-GO` |
+| `HYPE-15M-MII-V1.1` | clean diagnostic expression / not live-ready | 去掉未启用的 `1h confirm`、`RSI14 band`、ADX、H4、ret、churn、cooldown 等表达噪音，只保留生效项 | `research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md` | 行为等同 `V1base`；最近 1 周无交易，K+1 最近 1 月总收益 `34.40%`，全样本总收益 `309.54%`；trailing 动态止盈失败；BTC/ETH 跨资产诊断未证明可迁移；仍为 `NO-GO` |
+| `HYPE-15M-MII-V1.2` | ATR bracket diagnostic observation / not live-ready | 沿用 `V1.1` 入场过滤；下一根 open 入场时按信号 K 已知 `ATR96%` 设置 `TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24` | `live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md` | K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`；去掉 `ATR96 >= 0.75%` 后收益/回撤明显恶化，两个过滤都去掉转负；仍为 `NO-GO` |
 
 ## HYPE-15M-MII-V1base 规格
 
@@ -121,6 +123,69 @@ K+2 延迟压力：
 
 结论：`V1.1` 的优势来自短促反转窗口。单纯放开固定 TP 让利润奔跑，会让更多交易从小赢变成回吐或 timeout，不能提升当前观察基线。
 
+## HYPE-15M-MII-V1.2 ATR 动态止盈止损
+
+按用户指定，将 `atr96_tp1p25x_sl5x_hold24` 记录为 `HYPE-15M-MII-V1.2`。该版本保持 `V1.1` 信号、过滤、`2x` 权益暴露和成本不变，不使用 trailing；用信号 K 已知的 `ATR%` 在入场时设置一次性固定 bracket：`TP = ATR% * tp_mult`、`SL = ATR% * sl_mult`。
+
+- ATR bracket 网格：`600` 个配置。
+- K+1 收益、回撤、胜率同时超过固定百分比 baseline：`3/600`。
+- K+1/K+2 收益、回撤、胜率同时超过固定百分比 baseline：`1/600`。
+- V1.2 配置：`ATR96`，`TP = 1.25 * ATR96%`，`SL = 5.0 * ATR96%`，最长 `24` 根 `15m` K。
+- V1.2 结果：K+1 年化 `311.35%`、总收益 `355.78%`、回撤 `-17.74%`、胜率 `84.78%`、PF `2.179`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`、PF `1.612`。
+
+结论：`V1.2` 比 trailing 更值得继续审计；但通过联合 gate 的配置只有 `1/600`，且仍属于同样本出场参数再优化，不能提升为 candidate、paper-live、dry-run、handoff 或 live。
+
+### V1.2 时间片复核
+
+固定窗口：
+
+| 入场 | 窗口 | 交易数 | 总收益 | 年化 | 最大回撤 | Sharpe |
+| --- | --- | ---: | ---: | ---: | ---: | ---: |
+| `K+1` | `最近1周` | `0` | `0.00%` | `0.00%` | `0.00%` | `0.00` |
+| `K+1` | `最近1月` | `18` | `16.83%` | `564.64%` | `-13.24%` | `3.84` |
+| `K+1` | `最近3月` | `31` | `30.47%` | `194.28%` | `-13.24%` | `3.03` |
+| `K+1` | `最近6月` | `74` | `87.80%` | `254.21%` | `-15.21%` | `3.55` |
+| `K+1` | `最近1年` | `165` | `247.78%` | `248.07%` | `-17.74%` | `3.67` |
+| `K+1` | `全样本` | `184` | `355.78%` | `311.35%` | `-17.74%` | `4.13` |
+| `K+2` | `最近1月` | `19` | `15.05%` | `451.33%` | `-15.65%` | `3.23` |
+| `K+2` | `最近3月` | `32` | `28.48%` | `176.50%` | `-15.65%` | `2.73` |
+| `K+2` | `全样本` | `189` | `172.87%` | `154.96%` | `-34.81%` | `2.46` |
+
+滚动/随机切片：
+
+- `30d` 滚动：K+1 `40/52` 个正收益切片，中位总收益 `7.94%`，最差 `-10.68%`；K+2 `34/52` 个正收益切片，中位 `10.15%`，最差 `-29.03%`。
+- `90d` 滚动：K+1 `43/44` 个正收益切片，中位 `38.49%`，最差 `-7.07%`；K+2 `38/44` 个正收益切片，中位 `21.34%`，最差 `-6.94%`。
+- `180d` 滚动：K+1 `31/31` 个正收益切片，中位 `111.57%`，最差 `55.84%`；K+2 `29/31` 个正收益切片，中位 `54.56%`，最差 `-4.01%`。
+- 随机 `30d/90d/180d` 切片与滚动结果方向一致：短窗口有明显负切片，长窗口大多为正。
+
+结论：`V1.2` 的中长窗口形状强于 `V1.1` 固定 TP/SL，但 30 天级别仍会出现 K+1/K+2 负收益窗口，尤其 K+2 最差 30 天可到 `-29.03%`；不能因为全样本 Sharpe 较高而提升状态。
+
+### V1.2 ATR/RVOL 过滤消融
+
+保持 `V1.2` 的 RSI 信号、MACD 方向过滤、ATR bracket 出场、`2x` 暴露、Binance 成本和单仓状态机不变，只比较 `ATR96 >= 0.75%` 与 `RVOL96 >= 1.0` 的过滤贡献：
+
+| 变体 | K+1 交易数 | K+1 总收益 | K+1 回撤 | K+2 总收益 | K+2 回撤 | 结论 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `baseline` | `184` | `355.78%` | `-17.74%` | `172.87%` | `-34.81%` | 原 `V1.2` |
+| `remove_atr_min` | `342` | `21.93%` | `-43.93%` | `-21.09%` | `-58.00%` | 开单增多但质量明显下降 |
+| `remove_rvol` | `388` | `244.08%` | `-32.29%` | `164.57%` | `-32.32%` | 仍为正，但胜率、PF 和 K+1 回撤退化 |
+| `remove_atr_min_and_rvol` | `711` | `-78.36%` | `-84.73%` | `-71.96%` | `-82.51%` | 放开两者会把低质量信号大量放进来 |
+
+结论：`ATR96 >= 0.75%` 是更关键的质量阈值；`RVOL96 >= 1.0` 也在改善 K+1 回撤和交易形状。不能通过简单去过滤来解决 `V1.2` 交易频率偏低的问题。
+
+### V1.2 MACD 方向过滤消融
+
+保持 `ATR96 0.75%-2.80%`、`RVOL96 >= 1.0`、ATR bracket 出场和单仓状态机不变，只去掉 `MACD(12,26,9)` 方向过滤：
+
+| 变体 | 入场 | 单仓前通过信号 | 最终交易数 | 总收益 | 最大回撤 | 胜率 | PF |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `baseline` | `K+1` | `225` | `184` | `355.78%` | `-17.74%` | `84.78%` | `2.179` |
+| `remove_macd` | `K+1` | `990` | `681` | `-87.20%` | `-91.98%` | `72.10%` | `0.863` |
+| `baseline` | `K+2` | `225` | `189` | `172.87%` | `-34.81%` | `82.01%` | `1.612` |
+| `remove_macd` | `K+2` | `990` | `682` | `-87.37%` | `-92.50%` | `71.41%` | `0.866` |
+
+结论：`MACD` 方向过滤确实会挡掉大量信号，但被挡掉的主要是负期望信号；去掉后不是“多开优质单”，而是把策略变成高频亏损。
+
 ## V1.1 BTC/ETH 跨资产诊断
 
 直接把 `HYPE-15M-MII-V1.1` 套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，目标窗口与 HYPE 标准数据湖相同（`2025-05-30T10:30:00+00:00` 到 `2026-06-26T04:00:00+00:00`）。该数据来自 Binance futures kline API 直接拉取，不是本仓库标准 raw/normalized 数据湖；只用于 sanity check。
@@ -138,6 +203,7 @@ K+2 延迟压力：
 
 - K+2 延迟后收益显著下降，回撤扩大到 `-36.28%`，说明入场时点敏感性仍然存在。
 - 动态止盈测试没有改善收益/回撤/胜率综合形状；后续若继续研究利润奔跑，应先重新定义趋势过滤或分批止盈，而不是直接替换固定 TP。
+- `HYPE-15M-MII-V1.2` 有一个联合改善配置，但属于同样本出场参数再优化；需要邻域、资金费、滑点和滚动 OOS 复核。
 - BTC/ETH 跨资产诊断没有证明自然迁移：BTC 只有 `2` 笔交易，ETH 全样本亏损 `-40.06%`（K+1）。
 - 最近 1 周无交易；最近 1 月/3 月表现强，但短窗口年化会被样本长度放大。
 - 样本来自同一标准数据湖窗口，不是 untouched OOS。
@@ -158,12 +224,15 @@ K+2 延迟压力：
 - V1.1 window backtest：`research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`
 - V1.1 trade paths：`research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`
 - V1.1 dynamic take profit：`research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`
+- V1.2 reproduction spec：`live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`
+- V1.2 ATR bracket exit：`research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`
+- V1.2 window/slice backtest：`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
 - V1.1 BTC/ETH cross asset：`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
 - Decision log：`decision-log.md`
 
 ## 下一步
 
-若继续推进 `V1base`，必须先补齐：
+若继续推进 `V1.2` 或 `V1base`，必须先补齐：
 
 - 资金费回放。
 - 盘口级 stop-market / market order 滑点审计。

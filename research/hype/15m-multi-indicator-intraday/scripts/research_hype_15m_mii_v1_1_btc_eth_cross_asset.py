@@ -315,6 +315,22 @@ def lookup(rows: pd.DataFrame, asset: str, window: str, entry_timing: str) -> pd
     return selected.iloc[0]
 
 
+def json_safe(value: Any) -> Any:
+    if isinstance(value, dict):
+        return {key: json_safe(child) for key, child in value.items()}
+    if isinstance(value, list):
+        return [json_safe(child) for child in value]
+    if isinstance(value, tuple):
+        return [json_safe(child) for child in value]
+    if isinstance(value, np.integer):
+        return int(value)
+    if isinstance(value, np.floating):
+        value = float(value)
+    if isinstance(value, float) and not np.isfinite(value):
+        return None
+    return value
+
+
 def render_markdown(rows: pd.DataFrame, qualities: dict[str, Any]) -> str:
     btc_all = lookup(rows, "BTC", "全样本", "K+1")
     eth_all = lookup(rows, "ETH", "全样本", "K+1")
@@ -422,7 +438,10 @@ def main() -> None:
             "markdown": str(MARKDOWN_PATH),
         },
     }
-    JSON_PATH.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
+    JSON_PATH.write_text(
+        json.dumps(json_safe(summary), ensure_ascii=False, indent=2, allow_nan=False),
+        encoding="utf-8",
+    )
     MARKDOWN_PATH.write_text(render_markdown(result, qualities), encoding="utf-8")
     print(result.to_string(index=False))
     print(f"Wrote {CSV_PATH}")

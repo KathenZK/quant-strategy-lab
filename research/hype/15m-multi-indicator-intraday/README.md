@@ -39,6 +39,13 @@ V1 规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`。
 - 表现：K+1 年化 `272.30%`、回撤 `-21.12%`、胜率 `80.75%`、PF `2.158`、Last90 年化 `457.15%`；K+2 年化 `96.51%`、回撤 `-36.28%`、胜率 `78.01%`、PF `1.446`。
 - 状态：`V1base diagnostic observation only / not live-ready`；不改变本家族 `NO-GO` 状态。
 
+`HYPE-15M-MII-V1.2` 记录为 `V1.1` 的 ATR 动态止盈止损观察版：
+
+- 入场过滤：沿用 `V1.1` 的 `RSI(7)`、`MACD(12,26,9)`、`ATR96 pct` 与 `RVOL96` 规则。
+- 出场：入场时按信号 K 已知 `ATR96%` 设置固定 bracket：`TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、最长 `24` 根 `15m` K。
+- 表现：K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`、PF `2.179`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`、PF `1.612`。
+- 状态：`diagnostic observation only / not live-ready`；属于同样本出场参数再优化，不改变本家族 `NO-GO` 状态。
+
 ## 当前结论
 
 - `2026-06-25`：首次广泛搜索完成；没有候选同时达到年化 `>=2000%`、最大回撤 `<=20%`、胜率 `>=70%`。
@@ -52,6 +59,9 @@ V1 规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`。
 - `2026-06-30`：按用户指定，将 `clean_rsi7_40_60_atrmin75_rvol1_h10_rsi14b0_tp120_sl360_hold16_x2` 记录为 `HYPE-15M-MII-V1base` 诊断观察基线；K+1 收益高、Last90 强，但 K+2 回撤扩大到 `-36.28%`，因此仍不是 promotion。
 - `2026-06-30`：将干净参数登记为 `HYPE-15M-MII-V1.1`：仅保留 RSI、MACD、ATR/RVOL、固定 TP/SL/hold、2x 暴露和成本项；分窗口回测显示 K+1 最近 `1w` 无交易、最近 `1m` 总收益 `34.40%`、最近 `3m` 总收益 `52.69%`、全样本总收益 `309.54%`，但 K+2 全样本回撤仍为 `-36.28%`。另生成 HTML 交易路径图，可逐笔对照 K 线、RSI(7) 和 MACD(12,26,9)。
 - `2026-06-30`：测试 V1.1 动态止盈（取消固定 `TP=1.20%`，activation 后 trailing stop）。`264` 个动态 trailing 配置中 `0` 个同时超过固定 TP baseline 的收益、回撤和胜率形状；综合第一 `trail_act150_trail30_sl360_hold16` K+1 年化 `205.74%`、回撤 `-36.08%`、胜率 `71.35%`，弱于固定 TP baseline。结论：V1.1 更像短促反转，不适合单纯放开利润奔跑。
+- `2026-06-30`：按用户指定，将 ATR 动态止盈止损的联合通过配置记录为 `HYPE-15M-MII-V1.2`。该版本沿用 `V1.1` 入场过滤，入场时按信号 K 已知 `ATR96%` 设置固定 bracket：`TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24`。`600` 个 ATR bracket 配置中，`3` 个 K+1 收益/回撤/胜率同时超过固定百分比 baseline，`1` 个 K+1/K+2 联合超过 baseline；K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`。结论：`V1.2` 比 trailing 更值得继续审计，但仍只是 diagnostic variant。
+- `2026-06-30`：补充 `V1.2` 固定窗口、滚动窗口和随机切片回测。固定窗口 K+1 全样本 `184` 笔、总收益 `355.78%`、回撤 `-17.74%`、Sharpe `4.13`；K+2 全样本 `189` 笔、总收益 `172.87%`、回撤 `-34.81%`、Sharpe `2.46`。滚动 `30d` 仍存在负收益切片：K+1 最差 `-10.68%`，K+2 最差 `-29.03%`，因此不提升状态。
+- `2026-06-30`：补充 `V1.2` 的 `ATR96 >= 0.75%` 与 `RVOL96 >= 1.0` 过滤消融。去掉 ATR 下限后 K+1 交易数从 `184` 增至 `342`，但总收益降到 `21.93%`、回撤恶化到 `-43.93%`，K+2 转为 `-21.09%`；去掉 RVOL 后 K+1 `388` 笔、总收益 `244.08%`、回撤 `-32.29%`；两个都去掉后 K+1 `711` 笔、总收益 `-78.36%`、回撤 `-84.73%`。结论：不能靠简单放开过滤解决交易频率偏低。
 - `2026-06-30`：把 V1.1 直接套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据做跨资产诊断。BTC K+1 全样本只有 `2` 笔，年化 `3.46%`、总收益 `3.71%`，交易数过少；ETH K+1 全样本年化 `-37.95%`、总收益 `-40.06%`、回撤 `-42.74%`。结论：HYPE 参数没有自然迁移到 BTC/ETH。
 - 实盘判断：`NO-GO`。没有生产 runner、真实 stop-market/滑点证据、资金费核算、重启恢复、交易所对账、missing-bar fail-closed 和 kill switch。
 
@@ -69,11 +79,15 @@ V1 规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`。
 10. `research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`
 11. `research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`
 12. `research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`
-13. `research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
-14. `ablations/hype-15m-mii-v1-1-clean-lead-robustness-2026-06-29.md`
-15. `diagnostics/hype-15m-mii-search-2026-06-25.md`
-16. `ablations/hype-15m-mii-full-ablation-2026-06-26.md`
-17. `ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`
+13. `live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`
+14. `research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`
+15. `research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
+16. `research-notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md`
+17. `research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
+18. `ablations/hype-15m-mii-v1-1-clean-lead-robustness-2026-06-29.md`
+19. `diagnostics/hype-15m-mii-search-2026-06-25.md`
+20. `ablations/hype-15m-mii-full-ablation-2026-06-26.md`
+21. `ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`
 
 ## 证据规则
 

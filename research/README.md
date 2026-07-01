@@ -24,6 +24,7 @@
 | `HYPE-1M-MA-Pullback-Scalp` | - | `hype/1m-ma-pullback-scalp/` | Binance HYPEUSDT `1m` two-MA pullback/end-of-correction scalp with HH/HL or LL/LH structure and fixed brackets | No-go after first executable search |
 | `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `hype/15m-ema-trend-breakout/` | Later 15m EMA96/384 trend breakout / chase-long-chase-short family with ADX, volume, 1h confirmation, and cross-exchange execution variants | Archived/canonical research specs |
 | `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | `hype/15m-multi-indicator-intraday/` | Binance HYPEUSDT `15m` broad RSI/MACD/EMA/ADX/ATR/structure intraday search with live-realistic next-bar execution | V1 diagnostic baseline / not live-ready |
+| `HYPE-15M-Riptide` | - | `hype/15m-riptide/` | Binance HYPEUSDT `15m` EMA20/60 trend-background RSI pullback with 1h RV regime gate and ATR bracket exits | Diagnostic / reproduction-pending |
 | `HYPE-15M-Pullback-Trail` | - | `hype/15m-pullback-trail/` | Binance HYPEUSDT `15m` pullback event source research; V3.3 delayed trailing migration plus executable fixed bracket / emergency stop / timeout search | V3.3 migration no-go; bracket paper-audit candidate only |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `hype/5m-pullback-trail/` | Binance HYPE `5m` pullback/resume entries with ATR trailing-stop exits | Active research candidate |
 | `HYPE-5M-MA-Pullback-Scalp` | - | `hype/5m-ma-pullback-scalp/` | Binance HYPEUSDT `5m` two-MA pullback/end-of-correction scalp with HH/HL or LL/LH structure and fixed brackets | Paper-audit candidates only |
@@ -47,7 +48,7 @@
   - Independent Binance HYPEUSDT `15m` broad multi-indicator intraday research line.
   - It is not a version of `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, or `HYPE-Candle-Count-Reversal`.
   - `HYPE-15M-Multi-Indicator-Intraday-V1` 基线规格：`hype/15m-multi-indicator-intraday/canonical-specs/hype-15m-mii-v1-baseline-spec.md`；状态为 diagnostic only，不可实盘。
-  - `HYPE-15M-MII-V1.1` 主观察基线：`clean_rsi7_40_60_atrmin75_rvol1_h10_rsi14b0_tp120_sl360_hold16_x2`；分窗口回测见 `hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`，交易路径图见 `hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`，动态止盈测试见 `hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`；状态为 diagnostic observation only，不可实盘。
+  - `HYPE-15M-MII-V1.1` 固定 TP/SL 干净观察基线：`clean_rsi7_40_60_atrmin75_rvol1_h10_rsi14b0_tp120_sl360_hold16_x2`；分窗口回测见 `hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`，交易路径图见 `hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`，trailing 动态止盈测试见 `hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`。`HYPE-15M-MII-V1.2` 为 ATR96 动态止盈止损观察版，同事/AI 复现规格见 `hype/15m-multi-indicator-intraday/live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`，ATR bracket 报告见 `hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`，窗口/滚动/随机切片复核见 `hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；状态为 diagnostic observation only，不可实盘。
   - V1 全参数消融：`hype/15m-multi-indicator-intraday/ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`；`0/62` 通过完整 gate。
   - V1 实盘可行性审计：`hype/15m-multi-indicator-intraday/live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md`；结论 `NO-GO`。
   - V1 干净参数演化：`hype/15m-multi-indicator-intraday/research-notes/hype-15m-mii-clean-parameter-evolution-2026-06-29.md`；K+1 领先诊断版为 `323.57%` 年化、`-18.67%` 回撤、`78.99%` 胜率，但不是 promotion。
@@ -61,6 +62,9 @@
   - V3.3 migration diagnostic: `hype/15m-pullback-trail/diagnostics/hype-15m-pullback-trail-v3-3-migration-2026-06-30.md`.
   - Bracket executable search: `hype/15m-pullback-trail/diagnostics/hype-15m-pullback-trail-bracket-search-2026-06-30.md`.
   - Current status: V3.3 direct 15m migration remains no-go; bracket search has one paper-audit candidate, not live-ready.
+- `HYPE-15M-Riptide`: `hype/15m-riptide/README.md`
+  - `HYPE-15M-Riptide-V13` cache replay audit: `hype/15m-riptide/diagnostics/hype-15m-riptide-v13-cache-audit-2026-06-30.md`.
+  - Current status: diagnostic / reproduction-pending; fixed `cut_hi=104.7` replay did not fully match the external spec acceptance numbers, so no sim-paper/live promotion.
 - `HYPE-5M-Pullback-Trail`（`HYPE-5M-PBTR`）: `hype/5m-pullback-trail/hype-5m-pullback-trail-core-ledger.md`
   - Independent Binance HYPE `5m` pullback + ATR trailing-stop research line.
   - Its local `V1/V2` numbers are not the legacy 15m `HYPE-EMA-Trend-Breakout` V1/V2/V35 sequence.
@@ -77,6 +81,11 @@
   - Candidate robustness check: `hype/5m-micro-scalp/diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`.
   - `HYPE-5M-Micro-Scalp-V1` baseline spec: `hype/5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-baseline-spec.md`.
   - V1 full parameter ablation: `hype/5m-micro-scalp/ablations/hype-5m-micro-scalp-v1-full-parameter-ablation-2026-06-29.md`.
+  - V1 simplified combo search: `hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-combo-search-2026-06-30.md`.
+  - V1 simplified candidate robustness: `hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md`; preferred paper-audit observation `V1S_rand_016782__N00596` was recorded as `HYPE-5M-Micro-Scalp-V1.1`, not live-ready.
+  - `HYPE-5M-Micro-Scalp-V1.1` baseline spec: `hype/5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-1-baseline-spec.md`.
+  - V1.1 full parameter ablation: `hype/5m-micro-scalp/ablations/hype-5m-micro-scalp-v1-1-full-parameter-ablation-2026-06-30.md`.
+  - V1.1 micro-tune: `hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`; `V1.1_tune_grid_004895` is a follow-up observation, not a promoted version.
   - Current status: original `3-5` trades/day strict shape remains no-go; relaxed low-frequency VWAP/BB mean-reversion candidates may advance to paper audit only.
 - `HYPE-5M-Event-Quality-Scoring`（`HYPE-5M-EQS`）: `hype/5m-event-quality-scoring/README.md`
   - Core ledger: `hype/5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md`.
@@ -97,6 +106,7 @@
 跨资产研究不是 HYPE 策略家族，除非文档明确把它提升为某个 HYPE family variant。
 
 - `Binance-1D-Turtle-Breakout`: `binance/1d-turtle-breakout/README.md`，覆盖 Binance USD-M Futures `BTCUSDT`、`ETHUSDT`、`HYPEUSDT` 日线 20/10 turtle breakout 诊断。
+- `Binance-15M-Multi-Indicator-Intraday-Transfer`: `binance/15m-multi-indicator-intraday/README.md`，基于 `HYPE-15M-MII-V1.1` 机制对 BTC/ETH `15m` 做受约束参数迁移诊断；BTC 有低收益 K+1/K+2 同正版本，ETH 未通过 K+2。
 - `MU-HYPE-Transfer`（`MU-HYPE-XFER`）: `mu/README.md` and `mu/mu-hype-xfer-session-aware-ledger.md`
 - Old HYPE cross-asset transfer checks: archived under `../archive/research/hype-transfer/`.
 
@@ -110,12 +120,13 @@
 4. `HYPE-1M-MA-Pullback-Scalp`：HYPE Binance `1m` two-MA pullback scalp no-go research.
 5. `HYPE-EMA-Trend-Breakout`（`HYPE-EMA-TB`）：HYPE EMA trend breakout / chase-long-chase-short family.
 6. `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）：Binance HYPEUSDT `15m` broad multi-indicator intraday search.
-7. `HYPE-15M-Pullback-Trail`：HYPE Binance `15m` pullback event source research; V3.3 delayed trailing migration no-go, bracket search is paper-audit only.
-8. `HYPE-5M-Pullback-Trail`（`HYPE-5M-PBTR`）：HYPE Binance `5m` pullback + ATR trailing-stop family.
-9. `HYPE-5M-MA-Pullback-Scalp`：HYPE Binance `5m` two-MA pullback scalp paper-audit family.
-10. `HYPE-5M-Micro-Scalp`（`HYPE-5M-MS`）：Binance HYPEUSDT `5m` high-frequency micro-profit scalp family.
-11. `HYPE-5M-Event-Quality-Scoring`（`HYPE-5M-EQS`）：HYPE Binance `5m` event-quality scoring and seeded candidate ranking.
-12. `MU-HYPE-Transfer`（`MU-HYPE-XFER`）：MU transfer research from HYPE trend kernels.
+7. `HYPE-15M-Riptide`：HYPE Binance `15m` EMA trend-background RSI pullback with RV regime and ATR bracket exits.
+8. `HYPE-15M-Pullback-Trail`：HYPE Binance `15m` pullback event source research; V3.3 delayed trailing migration no-go, bracket search is paper-audit only.
+9. `HYPE-5M-Pullback-Trail`（`HYPE-5M-PBTR`）：HYPE Binance `5m` pullback + ATR trailing-stop family.
+10. `HYPE-5M-MA-Pullback-Scalp`：HYPE Binance `5m` two-MA pullback scalp paper-audit family.
+11. `HYPE-5M-Micro-Scalp`（`HYPE-5M-MS`）：Binance HYPEUSDT `5m` high-frequency micro-profit scalp family.
+12. `HYPE-5M-Event-Quality-Scoring`（`HYPE-5M-EQS`）：HYPE Binance `5m` event-quality scoring and seeded candidate ranking.
+13. `MU-HYPE-Transfer`（`MU-HYPE-XFER`）：MU transfer research from HYPE trend kernels.
 
 ## 历史或浅层研究
 
@@ -134,6 +145,7 @@
 - If a document path contains `1m-ma-pullback-scalp`, use `HYPE-1M-MA-Pullback-Scalp`.
 - If a document path contains `15m-ema-trend-breakout`, use `HYPE-EMA-Trend-Breakout` and optionally note alias `HYPE-EMA-TB`.
 - If a document path contains `15m-multi-indicator-intraday`, use `HYPE-15M-Multi-Indicator-Intraday` and optionally note alias `HYPE-15M-MII`.
+- If a document path contains `15m-riptide`, use `HYPE-15M-Riptide`.
 - If a document path contains `15m-pullback-trail`, use `HYPE-15M-Pullback-Trail`.
 - If a document path contains `5m-pullback-trail`, use `HYPE-5M-Pullback-Trail` and optionally note alias `HYPE-5M-PBTR`.
 - If a document path contains `5m-ma-pullback-scalp`, use `HYPE-5M-MA-Pullback-Scalp`.

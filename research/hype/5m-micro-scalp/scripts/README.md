@@ -10,3 +10,6 @@ Current scripts:
 - `research_hype_5m_micro_scalp_relaxed_rounds.py`: round-by-round relaxed-constraint search.
 - `research_hype_5m_micro_scalp_candidate_robustness.py`: local neighborhood robustness check for the better relaxed candidates.
 - `research_hype_5m_micro_scalp_v1_full_ablation.py`: `HYPE-5M-Micro-Scalp-V1` baseline reproduction and one-at-a-time full parameter ablation.
+- `research_hype_5m_micro_scalp_v1_simplified_combo_search.py`: fixes dormant V1 fields under `vwap_revert` and searches combinations of the effective parameters.
+- `research_hype_5m_micro_scalp_v1_simplified_candidate_robustness.py`: local neighborhood robustness sweep for the simplified combo leads and preferred paper-audit observation.
+- `research_hype_5m_micro_scalp_v1_1_ablation_and_tuning.py`: records `HYPE-5M-Micro-Scalp-V1.1`, runs full one-at-a-time parameter ablation, and micro-tunes the effective fields.

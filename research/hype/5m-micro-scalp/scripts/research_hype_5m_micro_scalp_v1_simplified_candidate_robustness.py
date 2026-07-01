@@ -47,6 +47,9 @@ RESEARCH_NOTE_ROOT = FAMILY_ROOT / "research-notes"
 SUMMARY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_candidate_robustness_summary_{RUN_ID}.csv"
 SEED_SUMMARY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_candidate_robustness_by_seed_{RUN_ID}.csv"
 MONTHLY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_candidate_robustness_monthly_{RUN_ID}.csv"
+PREFERRED_TRADES_PATH = (
+    ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_candidate_robustness_preferred_trades_{RUN_ID}.csv"
+)
 REPORT_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_candidate_robustness_{RUN_ID}.json"
 MARKDOWN_PATH = RESEARCH_NOTE_ROOT / f"hype-5m-micro-scalp-v1-simplified-candidate-robustness-{RUN_ID}.md"
 
@@ -266,6 +269,20 @@ def monthly_for_top(frame: pd.DataFrame, cfg_by_name: dict[str, ScalpConfig], na
     return pd.DataFrame(rows)
 
 
+def trades_to_frame(trades: list[Any]) -> pd.DataFrame:
+    return pd.DataFrame([{**asdict(trade), "side_label": "long" if trade.side > 0 else "short"} for trade in trades])
+
+
+def select_preferred(summary: pd.DataFrame) -> pd.Series:
+    best_audit = summary.loc[summary["audit_like_gate"].eq(True)].sort_values("balanced_score", ascending=False)
+    finite_fwd = best_audit.loc[np.isfinite(best_audit["fwd_2026_06_01_to_latest_profit_factor"])]
+    if not finite_fwd.empty:
+        return finite_fwd.iloc[0]
+    if not best_audit.empty:
+        return best_audit.iloc[0]
+    return summary.sort_values("balanced_score", ascending=False).iloc[0]
+
+
 def table(rows: pd.DataFrame, limit: int = 12) -> list[str]:
     output = [
         "| name | seed | trades/day | trades | ann | PF | win | avg | maxDD | VAL PF | FWD PF | recent30 | strict | audit-like |",
@@ -293,8 +310,7 @@ def render_markdown(
 ) -> str:
     best_audit = summary.loc[summary["audit_like_gate"].eq(True)].sort_values("balanced_score", ascending=False)
     best_strict = summary.loc[summary["strict_improve_gate"].eq(True)].sort_values("balanced_score", ascending=False)
-    finite_fwd = best_audit.loc[np.isfinite(best_audit["fwd_2026_06_01_to_latest_profit_factor"])]
-    preferred = finite_fwd.iloc[0] if not finite_fwd.empty else (best_audit.iloc[0] if not best_audit.empty else summary.iloc[0])
+    preferred = select_preferred(summary)
     preferred_monthly = monthly.loc[monthly["name"].eq(preferred["name"])]
     neg_months = int((preferred_monthly["total_return"] < 0).sum()) if not preferred_monthly.empty else 0
 
@@ -338,6 +354,10 @@ def render_markdown(
     lines.append(
         f"- 推荐下一步优先审计 `{preferred['name']}`（seed `{preferred['seed_candidate']}`）：ann `{mult(float(preferred['full_annualized_multiple']))}`，PF `{num(float(preferred['full_profit_factor']))}`，win `{pct(float(preferred['full_win_rate']))}`，maxDD `{pct(float(preferred['full_max_dd']))}`，recent30 `{pct(float(preferred['recent_30d_total_return']))}`，负收益月份 `{neg_months}`。"
     )
+    lines.extend(["", "## 推荐行参数", "", "| field | value |", "| --- | --- |"])
+    for field in SIMPLIFIED_ACTIVE_FIELDS:
+        lines.append(f"| `{field}` | `{preferred[f'cfg_{field}']}` |")
+    lines.extend(["", "固定机制与 dormant 字段：`entry_style=vwap_revert`，`require_trend=true`；RSI/Bollinger/Donchian/wick/pullback/breakout/momentum-pause 参数不参与当前信号。"])
     lines.append(
         "- 该推荐不是 live-ready：还需要逐笔路径图、同 K TP/SL 与 gap ordering 审计、参数邻域二次收缩、walk-forward 固化、订单维护与 restart-state 审计。"
     )
@@ -350,6 +370,7 @@ def render_markdown(
             f"- Summary CSV：`{SUMMARY_PATH}`",
             f"- By-seed CSV：`{SEED_SUMMARY_PATH}`",
             f"- Monthly CSV：`{MONTHLY_PATH}`",
+            f"- Preferred trades CSV：`{PREFERRED_TRADES_PATH}`",
             f"- JSON：`{REPORT_PATH}`",
         ]
     )
@@ -404,12 +425,16 @@ def main() -> None:
         )
     )
     monthly = monthly_for_top(frame, cfg_by_name, top_names[:120])
+    preferred = select_preferred(summary)
+    preferred_cfg = cfg_by_name[str(preferred["name"])]
+    preferred_trades, _ = simulate_trades(frame, build_signal(frame, preferred_cfg), preferred_cfg)
 
     ARTIFACT_ROOT.mkdir(parents=True, exist_ok=True)
     RESEARCH_NOTE_ROOT.mkdir(parents=True, exist_ok=True)
     summary.to_csv(SUMMARY_PATH, index=False)
     by_seed.to_csv(SEED_SUMMARY_PATH, index=False)
     monthly.to_csv(MONTHLY_PATH, index=False)
+    trades_to_frame(preferred_trades).to_csv(PREFERRED_TRADES_PATH, index=False)
     MARKDOWN_PATH.write_text(render_markdown(summary, by_seed, monthly, quality, args), encoding="utf-8")
     REPORT_PATH.write_text(
         json.dumps(
@@ -432,7 +457,9 @@ def main() -> None:
                     "summary": str(SUMMARY_PATH),
                     "by_seed": str(SEED_SUMMARY_PATH),
                     "monthly": str(MONTHLY_PATH),
+                    "preferred_trades": str(PREFERRED_TRADES_PATH),
                 },
+                "preferred": preferred.to_dict(),
                 "by_seed": by_seed.to_dict(orient="records"),
                 "top_audit_like": summary.loc[summary["audit_like_gate"].eq(True)]
                 .sort_values("balanced_score", ascending=False)
@@ -453,6 +480,7 @@ def main() -> None:
     print(f"summary={SUMMARY_PATH}")
     print(f"by_seed={SEED_SUMMARY_PATH}")
     print(f"monthly={MONTHLY_PATH}")
+    print(f"preferred_trades={PREFERRED_TRADES_PATH}")
 
 
 if __name__ == "__main__":

@@ -25,6 +25,12 @@ For the Binance HYPEUSDT `15m` pullback event-source research line, use:
 3. `15m-pullback-trail/diagnostics/hype-15m-pullback-trail-bracket-search-2026-06-30.md`
 4. `15m-pullback-trail/diagnostics/hype-15m-pullback-trail-v3-3-migration-2026-06-30.md`
 
+For the Binance HYPEUSDT `15m` Riptide trend-background RSI pullback research line, use:
+
+1. `15m-riptide/README.md`
+2. `15m-riptide/decision-log.md`
+3. `15m-riptide/diagnostics/hype-15m-riptide-v13-cache-audit-2026-06-30.md`
+
 For the Binance HYPEUSDT `5m` micro-scalp research line, use:
 
 1. `5m-micro-scalp/README.md`
@@ -34,6 +40,11 @@ For the Binance HYPEUSDT `5m` micro-scalp research line, use:
 5. `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`
 6. `5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-baseline-spec.md`
 7. `5m-micro-scalp/ablations/hype-5m-micro-scalp-v1-full-parameter-ablation-2026-06-29.md`
+8. `5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-combo-search-2026-06-30.md`
+9. `5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md`
+10. `5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-1-baseline-spec.md`
+11. `5m-micro-scalp/ablations/hype-5m-micro-scalp-v1-1-full-parameter-ablation-2026-06-30.md`
+12. `5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`
 
 For the Binance HYPEUSDT `5m` event-quality scoring research line, use:
 
@@ -75,6 +86,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 | `HYPE-Candle-Count-Reversal` | `HYPE-CC` | `15m-candle-count-reversal/` | 10-of-8 candle color reversal with ATR risk controls and early-exit variants | `V35` here is not trend breakout `V35` |
 | `HYPE-EMA-Crossover` | `HYPE-EMA-X` | `15m-ema-crossover/` | EMA golden/death cross lineage, evolved through V14-era filters, exits, state machine, late re-entry, and effective-cross scoring | Do not merge this with later `HYPE-EMA-Trend-Breakout` just because both use EMA96/384 |
 | `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | `15m-multi-indicator-intraday/` | Binance HYPEUSDT `15m` broad RSI/MACD/EMA/ADX/ATR/volume/structure intraday search | Do not relabel broad indicator-search results as existing EMA-X, EMA-TB, or candle-count versions |
+| `HYPE-15M-Riptide` | - | `15m-riptide/` | Binance HYPEUSDT `15m` EMA20/60 trend-background RSI pullback with 1h RV regime gate and ATR bracket exits | Do not merge with `HYPE-15M-MII` or `HYPE-15M-Pullback-Trail`; V13 is local to Riptide |
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | `1m-ema-crossover/` | Binance HYPEUSDT `1m` EMA cross lineage with live-executable next-bar entries, fixed TP, and trailing TP | Do not merge this with `15m-ema-crossover` just because both are EMA cross research |
 | `HYPE-1M-MA-Pullback-Scalp` | - | `1m-ma-pullback-scalp/` | Binance HYPEUSDT `1m` slow/fast MA trend-pullback scalp with HH/HL or LL/LH structure and fixed brackets | Do not merge this with `HYPE-1M-EMA-Crossover`; first executable search is no-go |
 | `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `15m-ema-trend-breakout/` | Later EMA trend breakout / chase-long-chase-short lineage with ADX, volume, 1h confirmation, and cross-exchange execution variants | `V35` here is not candle-count `V35` or EMA-cross `V14` |
@@ -87,7 +99,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 ## Core Markdown Ledgers
 
 - `15m-ema-crossover/hype-ema-x-core-ledger.md`: `HYPE-EMA-Crossover` promoted-candidate and version-evolution ledger.
-- `15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md`: `HYPE-15M-Multi-Indicator-Intraday` core ledger；当前 `HYPE-15M-MII-V1.1` 为 diagnostic observation only，不是 live-ready；HTML 交易路径图在 `15m-multi-indicator-intraday/artifacts/hype_15m_mii_v1_1_trade_paths_2026-06-30.html`；动态止盈测试见 `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`。
+- `15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md`: `HYPE-15M-Multi-Indicator-Intraday` core ledger；当前 `HYPE-15M-MII-V1.2` 为 ATR 动态止盈止损 diagnostic observation only，不是 live-ready；同事/AI 复现规格见 `15m-multi-indicator-intraday/live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`V1.1` HTML 交易路径图在 `15m-multi-indicator-intraday/artifacts/hype_15m_mii_v1_1_trade_paths_2026-06-30.html`；trailing 动态止盈测试见 `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`，ATR bracket V1.2 报告见 `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`，V1.2 时间片复核见 `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`。
 - `15m-multi-indicator-intraday/README.md`: `HYPE-15M-Multi-Indicator-Intraday` exploratory broad-indicator `15m` intraday search entry.
 - `15m-multi-indicator-intraday/canonical-specs/hype-15m-mii-v1-baseline-spec.md`：`HYPE-15M-Multi-Indicator-Intraday-V1` 固定基线；仅 diagnostic，不是实盘候选。
 - `15m-multi-indicator-intraday/ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`：V1 标准数据湖可执行时序与全参数消融，完整 gate `0/62`。
@@ -98,8 +110,13 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 - `15m-multi-indicator-intraday/research-notes/hype-15m-mii-fast-validation-frequency-ranking-2026-06-30.md`：快速验证频率综合排名；严格 `1-3` 笔/天版本收益或近期稳定性偏弱。
 - `15m-multi-indicator-intraday/research-notes/hype-15m-mii-balanced-leverage-stress-2026-06-30.md`：放弃频率后的均衡观察版本 `1.75x/2x/3x` 暴露阶梯；`2x` 均衡，`3x` 仅 aggressive diagnostic。
 - `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`：`HYPE-15M-MII-V1.1` 动态止盈测试；单纯 trailing 未改善固定 TP baseline。
+- `15m-multi-indicator-intraday/live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`：`HYPE-15M-MII-V1.2` 完整复现规格；给同事/AI 复刻策略使用，不是 live-ready 交接。
+- `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`：`HYPE-15M-MII-V1.2` ATR 动态止盈止损测试；`atr96_tp1p25x_sl5x_hold24` 是唯一 K+1/K+2 联合改善配置，仍为 diagnostic。
+- `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`：`HYPE-15M-MII-V1.2` 最近窗口、滚动窗口和随机切片复核；全样本 Sharpe 高，但 30d 切片仍有负收益窗口。
 - `15m-multi-indicator-intraday/ablations/hype-15m-mii-full-ablation-2026-06-26.md`: `HYPE-15M-Multi-Indicator-Intraday` best-search-candidate time-slice and full ablation diagnostic; still no-go.
 - `15m-multi-indicator-intraday/ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`: `HYPE-15M-Multi-Indicator-Intraday` surface-improvement combination optimization diagnostic; still no-go.
+- `15m-riptide/README.md`: `HYPE-15M-Riptide` 研究入口；当前 `HYPE-15M-Riptide-V13` 为 diagnostic / reproduction-pending，不是 sim-paper/live-ready。
+- `15m-riptide/diagnostics/hype-15m-riptide-v13-cache-audit-2026-06-30.md`: `HYPE-15M-Riptide-V13` 缓存口径复现审计；WF 形状接近外部规格，但固定切点第一验收未完全逐笔/汇总对齐。
 - `1m-ema-crossover/diagnostics/hype-1m-ema-crossover-live-search-2026-06-25.md`: `HYPE-1M-EMA-Crossover` first diagnostic / paper-live search report.
 - `1m-ma-pullback-scalp/diagnostics/hype-1m-ma-pullback-scalp-search-2026-06-26.md`: `HYPE-1M-MA-Pullback-Scalp` first executable two-MA pullback scalp search; no-go for paper-live/live.
 - `15m-ema-trend-breakout/hype-ema-tb-core-ledger.md`: `HYPE-EMA-Trend-Breakout` trend strategy research ledger.
@@ -112,6 +129,11 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 - `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`: `HYPE-5M-Micro-Scalp` first executable broad search; no-go for the original `3-5` trades/day strict shape.
 - `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-relaxed-rounds-2026-06-26.md`: relaxed-constraint search that found low-frequency profitable candidates.
 - `5m-micro-scalp/diagnostics/hype-5m-micro-scalp-candidate-robustness-2026-06-26.md`: parameter-neighborhood robustness check; current relaxed candidates are paper-audit only, not live-ready.
+- `5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-combo-search-2026-06-30.md`: V1 effective-parameter simplification and combo search; strict-improve rows exist on current data, but not live-ready.
+- `5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md`: local robustness sweep for simplified combo leads; preferred paper-audit observation `V1S_rand_016782__N00596` was recorded as `HYPE-5M-Micro-Scalp-V1.1`.
+- `5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-1-baseline-spec.md`: `HYPE-5M-Micro-Scalp-V1.1` baseline spec; paper-audit observation only, not live-ready.
+- `5m-micro-scalp/ablations/hype-5m-micro-scalp-v1-1-full-parameter-ablation-2026-06-30.md`: V1.1 full one-at-a-time parameter ablation; identifies dormant fields under `vwap_revert`.
+- `5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`: V1.1 effective-parameter micro-tune; `V1.1_tune_grid_004895` is a follow-up observation, not a promoted version.
 - `5m-event-quality-scoring/diagnostics/hype-5m-event-quality-v0-2026-06-27.md`: generic event-quality scoring diagnostic; no paper-audit candidate.
 - `5m-event-quality-scoring/diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`: seeded source-mean event ranker; `seeded_source_mean_q80` is paper-audit only, not live-ready.
 - `5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md`: `HYPE-5M-Event-Quality-Scoring` core ledger; Base is Seeded V0, fixed seed-universe V1 failed strict seed audit.
@@ -125,6 +147,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 - Always name the full family name, for example `HYPE-Candle-Count-Reversal-V21` or `HYPE-EMA-Trend-Breakout-V36`.
 - Treat `HYPE-EMA-Crossover` and `HYPE-EMA-Trend-Breakout` as separate core directions, not one EMA bucket.
 - Treat `HYPE-15M-Multi-Indicator-Intraday` as a broad indicator-search family, not a version of `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, or `HYPE-Candle-Count-Reversal`.
+- Treat `HYPE-15M-Riptide` as a separate `15m` trend-background RSI pullback family, not a version of `HYPE-15M-MII`, `HYPE-15M-Pullback-Trail`, or any bare `V13`.
 - Treat `HYPE-1M-EMA-Crossover` as a separate `1m` family, not as a subdocument or version of `HYPE-EMA-Crossover`.
 - Treat `HYPE-1M-MA-Pullback-Scalp` as a separate `1m` family, not as a version of `HYPE-1M-EMA-Crossover`.
 - Treat `HYPE-5M-Pullback-Trail` as a separate `5m` family, not as a subdocument of `HYPE-EMA-Trend-Breakout`.
