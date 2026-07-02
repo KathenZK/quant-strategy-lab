@@ -167,6 +167,27 @@ def late_reentry_allowed(
     return dist_to_ema96(frame, i, direction) <= spec.late_dist_ema96
 
 
+def stop_exit_price(
+    *,
+    pos: int,
+    open_price: float,
+    stop_px: float,
+    hold_bars: int,
+    mode: str,
+) -> tuple[float, str] | None:
+    stop_open_cross = open_price <= stop_px if pos > 0 else open_price >= stop_px
+    if mode == "delay_1bar" and hold_bars <= 1:
+        return None
+    if mode == "gap_open" and stop_open_cross:
+        px = open_price * (1 - SLIPPAGE if pos > 0 else 1 + SLIPPAGE)
+        return px, "stop_gap_open"
+    px = stop_px * (1 - SLIPPAGE if pos > 0 else 1 + SLIPPAGE)
+    if mode == "market_extra_slip":
+        px *= 1 - 0.0004 if pos > 0 else 1 + 0.0004
+        return px, "stop_market_extra_slip"
+    return px, "stop_loss"
+
+
 def run_late_reentry(
     frame: pd.DataFrame,
     spec: LateReentrySpec,
@@ -177,6 +198,7 @@ def run_late_reentry(
     signal_kind_override: np.ndarray | None = None,
     entry_allocation_scale: dict[str, float] | None = None,
     max_entry_allocation: float | None = None,
+    stop_fill_mode: str = "baseline",
 ) -> dict[str, Any]:
     ts_series = pd.to_datetime(frame.ts, utc=True)
     if start_ts is None:
@@ -331,10 +353,18 @@ def run_late_reentry(
                 stop_px = entry_px * (1 - pos * spec.v12.stop_atr * entry_atr)
                 hit_stop = low[i] <= stop_px if pos > 0 else high[i] >= stop_px
                 if hit_stop:
-                    px = stop_px * (1 - SLIPPAGE if pos > 0 else 1 + SLIPPAGE)
-                    close_position(i, px, "stop_loss")
-                    curve.append(float(equity))
-                    continue
+                    stop_exit = stop_exit_price(
+                        pos=pos,
+                        open_price=float(open_[i]),
+                        stop_px=float(stop_px),
+                        hold_bars=hold_bars,
+                        mode=stop_fill_mode,
+                    )
+                    if stop_exit is not None:
+                        px, reason = stop_exit
+                        close_position(i, px, reason)
+                        curve.append(float(equity))
+                        continue
 
             equity *= 1 + allocation * pos * (close[i] / last_mark - 1)
             last_mark = close[i]

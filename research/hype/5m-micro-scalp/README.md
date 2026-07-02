@@ -34,6 +34,11 @@ It is independent from:
 - `canonical-specs/hype-5m-micro-scalp-v1-1-baseline-spec.md`: `HYPE-5M-Micro-Scalp-V1.1` baseline spec.
 - `ablations/hype-5m-micro-scalp-v1-1-full-parameter-ablation-2026-06-30.md`: V1.1 full parameter ablation and dormant-field identification.
 - `research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`: V1.1 effective-parameter micro-tuning.
+- `canonical-specs/hype-5m-micro-scalp-v1-2-baseline-spec.md`：`HYPE-5M-Micro-Scalp-V1.2` 正式基线规格；源观察行为 `V1.1_tune_grid_004895`。
+- `research-notes/hype-5m-micro-scalp-v1-2-registration-and-leverage-retest-2026-07-01.md`：V1.2 登记，以及 V1.1/V1.2 在 fee `0.001`/fill、slippage `4 bps`/fill、`1x/2x/3x` 下的统一成本复测。
+- `canonical-specs/hype-5m-micro-scalp-v1-3-baseline-spec.md`：`HYPE-5M-Micro-Scalp-V1.3` 精简基线；剔除 V1.2 dormant 与等效关闭字段，仅保留 `18` 个有效参数。
+- `ablations/hype-5m-micro-scalp-v1-3-full-parameter-ablation-2026-07-01.md`：V1.3 有效字段 one-at-a-time 全参数消融。
+- `research-notes/hype-5m-micro-scalp-v1-3-baseline-backtest-2026-07-01.md`：V1.3 基线回测及与 V1.2 逐笔等价验证。
 
 ## Current Finding
 
@@ -53,9 +58,13 @@ This candidate is now recorded as `HYPE-5M-Micro-Scalp-V1` baseline. The 2026-06
 
 The 2026-06-30 simplified combo search fixed the dormant fields that do not participate in `vwap_revert` and searched only the effective fields. On the refreshed data through `2026-06-30 06:15:00+00:00`, V1 reproduced as `189` trades, `0.48` trades/day, annualized `1.34x`, win `85.71%`, PF `1.490`, maxDD `-8.16%`. The simplified combo sweep evaluated `49016` configs and found `633` strict-improve rows. A follow-up local robustness sweep evaluated `13389` neighbors around five leads. The preferred observation `V1S_rand_016782__N00596` is now recorded as `HYPE-5M-Micro-Scalp-V1.1`: `182` trades, `0.46` trades/day, annualized `2.13x`, win `87.91%`, PF `2.660`, average trade `45.88 bps`, maxDD `-8.06%`, VAL PF `2.441`, FWD PF `5.739`, recent30 `11.86%`, and `2` negative months.
 
-The V1.1 full parameter ablation tested `103` configs and confirmed the remaining dormant groups under `vwap_revert`: `bb_z`, `breakout_bps`, `min_dir_roc_bps`, `max_counter_roc_bps`, `pullback_bps`, `rsi_high`, `rsi_low`, `donchian`, `rsi_window`, and `wick_atr`. The follow-up V1.1 micro-tune evaluated `44001` configs and found `2` strict-improve rows. The current best follow-up observation is `V1.1_tune_grid_004895`: `178` trades, `0.45` trades/day, annualized `2.27x`, win `84.83%`, PF `2.419`, avg trade `51.12 bps`, maxDD `-7.75%`, VAL PF `6.348`, FWD PF `12.838`, recent30 `12.55%`, and `0` negative months. This is not yet a new version or live-ready candidate.
+The V1.1 full parameter ablation tested `103` configs and confirmed the remaining dormant groups under `vwap_revert`: `bb_z`, `breakout_bps`, `min_dir_roc_bps`, `max_counter_roc_bps`, `pullback_bps`, `rsi_high`, `rsi_low`, `donchian`, `rsi_window`, and `wick_atr`. The follow-up V1.1 micro-tune evaluated `44001` configs and found `2` strict-improve rows. The preferred observation `V1.1_tune_grid_004895` was formally recorded as `HYPE-5M-Micro-Scalp-V1.2` on 2026-07-01; this is a version identity change, not a live-ready promotion.
 
-All current V1/V1.1 lines remain paper-audit observations only. They still need per-trade path review, order maintenance audit, restart-state audit, and paper/live-dry-run reconciliation before any live, paper-live, handoff, or real-capital deployment.
+2026-07-01 指定成本复测将前序观测成本替换为 fee `0.001`/fill 与双边各 `4 bps` 不利滑点。V1.1 在 `1x/2x/3x` 下年化 `1.56x/2.38x/3.55x`，maxDD `-9.84%/-19.12%/-27.82%`；V1.2 年化 `1.76x/2.98x/4.89x`，maxDD `-9.96%/-19.90%/-29.67%`。V1.2 收益更高，但在该成本模型下回撤略深；canonical 默认敞口为 `1x`，`2x/3x` 只作压力测试。
+
+2026-07-01 V1.3 自 V1.2 剔除 `12` 个不生效字段（`10` 个 dormant + `min_adx` + `max_atr_pct_bps`），schema 只保留 `18` 个有效参数。在 fee `0.001`/fill、slippage `4 bps`/fill 下，V1.3 与 V1.2 逐笔路径完全等价：`180` 笔、`0.45` 笔/天、年化 `1.76x`、PF `1.934`、maxDD `-9.96%`。V1.3 全参数消融 `60` 组（`1` baseline + `59` variants），显示 `tp_bps`、`close_pos`、`require_body_dir` 附近仍有更高收益邻域，但 FWD 样本仍薄，不构成 live-ready 证明。
+
+当前 V1、V1.1、V1.2 均只属于 paper-audit observation。任何 live、paper-live、handoff 或真实资金部署前，仍需完成逐笔路径、订单维护、重启状态和 paper/live-dry-run reconciliation。
 
 ## Directory Rules
 

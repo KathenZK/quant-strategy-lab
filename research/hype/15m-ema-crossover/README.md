@@ -2,88 +2,55 @@
 
 Family id: `HYPE-EMA-X`
 
-This family covers the HYPE EMA golden/death cross strategy line. It is the long-running EMA cross research path that evolved through V14-era filters, exits, state-machine variants, late re-entry, and effective-cross quality analysis.
+Binance HYPEUSDT `15m` EMA96/384 金叉死叉研究线。根目录只保留家族入口三件套；其余材料按类型分子目录。
 
-Do not merge this with `HYPE-EMA-TB`. Both use EMA concepts, but `HYPE-EMA-X` is the earlier EMA cross lineage, while `HYPE-EMA-TB` is the later trend-breakout / chase-long-chase-short lineage.
+## 根目录（只读这三份起步）
 
-## Core Ledger
+| 文件 | 作用 |
+| --- | --- |
+| `README.md` | 本页：目录地图与阅读顺序 |
+| `hype-ema-x-core-ledger.md` | 主台账：版本演化、指标、实现状态 |
+| `decision-log.md` | 决策日志：提升记录与研究批次 |
 
-- `hype-ema-x-core-ledger.md`: migrated Markdown ledger for HYPE-EMA-X version evolution, promoted V15/V16/V17/V17.1 candidates, ablations, and implementation status.
-- `legacy-canvas/`: migrated historical Canvas reports for HYPE-EMA-X experiments and diagnostics.
+## 目录结构
 
-## Evidence Surface
+```
+15m-ema-crossover/
+├── README.md
+├── hype-ema-x-core-ledger.md
+├── decision-log.md
+├── canonical-specs/     # 干净官方参数规格
+├── ablations/           # 全参数消融与合体搜索
+├── diagnostics/         # 执行审计、可行性复审、参数剔除
+├── research-notes/      # 历史规则镜像与搜索笔记
+├── artifacts/           # 保留 JSON/CSV 证据
+├── scripts/             # 一次性复现脚本
+└── legacy-canvas/       # 迁移 Canvas 历史
+```
 
-The main evidence is currently in repo Markdown and archived scripts:
+## 当前 promoted 版本
 
-- `research/hype/15m-ema-crossover/scripts/research_hype_ema_cross_strategy.py`: base EMA cross research.
-- `research/hype/15m-ema-crossover/scripts/compare_hype_ema_v2_v4.py`: early EMA version comparison.
-- `research/hype/15m-ema-crossover/scripts/research_hype_ema_regime_hold_v5.py`: V5 regime-hold line.
-- `research/hype/15m-ema-crossover/scripts/research_hype_ema_volume_exhaustion_v7.py`: V7 volume exhaustion.
-- `research/hype/15m-ema-crossover/scripts/research_hype_ema_volume_overlay_v8.py`: V8 volume overlay.
-- `research/hype/15m-ema-crossover/scripts/research_hype_ema_htf_rsi_exit_v9.py`: V9 higher-timeframe RSI exit.
-- `research/hype/15m-ema-crossover/scripts/research_hype_ema_oscillator_top_exit_v10.py`: V10 oscillator top exit.
-- `research/hype/15m-ema-crossover/scripts/research_hype_trade_path_diagnostics_v11.py`: V11 trade-path diagnostics.
-- `research/hype/15m-ema-crossover/scripts/research_hype_state_machine_v12.py`: V12 state-machine line.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v13_late_reentry.py`: V13 late re-entry line.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v14_main_backfill.py`: V14 main backfill.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v14_ablation.py`: V14 ablation.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v14_atr_dynamic_entry.py`: V14 ATR dynamic entry.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v14_slow_trend_entry.py`: V14 slow trend entry probe.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v15_effective_cross.py`: post-V14 effective-cross quality probe.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v16_indicator_expansion.py`: post-V14 RSI/KDJ-style late supplemental entry probe.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v17_trend_state_search.py`: broad trend-state search across momentum, volatility, volume, structure, and oscillator indicators.
-- `research/hype/15m-ema-crossover/scripts/research_hype_v17_hybrid_ablation.py`: V17 V15/V16 hybrid full parameter ablation.
-- `research/hype/15m-ema-crossover/v16-v17-trend-state-search.md`: V16/V17 result note and next research direction.
-- `research/hype/15m-ema-crossover/v17-hybrid-ablation.md`: formal V17 hybrid definition, window metrics, and parameter ablation conclusions.
-- `research/hype/15m-ema-crossover/hype-ema-x-core-ledger.md`: main Markdown ledger for promoted HYPE-EMA-X versions.
-- `research/hype/15m-ema-crossover/v15-v16-promoted-strategy-specs.md`: full Chinese rule/parameter spec for promoted V15 and V16.
+| 版本 | 定位 |
+| --- | --- |
+| `HYPE-EMA-X-V17` | V15/V16 合体平衡版（信号层主候选） |
+| `HYPE-EMA-X-V17.1` | V17 + `hq_scale=1.1` 仓位增强 |
+| `HYPE-EMA-X-V18` | **V17.1 干净参数规格**；逻辑相同，剔除 noop/关闭模块后的最小参数集 |
 
-## Archived Cursor Source
+V15–V17.1 仍是研究候选，**不是** live-approved。V18 供 live spec / handoff 使用。
 
-The former Cursor canvas source for this family has been migrated. The canonical durable ledger is now `hype-ema-x-core-ledger.md`; migration evidence is archived under `../../../archive/docs/hype-cursor-artifacts/`.
+## 推荐阅读顺序
+
+1. `hype-ema-x-core-ledger.md`
+2. `decision-log.md`
+3. `canonical-specs/hype-ema-x-v18-baseline-spec.md`（干净参数）
+4. 按需：`diagnostics/`、`ablations/`、`research-notes/`
 
 ## Naming
 
-Use names such as `HYPE-EMA-X-V6`, `HYPE-EMA-X-V10`, `HYPE-EMA-X-V14`, `HYPE-EMA-X-V15`, `HYPE-EMA-X-V16`, `HYPE-EMA-X-V17`, or `HYPE-EMA-X-V17.1`.
+使用 `HYPE-EMA-X-V6`、`HYPE-EMA-X-V17`、`HYPE-EMA-X-V17.1`、`HYPE-EMA-X-V18` 等完整家族名。不要与 `HYPE-EMA-TB` 混用。
 
-Never call this only `EMA V14` or merge it into `HYPE-EMA-TB-V35`.
+## Scripts & Artifacts
 
-## Promoted Ledger Versions
-
-- `HYPE-EMA-X-V15`: high-win-rate / low-drawdown candidate from V17 search.
-- `HYPE-EMA-X-V16`: high-return candidate from V17 search.
-- `HYPE-EMA-X-V17`: V15/V16 hybrid candidate. It keeps V15 high-quality signals and admits only V16 low-score satellite signals with `trend_score` 5-6, `dir_dist_ema96 <= 0.04`, and `atr_ratio96_672 <= 1.1`.
-- `HYPE-EMA-X-V17.1`: V17 sizing-enhanced candidate. It keeps V17 signals unchanged and sets `hq_scale = 1.1`, `lq_scale = 1.0`.
-
-The search and V17 ablation did not find a candidate that satisfies `50x return`, `<20% max drawdown`, and `>80% win rate` simultaneously on the current Binance HYPE 15m slice. V15, V16, V17, and V17.1 are therefore promoted research candidates, not live-approved production strategies.
-
-## Local Report Artifacts
-
-Retained report artifacts live under `artifacts/`. Top-level `reports/` is retired; cite `artifacts/` when a JSON, CSV, or HTML file supports a durable report.
-
-Key historical report filename families:
-
-- `hype_ema_cross_research.json`
-- `hype_ema_v2_v4_compare.json`
-- `hype_ema_v5_data_lake_compare.json`
-- `hype_ema_v6_*`
-- `hype_ema_volume_exhaustion_v7*`
-- `hype_ema_volume_overlay_v8*`
-- `hype_ema_htf_rsi_exit_v9*`
-- `hype_ema_oscillator_top_exit_v10*`
-- `hype_trade_path_diagnostics_v11*`
-- `hype_state_machine_v12*`
-- `hype_v13_*`
-- `hype_v14_*`
-- `hype_v15_effective_cross*`
-- `hype_v16_indicator_expansion*`
-- `hype_v17_trend_state_search*`
-- `hype_v17_hybrid_ablation*`
-
-Migrated legacy Canvas reports live under `legacy-canvas/`.
-
-Do not use these report names to infer `HYPE-EMA-TB`; this is the `HYPE-EMA-X` lineage unless a document explicitly says otherwise.
-
-`hype_v15_*` and `hype_v16_*` report filenames are historical research batch names. The promoted main-ledger versions `HYPE-EMA-X-V15`, `HYPE-EMA-X-V16`, `HYPE-EMA-X-V17`, and `HYPE-EMA-X-V17.1` are recorded in `hype-ema-x-core-ledger.md`; supporting repo mirrors are `v15-v16-promoted-strategy-specs.md` and `v17-hybrid-ablation.md`.
-
-`hype_v17_hybrid_ablation*` report files are generated by `research/hype/15m-ema-crossover/scripts/research_hype_v17_hybrid_ablation.py` and cover the official V17 baseline plus 143 single-parameter/single-module ablation candidates.
+- 脚本：`scripts/`
+- 证据：`artifacts/`
+- 顶层 `reports/` 已退役；引用请指向 `artifacts/`

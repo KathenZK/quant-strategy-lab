@@ -7,7 +7,7 @@
 
 两者都来自 V17 trend-state search，但主台账版本号按正式候选重新编号。当前主台账是 `hype-ema-x-core-ledger.md`；本文是 repo 内的规则说明镜像。
 
-`HYPE-EMA-X-V17` 已在同一 Markdown 主台账中正式登记为 V15/V16 合体平衡版；`HYPE-EMA-X-V17.1` 也已登记为 V17 的仓位增强版。两者定义和全参数消融见 `v17-hybrid-ablation.md`。
+`HYPE-EMA-X-V17` 已在主台账 `hype-ema-x-core-ledger.md` 中登记为 V15/V16 合体平衡版；`HYPE-EMA-X-V17.1` 为仓位增强版；`HYPE-EMA-X-V18` 为干净参数规格。V17 消融见 `../ablations/hype-ema-x-v17-hybrid-ablation.md`。
 
 ## 一句话区别
 

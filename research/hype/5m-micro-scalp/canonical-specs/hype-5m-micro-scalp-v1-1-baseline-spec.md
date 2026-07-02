@@ -107,7 +107,7 @@ V1.1 全参数消融后的组合微调搜索评估 `44001` 组配置，找到 `2
 - VAL PF：`6.348`；FWD PF：`12.838`；recent30：`12.55%`。
 - 参数差异：`ema_htf=192`、`min_adx=0`、`max_chop=70`、`min_rvol=0.75`、`max_atr_pct_bps=9999`、`tp_bps=110`、`sl_bps=400`。
 
-该微调行不是 V1.2，也不是 live-ready；它只是 V1.1 后续 paper-audit observation。
+该微调行在 2026-07-01 按用户要求正式登记为 `HYPE-5M-Micro-Scalp-V1.2`。版本登记不改变 promotion 边界；V1.2 仍是 paper-audit observation，不是 live-ready。
 
 ## 推进边界
 
@@ -124,4 +124,5 @@ V1.1 全参数消融后的组合微调搜索评估 `44001` 组配置，找到 `2
 - V1 simplified candidate robustness：`research/hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md`
 - V1.1 full ablation：`research/hype/5m-micro-scalp/ablations/hype-5m-micro-scalp-v1-1-full-parameter-ablation-2026-06-30.md`
 - V1.1 micro tune：`research/hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`
+- V1.2 baseline spec：`research/hype/5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-2-baseline-spec.md`
 - Repro script：`research/hype/5m-micro-scalp/scripts/research_hype_5m_micro_scalp_v1_1_ablation_and_tuning.py`

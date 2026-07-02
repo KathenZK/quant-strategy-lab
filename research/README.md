@@ -23,6 +23,7 @@
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | `hype/1m-ema-crossover/` | Binance HYPEUSDT `1m` EMA golden/death cross research with live-executable next-bar entries and fixed/trailing exits | Diagnostic / paper-live candidate only |
 | `HYPE-1M-MA-Pullback-Scalp` | - | `hype/1m-ma-pullback-scalp/` | Binance HYPEUSDT `1m` two-MA pullback/end-of-correction scalp with HH/HL or LL/LH structure and fixed brackets | No-go after first executable search |
 | `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `hype/15m-ema-trend-breakout/` | Later 15m EMA96/384 trend breakout / chase-long-chase-short family with ADX, volume, 1h confirmation, and cross-exchange execution variants | Archived/canonical research specs |
+| `HYPE-1H-Adaptive-Regime` | `HYPE-1H-AR` | `hype/1h-adaptive-regime/` | Binance HYPEUSDT `1h` DI trend + stochastic reversal adaptive ensemble with broad indicator/parameter search | V1 frozen boundary; V2 clean-equivalent baseline; both NO-GO |
 | `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | `hype/15m-multi-indicator-intraday/` | Binance HYPEUSDT `15m` broad RSI/MACD/EMA/ADX/ATR/structure intraday search with live-realistic next-bar execution | V1 diagnostic baseline / not live-ready |
 | `HYPE-15M-Riptide` | - | `hype/15m-riptide/` | Binance HYPEUSDT `15m` EMA20/60 trend-background RSI pullback with 1h RV regime gate and ATR bracket exits | Diagnostic / reproduction-pending |
 | `HYPE-15M-Pullback-Trail` | - | `hype/15m-pullback-trail/` | Binance HYPEUSDT `15m` pullback event source research; V3.3 delayed trailing migration plus executable fixed bracket / emergency stop / timeout search | V3.3 migration no-go; bracket paper-audit candidate only |
@@ -85,7 +86,9 @@
   - V1 simplified candidate robustness: `hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md`; preferred paper-audit observation `V1S_rand_016782__N00596` was recorded as `HYPE-5M-Micro-Scalp-V1.1`, not live-ready.
   - `HYPE-5M-Micro-Scalp-V1.1` baseline spec: `hype/5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-1-baseline-spec.md`.
   - V1.1 full parameter ablation: `hype/5m-micro-scalp/ablations/hype-5m-micro-scalp-v1-1-full-parameter-ablation-2026-06-30.md`.
-  - V1.1 micro-tune: `hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`; `V1.1_tune_grid_004895` is a follow-up observation, not a promoted version.
+  - V1.1 micro-tune: `hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`; preferred row `V1.1_tune_grid_004895` was later recorded as V1.2.
+  - `HYPE-5M-Micro-Scalp-V1.2` baseline spec: `hype/5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-2-baseline-spec.md`；默认 `1x`，paper-audit observation / not live-ready。
+  - V1.2 registration and leverage retest: `hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-2-registration-and-leverage-retest-2026-07-01.md`; fee `0.001`/fill、slippage `4 bps`/fill，`2x/3x` 仅为压力测试。
   - Current status: original `3-5` trades/day strict shape remains no-go; relaxed low-frequency VWAP/BB mean-reversion candidates may advance to paper audit only.
 - `HYPE-5M-Event-Quality-Scoring`（`HYPE-5M-EQS`）: `hype/5m-event-quality-scoring/README.md`
   - Core ledger: `hype/5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md`.
@@ -98,8 +101,9 @@
   - Current status: V1 failed strict anti-leakage seed generation; this family has no paper-live/live-ready candidate.
 - `HYPE-Candle-Count-Reversal`（`HYPE-CC`）: `hype/15m-candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 - Repo rule mirrors:
-  - `hype/15m-ema-crossover/v15-v16-promoted-strategy-specs.md`
-  - `hype/15m-ema-crossover/v17-hybrid-ablation.md`
+  - `hype/15m-ema-crossover/research-notes/hype-ema-x-v15-v16-promoted-strategy-specs.md`
+  - `hype/15m-ema-crossover/ablations/hype-ema-x-v17-hybrid-ablation.md`
+  - `hype/15m-ema-crossover/canonical-specs/hype-ema-x-v18-baseline-spec.md`
 
 ## 跨资产与迁移研究
 
@@ -119,14 +123,15 @@
 3. `HYPE-1M-EMA-Crossover`（`HYPE-1M-EMA-X`）：HYPE Binance `1m` EMA cross paper-live research.
 4. `HYPE-1M-MA-Pullback-Scalp`：HYPE Binance `1m` two-MA pullback scalp no-go research.
 5. `HYPE-EMA-Trend-Breakout`（`HYPE-EMA-TB`）：HYPE EMA trend breakout / chase-long-chase-short family.
-6. `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）：Binance HYPEUSDT `15m` broad multi-indicator intraday search.
-7. `HYPE-15M-Riptide`：HYPE Binance `15m` EMA trend-background RSI pullback with RV regime and ATR bracket exits.
-8. `HYPE-15M-Pullback-Trail`：HYPE Binance `15m` pullback event source research; V3.3 delayed trailing migration no-go, bracket search is paper-audit only.
-9. `HYPE-5M-Pullback-Trail`（`HYPE-5M-PBTR`）：HYPE Binance `5m` pullback + ATR trailing-stop family.
-10. `HYPE-5M-MA-Pullback-Scalp`：HYPE Binance `5m` two-MA pullback scalp paper-audit family.
-11. `HYPE-5M-Micro-Scalp`（`HYPE-5M-MS`）：Binance HYPEUSDT `5m` high-frequency micro-profit scalp family.
-12. `HYPE-5M-Event-Quality-Scoring`（`HYPE-5M-EQS`）：HYPE Binance `5m` event-quality scoring and seeded candidate ranking.
-13. `MU-HYPE-Transfer`（`MU-HYPE-XFER`）：MU transfer research from HYPE trend kernels.
+6. `HYPE-1H-Adaptive-Regime`（`HYPE-1H-AR`）：Binance HYPEUSDT `1h` adaptive regime broad-search no-go research.
+7. `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）：Binance HYPEUSDT `15m` broad multi-indicator intraday search.
+8. `HYPE-15M-Riptide`：HYPE Binance `15m` EMA trend-background RSI pullback with RV regime and ATR bracket exits.
+9. `HYPE-15M-Pullback-Trail`：HYPE Binance `15m` pullback event source research; V3.3 delayed trailing migration no-go, bracket search is paper-audit only.
+10. `HYPE-5M-Pullback-Trail`（`HYPE-5M-PBTR`）：HYPE Binance `5m` pullback + ATR trailing-stop family.
+11. `HYPE-5M-MA-Pullback-Scalp`：HYPE Binance `5m` two-MA pullback scalp paper-audit family.
+12. `HYPE-5M-Micro-Scalp`（`HYPE-5M-MS`）：Binance HYPEUSDT `5m` high-frequency micro-profit scalp family.
+13. `HYPE-5M-Event-Quality-Scoring`（`HYPE-5M-EQS`）：HYPE Binance `5m` event-quality scoring and seeded candidate ranking.
+14. `MU-HYPE-Transfer`（`MU-HYPE-XFER`）：MU transfer research from HYPE trend kernels.
 
 ## 历史或浅层研究
 

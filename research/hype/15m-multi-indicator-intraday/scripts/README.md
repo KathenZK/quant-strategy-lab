@@ -28,4 +28,5 @@
 - `research_hype_15m_mii_v1_2_window_slice_backtest.py`：对 `HYPE-15M-MII-V1.2` 做最近 `1w/1m/3m/6m/1y/all` 固定窗口、`30/90/180d` 滚动窗口和随机切片回测，并输出交易数、收益、回撤、Sharpe/Sortino/Calmar 等指标。
 - `research_hype_15m_mii_v1_2_atr_rvol_filter_ablation.py`：保持 `HYPE-15M-MII-V1.2` 信号、MACD、ATR bracket 出场、成本和单仓状态机不变，分别去掉 `ATR96 >= 0.75%`、`RVOL96 >= 1.0`，以及同时去掉二者，评估开单数、收益和回撤变化。
 - `research_hype_15m_mii_v1_2_macd_filter_ablation.py`：保持 `HYPE-15M-MII-V1.2` 的 ATR/RVOL 过滤、ATR bracket 出场、成本和单仓状态机不变，只去掉 `MACD(12,26,9)` 方向过滤，评估漏入信号和回测质量。
+- `research_hype_15m_mii_v1_2_atr_dynamic_leverage.py`：保持 `HYPE-15M-MII-V1.2` 策略逻辑不变，对比固定 `2x`、固定 `2.5x`、固定 `3x`、以及按信号 K `ATR96%` 线性变化的 `2x-3x` 动态杠杆，并输出全样本和固定窗口回测。
 - `research_hype_15m_mii_v1_1_btc_eth_cross_asset.py`：把 `HYPE-15M-MII-V1.1` 直接套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，做跨资产迁移诊断；该脚本不使用标准数据湖，结果不得作为 promotion 证据。

@@ -4,7 +4,7 @@ Date: 2026-06-22
 
 Canonical main ledger:
 
-`hype-ema-x-core-ledger.md`
+`../hype-ema-x-core-ledger.md`
 
 ## Version Identity
 

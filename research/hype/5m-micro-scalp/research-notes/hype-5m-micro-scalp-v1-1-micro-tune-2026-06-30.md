@@ -91,6 +91,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 - `V1.1_tune_grid_004895`：ann `2.27x`，PF `2.419`，win `84.83%`，avg `51.12 bps`，maxDD `-7.75%`，VAL PF `6.348`，FWD PF `12.838`，recent30 `12.55%`，负收益月份 `0`。
 - 最差月份 `2025_05`：return `0.00%`，PF `0.000`，trades `0`。
+- 该观察行在 2026-07-01 按用户要求正式登记为 `HYPE-5M-Micro-Scalp-V1.2`；canonical 默认成本与 `1x` 敞口以 V1.2 规格为准。
 
 推荐行参数：
 
@@ -119,7 +120,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 ## 结论
 
 - 微调阶段可以找到更激进的收益版本，但如果回撤、分段样本或胜率范围不过关，不应替代 V1.1。
-- 推荐观察行仍然只是 paper-audit observation；进入 live/paper-live/handoff 前必须补逐笔路径、订单维护、重启恢复和 paper/live reconciliation。
+- 推荐观察行虽已登记为 V1.2，仍然只是 paper-audit observation；进入 live/paper-live/handoff 前必须补逐笔路径、订单维护、重启恢复和 paper/live reconciliation。
 
 ## 产物
 

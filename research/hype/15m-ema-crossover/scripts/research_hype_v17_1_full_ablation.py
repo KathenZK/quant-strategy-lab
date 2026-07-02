@@ -34,6 +34,9 @@ from research_hype_v17_hybrid_ablation import (
 from research_hype_v17_trend_state_search import SignalPlan, build_signal
 
 
+LEDGER_SLICE_END = pd.Timestamp("2026-06-01 03:00:00+00:00")
+
+
 REPORT_PATH = Path("research/hype/15m-ema-crossover/artifacts/hype_v17_1_full_ablation.json")
 RANKING_PATH = Path("research/hype/15m-ema-crossover/artifacts/hype_v17_1_full_ablation_ranking.csv")
 SENSITIVITY_PATH = Path("research/hype/15m-ema-crossover/artifacts/hype_v17_1_full_ablation_sensitivity.csv")
@@ -125,9 +128,14 @@ def _write_outputs(payload: dict[str, Any], tables: dict[Path, pd.DataFrame]) ->
     REPORT_PATH.write_text(json.dumps(payload, ensure_ascii=False, indent=2, default=str))
 
 
+def load_frame_v17_1() -> pd.DataFrame:
+    frame = load_frame()
+    return frame.loc[pd.to_datetime(frame.ts, utc=True) <= LEDGER_SLICE_END].reset_index(drop=True)
+
+
 def main() -> None:
     _keep_imported_paths_referenced()
-    frame = load_frame()
+    frame = load_frame_v17_1()
     end_ts = pd.Timestamp(frame.ts.iloc[-1])
     start_ts = end_ts - pd.Timedelta(days=365)
     base_signal, _kind, _counts = build_signal(frame, SignalPlan("atr18_base", "atr18"))
@@ -187,7 +195,7 @@ def main() -> None:
                 "Single-parameter ablation around HYPE-EMA-X-V17.1.",
                 "V17.1 baseline keeps the V17 signal unchanged and sets hq_scale=1.1, lq_scale=1.0.",
                 "Each row changes one active parameter, or activates one inactive module through a conservative single-module bundle.",
-                "Backtest window starts flat at latest 365 days, matching the HYPE-EMA-X main ledger.",
+                "Backtest window starts flat at latest 365 days on ledger slice end <= 2026-06-01 03:00 UTC.",
             ],
         },
         {
