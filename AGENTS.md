@@ -16,6 +16,8 @@
 
 所有新增或更新的长期研究文档默认使用中文，除非用户明确要求其他语言。这个规则包括 `decision-log.md`、README、策略主账、diagnostics、ablations、live specs、research notes、实验结论和交接文档；策略名、版本号、参数、路径、指标名和状态术语可以保留英文原文。
 
+当用户要求“登记为 Vx / 记录为 Vx / 冻结为 Vx / promote 为 Vx”时，必须更新对应策略家族的 core ledger / 主账，记录版本身份、状态、指标、证据链接和 live-readiness 结论。只有 canonical spec、research note、diagnostic 或 decision log 不算完成版本登记；如果该家族还没有主账，先在对应 research 目录创建 `<family-id>-core-ledger.md`。
+
 ## 当前 HYPE 命名口径
 
 HYPE 是当前已有历史材料最多的研究线，引用时特别注意不要把不同 family 的同名版本号串起来：

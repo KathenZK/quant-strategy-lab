@@ -6,3 +6,7 @@
 
 - `1d-turtle-breakout/`：Binance USD-M Futures `BTCUSDT`、`ETHUSDT`、`HYPEUSDT` 日线 20/10 turtle breakout 诊断。
 - `15m-multi-indicator-intraday/`：基于 `HYPE-15M-MII-V1.1` 机制的 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` 受约束参数迁移诊断；BTC 有低收益 K+1/K+2 同正版本，ETH 只有 K+1-only 赚钱版本，整体不提升。
+
+## 单资产研究转介
+
+- Bitcoin `1h` 独立策略家族位于 `../btc/1h-adaptive-regime/`：`BTC-1H-Adaptive-Regime`，2026-07-02 宽搜索与三个月 locked OOS 结论为 `NO-GO / not live-ready`。

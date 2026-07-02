@@ -32,6 +32,7 @@ V2 微调先后评估 `19,600` 组普通组合和 `640,000` 组三场景预拟�
 
 ## 入口
 
+- `hype-1h-ar-core-ledger.md`：本家族主账；登记 V1/V2、当前状态、版本规则和后续版本约束。
 - `decision-log.md`：决策与状态变更。
 - `scripts/fetch_hype_binance_1h.py`：全量 K 线、资金费与合约快照抓取和质量审计。
 - `diagnostics/hype-binance-1h-data-quality-2026-07-01.md`：`9,526` 根全量闭合 K 的质量与校验值。
@@ -41,6 +42,7 @@ V2 微调先后评估 `19,600` 组普通组合和 `640,000` 组三场景预拟�
 - `canonical-specs/hype-1h-ar-v1-baseline-spec.md`：V1 正式版本规格。
 - `canonical-specs/hype-1h-ar-v2-clean-baseline-spec.md`：V2 干净等价版本、删除字段和微调结论。
 - `ablations/hype-1h-ar-v1-full-parameter-ablation-2026-07-02.md`：`76/76` 字段槽全量消融。
+- `ablations/hype-1h-ar-v2-full-parameter-ablation-2026-07-02.md`：V2 clean `34` 字段槽全参数消融；完整 target-like 通过 `0` 行。
 - `diagnostics/hype-1h-ar-v2-tune-frontier-live-audit-2026-07-02.md`：基础达标微调前沿的成本/延迟否决。
 - `research-notes/hype-1h-ar-v2-live-robust-prefit-tune-2026-07-02.md`：把 K+2 和 8 bps 提前放入 prefit 的扩大搜索。
 - `canonical-specs/hype-1h-ar-boundary-reproduction-not-live-ready-2026-07-01.md`：最强边界组合完整复现规格；不可实盘。

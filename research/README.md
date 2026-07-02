@@ -5,6 +5,7 @@
 ## 入口
 
 - `hype/README.md`：HYPE 策略家族档案与阅读上下文。
+- `btc/README.md`：Bitcoin 单资产策略家族入口。
 - `binance/README.md`：Binance 跨资产研究入口。
 - `mu/README.md`：`MU-HYPE-Transfer`（历史别名：`MU-HYPE-XFER`）迁移研究入口。
 
@@ -45,6 +46,9 @@
   - First executable search: `hype/1m-ma-pullback-scalp/diagnostics/hype-1m-ma-pullback-scalp-search-2026-06-26.md`.
   - Current status: no paper-live or live candidate; no profitable config at `>=60` trades under the tested executable/cost model.
 - `HYPE-EMA-Trend-Breakout`（`HYPE-EMA-TB`）: `hype/15m-ema-trend-breakout/hype-ema-tb-core-ledger.md`
+- `HYPE-1H-Adaptive-Regime`（`HYPE-1H-AR`）: `hype/1h-adaptive-regime/hype-1h-ar-core-ledger.md`
+  - `HYPE-1H-Adaptive-Regime-V1`: frozen `DI-cross + Stoch-reversal` diagnostic baseline; `NO-GO / not live-ready`.
+  - `HYPE-1H-Adaptive-Regime-V2`: clean-equivalent baseline after full-field ablation; behavior equals V1; `NO-GO / not live-ready`.
 - `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）: `hype/15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md`
   - Independent Binance HYPEUSDT `15m` broad multi-indicator intraday research line.
   - It is not a version of `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, or `HYPE-Candle-Count-Reversal`.
@@ -113,6 +117,10 @@
 - `Binance-15M-Multi-Indicator-Intraday-Transfer`: `binance/15m-multi-indicator-intraday/README.md`，基于 `HYPE-15M-MII-V1.1` 机制对 BTC/ETH `15m` 做受约束参数迁移诊断；BTC 有低收益 K+1/K+2 同正版本，ETH 未通过 K+2。
 - `MU-HYPE-Transfer`（`MU-HYPE-XFER`）: `mu/README.md` and `mu/mu-hype-xfer-session-aware-ledger.md`
 - Old HYPE cross-asset transfer checks: archived under `../archive/research/hype-transfer/`.
+
+## Bitcoin 单资产研究
+
+- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。Binance USD-M Futures `BTCUSDT` perpetual `1h` 两年多指标广搜；`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，结论仍为 `NO-GO / not live-ready`。
 
 ## 核心研究方向
 

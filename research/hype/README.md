@@ -105,7 +105,8 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 
 ## Core Markdown Ledgers
 
-- `1h-adaptive-regime/README.md`：`HYPE-1H-Adaptive-Regime` 入口；V1 为冻结边界，V2 为全字段消融后的干净等价版，均不可实盘。
+- `1h-adaptive-regime/hype-1h-ar-core-ledger.md`：`HYPE-1H-Adaptive-Regime` 主账；V1 为冻结边界，V2 为全字段消融后的干净等价版，均不可实盘。后续登记 `Vx` 必须更新此主账。
+- `1h-adaptive-regime/README.md`：`HYPE-1H-Adaptive-Regime` 入口。
 - `1h-adaptive-regime/diagnostics/hype-binance-1h-data-quality-2026-07-02.md`：Binance HYPEUSDT 永续 `9,545` 根全量闭合 `1h` K 数据质量报告。
 - `1h-adaptive-regime/canonical-specs/hype-1h-ar-v1-baseline-spec.md`：V1 正式版本与 current-full 冻结结果。
 - `1h-adaptive-regime/canonical-specs/hype-1h-ar-v2-clean-baseline-spec.md`：V2 干净参数、逐笔等价证据及微调否决结论。
