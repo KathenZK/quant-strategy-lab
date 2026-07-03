@@ -105,6 +105,7 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 
 ## Core Markdown Ledgers
 
+- `cross-strategy-account/README.md`：HYPE 多策略共享子账户和全局单仓组合诊断入口；当前包含 `HYPE-5M-PBTR-V6.2.1` + `HYPE-15M-MII-V1.3` 共享 HYPEUSDT 子账户回放，结论为收益叠加但组合已平仓 DD 扩到 `-30.28%`，逐 K close MTM DD 为 `-32.34%`，最不利 high/low 标记浮亏约 `-55%`，不提升任一子策略状态。
 - `1h-adaptive-regime/hype-1h-ar-core-ledger.md`：`HYPE-1H-Adaptive-Regime` 主账；V1 为冻结边界，V2 为全字段消融后的干净等价版，均不可实盘。后续登记 `Vx` 必须更新此主账。
 - `1h-adaptive-regime/README.md`：`HYPE-1H-Adaptive-Regime` 入口。
 - `1h-adaptive-regime/diagnostics/hype-binance-1h-data-quality-2026-07-02.md`：Binance HYPEUSDT 永续 `9,545` 根全量闭合 `1h` K 数据质量报告。

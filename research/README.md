@@ -6,6 +6,8 @@
 
 - `hype/README.md`：HYPE 策略家族档案与阅读上下文。
 - `btc/README.md`：Bitcoin 单资产策略家族入口。
+- `bnb/README.md`：BNB 单资产策略家族入口。
+- `trx/README.md`：TRON（TRX）单资产策略家族入口。
 - `binance/README.md`：Binance 跨资产研究入口。
 - `mu/README.md`：`MU-HYPE-Transfer`（历史别名：`MU-HYPE-XFER`）迁移研究入口。
 
@@ -118,9 +120,25 @@
 - `MU-HYPE-Transfer`（`MU-HYPE-XFER`）: `mu/README.md` and `mu/mu-hype-xfer-session-aware-ledger.md`
 - Old HYPE cross-asset transfer checks: archived under `../archive/research/hype-transfer/`.
 
+## BNB 单资产研究
+
+- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：`bnb/1h-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `1h` 两年多指标广搜；最近三个月 locked OOS；当前 `active diagnostic research / not promoted / not live-ready`。
+
+## Ethereum 单资产研究
+
+- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：`eth/1h-adaptive-regime/README.md`。Binance USD-M Futures `ETHUSDT` perpetual `1h` 两年多指标广搜；最近三个月 locked OOS；当前 `research in progress / not promoted / not live-ready`。
+
+## Solana 单资产研究
+
+- `SOL-1H-Adaptive-Regime`（`SOL-1H-AR`）：`sol/1h-adaptive-regime/README.md`。Binance USD-M Futures `SOLUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 locked OOS；当前 `diagnostic search / not promoted / not live-ready`。
+
+## TRON 单资产研究
+
+- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：`trx/1h-adaptive-regime/README.md`。Binance USD-M Futures `TRXUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 locked OOS；两阶段搜索与持续 regime 上界均为 `0` hard-gate 命中。`V1base` 已登记为领先观察值 diagnostic baseline，`V2` 为全参数消融后的 clean baseline；当前 `NO-GO / not promoted / not live-ready`。
+
 ## Bitcoin 单资产研究
 
-- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。Binance USD-M Futures `BTCUSDT` perpetual `1h` 两年多指标广搜；`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，结论仍为 `NO-GO / not live-ready`。
+- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline；`BTC-1H-Adaptive-Regime-V2` 已登记为 V1 clean scaled frontier paper-audit observation，等待新增 forward trades，尚未 live-ready。
 
 ## 核心研究方向
 

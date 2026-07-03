@@ -44,12 +44,21 @@ HYPE 是当前已有历史材料最多的研究线，引用时特别注意不要
 - `active research line` 指当前仍在 `research/` 下维护、会继续复现或更新结论的研究方向；不再维护的一次性历史脚本应归入 `archive/scripts/research/`。
 - `current one-off research script` 指只服务某个研究问题的复现、搜索、审计、导出脚本；它可以保留在对应研究目录，但不应提升为 active package code。
 
+## 基础回测分片标准
+
+- 策略回测、参数消融、稳健性审计和实盘可行性审计默认必须包含最近 `1d`、`7d`、`1m`、`3m`、`6m`、`1y` 分片；若数据长度不足，应明确说明缺失哪些窗口。
+- 分片必须锚定数据集最后一个可用时间戳，而不是脚本运行时的墙上时间。
+- 报告必须同时写明市场、交易对/标的、周期、UTC 数据范围、手续费、滑点、funding/carry 假设，以及这些分片是否参与选参还是仅作冻结后审计。
+- 若任何近期分片暴露不可执行成交、严重数据质量问题、未来函数、stale stop fill、穿越 stop 后仍按旧 stop 价成交、生产 runner 无法复现状态机等问题，不得把策略标记为 candidate、paper-live、dry-run、handoff 或 live。
+- Binance 回测默认结合仓库成本口径：`0.001` fee/fill 与 `4 bps` adverse slippage/fill；除非用户或研究文档明确覆盖。
+
 ## 硬规则索引
 
 以下细则由 `.cursor/rules/` 维护，不在本文件重复展开：
 
 - `data-quality-first.mdc`：数据来源、字段口径、缺口/重复/空值、raw/normalized 对齐和 data-quality blocker。
 - `live-executable-strategy-research.mdc`：订单时序、成交假设、stop/lockout 审计和 promotion 前置条件。
+- `backtest-slice-standard.mdc`：策略回测默认包含最近 `1d/7d/1m/3m/6m/1y` 分片，并说明这些分片是否参与选参。
 - `backtest-execution-costs.mdc`：Binance 回测默认手续费 `0.001`、滑点 `4 bps`；其他市场等待明确成本口径，并要求报告中声明执行成本假设。
 - `research-report-storage.mdc`：新研究目录、Markdown 结论、脚本和 artifacts 的存放位置，以及 Canvas/legacy-canvas 边界。
 

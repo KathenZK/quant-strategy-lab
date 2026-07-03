@@ -4,7 +4,7 @@
 
 ## 当前研究线
 
-- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：Binance USD-M Futures `BTCUSDT` perpetual `1h` 多指标自适应 regime 家族；V1 为 Keltner breakout + CCI reversal diagnostic baseline，当前 `NO-GO / not live-ready`。
+- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：Binance USD-M Futures `BTCUSDT` perpetual `1h` 多指标自适应 regime 家族；V1 为 diagnostic baseline，V2 为 V1 clean scaled frontier paper-audit observation，当前仍 `not live-ready`。
 
 ## 数据与执行口径
 

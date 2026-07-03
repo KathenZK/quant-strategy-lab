@@ -22,4 +22,5 @@
 - `hype_15m_mii_v1_2_atr_rvol_filter_ablation_2026-06-30.json`、`hype_15m_mii_v1_2_atr_rvol_filter_ablation_2026-06-30.csv`、`hype_15m_mii_v1_2_atr_rvol_filter_ablation_windows_2026-06-30.csv`：`HYPE-15M-MII-V1.2` 分别去掉 `ATR96 >= 0.75%`、`RVOL96 >= 1.0`、以及同时去掉二者的过滤消融证据。
 - `hype_15m_mii_v1_2_macd_filter_ablation_2026-06-30.json`、`hype_15m_mii_v1_2_macd_filter_ablation_2026-06-30.csv`：`HYPE-15M-MII-V1.2` 去掉 `MACD(12,26,9)` 方向过滤后的信号漏入与全样本回测质量证据。
 - `hype_15m_mii_v1_2_atr_dynamic_leverage_2026-07-01.json`、`hype_15m_mii_v1_2_atr_dynamic_leverage_2026-07-01.csv`、`hype_15m_mii_v1_2_atr_dynamic_leverage_windows_2026-07-01.csv`：`HYPE-15M-MII-V1.2` 固定 `2x`、固定 `2.5x`、固定 `3x`、以及按 `ATR96%` 线性变化的 `2x-3x` 动态杠杆对比证据。
+- `hype_15m_mii_v1_3_profit_extension_2026-07-02.json`、`hype_15m_mii_v1_3_profit_extension_2026-07-02.csv`、`hype_15m_mii_v1_3_profit_extension_windows_2026-07-02.csv`：`HYPE-15M-MII-V1.3` 提高 TP、加强 RVOL 后提高 TP、分层止盈、动态 TP 和固定 `2.75x` sizing 的 K+1/K+2 诊断证据。
 - `hype_15m_mii_v1_1_btc_eth_cross_asset_2026-06-30.json`、`hype_15m_mii_v1_1_btc_eth_cross_asset_2026-06-30.csv`：`HYPE-15M-MII-V1.1` 直接套用 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据的跨资产诊断证据；不是标准数据湖 promotion 证据。

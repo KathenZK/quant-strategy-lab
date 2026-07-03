@@ -190,7 +190,7 @@ def classification(component: str, field: str) -> str:
     if field in CONTRACT_FIXED:
         return "contract_fixed"
     if field in SEMANTIC_DORMANT[component]:
-        return "semantic_dormant_remove"
+        return "baseline_fixed_remove"
     if field in NEUTRAL_FIXED[component]:
         return "neutral_fixed_remove"
     return "active_tunable"
@@ -406,7 +406,7 @@ def main() -> None:
         ),
         "",
         (
-            f"分类结果：`{classification_counts}`。其中 semantic dormant 与 neutral fixed "
+            f"分类结果：`{classification_counts}`。其中 baseline fixed 与 neutral fixed "
             "字段从后续 clean tuning surface 移除；contract fixed 字段保留为实现常量，不进入搜索。"
         ),
         "",

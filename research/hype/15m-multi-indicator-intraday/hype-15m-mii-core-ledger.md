@@ -217,6 +217,20 @@ K+2 延迟压力：
 - Cost：Binance 研究回测使用手续费 `0.1000%`/fill、滑点 `0.0400%`/fill、round-trip `0.2800%`；资金费未计入。
 - Status：`runner implementation target / diagnostic observation only / not live-ready`；不得标记为 candidate、paper-live、dry-run、handoff 或 live。
 
+### V1.3 多赚一点方案诊断
+
+按用户要求，测试提高 TP、加强 RVOL 后提高 TP、50/50 分层止盈、动态 TP，以及固定 `2.75x` sizing。所有方案保持 `V1.3` 的 RSI/MACD/ATR/RVOL 入场过滤、Binance 成本和单仓状态机不变。
+
+| 方案 | K+1 总收益 | K+1 回撤 | K+1 胜率 | K+1 平均单笔 | K+2 总收益 | K+2 回撤 | 结论 |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: | --- |
+| `v13_baseline_tp1p25_sl5_x2p5` | `549.30%` | `-22.01%` | `84.78%` | `1.08%` | `239.38%` | `-41.89%` | 原 `V1.3` |
+| `v13_baseline_tp1p25_sl5_x2p75` | `671.90%` | `-24.11%` | `84.78%` | `1.19%` | `276.53%` | `-45.20%` | 只是 sizing 放大，edge 未改善 |
+| `rvol125_tp1p75_sl5_x2p5` | `402.76%` | `-32.02%` | `78.57%` | `1.41%` | `500.62%` | `-30.97%` | K+2 形状强，但 K+1 最近 3 月为负 |
+| `dynamic_rvol150_tp2p5_else1p25_x2p5` | `669.42%` | `-35.72%` | `77.84%` | `1.29%` | `450.68%` | `-43.13%` | 全样本收益高，但近期和回撤退化 |
+| `split_50_tp1p25_tp2p5_sl5_x2p5` | `461.73%` | `-33.21%` | `71.01%` | `1.11%` | `214.22%` | `-45.45%` | 分层止盈未改善综合形状 |
+
+结论：目前没有一个方案同时满足全样本更高、K+2 更稳、近期窗口不退化。最保守结论仍是保留 `V1.3 baseline`；`rvol125_tp1p75` 和 `dynamic_rvol150` 只可作为后续 OOS/实盘模拟观察，不直接替换。
+
 ## V1.1 BTC/ETH 跨资产诊断
 
 直接把 `HYPE-15M-MII-V1.1` 套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，目标窗口与 HYPE 标准数据湖相同（`2025-05-30T10:30:00+00:00` 到 `2026-06-26T04:00:00+00:00`）。该数据来自 Binance futures kline API 直接拉取，不是本仓库标准 raw/normalized 数据湖；只用于 sanity check。
@@ -260,6 +274,7 @@ K+2 延迟压力：
 - V1.2 ATR bracket exit：`research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`
 - V1.2 window/slice backtest：`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
 - V1.2 ATR dynamic leverage：`research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`
+- V1.3 profit extension：`research-notes/hype-15m-mii-v1-3-profit-extension-2026-07-02.md`
 - V1.1 BTC/ETH cross asset：`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
 - Decision log：`decision-log.md`
 

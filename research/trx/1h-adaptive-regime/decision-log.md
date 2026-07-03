@@ -1,0 +1,42 @@
+# TRX-1H-Adaptive-Regime Decision Log
+
+## 2026-07-03：初始化独立研究家族
+
+- 将 `TRXUSDT` perpetual `1h` 作为独立资产 family，不继承其他资产的参数或版本号。
+- 运行时拉取最近两年全部闭合 K；最近三个月一次性锁定为 OOS。
+- 目标门槛原样执行：年化权益倍率 `>=10.0x`、胜率 `>=50%`、最大回撤严格小于 `20%`。
+- 搜索与排序不得读取 locked OOS；如无冻结 finalist 达标，则明确记录 `NO-GO`。
+- 初始状态：`active diagnostic search / not promoted / not live-ready`。
+
+## 2026-07-03：广搜、邻域精调和 locked OOS 揭盲
+
+- 数据 gate：`17,520` 根闭合 `1h` K，UTC `2024-07-03T06:00:00Z` 至 `2026-07-03T05:00:00Z`；missing/duplicate/critical null/OHLC violation/raw-normalized mismatch 均为 `0`。
+- 防泄漏：train `2024-08-17T06:00:00Z -> 2025-09-07T08:24:00Z`，validation 至 `2026-04-03T06:00:00Z`，随后三个月为 locked OOS；搜索与排序不读取 OOS。
+- 第一阶段：`300,768` proposals，`109,143` 个可交易评估，`22,298` 个 prefit eligible，prefit hard-shape `0` 命中，locked target `0/500`。
+- 第二阶段：`180,000` unique neighbors，`169,299` 个可交易评估，`126,780` 个 eligible，prefit hard-shape `0` 命中，locked target `0/500`。
+- 领先 prefit-selected ensemble：full `4.077x annual / -19.84% DD / 86.54% win / 104 trades`；locked OOS `0.844x annual / -4.12% return / -11.42% DD / 75.00% win / 8 trades`。
+- 决策：硬门槛失败，先记录 `NO-GO / not live-ready`；不把高全样本收益包装成可实盘策略。
+
+## 2026-07-03：持续 regime 与实盘压力边界
+
+- 持续持仓上界覆盖 `392` 个 causal states、`12,936` 个 side/leverage 变体；即使不计 intrabar adverse excursion、不给保护单约束这一偏乐观口径，prefit/locked target 仍均为 `0`。
+- K+2 延迟使领先观察值 full DD 扩大到 `-34.46%`，OOS 仍亏损；`8 bps` 滑点使 full DD `-24.74%`、OOS return `-20.06%`。
+- 订单时序可实现不等于策略可实盘；当前没有生产 runner、restart reconciliation、kill switch 和保护单监控实现。
+- 最终状态保持 `NO-GO`，不生成 canonical live spec，不登记可 promotion 的 V1。
+
+## 2026-07-03：登记 V1base 并完成全参数消融到 V2
+
+- 按后续研究指令，将领先观察值 `ENS__TRX_1H_AR_N131875__TRX_1H_AR_N129128` 登记为 `TRX-1H-Adaptive-Regime-V1base`；这是 diagnostic baseline，不是 candidate。
+- 新增全参数消融：覆盖两个组件全部 `78` 个 `StrategyConfig` 字段槽，coverage missing `0`；分类为 `33 active_tunable / 27 baseline_fixed_remove / 12 contract_fixed / 6 neutral_fixed_remove`。
+- 将移除 baseline/neutral fixed 字段后的干净参数面登记为 `TRX-1H-Adaptive-Regime-V2`；V2 与 V1base 共享行为边界，仍为 full `4.077x annual / -19.84% DD / 86.54% win / 104 trades`、locked OOS `0.844x annual / -4.12% return / -11.42% DD / 75.00% win / 8 trades`。
+- one-at-a-time 变体有 `4` 行 prefit 严格改善，但未用于 OOS 选参；当前 locked OOS 已解锁，只能作复用审计，不能再当新鲜 OOS。
+- 决策：`V1base` 与 `V2` 均为 `NO-GO / diagnostic only / not promoted / not live-ready`；不得标记为 paper-live、dry-run、handoff 或 live。
+
+## 2026-07-03：V2 严格分片、执行重放和不可实盘审计
+
+- 新增 `TRX-1H-Adaptive-Regime-V2` clean 参数全量 one-at-a-time 消融：覆盖 V2 retained 字段 `45/45`，行数 `135`（含 baseline），prefit 严格改善 `4` 行；这些行未用于 locked OOS 选参。
+- 按新的基础回测分片标准审计最近 `1d/7d/1m/3m/6m/1y`：`1d` 与 `7d` 无交易，`1m` 收益 `-10.12%`、`3m` 收益 `-4.12%`、`6m` 收益 `+12.80%`、`1y` 收益 `+45.18%`。
+- 逐笔执行重放覆盖 warmup 后全路径 merged `107` 笔交易（full 指标窗口 `104` 笔）和两个组件交易；违规计数 `0`，merged 违规 `0`。
+- stop gap/open 穿越按 open 成交 `22` 次，未发现穿越 stop 后仍按旧 stop 价成交；有利 target gap 以 target 价保守记账 `0` 次。
+- 因果审计：信号使用闭合 `1h` K，`K+1 open` 入场；HTF/funding 特征按已知时间 `merge_asof` 对齐；未发现 OOS 排序或 K 内决策依赖。
+- 决策：没有发现价格穿越/未来函数导致的新增不可实盘问题，但因收益目标、OOS/近期分片和 production runner 仍失败，V2 保持 `NO-GO / not promoted / not live-ready`。

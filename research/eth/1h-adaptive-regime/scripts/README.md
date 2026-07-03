@@ -1,0 +1,4 @@
+# Scripts
+
+- `fetch_eth_binance_1h.py`：刷新最近两年 ETHUSDT 永续 `1h` K、资金费与合约快照，写入标准数据湖并输出质量证据。
+- `research_eth_1h_adaptive_regime_search.py`：在 ETH 独立数据和固定三个月 locked OOS 上执行多指标宽搜索；复用经审计的一次性 `1h` 执行内核并固定校验 SHA-256，依赖漂移时 fail closed。

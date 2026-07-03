@@ -16,9 +16,13 @@
 
 ## 当前状态
 
-`NO-GO / not promoted / not live-ready`。
+`V1 registered diagnostic baseline；V2 registered paper-audit observation；not live-ready`。
 
 2026-07-02 共生成 `300,768` 组配置（`768` curated + `300,000` random），`41,898` 组满足最低评分条件，prefit 硬门槛命中 `0`。prefit 预冻结冠军为 `Keltner breakout + CCI reversal` ensemble：prefit `2.82x` 年化倍率、`-18.68%` 回撤、`68.29%` 胜率；最近三个月 locked OOS 降至 `0.17x`、`-42.73%`、`38.46%`。该边界按用户要求登记为 `BTC-1H-Adaptive-Regime-V1`，但不生成 live spec。
+
+V1 全参数消融覆盖两腿 `78/78` 个字段槽：`27` 个 active tunable、`12` 个 contract fixed、`35` 个 baseline fixed、`4` 个 neutral fixed。clean interface 仅保留 `27` 个可调参数，删除或硬编码 `51` 个槽，和 V1 逐笔完全等价。
+
+clean tune 每腿各采样 `150,000` 组，组合 `122,500` 组；得到 scaled frontier observation：prefit `3.18x / -13.99% / 84.85%`，reused holdout `1.52x / -13.48% / 81.82%`，current full `2.88x / -13.99% / 84.42%`；K+2 prefit `2.50x / -19.70% / 80.30%`。该观察已按用户要求登记为 `BTC-1H-Adaptive-Regime-V2`，但仍需新增 forward trades 与生产 runner，状态为 `paper-audit observation / not live-ready`。
 
 ## 入口
 
@@ -28,7 +32,15 @@
 - `scripts/fetch_btc_binance_1h.py`：两年 K 线、资金费、合约快照抓取与质量审计。
 - `scripts/research_btc_1h_adaptive_regime_search.py`：locked OOS 多指标宽搜索。
 - `scripts/audit_btc_1h_adaptive_regime_boundary.py`：延迟、成本、仓位、单腿、参数邻域、月度、bootstrap 与实盘可执行审计。
+- `scripts/btc_1h_ar_v1.py`：V1 冻结配置与复现入口。
+- `scripts/research_btc_1h_ar_v1_full_ablation.py`：V1 `78/78` 字段槽全参数消融。
+- `scripts/btc_1h_ar_v1_clean.py`：27 参数 clean-equivalent interface。
+- `scripts/research_btc_1h_ar_v1_clean_tune.py`：prefit-only 双腿高密度微调。
+- `scripts/audit_btc_1h_ar_v1_scaled_frontier.py`：最终缩放前沿、K+2、成本、邻域与 forward-readiness 审计。
 - `diagnostics/btc-binance-1h-data-quality-2026-07-02.md`：两年数据质量报告。
 - `diagnostics/btc-1h-adaptive-regime-search-2026-07-02.md`：30 万组主搜索报告。
 - `diagnostics/btc-1h-adaptive-regime-boundary-audit-2026-07-02.md`：最终 NO-GO 审计。
+- `ablations/btc-1h-ar-v1-full-parameter-ablation-2026-07-02.md`：V1 全参数消融与删参分类。
+- `research-notes/btc-1h-ar-v1-clean-parameter-tune-2026-07-02.md`：clean surface 微调。
+- `research-notes/btc-1h-ar-v1-scaled-frontier-audit-2026-07-02.md`：当前首选 paper-audit observation。
 - `artifacts/`：可复现证据；默认由 `.gitignore` 忽略。
