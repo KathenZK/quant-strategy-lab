@@ -1,16 +1,16 @@
-# TRX-1H-Adaptive-Regime-V1base 全参数消融 - 2026-07-03
+# TRX-1H-Adaptive-Regime-V1 全参数消融 - 2026-07-05
 
 ## 结论
 
-已覆盖 V1base 两个组件全部 `78` 个 StrategyConfig 字段槽，MACD `39` 个、Stochastic `39` 个，coverage missing 为 `0`。
+已覆盖 V1 两个组件全部 `78` 个 StrategyConfig 字段槽，MACD `39` 个、Stochastic `39` 个，coverage missing 为 `0`。
 
-分类结果：`{'active_tunable': 33, 'baseline_fixed_remove': 27, 'contract_fixed': 12, 'neutral_fixed_remove': 6}`。`baseline_fixed_remove` 与 `neutral_fixed_remove` 从 V2 clean 参数面移除；`contract_fixed` 作为实现常量保留，但不再作为可调搜索参数。
+分类结果：`{'active_tunable': 33, 'baseline_fixed_remove': 27, 'contract_fixed': 12, 'neutral_fixed_remove': 6}`。`baseline_fixed_remove` 与 `neutral_fixed_remove` 从 V1 clean-equivalent 参数面移除；`contract_fixed` 作为实现常量保留，但不再作为可调搜索参数。
 
 one-at-a-time 变体中，严格满足 prefit 年化更高、回撤更小、胜率 >=50%、train/validation 同正且 validation DD<20% 的行数为 `4`。
 
-V2 是 V1base 的删参干净版，行为等价边界仍为 `NO-GO / not promoted / not live-ready`；它不是 candidate、paper-live、dry-run、handoff 或 live 版本。
+V1 clean-equivalent 是 V1 的删参干净版，行为等价边界仍为 `NO-GO / not promoted / not live-ready`；它不是 candidate、paper-live、dry-run、handoff 或 live 版本。
 
-## V1base 基线
+## V1 基线
 
 | Window | Annual | Return | DD | Win | Trades | PF |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -103,7 +103,7 @@ V2 是 V1base 的删参干净版，行为等价边界仍为 `NO-GO / not promote
 | `stoch_reversal` | `trail_activation_atr` | `3.0` | `active_tunable` | `4` | `0` | `0` | `0` |
 | `stoch_reversal` | `trail_atr` | `1.25` | `active_tunable` | `4` | `0` | `0` | `0` |
 
-## V2 Clean 参数面
+## V1 Clean-equivalent 参数面
 
 - `macd_flip` 保留字段：`['cooldown_bars', 'ema_htf', 'entry_delay_bars', 'exit_kind', 'fixed_leverage', 'htf_mode', 'macd_fast', 'macd_signal', 'macd_slow', 'max_adx', 'max_atr_bps', 'max_dist_ema_bps', 'max_hold_bars', 'min_adx', 'min_dir_roc_bps', 'min_rvol', 'name', 'require_macd_turn', 'roc_window', 'side_mode', 'sizing_kind', 'sl_atr', 'style', 'tp_atr']`。
 - `macd_flip` 移除字段：`['band_k', 'ema_fast', 'ema_slow', 'indicator_window', 'max_aligned_funding_bps', 'max_leverage', 'min_atr_bps', 'pullback_atr', 'require_body_dir', 'risk_fraction', 'roc_threshold_bps', 'threshold_high', 'threshold_low', 'trail_activation_atr', 'trail_atr']`。
@@ -121,18 +121,18 @@ V2 是 V1base 的删参干净版，行为等价边界仍为 `NO-GO / not promote
 
 ## 选择边界
 
-- V1base 登记的是既有领先观察值，不改变其 OOS 亏损和 hard-gate 失败事实。
-- V2 只移除语义休眠字段和 neutral fixed 字段；不使用 locked OOS 选择新参数。
-- V2 后续若重新搜索，只能读取 train/validation/prefit；当前 locked OOS 已解锁，只能作复用审计。
+- V1 登记的是既有领先观察值，不改变其 OOS 亏损和 hard-gate 失败事实。
+- V1 clean-equivalent 只移除语义休眠字段和 neutral fixed 字段；不使用 locked OOS 选择新参数。
+- V1 clean-equivalent 后续若重新搜索，只能读取 train/validation/prefit；当前 locked OOS 已解锁，只能作复用审计。
 
 ## 机器证据
 
-- `artifacts/trx_1h_ar_v1base_full_ablation_2026-07-03.json`
-- `artifacts/trx_1h_ar_v1base_full_ablation_rows_2026-07-03.csv`
-- `artifacts/trx_1h_ar_v1base_full_ablation_fields_2026-07-03.csv`
+- `artifacts/trx_1h_ar_v1_full_ablation_2026-07-05.json`
+- `artifacts/trx_1h_ar_v1_full_ablation_rows_2026-07-05.csv`
+- `artifacts/trx_1h_ar_v1_full_ablation_fields_2026-07-05.csv`
 
 复现：
 
 ```bash
-uv run python research/trx/1h-adaptive-regime/scripts/research_trx_1h_ar_v1base_full_ablation.py
+uv run python research/trx/1h-adaptive-regime/scripts/research_trx_1h_ar_v1_full_ablation.py
 ```

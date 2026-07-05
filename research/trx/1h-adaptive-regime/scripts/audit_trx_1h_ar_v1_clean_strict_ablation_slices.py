@@ -15,7 +15,7 @@ if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
 
 import research_trx_1h_adaptive_regime_search as search  # noqa: E402
-import research_trx_1h_ar_v1base_full_ablation as v1base_ablation  # noqa: E402
+import research_trx_1h_ar_v1_full_ablation as v1_ablation  # noqa: E402
 
 
 base = search.load_engine()
@@ -23,15 +23,15 @@ base = search.load_engine()
 FAMILY_DIR = ROOT / "research/trx/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
 ABLATION_DIR = FAMILY_DIR / "ablations"
-DATE_TAG = "2026-07-03"
-REFINE_JSON = ARTIFACT_DIR / f"trx_1h_adaptive_regime_refine_{DATE_TAG}.json"
-V2_JSON = ARTIFACT_DIR / f"trx_1h_ar_v1base_full_ablation_{DATE_TAG}.json"
-SUMMARY_JSON = ARTIFACT_DIR / f"trx_1h_ar_v2_strict_ablation_slices_{DATE_TAG}.json"
-ROWS_CSV = ARTIFACT_DIR / f"trx_1h_ar_v2_strict_ablation_rows_{DATE_TAG}.csv"
-FIELDS_CSV = ARTIFACT_DIR / f"trx_1h_ar_v2_strict_ablation_fields_{DATE_TAG}.csv"
-SLICES_CSV = ARTIFACT_DIR / f"trx_1h_ar_v2_strict_slices_{DATE_TAG}.csv"
-TRADE_AUDIT_CSV = ARTIFACT_DIR / f"trx_1h_ar_v2_trade_execution_audit_{DATE_TAG}.csv"
-REPORT_MD = ABLATION_DIR / f"trx-1h-ar-v2-strict-ablation-slices-{DATE_TAG}.md"
+DATE_TAG = "2026-07-05"
+REFINE_JSON = ARTIFACT_DIR / "trx_1h_adaptive_regime_refine_2026-07-03.json"
+V1_ABLATION_JSON = ARTIFACT_DIR / f"trx_1h_ar_v1_full_ablation_{DATE_TAG}.json"
+SUMMARY_JSON = ARTIFACT_DIR / f"trx_1h_ar_v1_clean_strict_ablation_slices_{DATE_TAG}.json"
+ROWS_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1_clean_strict_ablation_rows_{DATE_TAG}.csv"
+FIELDS_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1_clean_strict_ablation_fields_{DATE_TAG}.csv"
+SLICES_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1_clean_strict_slices_{DATE_TAG}.csv"
+TRADE_AUDIT_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1_clean_trade_execution_audit_{DATE_TAG}.csv"
+REPORT_MD = ABLATION_DIR / f"trx-1h-ar-v1-clean-strict-ablation-slices-{DATE_TAG}.md"
 
 
 def metric_bundle(
@@ -126,9 +126,9 @@ def simulate_pair(
     return merged, component_trades, (priorities[0], priorities[1])
 
 
-def load_v2_configs() -> tuple[list[Any], dict[str, Any], dict[str, Any]]:
+def load_v1_clean_configs() -> tuple[list[Any], dict[str, Any], dict[str, Any]]:
     refine = json.loads(REFINE_JSON.read_text(encoding="utf-8"))
-    v2 = json.loads(V2_JSON.read_text(encoding="utf-8"))
+    v1_ablation_payload = json.loads(V1_ABLATION_JSON.read_text(encoding="utf-8"))
     config_names = str(refine["best"]["config_names"]).split("+")
     full_configs = [
         base.StrategyConfig(**refine["retained_configs"][name])
@@ -136,7 +136,7 @@ def load_v2_configs() -> tuple[list[Any], dict[str, Any], dict[str, Any]]:
     ]
     by_style = {cfg.style: cfg for cfg in full_configs}
     clean_configs_by_style: dict[str, Any] = {}
-    for style, clean_fields in v2["v2_clean_components"].items():
+    for style, clean_fields in v1_ablation_payload["v1_clean_equivalent_components"].items():
         clean_configs_by_style[style] = replace(
             by_style[style],
             **{
@@ -146,7 +146,7 @@ def load_v2_configs() -> tuple[list[Any], dict[str, Any], dict[str, Any]]:
             },
         )
     clean_configs = [clean_configs_by_style[cfg.style] for cfg in full_configs]
-    return clean_configs, refine, v2
+    return clean_configs, refine, v1_ablation_payload
 
 
 def strict_windows(
@@ -370,12 +370,12 @@ def metric_line(metric: dict[str, float]) -> str:
 
 
 def main() -> None:
-    if not REFINE_JSON.exists() or not V2_JSON.exists():
-        raise FileNotFoundError("Run refine and V1base full ablation before V2 strict audit")
+    if not REFINE_JSON.exists() or not V1_ABLATION_JSON.exists():
+        raise FileNotFoundError("Run refine and V1 full ablation before V1 clean-equivalent strict audit")
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     ABLATION_DIR.mkdir(parents=True, exist_ok=True)
 
-    configs, refine, v2 = load_v2_configs()
+    configs, refine, v1_ablation_payload = load_v1_clean_configs()
     frame, funding, quality = search.load_data()
     frame = base.add_features(frame, funding)
     funding_times, funding_cumulative = base.funding_prefix(funding)
@@ -409,7 +409,7 @@ def main() -> None:
             recorded = float(expected[f"{window}_{metric}"])
             if abs(observed - recorded) > 1e-12:
                 raise RuntimeError(
-                    f"V2 baseline drift at {window}.{metric}: {observed} != {recorded}"
+                    f"V1 clean-equivalent baseline drift at {window}.{metric}: {observed} != {recorded}"
                 )
     baseline_flat = flatten_metrics(baseline_metrics)
     baseline_signature = trade_signature(baseline_trades)
@@ -435,7 +435,7 @@ def main() -> None:
 
     rows: list[dict[str, Any]] = [
         {
-            "label": "TRX-1H-Adaptive-Regime-V2",
+            "label": "TRX-1H-Adaptive-Regime-V1 clean-equivalent",
             "component": "ensemble",
             "field": "baseline",
             "baseline_value": "baseline",
@@ -451,12 +451,12 @@ def main() -> None:
     by_style = {cfg.style: cfg for cfg in configs}
     clean_surface = {
         style: list(fields_for_style)
-        for style, fields_for_style in v2["clean_surface"].items()
+        for style, fields_for_style in v1_ablation_payload["clean_surface"].items()
     }
     for component in ("macd_flip", "stoch_reversal"):
         base_cfg = by_style[component]
         other_cfg = next(cfg for cfg in configs if cfg.name != base_cfg.name)
-        values_by_field = v1base_ablation.variant_values(component, base_cfg)
+        values_by_field = v1_ablation.variant_values(component, base_cfg)
         for field_name in sorted(clean_surface[component]):
             observed[component].add(field_name)
             for value in values_by_field[field_name]:
@@ -505,7 +505,7 @@ def main() -> None:
                     "value": value,
                     "classification": (
                         "contract_fixed"
-                        if field_name in v1base_ablation.CONTRACT_FIXED
+                        if field_name in v1_ablation.CONTRACT_FIXED
                         else "active_tunable"
                     ),
                     "component_path_equal": (
@@ -537,7 +537,7 @@ def main() -> None:
                     "baseline_value": getattr(cfg, field_name),
                     "classification": (
                         "contract_fixed"
-                        if field_name in v1base_ablation.CONTRACT_FIXED
+                        if field_name in v1_ablation.CONTRACT_FIXED
                         else "active_tunable"
                     ),
                     "variant_rows": int(len(subset)),
@@ -584,7 +584,7 @@ def main() -> None:
     }
     payload = {
         "family": "TRX-1H-Adaptive-Regime",
-        "version": "TRX-1H-Adaptive-Regime-V2",
+        "version": "TRX-1H-Adaptive-Regime-V1 clean-equivalent",
         "status": "strict_ablation_slice_execution_audit_complete_no_go_not_live_ready",
         "date": DATE_TAG,
         "data_quality": quality,
@@ -595,7 +595,7 @@ def main() -> None:
         },
         "baseline": baseline_metrics,
         "strict_slices": slice_summary,
-        "v2_field_slots": {
+        "v1_clean_field_slots": {
             "macd_flip": len(clean_surface["macd_flip"]),
             "stoch_reversal": len(clean_surface["stoch_reversal"]),
             "total": sum(len(fields_for_style) for fields_for_style in clean_surface.values()),
@@ -637,12 +637,12 @@ def main() -> None:
     )
 
     lines = [
-        "# TRX-1H-Adaptive-Regime-V2 严格消融、分片与执行审计 - 2026-07-03",
+        "# TRX-1H-Adaptive-Regime-V1 clean-equivalent 严格消融、分片与执行审计 - 2026-07-05",
         "",
         "## 结论",
         "",
         (
-            "`TRX-1H-Adaptive-Regime-V2` 完成 clean 参数全量 one-at-a-time 消融、"
+            "`TRX-1H-Adaptive-Regime-V1 clean-equivalent` 完成 clean 参数全量 one-at-a-time 消融、"
             "最近 `1d/7d/1m/3m/6m/1y` 严格分片和逐笔执行重放。"
         ),
         "",
@@ -656,11 +656,11 @@ def main() -> None:
         "",
         (
             "未发现 stale stop fill、入场早于信号、逐笔重放漂移或 raw exit 越界导致的不可实盘问题。"
-            "但 V2 仍因收益/OOS gate 失败、近期切片亏损和无 production runner 保持 "
+            "但 V1 clean-equivalent 仍因收益/OOS gate 失败、近期切片亏损和无 production runner 保持 "
             "`NO-GO / not promoted / not live-ready`。"
         ),
         "",
-        "## V2 基线",
+        "## V1 clean-equivalent 基线",
         "",
         "| Window | Annual / Return / DD / Win / Trades |",
         "| --- | --- |",
@@ -683,9 +683,9 @@ def main() -> None:
     lines.extend(
         [
             "",
-            "## V2 参数消融",
+            "## V1 clean-equivalent 参数消融",
             "",
-            f"- V2 clean 字段槽：`{payload['v2_field_slots']['total']}`，coverage missing：`{payload['v2_field_slots']['coverage_missing']}`。",
+            f"- V1 clean-equivalent clean 字段槽：`{payload['v1_clean_field_slots']['total']}`，coverage missing：`{payload['v1_clean_field_slots']['coverage_missing']}`。",
             f"- one-at-a-time 行数（含 baseline）：`{len(rows_frame)}`。",
             f"- prefit 严格改善行数：`{len(strict)}`；这些行未用于 OOS 选参。",
             "",
@@ -722,7 +722,7 @@ def main() -> None:
             "复现：",
             "",
             "```bash",
-            "uv run python research/trx/1h-adaptive-regime/scripts/audit_trx_1h_ar_v2_strict_ablation_slices.py",
+            "uv run python research/trx/1h-adaptive-regime/scripts/audit_trx_1h_ar_v1_clean_strict_ablation_slices.py",
             "```",
             "",
         ]

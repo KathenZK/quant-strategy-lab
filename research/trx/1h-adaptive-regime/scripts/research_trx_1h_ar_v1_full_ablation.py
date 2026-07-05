@@ -22,12 +22,12 @@ base = search.load_engine()
 FAMILY_DIR = ROOT / "research/trx/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
 ABLATION_DIR = FAMILY_DIR / "ablations"
-DATE_TAG = "2026-07-03"
-SOURCE_JSON = ARTIFACT_DIR / f"trx_1h_adaptive_regime_refine_{DATE_TAG}.json"
-SUMMARY_JSON = ARTIFACT_DIR / f"trx_1h_ar_v1base_full_ablation_{DATE_TAG}.json"
-ROWS_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1base_full_ablation_rows_{DATE_TAG}.csv"
-FIELDS_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1base_full_ablation_fields_{DATE_TAG}.csv"
-REPORT_MD = ABLATION_DIR / f"trx-1h-ar-v1base-full-parameter-ablation-{DATE_TAG}.md"
+DATE_TAG = "2026-07-05"
+SOURCE_JSON = ARTIFACT_DIR / "trx_1h_adaptive_regime_refine_2026-07-03.json"
+SUMMARY_JSON = ARTIFACT_DIR / f"trx_1h_ar_v1_full_ablation_{DATE_TAG}.json"
+ROWS_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1_full_ablation_rows_{DATE_TAG}.csv"
+FIELDS_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1_full_ablation_fields_{DATE_TAG}.csv"
+REPORT_MD = ABLATION_DIR / f"trx-1h-ar-v1-full-parameter-ablation-{DATE_TAG}.md"
 
 
 CONTRACT_FIXED = {
@@ -286,7 +286,7 @@ def metric_line(metric: dict[str, float]) -> str:
 
 def main() -> None:
     if not SOURCE_JSON.exists():
-        raise FileNotFoundError("Run the TRX refinement before V1base ablation")
+        raise FileNotFoundError("Run the TRX refinement before V1 ablation")
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     ABLATION_DIR.mkdir(parents=True, exist_ok=True)
 
@@ -309,7 +309,7 @@ def main() -> None:
     component_by_style = {cfg.style: cfg for cfg in configs}
     required_styles = {"macd_flip", "stoch_reversal"}
     if set(component_by_style) != required_styles:
-        raise RuntimeError(f"Unexpected V1base styles: {sorted(component_by_style)}")
+        raise RuntimeError(f"Unexpected V1 styles: {sorted(component_by_style)}")
 
     baseline_trades, component_trades, priorities = simulate_pair(
         configs,
@@ -346,7 +346,7 @@ def main() -> None:
     }
     rows: list[dict[str, Any]] = [
         {
-            "label": "TRX-1H-Adaptive-Regime-V1base",
+            "label": "TRX-1H-Adaptive-Regime-V1",
             "component": "ensemble",
             "field": "baseline",
             "baseline_value": "baseline",
@@ -511,7 +511,7 @@ def main() -> None:
         ].tolist()
         for component in ("macd_flip", "stoch_reversal")
     }
-    v2_clean_components = {
+    v1_clean_equivalent_components = {
         component: {
             field: asdict(component_by_style[component])[field]
             for field in clean_surface[component]
@@ -521,9 +521,9 @@ def main() -> None:
 
     payload = {
         "family": "TRX-1H-Adaptive-Regime",
-        "baseline_version": "TRX-1H-Adaptive-Regime-V1base",
-        "clean_version": "TRX-1H-Adaptive-Regime-V2",
-        "status": "full_parameter_ablation_complete_v2_clean_no_go_not_live_ready",
+        "baseline_version": "TRX-1H-Adaptive-Regime-V1",
+        "clean_version": "TRX-1H-Adaptive-Regime-V1-clean-equivalent",
+        "status": "full_parameter_ablation_complete_v1_clean_equivalent_no_go_not_live_ready",
         "date": DATE_TAG,
         "source_observation": source["best"]["name"],
         "data_quality": quality,
@@ -548,8 +548,8 @@ def main() -> None:
         "top_prefit_strict": strict.head(30).to_dict(orient="records"),
         "clean_surface": clean_surface,
         "removed_fields": removed_fields,
-        "v2_clean_components": v2_clean_components,
-        "v2_behavior": "identical_to_v1base_when removed fields keep engine defaults/neutral constants",
+        "v1_clean_equivalent_components": v1_clean_equivalent_components,
+        "v1_clean_behavior": "identical_to_v1_when removed fields keep engine defaults/neutral constants",
     }
     SUMMARY_JSON.write_text(
         json.dumps(search.json_safe(payload), indent=2, ensure_ascii=False),
@@ -557,18 +557,18 @@ def main() -> None:
     )
 
     lines = [
-        "# TRX-1H-Adaptive-Regime-V1base 全参数消融 - 2026-07-03",
+        "# TRX-1H-Adaptive-Regime-V1 全参数消融 - 2026-07-05",
         "",
         "## 结论",
         "",
         (
-            f"已覆盖 V1base 两个组件全部 `{len(field_names) * 2}` 个 StrategyConfig 字段槽，"
+            f"已覆盖 V1 两个组件全部 `{len(field_names) * 2}` 个 StrategyConfig 字段槽，"
             f"MACD `{len(field_names)}` 个、Stochastic `{len(field_names)}` 个，coverage missing 为 `0`。"
         ),
         "",
         (
             f"分类结果：`{classification_counts}`。`baseline_fixed_remove` 与 "
-            "`neutral_fixed_remove` 从 V2 clean 参数面移除；`contract_fixed` 作为实现常量保留，"
+            "`neutral_fixed_remove` 从 V1 clean-equivalent 参数面移除；`contract_fixed` 作为实现常量保留，"
             "但不再作为可调搜索参数。"
         ),
         "",
@@ -577,10 +577,10 @@ def main() -> None:
             f"train/validation 同正且 validation DD<20% 的行数为 `{len(strict)}`。"
         ),
         "",
-        "V2 是 V1base 的删参干净版，行为等价边界仍为 `NO-GO / not promoted / not live-ready`；"
+        "V1 clean-equivalent 是 V1 的删参干净版，行为等价边界仍为 `NO-GO / not promoted / not live-ready`；"
         "它不是 candidate、paper-live、dry-run、handoff 或 live 版本。",
         "",
-        "## V1base 基线",
+        "## V1 基线",
         "",
         "| Window | Annual | Return | DD | Win | Trades | PF |",
         "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
@@ -606,7 +606,7 @@ def main() -> None:
     lines.extend(
         [
             "",
-            "## V2 Clean 参数面",
+            "## V1 Clean-equivalent 参数面",
             "",
             f"- `macd_flip` 保留字段：`{clean_surface['macd_flip']}`。",
             f"- `macd_flip` 移除字段：`{removed_fields['macd_flip']}`。",
@@ -635,9 +635,9 @@ def main() -> None:
             "",
             "## 选择边界",
             "",
-            "- V1base 登记的是既有领先观察值，不改变其 OOS 亏损和 hard-gate 失败事实。",
-            "- V2 只移除语义休眠字段和 neutral fixed 字段；不使用 locked OOS 选择新参数。",
-            "- V2 后续若重新搜索，只能读取 train/validation/prefit；当前 locked OOS 已解锁，只能作复用审计。",
+            "- V1 登记的是既有领先观察值，不改变其 OOS 亏损和 hard-gate 失败事实。",
+            "- V1 clean-equivalent 只移除语义休眠字段和 neutral fixed 字段；不使用 locked OOS 选择新参数。",
+            "- V1 clean-equivalent 后续若重新搜索，只能读取 train/validation/prefit；当前 locked OOS 已解锁，只能作复用审计。",
             "",
             "## 机器证据",
             "",
@@ -648,7 +648,7 @@ def main() -> None:
             "复现：",
             "",
             "```bash",
-            "uv run python research/trx/1h-adaptive-regime/scripts/research_trx_1h_ar_v1base_full_ablation.py",
+            "uv run python research/trx/1h-adaptive-regime/scripts/research_trx_1h_ar_v1_full_ablation.py",
             "```",
             "",
         ]

@@ -16,11 +16,13 @@
 
 ## 当前状态
 
-`NO-GO / diagnostic versions registered / not promoted / not live-ready`。
+`NO-GO / diagnostic versions registered / recent adaptation search no-hit / not promoted / not live-ready`。
 
 两阶段搜索提出 `480,768` 个结构化/随机/邻域配置，另做 `12,936` 个持续 regime 乐观上界变体；prefit hard-shape、locked OOS hard gate 均为 `0` 命中。领先 prefit-selected ensemble 全样本年化权益倍率 `4.077x`、最大回撤 `-19.84%`、胜率 `86.54%`，但 locked OOS 年化权益倍率 `0.844x`、区间收益 `-4.12%`。
 
 按后续研究指令，该领先观察值已登记为 `TRX-1H-Adaptive-Regime-V1base`，并在全参数消融后把删参干净版登记为 `TRX-1H-Adaptive-Regime-V2`。两者均为 diagnostic only，不生成 canonical live spec。
+
+随后按近期行情适配目标重做一轮搜索：`80,800` 个 unique configs、`42,905` 个可评估、`1,225` 个 ensemble；recent hard hits 仍为 `0`。最佳观察值 `ENS_REC__TRX_1H_AR_REC_N011284__TRX_1H_AR_REC_N031489` 最近 `1y` 为 `2.227x annual / +122.58% / -10.67% DD / 79.49% win / 39 trades`，最近 `3m` 为 `+22.40% / -4.14% DD / 100% win / 9 trades`，但离 `>=10x` 年化门槛很远；曝光缩放至 `5x` 也只有最近 `1y 4.724x` 且 DD 已超过 `20%`，因此不登记为版本。
 
 ## 入口
 
@@ -33,8 +35,10 @@
 - `scripts/audit_trx_1h_live_feasibility.py`：领先观察值的精确复现、延迟/成本压力和生产控制审计。
 - `scripts/research_trx_1h_ar_v1base_full_ablation.py`：`V1base` 全参数消融与 `V2` clean 参数面登记证据。
 - `scripts/audit_trx_1h_ar_v2_strict_ablation_slices.py`：`V2` clean 参数消融、最近 `1d/7d/1m/3m/6m/1y` 分片和逐笔执行重放审计。
+- `scripts/research_trx_1h_ar_recent_adaptation_search.py`：解锁近期行情后的近期适配复搜、标准分片、曝光缩放和逐笔执行复核。
 - `research-notes/trx-1h-ar-search-conclusion-2026-07-03.md`：本轮总报告。
 - `ablations/trx-1h-ar-v1base-full-parameter-ablation-2026-07-03.md`：V1base 全参数消融与 V2 clean 参数面。
 - `ablations/trx-1h-ar-v2-strict-ablation-slices-2026-07-03.md`：V2 严格分片、消融和实盘可执行性复核。
+- `diagnostics/trx-1h-ar-recent-adaptation-search-2026-07-03.md`：近期适配复搜 `NO-GO` 证据。
 - `live-specs/trx-1h-ar-live-feasibility-2026-07-03.md`：实盘可行性 `NO-GO` 证据。
 - `artifacts/`：可复现证据；非 Markdown 产物默认由 `.gitignore` 忽略。

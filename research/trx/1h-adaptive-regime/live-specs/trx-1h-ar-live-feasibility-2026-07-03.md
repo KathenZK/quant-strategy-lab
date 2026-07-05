@@ -34,7 +34,7 @@
 
 ## 最终边界
 
-工程可执行不等于策略可实盘。由于性能 gate 和 OOS gate 均失败，不生成 canonical live spec。后续主账登记的 `V1base` 与 `V2` 仅为 diagnostic baseline / clean baseline，不改变本审计的 `NO-GO / not live-ready` 结论。
+工程可执行不等于策略可实盘。由于性能 gate 和 OOS gate 均失败，不生成 canonical live spec。后续主账登记的 `TRX-1H-Adaptive-Regime-V1` 仅为 diagnostic baseline；其 clean-equivalent 删参实现不是另一个版本，也不改变本审计的 `NO-GO / not live-ready` 结论。
 
 ## 产物
 

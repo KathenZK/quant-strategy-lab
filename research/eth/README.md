@@ -4,7 +4,7 @@
 
 ## 当前研究线
 
-- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：Binance USD-M Futures `ETHUSDT` perpetual `1h` 多指标自适应 regime 广泛搜索；当前 `research in progress / not promoted / not live-ready`。
+- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：Binance USD-M Futures `ETHUSDT` perpetual `1h` 多指标自适应 regime 家族；V1 已登记为 diagnostic baseline，当前 `NO-GO / not promoted / not live-ready`。
 
 ## 数据与执行口径
 

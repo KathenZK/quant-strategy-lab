@@ -26,6 +26,8 @@
 - `decision-log.md`：研究决策与状态变化。
 - `scripts/fetch_sol_binance_1h.py`：最近两年 K 线、资金费、合约快照抓取与质量审计。
 - `scripts/research_sol_1h_adaptive_regime_search.py`：locked OOS 多指标宽搜索。
-- `scripts/research_sol_1h_adaptive_regime_refine.py`：按预先定义的 prefit Pareto 邻域做高密度精调；seed 和排序不读取 OOS。
 - `scripts/audit_sol_1h_adaptive_regime_boundary.py`：成交延迟、成本、仓位缩放、单腿、参数邻域、月度、bootstrap 和实盘缺口审计。
+- `scripts/research_sol_1h_ar_v1_full_ablation.py`：V1 每条腿全部 `StrategyConfig` 字段槽的 one-at-a-time 全参数消融与删参分类。
+- `scripts/sol_1h_ar_v1_clean.py`：读取消融结果构建只暴露 `active_tunable` 的 clean-equivalent 配置面，并校验逐笔等价。
+- `scripts/research_sol_1h_ar_v1_clean_tune.py`：只在 clean surface 上做 train/validation/prefit 微调，并前置 K+2 与 8 bps 稳健性筛选。
 - `artifacts/`：Parquet、JSON、CSV 等可复现证据；默认由 `.gitignore` 忽略。

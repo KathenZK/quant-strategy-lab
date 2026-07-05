@@ -126,7 +126,7 @@
 
 ## Ethereum 单资产研究
 
-- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：`eth/1h-adaptive-regime/README.md`。Binance USD-M Futures `ETHUSDT` perpetual `1h` 两年多指标广搜；最近三个月 locked OOS；当前 `research in progress / not promoted / not live-ready`。
+- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：`eth/1h-adaptive-regime/README.md`。Binance USD-M Futures `ETHUSDT` perpetual `1h` 两年多指标广搜；`ETH-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，当前 `NO-GO / not promoted / not live-ready`。
 
 ## Solana 单资产研究
 
@@ -134,7 +134,7 @@
 
 ## TRON 单资产研究
 
-- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：`trx/1h-adaptive-regime/README.md`。Binance USD-M Futures `TRXUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 locked OOS；两阶段搜索与持续 regime 上界均为 `0` hard-gate 命中。`V1base` 已登记为领先观察值 diagnostic baseline，`V2` 为全参数消融后的 clean baseline；当前 `NO-GO / not promoted / not live-ready`。
+- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：`trx/1h-adaptive-regime/README.md`。Binance USD-M Futures `TRXUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 locked OOS；两阶段搜索与持续 regime 上界均为 `0` hard-gate 命中。`V1base` 已登记为领先观察值 diagnostic baseline，`V2` 为全参数消融后的 clean baseline；近期适配复搜 `80,800` 个 unique configs 仍无 recent hard hit，最佳观察值最近 `1y 2.227x annual / -10.67% DD / 79.49% win`；当前 `NO-GO / not promoted / not live-ready`。
 
 ## Bitcoin 单资产研究
 

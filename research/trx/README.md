@@ -4,7 +4,7 @@
 
 ## 当前研究线
 
-- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：Binance USD-M Futures `TRXUSDT` perpetual `1h` 多指标自适应 regime 广泛搜索；最近三个月为 locked OOS；`V1base` 为领先观察值 diagnostic baseline，`V2` 为全参数消融后的 clean baseline；当前结论为 `NO-GO / not promoted / not live-ready`。
+- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：Binance USD-M Futures `TRXUSDT` perpetual `1h` 多指标自适应 regime 广泛搜索；最近三个月为 locked OOS；`V1base` 为领先观察值 diagnostic baseline，`V2` 为全参数消融后的 clean baseline；后续近期适配复搜 `80,800` 个 unique configs 仍无 recent hard hit，最佳观察值最近 `1y 2.227x annual / -10.67% DD / 79.49% win`，当前结论为 `NO-GO / not promoted / not live-ready`。
 
 ## 数据与执行口径
 

@@ -1,14 +1,14 @@
-# TRX-1H-Adaptive-Regime-V2 严格消融、分片与执行审计 - 2026-07-03
+# TRX-1H-Adaptive-Regime-V1 clean-equivalent 严格消融、分片与执行审计 - 2026-07-05
 
 ## 结论
 
-`TRX-1H-Adaptive-Regime-V2` 完成 clean 参数全量 one-at-a-time 消融、最近 `1d/7d/1m/3m/6m/1y` 严格分片和逐笔执行重放。
+`TRX-1H-Adaptive-Regime-V1 clean-equivalent` 完成 clean 参数全量 one-at-a-time 消融、最近 `1d/7d/1m/3m/6m/1y` 严格分片和逐笔执行重放。
 
 执行审计覆盖 warmup 后全路径 merged `107` 笔交易（full 指标窗口 `104` 笔）和组件交易；违规计数 `0`，merged 违规 `0`。stop gap 均按 open 成交 `22` 次；有利 target gap 以 target 价保守记账 `0` 次。
 
-未发现 stale stop fill、入场早于信号、逐笔重放漂移或 raw exit 越界导致的不可实盘问题。但 V2 仍因收益/OOS gate 失败、近期切片亏损和无 production runner 保持 `NO-GO / not promoted / not live-ready`。
+未发现 stale stop fill、入场早于信号、逐笔重放漂移或 raw exit 越界导致的不可实盘问题。但 V1 clean-equivalent 仍因收益/OOS gate 失败、近期切片亏损和无 production runner 保持 `NO-GO / not promoted / not live-ready`。
 
-## V2 基线
+## V1 clean-equivalent 基线
 
 | Window | Annual / Return / DD / Win / Trades |
 | --- | --- |
@@ -29,9 +29,9 @@
 | `last_6m` | `2026-01-03 06:00:00+00:00` | `1.2752x` / `12.80%` / `-11.42%` / `77.78%` / `18` |
 | `last_1y` | `2025-07-03 06:00:00+00:00` | `1.4521x` / `45.18%` / `-19.84%` / `80.00%` / `50` |
 
-## V2 参数消融
+## V1 clean-equivalent 参数消融
 
-- V2 clean 字段槽：`45`，coverage missing：`{'macd_flip': [], 'stoch_reversal': []}`。
+- V1 clean-equivalent clean 字段槽：`45`，coverage missing：`{'macd_flip': [], 'stoch_reversal': []}`。
 - one-at-a-time 行数（含 baseline）：`135`。
 - prefit 严格改善行数：`4`；这些行未用于 OOS 选参。
 
@@ -93,14 +93,14 @@
 
 ## 机器证据
 
-- `artifacts/trx_1h_ar_v2_strict_ablation_slices_2026-07-03.json`
-- `artifacts/trx_1h_ar_v2_strict_ablation_rows_2026-07-03.csv`
-- `artifacts/trx_1h_ar_v2_strict_ablation_fields_2026-07-03.csv`
-- `artifacts/trx_1h_ar_v2_strict_slices_2026-07-03.csv`
-- `artifacts/trx_1h_ar_v2_trade_execution_audit_2026-07-03.csv`
+- `artifacts/trx_1h_ar_v1_clean_strict_ablation_slices_2026-07-05.json`
+- `artifacts/trx_1h_ar_v1_clean_strict_ablation_rows_2026-07-05.csv`
+- `artifacts/trx_1h_ar_v1_clean_strict_ablation_fields_2026-07-05.csv`
+- `artifacts/trx_1h_ar_v1_clean_strict_slices_2026-07-05.csv`
+- `artifacts/trx_1h_ar_v1_clean_trade_execution_audit_2026-07-05.csv`
 
 复现：
 
 ```bash
-uv run python research/trx/1h-adaptive-regime/scripts/audit_trx_1h_ar_v2_strict_ablation_slices.py
+uv run python research/trx/1h-adaptive-regime/scripts/audit_trx_1h_ar_v1_clean_strict_ablation_slices.py
 ```

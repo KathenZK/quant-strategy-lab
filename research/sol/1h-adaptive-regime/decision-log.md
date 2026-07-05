@@ -9,4 +9,9 @@
 - 采用下一根 open 成交、即时保护 bracket、stop-first、跳空按 open、闭合 K 更新 trailing 的可实盘时序。
 - 成本固定为 `0.001` fee/fill、`4 bps` adverse slippage/fill，并计入真实历史资金费。
 - 在 locked OOS 和 live-executable 审计完成前，状态保持 `diagnostic / not promoted / not live-ready`。
-- 在揭示第一轮 OOS 结果前预先固定第二轮精调规则：只从第一轮 prefit CSV 的 train/validation 字段选择 Pareto seed，随机变异 `1-5` 个参数字段；第二轮选择仍不使用 OOS。
+
+## 2026-07-03：固定 V1、消融、clean tune 顺序
+
+- 百万组广搜按 prefit 规则冻结的最终基线直接登记为 `SOL-1H-Adaptive-Regime-V1`；不允许先用 OOS 或额外精调替换 V1 身份。
+- V1 登记后覆盖每条腿全部配置字段做全参数消融，区分 active tunable、contract fixed、baseline fixed、neutral/dormant。
+- 删除或硬编码不必要字段，建立逐笔等价的 clean interface；后续微调只能从 clean 参数面出发，并只使用 train/validation 选择。

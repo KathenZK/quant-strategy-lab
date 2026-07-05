@@ -28,6 +28,8 @@
 
 - 数据抓取与质量检查：`scripts/fetch_sol_binance_1h.py`
 - 多指标宽搜索：`scripts/research_sol_1h_adaptive_regime_search.py`
-- prefit Pareto 邻域精调：`scripts/research_sol_1h_adaptive_regime_refine.py`
 - 冻结边界与实盘可执行审计：`scripts/audit_sol_1h_adaptive_regime_boundary.py`
+- V1 全参数消融：`scripts/research_sol_1h_ar_v1_full_ablation.py`
+- V1 clean interface：`scripts/sol_1h_ar_v1_clean.py`
+- V1 clean tune：`scripts/research_sol_1h_ar_v1_clean_tune.py`
 - 数据与搜索产物：`artifacts/`

@@ -18,7 +18,6 @@ ARTIFACT_DIR = FAMILY_DIR / "artifacts"
 DIAGNOSTIC_DIR = FAMILY_DIR / "diagnostics"
 SEARCH_SCRIPT = SCRIPT_DIR / "research_sol_1h_adaptive_regime_search.py"
 SEARCH_JSON = ARTIFACT_DIR / "sol_1h_adaptive_regime_search_2026-07-03.json"
-REFINE_JSON = ARTIFACT_DIR / "sol_1h_adaptive_regime_refine_2026-07-03.json"
 AUDIT_JSON = ARTIFACT_DIR / "sol_1h_adaptive_regime_boundary_audit_2026-07-03.json"
 SCENARIOS_CSV = ARTIFACT_DIR / "sol_1h_adaptive_regime_audit_scenarios_2026-07-03.csv"
 NEIGHBORHOOD_CSV = ARTIFACT_DIR / "sol_1h_adaptive_regime_neighborhood_2026-07-03.csv"
@@ -450,14 +449,9 @@ def main() -> None:
     frame = engine.add_features(frame, funding)
     funding_times, funding_cumulative = engine.funding_prefix(funding)
     search_summary = json.loads(SEARCH_JSON.read_text(encoding="utf-8"))
-    if REFINE_JSON.exists():
-        summary = json.loads(REFINE_JSON.read_text(encoding="utf-8"))
-        config_payload = summary["retained_configs"]
-        source_phase = "prefit_pareto_neighborhood_refine"
-    else:
-        summary = search_summary
-        config_payload = summary["best_configs"]
-        source_phase = "million_config_broad_search"
+    summary = search_summary
+    config_payload = summary["best_configs"]
+    source_phase = "million_config_broad_search_v1"
     config_names = summary["best"]["config_names"].split("+")
     configs = [engine.StrategyConfig(**config_payload[name]) for name in config_names]
     split = search_summary["split"]

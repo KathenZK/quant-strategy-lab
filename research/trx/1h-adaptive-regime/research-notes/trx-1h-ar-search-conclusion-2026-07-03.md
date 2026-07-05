@@ -8,7 +8,7 @@
 - 胜率 `>=50%`；
 - 最大回撤严格小于 `20%`。
 
-本轮原始搜索结论为 `NO-GO / not promoted / not live-ready`。后续主账将领先观察值登记为 `V1base`，并把全参数消融后的干净参数面登记为 `V2`；这两个版本都只是 diagnostic baseline，不是可以诚实交付实盘的版本。全样本看起来很高的观察值在 locked OOS 亏损，不能用全样本叙事掩盖。
+本轮原始搜索结论为 `NO-GO / not promoted / not live-ready`。用户于 2026-07-05 要求把领先观察值正式登记为 `TRX-1H-Adaptive-Regime-V1`；登记只冻结 diagnostic baseline 身份，clean-equivalent 删参实现仍属于同一个 V1，不是可交付实盘的新版本。全样本看起来很高的观察值在 locked OOS 亏损，不能用全样本叙事掩盖。
 
 ## 数据与冻结边界
 
@@ -80,7 +80,7 @@
 3. K+2 或较高滑点会突破 `20%` 回撤边界。
 4. 研究状态机虽可描述为真实订单时序，但仓库没有 TRX production runner、exchange reconciliation、保护单监控和 kill switch。
 
-因此本轮不登记可 promotion 的 `V1`，不生成 canonical live spec，不进入 paper-live/dry-run/handoff。后续登记的 `V1base` 与 `V2` 只用于失败边界和删参复现。
+因此本轮不生成可 promotion 的版本或 canonical live spec，不进入 paper-live/dry-run/handoff。后续登记的 `V1` 只用于冻结失败边界和删参复现，状态仍为 diagnostic baseline。
 
 ## 复现命令
 
@@ -101,7 +101,7 @@ uv run python research/trx/1h-adaptive-regime/scripts/audit_trx_1h_live_feasibil
 - `diagnostics/trx-1h-adaptive-regime-refine-2026-07-03.md`
 - `diagnostics/trx-1h-persistent-regime-boundary-2026-07-03.md`
 - `live-specs/trx-1h-ar-live-feasibility-2026-07-03.md`
-- `ablations/trx-1h-ar-v1base-full-parameter-ablation-2026-07-03.md`
+- `ablations/trx-1h-ar-v1-full-parameter-ablation-2026-07-05.md`
 - `artifacts/trx_1h_adaptive_regime_search_2026-07-03.json`
 - `artifacts/trx_1h_adaptive_regime_refine_2026-07-03.json`
 - `artifacts/trx_1h_persistent_regime_boundary_2026-07-03.json`

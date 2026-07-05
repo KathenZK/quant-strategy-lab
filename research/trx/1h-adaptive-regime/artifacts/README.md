@@ -13,3 +13,4 @@
 - `trx_1h_live_feasibility_2026-07-03.json`
 - `trx_1h_ar_v1base_full_ablation_2026-07-03.json`、`trx_1h_ar_v1base_full_ablation_rows_2026-07-03.csv`、`trx_1h_ar_v1base_full_ablation_fields_2026-07-03.csv`
 - `trx_1h_ar_v2_strict_ablation_slices_2026-07-03.json`、`trx_1h_ar_v2_strict_ablation_rows_2026-07-03.csv`、`trx_1h_ar_v2_strict_ablation_fields_2026-07-03.csv`、`trx_1h_ar_v2_strict_slices_2026-07-03.csv`、`trx_1h_ar_v2_trade_execution_audit_2026-07-03.csv`
+- `trx_1h_ar_recent_adaptation_search_2026-07-03.json`、`trx_1h_ar_recent_adaptation_ranking_2026-07-03.csv`、`trx_1h_ar_recent_adaptation_slices_2026-07-03.csv`、`trx_1h_ar_recent_adaptation_top_trades_2026-07-03.csv`、`trx_1h_ar_recent_adaptation_trade_audit_2026-07-03.csv`

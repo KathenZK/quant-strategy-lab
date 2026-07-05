@@ -40,3 +40,12 @@
 - stop gap/open 穿越按 open 成交 `22` 次，未发现穿越 stop 后仍按旧 stop 价成交；有利 target gap 以 target 价保守记账 `0` 次。
 - 因果审计：信号使用闭合 `1h` K，`K+1 open` 入场；HTF/funding 特征按已知时间 `merge_asof` 对齐；未发现 OOS 排序或 K 内决策依赖。
 - 决策：没有发现价格穿越/未来函数导致的新增不可实盘问题，但因收益目标、OOS/近期分片和 production runner 仍失败，V2 保持 `NO-GO / not promoted / not live-ready`。
+
+## 2026-07-03：近期适配复搜
+
+- 因 V2 最近 `1m/3m` 亏损，重新以最近 `1y/6m/3m/1m` 适配为目标做 diagnostic search；该过程直接使用已解锁近期行情，不能作为新鲜 OOS 或 promotion 证据。
+- 搜索覆盖 `80,800` 个 unique configs、`42,905` 个可评估配置、`600` 个保留单腿和 `1,225` 个 ensemble；recent hard hits `0`。
+- 最佳观察值为 `ENS_REC__TRX_1H_AR_REC_N011284__TRX_1H_AR_REC_N031489`（`momentum_break + wick_reject`）：最近 `1y 2.227x annual / +122.58% / -10.67% DD / 79.49% win / 39 trades`，最近 `3m +22.40% / -4.14% DD / 100% win / 9 trades`，最近 `1m +3.37% / -1.40% DD / 100% win / 2 trades`。
+- 曝光缩放边界：同一观察值缩放至 `5x` 时最近 `1y` 仅 `4.724x annual`，DD `-20.74%` 已超过硬门槛；full DD 扩大至 `-34.93%`。
+- 逐笔执行重放违规 `0`，stop/target gap 乐观穿越 `0`；但收益上限未达到 `>=10x` 年化门槛，且没有冻结后 forward OOS 和生产 runner。
+- 决策：不登记 V3，不标记 candidate；仅保留为近期适配边界观察，家族状态仍为 `NO-GO / not promoted / not live-ready`。
