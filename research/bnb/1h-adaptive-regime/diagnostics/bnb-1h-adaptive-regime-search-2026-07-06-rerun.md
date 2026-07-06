@@ -1,4 +1,4 @@
-# BNB-1H-Adaptive-Regime 广泛搜索 - 2026-07-03
+# BNB-1H-Adaptive-Regime 广泛搜索 rerun - 2026-07-06
 
 ## 结论
 

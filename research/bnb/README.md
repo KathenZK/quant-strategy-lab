@@ -4,7 +4,8 @@
 
 ## 当前研究线
 
-- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：Binance USD-M Futures `BNBUSDT` perpetual `1h` 多指标自适应 regime 广泛搜索；最近三个月为 locked OOS；当前为 `active diagnostic research / not promoted / not live-ready`。
+- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：Binance USD-M Futures `BNBUSDT` perpetual `1h` 多指标自适应 regime 广泛搜索；2026-07-03 完整搜索和 2026-07-06 趋势/反转 rerun 均未通过 hard gate；当前为 `NO-GO / not promoted / not live-ready`，不登记版本。
+- `BNB-15M-Adaptive-Regime`（`BNB-15M-AR`）：Binance USD-M Futures `BNBUSDT` perpetual `15m` BNB 专属趋势延续、波动压缩突破、结构修复与 regime 过滤研究；当前为 `active diagnostic research / not promoted / not live-ready`。
 
 ## 数据与执行口径
 

@@ -123,7 +123,8 @@
 
 ## BNB 单资产研究
 
-- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：`bnb/1h-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `1h` 两年多指标广搜；最近三个月 locked OOS；当前 `active diagnostic research / not promoted / not live-ready`。
+- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：`bnb/1h-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `1h` 两年多指标广搜；最近三个月 locked OOS；2026-07-03 完整搜索与 2026-07-06 趋势/反转 rerun 均未通过 hard gate；当前 `NO-GO / not promoted / not live-ready`。
+- `BNB-15M-Adaptive-Regime`（`BNB-15M-AR`）：`bnb/15m-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `15m` BNB 专属趋势延续、波动压缩突破、结构修复与 regime 过滤研究；当前 `active diagnostic research / not promoted / not live-ready`。
 
 ## Ethereum 单资产研究
 
