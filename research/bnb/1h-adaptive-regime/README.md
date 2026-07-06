@@ -16,9 +16,9 @@
 
 ## 当前状态
 
-`active diagnostic research / not promoted / not live-ready`。
+`NO-GO / not promoted / not live-ready`。
 
-在最近三个月 locked OOS 揭盲和 live-executable 审计完成前，本家族没有登记版本，也没有生产 runner。
+完整搜索没有 prefit hard-gate 命中；唯一冻结 primary 在最近三个月 locked OOS 明显失效。本家族没有登记版本，也没有生产 runner。后续 BNB 研究已拆分到独立的 `../15m-adaptive-regime/`，不得把 15m 结果写回本家族版本线。
 
 ## 入口
 
@@ -26,4 +26,5 @@
 - `decision-log.md`：研究决策与状态变化。
 - `scripts/fetch_bnb_binance_1h.py`：最近两年 K 线、资金费、合约快照抓取与质量审计。
 - `scripts/research_bnb_1h_adaptive_regime_search.py`：locked OOS 多指标宽搜索。
+- `diagnostics/bnb-1h-adaptive-regime-search-2026-07-03.md`：完整搜索与 locked OOS NO-GO 证据。
 - `artifacts/`：Parquet、JSON、CSV 等可复现证据；默认由 `.gitignore` 忽略。

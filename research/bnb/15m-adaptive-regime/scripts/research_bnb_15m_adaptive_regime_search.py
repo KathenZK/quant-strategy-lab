@@ -4,6 +4,7 @@ import argparse
 import hashlib
 import importlib.util
 import json
+import math
 import random
 import sys
 from dataclasses import asdict, dataclass, replace
@@ -362,9 +363,69 @@ def retain(
     keep: int,
 ) -> list[tuple[Any, SearchConfig, list[Any]]]:
     rows.append(item)
-    if len(rows) > keep * 3:
-        rows = sorted(rows, key=lambda row: selection_key(row[0]), reverse=True)[:keep]
+    if len(rows) > keep * 4:
+        rows = prune(rows, keep)
     return rows
+
+
+def prune(
+    rows: list[tuple[Any, SearchConfig, list[Any]]], keep: int
+) -> list[tuple[Any, SearchConfig, list[Any]]]:
+    """Keep a multi-objective prefit frontier rather than one scalar-score mode."""
+    selected: dict[str, tuple[Any, SearchConfig, list[Any]]] = {}
+
+    def add(items: list[tuple[Any, SearchConfig, list[Any]]], limit: int) -> None:
+        for row in items[:limit]:
+            selected.setdefault(row[0].name, row)
+
+    add(sorted(rows, key=lambda row: selection_key(row[0]), reverse=True), keep // 3)
+    plausible = [
+        row
+        for row in rows
+        if row[0].prefit["max_dd"] > -0.35
+        and row[0].prefit["win_rate"] >= 0.45
+        and row[0].validation["total_return"] > 0.0
+        and row[0].validation["max_dd"] > -0.35
+    ]
+    add(
+        sorted(
+            plausible,
+            key=lambda row: (
+                row[0].prefit["annual_multiple"],
+                row[0].validation["annual_multiple"],
+            ),
+            reverse=True,
+        ),
+        keep // 3,
+    )
+    add(
+        sorted(
+            plausible,
+            key=lambda row: (
+                row[0].validation["annual_multiple"],
+                row[0].prefit["annual_multiple"],
+            ),
+            reverse=True,
+        ),
+        keep // 5,
+    )
+    per_style = max(4, keep // (len({row[1].base.style for row in rows}) * 8))
+    for style in {row[1].base.style for row in rows}:
+        style_rows = [row for row in plausible if row[1].base.style == style]
+        add(
+            sorted(
+                style_rows,
+                key=lambda row: (
+                    row[0].prefit["annual_multiple"],
+                    row[0].prefit_score,
+                ),
+                reverse=True,
+            ),
+            per_style,
+        )
+    if len(selected) < keep:
+        add(sorted(rows, key=lambda row: selection_key(row[0]), reverse=True), keep)
+    return list(selected.values())[:keep]
 
 
 def mutate(engine: Any, seed: SearchConfig, rng: random.Random, index: int) -> SearchConfig:
@@ -543,18 +604,57 @@ def main() -> None:
             retained = retain(retained, (candidate, cfg, trades), args.prefit_keep)
         if (index + 1) % args.progress_every == 0 and retained:
             best = max(retained, key=lambda row: selection_key(row[0]))[0]
+            frontier = max(
+                retained,
+                key=lambda row: (
+                    row[0].prefit["annual_multiple"]
+                    if row[0].prefit["max_dd"] > -0.35
+                    and row[0].prefit["win_rate"] >= 0.45
+                    else -math.inf
+                ),
+            )[0]
             print(
                 f"first {index + 1}/{args.random_configs} eligible={counts['first_eligible']} "
                 f"passes={counts['first_prefit_pass']} best={best.name} "
                 f"ann={best.prefit['annual_multiple']:.3f} dd={best.prefit['max_dd']:.3f} "
-                f"win={best.prefit['win_rate']:.3f}",
+                f"win={best.prefit['win_rate']:.3f} "
+                f"frontier_ann={frontier.prefit['annual_multiple']:.3f} "
+                f"frontier_dd={frontier.prefit['max_dd']:.3f}",
                 flush=True,
             )
-    retained = sorted(retained, key=lambda row: selection_key(row[0]), reverse=True)[: args.prefit_keep]
+    retained = prune(retained, args.prefit_keep)
     if not retained:
         raise RuntimeError("No first-pass strategy survived")
 
-    seeds = [row[1] for row in retained[: args.seed_pool]]
+    plausible_seed_rows = [
+        row
+        for row in retained
+        if row[0].prefit["max_dd"] > -0.35
+        and row[0].prefit["win_rate"] >= 0.45
+        and row[0].validation["total_return"] > 0.0
+    ]
+    seed_rows: list[tuple[Any, SearchConfig, list[Any]]] = []
+    for ordered in (
+        sorted(retained, key=lambda row: selection_key(row[0]), reverse=True),
+        sorted(
+            plausible_seed_rows,
+            key=lambda row: row[0].prefit["annual_multiple"],
+            reverse=True,
+        ),
+        sorted(
+            plausible_seed_rows,
+            key=lambda row: row[0].validation["annual_multiple"],
+            reverse=True,
+        ),
+    ):
+        for row in ordered[: args.seed_pool // 2]:
+            if all(existing[0].name != row[0].name for existing in seed_rows):
+                seed_rows.append(row)
+            if len(seed_rows) >= args.seed_pool:
+                break
+        if len(seed_rows) >= args.seed_pool:
+            break
+    seeds = [row[1] for row in seed_rows]
     seen = {json.dumps(config_dict(cfg), sort_keys=True) for cfg in seeds}
     for index in range(args.neighbors):
         cfg = mutate(engine, seeds[index % len(seeds)], rng, args.random_configs + index)
@@ -582,22 +682,41 @@ def main() -> None:
             retained = retain(retained, (candidate, cfg, trades), args.prefit_keep)
         if (index + 1) % args.progress_every == 0 and retained:
             best = max(retained, key=lambda row: selection_key(row[0]))[0]
+            frontier = max(
+                retained,
+                key=lambda row: (
+                    row[0].prefit["annual_multiple"]
+                    if row[0].prefit["max_dd"] > -0.35
+                    and row[0].prefit["win_rate"] >= 0.45
+                    else -math.inf
+                ),
+            )[0]
             print(
                 f"neighbor {index + 1}/{args.neighbors} eligible={counts['neighbors_eligible']} "
                 f"passes={counts['neighbors_prefit_pass']} best={best.name} "
                 f"ann={best.prefit['annual_multiple']:.3f} dd={best.prefit['max_dd']:.3f} "
-                f"win={best.prefit['win_rate']:.3f}",
+                f"win={best.prefit['win_rate']:.3f} "
+                f"frontier_ann={frontier.prefit['annual_multiple']:.3f} "
+                f"frontier_dd={frontier.prefit['max_dd']:.3f}",
                 flush=True,
             )
-    retained = sorted(retained, key=lambda row: selection_key(row[0]), reverse=True)[: args.prefit_keep]
+    retained = prune(retained, args.prefit_keep)
     if args.prefit_only:
         print(json.dumps(json_safe({"status": "prefit_only", "counts": counts, "best": candidate_row(retained[0][0])}), indent=2, ensure_ascii=False))
         return
 
     ensembles: list[tuple[Any, tuple[SearchConfig, SearchConfig], list[Any], tuple[float, float]]] = []
     if not args.no_ensembles:
-        trends = [row for row in retained if row[1].base.style in engine.TREND_STYLES][:30]
-        reversions = [row for row in retained if row[1].base.style in engine.REVERSION_STYLES][:30]
+        trends = sorted(
+            [row for row in retained if row[1].base.style in engine.TREND_STYLES],
+            key=lambda row: selection_key(row[0]),
+            reverse=True,
+        )[:30]
+        reversions = sorted(
+            [row for row in retained if row[1].base.style in engine.REVERSION_STYLES],
+            key=lambda row: selection_key(row[0]),
+            reverse=True,
+        )[:30]
         for left, right in product(trends, reversions):
             left_candidate, left_cfg, left_trades = left
             right_candidate, right_cfg, right_trades = right
@@ -652,7 +771,7 @@ def main() -> None:
         ["prefit_pass", "prefit_score"], ascending=False
     ).to_csv(PREFIT_CSV, index=False)
 
-    single = retained[0]
+    single = max(retained, key=lambda row: selection_key(row[0]))
     ensemble = ensembles[0] if ensembles else None
     if ensemble is not None and selection_key(ensemble[0]) > selection_key(single[0]):
         primary_candidate = ensemble[0]

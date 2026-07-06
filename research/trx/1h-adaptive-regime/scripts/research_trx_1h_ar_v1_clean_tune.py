@@ -348,6 +348,8 @@ def build_leg_pool(
     workers: int,
 ) -> tuple[list[LegCandidate], dict[str, int]]:
     retained: list[LegCandidate] = []
+    custom_eligible = 0
+    native_priority_eligible = 0
     eligible = 0
     context = mp.get_context("fork")
     pool = context.Pool(processes=max(1, workers)) if workers > 1 else None
@@ -358,7 +360,9 @@ def build_leg_pool(
     )
     try:
         for index, (cfg, metrics, score, priority) in enumerate(results, start=1):
-            if score > -1e8:
+            custom_eligible += int(score > -1e8)
+            native_priority_eligible += int(priority > -1e8)
+            if score > -1e8 and priority > -1e8:
                 eligible += 1
                 retained.append(
                     LegCandidate(
@@ -387,6 +391,8 @@ def build_leg_pool(
     retained = sorted(retained, key=lambda candidate: candidate.score, reverse=True)[:keep]
     return retained, {
         "generated_unique": len(configs),
+        "custom_score_eligible": custom_eligible,
+        "native_priority_eligible": native_priority_eligible,
         "eligible": eligible,
         "retained": len(retained),
     }
@@ -492,10 +498,21 @@ def robust_score(candidate: PairCandidate) -> float:
 
 
 def pair_row(candidate: PairCandidate) -> dict[str, Any]:
+    all_window_robust = bool(
+        candidate.delay_metrics is not None
+        and candidate.slip8_metrics is not None
+        and candidate.combined_metrics is not None
+        and robust_prefit_gate(candidate.delay_metrics)
+        and robust_prefit_gate(candidate.slip8_metrics)
+        and robust_prefit_gate(candidate.combined_metrics)
+    )
     row = {
         "score": candidate.score,
         "robust_score": candidate.robust_score,
         "strict_improvement": candidate.strict_improvement,
+        "all_window_robust": all_window_robust,
+        "macd_priority_score": candidate.priorities[0],
+        "stoch_priority_score": candidate.priorities[1],
         **{f"m_{key}": value for key, value in asdict(candidate.macd).items()},
         **{f"s_{key}": value for key, value in asdict(candidate.stoch).items()},
         **flatten(candidate.metrics),
@@ -853,6 +870,7 @@ def main() -> None:
             "search_uses": "train_validation_prefit_only",
             "reused_holdout": "read_only_after_freeze_not_used_for_selection",
             "moderate_win_preference": "prefer 65%-85%; hard floor 55% for strict improvement",
+            "leg_gate": "custom leg score and native family priority must both be valid",
             "reason": selection_reason,
         },
         "search_counts": {
@@ -903,6 +921,7 @@ def main() -> None:
         "",
         f"- 选择规则：`{selection_reason}`。",
         f"- MACD/Stoch unique configs：`{macd_counts['generated_unique']}` / `{stoch_counts['generated_unique']}`；组合评估 `{evaluated_pairs}`。",
+        f"- 腿级双门槛：custom score 与家族原生 priority 必须同时有效；MACD/Stoch 最终 eligible：`{macd_counts['eligible']}` / `{stoch_counts['eligible']}`。",
         f"- prefit 同时收益更高、回撤更小、胜率>=55%的 pair observations：`{strict_count}`。",
         f"- 完成额外一根延迟、8 bps、延迟+8 bps 三重 prefit 审计：`{min(len(pairs), args.robust_keep)}`；全窗口通过：`{len(fully_robust)}`。",
         f"- 冻结邻域：`{len(neighbor_rows)}` 个 one-field variants，正收益/DD<20%/win>=50% 全窗口通过 `{neighborhood_pass}`。",
