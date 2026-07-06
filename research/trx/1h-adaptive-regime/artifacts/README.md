@@ -14,3 +14,7 @@
 - `trx_1h_ar_v1base_full_ablation_2026-07-03.json`、`trx_1h_ar_v1base_full_ablation_rows_2026-07-03.csv`、`trx_1h_ar_v1base_full_ablation_fields_2026-07-03.csv`
 - `trx_1h_ar_v2_strict_ablation_slices_2026-07-03.json`、`trx_1h_ar_v2_strict_ablation_rows_2026-07-03.csv`、`trx_1h_ar_v2_strict_ablation_fields_2026-07-03.csv`、`trx_1h_ar_v2_strict_slices_2026-07-03.csv`、`trx_1h_ar_v2_trade_execution_audit_2026-07-03.csv`
 - `trx_1h_ar_recent_adaptation_search_2026-07-03.json`、`trx_1h_ar_recent_adaptation_ranking_2026-07-03.csv`、`trx_1h_ar_recent_adaptation_slices_2026-07-03.csv`、`trx_1h_ar_recent_adaptation_top_trades_2026-07-03.csv`、`trx_1h_ar_recent_adaptation_trade_audit_2026-07-03.csv`
+- `trx_1h_ar_v1_config_2026-07-05.json`、`trx_1h_ar_v1_full_ablation_2026-07-05.json`、`trx_1h_ar_v1_full_ablation_rows_2026-07-05.csv`、`trx_1h_ar_v1_full_ablation_fields_2026-07-05.csv`
+- `trx_1h_ar_v2_config_2026-07-06.json`、`trx_1h_ar_v2_full_ablation_2026-07-06.json`、`trx_1h_ar_v2_full_ablation_rows_2026-07-06.csv`、`trx_1h_ar_v2_full_ablation_fields_2026-07-06.csv`、`trx_1h_ar_v2_slices_2026-07-06.csv`、`trx_1h_ar_v2_trade_execution_audit_2026-07-06.csv`
+- `trx_1h_ar_v2_ablation_guided_tune_2026-07-06.json`、`trx_1h_ar_v2_ablation_guided_tune_candidates_2026-07-06.csv`、`trx_1h_ar_v2_ablation_guided_tune_trades_2026-07-06.csv`、`trx_1h_ar_v2_ablation_guided_tune_slices_2026-07-06.csv`、`trx_1h_ar_v2_ablation_guided_tune_execution_audit_2026-07-06.csv`
+- `trx_1h_ar_v3_config_2026-07-06.json`

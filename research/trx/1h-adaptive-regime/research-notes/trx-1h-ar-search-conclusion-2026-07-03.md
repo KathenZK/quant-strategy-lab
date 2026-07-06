@@ -8,7 +8,7 @@
 - 胜率 `>=50%`；
 - 最大回撤严格小于 `20%`。
 
-本轮原始搜索结论为 `NO-GO / not promoted / not live-ready`。用户于 2026-07-05 要求把领先观察值正式登记为 `TRX-1H-Adaptive-Regime-V1`；登记只冻结 diagnostic baseline 身份，clean-equivalent 删参实现仍属于同一个 V1，不是可交付实盘的新版本。全样本看起来很高的观察值在 locked OOS 亏损，不能用全样本叙事掩盖。
+本轮原始搜索结论为 `NO-GO / not promoted / not live-ready`。用户于 2026-07-05 要求把领先观察值正式登记为 `TRX-1H-Adaptive-Regime-V1`；用户于 2026-07-06 要求把 clean-equivalent 删参实现正式登记为 `TRX-1H-Adaptive-Regime-V2`。V2 是 V1 逐交易等价的 clean 参数版本，不是可交付实盘版本。全样本看起来很高的观察值在 reused holdout 亏损，不能用全样本叙事掩盖。
 
 ## 数据与冻结边界
 

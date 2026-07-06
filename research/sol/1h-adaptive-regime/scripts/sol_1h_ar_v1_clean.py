@@ -15,9 +15,21 @@ if str(SCRIPT_DIR) not in sys.path:
 import sol_1h_ar_v1 as v1  # noqa: E402
 
 
-ARTIFACT_DIR = ROOT / "research/sol/1h-adaptive-regime/artifacts"
+FAMILY_DIR = ROOT / "research/sol/1h-adaptive-regime"
+ARTIFACT_DIR = FAMILY_DIR / "artifacts"
+NOTES_DIR = FAMILY_DIR / "research-notes"
+DATE_TAG = "2026-07-03"
 ABLATION_JSON = ARTIFACT_DIR / "sol_1h_ar_v1_full_ablation_2026-07-03.json"
 CLEAN_JSON = ARTIFACT_DIR / "sol_1h_ar_v1_clean_config_2026-07-03.json"
+REPORT_MD = NOTES_DIR / f"sol-1h-ar-v1-clean-interface-{DATE_TAG}.md"
+
+
+def fmt_pct(value: float) -> str:
+    return f"{value:.2%}"
+
+
+def fmt_mult(value: float) -> str:
+    return f"{value:.4f}x"
 
 
 def python_type(value: Any) -> type[Any]:
@@ -135,10 +147,57 @@ def main() -> None:
         "data_quality": quality,
     }
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    NOTES_DIR.mkdir(parents=True, exist_ok=True)
     CLEAN_JSON.write_text(
         json.dumps(payload, indent=2, ensure_ascii=False, default=str),
         encoding="utf-8",
     )
+    lines = [
+        "# SOL-1H-Adaptive-Regime-V1 Clean Interface 等价报告 - 2026-07-03",
+        "",
+        "## 结论",
+        "",
+        "V1 clean interface 已通过逐笔交易路径等价校验：clean 配置生成的交易签名与 V1 原始 `StrategyConfig` 完全一致。",
+        "",
+        f"- 原始字段槽：`{original_slots}`。",
+        f"- clean tunable 字段槽：`{clean_slots}`。",
+        f"- 删除或硬编码字段槽：`{original_slots - clean_slots}`。",
+        "- 状态：`diagnostic_baseline_not_promoted_not_live_ready`。",
+        "- reused holdout 已在 V1 冻结揭盲时使用，clean interface 只做等价收敛，不构成新版本或 promotion。",
+        "",
+        "## V1 / Clean 等价指标",
+        "",
+        "| Window | Annual | Return | DD | Win | Trades | PF |",
+        "| --- | ---: | ---: | ---: | ---: | ---: | ---: |",
+    ]
+    for window, metric in payload["metrics"].items():
+        lines.append(
+            f"| `{window}` | `{fmt_mult(metric['annual_multiple'])}` | "
+            f"`{fmt_pct(metric['total_return'])}` | `{fmt_pct(metric['max_dd'])}` | "
+            f"`{fmt_pct(metric['win_rate'])}` | `{int(metric['trades'])}` | "
+            f"`{metric['profit_factor']:.3f}` |"
+        )
+    lines.extend(["", "## Clean 参数面", ""])
+    for index, cfg in enumerate(clean_configs, start=1):
+        lines.extend([f"### Leg {index}", ""])
+        lines.extend(f"- `{key}` = `{value}`" for key, value in asdict(cfg).items())
+        lines.append("")
+    lines.extend(
+        [
+            "## 机器证据",
+            "",
+            f"- `artifacts/{CLEAN_JSON.name}`",
+            f"- clean 字段面由 `artifacts/{ABLATION_JSON.name}` 的 `clean_surface` 派生；对应人工可读消融报告为 `ablations/{REPORT_MD.name.replace('clean-interface', 'full-parameter-ablation')}`。",
+            "",
+            "复现：",
+            "",
+            "```bash",
+            "uv run python research/sol/1h-adaptive-regime/scripts/sol_1h_ar_v1_clean.py",
+            "```",
+            "",
+        ]
+    )
+    REPORT_MD.write_text("\n".join(lines), encoding="utf-8")
     print(json.dumps(payload, indent=2, ensure_ascii=False, default=str))
 
 

@@ -37,3 +37,11 @@
 - 新增 `normalized_bar_not_closed_at_cutoff`、`raw_closed_flag_at_or_after_cutoff` 两项硬 blocker，以及两个毫秒 dtype 回归测试。
 - 修复后 server time `2026-07-02 03:40:55.224 UTC`，raw `9,546` 行中仅 `9,545` 行闭合；最后合法闭合 K 为 `02:00`，正在形成的 `03:00` K 被排除。
 - V1、V2、`76/76` 消融、前沿压力、`30,000 + 30,000 + 19,600` 首轮微调和 `800 x 800` 扩大搜索全部从修复后的 closed-only 数据重新生成。V1/V2 最终指标与前次相同；未闭合末根当时没有形成可成交的下一根入场，但代码缺陷本身仍按最高优先级修复并留测试。
+
+## 2026-07-06：V2 组合复测并按用户要求登记 V3
+
+- V2 全参数消融提示的组合复测覆盖 DI `4` 个候选 × Stoch `4` 个候选，共 `16` 组；每组执行 base K+1、K+2 延迟和 `8 bps/fill` 滑点压力。
+- 最佳 base 组合为 `di_roc_off__stoch_th55`，current full `15.0530x / -19.11% / 79.73% / 74 trades`；reused holdout `9.0300x / -19.11% / 76.47% / 17 trades`。
+- 同一组合在 K+2 压力下 current full 为 `3.0574x / -31.93%`；在 `8 bps/fill` 下为 `9.4070x / -28.40%`。因此它不是 promotion，不可标记为 live、paper-live、dry-run、candidate 或 handoff。
+- 按用户要求，将 `di_roc_off__stoch_th55` 正式登记为 `HYPE-1H-Adaptive-Regime-V3` diagnostic baseline，并创建 `canonical-specs/hype-1h-ar-v3-baseline-spec.md` 与主账条目。
+- V3 全参数消融覆盖 clean 配置接口 `34` 个字段槽，输出 `98` 行，coverage missing fields 为 `0`；current full 严格改善行 `9`，基础 target-like 行 `5`。这些仍只作诊断，未完成 K+2/滑点/生产 runner/forward trades promotion 证据。

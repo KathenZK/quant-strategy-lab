@@ -46,3 +46,35 @@
 - 参数、作用说明和证据链接已写入 `btc-1h-ar-core-ledger.md`；机器证据仍为 `artifacts/btc_1h_ar_v1_scaled_frontier_audit_2026-07-02.json`。
 - 此登记覆盖上一条“版本命名暂缓”的决策，但不改变审计状态：`paper-audit observation / forward-test required / not live-ready`。
 - 下一证据仍必须来自 V2 冻结参数后的新增 forward trades、production runner、重启恢复、交易所对账、missing-bar fail-closed、kill switch 与真实 stop-market 滑点审计。
+
+## 2026-07-06 — V2 全参数消融
+
+- 对 `BTC-1H-Adaptive-Regime-V2` 冻结参数执行 one-at-a-time 全参数消融，复现 V2 基线：prefit `3.1773x / -13.99% / 84.85%`，reused holdout `1.5232x / -13.48% / 81.82%`，current full `2.8817x / -13.99% / 84.42%`。
+- 覆盖两条腿全部 `78/78` 个 `StrategyConfig` 字段槽，生成 `205` 行 baseline/variant 证据，coverage missing `0`。
+- 字段分类沿用 V1 全消融语义：`27` active tunable、`12` contract fixed、`35` baseline fixed、`4` neutral fixed。
+- 相对 V2 基线，one-at-a-time prefit 严格改善行数为 `5`；最强单字段方向为 CCI `tp_atr: 4.5 -> 5.0`，prefit `3.5469x / -13.99% / 84.85%`。
+- 决策：记录为敏感性审计，不做组合搜索，不登记 V2.1，不改变 `paper-audit observation / not live-ready`。证据见 `ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md` 与 `artifacts/btc_1h_ar_v2_full_ablation_2026-07-06.json`。
+
+## 2026-07-06 — V2 受约束微调观察
+
+- 基于 V2 全参数消融的前沿方向，仅调整 active 参数：Keltner `fixed_leverage`，CCI `tp_atr`、`cooldown_bars`、`max_adx`、`fixed_leverage`，以及少量 Keltner 过滤参数候选；不改变 `style`、`side_mode`、`entry_delay_bars`、`exit_kind` 或 `sizing_kind` 等合同字段。
+- 选参规则：只读取 train/validation/prefit；要求 prefit 年化高于 V2，train/validation/prefit 胜率均 `>=80%`、回撤均 `<20%`，并在通过 gate 的组合中最大化 prefit 年化。reused holdout 不参与选参。
+- 网格 `7,200` 组，`3,852` 组通过 selection gate。首选 `BTC-1H-AR-V2-MICRO-TUNE-2026-07-06`：Keltner `fixed_leverage=2.4`；CCI `tp_atr=5.5`、`cooldown_bars=0`、`max_adx=40.0`、`fixed_leverage=3.5`。
+- 指标：prefit `6.1574x / -12.87% / 87.30%`；reused holdout `1.8998x / -17.47% / 81.82%`；current full `5.2669x / -17.47% / 86.49%`。
+- 决策：记录为 diagnostic micro-tune observation；不登记 V2.1，不标记 candidate/paper-live/live-ready。证据见 `research-notes/btc-1h-ar-v2-micro-tune-2026-07-06.md` 与 `artifacts/btc_1h_ar_v2_micro_tune_2026-07-06.json`。
+
+## 2026-07-06 — 按用户要求登记 V3
+
+- 将 `BTC-1H-AR-V2-MICRO-TUNE-2026-07-06` 正式登记为 `BTC-1H-Adaptive-Regime-V3`。
+- V3 身份固定为 V2 micro-tune diagnostic observation：Keltner breakout + CCI reversal ensemble；Keltner `fixed_leverage=2.4`；CCI `tp_atr=5.5`、`cooldown_bars=0`、`max_adx=40.0`、`fixed_leverage=3.5`。
+- 指标沿用冻结观察：prefit `6.1574x / -12.87% / 87.30%`；reused holdout `1.8998x / -17.47% / 81.82%`；current full `5.2669x / -17.47% / 86.49%`。
+- 参数、作用说明和证据链接已写入 `btc-1h-ar-core-ledger.md`；机器证据仍为 `artifacts/btc_1h_ar_v2_micro_tune_2026-07-06.json`。
+- 此登记覆盖上一条“不登记 V2.1 / 不登记新版本”的命名决策，但不改变审计状态：`diagnostic micro-tune observation / forward-test required / not live-ready`。
+
+## 2026-07-06 — V3 全参数消融与多窗口回测
+
+- 对 `BTC-1H-Adaptive-Regime-V3` 冻结参数执行 one-at-a-time 全参数消融，复现 V3 基线：prefit `6.1574x / -12.87% / 87.30%`，reused holdout `1.8998x / -17.47% / 81.82%`，current full `5.2669x / -17.47% / 86.49%`。
+- 覆盖两条腿全部 `78/78` 个 `StrategyConfig` 字段槽，生成 `205` 行 baseline/variant 证据，coverage missing `0`；字段分类沿用 V1/V2：`27` active tunable、`12` contract fixed、`35` baseline fixed、`4` neutral fixed。
+- 相对 V3 基线，同时满足 prefit 年化更高、回撤更小、train/validation/prefit 胜率均 `>=80%`、train/validation 同正且 validation DD<20% 的 one-at-a-time 严格改善行数为 `0`。
+- 多窗口回测显示：recent 90d `1.9134x / +17.34% / -17.47% / 81.82% / 11`；recent 30d `1.2931x / +2.13% / -17.47% / 75.00% / 4`；recent 7d 无交易；2026 YTD `3.9017x / +97.37% / -17.47% / 84.00% / 25`。
+- 决策：记录为 V3 敏感性与时间稳定性诊断，不做组合搜索，不登记 V3.1/V4，不标记 candidate/paper-live/live-ready。证据见 `ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md`、`research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md`、`artifacts/btc_1h_ar_v3_full_ablation_2026-07-06.json` 与 `artifacts/btc_1h_ar_v3_window_backtest_2026-07-06.json`。

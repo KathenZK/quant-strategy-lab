@@ -569,7 +569,8 @@ def main() -> None:
         (
             f"分类结果：`{classification_counts}`。`baseline_fixed_remove` 与 "
             "`neutral_fixed_remove` 从 V1 clean-equivalent 参数面移除；`contract_fixed` 作为实现常量保留，"
-            "但不再作为可调搜索参数。"
+            "但不再作为可调搜索参数。该 clean-equivalent 参数面已于 2026-07-06 按用户指令正式登记为 "
+            "`TRX-1H-Adaptive-Regime-V2`。"
         ),
         "",
         (
@@ -578,7 +579,7 @@ def main() -> None:
         ),
         "",
         "V1 clean-equivalent 是 V1 的删参干净版，行为等价边界仍为 `NO-GO / not promoted / not live-ready`；"
-        "它不是 candidate、paper-live、dry-run、handoff 或 live 版本。",
+        "后续正式版本名为 `TRX-1H-Adaptive-Regime-V2`，但它不是 candidate、paper-live、dry-run、handoff 或 live 版本。",
         "",
         "## V1 基线",
         "",
@@ -636,8 +637,8 @@ def main() -> None:
             "## 选择边界",
             "",
             "- V1 登记的是既有领先观察值，不改变其 OOS 亏损和 hard-gate 失败事实。",
-            "- V1 clean-equivalent 只移除语义休眠字段和 neutral fixed 字段；不使用 locked OOS 选择新参数。",
-            "- V1 clean-equivalent 后续若重新搜索，只能读取 train/validation/prefit；当前 locked OOS 已解锁，只能作复用审计。",
+            "- V1 clean-equivalent 只移除语义休眠字段和 neutral fixed 字段；不使用 locked OOS 选择新参数；该 clean-equivalent 参数面后续登记为 `TRX-1H-Adaptive-Regime-V2`。",
+            "- V2 后续若重新搜索，只能读取 train/validation/prefit；当前 locked OOS 已解锁，只能作复用审计。",
             "",
             "## 机器证据",
             "",

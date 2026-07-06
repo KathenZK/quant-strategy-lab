@@ -51,6 +51,7 @@
 - `HYPE-1H-Adaptive-Regime`（`HYPE-1H-AR`）: `hype/1h-adaptive-regime/hype-1h-ar-core-ledger.md`
   - `HYPE-1H-Adaptive-Regime-V1`: frozen `DI-cross + Stoch-reversal` diagnostic baseline; `NO-GO / not live-ready`.
   - `HYPE-1H-Adaptive-Regime-V2`: clean-equivalent baseline after full-field ablation; behavior equals V1; `NO-GO / not live-ready`.
+  - `HYPE-1H-Adaptive-Regime-V3`: `di_roc_off__stoch_th55` diagnostic baseline; stronger base K+1 but fails reused-holdout/stress promotion gates; `NO-GO / not live-ready`.
 - `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）: `hype/15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md`
   - Independent Binance HYPEUSDT `15m` broad multi-indicator intraday research line.
   - It is not a version of `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, or `HYPE-Candle-Count-Reversal`.
@@ -126,19 +127,19 @@
 
 ## Ethereum 单资产研究
 
-- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：`eth/1h-adaptive-regime/README.md`。Binance USD-M Futures `ETHUSDT` perpetual `1h` 两年多指标广搜；`ETH-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，当前 `NO-GO / not promoted / not live-ready`。
+- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：`eth/1h-adaptive-regime/README.md`。Binance USD-M Futures `ETHUSDT` perpetual `1h` 两年多指标广搜；`ETH-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，`ETH-1H-Adaptive-Regime-V2` 已登记为 V1 clean tuned diagnostic observation，`ETH-1H-Adaptive-Regime-V2.1` 已登记为 high-win tuned diagnostic observation；V2.1 current full 达 `3.0277x / -19.55% / 87.50%`，但 reused holdout 为负且压力测试穿越回撤边界；当前 `NO-GO / not promoted / not live-ready`。
 
 ## Solana 单资产研究
 
-- `SOL-1H-Adaptive-Regime`（`SOL-1H-AR`）：`sol/1h-adaptive-regime/README.md`。Binance USD-M Futures `SOLUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 locked OOS；当前 `diagnostic search / not promoted / not live-ready`。
+- `SOL-1H-Adaptive-Regime`（`SOL-1H-AR`）：`sol/1h-adaptive-regime/README.md`。Binance USD-M Futures `SOLUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 locked OOS；`SOL-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，locked OOS 未通过 `10x / 50% / <20% DD` 硬门槛。V1 full ablation、clean interface 与 clean tune 报告已补齐；clean tune 样本内改善但 reused holdout/current full 回撤恶化，当前 `NO-GO / not promoted / not live-ready`。
 
 ## TRON 单资产研究
 
-- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：`trx/1h-adaptive-regime/README.md`。Binance USD-M Futures `TRXUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 locked OOS；两阶段搜索与持续 regime 上界均为 `0` hard-gate 命中。`V1base` 已登记为领先观察值 diagnostic baseline，`V2` 为全参数消融后的 clean baseline；近期适配复搜 `80,800` 个 unique configs 仍无 recent hard hit，最佳观察值最近 `1y 2.227x annual / -10.67% DD / 79.49% win`；当前 `NO-GO / not promoted / not live-ready`。
+- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：`trx/1h-adaptive-regime/README.md`。Binance USD-M Futures `TRXUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 reused locked OOS；两阶段搜索与持续 regime 上界均为 `0` hard-gate 命中。`V1` 已登记为领先观察值 diagnostic baseline，`V2` 已登记为 clean 参数版本并完成 V2 全参数消融 `36/36`、one-at-a-time `211` 行、执行重放违规 `0`；V2 消融引导微调观察值已登记为 `V3`，current full 提升至 `5.686x annual / -17.17% DD / 92.47% win`，但 reused holdout 胜率 `77.78%`，不 promotion；V3 参数说明见 `trx/1h-adaptive-regime/canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`；当前 `NO-GO / not promoted / not live-ready`。
 
 ## Bitcoin 单资产研究
 
-- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline；`BTC-1H-Adaptive-Regime-V2` 已登记为 V1 clean scaled frontier paper-audit observation，等待新增 forward trades，尚未 live-ready。
+- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline；`BTC-1H-Adaptive-Regime-V2` 已登记为 V1 clean scaled frontier paper-audit observation；`BTC-1H-Adaptive-Regime-V3` 已登记为 V2 micro-tune diagnostic observation，并已完成全参数消融与多窗口回测；等待新增 forward trades，尚未 live-ready。
 
 ## 核心研究方向
 

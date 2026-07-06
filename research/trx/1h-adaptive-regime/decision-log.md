@@ -24,13 +24,13 @@
 - 订单时序可实现不等于策略可实盘；当前没有生产 runner、restart reconciliation、kill switch 和保护单监控实现。
 - 最终状态保持 `NO-GO`，不生成 canonical live spec，不登记可 promotion 的 V1。
 
-## 2026-07-03：登记 V1base 并完成全参数消融到 V2
+## 2026-07-03：临时 V1base 命名与删参证据
 
-- 按后续研究指令，将领先观察值 `ENS__TRX_1H_AR_N131875__TRX_1H_AR_N129128` 登记为 `TRX-1H-Adaptive-Regime-V1base`；这是 diagnostic baseline，不是 candidate。
+- 当日按阶段性研究指令，将领先观察值 `ENS__TRX_1H_AR_N131875__TRX_1H_AR_N129128` 临时记为 `TRX-1H-Adaptive-Regime-V1base`；2026-07-05 后续正式收敛为 `TRX-1H-Adaptive-Regime-V1`。
 - 新增全参数消融：覆盖两个组件全部 `78` 个 `StrategyConfig` 字段槽，coverage missing `0`；分类为 `33 active_tunable / 27 baseline_fixed_remove / 12 contract_fixed / 6 neutral_fixed_remove`。
-- 将移除 baseline/neutral fixed 字段后的干净参数面登记为 `TRX-1H-Adaptive-Regime-V2`；V2 与 V1base 共享行为边界，仍为 full `4.077x annual / -19.84% DD / 86.54% win / 104 trades`、locked OOS `0.844x annual / -4.12% return / -11.42% DD / 75.00% win / 8 trades`。
+- 移除 baseline/neutral fixed 字段后的干净参数面当时作为 V2 来源证据；2026-07-06 已按用户明确指令正式登记为 `TRX-1H-Adaptive-Regime-V2`。V2 与 V1 共享行为边界，仍为 full `4.077x annual / -19.84% DD / 86.54% win / 104 trades`、reused holdout `0.844x annual / -4.12% return / -11.42% DD / 75.00% win / 8 trades`。
 - one-at-a-time 变体有 `4` 行 prefit 严格改善，但未用于 OOS 选参；当前 locked OOS 已解锁，只能作复用审计，不能再当新鲜 OOS。
-- 决策：`V1base` 与 `V2` 均为 `NO-GO / diagnostic only / not promoted / not live-ready`；不得标记为 paper-live、dry-run、handoff 或 live。
+- 决策：该观察值与删参结果均为 `NO-GO / diagnostic only / not promoted / not live-ready`；不得标记为 paper-live、dry-run、handoff 或 live。
 
 ## 2026-07-03：V2 严格分片、执行重放和不可实盘审计
 
@@ -49,3 +49,32 @@
 - 曝光缩放边界：同一观察值缩放至 `5x` 时最近 `1y` 仅 `4.724x annual`，DD `-20.74%` 已超过硬门槛；full DD 扩大至 `-34.93%`。
 - 逐笔执行重放违规 `0`，stop/target gap 乐观穿越 `0`；但收益上限未达到 `>=10x` 年化门槛，且没有冻结后 forward OOS 和生产 runner。
 - 决策：不登记 V3，不标记 candidate；仅保留为近期适配边界观察，家族状态仍为 `NO-GO / not promoted / not live-ready`。
+
+## 2026-07-06：正式登记 V2 并完成 V2 全参数消融
+
+- 按用户明确指令，将此前 V1 clean-equivalent 干净参数面正式登记为 `TRX-1H-Adaptive-Regime-V2`。此前 `V1base` 为临时命名；当前正式版本为 `V1` 与 `V2`。
+- `V2` 与 `V1` 逐交易路径完全一致，仍共享 full `4.077x annual / -19.84% DD / 86.54% win / 104 trades` 与 reused holdout `0.844x annual / -4.12% return / -11.42% DD / 75.00% win / 8 trades` 的行为边界。
+- 新增 `trx_1h_ar_v2.py`，输出 `artifacts/trx_1h_ar_v2_config_2026-07-06.json`；该 artifact 记录 V2 暴露 `36` 个 clean 参数槽，移除 `33` 个 dormant/neutral 字段，并硬编码 `9` 个版本身份/订单契约字段。
+- 新增 V2 全参数消融：覆盖 V2 对外暴露 clean 字段槽 `36/36`，one-at-a-time 行数 `211`（含 baseline），prefit 严格改善 `8` 行；这些行只作诊断，不使用 reused holdout 或近期分片选参。
+- V2 严格近期分片：`1d/7d` 无交易，`1m -10.12%`，`3m -4.12%`，`6m +12.80%`，`1y +45.18%`；近期适配性仍不满足 promotion。
+- 逐笔执行重放覆盖 warmup 后全路径 merged `107` 笔交易（full 指标窗口 `104` 笔）和组件交易；违规计数 `0`，merged 违规 `0`；stop gap 按 open 成交 `22` 次，有利 target gap 以 target 价保守记账 `0` 次。
+- 决策：`V2` 登记完成，但只是 clean 参数 diagnostic version，不是 candidate、paper-live、dry-run、handoff 或 live；家族状态保持 `NO-GO / not promoted / not live-ready`。
+
+## 2026-07-06：V2 消融引导微调观察
+
+- 按用户要求，根据 V2 消融结果做微调，目标为提高收益率、胜率维持 `80%+`、回撤 `<20%`。
+- 选择过程只使用 train/validation/prefit；reused holdout 和最近 `1d/7d/1m/3m/6m/1y` 分片均为冻结后审计，不参与选参。
+- pair pool `500` 行，满足 train/validation/prefit `win>=80%`、DD `<20%`、train/validation 正收益且 prefit annual 高于 V2 的候选 `41` 行。
+- 选中观察值 `TRX-1H-AR-V2-ABLATION-GUIDED-TUNE-2026-07-06`：prefit `7.330x annual / +2452.42% / -17.17% DD / 94.05% win / 84 trades`，current full `5.686x annual / +2503.89% / -17.17% DD / 92.47% win / 93 trades`。后续按用户明确指令正式登记为 `TRX-1H-Adaptive-Regime-V3`。
+- 冻结后 reused holdout 为 `1.083x annual / +2.02% / -15.23% DD / 77.78% win / 9 trades`，收益和回撤改善，但胜率未达 `80%`。
+- 标准近期分片：`1m +3.52% / -1.56% DD / 100% win / 2 trades`，`3m +2.02% / -15.23% DD / 77.78% win / 9 trades`，`6m +80.29% / -15.23% DD / 91.30% win / 23 trades`，`1y +191.14% / -15.71% DD / 91.84% win / 49 trades`。
+- 逐笔执行重放违规 `0`，merged 违规 `0`；stop gap/open 按 open 成交 `10` 次，target gap 保守记账 `0` 次。
+- 决策：该结果满足 current full 目标，但 reused holdout 胜率未达 `80%`，且没有新增 forward trades 和 TRX production runner；登记为 `V3` 后仍不 promotion。
+
+## 2026-07-06：登记 V3 与参数说明
+
+- 按用户明确指令，将 `TRX-1H-AR-V2-ABLATION-GUIDED-TUNE-2026-07-06` 正式登记为 `TRX-1H-Adaptive-Regime-V3`。
+- 新增 `scripts/trx_1h_ar_v3.py` 和 `artifacts/trx_1h_ar_v3_config_2026-07-06.json`，校验 V3 指标与微调观察值一致。
+- 新增 `canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`，逐项列出 V3 全部 `36` 个参数、作用、V2/V3 参数值和变化含义。
+- V3 相比 V2：不再与 V1/V2 逐交易等价；MACD leg 更快 HTF、更窄 ADX/ATR、放宽 MACD turn 与 EMA 距离、杠杆提高到 `5x`；Stochastic leg 从 long-only 改为 both，使用更慢 EMA 参考、严格 ADX、较宽 trailing、较短 cooldown 和 `2h` 入场延迟。
+- 决策：`V3` 为 registered diagnostic tuned version。current full 满足收益更高、win `>80%`、DD `<20%`，但 reused holdout 胜率 `77.78%`，且缺 fresh forward OOS 与 production runner，仍为 `NO-GO / not promoted / not live-ready`。

@@ -26,3 +26,25 @@
 - `btc_1h_adaptive_regime_audit_scenarios_2026-07-02.csv`
 - `btc_1h_adaptive_regime_neighborhood_2026-07-02.csv`
 - `btc_1h_adaptive_regime_monthly_2026-07-02.csv`
+
+2026-07-06 V2 全参数消融证据：
+
+- `btc_1h_ar_v2_full_ablation_2026-07-06.json`
+- `btc_1h_ar_v2_full_ablation_rows_2026-07-06.csv`
+- `btc_1h_ar_v2_full_ablation_fields_2026-07-06.csv`
+
+2026-07-06 V2 微调观察证据：
+
+- `btc_1h_ar_v2_micro_tune_2026-07-06.json`
+- `btc_1h_ar_v2_micro_tune_grid_2026-07-06.csv`
+- `btc_1h_ar_v2_micro_tune_selected_trades_2026-07-06.csv`
+
+2026-07-06 V3 冻结配置、全参数消融与多窗口回测证据：
+
+- `btc_1h_ar_v3_config_2026-07-06.json`
+- `btc_1h_ar_v3_full_ablation_2026-07-06.json`
+- `btc_1h_ar_v3_full_ablation_rows_2026-07-06.csv`
+- `btc_1h_ar_v3_full_ablation_fields_2026-07-06.csv`
+- `btc_1h_ar_v3_window_backtest_2026-07-06.json`
+- `btc_1h_ar_v3_window_backtest_windows_2026-07-06.csv`
+- `btc_1h_ar_v3_window_backtest_trades_2026-07-06.csv`

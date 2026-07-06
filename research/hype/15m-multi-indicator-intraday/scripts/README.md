@@ -30,4 +30,7 @@
 - `research_hype_15m_mii_v1_2_macd_filter_ablation.py`：保持 `HYPE-15M-MII-V1.2` 的 ATR/RVOL 过滤、ATR bracket 出场、成本和单仓状态机不变，只去掉 `MACD(12,26,9)` 方向过滤，评估漏入信号和回测质量。
 - `research_hype_15m_mii_v1_2_atr_dynamic_leverage.py`：保持 `HYPE-15M-MII-V1.2` 策略逻辑不变，对比固定 `2x`、固定 `2.5x`、固定 `3x`、以及按信号 K `ATR96%` 线性变化的 `2x-3x` 动态杠杆，并输出全样本和固定窗口回测。
 - `research_hype_15m_mii_v1_3_profit_extension.py`：保持 `HYPE-15M-MII-V1.3` 入场过滤不变，测试提高 TP、加强 RVOL 后提高 TP、50/50 分层止盈、动态 TP 和固定 `2.75x` sizing，输出 K+1/K+2 全样本和固定窗口诊断。
+- `research_hype_15m_mii_v1_3_signal_drought_diagnostic.py`：使用当前 Binance futures public kline 已闭合 `15m` K 与标准数据湖对照，拆解 `HYPE-15M-MII-V1.3` 的 `RSI raw cross -> ATR/RVOL -> MACD -> final signal` 漏斗，解释近期不开单原因。
+- `research_hype_15m_mii_v1_3_trade_timing_atr_diagnostic.py`：统计 `HYPE-15M-MII-V1.3` K+1/K+2 历史开单月份、季度、逐笔入场 `ATR96%` 和月度 ATR 过线率，用于判断开单是否集中在早期高波动窗口。
+- `research_hype_15m_mii_v1_3_min_atr_grid.py`：保持 `HYPE-15M-MII-V1.3` 其它条件不变，单独测试 `min_atr_pct96=50/55/60/65/70/75 bps`，输出标准数据湖固定窗口、滚动窗口摘要和 current Binance API 最近窗口。
 - `research_hype_15m_mii_v1_1_btc_eth_cross_asset.py`：把 `HYPE-15M-MII-V1.1` 直接套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，做跨资产迁移诊断；该脚本不使用标准数据湖，结果不得作为 promotion 证据。

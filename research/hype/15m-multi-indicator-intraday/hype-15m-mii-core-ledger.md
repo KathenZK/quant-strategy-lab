@@ -50,7 +50,7 @@ Created：2026-06-30
 | `HYPE-15M-MII-V1base` | diagnostic observation / not live-ready | `RSI(7)` 上穿 `40` 做多、下穿 `60` 做空；MACD 方向过滤；`ATR96 pct >= 0.75%`；`min_rvol96=1.0`；`TP=1.20%`、`SL=3.60%`、`hold=16`、`2x` | `research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`；补算 K+2 延迟压力 | K+1 年化高、Last90 强，但 K+2 回撤扩大到 `-36.28%`；保留为主观察基线，不提升为 candidate/paper-live/dry-run/handoff/live |
 | `HYPE-15M-MII-V1.1` | clean diagnostic expression / not live-ready | 去掉未启用的 `1h confirm`、`RSI14 band`、ADX、H4、ret、churn、cooldown 等表达噪音，只保留生效项 | `research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md` | 行为等同 `V1base`；最近 1 周无交易，K+1 最近 1 月总收益 `34.40%`，全样本总收益 `309.54%`；trailing 动态止盈失败；BTC/ETH 跨资产诊断未证明可迁移；仍为 `NO-GO` |
 | `HYPE-15M-MII-V1.2` | ATR bracket diagnostic observation / not live-ready | 沿用 `V1.1` 入场过滤；下一根 open 入场时按信号 K 已知 `ATR96%` 设置 `TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24` | `live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md` | K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`；去掉 `ATR96 >= 0.75%` 后收益/回撤明显恶化，两个过滤都去掉转负；仍为 `NO-GO` |
-| `HYPE-15M-MII-V1.3` | fixed 2.5x sizing diagnostic / runner implementation target / not live-ready | 沿用 `V1.2` 信号、过滤、ATR bracket 和 `hold=24`；固定 `2.5x` 权益暴露 | `research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`；`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md` | K+1 总收益 `549.30%`、年化 `472.15%`、回撤 `-22.01%`；K+2 总收益 `239.38%`、年化 `212.47%`、回撤 `-41.89%`；作为 runner 实现目标和 aggressive sizing diagnostic，仍为 `NO-GO` |
+| `HYPE-15M-MII-V1.3` | fixed 2.5x sizing diagnostic / runner implementation target / not live-ready | 沿用 `V1.2` 信号、过滤、ATR bracket 和 `hold=24`；固定 `2.5x` 权益暴露 | `research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`；`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`；`research-notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md` | K+1 总收益 `549.30%`、年化 `472.15%`、回撤 `-22.01%`；K+2 总收益 `239.38%`、年化 `212.47%`、回撤 `-41.89%`；近期不开单主要来自 `ATR96% >= 0.75%` 过滤，仍为 `NO-GO` |
 
 ## HYPE-15M-MII-V1base 规格
 
@@ -230,6 +230,57 @@ K+2 延迟压力：
 | `split_50_tp1p25_tp2p5_sl5_x2p5` | `461.73%` | `-33.21%` | `71.01%` | `1.11%` | `214.22%` | `-45.45%` | 分层止盈未改善综合形状 |
 
 结论：目前没有一个方案同时满足全样本更高、K+2 更稳、近期窗口不退化。最保守结论仍是保留 `V1.3 baseline`；`rvol125_tp1p75` 和 `dynamic_rvol150` 只可作为后续 OOS/实盘模拟观察，不直接替换。
+
+### HYPE-15M-MII-V1.3 近期不开单诊断
+
+按当前 Binance futures public kline 已闭合 `15m` K 拆解 `V1.3` 信号漏斗：
+
+- 最近 `24h`：`RSI raw cross` 有 `13` 次，`ATR96%` 过线 `0` 次，最终信号 `0`。
+- 最近 `72h`：`RSI raw cross` 有 `42` 次，`ATR96%` 过线 `0` 次，最终信号 `0`；最新 `ATR96% = 0.505%`。
+- 最近 `7d`：最终信号 `1`，时间为 `2026-06-29T15:00:00Z`；之后没有新最终信号。
+- 最近 `90d`：`ATR96%` 中位 `0.670%`，低于 `0.75%` 门槛；历史高开单窗口 `2025-05-30` 到 `2025-06-30` 的 `ATR96%` 中位为 `0.985%`。
+
+结论：`V1.3` 当前基本不开单不是 runner 漏单，而是近期行情进入低 15m 波动状态，`ATR96% >= 0.75%` 的质量过滤直接拦截。最近三个月相对早期高波动窗口确实更低，但真正造成当前信号枯竭的是 6 月底后、尤其最近 `72h` 的波动率塌到门槛以下。简单放宽 `min_atr_pct96` 不应直接视为修复，因为既有 ATR/RVOL 消融显示放开过滤会显著伤害收益和回撤。
+
+### HYPE-15M-MII-V1.3 开单时间与 ATR96 口径
+
+`ATR96` 的 `96` 是 `96` 根 `15m` K，不是小时 K，也不是 `96h`。代码口径为：
+
+- `true_range = max(high-low, abs(high-prev_close), abs(low-prev_close))`。
+- `atr96 = true_range.rolling(96, min_periods=96).mean()`。
+- `atr_pct96 = atr96 / close`。
+
+因此 `ATR96% >= 0.75%` 的含义是：过去约 `24h` 内，平均单根 `15m` K 的 true range 至少达到价格的 `0.75%`。
+
+按 `V1.3` K+1 回测逐笔分布：
+
+- 标准数据湖样本为 `2025-05-30T10:30:00Z` 到 `2026-06-26T04:00:00Z`，没有 `30` 个月历史。
+- K+1 首笔入场 `2025-06-02T00:30:00Z`，末笔入场 `2026-06-18T18:30:00Z`；最近 `90d` 仍有 `31` 笔。
+- 季度分布：`2025Q2` `20` 笔、`2025Q3` `36` 笔、`2025Q4` `54` 笔、`2026Q1` `43` 笔、`2026Q2` `31` 笔。
+- `2026Q2` K+1 复利收益 `38.54%`、胜率 `90.32%`、入场 `ATR96%` 中位 `0.996%`，说明 V1.3 并非只靠早期窗口。
+
+结论：当前 `0.75%` 门槛不是明显过时到只匹配早期行情；近期不开单更像 6 月底后短期波动率回落。若要调整 ATR，应做完整门槛网格与 K+1/K+2/滚动窗口复测，不应直接把门槛降到当前低波动水平。
+
+### HYPE-15M-MII-V1.3 min_atr_pct96 网格
+
+按用户指定，保持 `V1.3` 的 RSI/MACD/RVOL 入场过滤、`ATR96 TP=1.25x / SL=5.0x / hold=24`、`2.5x` 暴露、Binance fee `0.001`/fill 和 slippage `4 bps`/fill 不变，只测试 `min_atr_pct96 in [0.50%, 0.55%, 0.60%, 0.65%, 0.70%, 0.75%]`。
+
+全样本结果：
+
+| min ATR96 | K+1 trades | K+1 total | K+1 DD | K+2 trades | K+2 total | K+2 DD |
+| --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| `0.50%` | `305` | `156.46%` | `-40.38%` | `310` | `45.35%` | `-48.81%` |
+| `0.55%` | `295` | `158.61%` | `-37.69%` | `300` | `43.91%` | `-48.81%` |
+| `0.60%` | `272` | `202.91%` | `-39.30%` | `277` | `89.04%` | `-49.93%` |
+| `0.65%` | `239` | `180.98%` | `-34.81%` | `243` | `57.46%` | `-50.93%` |
+| `0.70%` | `213` | `214.73%` | `-33.25%` | `218` | `88.71%` | `-50.27%` |
+| `0.75%` | `184` | `549.30%` | `-22.01%` | `189` | `239.38%` | `-41.89%` |
+
+滚动窗口同样支持保留 `0.75%`：K+1 滚动 `30d` 正收益切片 `40/52`、中位收益 `9.84%`、最差收益 `-13.38%`；`0.70%` 为 `33/52`、中位 `4.29%`、最差 `-11.98%`。K+2 滚动 `90d` 下，`0.75%` 为 `38/44` 正收益、中位 `26.33%`、最差 `-9.60%`；`0.70%` 为 `28/44`、中位 `7.43%`、最差 `-20.59%`。
+
+当前 Binance API 最近窗口显示，降低 ATR 门槛会增加最近 `72h/7d` 交易，但表现偏负：K+1 最近 `72h` 下 `0.50%` 有 `3` 笔、总收益 `-6.74%`，`0.55%` 有 `2` 笔、总收益 `-2.94%`，`0.60%` 有 `1` 笔、总收益 `-4.03%`；`0.65%+` 无交易。K+1 最近 `7d` 下 `0.50%-0.75%` 均为负。
+
+结论：`min_atr_pct96` 暂不建议从 `0.75%` 下调。低门槛解决的是“开单数量”，但引入的是低波动负期望信号；若为了更高频继续研究，`0.70%` 只能作为实验点进入 OOS/纸面模拟，不能直接替换 `V1.3 baseline`。
 
 ## V1.1 BTC/ETH 跨资产诊断
 

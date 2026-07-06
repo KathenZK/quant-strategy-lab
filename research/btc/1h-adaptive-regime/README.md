@@ -16,13 +16,19 @@
 
 ## 当前状态
 
-`V1 registered diagnostic baseline；V2 registered paper-audit observation；not live-ready`。
+`V1 registered diagnostic baseline；V2 registered paper-audit observation；V3 registered diagnostic micro-tune observation；not live-ready`。
 
 2026-07-02 共生成 `300,768` 组配置（`768` curated + `300,000` random），`41,898` 组满足最低评分条件，prefit 硬门槛命中 `0`。prefit 预冻结冠军为 `Keltner breakout + CCI reversal` ensemble：prefit `2.82x` 年化倍率、`-18.68%` 回撤、`68.29%` 胜率；最近三个月 locked OOS 降至 `0.17x`、`-42.73%`、`38.46%`。该边界按用户要求登记为 `BTC-1H-Adaptive-Regime-V1`，但不生成 live spec。
 
 V1 全参数消融覆盖两腿 `78/78` 个字段槽：`27` 个 active tunable、`12` 个 contract fixed、`35` 个 baseline fixed、`4` 个 neutral fixed。clean interface 仅保留 `27` 个可调参数，删除或硬编码 `51` 个槽，和 V1 逐笔完全等价。
 
 clean tune 每腿各采样 `150,000` 组，组合 `122,500` 组；得到 scaled frontier observation：prefit `3.18x / -13.99% / 84.85%`，reused holdout `1.52x / -13.48% / 81.82%`，current full `2.88x / -13.99% / 84.42%`；K+2 prefit `2.50x / -19.70% / 80.30%`。该观察已按用户要求登记为 `BTC-1H-Adaptive-Regime-V2`，但仍需新增 forward trades 与生产 runner，状态为 `paper-audit observation / not live-ready`。
+
+2026-07-06 已对 V2 冻结参数执行全参数消融：覆盖两腿 `78/78` 个 `StrategyConfig` 字段槽，生成 `205` 行 baseline/variant 证据；相对 V2 基线，one-at-a-time prefit 严格改善行数为 `5`。该消融仅为敏感性审计，不登记 V2.1，不改变 `not live-ready`。
+
+基于 V2 消融前沿方向的受约束微调生成 `BTC-1H-AR-V2-MICRO-TUNE-2026-07-06` 观察：`7,200` 组网格中 `3,852` 组满足 prefit 年化高于 V2、train/validation/prefit 胜率均 `>=80%`、回撤均 `<20%`；首选组合 prefit `6.16x / -12.87% / 87.30%`，current full `5.27x / -17.47% / 86.49%`。该观察已按用户要求登记为 `BTC-1H-Adaptive-Regime-V3`，仍 `not live-ready`。
+
+2026-07-06 已对 V3 冻结参数执行全参数消融与多窗口回测：全消融覆盖两腿 `78/78` 个字段槽，生成 `205` 行 baseline/variant 证据，相对 V3 基线的严格改善单字段为 `0`；多窗口显示 recently unlocked holdout/recent 90d 为 `1.91x / +17.34% / -17.47% / 81.82% / 11`，最近 30d 为 `1.29x / +2.13% / -17.47% / 75.00% / 4`，最近 7d 无交易。该诊断不产生 V3.1/V4，也不改变 `not live-ready`。
 
 ## 入口
 
@@ -37,10 +43,19 @@ clean tune 每腿各采样 `150,000` 组，组合 `122,500` 组；得到 scaled 
 - `scripts/btc_1h_ar_v1_clean.py`：27 参数 clean-equivalent interface。
 - `scripts/research_btc_1h_ar_v1_clean_tune.py`：prefit-only 双腿高密度微调。
 - `scripts/audit_btc_1h_ar_v1_scaled_frontier.py`：最终缩放前沿、K+2、成本、邻域与 forward-readiness 审计。
+- `scripts/research_btc_1h_ar_v2_full_ablation.py`：V2 冻结参数 `78/78` 字段槽全参数消融。
+- `scripts/research_btc_1h_ar_v2_micro_tune.py`：基于 V2 消融前沿方向的受约束 active 参数微调。
+- `scripts/btc_1h_ar_v3.py`：V3 冻结配置与复现入口。
+- `scripts/research_btc_1h_ar_v3_full_ablation.py`：V3 冻结参数 `78/78` 字段槽全参数消融。
+- `scripts/research_btc_1h_ar_v3_window_backtest.py`：V3 canonical/recent/calendar/half-year/monthly 多窗口回测。
 - `diagnostics/btc-binance-1h-data-quality-2026-07-02.md`：两年数据质量报告。
 - `diagnostics/btc-1h-adaptive-regime-search-2026-07-02.md`：30 万组主搜索报告。
 - `diagnostics/btc-1h-adaptive-regime-boundary-audit-2026-07-02.md`：最终 NO-GO 审计。
 - `ablations/btc-1h-ar-v1-full-parameter-ablation-2026-07-02.md`：V1 全参数消融与删参分类。
+- `ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md`：V2 全参数消融与单字段敏感性审计。
+- `research-notes/btc-1h-ar-v2-micro-tune-2026-07-06.md`：V2 微调观察，已登记为 `BTC-1H-Adaptive-Regime-V3`。
+- `ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md`：V3 全参数消融与单字段敏感性审计。
+- `research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md`：V3 多窗口回测。
 - `research-notes/btc-1h-ar-v1-clean-parameter-tune-2026-07-02.md`：clean surface 微调。
 - `research-notes/btc-1h-ar-v1-scaled-frontier-audit-2026-07-02.md`：当前首选 paper-audit observation。
 - `artifacts/`：可复现证据；默认由 `.gitignore` 忽略。

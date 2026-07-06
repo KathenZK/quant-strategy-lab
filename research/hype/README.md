@@ -106,12 +106,14 @@ For the Binance HYPEUSDT `1m` two-MA pullback scalp research line, use:
 ## Core Markdown Ledgers
 
 - `cross-strategy-account/README.md`：HYPE 多策略共享子账户和全局单仓组合诊断入口；当前包含 `HYPE-5M-PBTR-V6.2.1` + `HYPE-15M-MII-V1.3` 共享 HYPEUSDT 子账户回放，结论为收益叠加但组合已平仓 DD 扩到 `-30.28%`，逐 K close MTM DD 为 `-32.34%`，最不利 high/low 标记浮亏约 `-55%`，不提升任一子策略状态。
-- `1h-adaptive-regime/hype-1h-ar-core-ledger.md`：`HYPE-1H-Adaptive-Regime` 主账；V1 为冻结边界，V2 为全字段消融后的干净等价版，均不可实盘。后续登记 `Vx` 必须更新此主账。
+- `1h-adaptive-regime/hype-1h-ar-core-ledger.md`：`HYPE-1H-Adaptive-Regime` 主账；V1 为冻结边界，V2 为全字段消融后的干净等价版，V3 为 `di_roc_off__stoch_th55` diagnostic baseline，均不可实盘。后续登记 `Vx` 必须更新此主账。
 - `1h-adaptive-regime/README.md`：`HYPE-1H-Adaptive-Regime` 入口。
 - `1h-adaptive-regime/diagnostics/hype-binance-1h-data-quality-2026-07-02.md`：Binance HYPEUSDT 永续 `9,545` 根全量闭合 `1h` K 数据质量报告。
 - `1h-adaptive-regime/canonical-specs/hype-1h-ar-v1-baseline-spec.md`：V1 正式版本与 current-full 冻结结果。
 - `1h-adaptive-regime/canonical-specs/hype-1h-ar-v2-clean-baseline-spec.md`：V2 干净参数、逐笔等价证据及微调否决结论。
+- `1h-adaptive-regime/canonical-specs/hype-1h-ar-v3-baseline-spec.md`：V3 diagnostic baseline；来源为 `di_roc_off__stoch_th55`，仍不可实盘。
 - `1h-adaptive-regime/ablations/hype-1h-ar-v1-full-parameter-ablation-2026-07-02.md`：两条腿 `76/76` 字段槽全量消融。
+- `1h-adaptive-regime/ablations/hype-1h-ar-v3-full-parameter-ablation-2026-07-06.md`：V3 clean `34` 字段槽全参数消融与最近/滚动时间片复核。
 - `1h-adaptive-regime/diagnostics/hype-1h-adaptive-regime-boundary-audit-2026-07-01.md`：K+2、成本、`164` 行 active-field 消融和 live-executable 严格审计；结论 `NO-GO`。
 - `15m-ema-crossover/hype-ema-x-core-ledger.md`: `HYPE-EMA-Crossover` promoted-candidate and version-evolution ledger.
 - `15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md`: `HYPE-15M-Multi-Indicator-Intraday` core ledger；当前 `HYPE-15M-MII-V1.2` 为 ATR 动态止盈止损 diagnostic observation only，不是 live-ready；同事/AI 复现规格见 `15m-multi-indicator-intraday/live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`V1.1` HTML 交易路径图在 `15m-multi-indicator-intraday/artifacts/hype_15m_mii_v1_1_trade_paths_2026-06-30.html`；trailing 动态止盈测试见 `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`，ATR bracket V1.2 报告见 `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`，V1.2 时间片复核见 `15m-multi-indicator-intraday/research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`。

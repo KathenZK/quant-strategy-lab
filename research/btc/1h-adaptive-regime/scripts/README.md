@@ -8,5 +8,10 @@
 - `btc_1h_ar_v1_clean.py`：从 78 个原始槽缩到 27 个 active 参数的逐笔等价 clean interface。
 - `research_btc_1h_ar_v1_clean_tune.py`：每腿 15 万组、12.25 万组合的 prefit-only 微调与 K+2/8 bps 前沿筛选。
 - `audit_btc_1h_ar_v1_scaled_frontier.py`：缩放前沿、成本/延迟、55 个邻域、月度、bootstrap 与 forward-readiness 审计。
+- `research_btc_1h_ar_v2_full_ablation.py`：V2 冻结参数两腿 `78/78` 字段槽全参数消融与单字段敏感性审计。
+- `research_btc_1h_ar_v2_micro_tune.py`：基于 V2 消融前沿方向的受约束 active 参数微调。
+- `btc_1h_ar_v3.py`：`BTC-1H-Adaptive-Regime-V3` 冻结配置、两腿合成与指标复现入口。
+- `research_btc_1h_ar_v3_full_ablation.py`：V3 冻结参数两腿 `78/78` 字段槽全参数消融与单字段敏感性审计。
+- `research_btc_1h_ar_v3_window_backtest.py`：V3 canonical/recent/calendar/half-year/monthly 多时间窗口回测。
 
-两份 wrapper 都固定校验被复用引擎的 SHA-256；依赖脚本漂移时 fail closed，避免静默改变历史复现结果。
+这些 wrapper 固定校验被复用引擎的 SHA-256；依赖脚本漂移时 fail closed，避免静默改变历史复现结果。

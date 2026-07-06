@@ -73,6 +73,9 @@ V1 规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`。
 - `2026-07-01`：按用户指定，将固定 `2.5x` sizing 记录为 `HYPE-15M-MII-V1.3`，用于 `/Users/ZK/OpenCode/quant-runner` 实现。该版本仍未补齐资金费、盘口级 stop-market 证据、真实滑点、生产重启恢复、交易所对账、missing-bar fail-closed 和 kill switch，因此不是 live-ready。
 - `2026-07-02`：补充 `V1.3` 多赚一点方案诊断：提高 TP、加强 RVOL 后提高 TP、50/50 分层止盈、动态 TP 和固定 `2.75x` sizing。固定 `2.75x` K+1 总收益 `671.90%`、回撤 `-24.11%`，只是风险放大；`rvol125_tp1p75` K+2 总收益 `500.62%`、回撤 `-30.97%`、平均单笔 `1.47%`，但 K+1 最近 3 月总收益 `-8.21%`；`dynamic_rvol150` K+1 总收益 `669.42%`，但回撤 `-35.72%` 且最近 3 月仅 `7.75%`。结论：没有方案同时满足全样本更高、K+2 更稳、近期窗口不退化；不替换 `V1.3 baseline`。
 - `2026-07-02`：补充 `HYPE-15M-MII-V1.3` 与 `HYPE-5M-PBTR-V6.2.1` 同一 HYPEUSDT 子账户、全局单仓组合诊断，见 `../cross-strategy-account/diagnostics/hype-pbtr-v6-2-1-mii-v1-3-shared-account-2026-07-02.md`。组合样本内复利收益提高，但已平仓 DD 为 `-30.28%`，逐 K close MTM DD 为 `-32.34%`，最不利 high/low 标记 DD 为 `-55.23%`；不改变 `V1.3` not-live-ready 状态。
+- `2026-07-06`：补充 `HYPE-15M-MII-V1.3` 近期不开单诊断，见 `research-notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md`。当前 Binance public futures `15m` 已闭合 K 显示最近 `24h/72h` 虽有 RSI raw cross 但 `ATR96%` 过线为 `0`，最近最终信号为 `2026-06-29T15:00:00Z`；近期不开单主要来自 `ATR96% >= 0.75%` 波动率过滤，不是 runner 漏单。
+- `2026-07-06`：补充 `V1.3` 开单时间与 ATR96 口径诊断，见 `research-notes/hype-15m-mii-v1-3-trade-timing-atr-2026-07-06.md`。`ATR96` 是 `96` 根 `15m` K 的 true range 简单均值除以 close，约为最近 `24h` 平均单根 `15m` 波动比例；K+1 回测首笔 `2025-06-02`、末笔 `2026-06-18`，最近 `90d` 仍有 `31` 笔，不是只依赖早期窗口。
+- `2026-07-06`：补充 `V1.3` 的 `min_atr_pct96` 网格诊断，见 `research-notes/hype-15m-mii-v1-3-min-atr-grid-2026-07-06.md`。单独测试 `0.50%-0.75%` 后，全样本和滚动窗口仍支持保留 `0.75%`；降低门槛会提高交易数，但 K+1/K+2 收益、回撤、PF 和滚动稳定性明显退化，当前 API 最近 `72h/7d` 放宽后也主要开出亏损低波动信号。
 - `2026-06-30`：把 V1.1 直接套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据做跨资产诊断。BTC K+1 全样本只有 `2` 笔，年化 `3.46%`、总收益 `3.71%`，交易数过少；ETH K+1 全样本年化 `-37.95%`、总收益 `-40.06%`、回撤 `-42.74%`。结论：HYPE 参数没有自然迁移到 BTC/ETH。
 - 实盘判断：`NO-GO`。没有生产 runner、真实 stop-market/滑点证据、资金费核算、重启恢复、交易所对账、missing-bar fail-closed 和 kill switch。
 
@@ -97,11 +100,14 @@ V1 规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`。
 17. `research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`
 18. `live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`
 19. `research-notes/hype-15m-mii-v1-3-profit-extension-2026-07-02.md`
-20. `research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
-21. `ablations/hype-15m-mii-v1-1-clean-lead-robustness-2026-06-29.md`
-22. `diagnostics/hype-15m-mii-search-2026-06-25.md`
-23. `ablations/hype-15m-mii-full-ablation-2026-06-26.md`
-24. `ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`
+20. `research-notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md`
+21. `research-notes/hype-15m-mii-v1-3-trade-timing-atr-2026-07-06.md`
+22. `research-notes/hype-15m-mii-v1-3-min-atr-grid-2026-07-06.md`
+23. `research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
+24. `ablations/hype-15m-mii-v1-1-clean-lead-robustness-2026-06-29.md`
+25. `diagnostics/hype-15m-mii-search-2026-06-25.md`
+26. `ablations/hype-15m-mii-full-ablation-2026-06-26.md`
+27. `ablations/hype-15m-mii-surface-combo-optimization-2026-06-26.md`
 
 ## 证据规则
 

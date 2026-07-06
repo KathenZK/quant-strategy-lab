@@ -430,13 +430,14 @@ def main() -> None:
         (
             "得到一个在 prefit 同时满足“相对 V1 收益更高、回撤更小、胜率适中”且通过 "
             "K+2/8 bps 选择门槛的 clean tuned observation；但最近三个月 reused holdout "
-            "收益仍为负，原始 10x 目标也未达到。因此状态为 "
-            "`diagnostic tuned observation / NO-GO / not live-ready`，不登记新版本。"
+            "收益仍为负，原始 10x 目标也未达到。该 observation 后续按用户要求登记为 "
+            "`ETH-1H-Adaptive-Regime-V2`，状态仍为 "
+            "`registered diagnostic tuned observation / NO-GO / not live-ready`。"
         ),
         "",
         "## 选择来源",
         "",
-        "- 参数来自 33 个 active clean 参数的 prefit-only 搜索；OOS 不参与选择。",
+        "- 参数来自 29 个 active clean 参数的 prefit-only 搜索；OOS 不参与选择。",
         "- 冻结规则要求 prefit 年化高于 V1、DD 更小、胜率位于 55%-85%，并通过 K+2 与 8 bps 稳健排序。",
         "- 最近三个月已在 V1 阶段解锁，本报告只作 reused holdout 失败审计。",
         "",

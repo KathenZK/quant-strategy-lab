@@ -16,9 +16,15 @@
 
 ## 当前状态
 
-`active diagnostic search / not promoted / not live-ready`。
+`SOL-1H-Adaptive-Regime-V1 registered diagnostic baseline / NO-GO / not promoted / not live-ready`。
 
-策略研究结果在 locked OOS 揭盲和 live-executable 审计完成前不形成 promotion 结论。本家族目前没有登记版本，也没有生产 runner。
+`V1` 是 2026-07-03 百万组广搜按 prefit 规则冻结的最终基线：`donchian_break + bb_revert` ensemble（`ENS__SOL_1H_AR_R594184__SOL_1H_AR_R736318`）。它的登记只用于固定诊断边界，不代表候选或交接。
+
+广搜结论为 `NO-GO`：finalists `700`，prefit pass `0`，locked target pass `0`；最佳冻结 V1 full annual `2.18x`、DD `-18.86%`、win `76.60%`，但最近三个月 locked OOS annual `0.71x`、return `-8.09%`、DD `-16.19%`、win `50.00%`、trades `8`，未通过 `10x / 50% / <20% DD` 硬门槛。
+
+V1 clean tune 只形成未登记观察值：prefit annual `5.7104x`、DD `-18.81%`、win `85.71%`，但 reused holdout annual `0.1607x`、DD `-42.87%`，current full DD `-42.87%`。该观察不创建 `V1.1/V2`，也不改变 `NO-GO` 结论。
+
+本家族目前没有 production runner；在新增 forward trades、完整 live-executable 审计和生产状态机证据前，不得标记为 candidate、paper-live、dry-run、handoff 或 live。
 
 ## 入口
 
@@ -27,7 +33,11 @@
 - `scripts/fetch_sol_binance_1h.py`：最近两年 K 线、资金费、合约快照抓取与质量审计。
 - `scripts/research_sol_1h_adaptive_regime_search.py`：locked OOS 多指标宽搜索。
 - `scripts/audit_sol_1h_adaptive_regime_boundary.py`：成交延迟、成本、仓位缩放、单腿、参数邻域、月度、bootstrap 和实盘缺口审计。
+- `scripts/sol_1h_ar_v1.py`：`V1` 冻结配置、复现指标和标准近期分片的登记 wrapper。
 - `scripts/research_sol_1h_ar_v1_full_ablation.py`：V1 每条腿全部 `StrategyConfig` 字段槽的 one-at-a-time 全参数消融与删参分类。
+- `ablations/sol-1h-ar-v1-full-parameter-ablation-2026-07-03.md`：V1 全参数消融持久报告；`78/78` 字段槽覆盖，clean surface 保留 `40` 个 active tunable 字段槽。
 - `scripts/sol_1h_ar_v1_clean.py`：读取消融结果构建只暴露 `active_tunable` 的 clean-equivalent 配置面，并校验逐笔等价。
+- `research-notes/sol-1h-ar-v1-clean-interface-2026-07-03.md`：V1 clean interface 等价报告；原始 `78` 个字段槽收敛为 `40` 个 clean tunable 字段槽，逐笔交易签名相等。
 - `scripts/research_sol_1h_ar_v1_clean_tune.py`：只在 clean surface 上做 train/validation/prefit 微调，并前置 K+2 与 8 bps 稳健性筛选。
+- `research-notes/sol-1h-ar-v1-clean-parameter-tune-2026-07-03.md`：V1 clean 参数微调报告；样本内/prefit 改善但 reused holdout 与 current full 回撤恶化，只能作为 diagnostic observation。
 - `artifacts/`：Parquet、JSON、CSV 等可复现证据；默认由 `.gitignore` 忽略。
