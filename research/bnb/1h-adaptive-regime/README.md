@@ -1,43 +1,28 @@
 # BNB-1H-Adaptive-Regime
 
-`BNB-1H-Adaptive-Regime`（短 id：`BNB-1H-AR`）是 Binance USD-M Futures `BNBUSDT` perpetual `1h` 多指标自适应策略研究家族，与 BTC、ETH、SOL、HYPE 或其他资产 family 没有版本继承关系。
+- Full family name：`BNB-1H-Adaptive-Regime`（短 id：`BNB-1H-AR`）
+- 市场/周期：Binance USD-M Futures `BNBUSDT` perpetual `1h`
+- 机制：两年闭合 `1h` K 多指标自适应 regime 广搜（EMA/MACD/RSI/Stoch/CCI/ADX/ATR/Keltner/Donchian/VWAP/结构 + 高周期 regime + 资金费过滤），ensemble 组合。
+- 当前状态：V1-V3 已登记（V3 实际最大杠杆 `2.5x`）；reused OOS 属二次读取；`NO-GO / not promoted / not live-ready`。
 
-## 研究目标
+## 边界
 
-- 数据：运行时最近两年的全部闭合 `1h` K，直接刷新自 Binance FAPI，并保存 raw/normalized 数据湖分区、资金费历史和合约过滤器快照。
-- OOS：最后三个月固定为 locked out-of-sample；参数生成、搜索、排序和组合冻结不得读取该区间。
-- 硬门槛：年化权益倍率 `>=10.0x`（即年化收益 `>=900%`）、胜率 `>=50%`、最大回撤严格小于 `20%`。
-- 成本：`0.001` fee/fill、`4 bps` adverse slippage/fill，并逐笔计入 Binance 历史资金费。
-- 执行：闭合 K 产生信号，下一根 `1h` open 市价成交；入场后保护性 bracket 立即生效；同 K 双触发 stop-first；跳空穿越 stop 按 open 成交；trailing 只在完整 K 闭合后更新并从下一根 K 生效。
+- 后续 BNB `15m` 研究在独立家族 `../15m-adaptive-regime/`；不得把 15m 结果写回本家族版本线。
 
-## 指标与搜索面
+## 研究协议（冻结口径）
 
-搜索覆盖 EMA/MACD、RSI、Stochastic、CCI、Williams %R、ADX/DI、ATR、Bollinger、Keltner、Donchian、rolling VWAP、成交量、动量、wick/body 结构、`4h/12h/1d` 闭合 regime、资金费过滤、固定/风险预算仓位、固定 bracket/trailing exit 及 long/short/both。
-
-## 当前状态
-
-`NO-GO / not promoted / not live-ready`。
-
-完整搜索没有 prefit hard-gate 命中；唯一冻结 primary 在最近三个月 locked OOS 明显失效。2026-07-06 追加的 `<=3x` 高胜率趋势/反转搜索找到 `ema_pullback+wick_reject` 样本内观察形态，并登记为 `BNB-1H-Adaptive-Regime-V1` diagnostic observation；但 locked OOS `0.64x / -22.86% DD / 68.42% win`，仍未通过。`BNB-1H-Adaptive-Regime-V2` 已登记为 V1 clean-equivalent 可执行版本（交易路径逐笔一致），完成多窗口验证与 V2 全参数消融（`27` 活动字段、`0` 可再删）。`BNB-1H-Adaptive-Regime-V3` 已登记为 V2 消融引导微调版本：实际最大杠杆 `2.5x`，prefit `3.37x / -18.24% / 89.42%`、reused OOS `1.22x / -15.53% / 81.25%`、full `2.94x / -18.24% / 88.33%`；但 reused OOS 属二次读取，不改变 `NO-GO / not promoted / not live-ready` 结论。本家族没有生产 runner。后续 BNB 研究已拆分到独立的 `../15m-adaptive-regime/`，不得把 15m 结果写回本家族版本线。
+- 数据：最近两年全部闭合 `1h` K 刷新自 Binance FAPI，raw/normalized 数据湖分区 + 资金费历史 + 合约过滤器快照。
+- OOS：最后三个月 locked out-of-sample，参数生成、搜索、排序和组合冻结不得读取。
+- 硬门槛：年化权益倍率 `>=10x`、胜率 `>=50%`、最大回撤 `<20%`。
+- 执行：闭合 K 信号、下一根 open 市价成交、入场即挂 bracket、同 K stop-first、跳空按 open 成交、trailing 闭合后更新次 K 生效。
+- 成本：fee `0.001`/fill、slippage `4 bps`/fill、真实资金费。
+- 搜索引擎：`research/_shared-kernels/1h-adaptive-regime-search/`（SHA pin）。
 
 ## 入口
 
-- `bnb-1h-ar-core-ledger.md`：家族主账。
-- `decision-log.md`：研究决策与状态变化。
-- `scripts/fetch_bnb_binance_1h.py`：最近两年 K 线、资金费、合约快照抓取与质量审计。
-- `scripts/research_bnb_1h_adaptive_regime_search.py`：locked OOS 多指标宽搜索。
-- `scripts/research_bnb_1h_ar_v1_full_ablation.py`：V1 全参数消融与 clean spec 证据生成。
-- `scripts/bnb_1h_ar_v2.py`：V2 clean 参数可执行定义、V1 路径等价验证与多窗口回测。
-- `scripts/research_bnb_1h_ar_v2_full_ablation.py`：V2 全参数域扫描消融。
-- `scripts/research_bnb_1h_ar_v2_micro_tune.py`：V2 消融引导微调（prefit-only 选参）。
-- `canonical-specs/bnb-1h-ar-v1-parameter-spec-2026-07-06.md`：V1 原始冻结参数规格。
-- `canonical-specs/bnb-1h-ar-v1-clean-parameter-spec-2026-07-06.md`：V1 删除 no-op 字段后的等价 clean 参数规格。
-- `canonical-specs/bnb-1h-ar-v2-parameter-spec-2026-07-07.md`：V2 clean-equivalent 版本参数规格。
-- `canonical-specs/bnb-1h-ar-v3-parameter-spec-2026-07-07.md`：V3 微调版本参数规格，逐项解释参数与当前 `2.5x` 最大杠杆。
-- `research-notes/bnb-1h-ar-v2-multiwindow-backtest-2026-07-07.md`：V2 路径等价验证与多时间窗口分片。
-- `research-notes/bnb-1h-ar-v2-micro-tune-2026-07-07.md`：V2 微调 tuned observation（reused OOS，不 promotion）。
-- `diagnostics/bnb-1h-adaptive-regime-search-2026-07-03.md`：完整搜索与 locked OOS NO-GO 证据。
-- `diagnostics/bnb-1h-ar-cap3-highwin-search-2026-07-06-cap3-highwin.md`：`<=3x` 高胜率趋势/反转搜索，样本内接近目标但 locked OOS 失败。
-- `ablations/bnb-1h-ar-v1-full-parameter-ablation-2026-07-06.md`：V1 全参数消融，识别 `32` 个交易路径不变的 no-op 字段。
-- `ablations/bnb-1h-ar-v2-full-parameter-ablation-2026-07-07.md`：V2 全参数域扫描消融，`27` 个活动字段、无可再删参数。
-- `artifacts/`：Parquet、JSON、CSV 等可复现证据；默认由 `.gitignore` 忽略。
+- 主账（V1-V3 版本表、指标与证据链接）：`bnb-1h-ar-core-ledger.md`
+- 决策记录：`decision-log.md`
+- 版本规格：`canonical-specs/`（V1 原始/clean、V2 clean-equivalent、V3 微调）
+- 搜索 NO-GO 证据：`diagnostics/bnb-1h-adaptive-regime-search-2026-07-03.md`、`diagnostics/bnb-1h-ar-cap3-highwin-search-2026-07-06-cap3-highwin.md`
+
+脚本在 `scripts/`（fetch / search / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

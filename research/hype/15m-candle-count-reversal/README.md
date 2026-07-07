@@ -1,53 +1,21 @@
-# HYPE-CC Candle-Count Reversal
+# HYPE-Candle-Count-Reversal
 
-Family id: `HYPE-CC`
+- Full family name：`HYPE-Candle-Count-Reversal`（历史别名：`HYPE-CC`）
+- 市场/周期：HYPE `15m`
+- 机制：10 根 K 中 8 根同色的颜色计数反转 + ATR 风控，后续演化 early-exit 变体。
+- 当前状态：archived/canonical specs；V35 曾实盘并出现 live underperformance，已降级为 execution-risk diagnostic（见下方诊断）。
 
-This family covers HYPE 15m candle-count reversal strategies: 10 bars, 8 same-color candles, ATR-based risk controls, and later early-exit variants.
+## 边界
 
-## Canonical Specs
+- 这里的 `V35` 不是 `HYPE-EMA-TB-V35`；不要凭 `v35` 文件名推断家族身份（历史报告文件名 `hype_v13_*`、`hype_v18_*`、`hype_v35_*` 等跨家族撞名，必须回链接文档确认）。
+- 引用用完整名：`HYPE-CC-V13`、`HYPE-CC-V21`、`HYPE-CC-V35`。
 
-Use `canonical-specs/` for reproducible strategy definitions and parameter records.
+## 入口
 
-Important documents:
+- 主账（milestone comparison ledger）：`hype-cc-15m-milestone-comparison.md`
+- 决策记录：`decision-log.md`
+- 版本规格：`canonical-specs/`（V13、V18 ATR672、V21 双向 early-exit、V35 复现参数等）
+- V35 过拟合再诊断：`diagnostics/hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md`
+- V35 实盘表现不及回测复盘：`diagnostics/hype-cc-v35-live-underperformance-review-2026-06-29.md`
 
-- `hype-cc-15m-milestone-comparison.md`: migrated Markdown ledger for the HYPE-CC 15m milestone comparison.
-- `legacy-canvas/`: migrated historical Canvas reports for HYPE-CC experiments, robustness checks, and diagnostics.
-- `hype-v13-strategy-spec.md`: core V13 specification.
-- `hype-v18-atr672-strategy-spec.md`: ATR672 robust baseline.
-- `hype-v21-bidirectional-opposite-three-exit-strategy-spec.md`: bidirectional early-exit variant.
-- `hype-v35-reproducible-params.md`: V35 reproducibility record.
-
-## Diagnostics
-
-Use `diagnostics/` for overfit analysis and caveats.
-
-Current diagnostics:
-
-- `diagnostics/hype-v35-overfit-diagnosis.md`: V35 parameter sensitivity and overfit-risk checkpoint.
-- `diagnostics/hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md`: V35 parameter-level overfit re-diagnosis after June OOS proxy and live underperformance evidence.
-- `diagnostics/hype-cc-v35-live-underperformance-review-2026-06-29.md`: V35 Binance live underperformance review; downgrades V35 to live-underperformance / execution-risk diagnostic until live-realistic replay is complete.
-- `scripts/replay_hype_cc_v35_oos_proxy_2026_06_29.py`: one-off replay script for the 2026-06 OOS OHLCV proxy check.
-- `artifacts/hype_cc_v35_oos_proxy_review_2026-06-29.json`: retained output from the 2026-06 OOS proxy replay.
-- `artifacts/hype_pulse_aliyun_live_audit_2026-06-29.json`: retained Aliyun HypePulse live DB / log / exchange snapshot audit for the same underperformance review.
-
-## Do Not Mix With
-
-- `HYPE-EMA-TB-V35`
-- Any trend-breakout document under `../15m-ema-trend-breakout/`
-
-When citing this family, use names like `HYPE-CC-V13`, `HYPE-CC-V21`, or `HYPE-CC-V35`.
-
-## Local Report Artifacts
-
-New retained artifacts for this family should live under `artifacts/`. Top-level `reports/` is retired; migrated Canvas notes should point to retained `artifacts/` or explicit archive paths.
-
-Historical report filename families observed for this lineage:
-
-- `hype_v13_*`
-- `hype_v18_*`
-- `hype_v21_*`
-- `hype_v24_*`
-- `hype_v35_*`
-- `hyperliquid_hype_v13_v15_v18_*`
-
-Family identity must be checked from the linked document or migrated Canvas note before using a report. Do not infer family identity from `v35` alone.
+脚本在 `scripts/`，被报告引用的产物在 `artifacts/`，`legacy-canvas/` 为冻结迁移历史。

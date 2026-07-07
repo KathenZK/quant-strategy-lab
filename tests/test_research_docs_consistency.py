@@ -136,6 +136,57 @@ def test_no_links_to_retired_reports_dir() -> None:
   assert not offenders, "以下文档仍链接已退役的 reports/:\n" + "\n".join(offenders)
 
 
+# 对外复现规格的存量整改清单：这两份写于 external-reproduction-spec 规则之前。
+# 只允许收缩：把仓库内部引用移入"非复现依赖"附录后，从这里删除对应条目。
+GRANDFATHERED_REPRO_SPECS = {
+    "asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/canonical-specs/"
+    "binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md",
+    "hype/15m-multi-indicator-intraday/live-specs/"
+    "hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md",
+}
+
+# 附录标题必须含此标记，其后的仓库内部引用才被允许。
+_REPRO_APPENDIX_MARKER = "非复现依赖"
+_REPRO_INTERNAL_REF = re.compile(
+    r"(?:research|scripts|artifacts)/[A-Za-z0-9_\-./]+\.(?:py|json|csv|md|html|parquet)"
+    r"|/Users/ZK"
+    r"|uv run"
+)
+
+
+def test_external_reproduction_specs_are_self_contained() -> None:
+    """对外复现规格必须自包含：仓库内部引用只能出现在"非复现依赖"附录之后。
+
+    规则来源：.cursor/rules/external-reproduction-spec.mdc。同事只会拿到这一个
+    Markdown 文件，正文里引用仓库脚本/产物/绝对路径都会让复现在仓库外失败。
+    """
+    problems = []
+    for md in sorted(RESEARCH.rglob("*reproduction-spec*.md")):
+        rel = str(md.relative_to(RESEARCH))
+        lines = md.read_text(encoding="utf-8").splitlines()
+        appendix_start = next(
+            (
+                i
+                for i, line in enumerate(lines)
+                if line.startswith("#") and _REPRO_APPENDIX_MARKER in line
+            ),
+            len(lines),
+        )
+        violations = [
+            f"  L{i + 1}: {line.strip()[:100]}"
+            for i, line in enumerate(lines[:appendix_start])
+            if _REPRO_INTERNAL_REF.search(line)
+        ]
+        if violations and rel not in GRANDFATHERED_REPRO_SPECS:
+            problems.append(
+                f"{rel}: 正文含仓库内部引用（应移入'{_REPRO_APPENDIX_MARKER}'附录）:\n"
+                + "\n".join(violations[:8])
+            )
+        if not violations and rel in GRANDFATHERED_REPRO_SPECS:
+            problems.append(f"{rel}: 已整改，请从 GRANDFATHERED_REPRO_SPECS 移除")
+    assert not problems, "对外复现规格自包含检查失败:\n" + "\n".join(problems)
+
+
 def test_shared_kernel_versions_are_frozen() -> None:
   """_shared-kernels 冻结版本目录的 SHA256 必须与 kernel README 登记值一致。"""
   import hashlib

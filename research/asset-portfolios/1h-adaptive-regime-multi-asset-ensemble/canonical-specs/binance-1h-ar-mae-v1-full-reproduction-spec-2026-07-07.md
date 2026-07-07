@@ -4,6 +4,8 @@
 
 这份文件是 `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` 的完整复现规格。目标是：同事把本文件交给他的 AI 后，可以在本仓库内复现同一条 V1 交易路径、同一组近期分片指标和同一个 `NO-GO` 判断。
 
+重要：本文件必须视为 standalone spec。文中出现的仓库路径只用于你在本仓库内快速校验，不是复现依赖；如果同事没有这些脚本或主账，也应该能仅凭本文的“数据 schema + 特征计算 + 信号逻辑 + 过滤器 + 出入场状态机 + 参数 JSON + 组合阻塞规则”重写实现。
+
 最短复现命令：
 
 ```bash
@@ -40,6 +42,13 @@ uv run python research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/
 - 滑点：`0.0004` adverse slippage/fill，即 `4 bps`
 - Funding：每个 sleeve 逐笔计入 Binance 历史 funding。
 - 数据质量：各成分家族 loader 自带数据质量校验；任一成分数据质量漂移或主账指标漂移，组合脚本应直接失败。
+
+若脱离本仓库独立实现，需要提供同一批数据：
+
+- 每个 symbol 一份闭合 `1h` candle 序列，字段至少包括：`ts`（UTC，K 线开盘时间）、`open`、`high`、`low`、`close`、`volume`、`quote_volume`、`trade_count`、`vwap`、`is_closed`。
+- 每个 symbol 一份 funding 序列，字段至少包括：`ts`（UTC funding 时间）、`funding_rate`。
+- Candle 必须无缺口、无重复、全部闭合、OHLC 合法；不要用未闭合 K 或本地缓存补洞。
+- `ts` 语义：本策略在 K 线 `ts` 对应的闭合时刻看到信号，`entry_delay_bars=1` 表示在下一根 K 的 `open` 成交。
 
 ## 成分版本清单
 
@@ -152,13 +161,224 @@ for asset, trade in selected:
 
 逐笔胜率和 PF 使用中选交易的 `trade.equity_ret`。
 
+## 成分子策略通用逻辑
+
+六个成分 sleeve 都基于同一个 `1h` adaptive-regime 引擎家族。若同事不直接调用仓库脚本，而是让 AI 独立实现，需要同时实现以下通用逻辑和后文每个 leg 的 style 逻辑。
+
+### 特征计算
+
+对每个 symbol 的闭合 `1h` OHLCV 数据，按 UTC 时间升序计算：
+
+- `ATR14`：true range 的 EWMA，`alpha=1/14`，`min_periods=14`。
+- `ATR48`：true range 的 `48` 根 rolling mean。
+- `atr_bps = ATR14 / close * 10000`。
+- `EMA`：对 close 计算各参数需要的 EMA，例如 `8/21/34/55/89/144/233/377` 等，`adjust=False`，`min_periods=span`。
+- `RSI(window)`：用于 ETH RSI reversal。
+- `ROC(window)_bps = close.pct_change(window) * 10000`。
+- `RVOL48 = volume / rolling_mean(volume, 48)`。
+- `body_atr = (close - open) / ATR14`。
+- `close_pos = (close - low) / (high - low)`。
+- `upper_wick_atr = (high - max(open, close)) / ATR14`。
+- `lower_wick_atr = (min(open, close) - low) / ATR14`。
+- `MACD(fast, slow, signal)`：`EMA_fast - EMA_slow`；histogram = MACD line - signal EMA。
+- Bollinger z-score：`bb_z(window) = (close - rolling_mean(close, window)) / rolling_std(close, window, ddof=0)`。
+- Donchian：`don_high(window) = high.shift(1).rolling(window).max()`；`don_low(window) = low.shift(1).rolling(window).min()`。注意使用上一根以前的数据，避免当前 K 泄漏。
+- Stochastic：`K = 100 * (close - rolling_low) / (rolling_high - rolling_low)`，`D = rolling_mean(K, 3)`。
+- CCI：typical price = `(high + low + close) / 3`；`CCI = (typical - rolling_mean(typical, window)) / (0.015 * mean_abs_deviation)`。
+- VWAP deviation：rolling VWAP = `sum(typical * volume, window) / sum(volume, window)`；`vwap_dev_atr = (close - rolling_vwap) / ATR14`。
+- `ADX14 / +DI14 / -DI14`：标准 Wilder ADX/DI。
+- 高周期 regime：使用已闭合 `4h`、`12h`、`1D` K 的 EMA spread；在 `htf_mode` 为 `h4/h12/d1` 时，要求 `side * spread >= 0`。
+- Funding：对每根信号 K，只使用到信号 K 下一根 open 前已经知道的最近 funding rate；过滤项使用 `side * last_funding_rate * 10000`。
+
+关键指标的精确定义：
+
+- RSI：
+
+```python
+delta = close.diff()
+gain = delta.clip(lower=0.0)
+loss = -delta.clip(upper=0.0)
+avg_gain = gain.ewm(alpha=1 / window, adjust=False, min_periods=window).mean()
+avg_loss = loss.ewm(alpha=1 / window, adjust=False, min_periods=window).mean()
+rsi = 100.0 - 100.0 / (1.0 + avg_gain / avg_loss.replace(0.0, np.nan))
+```
+
+- ADX / DI：
+
+```python
+previous_close = close.shift(1)
+true_range = max(high - low, abs(high - previous_close), abs(low - previous_close))
+up = high.diff()
+down = -low.diff()
+plus_dm = where((up > down) & (up > 0), up, 0.0)
+minus_dm = where((down > up) & (down > 0), down, 0.0)
+atr = true_range.ewm(alpha=1 / 14, adjust=False, min_periods=14).mean()
+pdi14 = 100 * ewm(plus_dm, alpha=1/14, min_periods=14) / atr
+mdi14 = 100 * ewm(minus_dm, alpha=1/14, min_periods=14) / atr
+dx = 100 * abs(pdi14 - mdi14) / (pdi14 + mdi14)
+adx14 = dx.ewm(alpha=1 / 14, adjust=False, min_periods=14).mean()
+```
+
+- 高周期 regime：
+  - 对 `4h`、`12h`、`1D` 以 `label="left", closed="left"` 重采样 OHLCV。
+  - 每个高周期 bar 在 `bar_start + rule_offset` 后才可见。
+  - 用高周期 close 计算 `EMA12` 与 `EMA48`，`spread = EMA12 / EMA48 - 1`。
+  - 对每根 `1h` K，以 `known_ts = ts + 1h` 做 backward asof merge，只能拿到已闭合高周期 spread。
+
+```python
+bars = one_hour_frame.resample(rule, label="left", closed="left").agg({
+    "open": "first", "high": "max", "low": "min", "close": "last", "volume": "sum"
+}).dropna()
+known_ts = bars.index + pd.Timedelta(rule)
+ema12 = bars["close"].ewm(span=12, adjust=False, min_periods=12).mean()
+ema48 = bars["close"].ewm(span=48, adjust=False, min_periods=48).mean()
+spread = ema12 / ema48 - 1.0
+```
+
+### 信号生成 style 逻辑
+
+先生成原始方向信号 `signal`，取值 `+1` long、`-1` short、`0` 无信号，然后再套 side 和过滤器。
+
+- `macd_flip`：`MACD histogram` 上穿 `0` 做多，下穿 `0` 做空。
+- `donchian_break`：close 上穿 `don_high(window)` 做多，下穿 `don_low(window)` 做空。
+- `vwap_revert`：`vwap_dev_atr(window)` 上穿 `-band_k` 做多，下穿 `+band_k` 做空；再由 `side_mode` 限制方向。SOL V2 的 VWAP leg 为 `short`，因此只保留做空信号。
+- `di_cross`：`+DI14 - -DI14` 上穿 `0` 做多，下穿 `0` 做空。
+- `stoch_reversal`：`K-D` 上穿 `0` 且 `K <= threshold_low` 做多；`K-D` 下穿 `0` 且 `K >= threshold_high` 做空。
+- `bb_break`：`bb_z(window)` 上穿 `+band_k` 做多，下穿 `-band_k` 做空。
+- `rsi_reversal`：`RSI(window)` 上穿 `threshold_low` 做多，下穿 `threshold_high` 做空。
+- `keltner_break`：`mid = rolling_mean(close, window)`；上轨 `mid + band_k * ATR14`，下轨 `mid - band_k * ATR14`；close 上穿上轨做多，下穿下轨做空。
+- `cci_reversal`：`CCI(window)` 上穿 `-threshold_high` 做多，下穿 `+threshold_high` 做空；BTC V4 CCI leg 固定 `side_mode=long`，因此只保留做多信号。
+- `ema_pullback`：趋势 `sign(EMA_fast - EMA_slow)`；多头要求趋势向上、`low <= EMA_fast + pullback_atr * ATR14`、`close > EMA_fast`、`close > open`；空头相反，要求趋势向下、`high >= EMA_fast - pullback_atr * ATR14`、`close < EMA_fast`、`close < open`。连续同向相邻信号只保留第一根。
+- `wick_reject`：下影线拒绝做多：`lower_wick_atr >= band_k` 且 `close_pos >= threshold_high`；上影线拒绝做空：`upper_wick_atr >= band_k` 且 `close_pos <= threshold_low`。
+
+### 通用过滤器
+
+对每个非零原始信号，按参数逐项过滤：
+
+1. `side_mode`：`long` 只保留 `+1`；`short` 只保留 `-1`；`both` 保留双向。
+2. ADX：`min_adx <= ADX14 <= max_adx`。
+3. RVOL：`RVOL48 >= min_rvol`。
+4. ATR：`min_atr_bps <= atr_bps <= max_atr_bps`。
+5. 方向动量：`side * ROC(roc_window)_bps >= min_dir_roc_bps`。
+6. 长 EMA 距离：`abs(close / EMA(ema_htf) - 1) * 10000 <= max_dist_ema_bps`。
+7. 高周期方向：若 `htf_mode != "none"`，要求 `side * htf_spread >= 0`。
+8. MACD 转向：若 `require_macd_turn=true`，要求 `side * delta(MACD histogram) > 0`。
+9. K 线实体方向：若 `require_body_dir=true`，要求 `side * body_atr > 0`。
+10. Funding 拥挤过滤：`side * last_funding_rate * 10000 <= max_aligned_funding_bps`。
+
+所有用到的特征必须为 finite；任一必要值为 NaN/inf，则该信号过滤掉。
+
+### 单个 sleeve 内部交易执行
+
+成分 sleeve 内部每个 leg 独立产生交易，再用该家族的 merge 规则合并成单资产交易路径。
+
+每笔候选交易执行规则：
+
+1. `entry_i = signal_i + entry_delay_bars`；即闭合信号 K 后，下一根或指定延迟后的 open 成交。
+2. 如果 `entry_i >= len(frame)` 或 `entry_i <= blocked_until`，跳过。
+3. 入场价：`entry_price = open[entry_i] * (1 + side * slippage)`。
+4. 初始止损：`initial_stop = entry_price - side * sl_atr * ATR14(signal_i)`。
+5. 若 `exit_kind == "fixed"`，止盈价：`target = entry_price + side * tp_atr * ATR14(signal_i)`。
+6. 若 `exit_kind == "trailing"`，没有固定 target，只使用初始 stop + trailing stop。
+7. 最长持仓：`timeout_i = entry_i + max_hold_bars`，到期按该 bar open 出场。
+8. 每根持仓 K 内出场检查顺序：
+   - 若 open 已穿 stop，按 open 出场，原因 `stop_gap_open`。
+   - 若 fixed target 存在且 open 已穿 target，按 target 出场，原因 `target_gap_or_open`。
+   - 若同一根 K 同时触及 stop 和 target，按 stop-first，原因 `both_hit_stop_first`。
+   - 若只触及 stop，按 stop 出场，原因 `stop_market`。
+   - 若只触及 target，按 target 出场，原因 `take_profit`。
+   - 若 trailing，更新有利方向极值；当浮盈达到 `trail_activation_atr * ATR14(signal_i)` 后，用 `trail_atr * ATR14(signal_i)` 更新 trailing stop。
+9. 出场价：`exit_price = raw_exit * (1 - side * slippage)`。
+10. 价格收益：`price_ret = side * (exit_price / entry_price - 1)`。
+11. 手续费：`fee_ret = fee_per_fill * (1 + exit_price / entry_price)`。
+12. Funding：`funding_ret = -side * sum(funding_rate in [entry_ts, exit_ts))`。
+13. `net_ret_1x = price_ret - fee_ret + funding_ret`。
+14. 若 `sizing_kind == "fixed"`，`exposure = fixed_leverage`；V1 所有中选交易均来自 fixed sizing。
+15. `equity_ret = exposure * net_ret_1x`。
+16. 该 leg 内部成交后设置 `blocked_until = exit_i + cooldown_bars`。
+
+### 单资产内部 ensemble 合并
+
+每个 asset sleeve 内部先把两个 leg 的交易集合合并成单资产交易路径。通用合并规则：
+
+```python
+tagged = [(trade, left_priority) for trade in left] + [(trade, right_priority) for trade in right]
+tagged.sort(key=lambda item: (item[0].entry_i, -item[1], item[0].exit_i))
+selected = []
+blocked_until = -1
+for trade, priority in tagged:
+    if trade.entry_i <= blocked_until:
+        continue
+    selected.append(trade)
+    blocked_until = trade.exit_i
+```
+
+也就是说：单个 asset 内同一时间最多一笔；冲突时先按入场 K，入场相同时按 leg priority，已持仓期间其他 leg 信号跳过，不抢仓、不提前平仓。
+
+## 各成分子策略逻辑说明
+
+### TRX V3：MACD flip + Stochastic reversal
+
+- MACD leg 用 `MACD(34,89,13)` histogram 零轴翻转作为趋势/动量切换信号，双向交易；过滤器要求 `ADX 20-24`、`ATR <= 150 bps`、方向 ROC6 不低于 `-100 bps`、价格不限制 EMA 距离（`10000 bps`）、且方向符合闭合 `12h` regime；固定止盈 `2 ATR`、止损 `5 ATR`、最长 `120h`、入场延迟 `1h`、暴露 `5x`。
+- Stoch leg 用 `Stoch(21)` 的 `K-D` 反转交叉：低位上穿做多，高位下穿做空；双向交易；过滤器要求 `ADX <= 24`、`RVOL >= 1`、方向 ROC3 不低于 `-300 bps`、K 线实体同向；使用 trailing exit，初始止损 `6 ATR`，浮盈 `3 ATR` 后用 `2 ATR` trailing，最长 `120h`，入场延迟 `2h`，暴露 `3.5x`。
+- TRX sleeve 内部用 V3 clean wrapper 复现；优先级由成分脚本按 prefit leg score 计算。
+
+### SOL V2：Donchian break + VWAP revert
+
+- Donchian leg 是趋势突破：close 上穿上一段 `24h` Donchian high 做多，下穿 Donchian low 做空；过滤器要求 `ADX >= 36`、`RVOL >= 1`、`ATR >= 100 bps`、方向 ROC24 至少 `+100 bps`、funding 顺向拥挤不超过 `2 bps`；固定 TP `0.75 ATR`、SL `4 ATR`、最长 `120h`、暴露 `3x`。
+- VWAP leg 是均值回归，但本版本只做空：`vwap_dev_atr(48)` 下穿 `+1.25 ATR` 触发做空候选；过滤器要求 `ATR >= 125 bps`、价格距 EMA89 不超过 `1000 bps`、方向符合闭合 `12h` regime、K 线实体同向、funding 顺向拥挤不超过 `1 bps`；固定 TP `0.75 ATR`、SL `3 ATR`、最长 `18h`、cooldown `3h`、暴露 `1.5x`。
+- SOL sleeve 内部 leg priority 由高胜率搜索覆写后的 `prefit_score(train, validation, prefit)` 计算。
+
+### HYPE V4：DI-cross + Stochastic reversal
+
+- DI leg 是趋势方向切换：`+DI14 - -DI14` 上穿零做多，下穿零做空；过滤器要求 `ADX >= 10`、`RVOL >= 2`、`ATR <= 250 bps`、方向符合闭合 `12h` regime；不要求实体同向；固定 TP `1.5 ATR`、SL `4.5 ATR`、最长 `18h`、暴露 `3x`。
+- Stoch leg 是高波动反转：`Stoch(21)` 低位上穿做多、高位下穿做空，阈值 `25/55`；过滤器要求 `RVOL >= 1`、`200 <= ATR <= 500 bps`，并要求 `MACD(8,55,5)` histogram 朝交易方向转向；trailing exit，安全初始止损 `4 ATR`，浮盈 `1 ATR` 后 `1 ATR` trailing，最长 `8h`，cooldown `36h`，暴露 `2x`。
+- HYPE sleeve 内部冲突固定 DI 优先：`DI priority=1.0`，`Stoch priority=0.0`。
+
+### ETH V3：BB break + RSI reversal
+
+- BB break leg 是布林突破：`bb_z(72)` 上穿 `+2.5` 做多，下穿 `-2.5` 做空；过滤器要求 `ADX >= 16`、`RVOL >= 3.5`、`ATR >= 75 bps`、方向 ROC24 至少 `+200 bps`、价格距 EMA55 不超过 `750 bps`、funding 顺向拥挤不超过 `8 bps`；固定 TP `3 ATR`、SL `5 ATR`、最长 `72h`、暴露 `1.5x`。
+- RSI reversal leg 是极端 RSI 恢复/反转：`RSI7` 上穿 `5` 做多，下穿 `75` 做空；过滤器要求 `20 <= ADX <= 45`、`ATR >= 125 bps`、方向 ROC6 不低于 `-300 bps`、价格距 EMA233 不超过 `750 bps`；固定 TP `2 ATR`、SL `3 ATR`、最长 `48h`、cooldown `24h`、暴露 `2.5x`。
+- ETH sleeve 内部 priority 由成分 `simulate_clean` 的 prefit leg score 计算。
+
+### BTC V4：Keltner break + CCI reversal
+
+- Keltner leg 是强趋势突破：close 上穿/下穿 `rolling_mean(close,20) ± 2 * ATR14` 触发多/空；过滤器要求 `ADX >= 40`、`RVOL >= 1.25`、方向符合闭合 `4h` regime；V4 将 ATR 上限、方向 ROC、funding、最长持仓、cooldown 等字段中和固定；固定 TP `1.5 ATR`、SL `5 ATR`、暴露 `2.4x`。
+- CCI leg 是 CCI 均值回归，但固定只做多：`CCI20` 上穿 `-125` 做多；过滤器要求 `ADX <= 40`、`RVOL >= 1.25`、`ATR >= 75 bps`、价格距 EMA377 不超过 `750 bps`；固定 TP `5.5 ATR`、SL `1.5 ATR`、最长 `72h`、暴露 `3.5x`。
+- BTC V4 是 V3 的最小等价 clean surface；多个不生效字段以中和值固定，不改变交易路径。
+
+### BNB V3：EMA pullback + Wick reject
+
+- EMA pullback leg 是趋势回踩恢复：趋势由 `EMA55 - EMA144` 决定；多头要求趋势向上、低点回踩至 `EMA55 - 0.25 ATR` 附近并收回、收盘站上 EMA55 且阳线；空头相反；过滤器要求 `RVOL >= 1`、`ATR >= 50 bps`、价格距 EMA377 不超过 `300 bps`；使用 trailing exit，初始 SL `5 ATR`，浮盈 `2 ATR` 后 `1.5 ATR` trailing，最长 `240h`、cooldown `12h`、暴露 `2.5x`。
+- Wick reject leg 是影线拒绝：下影线长度至少 `0.5 ATR` 且收盘位置 `>=0.75` 做多；上影线长度至少 `0.5 ATR` 且收盘位置 `<=0.40` 做空；过滤器要求 `ADX >= 28`、`RVOL >= 2`、方向符合闭合 `12h` regime；固定 TP `1 ATR`、SL `5 ATR`、最长 `48h`、cooldown `24h`、暴露 `1x`。
+- BNB sleeve 内部 priority 固定为 EMA pullback `2.445774012147314`、wick reject `1.6307399812929821`。
+
 ## 成分参数总表
 
-以下参数是 V1 复现所需的冻结参数。若同事使用本仓库脚本复现，优先调用脚本；若独立实现，需要按本节参数和各家族执行契约重建信号。
+以下参数是 V1 复现所需的冻结参数。它们与上文“成分子策略通用逻辑”共同构成完整实现规格；仓库路径只作为本仓库内出处备注，不应作为 standalone 复现依赖。
+
+### 固定字段补全规则
+
+有些成分来自 clean surface，参数 JSON 只列出 active 字段；独立实现时必须按下表补齐固定字段：
+
+| Asset / leg | style | side_mode | exit_kind | entry_delay_bars | sizing_kind | 固定说明 |
+| --- | --- | --- | --- | ---: | --- | --- |
+| TRX MACD | `macd_flip` | `both` | `fixed` | `1` | `fixed` | `min_atr_bps=0`、`max_aligned_funding_bps=10000`、`require_body_dir=false` |
+| TRX Stoch | `stoch_reversal` | 参数内 `both` | `trailing` | 参数内 `2` | `fixed` | `min_adx=0`、`min_atr_bps=0`、`max_atr_bps=10000`、`htf_mode=none`、`require_macd_turn=false`、`tp_atr` 不生效 |
+| SOL Donchian | `donchian_break` | `both` | `fixed` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
+| SOL VWAP | `vwap_revert` | `short` | `fixed` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
+| HYPE DI | `di_cross` | `both` | `fixed` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
+| HYPE Stoch | `stoch_reversal` | `both` | `trailing` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
+| ETH BB | `bb_break` | `both` | `fixed` | `1` | `fixed` | `min_atr_bps=75`、`max_atr_bps=10000`、`require_macd_turn=false`、`require_body_dir=false` |
+| ETH RSI | `rsi_reversal` | `both` | `fixed` | `1` | `fixed` | `min_rvol=0`、`max_atr_bps=10000`、`htf_mode=none`、`require_macd_turn=false`、`require_body_dir=false` |
+| BTC Keltner | `keltner_break` | `both` | `fixed` | `1` | `fixed` | `ema_fast=55`、`ema_slow=144`、`ema_htf=55`；完整有效字段见 JSON |
+| BTC CCI | `cci_reversal` | `long` | `fixed` | `1` | `fixed` | `ema_fast=89`、`ema_slow=233`；完整有效字段见 JSON |
+| BNB EMA pullback | `ema_pullback` | `both` | `trailing` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
+| BNB Wick reject | `wick_reject` | `both` | `fixed` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
 
 ### TRX-1H-Adaptive-Regime-V3
 
-来源：
+仓库内出处备注（非 standalone 依赖）：
 
 - Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_trx`
 - 成分脚本：`research/trx/1h-adaptive-regime/scripts/trx_1h_ar_v3_clean.py`
@@ -216,7 +436,7 @@ Stochastic reversal leg：
 
 ### SOL-1H-Adaptive-Regime-V2
 
-来源：
+仓库内出处备注（非 standalone 依赖）：
 
 - Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_sol`
 - 成分版本：`SOL-1H-Adaptive-Regime-V2`
@@ -316,7 +536,7 @@ VWAP revert leg：
 
 ### HYPE-1H-Adaptive-Regime-V4
 
-来源：
+仓库内出处备注（非 standalone 依赖）：
 
 - Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_hype`
 - 成分版本：`HYPE-1H-Adaptive-Regime-V4`
@@ -416,7 +636,7 @@ Stoch engine config：
 
 ### ETH-1H-Adaptive-Regime-V3
 
-来源：
+仓库内出处备注（非 standalone 依赖）：
 
 - Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_eth`
 - 成分脚本：`research/eth/1h-adaptive-regime/scripts/eth_1h_ar_v2_1_clean.py`
@@ -467,7 +687,7 @@ RSI reversal clean config：
 
 ### BTC-1H-Adaptive-Regime-V4
 
-来源：
+仓库内出处备注（非 standalone 依赖）：
 
 - Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_btc`
 - 成分脚本：`research/btc/1h-adaptive-regime/scripts/btc_1h_ar_v4.py`
@@ -516,7 +736,7 @@ CCI engine config（含中和值固定字段）：
 
 ### BNB-1H-Adaptive-Regime-V3
 
-来源：
+仓库内出处备注（非 standalone 依赖）：
 
 - Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_bnb`
 - 成分参数源：`research/bnb/1h-adaptive-regime/artifacts/bnb_1h_ar_v2_micro_tune_2026-07-07.json`

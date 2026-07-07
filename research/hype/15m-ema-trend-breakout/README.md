@@ -1,51 +1,21 @@
-# HYPE-EMA-TB EMA Trend Breakout
+# HYPE-EMA-Trend-Breakout
 
-Family id: `HYPE-EMA-TB`
+- Full family name：`HYPE-EMA-Trend-Breakout`（历史别名：`HYPE-EMA-TB`）
+- 市场/周期：HYPE `15m`
+- 机制：EMA96/EMA384 趋势突破 / 追多追空，带 ADX、成交量、1h 确认、live-realistic 执行检查与跨所执行变体。
+- 当前状态：archived/canonical specs；V35 在 quant-runner 侧有历史实现。
 
-This family covers the later HYPE 15m EMA96/EMA384 trend-breakout / chase-long-chase-short research with ADX, volume, 1h confirmation, live-realistic execution checks, and cross-exchange execution variants.
+## 边界
 
-It is not the earlier `HYPE-EMA-X` golden/death cross family.
+- 不是更早的 `HYPE-EMA-Crossover`（`HYPE-EMA-X`）金叉/死叉家族。
+- 这里的 `V35` 不是 `HYPE-CC-V35` 或 `HYPE-EMA-X-V14`；历史报告文件名（`hype_v30_*`、`hype_v35_*` 等）跨家族撞名，必须回链接文档确认身份。
+- Binance HYPE `5m` 回踩研究已拆分到独立家族 `../5m-pullback-trail/`；本地 `HYPE-5M-PBTR-V1/V2` 与本家族版本无关。
+- 引用用完整名：`HYPE-EMA-TB-V30`、`HYPE-EMA-TB-V35`、`HYPE-EMA-TB-V36`。
 
-## Canonical Specs
+## 入口
 
-Use `canonical-specs/` for reproducible strategy definitions and handoff documents.
+- 主账：`hype-ema-tb-core-ledger.md`
+- 决策记录：`decision-log.md`
+- 版本规格：`canonical-specs/`（V2P、V30、V34、V35、V36 等）
 
-Important documents:
-
-- `hype-ema-tb-core-ledger.md`: migrated Markdown ledger for the broader HYPE-EMA-TB trend strategy research line.
-- `legacy-canvas/`: migrated historical Canvas reports for HYPE-EMA-TB experiments, ablations, execution checks, and diagnostics.
-- `hype-v2p-strategy-spec.md`: early trend-breakout candidate.
-- `hype-trend-strategy-v30-spec.md`: trend-family baseline.
-- `hype-trend-strategy-v34-spec.md`: high-return/low-drawdown checkpoint.
-- `hype-trend-strategy-v35-spec.md`: timeout-relaxed variant.
-- `hype-trend-strategy-v36-spec.md`: Binance signal plus Hyperliquid execution.
-
-## Moved Out
-
-- `HYPE-5M-PBTR`: Binance HYPE `5m` pullback + ATR trailing-stop research now lives under `../5m-pullback-trail/`.
-
-## Do Not Mix With
-
-- `HYPE-CC-V35`
-- `HYPE-EMA-X-V14`
-- `HYPE-5M-PBTR-V1` / `HYPE-5M-PBTR-V2`
-- Any candle-count reversal document under `../15m-candle-count-reversal/`
-
-When citing this family, use names like `HYPE-EMA-TB-V30`, `HYPE-EMA-TB-V35`, or `HYPE-EMA-TB-V36`.
-
-## Local Report Artifacts
-
-New retained artifacts for this family should live under `artifacts/`. Top-level `reports/` is retired; migrated Canvas notes should point to retained `artifacts/` or explicit archive paths.
-
-Trend-breakout reports often use filenames such as:
-
-- `hype_ema_*`
-- `hype_v30_*`
-- `hype_v34_*`
-- `hype_v35_*`
-- `hype_v36_*`
-- `hype_v15_effective_cross_*`
-
-Family identity must be checked from the target document or migrated Canvas note. Do not infer family identity from `v35` alone.
-
-Binance HYPE `5m` strategy research has moved to the independent `HYPE-5M-PBTR` family under `../5m-pullback-trail/README.md`.
+脚本在 `scripts/`，被报告引用的产物在 `artifacts/`，`legacy-canvas/` 为冻结迁移历史，`experiments/` 为历史实验材料。
