@@ -72,8 +72,8 @@ Family：`Binance-15M-Multi-Indicator-Intraday-Transfer`
 
 ## 产物
 
-- 脚本：`research/binance/15m-multi-indicator-intraday/scripts/research_binance_15m_mii_btc_eth_constrained_search.py`
-- Ranking CSV：`research/binance/15m-multi-indicator-intraday/artifacts/binance_15m_mii_btc_eth_constrained_search_ranking_2026-06-30.csv`
-- Finalists CSV：`research/binance/15m-multi-indicator-intraday/artifacts/binance_15m_mii_btc_eth_constrained_search_finalists_2026-06-30.csv`
-- Slices CSV：`research/binance/15m-multi-indicator-intraday/artifacts/binance_15m_mii_btc_eth_constrained_search_slices_2026-06-30.csv`
-- JSON：`research/binance/15m-multi-indicator-intraday/artifacts/binance_15m_mii_btc_eth_constrained_search_2026-06-30.json`
+- 脚本：`research/asset-portfolios/15m-multi-indicator-intraday/scripts/research_binance_15m_mii_btc_eth_constrained_search.py`
+- Ranking CSV：`research/asset-portfolios/15m-multi-indicator-intraday/artifacts/binance_15m_mii_btc_eth_constrained_search_ranking_2026-06-30.csv`
+- Finalists CSV：`research/asset-portfolios/15m-multi-indicator-intraday/artifacts/binance_15m_mii_btc_eth_constrained_search_finalists_2026-06-30.csv`
+- Slices CSV：`research/asset-portfolios/15m-multi-indicator-intraday/artifacts/binance_15m_mii_btc_eth_constrained_search_slices_2026-06-30.csv`
+- JSON：`research/asset-portfolios/15m-multi-indicator-intraday/artifacts/binance_15m_mii_btc_eth_constrained_search_2026-06-30.json`

@@ -63,12 +63,12 @@
 
 ## 保留产物
 
-- Summary JSON：`research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_summary_2026-06-27.json`
-- Summary CSV：`research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_summary_2026-06-27.csv`
-- Quality CSV：`research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_quality_2026-06-27.csv`
-- Candles CSV：`research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_candles_2026-06-27.csv`
-- Trades CSV：`research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_trades_2026-06-27.csv`
-- Equity CSV：`research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_equity_2026-06-27.csv`
+- Summary JSON：`research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_summary_2026-06-27.json`
+- Summary CSV：`research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_summary_2026-06-27.csv`
+- Quality CSV：`research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_quality_2026-06-27.csv`
+- Candles CSV：`research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_candles_2026-06-27.csv`
+- Trades CSV：`research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_trades_2026-06-27.csv`
+- Equity CSV：`research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_equity_2026-06-27.csv`
 
 ## 状态
 
@@ -149,13 +149,13 @@
     }
   ],
   "artifacts": {
-    "summary_json": "research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_summary_2026-06-27.json",
-    "summary_csv": "research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_summary_2026-06-27.csv",
-    "quality_csv": "research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_quality_2026-06-27.csv",
-    "candles_csv": "research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_candles_2026-06-27.csv",
-    "trades_csv": "research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_trades_2026-06-27.csv",
-    "equity_csv": "research/binance/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_equity_2026-06-27.csv",
-    "report_md": "research/binance/1d-turtle-breakout/diagnostics/binance-1d-turtle-breakout-2026-06-27.md"
+    "summary_json": "research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_summary_2026-06-27.json",
+    "summary_csv": "research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_summary_2026-06-27.csv",
+    "quality_csv": "research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_quality_2026-06-27.csv",
+    "candles_csv": "research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_candles_2026-06-27.csv",
+    "trades_csv": "research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_trades_2026-06-27.csv",
+    "equity_csv": "research/asset-portfolios/1d-turtle-breakout/artifacts/binance_1d_turtle_breakout_equity_2026-06-27.csv",
+    "report_md": "research/asset-portfolios/1d-turtle-breakout/diagnostics/binance-1d-turtle-breakout-2026-06-27.md"
   },
   "summary": [
     {

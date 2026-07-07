@@ -44,7 +44,7 @@ from research_hype_15m_mii_search import (  # noqa: E402
 
 FAMILY = "Binance-15M-Multi-Indicator-Intraday-Transfer"
 RUN_DATE = "2026-06-30"
-RESEARCH_DIR = Path("research/binance/15m-multi-indicator-intraday")
+RESEARCH_DIR = Path("research/asset-portfolios/15m-multi-indicator-intraday")
 SCRIPT_PATH = RESEARCH_DIR / "scripts" / "research_binance_15m_mii_btc_eth_constrained_search.py"
 ARTIFACTS_DIR = RESEARCH_DIR / "artifacts"
 DIAGNOSTICS_DIR = RESEARCH_DIR / "diagnostics"

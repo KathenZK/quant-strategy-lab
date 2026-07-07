@@ -8,7 +8,7 @@
 - `btc/README.md`：Bitcoin 单资产策略家族入口。
 - `bnb/README.md`：BNB 单资产策略家族入口。
 - `trx/README.md`：TRON（TRX）单资产策略家族入口。
-- `binance/README.md`：Binance 跨资产研究入口。
+- `asset-asset-portfolios/README.md`：组合策略、跨资产策略与迁移研究入口。
 - `mu/README.md`：`MU-HYPE-Transfer`（历史别名：`MU-HYPE-XFER`）迁移研究入口。
 
 已经不作为 active research 入口的历史策略研究位于 `../archive/research/`，其中旧 HYPE cross-asset transfer 材料位于 `../archive/research/hype-transfer/`。
@@ -121,8 +121,9 @@
 
 跨资产研究不是 HYPE 策略家族，除非文档明确把它提升为某个 HYPE family variant。
 
-- `Binance-1D-Turtle-Breakout`: `binance/1d-turtle-breakout/README.md`，覆盖 Binance USD-M Futures `BTCUSDT`、`ETHUSDT`、`HYPEUSDT` 日线 20/10 turtle breakout 诊断。
-- `Binance-15M-Multi-Indicator-Intraday-Transfer`: `binance/15m-multi-indicator-intraday/README.md`，基于 `HYPE-15M-MII-V1.1` 机制对 BTC/ETH `15m` 做受约束参数迁移诊断；BTC 有低收益 K+1/K+2 同正版本，ETH 未通过 K+2。
+- `Binance-1D-Turtle-Breakout`: `asset-portfolios/1d-turtle-breakout/README.md`，覆盖 Binance USD-M Futures `BTCUSDT`、`ETHUSDT`、`HYPEUSDT` 日线 20/10 turtle breakout 诊断。
+- `Binance-15M-Multi-Indicator-Intraday-Transfer`: `asset-portfolios/15m-multi-indicator-intraday/README.md`，基于 `HYPE-15M-MII-V1.1` 机制对 BTC/ETH `15m` 做受约束参数迁移诊断；BTC 有低收益 K+1/K+2 同正版本，ETH 未通过 K+2。
+- `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`）: `asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/README.md`，六个 `1h` adaptive-regime 家族最新登记版本（TRX V3、SOL V2、HYPE V4、ETH V3、BTC V4、BNB V3）的跨资产组合；`Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` 已登记为全账户单仓、先到先得版本，full `287.01x / -21.43% DD / 90.30% win / 371 trades`，reused holdout `7.67x / -19.79% DD`；主账 `asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/binance-1h-ar-mae-core-ledger.md`；状态 `registered diagnostic / NO-GO / not promoted / not live-ready`。
 - `MU-HYPE-Transfer`（`MU-HYPE-XFER`）: `mu/README.md` and `mu/mu-hype-xfer-session-aware-ledger.md`
 - Old HYPE cross-asset transfer checks: archived under `../archive/research/hype-transfer/`.
 

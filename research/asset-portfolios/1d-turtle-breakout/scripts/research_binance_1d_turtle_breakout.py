@@ -12,7 +12,7 @@ import numpy as np
 import pandas as pd
 
 
-FAMILY_ROOT = Path("research/binance/1d-turtle-breakout")
+FAMILY_ROOT = Path("research/asset-portfolios/1d-turtle-breakout")
 ARTIFACT_ROOT = FAMILY_ROOT / "artifacts"
 DIAG_ROOT = FAMILY_ROOT / "diagnostics"
 
