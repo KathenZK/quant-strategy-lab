@@ -27,9 +27,16 @@
 - `scripts/fetch_bnb_binance_1h.py`：最近两年 K 线、资金费、合约快照抓取与质量审计。
 - `scripts/research_bnb_1h_adaptive_regime_search.py`：locked OOS 多指标宽搜索。
 - `scripts/research_bnb_1h_ar_v1_full_ablation.py`：V1 全参数消融与 clean spec 证据生成。
+- `scripts/bnb_1h_ar_v2.py`：V2 clean 参数可执行定义、V1 路径等价验证与多窗口回测。
+- `scripts/research_bnb_1h_ar_v2_full_ablation.py`：V2 全参数域扫描消融。
+- `scripts/research_bnb_1h_ar_v2_micro_tune.py`：V2 消融引导微调（prefit-only 选参）。
 - `canonical-specs/bnb-1h-ar-v1-parameter-spec-2026-07-06.md`：V1 原始冻结参数规格。
 - `canonical-specs/bnb-1h-ar-v1-clean-parameter-spec-2026-07-06.md`：V1 删除 no-op 字段后的等价 clean 参数规格。
+- `canonical-specs/bnb-1h-ar-v2-parameter-spec-2026-07-07.md`：V2 clean-equivalent 版本参数规格。
+- `research-notes/bnb-1h-ar-v2-multiwindow-backtest-2026-07-07.md`：V2 路径等价验证与多时间窗口分片。
+- `research-notes/bnb-1h-ar-v2-micro-tune-2026-07-07.md`：V2 微调 tuned observation（reused OOS，不 promotion）。
 - `diagnostics/bnb-1h-adaptive-regime-search-2026-07-03.md`：完整搜索与 locked OOS NO-GO 证据。
 - `diagnostics/bnb-1h-ar-cap3-highwin-search-2026-07-06-cap3-highwin.md`：`<=3x` 高胜率趋势/反转搜索，样本内接近目标但 locked OOS 失败。
 - `ablations/bnb-1h-ar-v1-full-parameter-ablation-2026-07-06.md`：V1 全参数消融，识别 `32` 个交易路径不变的 no-op 字段。
+- `ablations/bnb-1h-ar-v2-full-parameter-ablation-2026-07-07.md`：V2 全参数域扫描消融，`27` 个活动字段、无可再删参数。
 - `artifacts/`：Parquet、JSON、CSV 等可复现证据；默认由 `.gitignore` 忽略。
