@@ -23,6 +23,7 @@ It is independent from:
 
 ## Canonical Entrypoints
 
+- `hype-5m-micro-scalp-core-ledger.md`: family core ledger with the V1/V1.1/V1.2/V1.3 version table (added 2026-07-07).
 - `decision-log.md`: family decision history.
 - `diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`: first executable broad search report.
 - `diagnostics/hype-5m-micro-scalp-relaxed-rounds-2026-06-26.md`: round-by-round relaxed-constraint search.
@@ -64,7 +65,7 @@ The V1.1 full parameter ablation tested `103` configs and confirmed the remainin
 
 2026-07-01 V1.3 自 V1.2 剔除 `12` 个不生效字段（`10` 个 dormant + `min_adx` + `max_atr_pct_bps`），schema 只保留 `18` 个有效参数。在 fee `0.001`/fill、slippage `4 bps`/fill 下，V1.3 与 V1.2 逐笔路径完全等价：`180` 笔、`0.45` 笔/天、年化 `1.76x`、PF `1.934`、maxDD `-9.96%`。V1.3 全参数消融 `60` 组（`1` baseline + `59` variants），显示 `tp_bps`、`close_pos`、`require_body_dir` 附近仍有更高收益邻域，但 FWD 样本仍薄，不构成 live-ready 证明。
 
-当前 V1、V1.1、V1.2 均只属于 paper-audit observation。任何 live、paper-live、handoff 或真实资金部署前，仍需完成逐笔路径、订单维护、重启状态和 paper/live-dry-run reconciliation。
+当前 V1、V1.1、V1.2 均只属于 paper-audit observation。任何 live、dry-run、handoff 或真实资金部署前，仍需完成逐笔路径、订单维护、重启状态和 dry-run/live reconciliation。
 
 ## Directory Rules
 

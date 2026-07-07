@@ -4,9 +4,9 @@ Family：`HYPE-15M-Multi-Indicator-Intraday`（alias：`HYPE-15M-MII`）
 
 Version：`HYPE-15M-MII-V1.3`
 
-Runner kind：`hype_mii_v13`
+Runner kind：`hype_mii`（2026-07-07 校正：quant-runner 实际注册的 kind 为 `hype_mii`，本文早期草稿使用的 `hype_mii_v13` 已废弃）
 
-Status：`runner implementation target / diagnostic observation only / not live-ready / not paper-live-ready`
+Status：`runner implementation target / diagnostic observation only / not live-ready / `
 
 ## 先读结论
 
@@ -16,7 +16,7 @@ Status：`runner implementation target / diagnostic observation only / not live-
 - 出场：用信号 K 已知的 `ATR96%` 设置一次性固定 bracket，`TP = 1.25 * ATR96%`，`SL = 5.0 * ATR96%`，最长 `24` 根 `15m` K。
 - 暴露：固定 `2.5x` 权益暴露；在 `quant-runner` 中用 `exposure = 2.5` 控制下单名义规模，`leverage = 3` 只是 Binance 整数杠杆设置上限。
 
-这份文件是参数导出和 runner 对齐规格，不是实盘批准书。当前仍缺资金费核算、盘口级 market/stop-market 滑点审计、真实订单延迟、runner 重启恢复、交易所对账、missing-bar fail-closed、kill switch 和指标对拍验收。不得把本版本标记为 `candidate`、`paper-live`、`dry-run handoff` 或 `live`。
+这份文件是参数导出和 runner 对齐规格，不是实盘批准书。当前仍缺资金费核算、盘口级 market/stop-market 滑点审计、真实订单延迟、runner 重启恢复、交易所对账、missing-bar fail-closed、kill switch 和指标对拍验收。不得把本版本标记为 `candidate`、`dry-run`、`dry-run handoff` 或 `live`。
 
 ## 身份与边界
 
@@ -34,8 +34,9 @@ Status：`runner implementation target / diagnostic observation only / not live-
 | Timezone | UTC |
 | Candle requirement | 只使用闭合 K 线 |
 | Current runner repository | `/Users/ZK/OpenCode/quant-runner` |
-| Runner strategy kind | `hype_mii_v13` |
-| Runner strategy module | `crates/quant-runner/src/strategies/hype_mii_v13/mod.rs` |
+| Runner strategy kind | `hype_mii` |
+| Runner strategy module | `crates/quant-runner/src/runner/strategies/hype_mii/mod.rs` |
+| Runner strategy SPEC | `crates/quant-runner/src/runner/strategies/hype_mii/HYPE-15M-MII-V1.3-SPEC.md` |
 | Research evidence | `research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md` |
 | Core ledger | `hype-15m-mii-core-ledger.md` |
 
@@ -73,14 +74,14 @@ Status：`runner implementation target / diagnostic observation only / not live-
 
 | 参数 | 值 | 说明 |
 | --- | ---: | --- |
-| `kind` | `hype_mii_v13` | `quant-runner` 策略类型。 |
+| `kind` | `hype_mii` | `quant-runner` 策略类型。 |
 | `strategy_id` | `HYPE-15M-MII-V1.3` | 事件、状态和订单前缀中使用的策略身份。 |
 | `symbol` | `HYPE/USDT:USDT` | Binance USD-M HYPE 永续。 |
 | `timeframe` | `15m` | 固定 15 分钟 K。 |
 | `warmup_bars` | `2500` | runner 默认拉取闭合 K 数量；必须足够覆盖 `ATR96`、`RVOL96`、MACD warmup。 |
 | `mode` | `dry_run` 或 `live` | 当前配置示例默认 `dry_run` 且 `enabled=false`。 |
 | `cycle_delay_seconds` | `3.0` | 新 K 形成后等待 3 秒再处理，降低刚闭合数据未稳定的风险。 |
-| `order_client_id_prefix` | `qrmii13-` | Binance client order id 前缀。 |
+| `order_client_id_prefix` | `qrmii-` | Binance client order id 前缀；由 runner 代码按 kind 固定，非 TOML 可配。 |
 
 ### 信号与过滤
 
@@ -139,9 +140,9 @@ Status：`runner implementation target / diagnostic observation only / not live-
 ```text
 previous_close[t] = close[t-1]
 TR[t] = max(
-  high[t] - low[t],
-  abs(high[t] - previous_close[t]),
-  abs(low[t] - previous_close[t])
+ high[t] - low[t],
+ abs(high[t] - previous_close[t]),
+ abs(low[t] - previous_close[t])
 )
 ```
 
@@ -173,7 +174,7 @@ macd_hist = macd - macd_signal
 方向过滤：
 
 ```text
-long  requires macd_hist[t] >= 0
+long requires macd_hist[t] >= 0
 short requires macd_hist[t] <= 0
 ```
 
@@ -195,7 +196,7 @@ rvol96[t] = volume[t] / rolling_mean(volume, window=96, min_periods=96)
 在闭合信号 K `t` 上计算：
 
 ```text
-long_raw[t]  = RSI7[t] > 40 and RSI7[t-1] <= 40
+long_raw[t] = RSI7[t] > 40 and RSI7[t-1] <= 40
 short_raw[t] = RSI7[t] < 60 and RSI7[t-1] >= 60
 ```
 
@@ -203,9 +204,9 @@ short_raw[t] = RSI7[t] < 60 and RSI7[t-1] >= 60
 
 ```text
 if long_raw[t]:
-  direction = +1
+ direction = +1
 if short_raw[t]:
-  direction = -1
+ direction = -1
 ```
 
 过滤：
@@ -245,12 +246,12 @@ entry_price = actual_market_fill_price
 
 ```text
 if direction == +1:
-  take_profit_price = entry_price * (1 + take_profit_pct)
-  stop_price = entry_price * (1 - stop_pct)
+ take_profit_price = entry_price * (1 + take_profit_pct)
+ stop_price = entry_price * (1 - stop_pct)
 
 if direction == -1:
-  take_profit_price = entry_price * (1 - take_profit_pct)
-  stop_price = entry_price * (1 + stop_pct)
+ take_profit_price = entry_price * (1 - take_profit_pct)
+ stop_price = entry_price * (1 + stop_pct)
 ```
 
 ## 执行时序
@@ -300,8 +301,8 @@ entry_i = signal_i + 2
 
 ```text
 if stop_hit and target_hit:
-  exit_reason = both_hit_stop_first
-  exit_price = stop_price
+ exit_reason = both_hit_stop_first
+ exit_price = stop_price
 ```
 
 ## 收益计算
@@ -328,53 +329,29 @@ round_trip_cost = 0.0028
 
 ## quant-runner TOML 示例
 
-以下为当前 `/Users/ZK/OpenCode/quant-runner/configs/strategies.toml` 中的参数形状。默认保持 `enabled = false`。
+以下为当前 `/Users/ZK/OpenCode/quant-runner/configs/dryrun.toml` 中的实际形状（2026-07-07 校正）。策略参数不在 TOML 子表中配置，而是由 runner 代码中 `HypeMiiConfig::default()` 内置，取值必须与本 spec 的参数总表一致；`strategy_id` 由 `kind = "hype_mii"` 在代码中固定映射为 `HYPE-15M-MII-V1.3`。
 
 ```toml
 [[strategies]]
-name = "hype-mii-v13-dry-run"
-enabled = false
+name = "hype-mii-dry-run"
+enabled = true
 group = "dryrun"
-kind = "hype_mii_v13"
+kind = "hype_mii"
 mode = "dry_run"
 symbol = "HYPE/USDT:USDT"
 timeframe = "15m"
 account_id = "dryrun"
-state_dir = "state/hype-mii-v13-dry-run"
-
+state_dir = "/home/admin/quant-runner/state/hype-mii-dry-run"
 # Binance leverage must be an integer; exposure controls order notional sizing.
 leverage = 3
 exposure = 2.5
 margin_mode = "isolated"
 warmup_bars = 2500
 dry_run_notional_usdt = 10.0
-live_notional_usdt = 10.0
-max_live_notional_usdt = 25.0
-cycle_delay_seconds = 3.0
 live_confirm = false
-order_client_id_prefix = "qrmii13-"
-
-[strategies.hype_mii_v13]
-strategy_id = "HYPE-15M-MII-V1.3"
-exchange = "binance"
-symbol = "HYPE/USDT:USDT"
-timeframe = "15m"
-rsi_window = 7
-rsi_long_cross = 40.0
-rsi_short_cross = 60.0
-macd_fast = 12
-macd_slow = 26
-macd_signal = 9
-min_atr_pct96 = 0.0075
-max_atr_pct96 = 0.028
-min_rvol96 = 1.0
-tp_atr_mult = 1.25
-sl_atr_mult = 5.0
-timeout_bars = 24
-fee_rate_per_fill = 0.001
-entry_slippage_rate = 0.0004
-exit_slippage_rate = 0.0004
 ```
+
+若修改 runner 侧 `HypeMiiConfig` 默认参数，必须同步更新本 spec 参数总表，并在 family decision log 记录差异。
 
 若要切到 live，至少还需要：
 
@@ -390,45 +367,45 @@ account_id = "<live-account-id>"
 
 ```text
 for each newly closed 15m candle t:
-  load candles and verify continuity
-  compute RSI7, MACD(12,26,9), ATR96%, RVOL96 using only closed candles
+ load candles and verify continuity
+ compute RSI7, MACD(12,26,9), ATR96%, RVOL96 using only closed candles
 
-  if current_position_exists:
-    maintain bracket / timeout / exchange reconciliation
-    return
+ if current_position_exists:
+  maintain bracket / timeout / exchange reconciliation
+  return
 
-  long_raw = RSI7[t] > 40 and RSI7[t-1] <= 40
-  short_raw = RSI7[t] < 60 and RSI7[t-1] >= 60
+ long_raw = RSI7[t] > 40 and RSI7[t-1] <= 40
+ short_raw = RSI7[t] < 60 and RSI7[t-1] >= 60
 
-  if long_raw:
-    side = +1
-  else if short_raw:
-    side = -1
-  else:
-    return no_signal
+ if long_raw:
+  side = +1
+ else if short_raw:
+  side = -1
+ else:
+  return no_signal
 
-  if not isfinite(macd_hist[t], atr_pct96[t], rvol96[t]):
-    return no_signal
+ if not isfinite(macd_hist[t], atr_pct96[t], rvol96[t]):
+  return no_signal
 
-  if side == +1 and macd_hist[t] < 0:
-    return no_signal
-  if side == -1 and macd_hist[t] > 0:
-    return no_signal
-  if atr_pct96[t] < 0.0075 or atr_pct96[t] > 0.028:
-    return no_signal
-  if rvol96[t] < 1.0:
-    return no_signal
+ if side == +1 and macd_hist[t] < 0:
+  return no_signal
+ if side == -1 and macd_hist[t] > 0:
+  return no_signal
+ if atr_pct96[t] < 0.0075 or atr_pct96[t] > 0.028:
+  return no_signal
+ if rvol96[t] < 1.0:
+  return no_signal
 
-  entry_price = current live fill price
-  tp_pct = atr_pct96[t] * 1.25
-  sl_pct = atr_pct96[t] * 5.0
-  target_price = entry_price * (1 + side * tp_pct)
-  stop_price = entry_price * (1 - side * sl_pct)
-  quantity = base_notional_usdt * 2.5 / entry_price
+ entry_price = current live fill price
+ tp_pct = atr_pct96[t] * 1.25
+ sl_pct = atr_pct96[t] * 5.0
+ target_price = entry_price * (1 + side * tp_pct)
+ stop_price = entry_price * (1 - side * sl_pct)
+ quantity = base_notional_usdt * 2.5 / entry_price
 
-  enter market
-  arm reduce-only target and stop-market orders
-  persist position state
+ enter market
+ arm reduce-only target and stop-market orders
+ persist position state
 ```
 
 ## 回测参考结果
@@ -465,7 +442,7 @@ for each newly closed 15m candle t:
 
 - 不得把 `enabled` 改为 `true` 并长期无人值守运行，除非已完成上述验收。
 - 不得把 `mode` 改为 `live`，除非另有独立 live-feasibility 审计记录批准。
-- 不得将 `V1.3` 口头简称为 “live 策略” 或 “paper-live 交接版”。
+- 不得将 `V1.3` 口头简称为 “live 策略” 或 “dry-run 交接版”。
 - 不得因为 runner 已经有代码实现，就绕过资金费、滑点、状态恢复和交易所对账。
 
 ## 证据入口

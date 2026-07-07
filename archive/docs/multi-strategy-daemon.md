@@ -26,12 +26,12 @@ Created: 2026-06-28
 
 合并模式：
 一个 strategy-daemon:
-  共享 Python 解释器
-  共享 pandas/numpy/ccxt
-  共享 Binance K线拉取
-  共享公共指标缓存
-  共享调度循环
-  每个策略只保留自己的参数、状态、信号、虚拟订单和统计
+ 共享 Python 解释器
+ 共享 pandas/numpy/ccxt
+ 共享 Binance K线拉取
+ 共享公共指标缓存
+ 共享调度循环
+ 每个策略只保留自己的参数、状态、信号、虚拟订单和统计
 ```
 
 如果 `50` 个策略都基于同一个交易所、同一个 symbol、同一个 timeframe 和类似指标，合并后是真有机会在小机器上跑起来的。
@@ -70,36 +70,36 @@ Created: 2026-06-28
 
 ```text
 MarketDataService
-  每 5m 拉一次 Binance HYPE K线
-  去重、连续性检查、闭合 K 判断
-  计算公共指标并缓存 feature frame
+ 每 5m 拉一次 Binance HYPE K线
+ 去重、连续性检查、闭合 K 判断
+ 计算公共指标并缓存 feature frame
 
 StrategyEngine
-  从配置加载 N 个策略
-  每个策略消费同一个 feature frame
-  输出 signal candidates
-  不直接下单
+ 从配置加载 N 个策略
+ 每个策略消费同一个 feature frame
+ 输出 signal candidates
+ 不直接下单
 
 PaperExecutionEngine
-  对每个策略做虚拟 TP/SL/timeout 成交
-  记录 virtual orders、virtual trades、MAE/MFE、原因
-  用 strategy_id 区分
+ 对每个策略做虚拟 TP/SL/timeout 成交
+ 记录 virtual orders、virtual trades、MAE/MFE、原因
+ 用 strategy_id 区分
 
 Portfolio / Risk Router
-  统一处理账户级约束
-  例如同一账户同一时间最多几笔仓位
-  处理策略优先级、互斥组、资金分配
+ 统一处理账户级约束
+ 例如同一账户同一时间最多几笔仓位
+ 处理策略优先级、互斥组、资金分配
 
 LiveExecutionEngine
-  只服务少量精选策略
-  负责真实订单、撤单、恢复、账本对账
-  不建议让 50 个候选同时真钱下单
+ 只服务少量精选策略
+ 负责真实订单、撤单、恢复、账本对账
+ 不建议让 50 个候选同时真钱下单
 
 Storage
-  event_log(strategy_id, event_type, payload_json)
-  signal_log(strategy_id, signal_ts, side, accepted, reject_reason)
-  virtual_trade_ledger(strategy_id, ...)
-  live_trade_ledger(strategy_id, ...)
+ event_log(strategy_id, event_type, payload_json)
+ signal_log(strategy_id, signal_ts, side, accepted, reject_reason)
+ virtual_trade_ledger(strategy_id, ...)
+ live_trade_ledger(strategy_id, ...)
 ```
 
 ## 运行形态
@@ -108,14 +108,14 @@ Storage
 
 ```text
 multi-strategy-dry-run-daemon
-  跑 20/50/100 个候选
-  只记录虚拟信号、虚拟成交和评分
-  可用 systemd timer 或常驻 daemon
+ 跑 20/50/100 个候选
+ 只记录虚拟信号、虚拟成交和评分
+ 可用 systemd timer 或常驻 daemon
 
 single/few-strategy-live-runner
-  只跑 1-3 个精选策略
-  负责真钱订单
-  保持状态机和事故面尽量简单
+ 只跑 1-3 个精选策略
+ 负责真钱订单
+ 保持状态机和事故面尽量简单
 ```
 
 这样可以同时观察很多策略，但真钱通道不被候选策略复杂度污染。

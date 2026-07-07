@@ -8,4 +8,4 @@
 
 ## 数据与执行口径
 
-TRX 合约研究遵循仓库的 data-quality-first、Binance 成本和 live-executable 审计规则。未经 locked OOS、成本/延迟压力、参数邻域、订单过滤器和生产状态机审计，不得标记为 candidate、paper-live、dry-run、handoff 或 live。
+TRX 合约研究遵循仓库的 data-quality-first、Binance 成本和 live-executable 审计规则。未经 locked OOS、成本/延迟压力、参数邻域、订单过滤器和生产状态机审计，不得标记为 candidate、dry-run、handoff 或 live。
