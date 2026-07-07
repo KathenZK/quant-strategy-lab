@@ -34,6 +34,7 @@
 | `HYPE-5M-MA-Pullback-Scalp` | - | `hype/5m-ma-pullback-scalp/` | Binance HYPEUSDT `5m` two-MA pullback/end-of-correction scalp with HH/HL or LL/LH structure and fixed brackets | Paper-audit candidates only |
 | `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `hype/5m-micro-scalp/` | Binance HYPEUSDT `5m` high-frequency micro-profit scalp search with immediate executable TP/SL brackets | Exploratory; relaxed-search paper-audit candidates only |
 | `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | `hype/5m-event-quality-scoring/` | Binance HYPEUSDT `5m` event-quality scoring over candidate events and seeded micro-scalp signals | Fixed seed-universe diagnostics only; V1 failed strict seed audit |
+| `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | `hype/15m-trend-breakout-multi-indicator-ensemble/` | Combination research of `HYPE-EMA-Trend-Breakout-V35` and `HYPE-15M-MII-V1.3` (sub-account portfolios and single-account V35-priority arbitration) | First combination diagnostic; NO-GO / not live-ready |
 
 ## 核心台账入口
 
@@ -107,6 +108,9 @@
   - Seeded V1 live-feasibility audit: `hype/5m-event-quality-scoring/diagnostics/hype-5m-seeded-v1-live-feasibility-2026-06-27.md`.
   - Seeded V1 strict seed audit: `hype/5m-event-quality-scoring/diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md`.
   - Current status: V1 failed strict anti-leakage seed generation; this family has no paper-live/live-ready candidate.
+- `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble`（`HYPE-15M-TB-MII-ENS`）: `hype/15m-trend-breakout-multi-indicator-ensemble/hype-15m-tb-mii-ens-core-ledger.md`
+  - `HYPE-EMA-Trend-Breakout-V35` + `HYPE-15M-MII-V1.3` 组合研究；双子账户组合与单账户 V35 优先仲裁两类结构。
+  - 首次组合回测：`hype/15m-trend-breakout-multi-indicator-ensemble/research-notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md`；状态 `first combination diagnostic / NO-GO / not live-ready`。
 - `HYPE-Candle-Count-Reversal`（`HYPE-CC`）: `hype/15m-candle-count-reversal/hype-cc-15m-milestone-comparison.md`
 - Repo rule mirrors:
   - `hype/15m-ema-crossover/research-notes/hype-ema-x-v15-v16-promoted-strategy-specs.md`
@@ -124,24 +128,24 @@
 
 ## BNB 单资产研究
 
-- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：`bnb/1h-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `1h` 两年多指标广搜；`BNB-1H-Adaptive-Regime-V1` 已登记为 `ema_pullback+wick_reject` diagnostic observation；`BNB-1H-Adaptive-Regime-V2` 已登记为 V1 clean-equivalent 版本，完成多窗口验证、V2 全参数消融（`27` 活动字段、`0` 可再删）与消融引导微调（tuned observation prefit `3.37x / -18.24% / 89.42%`、reused OOS `1.22x / -15.53% / 81.25%`、full `2.94x / -18.24% / 88.33%`）；locked OOS 属二次读取，当前 `NO-GO / not promoted / not live-ready`。
+- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：`bnb/1h-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `1h` 两年多指标广搜；`BNB-1H-Adaptive-Regime-V1` 已登记为 `ema_pullback+wick_reject` diagnostic observation；`BNB-1H-Adaptive-Regime-V2` 已登记为 V1 clean-equivalent 版本；`BNB-1H-Adaptive-Regime-V3` 已登记为 V2 消融引导微调版本，实际最大杠杆 `2.5x`，prefit `3.37x / -18.24% / 89.42%`、reused OOS `1.22x / -15.53% / 81.25%`、full `2.94x / -18.24% / 88.33%`；locked OOS 属二次读取，当前 `NO-GO / not promoted / not live-ready`。
 - `BNB-15M-Adaptive-Regime`（`BNB-15M-AR`）：`bnb/15m-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `15m` BNB 专属趋势延续、波动压缩突破、结构修复与 regime 过滤研究；当前 `active diagnostic research / not promoted / not live-ready`。
 
 ## Ethereum 单资产研究
 
-- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：`eth/1h-adaptive-regime/README.md`。Binance USD-M Futures `ETHUSDT` perpetual `1h` 两年多指标广搜；`ETH-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，`ETH-1H-Adaptive-Regime-V2` 已登记为 V1 clean tuned diagnostic observation，`ETH-1H-Adaptive-Regime-V2.1` 已登记为 high-win tuned diagnostic observation；V2.1 current full 达 `3.0277x / -19.55% / 87.50%`，但 reused holdout 为负且压力测试穿越回撤边界；当前 `NO-GO / not promoted / not live-ready`。
+- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：`eth/1h-adaptive-regime/README.md`。Binance USD-M Futures `ETHUSDT` perpetual `1h` 两年多指标广搜；`ETH-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，`ETH-1H-Adaptive-Regime-V2` 已登记为 V1 clean tuned diagnostic observation，`ETH-1H-Adaptive-Regime-V2.1` 已登记为 high-win tuned diagnostic observation，`ETH-1H-Adaptive-Regime-V3` 已登记为 27 参数 clean tuned diagnostic observation；V3 current full 达 `3.3084x / -15.70% / 95.65%`，但 reused holdout 仍为负；当前 `NO-GO / not promoted / not live-ready`。
 
 ## Solana 单资产研究
 
-- `SOL-1H-Adaptive-Regime`（`SOL-1H-AR`）：`sol/1h-adaptive-regime/README.md`。Binance USD-M Futures `SOLUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 locked OOS；`SOL-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，locked OOS 未通过 `10x / 50% / <20% DD` 硬门槛。V1 full ablation、clean interface 与 clean tune 报告已补齐；clean tune 样本内改善但 reused holdout/current full 回撤恶化，当前 `NO-GO / not promoted / not live-ready`。
+- `SOL-1H-Adaptive-Regime`（`SOL-1H-AR`）：`sol/1h-adaptive-regime/README.md`。Binance USD-M Futures `SOLUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；`SOL-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline；`SOL-1H-Adaptive-Regime-V2` 已登记为高胜率最佳观察值 diagnostic observation，full annual `2.07x`、DD `-17.41%`、win `93.91%`，但最近三个月 reused holdout annual `0.70x`、win `66.67%`，未达到 `10x / 80% / <20% DD`；当前 `NO-GO / not promoted / not live-ready`。
 
 ## TRON 单资产研究
 
-- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：`trx/1h-adaptive-regime/README.md`。Binance USD-M Futures `TRXUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 reused locked OOS；两阶段搜索与持续 regime 上界均为 `0` hard-gate 命中。`V1` 已登记为领先观察值 diagnostic baseline，`V2` 已登记为 clean 参数版本并完成 V2 全参数消融 `36/36`、one-at-a-time `211` 行、执行重放违规 `0`；V2 消融引导微调观察值已登记为 `V3`，current full 提升至 `5.686x annual / -17.17% DD / 92.47% win`，但 reused holdout 胜率 `77.78%`，不 promotion；V3 参数说明见 `trx/1h-adaptive-regime/canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`；当前 `NO-GO / not promoted / not live-ready`。
+- `TRX-1H-Adaptive-Regime`（`TRX-1H-AR`）：`trx/1h-adaptive-regime/README.md`。Binance USD-M Futures `TRXUSDT` perpetual `1h` 两年多指标自适应 regime 广搜；最近三个月 reused locked OOS；两阶段搜索与持续 regime 上界均为 `0` hard-gate 命中。`V1` 已登记为领先观察值 diagnostic baseline，`V2` 已登记为 clean 参数版本并完成 V2 全参数消融 `36/36`、one-at-a-time `211` 行、执行重放违规 `0`；V2 消融引导微调观察值已登记为 `V3`，current full 提升至 `5.686x annual / -17.17% DD / 92.47% win`，但 reused holdout 胜率 `77.78%`，不 promotion；V3 参数说明见 `trx/1h-adaptive-regime/canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`；V3 全参数消融 `36/36` prefit 严格改善 `0`，`5` 个 dormant 字段固定后的 `31` 槽 clean 面微调亦无三指标同收命中，V3 为局部最优；当前 `NO-GO / not promoted / not live-ready`。
 
 ## Bitcoin 单资产研究
 
-- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline；`BTC-1H-Adaptive-Regime-V2` 已登记为 V1 clean scaled frontier paper-audit observation；`BTC-1H-Adaptive-Regime-V3` 已登记为 V2 micro-tune diagnostic observation，并已完成全参数消融、多窗口回测、参数必要性审计与最小表面微调（判定冻结邻域局部最优）；等待新增 forward trades，尚未 live-ready。
+- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline；`BTC-1H-Adaptive-Regime-V2` 已登记为 V1 clean scaled frontier paper-audit observation；`BTC-1H-Adaptive-Regime-V3` 已登记为 V2 micro-tune diagnostic observation；`BTC-1H-Adaptive-Regime-V4` 已登记为 V3 的 `19` 参数最小等价干净版本，并已完成多窗口回测；等待新增 forward trades，尚未 live-ready。
 
 ## 核心研究方向
 
@@ -185,6 +189,7 @@
 - If a document path contains `5m-ma-pullback-scalp`, use `HYPE-5M-MA-Pullback-Scalp`.
 - If a document path contains `5m-micro-scalp`, use `HYPE-5M-Micro-Scalp` and optionally note alias `HYPE-5M-MS`.
 - If a document path contains `5m-event-quality-scoring`, use `HYPE-5M-Event-Quality-Scoring` and optionally note alias `HYPE-5M-EQS`.
+- If a document path contains `15m-trend-breakout-multi-indicator-ensemble`, use `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` and optionally note alias `HYPE-15M-TB-MII-ENS`.
 - If a document lives under `archive/`, treat it as historical evidence, not the current entrypoint.
 
 ## 研究目录约定

@@ -97,13 +97,30 @@ V2 逐笔执行重放覆盖 warmup 后 merged `107` 笔交易（full 指标窗�
 
 执行复核：逐笔重放违规 `0`，merged 违规 `0`；stop gap/open 按 open 成交 `10` 次，target gap 以 target 价记账 `0` 次。V3 满足本次提出的 current full 收益更高、win `>=80%`、DD `<20%` 目标，但 reused holdout 胜率仅 `77.78%`，且无新增 forward trades 与 production runner，因此 V3 只是 diagnostic registered version，不 promotion。
 
+## V3 全参数消融与 clean 参数面
+
+2026-07-07 对 V3 对外暴露的 `36/36` 个参数槽完成 one-at-a-time 全参数消融，行数 `215`（含 baseline），coverage missing `0`，prefit 严格改善行 `0`（V3 在单字段方向上已是局部最优）。V3 逐笔执行重放违规 `0`，merged 违规 `0`。
+
+按 merged 交易路径识别出 `5` 个 dormant（无作用）字段并固定为 V3 值，从可调参数面移除：
+
+- `macd_flip`：`ema_htf`、`max_atr_bps`、`max_hold_bars`、`require_macd_turn`。
+- `stoch_reversal`：`ema_htf`。
+
+V3 clean 参数面保留 `31` 个可调槽（MACD `15`、Stochastic `16`），`trx_1h_ar_v3_clean.py` 已确认 clean 面与 V3 逐交易路径完全一致。
+
+## V3 clean 参数面微调（no-hit）
+
+2026-07-07 在 V3 clean 参数面上做随机邻域微调（1-5 字段变更），选择只使用 train/validation/prefit，硬约束要求 prefit 年化、胜率、回撤同时严格优于 V3（`7.3305x / 94.05% / -17.17%`）。首轮 seed `20260707` 评估 `3,420` 个唯一候选，独立 seed `99120707` 追加验证 `9,111` 个，三指标同时改善命中均为 `0`。
+
+单指标改善候选存在（annual `114`、win `145`、DD `719`），但 annual+win 仅 `1`、annual+DD 仅 `1`、三者同收 `0`——收益与胜率/回撤在此参数面上形成明确 trade-off。结论：V3 参数保持不变，本轮为 no-hit 诊断，未产生新版本。
+
 ## 版本表
 
 | Version | Status | Metrics | Evidence | Live readiness |
 | --- | --- | --- | --- | --- |
 | `TRX-1H-Adaptive-Regime-V1` | registered diagnostic baseline / not promoted | full `4.077x annual / -19.84% DD / 86.54% win / 104 trades`; reused holdout `0.844x annual / -4.12% return / -11.42% DD / 75.00% win / 8 trades` | `canonical-specs/trx-1h-ar-v1-baseline-spec.md`; `artifacts/trx_1h_ar_v1_config_2026-07-05.json` | `NO-GO / not live-ready` |
 | `TRX-1H-Adaptive-Regime-V2` | registered clean parameter version / V1 trade-path equivalent / not promoted | same trade path as V1; V2 full parameter ablation coverage `36/36`; one-at-a-time rows `211`; prefit strict improve `8`; recent slices `1m -10.12%`, `3m -4.12%`, `6m +12.80%`, `1y +45.18%`; execution replay violations `0` | `artifacts/trx_1h_ar_v2_config_2026-07-06.json`; `ablations/trx-1h-ar-v2-full-parameter-ablation-2026-07-06.md`; `artifacts/trx_1h_ar_v2_full_ablation_2026-07-06.json` | `NO-GO / not live-ready` |
-| `TRX-1H-Adaptive-Regime-V3` | registered V2 ablation-guided tuned diagnostic version / not promoted | current full `5.686x annual / +2503.89% return / -17.17% DD / 92.47% win / 93 trades`; reused holdout `1.083x annual / +2.02% return / -15.23% DD / 77.78% win / 9 trades`; last `1y +191.14% / -15.71% DD / 91.84% win / 49 trades`; execution replay violations `0` | `canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`; `artifacts/trx_1h_ar_v3_config_2026-07-06.json`; `research-notes/trx-1h-ar-v2-ablation-guided-tune-2026-07-06.md`; `artifacts/trx_1h_ar_v2_ablation_guided_tune_2026-07-06.json` | `NO-GO / not live-ready` |
+| `TRX-1H-Adaptive-Regime-V3` | registered V2 ablation-guided tuned diagnostic version / full ablation complete / clean-surface tune no-hit / not promoted | current full `5.686x annual / +2503.89% return / -17.17% DD / 92.47% win / 93 trades`; reused holdout `1.083x annual / +2.02% return / -15.23% DD / 77.78% win / 9 trades`; V3 full ablation coverage `36/36`, rows `215`, prefit strict improve `0`; clean surface `31` tunable + `5` dormant fixed; clean tune `12,531` unique candidates, triple-improve hits `0`; execution replay violations `0` | `canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`; `artifacts/trx_1h_ar_v3_config_2026-07-06.json`; `ablations/trx-1h-ar-v3-full-parameter-ablation-2026-07-07.md`; `artifacts/trx_1h_ar_v3_clean_config_2026-07-07.json`; `research-notes/trx-1h-ar-v3-clean-tune-2026-07-07.md` | `NO-GO / not live-ready` |
 
 ## Promotion 边界
 

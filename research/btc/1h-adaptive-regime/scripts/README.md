@@ -15,5 +15,7 @@
 - `research_btc_1h_ar_v3_window_backtest.py`：V3 canonical/recent/calendar/half-year/monthly 多时间窗口回测。
 - `research_btc_1h_ar_v3_param_necessity.py`：V3 参数必要性审计；中和非必要槽位并验证与 V3 逐笔路径等价。
 - `research_btc_1h_ar_v3_minimal_micro_tune.py`：V3 最小等价表面（19 必要参数、杠杆冻结）受约束微调。
+- `btc_1h_ar_v4.py`：`BTC-1H-Adaptive-Regime-V4` 最小等价干净参数复现入口；强制验证与 V3 逐笔等价。
+- `research_btc_1h_ar_v4_window_backtest.py`：V4 canonical/recent/calendar/half-year/monthly 多时间窗口回测。
 
 这些 wrapper 固定校验被复用引擎的 SHA-256；依赖脚本漂移时 fail closed，避免静默改变历史复现结果。

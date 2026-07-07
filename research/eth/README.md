@@ -4,7 +4,7 @@
 
 ## 当前研究线
 
-- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：Binance USD-M Futures `ETHUSDT` perpetual `1h` 多指标自适应 regime 家族；V1 已登记为 diagnostic baseline，V2 已登记为 clean tuned diagnostic observation，V2.1 已登记为 high-win tuned diagnostic observation；V2.1 current full 达 `3.0277x / -19.55% / 87.50%`，但 reused holdout 为负且压力测试穿越回撤边界；当前 `NO-GO / not promoted / not live-ready`。
+- `ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）：Binance USD-M Futures `ETHUSDT` perpetual `1h` 多指标自适应 regime 家族；V1 已登记为 diagnostic baseline，V2 已登记为 clean tuned diagnostic observation，V2.1 已登记为 high-win tuned diagnostic observation，V3 已登记为 27 参数 clean tuned diagnostic observation；V3 current full 达 `3.3084x / -15.70% / 95.65%`，但 reused holdout 仍为负；当前 `NO-GO / not promoted / not live-ready`。
 
 ## 数据与执行口径
 

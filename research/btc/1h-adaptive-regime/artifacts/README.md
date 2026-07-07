@@ -55,3 +55,10 @@
 - `btc_1h_ar_v3_minimal_micro_tune_2026-07-07.json`
 - `btc_1h_ar_v3_minimal_micro_tune_grid_2026-07-07.csv`
 - `btc_1h_ar_v3_minimal_micro_tune_selected_trades_2026-07-07.csv`
+
+2026-07-07 V4 最小等价干净参数与多窗口回测证据：
+
+- `btc_1h_ar_v4_config_2026-07-07.json`
+- `btc_1h_ar_v4_window_backtest_2026-07-07.json`
+- `btc_1h_ar_v4_window_backtest_windows_2026-07-07.csv`
+- `btc_1h_ar_v4_window_backtest_trades_2026-07-07.csv`

@@ -77,7 +77,7 @@
 - 覆盖两条腿全部 `78/78` 个 `StrategyConfig` 字段槽，生成 `205` 行 baseline/variant 证据，coverage missing `0`；字段分类沿用 V1/V2：`27` active tunable、`12` contract fixed、`35` baseline fixed、`4` neutral fixed。
 - 相对 V3 基线，同时满足 prefit 年化更高、回撤更小、train/validation/prefit 胜率均 `>=80%`、train/validation 同正且 validation DD<20% 的 one-at-a-time 严格改善行数为 `0`。
 - 多窗口回测显示：recent 90d `1.9134x / +17.34% / -17.47% / 81.82% / 11`；recent 30d `1.2931x / +2.13% / -17.47% / 75.00% / 4`；recent 7d 无交易；2026 YTD `3.9017x / +97.37% / -17.47% / 84.00% / 25`。
-- 决策：记录为 V3 敏感性与时间稳定性诊断，不做组合搜索，不登记 V3.1/V4，不标记 candidate/paper-live/live-ready。证据见 `ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md`、`research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md`、`artifacts/btc_1h_ar_v3_full_ablation_2026-07-06.json` 与 `artifacts/btc_1h_ar_v3_window_backtest_2026-07-06.json`。
+- 决策：记录为 V3 敏感性与时间稳定性诊断，不做组合搜索；原“不登记 V3.1/V4”的诊断口径后续已被用户指令覆盖，但不标记 candidate/paper-live/live-ready。证据见 `ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md`、`research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md`、`artifacts/btc_1h_ar_v3_full_ablation_2026-07-06.json` 与 `artifacts/btc_1h_ar_v3_window_backtest_2026-07-06.json`。
 
 ## 2026-07-07 — V3 参数必要性审计与最小表面微调
 
@@ -86,4 +86,12 @@
 - 在最小表面上执行受约束微调：两腿杠杆冻结为 V3 值（Keltner `2.4x`、CCI `3.5x`），只触碰必要参数；选参只读取 train/validation/prefit，附加 train/validation 胜率 `>=80%`、回撤 `<20%`、同正约束；reused holdout 不参与选参。
 - 结果：腿级变体 Keltner `486`、CCI `1,728`，组合网格 `24,576` 组。严格三项改善（prefit 年化更高、回撤更小、胜率更高）命中 `0` 组；Pareto 口径（年化严格更高、回撤与胜率不劣）`8` 组。
 - 首选观察 `BTC-1H-AR-V3-MINIMAL-MICRO-TUNE-2026-07-07`：CCI `max_hold_bars 72->96`、`max_dist_ema_bps 750->700`，prefit `6.2430x / -12.87% / 87.30%`（vs V3 `6.1574x`），reused holdout `1.8998x / -17.47% / 81.82%` 与 V3 完全相同，current full `5.3303x / -17.47% / 86.49%`。
-- 决策：改善幅度约 `+1.4%` 年化倍率、回撤与胜率无变化，属噪声级别；V3 在其冻结邻域判定为局部最优。不登记 V3.1/V4，不改变 `diagnostic observation / not live-ready`。证据见 `research-notes/btc-1h-ar-v3-param-necessity-2026-07-07.md`、`research-notes/btc-1h-ar-v3-minimal-micro-tune-2026-07-07.md`、`artifacts/btc_1h_ar_v3_param_necessity_2026-07-07.json` 与 `artifacts/btc_1h_ar_v3_minimal_micro_tune_2026-07-07.json`。
+- 决策：改善幅度约 `+1.4%` 年化倍率、回撤与胜率无变化，属噪声级别；V3 在其冻结邻域判定为局部最优。该“最小等价表面不登记新版本”的诊断口径后续已被用户要求登记 V4 覆盖；不改变 `diagnostic observation / not live-ready`。证据见 `research-notes/btc-1h-ar-v3-param-necessity-2026-07-07.md`、`research-notes/btc-1h-ar-v3-minimal-micro-tune-2026-07-07.md`、`artifacts/btc_1h_ar_v3_param_necessity_2026-07-07.json` 与 `artifacts/btc_1h_ar_v3_minimal_micro_tune_2026-07-07.json`。
+
+## 2026-07-07 — 按用户要求登记 V4 并分时间片回测
+
+- 将 V3 参数必要性审计得到的 `19` 参数最小等价表面正式登记为 `BTC-1H-Adaptive-Regime-V4`。
+- V4 身份固定为 V3 minimal-equivalent clean observation：Keltner 保留 `8` 个必要参数，CCI 保留 `11` 个必要参数；`8` 个非必要槽位以中和值固定。脚本强制校验 V4 与 V3 逐笔交易签名完全一致。
+- V4 指标与 V3 完全一致：prefit `6.1574x / -12.87% / 87.30%`；reused holdout `1.8998x / -17.47% / 81.82%`；current full `5.2669x / -17.47% / 86.49%`。
+- 分时间片回测：recent 7d 无交易；recent 30d `1.2931x / +2.13% / -17.47% / 75.00% / 4`；recent 90d `1.9134x / +17.34% / -17.47% / 81.82% / 11`；2025 全年 `4.4421x / +343.75% / -11.04% / 88.24% / 34`；2026 YTD `3.9017x / +97.37% / -17.47% / 84.00% / 25`。
+- 决策：V4 登记只固定“参数干净版”身份，不是新增 OOS 或收益证据；不标记 candidate/paper-live/live-ready。证据见 `artifacts/btc_1h_ar_v4_config_2026-07-07.json`、`research-notes/btc-1h-ar-v4-window-backtest-2026-07-07.md`、`artifacts/btc_1h_ar_v4_window_backtest_2026-07-07.json`。

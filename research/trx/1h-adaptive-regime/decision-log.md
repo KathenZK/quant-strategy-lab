@@ -78,3 +78,13 @@
 - 新增 `canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`，逐项列出 V3 全部 `36` 个参数、作用、V2/V3 参数值和变化含义。
 - V3 相比 V2：不再与 V1/V2 逐交易等价；MACD leg 更快 HTF、更窄 ADX/ATR、放宽 MACD turn 与 EMA 距离、杠杆提高到 `5x`；Stochastic leg 从 long-only 改为 both，使用更慢 EMA 参考、严格 ADX、较宽 trailing、较短 cooldown 和 `2h` 入场延迟。
 - 决策：`V3` 为 registered diagnostic tuned version。current full 满足收益更高、win `>80%`、DD `<20%`，但 reused holdout 胜率 `77.78%`，且缺 fresh forward OOS 与 production runner，仍为 `NO-GO / not promoted / not live-ready`。
+
+## 2026-07-07：V3 全参数消融、clean 参数面与微调（no-hit）
+
+- 按用户要求，对 V3 做全参数消融，移除无作用参数生成干净参数面，并在干净面上微调，目标为收益更高、胜率更高、回撤更小。
+- V3 全参数消融覆盖 `36/36` 个对外参数槽，one-at-a-time 行数 `215`（含 baseline），coverage missing `0`；prefit 严格改善行 `0`，即没有任何单字段方向能在不恶化胜率/回撤的前提下提高 prefit 年化。
+- 按 merged 交易路径识别 `5` 个 dormant 字段并固定为 V3 值：`macd_flip` 的 `ema_htf`、`max_atr_bps`、`max_hold_bars`、`require_macd_turn` 与 `stoch_reversal` 的 `ema_htf`。新增 `scripts/trx_1h_ar_v3_clean.py`，确认 clean 面（`31` 个可调槽）与 V3 逐交易路径完全一致，输出 `artifacts/trx_1h_ar_v3_clean_config_2026-07-07.json`。
+- V3 基线逐笔执行重放违规 `0`，merged 违规 `0`；stop gap 按 open 成交 `10` 次，target gap 乐观穿越 `0` 次。
+- clean 面微调：随机邻域 1-5 字段变更，选择只使用 train/validation/prefit，硬约束要求 prefit 年化、胜率、回撤同时严格优于 V3（`7.3305x / 94.05% / -17.17%`）。seed `20260707` 评估 `3,420` 个唯一候选 + 独立 seed `99120707` 追加 `9,111` 个，三指标同时改善命中 `0`。
+- 单指标改善存在（annual `114`、win `145`、DD `719`），但 annual+win 仅 `1`、annual+DD 仅 `1`、三者同收 `0`；收益与胜率/回撤形成明确 trade-off。
+- 决策：本轮为 no-hit 诊断结论，V3 参数保持不变，不产生 `V3.1`/`V4`；家族状态保持 `NO-GO / not promoted / not live-ready`。

@@ -8,6 +8,9 @@
 - `trx_1h_ar_v1.py`：正式登记的 `TRX-1H-Adaptive-Regime-V1` 基线实现与配置导出。
 - `trx_1h_ar_v2.py`：正式登记的 `TRX-1H-Adaptive-Regime-V2` clean 参数实现；校验与 V1 逐交易路径完全一致。
 - `trx_1h_ar_v3.py`：正式登记的 `TRX-1H-Adaptive-Regime-V3` 微调参数实现；校验 V3 指标与 V2 消融引导微调观察值一致并导出配置。
+- `trx_1h_ar_v3_clean.py`：V3 clean 参数面实现（`31` 可调槽 + `5` dormant 固定字段）；校验与 V3 逐交易路径完全一致并导出 clean config。
+- `research_trx_1h_ar_v3_full_ablation.py`：覆盖 V3 对外参数槽 `36/36` 的 one-at-a-time 全参数消融、dormant 字段识别、标准分片和逐笔成交重放。
+- `research_trx_1h_ar_v3_clean_tune.py`：在 V3 clean 参数面上的随机邻域微调；只用 train/validation/prefit 选参，要求 prefit 三指标同时严格优于 V3（本轮 no-hit）。
 - `research_trx_1h_ar_v1_full_ablation.py`：覆盖 V1 两个组件全部 `StrategyConfig` 字段槽，生成 V2 clean 参数面的删参证据。
 - `research_trx_1h_ar_v2_full_ablation.py`：覆盖 V2 对外暴露 clean 参数槽 `36/36`，输出 one-at-a-time 全参数消融、标准分片和逐笔成交重放。
 - `research_trx_1h_ar_v2_ablation_guided_tune.py`：基于 V2 消融结果与 clean-surface pair pool 做 train/validation/prefit-only 微调，并输出冻结后 holdout、标准分片和执行审计。
@@ -16,4 +19,4 @@
 
 统一从仓库根目录使用 `uv run python ...` 运行。
 
-复现顺序：fetch → broad search → refine → persistent boundary → live feasibility → V1 config → V1 full ablation → V2 config → V2 full ablation → V2 ablation-guided tune → V3 config → recent adaptation search。所有搜索脚本的默认 seed、搜索规模和输出路径均已冻结在源码中。
+复现顺序：fetch → broad search → refine → persistent boundary → live feasibility → V1 config → V1 full ablation → V2 config → V2 full ablation → V2 ablation-guided tune → V3 config → V3 full ablation → V3 clean config → V3 clean tune → recent adaptation search。所有搜索脚本的默认 seed、搜索规模和输出路径均已冻结在源码中。

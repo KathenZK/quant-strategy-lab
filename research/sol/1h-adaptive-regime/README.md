@@ -16,13 +16,15 @@
 
 ## 当前状态
 
-`SOL-1H-Adaptive-Regime-V1 registered diagnostic baseline / NO-GO / not promoted / not live-ready`。
+`SOL-1H-Adaptive-Regime-V2 registered diagnostic observation / NO-GO / not promoted / not live-ready`。
 
 `V1` 是 2026-07-03 百万组广搜按 prefit 规则冻结的最终基线：`donchian_break + bb_revert` ensemble（`ENS__SOL_1H_AR_R594184__SOL_1H_AR_R736318`）。它的登记只用于固定诊断边界，不代表候选或交接。
 
 广搜结论为 `NO-GO`：finalists `700`，prefit pass `0`，locked target pass `0`；最佳冻结 V1 full annual `2.18x`、DD `-18.86%`、win `76.60%`，但最近三个月 locked OOS annual `0.71x`、return `-8.09%`、DD `-16.19%`、win `50.00%`、trades `8`，未通过 `10x / 50% / <20% DD` 硬门槛。
 
 V1 clean tune 只形成未登记观察值：prefit annual `5.7104x`、DD `-18.81%`、win `85.71%`，但 reused holdout annual `0.1607x`、DD `-42.87%`，current full DD `-42.87%`。该观察不创建 `V1.1/V2`，也不改变 `NO-GO` 结论。
+
+2026-07-07 高胜率硬目标（`10x / 80% / <20% DD`）重新搜索：`600768` configs、评估 `370589`，prefit pass `0`，reused-holdout target pass `0`，结论仍为 `NO-GO`。最佳观察值已登记为 `SOL-1H-Adaptive-Regime-V2`：`donchian_break + vwap_revert` ensemble，full annual `2.07x`、DD `-17.41%`、win `93.91%`；last `1y` annual `1.60x`、win `92.31%`；但最近三个月 reused holdout annual `0.70x`、return `-8.53%`、win `66.67%`。V2 只固定高胜率观察参数，不构成新鲜 OOS 证据或 promotion。
 
 本家族目前没有 production runner；在新增 forward trades、完整 live-executable 审计和生产状态机证据前，不得标记为 candidate、paper-live、dry-run、handoff 或 live。
 
@@ -40,4 +42,7 @@ V1 clean tune 只形成未登记观察值：prefit annual `5.7104x`、DD `-18.81
 - `research-notes/sol-1h-ar-v1-clean-interface-2026-07-03.md`：V1 clean interface 等价报告；原始 `78` 个字段槽收敛为 `40` 个 clean tunable 字段槽，逐笔交易签名相等。
 - `scripts/research_sol_1h_ar_v1_clean_tune.py`：只在 clean surface 上做 train/validation/prefit 微调，并前置 K+2 与 8 bps 稳健性筛选。
 - `research-notes/sol-1h-ar-v1-clean-parameter-tune-2026-07-03.md`：V1 clean 参数微调报告；样本内/prefit 改善但 reused holdout 与 current full 回撤恶化，只能作为 diagnostic observation。
+- `scripts/research_sol_1h_ar_high_win_target_search.py`：`10x / 80% / <20% DD` 高胜率硬目标搜索；选择只用 train/validation，reused holdout 仅审计。
+- `diagnostics/sol-1h-ar-high-win-target-search-2026-07-07.md`：高胜率硬目标搜索报告；`0` 硬门槛命中，结论 `NO-GO`。
+- `canonical-specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`：`SOL-1H-Adaptive-Regime-V2` 参数规格；记录 `donchian_break + vwap_revert` 双腿 ensemble 的完整配置和 promotion 边界。
 - `artifacts/`：Parquet、JSON、CSV 等可复现证据；默认由 `.gitignore` 忽略。

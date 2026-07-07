@@ -4,7 +4,7 @@
 
 ## 当前研究线
 
-- `SOL-1H-Adaptive-Regime`（`SOL-1H-AR`）：Binance USD-M Futures `SOLUSDT` perpetual `1h` 多指标自适应 regime 研究；`SOL-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，最近三个月 locked OOS 未通过硬门槛，V1 full ablation、clean interface 与 clean tune 报告已补齐。clean tune 样本内改善但 reused holdout/current full 回撤恶化，当前仍为 `NO-GO / not promoted / not live-ready`。
+- `SOL-1H-Adaptive-Regime`（`SOL-1H-AR`）：Binance USD-M Futures `SOLUSDT` perpetual `1h` 多指标自适应 regime 研究；`SOL-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline，`SOL-1H-Adaptive-Regime-V2` 已登记为高胜率最佳观察值 diagnostic observation。V2 full annual `2.07x`、DD `-17.41%`、win `93.91%`，但最近三个月 reused holdout annual `0.70x`、win `66.67%`，且未达到 `10x / 80% / <20% DD` 硬目标；当前仍为 `NO-GO / not promoted / not live-ready`。
 
 ## 数据与执行口径
 

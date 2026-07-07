@@ -74,5 +74,14 @@
 - 在 V2 上做 prefit-only 微调：leg 级采样（`ema_pullback` `2000`、`wick_reject` `1600`），每侧 top `40` 组成 `1600` 个 ensemble；gate 要求相对 V2 prefit 同时做到收益更高、回撤更小、胜率更高，通过 `168` 个。
 - 首选组合（按 prefit score 唯一选出后才复用 OOS 一次）：`ema_pullback` 改 `ema_slow=144`、trailing 出场（activation `2.0`、trail `1.5` ATR）、`max_hold=240`、`cooldown=12`、`2.5x`；`wick_reject` 改 `threshold 0.40/0.75`、`min_adx=28`、`max_hold=48`、`1.0x`。
 - 结果：prefit `3.37x / -18.24% DD / 89.42% win / 104 trades`；reused locked OOS 观察值 `1.22x / -15.53% DD / 81.25% win / 16 trades`；full `2.94x / -18.24% DD / 88.33% win / 120 trades`；实际最大暴露 `2.5x`。
-- 三个维度均优于 V2（收益 `1.87x -> 2.94x`、回撤 `-22.86% -> -18.24%`、胜率 `84.25% -> 88.33%`），但 locked OOS 为二次读取，只能作为 tuned observation；未登记版本，不 promotion。
+- 三个维度均优于 V2（收益 `1.87x -> 2.94x`、回撤 `-22.86% -> -18.24%`、胜率 `84.25% -> 88.33%`），但 locked OOS 为二次读取，只能作为 tuned observation；后续按用户要求登记为 V3，不 promotion。
 - 证据见 `research-notes/bnb-1h-ar-v2-micro-tune-2026-07-07.md`。
+
+## 2026-07-07：登记 `BNB-1H-Adaptive-Regime-V3`
+
+- 按用户要求，将 V2 消融引导微调首选组合登记为 `BNB-1H-Adaptive-Regime-V3`。
+- V3 状态为 `tuned diagnostic observation / not promoted / not live-ready`；不是 candidate、paper-live、dry-run、handoff 或 live。
+- 当前实际最大杠杆为 `2.5x`：`ema_pullback` 固定 `2.5x`，`wick_reject` 固定 `1.0x`，单仓 merge 后组合最大暴露为 `2.5x`。
+- 参数规格已逐项解释：`canonical-specs/bnb-1h-ar-v3-parameter-spec-2026-07-07.md`。
+- 指标登记为 prefit `3.37x / -18.24% DD / 89.42% win / 104 trades`，reused locked OOS `1.22x / -15.53% DD / 81.25% win / 16 trades`，full `2.94x / -18.24% DD / 88.33% win / 120 trades`。
+- Promotion 边界不变：OOS 为 reused observation，必须等待未读 forward 数据或重新冻结流程，才能讨论 candidate/live-readiness。

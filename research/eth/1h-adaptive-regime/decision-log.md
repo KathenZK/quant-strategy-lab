@@ -55,3 +55,11 @@
 - 该 observation prefit `3.7853x / -14.98% / 91.67% / 36 trades`，current full `3.0277x / -19.55% / 87.50% / 40 trades`，满足本轮“收益更高、胜率 80% 以上、回撤 20% 以下”的 current-full 形状。
 - 近期失败解释：reused holdout 只有 `4` 笔，全部来自 `BB_BREAK` 多头；`2026-04-11` stop-market 亏 `-11.65%` equity，`2026-05-23` timeout 亏 `-6.26%` equity，两笔盈利仅 `+4.07%` 与 `+6.34%`，导致近三个月总收益为负且胜率只有 `50%`。
 - 失败边界：reused holdout `0.7048x / -19.55% / 50.00% / 4 trades` 仍为负；K+2 prefit DD `-20.34%`，double-cost full DD `-21.40%`。因此 V2.1 不 promotion，不生成 live spec。
+
+## 2026-07-07：登记 ETH-1H-Adaptive-Regime-V3
+
+- V2.1 全参数消融覆盖两腿 `29/29` 个 clean 参数槽，one-at-a-time 行数（含 baseline）`140`；单字段相对 V2.1“收益更高、胜率更高、回撤更小”的严格改善行为 `0`。
+- 判定 `bb_break.ema_htf` 与 `bb_break.max_aligned_funding_bps` 为 merged-path inert（domain 内所有变体逐笔路径与 V2.1 完全相同），硬编码为冻结值；clean surface 收敛到 `27` 个可调参数，`scripts/eth_1h_ar_v2_1_clean.py` fail-closed 校验与 V2.1 逐笔等价。
+- 在 27 参数干净面上微调：每腿随机 `100,000` 组，保留 `400 + 400`，组合评估 `160,000`，可评分 `128,759`；严格改善组合 `5` 个，经 K+2/8 bps 稳健排序后冻结 `ETH-1H-AR-V2-1-CLEAN-TUNE-2026-07-07`，并按用户要求登记为 `ETH-1H-Adaptive-Regime-V3`。
+- 冻结 observation：prefit `4.0591x / -12.15% / 100.00% / 42 trades`，current full `3.3084x / -15.70% / 95.65% / 46 trades`；相对 V2.1 收益更高、胜率更高、回撤更小，冻结后 current full 三项同时改善。
+- 失败边界：reused holdout `0.8706x / -15.70% / 50.00% / 4 trades`，亏损从 V2.1 的 `-8.35%` 收敛到 `-3.39%` 但仍为负；K+2 下 prefit 退化为 `2.7964x / -16.66% / 90.24%`、holdout 胜率 `25%`；近三个月分片仍为负。登记结论为 `registered diagnostic clean tuned observation / NO-GO / not promoted / not live-ready`，不生成 live spec。

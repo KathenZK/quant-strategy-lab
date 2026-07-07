@@ -10,3 +10,4 @@
 - `sol_1h_ar_v1_full_ablation_*_2026-07-03.*`：V1 全参数消融摘要、逐行结果和字段分类。
 - `sol_1h_ar_v1_clean_config_2026-07-03.json`：V1 clean interface 与逐笔等价校验摘要。
 - `sol_1h_ar_v1_clean_tune_2026-07-03.json`、`sol_1h_ar_v1_tune_*_2026-07-03.csv`：clean surface 微调观察与交易路径；不自动形成新版本。
+- `sol_1h_ar_high_win_*_2026-07-07.*`：`10x / 80% / <20% DD` 高胜率硬目标搜索摘要、prefit 排名、finalists、时间切片和最佳观察交易路径。

@@ -100,6 +100,12 @@ V2.1 的登记只冻结可复现身份，不代表 candidate、paper-live、dry-
 - V2.1 微调报告：`../research-notes/eth-1h-ar-v2-ablation-guided-tune-2026-07-06.md`。
 - 交易明细：`../artifacts/eth_1h_ar_v2_ablation_guided_tune_trades_2026-07-06.csv`。
 
+## 登记后消融与微调
+
+- V2.1 全参数消融：`../ablations/eth-1h-ar-v2-1-full-parameter-ablation-2026-07-07.md`；`bb_break.ema_htf` 与 `bb_break.max_aligned_funding_bps` 判定为 merged-path inert，clean surface 收敛到 `27` 个可调参数。
+- V2.1 clean 微调：`../research-notes/eth-1h-ar-v2-1-clean-tune-2026-07-07.md`；observation `ETH-1H-AR-V2-1-CLEAN-TUNE-2026-07-07` 后续按用户要求登记为 `ETH-1H-Adaptive-Regime-V3`，其 prefit 为 `4.0591x / -12.15% / 100.00% / 42`、current full `3.3084x / -15.70% / 95.65% / 46`，三项均优于 V2.1，但 reused holdout 仍为负（`0.8706x / -3.39%`），不 promotion。
+- V3 参数说明：`eth-1h-ar-v3-clean-tuned-spec-2026-07-07.md`。V3 不修改本 V2.1 canonical spec。
+
 ## 登记结论
 
 `ETH-1H-Adaptive-Regime-V2.1` 登记为 high-win tuned diagnostic observation。它满足 current-full 的高胜率形状，但近期 reused holdout、近期分片、成本/延迟压力均显示不可 promotion；下一步必须等待冻结 V2.1 参数后的新增 forward trades。

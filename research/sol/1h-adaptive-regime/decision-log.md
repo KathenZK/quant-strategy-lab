@@ -25,3 +25,19 @@
 - V1 clean interface 报告：`research-notes/sol-1h-ar-v1-clean-interface-2026-07-03.md`；原始 `78` 个字段槽收敛为 `40` 个 clean tunable 字段槽，逐笔交易签名与 V1 相等。
 - V1 clean tune 报告：`research-notes/sol-1h-ar-v1-clean-parameter-tune-2026-07-03.md`；每腿随机样本 `250000`，组合评估 `160000`，K+2/8 bps prefit 稳健候选 `395`。
 - clean tune 只能作为 diagnostic observation；prefit annual `5.7104x`、DD `-18.81%`、win `85.71%`，但 reused holdout annual `0.1607x`、DD `-42.87%`、win `0.00%`，current full DD `-42.87%`，不能登记为 `V1.1/V2`，也不能 promotion。
+
+## 2026-07-07：高胜率硬目标（10x / 80% / <20% DD）重新搜索，结论 NO-GO
+
+- 应用户要求以更严格目标重新搜参：年化权益倍率 `>=10.0x`、胜率 `>=80%`、最大回撤严格小于 `20%`；打分函数向高胜率倾斜（win-rate 奖励封顶 `90%`，低于 `80%` 罚分）。
+- 数据沿用 V1 冻结研究帧（`2024-07-03` 至 `2026-07-03`，17520 根闭合 K）；最近三个月已在 2026-07-03 V1 广搜揭盲，本轮按 reused holdout 处理，选择只用 train/validation。
+- 覆盖 `600768` 个 configs（curated `768` + random `600000`），评估 `370589`，prefit eligible `141925`；prefit pass `0`，reused-holdout target pass `0`，last-1y 硬形状命中 `0`。结论 `NO-GO / not promoted / not live-ready`。
+- 最佳冻结 finalist `ENS__SOL_1H_AR_HW_R132002__SOL_1H_AR_HW_R243705`（`donchian_break + vwap_revert` ensemble）：full annual `2.07x`、DD `-17.41%`、win `93.91%`、trades `115`；last-1y annual `1.60x`、win `92.31%`；但 reused holdout annual `0.70x`、return `-8.53%`、win `66.67%`。
+- 诊断含义：在本机制面和成本口径下，胜率 `>=80%` 与 DD `<20%` 可以同时达到，约束瓶颈是年化 `>=10x`——最好观察值离目标差约 5 倍，且最近三个月持续走弱。
+- 报告：`diagnostics/sol-1h-ar-high-win-target-search-2026-07-07.md`；脚本：`scripts/research_sol_1h_ar_high_win_target_search.py`；产物：`artifacts/sol_1h_ar_high_win_*_2026-07-07.*`。
+
+## 2026-07-07：按用户要求将高胜率最佳观察值登记为 V2
+
+- 将 `ENS__SOL_1H_AR_HW_R132002__SOL_1H_AR_HW_R243705` 登记为 `SOL-1H-Adaptive-Regime-V2`。
+- V2 机制：`donchian_break + vwap_revert` 双腿 ensemble；完整参数规格见 `canonical-specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`。
+- V2 指标：full annual `2.07x`、return `290.00%`、DD `-17.41%`、win `93.91%`、trades `115`；last `1y` annual `1.60x`、win `92.31%`；reused holdout annual `0.70x`、return `-8.53%`、DD `-15.69%`、win `66.67%`、trades `6`。
+- V2 状态：`registered diagnostic observation / NO-GO / not promoted / not live-ready`。登记 V2 只固定高胜率观察参数，不代表 candidate、paper-live、dry-run、handoff 或 live。
