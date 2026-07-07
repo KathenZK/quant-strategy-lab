@@ -147,6 +147,10 @@ V3 全参数消融：`ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.
 
 V3 多窗口回测：`research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md` 复用 V3 冻结参数，不引入新增 forward 数据。recent 90d 为 `1.91x / +17.34% / -17.47% / 81.82% / 11`，recent 30d 为 `1.29x / +2.13% / -17.47% / 75.00% / 4`，recent 7d 无交易；2026 YTD 为 `3.90x / +97.37% / -17.47% / 84.00% / 25`。这些窗口只用于风险画像，不能视为新鲜 OOS。
 
+V3 参数必要性审计（2026-07-07）：`research-notes/btc-1h-ar-v3-param-necessity-2026-07-07.md` 对 `27` 个 clean active 槽位逐项中和验证。`8` 个槽位在 V3 冻结值下从不生效（Keltner `max_atr_bps`/`min_dir_roc_bps`/`roc_window`/`max_aligned_funding_bps`/`max_hold_bars`/`cooldown_bars=0`，CCI `max_atr_bps`/`cooldown_bars=0`），移除后与 V3 逐笔交易签名完全一致。最小等价表面为 `19` 个必要参数（Keltner `8`、CCI `11`），指标与 V3 逐字节相同，不构成新版本。
+
+V3 最小表面微调（2026-07-07）：`research-notes/btc-1h-ar-v3-minimal-micro-tune-2026-07-07.md` 在 19 参数最小表面上做受约束网格（杠杆冻结为 V3 值）。腿级变体 Keltner `486`、CCI `1,728`，组合 `24,576` 组：没有组合能同时严格提升 prefit 年化、回撤、胜率三项；Pareto 口径（年化更高、回撤与胜率不劣）仅 `8` 组，首选 prefit `6.24x / -12.87% / 87.30%`（vs V3 `6.16x`，改善约 `+1.4%`，来自 CCI `max_hold_bars 72->96`、`max_dist_ema_bps 750->700`），reused holdout 与 V3 完全相同。结论：V3 在其冻结邻域是局部最优，微调收益属噪声级别，不登记 V3.1/V4，不改变 `not live-ready`。
+
 ## Promotion 门槛
 
 必须同时通过：最近三个月 locked OOS、年化权益倍率 `>=10.0x`、胜率 `>=50%`、最大回撤 `<20%`、K+2/成本压力、参数邻域、时间切片、bootstrap、订单时序、保护单、重启恢复、missing-bar fail-closed、交易所对账和 kill switch 审计。

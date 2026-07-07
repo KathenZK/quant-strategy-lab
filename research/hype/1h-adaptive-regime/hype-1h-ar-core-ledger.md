@@ -10,14 +10,14 @@ Created：2026-07-02
 
 `HYPE-1H-Adaptive-Regime` 是 Binance USD-M Futures `HYPEUSDT` perpetual `1h` 自适应市场状态研究线。它独立于 `HYPE-15M-Multi-Indicator-Intraday`、`HYPE-EMA-Crossover`、`HYPE-EMA-Trend-Breakout`、`HYPE-5M-Pullback-Trail` 和其他 HYPE 家族。
 
-本台账中的 `V1`、`V2`、`V3` 只在 `HYPE-1H-Adaptive-Regime` 家族内有效。裸版本号不具有策略身份。
+本台账中的 `V1`、`V2`、`V3`、`V4` 只在 `HYPE-1H-Adaptive-Regime` 家族内有效。裸版本号不具有策略身份。
 
 ## 当前状态
 
-- 当前登记版本：`HYPE-1H-Adaptive-Regime-V3`。
-- 当前状态：`diagnostic baseline / NO-GO / not live-ready / not promoted`。
+- 当前登记版本：`HYPE-1H-Adaptive-Regime-V4`。
+- 当前状态：`diagnostic pruned tuned baseline / NO-GO / not live-ready / not promoted`。
 - 家族实盘判断：`NO-GO`。
-- 原因：V3 base current full 明显强于 V2，但 reused holdout 年化仍低于 `10.0x`，K+2/更高滑点压力下回撤穿越 `20%`，且没有生产 runner、重启恢复、交易所订单/仓位对账、missing-bar fail-closed、kill switch 和真实 stop-market 滑点证据。
+- 原因：V4 比 V3 更干净且 base current full / reused holdout 明显更强，但 K+2 与 8 bps/fill 压力下最大回撤仍穿越 `20%`，且没有生产 runner、重启恢复、交易所订单/仓位对账、missing-bar fail-closed、kill switch 和真实 stop-market 滑点证据。
 
 ## 数据与成本口径
 
@@ -39,6 +39,7 @@ Created：2026-07-02
 | `HYPE-1H-Adaptive-Regime-V1` | 第一版正式登记基线，来自 `DI-cross + Stoch-reversal` 最强冻结边界；不是 live/paper-live/dry-run/candidate/handoff。 |
 | `HYPE-1H-Adaptive-Regime-V2` | V1 全字段消融后的干净等价版本，删除 dormant 或固定状态机字段；DI、Stoch 和 merged 逐笔交易签名与 V1 完全一致；不是 promotion。 |
 | `HYPE-1H-Adaptive-Regime-V3` | V2 消融引导组合 `di_roc_off__stoch_th55` 的登记版；base K+1 明显增强，但 K+2/8bps 压力仍失败，不是 promotion。 |
+| `HYPE-1H-Adaptive-Regime-V4` | V3 剪枝后 prefit 三场景微调的登记版；参数槽从 `34` 降至 `25`，base K+1 显著强于 V3，但 K+2/8bps 回撤仍超 `20%`。 |
 | 后续版本 | 只有在冻结参数、保留数据质量证据、完成 live-executable 审计并写入本主账后，才可登记为新的 `Vx`；高年化但压力失败的 tune 只能记录为 rejected diagnostic。 |
 
 ## 版本台账
@@ -48,8 +49,9 @@ Created：2026-07-02
 | `HYPE-1H-Adaptive-Regime-V1` | diagnostic baseline / NO-GO / not live-ready | `DI-cross` 趋势腿 + `Stoch-reversal` 反转腿，闭合 K 信号、K+1 open 入场；DI fixed ATR bracket，Stoch ATR trailing；固定权益名义仓位，DI 优先合并单仓。 | `canonical-specs/hype-1h-ar-v1-baseline-spec.md`；`ablations/hype-1h-ar-v1-full-parameter-ablation-2026-07-02.md`；`diagnostics/hype-1h-adaptive-regime-boundary-audit-2026-07-01.md` | Current full `9.6838x`、`-19.64%` 最大回撤、`78.26%` 胜率、`69` 笔；reused holdout `5.1305x`。未达 `10.0x` 硬门槛，压力测试缺缓冲，维持 `NO-GO`。 |
 | `HYPE-1H-Adaptive-Regime-V2` | clean equivalent diagnostic baseline / NO-GO / not live-ready | 保留 V1 两条腿真实生效参数，删除 `40` 个 dormant 或固定状态机字段槽；策略行为与 V1 完全相同。 | `canonical-specs/hype-1h-ar-v2-clean-baseline-spec.md`；`ablations/hype-1h-ar-v2-full-parameter-ablation-2026-07-02.md`；`research-notes/hype-1h-ar-v2-active-parameter-tune-2026-07-02.md`；`diagnostics/hype-1h-ar-v2-tune-frontier-live-audit-2026-07-02.md`；`research-notes/hype-1h-ar-v2-live-robust-prefit-tune-2026-07-02.md`；`research-notes/hype-1h-ar-v2-window-backtest-2026-07-02.md` | 与 V1 逐笔等价，current full 仍为 `9.6838x / -19.64% / 78.26% / 69 trades`。V2 clean `34` 字段槽全参数消融中，完整 current full + reused holdout target-like 通过 `0` 行；普通微调 `19,600` 组与扩大稳健预拟合 `640,000` 组均未形成更优实盘版本，维持 `NO-GO`。 |
 | `HYPE-1H-Adaptive-Regime-V3` | diagnostic baseline / NO-GO / not live-ready | V2 消融引导组合：DI 关闭方向化 ROC 下限过滤（`min_dir_roc_bps=-10000`），Stoch 将 `threshold_high` 从 `60` 收紧到 `55`。 | `canonical-specs/hype-1h-ar-v3-baseline-spec.md`；`research-notes/hype-1h-ar-v2-ablation-combo-retest-2026-07-06.md`；`ablations/hype-1h-ar-v3-full-parameter-ablation-2026-07-06.md` | Current full `15.0530x / -19.11% / 79.73% / 74 trades`；reused holdout `9.0300x / -19.11% / 76.47% / 17 trades`，仍低于 `10x` 硬门槛；K+2 current full `3.0574x / -31.93%`，8bps current full `9.4070x / -28.40%`，维持 `NO-GO`。 |
+| `HYPE-1H-Adaptive-Regime-V4` | diagnostic pruned tuned baseline / NO-GO / not live-ready | V3 剪枝后 `25` 参数槽微调：DI `min_adx=10`、`require_body_dir=false`、`sl_atr=4.5`；Stoch `min_adx=0`、`max_atr_bps=500`、`macd_slow=55`、`cooldown_bars=36`，并保留 `threshold_high=55`。 | `canonical-specs/hype-1h-ar-v4-pruned-tuned-baseline-spec.md`；`research-notes/hype-1h-ar-v3-prune-and-tune-2026-07-07.md` | Current full `22.8128x / -19.11% / 81.08% / 74 trades`；reused holdout `13.0662x / -19.11%`。但 K+2 current full `8.7014x / -23.56%`，8bps current full `15.3677x / -22.46%`，仍不 promotion。 |
 
-## V1 / V2 / V3 冻结指标
+## V1 / V2 / V3 / V4 冻结指标
 
 | Window | Annual multiple | Annual return | Max DD | Win rate | Trades | PF |
 | --- | ---: | ---: | ---: | ---: | ---: | ---: |
@@ -59,6 +61,8 @@ Created：2026-07-02
 | V3 Prefit | `17.4864x` | `+1648.64%` | `-16.93%` | `80.70%` | `57` | `8.288` |
 | V3 Reused holdout | `9.0300x` | `+803.00%` | `-19.11%` | `76.47%` | `17` | `5.521` |
 | V3 Current full | `15.0530x` | `+1405.30%` | `-19.11%` | `79.73%` | `74` | `7.549` |
+| V4 Reused holdout | `13.0662x` | `+1206.62%` | `-19.11%` | `77.78%` | `18` | `6.272` |
+| V4 Current full | `22.8128x` | `+2181.28%` | `-19.11%` | `81.08%` | `74` | `9.722` |
 
 V1 与 V2 的 DI component trade signature、Stoch component trade signature、merged trade signature 均为 exact equal。
 
@@ -112,6 +116,20 @@ V1 与 V2 的 DI component trade signature、Stoch component trade signature、m
 - 滚动 `30d` 切片 `11/11` 正收益，交易数中位数 `6`；滚动 `7d` 切片 `50` 个中 `9` 个零交易窗口。
 
 这些结果说明 V3 在 base 口径和时间片形状上优于 V2，但仍未修复延迟/滑点压力失败；不改变 `NO-GO / not live-ready` 状态。
+
+## V3 参数剪枝与预拟合微调
+
+`research-notes/hype-1h-ar-v3-prune-and-tune-2026-07-07.md` 验证了 V3 的 `34` 个字段槽中 `9` 个在当前数据上 dormant，可整体移除且逐笔交易路径与 V3 exact equal（DI、Stoch、merged 三层签名一致）：
+
+- DI 移除：`ema_htf`、`max_adx`、`roc_window`、`min_dir_roc_bps`、`max_dist_ema_bps`、`max_aligned_funding_bps`。
+- Stoch 移除：`ema_htf`、`max_dist_ema_bps`；`sl_atr` 固化为 `4.0` 安全兜底（3-6 ATR 变体全 path-equal，从未触发）。
+- 剪枝后剩 `25` 个字段槽（DI `9` + Stoch `16`）。
+
+剪枝后微调只用 prefit 选参（DI 网格 `972` × Stoch 网格 `6,144`，单腿达标取 top，组合 `169` 个，前 `17` 名跑 K+1/K+2/8bps 三场景 prefit 稳健排名，冻结前 `5` 名后揭示）：
+
+- 冻结最佳组合 base K+1 current full `22.8128x / -19.11% / 81.08% / 74 trades`，reused holdout `13.0662x / -19.11%`，三项都优于 V3。
+- 但同一组合 K+2 current full `8.7014x / -23.56%`，8bps current full `15.3677x / -22.46%`，回撤仍穿越 `20%`。
+- 结论：剪枝方向成立，已按用户要求登记为 V4 diagnostic baseline；它不是 promotion，不改变 `NO-GO / not live-ready`。
 
 ## V1 机制摘要
 

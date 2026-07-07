@@ -78,3 +78,12 @@
 - 相对 V3 基线，同时满足 prefit 年化更高、回撤更小、train/validation/prefit 胜率均 `>=80%`、train/validation 同正且 validation DD<20% 的 one-at-a-time 严格改善行数为 `0`。
 - 多窗口回测显示：recent 90d `1.9134x / +17.34% / -17.47% / 81.82% / 11`；recent 30d `1.2931x / +2.13% / -17.47% / 75.00% / 4`；recent 7d 无交易；2026 YTD `3.9017x / +97.37% / -17.47% / 84.00% / 25`。
 - 决策：记录为 V3 敏感性与时间稳定性诊断，不做组合搜索，不登记 V3.1/V4，不标记 candidate/paper-live/live-ready。证据见 `ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md`、`research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md`、`artifacts/btc_1h_ar_v3_full_ablation_2026-07-06.json` 与 `artifacts/btc_1h_ar_v3_window_backtest_2026-07-06.json`。
+
+## 2026-07-07 — V3 参数必要性审计与最小表面微调
+
+- 基于 V3 全消融的路径等价证据，对 `27` 个 clean active 槽位逐项中和验证（贪心累积 + 逐笔交易签名比对）。
+- `8` 个槽位在 V3 冻结值下从不生效并被移除：Keltner `max_atr_bps=200`、`min_dir_roc_bps=-200`、`roc_window=24`（依附方向 ROC 过滤）、`max_aligned_funding_bps=4.0`、`max_hold_bars=240`、`cooldown_bars=0`，CCI `max_atr_bps=600`、`cooldown_bars=0`。最小等价表面为 `19` 个必要参数，逐笔路径与 V3 完全一致。
+- 在最小表面上执行受约束微调：两腿杠杆冻结为 V3 值（Keltner `2.4x`、CCI `3.5x`），只触碰必要参数；选参只读取 train/validation/prefit，附加 train/validation 胜率 `>=80%`、回撤 `<20%`、同正约束；reused holdout 不参与选参。
+- 结果：腿级变体 Keltner `486`、CCI `1,728`，组合网格 `24,576` 组。严格三项改善（prefit 年化更高、回撤更小、胜率更高）命中 `0` 组；Pareto 口径（年化严格更高、回撤与胜率不劣）`8` 组。
+- 首选观察 `BTC-1H-AR-V3-MINIMAL-MICRO-TUNE-2026-07-07`：CCI `max_hold_bars 72->96`、`max_dist_ema_bps 750->700`，prefit `6.2430x / -12.87% / 87.30%`（vs V3 `6.1574x`），reused holdout `1.8998x / -17.47% / 81.82%` 与 V3 完全相同，current full `5.3303x / -17.47% / 86.49%`。
+- 决策：改善幅度约 `+1.4%` 年化倍率、回撤与胜率无变化，属噪声级别；V3 在其冻结邻域判定为局部最优。不登记 V3.1/V4，不改变 `diagnostic observation / not live-ready`。证据见 `research-notes/btc-1h-ar-v3-param-necessity-2026-07-07.md`、`research-notes/btc-1h-ar-v3-minimal-micro-tune-2026-07-07.md`、`artifacts/btc_1h_ar_v3_param_necessity_2026-07-07.json` 与 `artifacts/btc_1h_ar_v3_minimal_micro_tune_2026-07-07.json`。

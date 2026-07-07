@@ -263,3 +263,20 @@
 | RSI/MACD 判断 | RSI 比 MACD 更适合 HYPE 的回踩策略：RSI 控制买点质量，MACD 只适合宽松过滤大方向；过强 MACD 过滤会错过核心反弹。 |
 | 纯趋势判断 | 1h 是最适合做纯趋势主信号的周期；4h 更适合做过滤；15m 更适合执行和风控。 |
 | 后续版本规则 | 后续如果在 V1 回踩族上加 overlay，就命名为 V1F/V1G；如果在 V2 突破族上调风控或方向，按用户指定命名继续；只有出现第三种核心机制才启用 V3。 |
+
+## 2026-07-07 V35 浮盈保护线诊断
+
+线上 `HYPE-EMA-TB-V35` 出现一类问题：单笔最高浮盈已接近 `5ATR` 止盈，但因 `mfe_atr >= 1.5` 后永久关闭 ADX 指标退出，ADX 变弱不会触发退出，利润可能回吐。为此测试分阶段 `profit floor`：
+
+- `mfe_atr >= 1.5`：保护到覆盖开/平成本的近保本价。
+- `mfe_atr >= 3.0`：锁定约 `1.5 ATR`。
+- `mfe_atr >= 4.0`：锁定约 `2.5 ATR`。
+- 原始 `5ATR` 止盈、`7ATR` 硬止损保留；保护线只向有利方向移动。
+
+诊断结论：不直接合入 V35 主策略。Binance API 补充窗口（`2025-05-30 10:30 UTC` 至 `2026-07-07 07:15 UTC`）显示，profit floor 对最近 `7d/1m` 有小幅改善（`7d +9.94% -> +11.00%`，`1m +23.40% -> +29.94%`），但全样本收益从 `+8360.80%` 降到 `+898.31%`，Sharpe 从 `4.75` 降到 `3.18`，最大回撤从 `-23.46%` 加深到 `-26.72%`，交易数从 `108` 增到 `213`，其中 `profit_floor` 退出 `142` 次。该保护线会把大量本应打到 `5ATR` 的趋势单截断，并在 `cooldown_bars=0` 下造成频繁重进和成本翻倍。
+
+证据：`research-notes/hype-ema-tb-v35-profit-floor-diagnostic-2026-07-07.md`；复现脚本：`scripts/research_hype_ema_tb_v35_profit_floor.py`；保留产物：`artifacts/hype_ema_tb_v35_profit_floor_binance_api_2026-07-07.json`。
+
+### 同日第二轮：窄口径 profit floor 找到可用解
+
+把启动线收窄后结论反转：只在 `mfe_atr >= 4.75` 启动、锁 `4.25 ATR`（`floor_475_lock425`）得 full `+7053.02% / -23.46% / Sharpe 4.60`，保留 base（`+8360.80% / -23.46% / 4.75`）的 84% 收益且 maxDD 完全不变；`mfe >= 4.9` 锁 `4.4 ATR`（`floor_49_lock44`）保留 95%（`+7972.54% / Sharpe 4.72`），但覆盖不到当前实盘这单的 `4.86 ATR` 峰值。结构性依据：base 中 `mfe >= 4.5` 的 41 笔样本内全部打到 TP，窄口径 floor 在样本内只付出小额“保险费”（floor 单均比对应 TP 单少约 1.7pp），防护对象是样本外的高浮盈回吐。启动线 `<= 4.5` 的所有档位、floor 退出后 16 根冷却、直接把 TP 收紧到 4.75 全部劣化明显，均否决。两个窄口径变体为 diagnostic 观察候选，未 promotion、未 live-ready；上线前需补 live-executable 审计（收盘后上移 STOP_MARKET 触发价的改单路径）。证据：`research-notes/hype-ema-tb-v35-narrow-profit-floor-2026-07-07.md`；产物：`artifacts/hype_ema_tb_v35_profit_floor_variants_binance_api_2026-07-07.json`。

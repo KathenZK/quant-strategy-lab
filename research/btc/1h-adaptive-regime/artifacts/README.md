@@ -48,3 +48,10 @@
 - `btc_1h_ar_v3_window_backtest_2026-07-06.json`
 - `btc_1h_ar_v3_window_backtest_windows_2026-07-06.csv`
 - `btc_1h_ar_v3_window_backtest_trades_2026-07-06.csv`
+
+2026-07-07 V3 参数必要性审计与最小表面微调证据：
+
+- `btc_1h_ar_v3_param_necessity_2026-07-07.json`
+- `btc_1h_ar_v3_minimal_micro_tune_2026-07-07.json`
+- `btc_1h_ar_v3_minimal_micro_tune_grid_2026-07-07.csv`
+- `btc_1h_ar_v3_minimal_micro_tune_selected_trades_2026-07-07.csv`

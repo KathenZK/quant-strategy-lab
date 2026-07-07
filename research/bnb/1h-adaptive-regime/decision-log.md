@@ -31,3 +31,48 @@
 - 对 2026-07-06 rerun primary 做 3x cap 重放：train `2.42x / -14.58% DD / 91.26% win`，validation `2.52x / -13.74% DD / 92.11% win`。
 - locked OOS 仍为 `0.44x / -28.30% DD / 75.00% win / 4 trades`；full 为 `1.95x / -28.30% DD / 91.03% win / 145 trades`。
 - 结论：3x cap 降低尾部亏损，但仍未通过 `20%` 回撤 hard gate；未来搜索必须硬性约束 `max_leverage <= 3.0`，并继续降低单笔权益风险。证据见 `diagnostics/bnb-1h-ar-rerun-cap3-replay-2026-07-06.md`。
+
+## 2026-07-06：cap3 高胜率趋势/反转搜索未通过 locked OOS
+
+- 按用户要求重新寻找趋势或反转策略，约束最大杠杆 `<=3x`，诊断目标为高收益、最大回撤不超过 `20%`、胜率约 `80%`。
+- 本轮为 `500,000` random + `250,000` neighbors；first-pass evaluated `208,885`、neighbor evaluated `198,447`；first/neighbors 单策略 prefit pass 均为 `0`，最终通过趋势+反转 ensemble 得到唯一冻结 primary。
+- 冻结 primary 为 `ENS__BNB_1H_CAP3_HW_N0501751__BNB_1H_CAP3_HW_N0663797`，机制为趋势 `ema_pullback` + 反转 `wick_reject`，实际最大暴露 `2x`。
+- prefit 命中诊断目标：`2.20x annual / -18.66% DD / 87.04% win / 108 trades`。
+- locked OOS 失败：`0.64x annual / -22.86% DD / 68.42% win / 19 trades`；full 也为 `1.87x annual / -22.86% DD / 84.25% win / 127 trades`，回撤略穿 `20%` 上限且收益低于 `2x` 诊断目标。
+- 结论：存在样本内接近用户偏好的趋势+反转形态，但未通过 locked OOS，不得登记为 candidate、paper-live 或 live；证据见 `diagnostics/bnb-1h-ar-cap3-highwin-search-2026-07-06-cap3-highwin.md`。
+
+## 2026-07-06：登记 `BNB-1H-Adaptive-Regime-V1`
+
+- 按用户要求，将 `ema_pullback + wick_reject` cap3 high-win primary 登记为 `BNB-1H-Adaptive-Regime-V1`。
+- V1 状态为 `diagnostic observation baseline / not promoted / not live-ready`；它只是样本内观察形态，不是 candidate。
+- 参数规格见 `canonical-specs/bnb-1h-ar-v1-parameter-spec-2026-07-06.md`；后续全参数消融只允许删除交易路径完全不变的 no-op 参数，或另行登记 clean diagnostic version。
+
+## 2026-07-06：V1 全参数消融与 clean spec
+
+- 完成 `BNB-1H-Adaptive-Regime-V1` 全参数消融，共 `60` 个消融 row；baseline 仍为 prefit `2.20x / -18.66% DD / 87.04% win`、locked OOS `0.64x / -22.86% DD / 68.42% win`、full `1.87x / -22.86% DD / 84.25% win`。
+- 识别出 `32` 个交易路径完全不变的 no-op 字段；已整理为等价 clean spec：`canonical-specs/bnb-1h-ar-v1-clean-parameter-spec-2026-07-06.md`。
+- `ema_pullback.ema_slow` 与 `wick_reject.sl_atr` 的单项替换在样本内不差但改变交易路径，不能作为 V1 clean 直接采用；如继续研究需另行冻结。
+- 结论不变：V1 clean 只删除无用参数，不修复 locked OOS 失败，不 promotion；证据见 `ablations/bnb-1h-ar-v1-full-parameter-ablation-2026-07-06.md`。
+
+## 2026-07-07：登记 `BNB-1H-Adaptive-Regime-V2` 并完成多窗口验证
+
+- 按用户要求，将 V1 clean 参数版本落成可执行定义 `scripts/bnb_1h_ar_v2.py` 并登记为 `BNB-1H-Adaptive-Regime-V2`。
+- no-op 字段固定为 V1 消融验证的 neutral 值；逐笔重放确认 V2 与 V1 trade signature 完全相等，指标原样继承。
+- 多时间窗口回测已落盘：train/validation/prefit/locked OOS/full、8 个 90d block、last `1d/7d/1m/3m/6m/1y`（锚定数据集末端 `2026-07-03T06:00Z`，数据未刷新）。
+- 分片显示亏损集中在 `block_90d_04`（2025-05 至 2025-08，`-8.09%`）与 locked OOS（last_3m `0.64x / -22.86% DD / 68.42% win`）；其余 block 均为正。
+- V2 状态：`clean-equivalent diagnostic observation / not promoted / not live-ready`；证据见 `research-notes/bnb-1h-ar-v2-multiwindow-backtest-2026-07-07.md`。
+
+## 2026-07-07：V2 全参数消融
+
+- 对 V2 全部 `29` 个受检字段做 one-at-a-time 域扫描（`122` rows，含 component removal 与 exit_kind 联动变体）。
+- 结果：`27` 个字段 active、`2` 个为执行时序参数（`entry_delay_bars`）、`0` 个可再移除。V2 已是最小活动参数集，本轮没有新的无效参数可删。
+- 消融给出 `8` 个 prefit-only 改进方向（如 `ema_pullback` trailing 出场、`ema_slow=144`、`min_rvol=0.8`、`wick_reject.threshold_high=0.75/0.80`），作为微调搜索输入；这些变体改变交易路径，不构成 V2 变更。
+- 证据见 `ablations/bnb-1h-ar-v2-full-parameter-ablation-2026-07-07.md`。
+
+## 2026-07-07：V2 消融引导微调找到更优观察值
+
+- 在 V2 上做 prefit-only 微调：leg 级采样（`ema_pullback` `2000`、`wick_reject` `1600`），每侧 top `40` 组成 `1600` 个 ensemble；gate 要求相对 V2 prefit 同时做到收益更高、回撤更小、胜率更高，通过 `168` 个。
+- 首选组合（按 prefit score 唯一选出后才复用 OOS 一次）：`ema_pullback` 改 `ema_slow=144`、trailing 出场（activation `2.0`、trail `1.5` ATR）、`max_hold=240`、`cooldown=12`、`2.5x`；`wick_reject` 改 `threshold 0.40/0.75`、`min_adx=28`、`max_hold=48`、`1.0x`。
+- 结果：prefit `3.37x / -18.24% DD / 89.42% win / 104 trades`；reused locked OOS 观察值 `1.22x / -15.53% DD / 81.25% win / 16 trades`；full `2.94x / -18.24% DD / 88.33% win / 120 trades`；实际最大暴露 `2.5x`。
+- 三个维度均优于 V2（收益 `1.87x -> 2.94x`、回撤 `-22.86% -> -18.24%`、胜率 `84.25% -> 88.33%`），但 locked OOS 为二次读取，只能作为 tuned observation；未登记版本，不 promotion。
+- 证据见 `research-notes/bnb-1h-ar-v2-micro-tune-2026-07-07.md`。

@@ -52,6 +52,7 @@
   - `HYPE-1H-Adaptive-Regime-V1`: frozen `DI-cross + Stoch-reversal` diagnostic baseline; `NO-GO / not live-ready`.
   - `HYPE-1H-Adaptive-Regime-V2`: clean-equivalent baseline after full-field ablation; behavior equals V1; `NO-GO / not live-ready`.
   - `HYPE-1H-Adaptive-Regime-V3`: `di_roc_off__stoch_th55` diagnostic baseline; stronger base K+1 but fails reused-holdout/stress promotion gates; `NO-GO / not live-ready`.
+  - `HYPE-1H-Adaptive-Regime-V4`: pruned tuned diagnostic baseline with `25` parameter slots; stronger base/reused-holdout but K+2/8bps drawdown still fails; `NO-GO / not live-ready`.
 - `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`）: `hype/15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md`
   - Independent Binance HYPEUSDT `15m` broad multi-indicator intraday research line.
   - It is not a version of `HYPE-EMA-Crossover`, `HYPE-EMA-Trend-Breakout`, or `HYPE-Candle-Count-Reversal`.
@@ -123,7 +124,7 @@
 
 ## BNB 单资产研究
 
-- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：`bnb/1h-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `1h` 两年多指标广搜；最近三个月 locked OOS；2026-07-03 完整搜索与 2026-07-06 趋势/反转 rerun 均未通过 hard gate；当前 `NO-GO / not promoted / not live-ready`。
+- `BNB-1H-Adaptive-Regime`（`BNB-1H-AR`）：`bnb/1h-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `1h` 两年多指标广搜；`BNB-1H-Adaptive-Regime-V1` 已登记为 `ema_pullback+wick_reject` diagnostic observation，并完成全参数消融/clean spec；locked OOS 未通过，当前 `NO-GO / not promoted / not live-ready`。
 - `BNB-15M-Adaptive-Regime`（`BNB-15M-AR`）：`bnb/15m-adaptive-regime/README.md`。Binance USD-M Futures `BNBUSDT` perpetual `15m` BNB 专属趋势延续、波动压缩突破、结构修复与 regime 过滤研究；当前 `active diagnostic research / not promoted / not live-ready`。
 
 ## Ethereum 单资产研究
@@ -140,7 +141,7 @@
 
 ## Bitcoin 单资产研究
 
-- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline；`BTC-1H-Adaptive-Regime-V2` 已登记为 V1 clean scaled frontier paper-audit observation；`BTC-1H-Adaptive-Regime-V3` 已登记为 V2 micro-tune diagnostic observation，并已完成全参数消融与多窗口回测；等待新增 forward trades，尚未 live-ready。
+- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：`btc/1h-adaptive-regime/README.md`。`BTC-1H-Adaptive-Regime-V1` 已登记为 diagnostic baseline；`BTC-1H-Adaptive-Regime-V2` 已登记为 V1 clean scaled frontier paper-audit observation；`BTC-1H-Adaptive-Regime-V3` 已登记为 V2 micro-tune diagnostic observation，并已完成全参数消融、多窗口回测、参数必要性审计与最小表面微调（判定冻结邻域局部最优）；等待新增 forward trades，尚未 live-ready。
 
 ## 核心研究方向
 

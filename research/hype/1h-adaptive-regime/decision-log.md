@@ -45,3 +45,19 @@
 - 同一组合在 K+2 压力下 current full 为 `3.0574x / -31.93%`；在 `8 bps/fill` 下为 `9.4070x / -28.40%`。因此它不是 promotion，不可标记为 live、paper-live、dry-run、candidate 或 handoff。
 - 按用户要求，将 `di_roc_off__stoch_th55` 正式登记为 `HYPE-1H-Adaptive-Regime-V3` diagnostic baseline，并创建 `canonical-specs/hype-1h-ar-v3-baseline-spec.md` 与主账条目。
 - V3 全参数消融覆盖 clean 配置接口 `34` 个字段槽，输出 `98` 行，coverage missing fields 为 `0`；current full 严格改善行 `9`，基础 target-like 行 `5`。这些仍只作诊断，未完成 K+2/滑点/生产 runner/forward trades promotion 证据。
+
+## 2026-07-07：V3 参数剪枝验证与预拟合微调
+
+- 依据 V3 全参数消融的 path-equal 证据，移除 `9` 个 dormant 字段槽（DI：`ema_htf`、`max_adx`、`roc_window`、`min_dir_roc_bps`、`max_dist_ema_bps`、`max_aligned_funding_bps`；Stoch：`ema_htf`、`max_dist_ema_bps`、`sl_atr` 固化 `4.0`），并验证剪枝后 DI、Stoch、merged 三层逐笔签名与 V3 exact equal。
+- 剪枝后 `25` 个字段槽只用 prefit 微调：单腿网格 DI `972`、Stoch `6,144`；prefit 达标 DI `354`、Stoch `1,056`；top 组合 `169` 个，前 `17` 名执行 K+1/K+2/8bps 三场景 prefit 稳健排名，冻结前 `5` 名后才揭示 reused holdout 与 current full。
+- 冻结第一名（DI `min_adx=10`、`require_body_dir=false`、`sl_atr=4.5`；Stoch `min_adx=0`、`max_atr_bps=500`、`macd_slow=55`、`cooldown_bars=36`）base K+1 current full `22.8128x / -19.11% / 81.08%`，reused holdout `13.0662x / -19.11%`，收益、回撤、胜率三项都不差于 V3。
+- 但 K+2 下 current full `8.7014x / -23.56%`，8bps 下 `15.3677x / -22.46%`，回撤仍穿越 `20%` 硬门槛。
+- 决策：剪枝结论可作为后续 clean 接口基础；微调组合记为 tuned diagnostic，不登记 promotion，家族维持 `NO-GO / not live-ready`。
+
+## 2026-07-07：按用户要求登记 V4 并补充参数解释
+
+- 按用户要求，将 V3 剪枝后微调的最佳等价组合 `di_cross_00205__stoch_reversal_05554` 登记为 `HYPE-1H-Adaptive-Regime-V4` diagnostic pruned tuned baseline。
+- 选择 `stoch_reversal_05554` 而不是同指标的 `stoch_reversal_04786`，是为了保留 V3 的 `threshold_high=55`，少改一个参数，降低额外过拟合风险。
+- V4 参数字段槽从 V3 的 `34` 个降至 `25` 个：DI `9` 个、Stoch `16` 个。新增 `canonical-specs/hype-1h-ar-v4-pruned-tuned-baseline-spec.md`，逐项解释全部参数、固定执行语义和已移除字段。
+- V4 base K+1 current full `22.8128x / -19.11% / 81.08% / 74 trades`；reused holdout `13.0662x / -19.11% / 77.78% / 18 trades`。
+- V4 仍不是 promotion：K+2 current full `8.7014x / -23.56%`，8bps current full `15.3677x / -22.46%`，压力回撤仍穿越 `20%` 硬门槛。

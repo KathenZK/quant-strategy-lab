@@ -13,5 +13,7 @@
 - `btc_1h_ar_v3.py`：`BTC-1H-Adaptive-Regime-V3` 冻结配置、两腿合成与指标复现入口。
 - `research_btc_1h_ar_v3_full_ablation.py`：V3 冻结参数两腿 `78/78` 字段槽全参数消融与单字段敏感性审计。
 - `research_btc_1h_ar_v3_window_backtest.py`：V3 canonical/recent/calendar/half-year/monthly 多时间窗口回测。
+- `research_btc_1h_ar_v3_param_necessity.py`：V3 参数必要性审计；中和非必要槽位并验证与 V3 逐笔路径等价。
+- `research_btc_1h_ar_v3_minimal_micro_tune.py`：V3 最小等价表面（19 必要参数、杠杆冻结）受约束微调。
 
 这些 wrapper 固定校验被复用引擎的 SHA-256；依赖脚本漂移时 fail closed，避免静默改变历史复现结果。

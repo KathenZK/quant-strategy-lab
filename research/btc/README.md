@@ -4,7 +4,7 @@
 
 ## 当前研究线
 
-- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：Binance USD-M Futures `BTCUSDT` perpetual `1h` 多指标自适应 regime 家族；V1 为 diagnostic baseline，V2 为 V1 clean scaled frontier paper-audit observation，V3 为 V2 micro-tune diagnostic observation；V3 已完成全参数消融与多窗口回测，未产生严格改善单字段，当前仍 `not live-ready`。
+- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：Binance USD-M Futures `BTCUSDT` perpetual `1h` 多指标自适应 regime 家族；V1 为 diagnostic baseline，V2 为 V1 clean scaled frontier paper-audit observation，V3 为 V2 micro-tune diagnostic observation；V3 已完成全参数消融、多窗口回测、参数必要性审计（19 参数最小等价表面）与最小表面微调，判定为冻结邻域局部最优，当前仍 `not live-ready`。
 
 ## 数据与执行口径
 
