@@ -32,4 +32,4 @@
 - 本家族版本号 local 于 `HYPE-5M-Micro-Scalp`，与 `HYPE-5M-Pullback-Trail`、`HYPE-15M-MII` 等家族的版本号无关。
 - 登记新版本必须更新本表、`decision-log.md`，并同步 `research/hype/README.md` 与 `research/README.md` 的状态标签。
 - V1.3 之后的动态 TP（`research-notes/hype-5m-micro-scalp-v1-3-atr-dynamic-tp-2026-07-01.md`）与动态杠杆（`research-notes/hype-5m-micro-scalp-v1-3-atr-dynamic-leverage-2026-07-01.md`）测试均未超越固定基线，未形成新版本。
-- 任何版本进入 promotion 状态前必须补齐：逐笔路径图、同 K TP/SL 与 gap ordering 审计、订单维护、restart-state 审计、live-executable 审计与 `forward-tracking/` 证据（见 `research/strategy-status-glossary.md`）。
+- 任何版本进入 promotion 状态前必须补齐：逐笔路径图、同 K TP/SL 与 gap ordering 审计、订单维护、restart-state 审计、live-executable 审计与 `forward-tracking/` 证据（见 [strategy-status-glossary.md](../../../docs/research-governance/strategy-status-glossary.md)）。

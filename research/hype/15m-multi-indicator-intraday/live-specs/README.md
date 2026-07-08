@@ -11,4 +11,4 @@
 
 ## 状态边界
 
-本目录下出现 `spec` 不代表 promotion。进入任何 promotion 状态（`live spec`、`dry-run`、`live`）前，必须先完成资金费、盘口级滑点、runner 状态机、重启恢复、交易所对账、missing-bar fail-closed 和 kill switch 审计（状态词定义见 `../../../strategy-status-glossary.md`）。
+本目录下出现 `spec` 不代表 promotion。进入任何 promotion 状态（`live spec`、`dry-run`、`live`）前，必须先完成资金费、盘口级滑点、runner 状态机、重启恢复、交易所对账、missing-bar fail-closed 和 kill switch 审计（状态词定义见 [strategy-status-glossary.md](../../../../docs/research-governance/strategy-status-glossary.md)）。

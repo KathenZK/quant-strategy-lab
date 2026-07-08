@@ -16,12 +16,12 @@
 
 - 不要根据 `V13`、`V21`、`V35`、`V36` 这类裸版本号判断策略身份；版本号只在具体资产、市场、周期和策略家族里有意义。
 - 标准 family name 使用展开写法，优先包含资产、周期和机制；短 id 只作为历史别名。家族清单与别名以 `research/README.md` 和各资产 README 的路由表为准，不在本文件重复维护。
-- 当用户要求"登记为 Vx / 记录为 Vx / 冻结为 Vx / promote 为 Vx"时，必须更新对应家族 core ledger / 主账（细则见 [.cursor/rules/research-report-storage.mdc](.cursor/rules/research-report-storage.mdc)；新建/重构主账用 [research/core-ledger-template.md](research/core-ledger-template.md)）。只更新 canonical spec、research note、diagnostic 或 decision log 不算完成版本登记。
+- 当用户要求"登记为 Vx / 记录为 Vx / 冻结为 Vx / promote 为 Vx"时，必须更新对应家族 core ledger / 主账（细则见 [.cursor/rules/research-report-storage.mdc](.cursor/rules/research-report-storage.mdc)；新建/重构主账用 [docs/research-governance/core-ledger-template.md](docs/research-governance/core-ledger-template.md)）。只更新 canonical spec、research note、diagnostic 或 decision log 不算完成版本登记。
 - 所有新增或更新的长期研究文档默认使用中文，除非用户明确要求其他语言；策略名、版本号、参数、路径、指标名和状态术语可以保留英文原文。
 
 ## 术语口径
 
-- 策略状态词（`explore`、`registered`、`audit`、`live spec`、`dry-run`、`live`、`NO-GO` 等）的定义与状态机以 `research/strategy-status-glossary.md` 为唯一来源；dry-run 前不得写 `NO-GO`，只能写 `not promoted / not live-ready`。
+- 策略状态词（`explore`、`registered`、`audit`、`live spec`、`dry-run`、`live`、`NO-GO` 等）的定义与状态机以 `docs/research-governance/strategy-status-glossary.md` 为唯一来源；dry-run 前不得写 `NO-GO`，只能写 `not promoted / not live-ready`。
 - promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是叠加其上的移交标签。`candidate` 可以作为研究角色词使用，例如参数候选、候选观察行、`registered candidate`，但不是主状态，也不得暗示 live-ready 或可跳过 promotion gate。进入任何 promotion 状态前必须完成 live-executable 审计。本仓库不定义额外的模拟盘阶段；模拟盘/仿真运行统一称为 `dry-run`，真实下单归入 `live`；实盘资金边界由子账户资金、runner 配置或上线 decision log 管理，策略 spec 不强制写 live notional。
 - `active research line` 指当前仍在 `research/` 下维护、会继续复现或更新结论的研究方向；不再维护的一次性历史脚本应归入 `archive/scripts/research/`。
 - `current one-off research script` 指只服务某个研究问题的复现、搜索、审计、导出脚本；它可以保留在对应研究目录，但不应提升为 active package code。

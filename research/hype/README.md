@@ -13,7 +13,7 @@ HYPE 有多个互不相关但复用版本号的策略家族。不要按裸版本
 5. 该家族 `decision-log.md`
 6. 按需打开 canonical specs、diagnostics、ablations、live specs、artifacts。
 
-状态词定义见 [../strategy-status-glossary.md](../strategy-status-glossary.md)。
+状态词定义见 [strategy-status-glossary.md](../../docs/research-governance/strategy-status-glossary.md)。
 
 ## Strategy Families
 

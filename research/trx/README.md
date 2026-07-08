@@ -1,6 +1,6 @@
 # TRX Research Index
 
-本目录存放 TRON（TRX）单资产策略家族。任何版本号都必须和市场、周期、机制一起引用；状态词定义见 [../strategy-status-glossary.md](../strategy-status-glossary.md)。
+本目录存放 TRON（TRX）单资产策略家族。任何版本号都必须和市场、周期、机制一起引用；状态词定义见 [strategy-status-glossary.md](../../docs/research-governance/strategy-status-glossary.md)。
 
 ## 当前研究线
 

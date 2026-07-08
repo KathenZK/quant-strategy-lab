@@ -16,7 +16,7 @@
 
 - `AGENTS.md` 与 `.cursor/rules/`：AI agent 在本仓库工作的约束；细则以 `.cursor/rules/` 为准。
 - `research/README.md`：研究档案总入口与家族路由表。
-- `research/strategy-status-glossary.md`：策略状态词与状态机的唯一定义。
+- `docs/research-governance/strategy-status-glossary.md`：策略状态词与状态机的唯一定义。
 
 ## 当前结构
 
@@ -27,11 +27,15 @@ data/
 
 research/
  README.md          # 家族路由表
- strategy-status-glossary.md # 状态机术语表
  _shared-kernels/      # 跨资产共享研究引擎（冻结版本目录）
  hype/ btc/ eth/ sol/ trx/ bnb/  # 单资产策略家族
  asset-portfolios/      # 组合与跨资产研究
  mu/             # MU-HYPE-Transfer（扁平结构，grandfathered）
+
+docs/research-governance/
+ strategy-status-glossary.md # 状态机术语表
+ strategy-validation-gates.md # 策略推进门禁
+ core-ledger-template.md      # 主账模板
 
 src/strategy_lab/
  data/    # 最小数据湖内核：layout/schema/normalize/read-write/quality/features/factors

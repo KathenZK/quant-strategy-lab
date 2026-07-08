@@ -46,7 +46,7 @@
 - `2026-07-08`：补充 `HYPE-15M-MII-V1.4` 亏损环境过滤诊断。保持 RSI/MACD、`min_atr_pct96=75 bps`、`min_rvol96=0.85`、ATR bracket、Binance 成本和 `2.5x` 不变，只叠加风控过滤，测试更严格 `max_atr_pct96`、`atr_ratio96_672`、短期 ATR 扩张、最近单根 TR 尖峰、方向/波动异常和信号拥挤。strict DD gate（K+1 回撤不变差、K+2 回撤至少改善 5pp、收益保留 90%）`1/45`，唯一通过项为 `ATR14/ATR96 <= 1.75`：K+1 `230` 笔、总收益 `936.18%`、回撤 `-24.70%`、胜率 `84.78%`；K+2 总收益 `608.93%`、回撤 `-29.87%`。单独收紧 `max_atr_pct96` 无效，单根尖峰过滤能压回撤但交易数和收益损失过大。结论：`ATR14/ATR96 <= 1.75` 只登记为 V1.4 风控层观察候选，不提升为新版本或 runner dry-run。
 - `2026-06-30`：把 `HYPE-15M-MII-V1.1` 直接套用到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，做跨资产迁移诊断。目标窗口与 HYPE 标准数据湖一致，API 数据 quality gate 通过（BTC/ETH 各 `37,607` 根，gap/duplicate/null/invalid OHLC 均为 `0`），但该输入不是本仓库标准 raw/normalized 数据湖。BTC K+1 全样本仅 `2` 笔，年化 `3.46%`、总收益 `3.71%`，交易数过少，不能说明有效迁移；ETH K+1 全样本年化 `-37.95%`、总收益 `-40.06%`、回撤 `-42.74%`，K+2 全样本年化 `-30.24%`、总收益 `-32.04%`。结论：V1.1 没有自然迁移到 BTC/ETH，继续维持 `NO-GO`。
 
-- `2026-07-08`：状态口径对齐。`HYPE-15M-MII-V1.3` 已在 quant-runner 以 `hype_mii` dry-run 配置运行（`configs/dryrun.toml`），主状态由 `live spec` 更新为 `dry-run / forward-test required`，并建立 `forward-tracking/`；历史批次中 dry-run 前写下的 `NO-GO` 按新版 `research/strategy-status-glossary.md` 口径理解为 `not promoted / not live-ready`，V1/V1base/V1.1/V1.2 状态统一为 `not promoted / not live-ready`。live 或 NO-GO 的判定推迟到 forward 证据出来之后。
+- `2026-07-08`：状态口径对齐。`HYPE-15M-MII-V1.3` 已在 quant-runner 以 `hype_mii` dry-run 配置运行（`configs/dryrun.toml`），主状态由 `live spec` 更新为 `dry-run / forward-test required`，并建立 `forward-tracking/`；历史批次中 dry-run 前写下的 `NO-GO` 按新版 [strategy-status-glossary.md](../../../docs/research-governance/strategy-status-glossary.md) 口径理解为 `not promoted / not live-ready`，V1/V1base/V1.1/V1.2 状态统一为 `not promoted / not live-ready`。live 或 NO-GO 的判定推迟到 forward 证据出来之后。
 
 ## 证据政策
 

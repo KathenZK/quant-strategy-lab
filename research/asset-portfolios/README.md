@@ -1,6 +1,6 @@
 # Asset Portfolios Research Index
 
-本目录存放组合策略、跨资产策略、迁移研究和多 sleeve 资金结构研究。当前材料主要基于 Binance USD-M Futures 市场数据；若某个研究线后续变成单一资产策略家族，应迁入对应资产目录并保留这里的交叉引用。状态词定义见 [../strategy-status-glossary.md](../strategy-status-glossary.md)。
+本目录存放组合策略、跨资产策略、迁移研究和多 sleeve 资金结构研究。当前材料主要基于 Binance USD-M Futures 市场数据；若某个研究线后续变成单一资产策略家族，应迁入对应资产目录并保留这里的交叉引用。状态词定义见 [strategy-status-glossary.md](../../docs/research-governance/strategy-status-glossary.md)。
 
 ## 当前研究线
 

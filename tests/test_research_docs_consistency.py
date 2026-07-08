@@ -2,7 +2,7 @@
 
 把 research/ 的索引更新义务、家族目录骨架和状态词约定变成可执行检查，
 防止路由表与目录结构漂移（历史上 6h-rs4-regime-switch 曾建目录但未登记索引）。
-规则来源：.cursor/rules/research-report-storage.mdc 与 research/strategy-status-glossary.md。
+规则来源：.cursor/rules/research-report-storage.mdc 与 docs/research-governance/strategy-status-glossary.md。
 """
 
 from __future__ import annotations
@@ -12,6 +12,7 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / "research"
+GOVERNANCE_DOCS = ROOT / "docs" / "research-governance"
 
 # 资产/主题目录：其下一级子目录被视为策略家族目录。
 ASSET_DIRS = ["hype", "btc", "eth", "sol", "trx", "bnb", "asset-portfolios"]
@@ -86,8 +87,8 @@ def test_family_dirs_have_core_ledger_unless_grandfathered() -> None:
 
 
 def test_core_ledger_template_defines_required_sections() -> None:
-  template = RESEARCH / "core-ledger-template.md"
-  assert template.is_file(), "缺少 research/core-ledger-template.md"
+  template = GOVERNANCE_DOCS / "core-ledger-template.md"
+  assert template.is_file(), "缺少 docs/research-governance/core-ledger-template.md"
   text = template.read_text(encoding="utf-8")
   required_headings = [
     "## Family Identity",

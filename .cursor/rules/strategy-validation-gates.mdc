@@ -1,0 +1,17 @@
+---
+description: Map strategy validation gates into the research-to-live workflow
+alwaysApply: true
+---
+
+# Strategy Validation Gates
+
+- This repository uses validation gates as evidence requirements inside the existing status machine, not as a parallel state system. Status labels remain defined only in `docs/research-governance/strategy-status-glossary.md`.
+- Gate details, default thresholds, report expectations, and allowed deviations live in `docs/research-governance/strategy-validation-gates.md`. Do not copy the full checklist into core ledgers, README routing tables, or AGENTS.md.
+- `explore -> registered` is unchanged: registration fixes version identity and evidence links, but does not imply live readiness.
+- Before a registered strategy is promoted into `audit`, check the research-side gates: excess-return baseline, ablation, OOS/CPCV-style validation, and statistical significance. Missing or failed evidence keeps the version at `registered / not promoted / not live-ready`.
+- Before `audit -> live spec`, check the live-readiness gates: Monte Carlo robustness, stress tests, start-time sensitivity, phase/bar-alignment sensitivity, and the existing live-executable audit. Missing or failed evidence prevents writing a promotion-ready live spec.
+- `live spec -> dry-run -> live` remains governed by the runner handoff, forward-tracking, and operations rules in `lab-runner-handoff.mdc` and `live-executable-strategy-research.mdc`.
+- Gate thresholds are default repository standards, not immutable constants. A report may use a stricter or different threshold only when it states why the default is unsuitable, what replacement was used, and records the deviation in the family `decision-log.md`.
+- Do not treat unavailable data as a pass. For example, if phase testing needs `1m` candles and they are missing, record the gate as incomplete and keep the version `not promoted / not live-ready`.
+- Gate evidence belongs under the relevant family directory: durable Markdown in `diagnostics/`, `ablations/`, or `research-notes/` by nature; scripts in `scripts/`; retained JSON/CSV/plots in `artifacts/`; state changes in `decision-log.md`; compact links and status in the core ledger.
+- Existing dry-run or historical versions are not automatically downgraded by this rule. Apply these gates to new promotion attempts and to any later attempt to move an existing version toward `live`.

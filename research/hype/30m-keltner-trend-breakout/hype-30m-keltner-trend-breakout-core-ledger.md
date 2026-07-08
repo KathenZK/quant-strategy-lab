@@ -11,7 +11,7 @@
 ## Current State
 
 - Current version(s)：`K2-FQ-V2-ATRVT-OFF` 外部规格复现观察。
-- Current status：`explore / not promoted / not live-ready`（状态词见 [../../strategy-status-glossary.md](../../strategy-status-glossary.md)）。
+- Current status：`explore / not promoted / not live-ready`（状态词见 [strategy-status-glossary.md](../../../docs/research-governance/strategy-status-glossary.md)）。
 - Runner / dry-run / live status：无 runner handoff、无 dry-run、无 live。
 - Live-readiness blockers：funding 未计入；止损滑点、gap-open、stop-market 成交、逐笔外部脚本 diff、runner 状态机对账未完成；高杠杆路径风险显著。
 - Next decision gate：完成 live-executable 成交审计与外部逐笔对账后，再决定是否冻结本仓库正式 `V1`。

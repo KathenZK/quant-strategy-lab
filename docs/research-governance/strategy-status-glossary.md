@@ -11,7 +11,7 @@ explore（无版本号）
    │ 用户要求登记 Vx
    ▼
 registered
-   │ 准备推进 quant-runner / dry-run：用户明确要求，或 Agent 基于证据主动建议进入 promotion review
+   │ 准备推进 quant-runner / dry-run：用户明确要求，或 Agent 基于证据主动建议进入 promotion review，并核验验证门禁
    ▼
 audit（短暂 gate，不是失败后的长期状态）
    │ live-executable 审计通过 + 参数/状态机可被 runner 复现 + 写出交接规格
@@ -31,7 +31,7 @@ dry-run 前任一阶段如果证据不足、回测失败、可执行性审计不
 
 `audit` 不是用户日常会主动触发的“随便审计一下”标签，也不是因为某个报告文件名含 audit 就自动进入的状态。它只在一个已登记版本准备推进 `quant-runner` / `dry-run` 时触发：用户明确要求评估能否 dry-run、交给 runner 或写 live spec；或 Agent 认为证据足够并明确提出进入 promotion review。审计失败后不要长期挂 `audit / not promoted`，应回到 `registered / not promoted / not live-ready`，并记录缺口。
 
-promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是可叠加在其上的移交标签，不是独立状态。进入任何 promotion 状态前必须完成 live-executable 审计（见 `.cursor/rules/live-executable-strategy-research.mdc` 与 `.cursor/rules/lab-runner-handoff.mdc`）。本仓库不定义额外的模拟盘阶段；模拟盘/仿真运行统一称为 `dry-run`，真实小额下单归入 `live`。
+promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是可叠加在其上的移交标签，不是独立状态。进入任何 promotion 状态前必须完成 live-executable 审计（见 [live-executable-strategy-research.mdc](../../.cursor/rules/live-executable-strategy-research.mdc) 与 [lab-runner-handoff.mdc](../../.cursor/rules/lab-runner-handoff.mdc)），并按 [strategy-validation-gates.md](strategy-validation-gates.md) 补齐对应门禁证据。本仓库不定义额外的模拟盘阶段；模拟盘/仿真运行统一称为 `dry-run`，真实下单归入 `live`。
 
 ## 主状态定义
 
@@ -39,8 +39,8 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 | --- | --- | --- |
 | `explore` | 搜索、诊断进行中，未登记版本 | 无；不可被引用为"策略" |
 | `registered` | 用户要求登记的冻结版本（基线或观察值），仅固定研究身份 | core ledger 已更新版本表、参数、证据链接；不代表策略可行 |
-| `audit` | dry-run 前的 live-executable promotion review：审计该 registered 版本是否可被真实订单时序和 runner 状态机复现 | 已登记版本具备推进意图；全参数消融或邻域稳健性完成；分片回测无执行不可能性；成本口径明确 |
-| `live spec` | 已写出 runner 交接规格，等待/正在 quant-runner 实现；未启用 | live-executable 审计通过；参数/状态机可被 runner 复现；满足 `lab-runner-handoff.mdc` 交接规格必备字段；core ledger 链接该规格 |
+| `audit` | dry-run 前的 live-executable promotion review：审计该 registered 版本是否可被真实订单时序和 runner 状态机复现 | 已登记版本具备推进意图；已核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的研究侧门禁（超额收益、消融、OOS/CPCV、统计显著性）；分片回测无执行不可能性；成本口径明确 |
+| `live spec` | 已写出 runner 交接规格，等待/正在 quant-runner 实现；未启用 | live-executable 审计通过；已核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的上线前门禁（MC、压力测试、启动时间、相位）；参数/状态机可被 runner 复现；满足 `lab-runner-handoff.mdc` 交接规格必备字段；core ledger 链接该规格 |
 | `dry-run` | 在 quant-runner 以 dry-run 模式运行（模拟盘，不下真实订单） | quant-runner 实现完成；指标对拍/smoke test 通过；进入 dry-run 的同一变更中建立 `forward-tracking/` |
 | `live` | 真实资金运行 | dry-run forward 证据达标；资金费、盘口滑点、订单失败处理已审计；decision log 记录批准；资金边界由子账户资金、runner 配置或上线 decision log 管理，策略 spec 不强制写 live notional |
 | `NO-GO` | dry-run 或 live 后的最终否决状态 | 必须有 `forward-tracking/`、dry-run 对账或真实订单证据；记录否决原因，重开需新证据并写 decision log |
