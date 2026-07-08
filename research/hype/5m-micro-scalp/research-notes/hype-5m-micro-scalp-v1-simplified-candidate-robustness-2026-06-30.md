@@ -2,7 +2,7 @@
 
 Family id：`HYPE-5M-Micro-Scalp`
 
-本报告围绕精简组合搜索的前排候选做局部邻域测试，目的是确认改善不是单点参数尖峰。它仍是 paper-audit observation，不是 promotion。
+本报告围绕精简组合搜索的前排候选做局部邻域测试，目的是确认改善不是单点参数尖峰。它仍是 audit observation，不是 promotion。
 
 ## 输入
 

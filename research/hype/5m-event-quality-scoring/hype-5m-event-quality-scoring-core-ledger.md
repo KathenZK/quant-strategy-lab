@@ -10,7 +10,7 @@
 
 - 当前 baseline：`HYPE-5M-Event-Quality-Scoring-Seeded-V0`，实现口径为 `current_70_20_10__q80`。
 - 固定 seed-universe 旧 lead：`HYPE-5M-Event-Quality-Scoring-Seeded-V1`，实现口径为 `no_wick_no_breakout__cfg_side_88_12__q80`。
-- 当前角色：V1 已在 strict seed-generation audit 中失败；仅保留为固定 seed-universe diagnostic，不再是 paper-audit lead。
+- 当前角色：V1 已在 strict seed-generation audit 中失败；仅保留为固定 seed-universe diagnostic，不再是 audit lead。
 - 最大已知风险：固定 seed configs 来自 `HYPE-5M-Micro-Scalp` 历史 relaxed-search 产物，strict audit 显示存在显著 config-universe / seed-selection bias。
 - 下一步主线：若继续本家族，应先做严格滚动 seed 的 V2 搜索；在出现严格 OOS 正结果前，不做 paper/live-dry-run 对账或部署推进。
 
@@ -21,7 +21,7 @@
 | `HYPE-5M-Event-Quality-Scoring-Generic-V0` | no-go | 多源规则生成事件，再用低依赖 walk-forward ranker 分层 | `diagnostics/hype-5m-event-quality-v0-2026-06-27.md` | `252,277` 个事件但 `0` 个 paper-gate pass，不提升 |
 | `HYPE-5M-Event-Quality-Scoring-Seeded-V0` | base / fixed-seed diagnostic | 使用 `HYPE-5M-Micro-Scalp` relaxed seeds，按 `0.70 cfg_mean + 0.20 style_mean + 0.10 side_mean` 打分，`q80` 交易 | `diagnostics/hype-5m-seeded-event-quality-v0-2026-06-27.md`，`diagnostics/hype-5m-seeded-event-quality-v0-ablation-2026-06-27.md` | 作为 Base 证据保留；不能作为 paper/live 候选 |
 | `HYPE-5M-Event-Quality-Scoring-Seeded-V0.1-Style-Prune` | fixed-seed diagnostic | 在 Seeded V0 上精简事件源，优先移除弱贡献或高回撤 source | `diagnostics/hype-5m-seeded-event-quality-v01-style-prune-2026-06-27.md`，`diagnostics/hype-5m-seeded-event-quality-v01-full-ablation-2026-06-27.md` | `no_wick_no_breakout__cfg_side_88_12__q80` 为固定 seed-universe 全参数首位；只能作为后续严格 V2 搜索参考 |
-| `HYPE-5M-Event-Quality-Scoring-Seeded-V1` | fixed-seed diagnostic / anti-leakage failed | 将 V0.1 全参数首位正式登记为 V1：`no_wick_no_breakout__cfg_side_88_12__q80` | `diagnostics/hype-5m-seeded-v1-live-feasibility-2026-06-27.md`，`diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md` | strict seed-generation audit 失败；不再作为 paper-audit lead，仅作为 selection-bias 证据保留 |
+| `HYPE-5M-Event-Quality-Scoring-Seeded-V1` | fixed-seed diagnostic / anti-leakage failed | 将 V0.1 全参数首位正式登记为 V1：`no_wick_no_breakout__cfg_side_88_12__q80` | `diagnostics/hype-5m-seeded-v1-live-feasibility-2026-06-27.md`，`diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md` | strict seed-generation audit 失败；不再作为 audit lead，仅作为 selection-bias 证据保留 |
 
 ## Base: Seeded V0
 

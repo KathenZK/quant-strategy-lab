@@ -5,7 +5,7 @@
 - 完整名称：`ETH-1H-Adaptive-Regime-V2.1`。
 - 家族：`ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）。
 - 市场：Binance USD-M Futures `ETHUSDT` perpetual `1h`。
-- 状态：`registered diagnostic high-win tuned observation / NO-GO / not promoted / not live-ready`。
+- 状态：`registered high-win tuned observation / NO-GO / not promoted / not live-ready`。
 - 版本来源：`ETH-1H-Adaptive-Regime-V2` 全参数消融后的 high-win 组合微调观察值；选择只使用 train/validation/prefit，reused holdout 与近期分片只作冻结后审计。
 
 V2.1 的登记只冻结可复现身份，不代表 candidate、paper-live、dry-run、handoff 或 live。

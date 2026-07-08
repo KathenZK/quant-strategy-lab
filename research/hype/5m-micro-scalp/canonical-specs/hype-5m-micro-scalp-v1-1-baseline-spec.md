@@ -6,7 +6,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 源候选：`V1S_rand_016782__N00596`
 
-状态：`paper-audit observation / not live-ready`
+状态：`audit observation / not live-ready`
 
 ## 一句话定义
 
@@ -107,7 +107,7 @@ V1.1 全参数消融后的组合微调搜索评估 `44001` 组配置，找到 `2
 - VAL PF：`6.348`；FWD PF：`12.838`；recent30：`12.55%`。
 - 参数差异：`ema_htf=192`、`min_adx=0`、`max_chop=70`、`min_rvol=0.75`、`max_atr_pct_bps=9999`、`tp_bps=110`、`sl_bps=400`。
 
-该微调行在 2026-07-01 按用户要求正式登记为 `HYPE-5M-Micro-Scalp-V1.2`。版本登记不改变 promotion 边界；V1.2 仍是 paper-audit observation，不是 live-ready。
+该微调行在 2026-07-01 按用户要求正式登记为 `HYPE-5M-Micro-Scalp-V1.2`。版本登记不改变 promotion 边界；V1.2 仍是 audit observation，不是 live-ready。
 
 ## 推进边界
 

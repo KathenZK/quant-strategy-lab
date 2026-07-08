@@ -79,8 +79,8 @@ Created：2026-06-23
 | `HYPE-5M-PBTR-V3.3` | V3.2 的最小复现表达：删除所有兼容/关闭/保护/基本不触发参数，退出仅保留 `min_hold + ATR trailing`。 | archived research candidate | `8027` | `1327928815.51x` | `55.66%` | `3.31` | `-8.69%` | 见诊断 | 严格 live-realistic PF 降至 `0.58`；即时 TP 网格最佳 `2.5ATR` PF 仅 `0.615`，不再作为交接版本。 |
 | `HYPE-5M-PBTR-V3.3.1` | V3.3 + 实盘 stop-arm retry overlay：第 7 根尝试挂 stop，穿越时重试，第 10 根兜底市价。 | live monitor / no-go research | `8426` | `0.00x` | `40.17%` | `0.86` | `-100.00%` | 见诊断 | 1m 乐观口径 PF `0.580`；修复进程崩溃和审计问题，但保守/乐观 PF 均低于 `1`，上一单平仓价、五类入场过滤、退出 overlay、轻量 ML 事件质量筛选和 armed 后加仓均无效。 |
 | `HYPE-5M-PBTR-V4` | V3.3 有效单因子增强项组合：`EMA9/96 + stop_atr=0.25 + trail_atr=0.5 + min_hold_bars=18`。 | paper-live audit candidate | `5053` | `28884173450807.53x` | `72.95%` | `7.39` | `-11.27%` | 见审计 | 样本内显著强于 V3.3，但高度依赖锁仓期和 stop 成交质量；只能 paper-live/极小资金审计。 |
-| `HYPE-5M-PBTR-V6` | 可执行修复版：`EMA21/55` 多头回踩恢复 + `dir_ret192_bps>=788.123` + 入场即 `TP=3ATR/SL=7ATR` + `36` 根 K 超时。 | paper audit candidate | `147` | `1.70x` | `59.86%` | `1.15` | `-11.28%` | OOS PF `1.45` | 放弃旧 `min_hold + trailing` 成交假设，当前只允许 paper audit / 极小资金 dry-run，不是生产 sizing 版本。 |
-| `HYPE-5M-PBTR-V6.1` | V6 sizing/exit 变体：`TP=2.5ATR/SL=7ATR/timeout=36`，fixed `3x`。 | paper audit sizing variant | `157` | 见诊断 | `63.69%` | `1.01` | `-25.63%` | 见诊断 | 回测总收益 `+408.95%`、PF `1.773`；收益漂亮但 sizing 风险高，必须先 paper audit，不是生产版本。 |
+| `HYPE-5M-PBTR-V6` | 可执行修复版：`EMA21/55` 多头回踩恢复 + `dir_ret192_bps>=788.123` + 入场即 `TP=3ATR/SL=7ATR` + `36` 根 K 超时。 | audit candidate | `147` | `1.70x` | `59.86%` | `1.15` | `-11.28%` | OOS PF `1.45` | 放弃旧 `min_hold + trailing` 成交假设，当前只允许 audit / 极小资金 dry-run，不是生产 sizing 版本。 |
+| `HYPE-5M-PBTR-V6.1` | V6 sizing/exit 变体：`TP=2.5ATR/SL=7ATR/timeout=36`，fixed `3x`。 | audit sizing variant | `157` | 见诊断 | `63.69%` | `1.01` | `-25.63%` | 见诊断 | 回测总收益 `+408.95%`、PF `1.773`；收益漂亮但 sizing 风险高，必须先 audit，不是生产版本。 |
 | `HYPE-5M-PBTR-V6.2` | V6.1 long-only + short rank2：long `EMA21/55 TP2.5/SL7/tx36`，short `EMA34/144 TP1.5/SL2/tx48`，组合严格单仓。 | paper/live-dry-run candidate | `210` | 见诊断 | `64.76%` | `0.96` | `-22.38%` | OOS PF `1.439` | 由 `combo_short_rank2` 固化；总收益 `+833.71%`、PF `1.771`，但 short OOS 只有 `5` 笔。只允许 1x 或极小 notional 验证，不是生产版本。 |
 | `HYPE-5M-PBTR-V6.2.1` | V6.2 的 long `htf_spread >= 0` 变体：long `EMA21/55 TP2.5/SL7/tx36`，short 仍为 V6.2 short rank2，组合严格单仓。 | dry-run / tiny-notional live audit candidate | `219` | 见诊断 | `64.38%` | `1.00` | `-22.35%` | OOS PF `1.439` | 来自 V6.2 full ablation 的 `long_htf_threshold_0p0`；fixed `3x` 总收益 `+1022.25%`、PF `1.804`，但 short OOS 仍只有 `5` 笔。新 live runner `hype-pullback-enhance` 默认先 dry-run，不是生产 sizing。 |
 
@@ -711,7 +711,7 @@ stop_market = 2
 - 加回 trailing 会显著降收益；V6 不应回到旧 trailing 状态机。
 - `time_exit_bars=24` 仍通过但收益下降；`36` 保留为主定义。
 
-结论：V6 是当前最干净的可执行修复方向，但它仍只是 paper audit candidate。生产 sizing 前必须先有 paper runner 记录全部原始触发、拒绝原因、接受信号、虚拟订单、真实盘口可成交性、重启恢复和 order idempotency。
+结论：V6 是当前最干净的可执行修复方向，但它仍只是 audit candidate。生产 sizing 前必须先有 paper runner 记录全部原始触发、拒绝原因、接受信号、虚拟订单、真实盘口可成交性、重启恢复和 order idempotency。
 
 ### V6.1: TP2.5 Fixed-3x Sizing Variant
 
@@ -753,7 +753,7 @@ time_open = 68
 stop_market = 2
 ```
 
-结论：V6.1 在回测上比 V6 原始 1x 表达收益更高，且 `TP=2.5ATR` 的 1x 回撤低于 `TP=3ATR`；但 fixed `3x` 把最大回撤扩大到约 `-25.63%`，单笔最差接近 `-14.81%`。V6.1 只能作为 paper audit sizing variant，必须先验证真实盘口滑点、bracket 维护、超时平仓和连续 `30-50` 笔 paper/live-dry-run 偏差；不能直接生产 sizing。
+结论：V6.1 在回测上比 V6 原始 1x 表达收益更高，且 `TP=2.5ATR` 的 1x 回撤低于 `TP=3ATR`；但 fixed `3x` 把最大回撤扩大到约 `-25.63%`，单笔最差接近 `-14.81%`。V6.1 只能作为 audit sizing variant，必须先验证真实盘口滑点、bracket 维护、超时平仓和连续 `30-50` 笔 paper/live-dry-run 偏差；不能直接生产 sizing。
 
 TP 触发后 trailing overlay 未改善 V6.1。将 `2.5ATR` 从固定止盈改成 trailing trigger，并扫描 `lock_atr=0/1/1.5/2/2.5`、`trail_atr=1/1.5/2/2.5/3/4`、`max_hold=36/72/144` 后，收益最高行为为 `trigger2.5_lock2.5_trail2.5_max36`，总收益 `+364.32%`、最大回撤 `-27.70%`，仍弱于固定止盈基线 `+408.95%` / `-25.63%`。该结果说明 V6.1 的 edge 更像是强动量后吃一段 `2.5ATR` 目标，而不是持续持有趋势右尾；暂不把 trailing overlay 纳入 V6.1。
 
@@ -1047,8 +1047,8 @@ trail_stop = min(initial_stop, previous_trough + trail_atr * ATR14(current_bar))
 7. `HYPE-5M-PBTR-V3.3` 作为 V3.2 的最小复现表达保留历史记录；严格 live-realistic 口径已证明不适合作为交接版本。
 8. `HYPE-5M-PBTR-V3.3.1` 记录当前 V3.3 retry-arm 实盘 overlay；它可作为小额实盘风控/审计机制，但保守/乐观回测、上一单平仓价过滤、五类入场过滤方向、退出 overlay、ML event quality 和 armed 后加仓测试均低于 PF `1`，不提升为 paper/live 候选。
 9. `HYPE-5M-PBTR-V4` 记录自原 V3.4-candidate；样本内显著强于 V3.3，但严格 live-realistic 口径已失效，不应进入直接 paper-live 交接。
-10. `HYPE-5M-PBTR-V6` 正式记录为当前最可执行的 paper audit candidate。它放弃旧 `min_hold_bars + trailing`，使用强动量多头回踩恢复、入场即固定 bracket、36 根 K 时间退出；下一步优先写 paper audit runner。
-11. `HYPE-5M-PBTR-V6.1` 记录为 V6 的 `TP=2.5ATR + fixed 3x` sizing/exit 变体；回测收益高但回撤和单笔风险已明显放大，只能 paper audit，不能直接生产 sizing。
+10. `HYPE-5M-PBTR-V6` 正式记录为当前最可执行的 audit candidate。它放弃旧 `min_hold_bars + trailing`，使用强动量多头回踩恢复、入场即固定 bracket、36 根 K 时间退出；下一步优先写 audit runner。
+11. `HYPE-5M-PBTR-V6.1` 记录为 V6 的 `TP=2.5ATR + fixed 3x` sizing/exit 变体；回测收益高但回撤和单笔风险已明显放大，只能 audit，不能直接生产 sizing。
 12. `HYPE-5M-PBTR-V6.2` 记录为 short-only 组合后的 paper/live-dry-run 候选：`combo_short_rank2` 在严格单仓组合下把 V6.1 fixed `3x` 从 `+408.95%/-25.63% DD` 改善到 `+833.71%/-22.38% DD`，但 short OOS 只有 `5` 笔；小额实盘应从 `1x` 或极小 notional 验证订单偏差，不直接生产。
 13. `HYPE-5M-PBTR-V6.2.1` 记录为 V6.2 的默认 dry-run 表达：long `htf_spread>=0` 在 2026-06-29 专项全参数消融中仍优于收紧回 `0.5` 和完全删除 HTF 过滤；fixed `3x` 只是横向比较口径，真实观察仍从 `1x` 或极小 notional 开始。
 14. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
@@ -1076,7 +1076,7 @@ V3/V3.1/V3.2/V3.3/V4 高频验收线：
 - V3.3 额外要求：paper-live 交易流应与 V3.2 参考实现基本一致；若实盘复现少算/多算大量信号，优先检查 EMA/ATR 预热、K 线收盘确认和连续同向信号去重。
 - V4 额外要求：必须单独审计 `stop_atr=0.25`、`trail_atr=0.5` 和前 `18` 根 K 锁仓期的真实风控；若从开仓即挂保护止损导致大面积扫损，或不挂保护止损导致尾部风险不可接受，应回退 V3.3。
 
-V6 paper audit 验收线：
+V6 audit 验收线：
 
 - 至少连续 `30-50` 笔 paper 订单后再评估是否进入极小资金。
 - paper 订单必须记录所有原始触发、质量过滤拒绝原因、接受信号、TP/SL/timeout 虚拟成交、真实盘口可成交性和订单维护事件。

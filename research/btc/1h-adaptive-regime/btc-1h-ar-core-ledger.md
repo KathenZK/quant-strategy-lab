@@ -9,14 +9,14 @@
 
 ## 当前状态
 
-`V1 registered diagnostic baseline；V2 registered paper-audit observation；V3 registered diagnostic micro-tune observation；V4 registered minimal-equivalent clean observation；not promoted / not live-ready`。
+`V1 registered baseline；V2 registered audit observation；V3 registered micro-tune observation；V4 registered minimal-equivalent clean observation；not promoted / not live-ready`。
 
 ## 版本表
 
 | Version | Identity | Status | Prefit annual / DD / win | Reused holdout annual / DD / win | Evidence | Live-readiness |
 | --- | --- | --- | --- | --- | --- | --- |
 | `BTC-1H-Adaptive-Regime-V1` | Keltner breakout + CCI reversal prefit-frozen ensemble | diagnostic baseline / NO-GO | `2.82x` / `-18.68%` / `68.29%` | `0.17x` / `-42.73%` / `38.46%` | `canonical-specs/btc-1h-ar-v1-baseline-spec.md`；`artifacts/btc_1h_ar_v1_config_2026-07-02.json` | not live-ready；不生成 live spec |
-| `BTC-1H-Adaptive-Regime-V2` | V1 clean surface scaled frontier：Keltner breakout + CCI reversal ensemble，曝光统一缩放至 Keltner `1.8x`、CCI `2.7x` | paper-audit observation / forward-test required | `3.18x` / `-13.99%` / `84.85%` | `1.52x` / `-13.48%` / `81.82%` | `research-notes/btc-1h-ar-v1-scaled-frontier-audit-2026-07-02.md`；`ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md`；`artifacts/btc_1h_ar_v1_scaled_frontier_audit_2026-07-02.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
+| `BTC-1H-Adaptive-Regime-V2` | V1 clean surface scaled frontier：Keltner breakout + CCI reversal ensemble，曝光统一缩放至 Keltner `1.8x`、CCI `2.7x` | audit observation / forward-test required | `3.18x` / `-13.99%` / `84.85%` | `1.52x` / `-13.48%` / `81.82%` | `research-notes/btc-1h-ar-v1-scaled-frontier-audit-2026-07-02.md`；`ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md`；`artifacts/btc_1h_ar_v1_scaled_frontier_audit_2026-07-02.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
 | `BTC-1H-Adaptive-Regime-V3` | V2 micro-tune：Keltner breakout + CCI reversal ensemble，Keltner `2.4x`、CCI `3.5x`，CCI 更高 TP、无冷却、较严 ADX 上限 | diagnostic micro-tune observation / forward-test required | `6.16x` / `-12.87%` / `87.30%` | `1.90x` / `-17.47%` / `81.82%` | `research-notes/btc-1h-ar-v2-micro-tune-2026-07-06.md`；`ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md`；`research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md`；`artifacts/btc_1h_ar_v3_config_2026-07-06.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
 | `BTC-1H-Adaptive-Regime-V4` | V3 minimal-equivalent clean surface：只保留 `19` 个必要参数，`8` 个非必要槽位以中和值固定；与 V3 逐笔等价 | registered minimal-equivalent observation / forward-test required | `6.16x` / `-12.87%` / `87.30%` | `1.90x` / `-17.47%` / `81.82%` | `research-notes/btc-1h-ar-v3-param-necessity-2026-07-07.md`；`research-notes/btc-1h-ar-v4-window-backtest-2026-07-07.md`；`artifacts/btc_1h_ar_v4_config_2026-07-07.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
 

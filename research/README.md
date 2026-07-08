@@ -30,16 +30,16 @@
 | `HYPE-EMA-Crossover` | `HYPE-EMA-X` | `hype/15m-ema-crossover/` | EMA 金叉/死叉家族（V14 时代演化） | promoted research candidates（V15-V18），未 live |
 | `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `hype/15m-ema-trend-breakout/` | EMA96/384 趋势突破 / 追多追空 | archived/canonical specs；V35 在 runner 侧有历史实现 |
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | `hype/1m-ema-crossover/` | `1m` EMA 金叉/死叉，可执行时序 | diagnostic / dry-run candidate only |
-| `HYPE-1M-MA-Pullback-Scalp` | - | `hype/1m-ma-pullback-scalp/` | `1m` 双 MA 回踩 scalp | NO-GO |
-| `HYPE-1H-Adaptive-Regime` | `HYPE-1H-AR` | `hype/1h-adaptive-regime/` | `1h` DI 趋势 + 随机指标反转自适应 ensemble | V1-V4 registered / NO-GO |
-| `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | `hype/15m-multi-indicator-intraday/` | `15m` 多指标日内广搜 | V1.3 runner implementation target / not live-ready |
+| `HYPE-1M-MA-Pullback-Scalp` | - | `hype/1m-ma-pullback-scalp/` | `1m` 双 MA 回踩 scalp | not promoted / not live-ready |
+| `HYPE-1H-Adaptive-Regime` | `HYPE-1H-AR` | `hype/1h-adaptive-regime/` | `1h` DI 趋势 + 随机指标反转自适应 ensemble | V1-V4 registered / not promoted / not live-ready |
+| `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | `hype/15m-multi-indicator-intraday/` | `15m` 多指标日内广搜 | V1.3 live spec / not live-ready |
 | `HYPE-15M-Riptide` | - | `hype/15m-riptide/` | `15m` EMA 趋势背景 RSI 回踩 + RV regime | diagnostic / reproduction-pending |
-| `HYPE-15M-Pullback-Trail` | - | `hype/15m-pullback-trail/` | `15m` 回踩事件源 + bracket 搜索 | V3.3 迁移 NO-GO；bracket paper-audit only |
+| `HYPE-15M-Pullback-Trail` | - | `hype/15m-pullback-trail/` | `15m` 回踩事件源 + bracket 搜索 | V3.3 迁移 not promoted；bracket audit only |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `hype/5m-pullback-trail/` | `5m` 回踩/恢复入场 + ATR trailing stop | active research candidate；V6.2.1 在 runner dry-run |
-| `HYPE-5M-MA-Pullback-Scalp` | - | `hype/5m-ma-pullback-scalp/` | `5m` 双 MA 回踩 scalp | paper-audit candidates only |
-| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `hype/5m-micro-scalp/` | `5m` 高频小利 scalp 搜索 | V1-V1.3 registered paper-audit observations / not live-ready |
+| `HYPE-5M-MA-Pullback-Scalp` | - | `hype/5m-ma-pullback-scalp/` | `5m` 双 MA 回踩 scalp | audit candidates only |
+| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `hype/5m-micro-scalp/` | `5m` 高频小利 scalp 搜索 | V1-V1.3 registered audit observations / not live-ready |
 | `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | `hype/5m-event-quality-scoring/` | `5m` 事件质量打分 | V1 failed strict seed audit / no candidate |
-| `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | `hype/15m-trend-breakout-multi-indicator-ensemble/` | `EMA-TB-V35` + `MII-V1.3` 组合研究 | first combination diagnostic / NO-GO |
+| `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | `hype/15m-trend-breakout-multi-indicator-ensemble/` | `EMA-TB-V35` + `MII-V1.3` 组合研究 | first combination diagnostic / not promoted |
 | `HYPE-6H-RS4-Regime-Switch` | - | `hype/6h-rs4-regime-switch/` | `6h` regime-switch 趋势（压缩动量腿 + 扩张突破腿）复现 | V1 diagnostic only / not promoted |
 | （诊断主题）HYPE cross-strategy account | - | `hype/cross-strategy-account/` | 多策略共享子账户 / 全局单仓组合诊断 | diagnostic topic；不提升任何子策略状态 |
 
@@ -48,10 +48,10 @@
 | Family | Alias | Directory | 状态 |
 | --- | --- | --- | --- |
 | `BTC-1H-Adaptive-Regime` | `BTC-1H-AR` | `btc/1h-adaptive-regime/` | V1-V4 registered；V4 为 V3 最小等价干净版；forward-test required / not live-ready |
-| `ETH-1H-Adaptive-Regime` | `ETH-1H-AR` | `eth/1h-adaptive-regime/` | V1-V3 registered / NO-GO |
-| `SOL-1H-Adaptive-Regime` | `SOL-1H-AR` | `sol/1h-adaptive-regime/` | V1-V2 registered / NO-GO |
-| `TRX-1H-Adaptive-Regime` | `TRX-1H-AR` | `trx/1h-adaptive-regime/` | V1-V3 registered / NO-GO |
-| `BNB-1H-Adaptive-Regime` | `BNB-1H-AR` | `bnb/1h-adaptive-regime/` | V1-V3 registered / NO-GO |
+| `ETH-1H-Adaptive-Regime` | `ETH-1H-AR` | `eth/1h-adaptive-regime/` | V1-V3 registered / not promoted / not live-ready |
+| `SOL-1H-Adaptive-Regime` | `SOL-1H-AR` | `sol/1h-adaptive-regime/` | V1-V2 registered / not promoted / not live-ready |
+| `TRX-1H-Adaptive-Regime` | `TRX-1H-AR` | `trx/1h-adaptive-regime/` | V1-V3 registered / not promoted / not live-ready |
+| `BNB-1H-Adaptive-Regime` | `BNB-1H-AR` | `bnb/1h-adaptive-regime/` | V1-V3 registered / not promoted / not live-ready |
 | `BNB-15M-Adaptive-Regime` | `BNB-15M-AR` | `bnb/15m-adaptive-regime/` | active diagnostic research / not promoted |
 
 各资产入口：`btc/README.md`、`eth/README.md`、`sol/README.md`、`trx/README.md`、`bnb/README.md`。
@@ -64,7 +64,7 @@
 | --- | --- | --- |
 | `Binance-1D-Turtle-Breakout` | `asset-portfolios/1d-turtle-breakout/` | diagnostic |
 | `Binance-15M-Multi-Indicator-Intraday-Transfer` | `asset-portfolios/15m-multi-indicator-intraday/` | 迁移诊断；整体不提升 |
-| `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`） | `asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/` | V1 registered diagnostic / NO-GO |
+| `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`） | `asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/` | V1 registered / not promoted / not live-ready |
 | `MU-HYPE-Transfer`（`MU-HYPE-XFER`） | `mu/`（扁平结构，grandfathered） | core transfer research line |
 
 旧 HYPE cross-asset transfer 材料位于 `../archive/research/hype-transfer/`。

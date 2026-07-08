@@ -2,7 +2,7 @@
 
 ## 结论
 
-得到一个同时满足“相对 V1 收益更高、回撤更小、胜率适中”且 K+2 prefit 回撤低于 20% 的缩放前沿观察。它通过 reused holdout 与成本压力，但由于 reused holdout 已解锁、没有新增 forward trades 和生产 runner，状态仍为 `paper-audit observation / not live-ready`。
+得到一个同时满足“相对 V1 收益更高、回撤更小、胜率适中”且 K+2 prefit 回撤低于 20% 的缩放前沿观察。它通过 reused holdout 与成本压力，但由于 reused holdout 已解锁、没有新增 forward trades 和生产 runner，状态仍为 `audit observation / not live-ready`。
 
 2026-07-03 按用户要求，该观察已在 `btc-1h-ar-core-ledger.md` 登记为 `BTC-1H-Adaptive-Regime-V2`。此次登记只固定版本身份和参数，不改变 `not live-ready` 结论。
 

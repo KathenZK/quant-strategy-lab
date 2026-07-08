@@ -83,7 +83,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 - V1.1 在 `1x/2x/3x` 下为 `1.56x` / `2.38x` / `3.55x`，maxDD 为 `-9.84%` / `-19.12%` / `-27.82%`。
 - V1.2 在 `1x/2x/3x` 下为 `1.76x` / `2.98x` / `4.89x`，maxDD 为 `-9.96%` / `-19.90%` / `-29.67%`。它在三个杠杆档位收益均更高，但回撤也略深，不是 V1.1 的全指标严格替代。
 - 若继续坚持“小回撤”，`1x` 是本次唯一仍把全样本 maxDD 控制在约 `10%` 的档位；`2x` 已接近 `20%`，`3x` 接近 `30%`。
-- V1.2 的 train PF 明显低于后续窗口，近期高 PF 不应外推；版本登记不改变其 paper-audit observation / not live-ready 状态。
+- V1.2 的 train PF 明显低于后续窗口，近期高 PF 不应外推；版本登记不改变其 audit observation / not live-ready 状态。
 - `2x/3x` 是研究压力测试，不构成实盘仓位建议；任何 promotion 仍需逐笔路径、交易所 bracket maintenance、强平/保证金、资金费、重启恢复与 paper/live reconciliation。
 - VAL/FWD 已参与前序筛选，不能视作全新独立 OOS。
 

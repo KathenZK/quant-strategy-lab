@@ -2,7 +2,7 @@
 
 Family id：`HYPE-5M-Micro-Scalp`
 
-本报告将 `V1S_rand_016782__N00596` 正式记录为 `HYPE-5M-Micro-Scalp-V1.1` 后，对 `ScalpConfig` 的全部字段做 one-at-a-time 消融。状态仍为 `paper-audit observation / not live-ready`。
+本报告将 `V1S_rand_016782__N00596` 正式记录为 `HYPE-5M-Micro-Scalp-V1.1` 后，对 `ScalpConfig` 的全部字段做 one-at-a-time 消融。状态仍为 `audit observation / not live-ready`。
 
 ## 数据与执行
 

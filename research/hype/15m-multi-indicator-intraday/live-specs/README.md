@@ -4,7 +4,7 @@
 
 ## 当前文件
 
-- `hype-15m-mii-v1-live-feasibility-2026-06-29.md`：`HYPE-15M-MII-V1` 实盘可行性审计，结论 `NO-GO / not live-ready / not paper-live-ready`。
+- `hype-15m-mii-v1-live-feasibility-2026-06-29.md`：`HYPE-15M-MII-V1` 实盘可行性审计，结论 `not promoted / not live-ready`。
 - `hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`：`HYPE-15M-MII-V1.2` 完整复现规格，包含数据、指标、参数、执行时序、伪代码、验收指标和实盘前 blockers；用于同事或 AI 复刻策略，不是 live/paper-live handoff。
 - `hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`：`HYPE-15M-MII-V1.3` 固定 `2.5x` sizing 的实盘参数规格，包含 runner TOML 参数、指标/信号/bracket 定义、live runner 时序差异和上线前硬性验收；不是 live/paper-live handoff。
 

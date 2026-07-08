@@ -104,7 +104,7 @@ Family id：`HYPE-5M-PBTR`
 
 同日补充的 `diagnostics/hype-5m-pbtr-v6-candidate-robustness-2026-06-25.md` 才是本轮最终筛选依据。该复核围绕最强可执行基座做邻域测试，找到 paper-only 候选：`EMA21/EMA55` 多头回踩恢复、`dir_ret192_bps >= 788.123`、入场即挂 `TP=3ATR / SL=7ATR`、无 trailing、`36` 根 K 超时 open 平仓。它全样本 `147` 笔、PF `1.72`、胜率 `59.86%`、最大回撤 `-11.28%`，`2026-06-01` 以后 OOS `10` 笔、PF `1.45`。
 
-因此，本轮结论不是“可以真钱生产”，而是“找到一个可实盘表达且值得 paper audit 的 V6 候选”。下一步应先做 paper audit runner，记录所有触发、拒绝、接受和虚拟订单成交；生产 sizing 前必须有连续 live/paper 证据。
+因此，本轮结论不是“可以真钱生产”，而是“找到一个可实盘表达且值得 audit 的 V6 候选”。下一步应先做 audit runner，记录所有触发、拒绝、接受和虚拟订单成交；生产 sizing 前必须有连续 live/paper 证据。
 
 这轮搜索刻意没有接受旧 `min_hold_bars + stale stop price` 的成交假设。若候选不能在这个口径下赚钱，就不应交给实盘 runner。
 

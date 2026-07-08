@@ -5,7 +5,7 @@
 - 完整名称：`ETH-1H-Adaptive-Regime-V1`。
 - 家族：`ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）。
 - 市场：Binance USD-M Futures `ETHUSDT` perpetual `1h`。
-- 状态：`registered diagnostic baseline / NO-GO / not promoted / not live-ready`。
+- 状态：`registered baseline / NO-GO / not promoted / not live-ready`。
 - 版本来源：首轮 `600,768` 组配置的 prefit 冻结冠军；不是根据最近三个月 OOS 反向选择。
 
 V1 的登记只冻结可复现身份，不代表达到用户要求的 `10x / >=50% / DD<20% / 可实盘` 门槛。

@@ -4,7 +4,7 @@
 
 问题：保留 15m 回踩/恢复信号作为事件源，但放弃旧 V3.3 delayed trailing，改成实盘从入场时刻就能存在的 fixed TP/SL bracket、emergency stop 和 timeout，判断是否能找到收益、胜率、回撤更均衡的策略。
 
-结论：找到一个 `paper-audit candidate only`，不能直接提升为 paper-live、dry-run 或 live candidate。该结构解决了 delayed trailing 解锁后 stop 不可实盘的问题，但 OOS 样本只有 `9` 笔，且 `2025-09-01 -> 2025-12-01` 切片表现弱，后续必须先做 walk-forward 固化和 paper audit runner。
+结论：找到一个 `audit candidate only`，不能直接提升为 paper-live、dry-run 或 live candidate。该结构解决了 delayed trailing 解锁后 stop 不可实盘的问题，但 OOS 样本只有 `9` 笔，且 `2025-09-01 -> 2025-12-01` 切片表现弱，后续必须先做 walk-forward 固化和 audit runner。
 
 候选：`ema21_96_pb0.015_long_nocandle__ret32>=600__tp2_sl4_tx24`。全样本 `70` 笔，收益 `39.56%`，年化 `1.36x`，胜率 `62.86%`，PF `1.677`，payoff `0.991`，最大回撤 `-12.49%`。OOS `2026-06-01 -> latest` 为 `9` 笔，收益 `11.39%`，胜率 `77.78%`，PF `5.167`。
 

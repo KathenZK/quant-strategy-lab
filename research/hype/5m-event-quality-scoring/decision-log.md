@@ -13,7 +13,7 @@
 原因：
 
 - 既有 `1m` EMA-crossover 诊断显示，增加 exits 或迁移 strength filters 不能救回原始 cross-chasing。
-- 既有 `5m` fixed-rule scalp 研究只有在放宽频率后才找到 paper-audit candidates，因此下一个有用问题不是再找一个静态规则，而是能否选择事件质量。
+- 既有 `5m` fixed-rule scalp 研究只有在放宽频率后才找到 audit candidates，因此下一个有用问题不是再找一个静态规则，而是能否选择事件质量。
 
 V0 必需标准：
 
@@ -22,9 +22,9 @@ V0 必需标准：
 - 在训练标签和测试月份之间使用 purge window。
 - 在本家族下保留 JSON/CSV artifacts 和 Markdown diagnostic。
 
-## 2026-06-27 - Generic V0 no-go；seeded V0 paper-audit candidate
+## 2026-06-27 - Generic V0 no-go；seeded V0 audit candidate
 
-状态：`paper-audit candidate`
+状态：`audit candidate`
 
 证据：
 
@@ -36,7 +36,7 @@ V0 必需标准：
 决策：
 
 - 不提升 generic multi-source event pool。它产生了 `252,277` 个 candidate events，但 paper-gate pass 为 `0`；排名最好的行在 OOS 仍为负。
-- 仅将 `seeded_source_mean_q80` 保留为 paper-audit candidate。
+- 仅将 `seeded_source_mean_q80` 保留为 audit candidate。
 
 Seeded V0 摘要：
 
@@ -50,7 +50,7 @@ Seeded V0 摘要：
 
 ## 2026-06-27 - Seeded V0 score/quantile ablation
 
-状态：`paper-audit candidate unchanged`
+状态：`audit candidate unchanged`
 
 证据：
 
@@ -62,7 +62,7 @@ Seeded V0 摘要：
 决策：
 
 - 不要用全年收益最高的行替换 `current_70_20_10__q80`。
-- 保留 `current_70_20_10__q80` 作为后续审计的均衡 paper-audit 行，同时将高收益 `q50/q60` 行视为不稳定诊断。
+- 保留 `current_70_20_10__q80` 作为后续审计的均衡 audit 行，同时将高收益 `q50/q60` 行视为不稳定诊断。
 
 发现：
 
@@ -76,7 +76,7 @@ Seeded V0 摘要：
 
 ## 2026-06-27 - 创建主账并进行 Seeded V0.1 style-prune
 
-状态：`paper-audit candidate refined`
+状态：`audit candidate refined`
 
 证据：
 
@@ -88,7 +88,7 @@ Seeded V0 摘要：
 决策：
 
 - 将 `HYPE-5M-Event-Quality-Scoring-Seeded-V0` / `current_70_20_10__q80` 视为 Base version。
-- 将 `no_wick_no_breakout__q80` 提升为当前 refined diagnostic candidate，用于后续 paper audit。
+- 将 `no_wick_no_breakout__q80` 提升为当前 refined diagnostic candidate，用于后续 audit。
 - 保留 `bb_vwap_only__q85` 作为低回撤简化替代项。
 - 不再继续把 `wick_reject` 和 `micro_breakout` 视为必需的 baseline event sources；除非后续 focused audit 证明受约束版本有用，否则它们应保持移除。
 
@@ -104,7 +104,7 @@ Seeded V0 摘要：
 
 ## 2026-06-27 - Seeded V0.1 full parameter ablation
 
-状态：`paper-audit candidate refined`
+状态：`audit candidate refined`
 
 证据：
 
@@ -132,7 +132,7 @@ Seeded V0 摘要：
 
 ## 2026-06-27 - 登记 Seeded V1 并阻止 live promotion
 
-状态：`research lead / paper-audit lead only`
+状态：`research lead / audit lead only`
 
 证据：
 
@@ -178,7 +178,7 @@ V1 摘要：
 
 决策：
 
-- 将 `HYPE-5M-Event-Quality-Scoring-Seeded-V1` 从 paper-audit lead 下调为仅 fixed seed-universe diagnostic。
+- 将 `HYPE-5M-Event-Quality-Scoring-Seeded-V1` 从 audit lead 下调为仅 fixed seed-universe diagnostic。
 - 不要从 V1 继续推进 paper-runner reconciliation、paper-live、dry-run handoff 或 live deployment。
 - 将此前 fixed seed-universe V1 结果视为很可能包含实质性 config-universe / seed-selection bias。
 

@@ -37,14 +37,14 @@
 - 硬 gate 第一名 prefit `3.52x / -18.06% / 80.33%`，但 reused holdout `0.60x / -26.07% / 54.55%`，因此否决为最终观察。
 - 第一次 prefit-only soft frontier 的原曝光为 Keltner `2.0x`、CCI `3.0x`，K+2 prefit DD `-21.77%`；按 prefit K+2 回撤机械统一缩放 `0.90`，得到 `1.8x/2.7x`，没有读取 reused holdout 决定 scale。
 - 缩放前沿 prefit `3.18x / -13.99% / 84.85%`，K+2 prefit `2.50x / -19.70% / 80.30%`，reused holdout `1.52x / -13.48% / 81.82%`，current full `2.88x / -13.99% / 84.42%`。
-- 当时决策：记录为 `BTC-1H-AR-V1-SCALED-FRONTIER-2026-07-02` paper-audit observation；版本命名暂缓，不标记 live-ready。下一证据必须是冻结参数后的新增 forward trades 和生产 runner 审计。
+- 当时决策：记录为 `BTC-1H-AR-V1-SCALED-FRONTIER-2026-07-02` audit observation；版本命名暂缓，不标记 live-ready。下一证据必须是冻结参数后的新增 forward trades 和生产 runner 审计。
 
 ## 2026-07-03 — 按用户要求登记 V2
 
 - 将 `BTC-1H-AR-V1-SCALED-FRONTIER-2026-07-02` 正式登记为 `BTC-1H-Adaptive-Regime-V2`。
 - V2 身份固定为 V1 clean surface scaled frontier：Keltner breakout + CCI reversal ensemble，Keltner `fixed_leverage=1.8`、CCI `fixed_leverage=2.7`。
 - 参数、作用说明和证据链接已写入 `btc-1h-ar-core-ledger.md`；机器证据仍为 `artifacts/btc_1h_ar_v1_scaled_frontier_audit_2026-07-02.json`。
-- 此登记覆盖上一条“版本命名暂缓”的决策，但不改变审计状态：`paper-audit observation / forward-test required / not live-ready`。
+- 此登记覆盖上一条“版本命名暂缓”的决策，但不改变审计状态：`audit observation / forward-test required / not live-ready`。
 - 下一证据仍必须来自 V2 冻结参数后的新增 forward trades、production runner、重启恢复、交易所对账、missing-bar fail-closed、kill switch 与真实 stop-market 滑点审计。
 
 ## 2026-07-06 — V2 全参数消融
@@ -53,7 +53,7 @@
 - 覆盖两条腿全部 `78/78` 个 `StrategyConfig` 字段槽，生成 `205` 行 baseline/variant 证据，coverage missing `0`。
 - 字段分类沿用 V1 全消融语义：`27` active tunable、`12` contract fixed、`35` baseline fixed、`4` neutral fixed。
 - 相对 V2 基线，one-at-a-time prefit 严格改善行数为 `5`；最强单字段方向为 CCI `tp_atr: 4.5 -> 5.0`，prefit `3.5469x / -13.99% / 84.85%`。
-- 决策：记录为敏感性审计，不做组合搜索，不登记 V2.1，不改变 `paper-audit observation / not live-ready`。证据见 `ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md` 与 `artifacts/btc_1h_ar_v2_full_ablation_2026-07-06.json`。
+- 决策：记录为敏感性审计，不做组合搜索，不登记 V2.1，不改变 `audit observation / not live-ready`。证据见 `ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md` 与 `artifacts/btc_1h_ar_v2_full_ablation_2026-07-06.json`。
 
 ## 2026-07-06 — V2 受约束微调观察
 

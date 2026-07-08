@@ -6,7 +6,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 父版本：`HYPE-5M-Micro-Scalp-V1.2`
 
-状态：`paper-audit observation / not live-ready`
+状态：`audit observation / not live-ready`
 
 ## 一句话定义
 

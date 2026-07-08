@@ -6,7 +6,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 源观察行：`V1.1_tune_grid_004895`
 
-状态：`paper-audit observation / not live-ready`
+状态：`audit observation / not live-ready`
 
 ## 一句话定义
 
@@ -50,7 +50,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 | 杠杆 | 年化资金倍数 | 全区间收益 | maxDD | 最差单笔账户收益 | 定位 |
 | ---: | ---: | ---: | ---: | ---: | --- |
-| `1x` | `1.76x` | `84.28%` | `-9.96%` | `-4.25%` | V1.2 默认 paper-audit 敞口 |
+| `1x` | `1.76x` | `84.28%` | `-9.96%` | `-4.25%` | V1.2 默认 audit 敞口 |
 | `2x` | `2.98x` | `227.11%` | `-19.90%` | `-8.49%` | aggressive research stress |
 | `3x` | `4.89x` | `458.10%` | `-29.67%` | `-12.74%` | aggressive research stress |
 

@@ -73,7 +73,7 @@ This row uses the V5.1 fixed thresholds discovered with hindsight. It is not wal
 
 The audit CSV logs every observation-confirmed event for the best row: `176` accepted, `165` paper trades opened, `11` accepted events blocked by an existing paper position, and `2780` rejected by score threshold.
 
-Required live paper-audit fields are present: `signal_ts`, `side`, `segment`, `train_start`, `train_end`, `test_start`, `test_end`, `score`, `score_threshold`, `score_rank_pct_train`, `decision`, `reject_reason`, and `paper_order_status`.
+Required live audit fields are present: `signal_ts`, `side`, `segment`, `train_start`, `train_end`, `test_start`, `test_end`, `score`, `score_threshold`, `score_rank_pct_train`, `decision`, `reject_reason`, and `paper_order_status`.
 
 ## Decision
 

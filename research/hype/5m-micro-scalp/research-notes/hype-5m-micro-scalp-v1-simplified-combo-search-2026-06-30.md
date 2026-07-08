@@ -108,9 +108,9 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 ## 结论
 
-本轮找到严格优于当前数据 V1 的观察候选 `V1S_core_032883`，但它仍只是 `paper-audit observation`，不能替代 V1 或进入实盘。下一步必须做逐笔路径、参数邻域、walk-forward 和订单维护审计。
+本轮找到严格优于当前数据 V1 的观察候选 `V1S_core_032883`，但它仍只是 `audit observation`，不能替代 V1 或进入实盘。下一步必须做逐笔路径、参数邻域、walk-forward 和订单维护审计。
 
-后续局部稳健性报告 `research-notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md` 已复核前排候选；优先 paper-audit observation 调整为 `V1S_rand_016782__N00596`，并在后续记录为 `HYPE-5M-Micro-Scalp-V1.1`，但仍不是 live-ready。
+后续局部稳健性报告 `research-notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md` 已复核前排候选；优先 audit observation 调整为 `V1S_rand_016782__N00596`，并在后续记录为 `HYPE-5M-Micro-Scalp-V1.1`，但仍不是 live-ready。
 
 ## 产物
 

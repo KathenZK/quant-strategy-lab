@@ -20,7 +20,7 @@
 - prefit 冻结冠军为 `BB breakout long + RSI reversal both` ensemble；按用户要求登记为 `ETH-1H-Adaptive-Regime-V1`。
 - V1 prefit `2.8109x / -16.29% / 71.57% / 102 trades`；locked OOS `0.5196x / -20.87% / 14.29% / 7 trades`；current full `2.2462x / -20.87% / 67.89% / 109 trades`。
 - 独立复现入口 `scripts/eth_1h_ar_v1.py` 与首轮 summary 逐项一致。
-- 状态为 `registered diagnostic baseline / NO-GO / not promoted / not live-ready`；不生成 live spec。
+- 状态为 `registered baseline / NO-GO / not promoted / not live-ready`；不生成 live spec。
 - 后续按用户要求对 V1 两腿全部字段槽做 one-at-a-time 全参数消融，删除不必要参数后再从 clean 参数面微调。
 
 ## 2026-07-03：V1 全参数消融与 clean-equivalent interface
@@ -45,7 +45,7 @@
 - V2 继承 V1 的数据、切分、执行、手续费 `0.001`/fill、滑点 `4 bps`/fill 和历史资金费口径；使用全参数消融后的 `29` 参数 clean interface。
 - V2 prefit `3.4333x / -15.02% / 73.33% / 105 trades`，current full `2.6071x / -18.93% / 71.30% / 115 trades`，相对 V1 收益更高、回撤更小、胜率仍在适中区间。
 - V2 reused holdout `0.4323x / -18.93% / 50.00% / 10 trades`，收益仍为负；`66` 个邻域的 reused-holdout positive 为 `0`，bootstrap 原始硬形状命中率为 `0%`。
-- 登记结论：`registered diagnostic tuned observation / NO-GO / not promoted / not live-ready`；不生成 live spec，后续必须等待冻结 V2 参数后的新增 forward trades。
+- 登记结论：`registered tuned observation / NO-GO / not promoted / not live-ready`；不生成 live spec，后续必须等待冻结 V2 参数后的新增 forward trades。
 
 ## 2026-07-06：登记 ETH-1H-Adaptive-Regime-V2.1
 
@@ -62,4 +62,4 @@
 - 判定 `bb_break.ema_htf` 与 `bb_break.max_aligned_funding_bps` 为 merged-path inert（domain 内所有变体逐笔路径与 V2.1 完全相同），硬编码为冻结值；clean surface 收敛到 `27` 个可调参数，`scripts/eth_1h_ar_v2_1_clean.py` fail-closed 校验与 V2.1 逐笔等价。
 - 在 27 参数干净面上微调：每腿随机 `100,000` 组，保留 `400 + 400`，组合评估 `160,000`，可评分 `128,759`；严格改善组合 `5` 个，经 K+2/8 bps 稳健排序后冻结 `ETH-1H-AR-V2-1-CLEAN-TUNE-2026-07-07`，并按用户要求登记为 `ETH-1H-Adaptive-Regime-V3`。
 - 冻结 observation：prefit `4.0591x / -12.15% / 100.00% / 42 trades`，current full `3.3084x / -15.70% / 95.65% / 46 trades`；相对 V2.1 收益更高、胜率更高、回撤更小，冻结后 current full 三项同时改善。
-- 失败边界：reused holdout `0.8706x / -15.70% / 50.00% / 4 trades`，亏损从 V2.1 的 `-8.35%` 收敛到 `-3.39%` 但仍为负；K+2 下 prefit 退化为 `2.7964x / -16.66% / 90.24%`、holdout 胜率 `25%`；近三个月分片仍为负。登记结论为 `registered diagnostic clean tuned observation / NO-GO / not promoted / not live-ready`，不生成 live spec。
+- 失败边界：reused holdout `0.8706x / -15.70% / 50.00% / 4 trades`，亏损从 V2.1 的 `-8.35%` 收敛到 `-3.39%` 但仍为负；K+2 下 prefit 退化为 `2.7964x / -16.66% / 90.24%`、holdout 胜率 `25%`；近三个月分片仍为负。登记结论为 `registered clean tuned observation / NO-GO / not promoted / not live-ready`，不生成 live spec。

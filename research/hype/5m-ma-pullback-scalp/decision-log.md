@@ -18,7 +18,7 @@
 
 ## 当前决策
 
-- 本家族有 paper-audit candidates，但没有 live-ready strategy。
-- 优先将 `HYPE_5M_MA_PBS_R03072__base` 作为第一个 paper-audit 起点，因为它的样本数更高（`138` 笔）且通过了邻域测试；将 `HYPE_5M_MA_PBS_R03072__nb_0370` 作为得分更高的邻域对照。
+- 本家族有 audit candidates，但没有 live-ready strategy。
+- 优先将 `HYPE_5M_MA_PBS_R03072__base` 作为第一个 audit 起点，因为它的样本数更高（`138` 笔）且通过了邻域测试；将 `HYPE_5M_MA_PBS_R03072__nb_0370` 作为得分更高的邻域对照。
 - 不要称它为高频 scalp：存活 candidate 的频率只有约 `0.15-0.35` 笔/天。
 - 未完成 per-trade path review、order-maintenance audit、restart/idempotency checks 和 paper/live-dry-run reconciliation 前，不要提升。

@@ -64,7 +64,7 @@ Family id: `HYPE-5M-MA-Pullback-Scalp`
 
 ## 结论
 
-邻域复核保留了若干可推进配置；它们仍然只是 paper-audit 候选，下一步需要逐笔路径图、paper runner 和 live-runner 订单维护/重启审计。
+邻域复核保留了若干可推进配置；它们仍然只是 audit 候选，下一步需要逐笔路径图、paper runner 和 live-runner 订单维护/重启审计。
 
 ## 产物
 

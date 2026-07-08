@@ -2,7 +2,7 @@
 
 ## 结论
 
-得到一个在 prefit 同时满足“相对 V1 收益更高、回撤更小、胜率适中”且通过 K+2/8 bps 选择门槛的 clean tuned observation；但最近三个月 reused holdout 收益仍为负，原始 10x 目标也未达到。该 observation 后续按用户要求登记为 `ETH-1H-Adaptive-Regime-V2`，状态仍为 `registered diagnostic tuned observation / NO-GO / not live-ready`。
+得到一个在 prefit 同时满足“相对 V1 收益更高、回撤更小、胜率适中”且通过 K+2/8 bps 选择门槛的 clean tuned observation；但最近三个月 reused holdout 收益仍为负，原始 10x 目标也未达到。该 observation 后续按用户要求登记为 `ETH-1H-Adaptive-Regime-V2`，状态仍为 `registered tuned observation / NO-GO / not live-ready`。
 
 ## 选择来源
 

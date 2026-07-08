@@ -5,7 +5,7 @@
 - 完整名称：`ETH-1H-Adaptive-Regime-V3`。
 - 家族：`ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）。
 - 市场：Binance USD-M Futures `ETHUSDT` perpetual `1h`。
-- 状态：`registered diagnostic clean tuned observation / NO-GO / not promoted / not live-ready`。
+- 状态：`registered clean tuned observation / NO-GO / not promoted / not live-ready`。
 - 版本来源：V2.1 全参数消融后删除 `2` 个 merged-path inert 字段，在 `27` 参数 clean surface 上做严格改善微调得到的冻结 observation `ETH-1H-AR-V2-1-CLEAN-TUNE-2026-07-07`。
 
 V3 的登记只冻结可复现身份，不代表 candidate、paper-live、dry-run、handoff 或 live。

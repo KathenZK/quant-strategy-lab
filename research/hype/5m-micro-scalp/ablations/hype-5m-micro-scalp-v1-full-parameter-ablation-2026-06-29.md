@@ -28,7 +28,7 @@ Family id: `HYPE-5M-Micro-Scalp`
 - 最脆弱参数是 `entry_style`、`require_trend`、`ema_slow` 和 `vwap_dev_bps`：改变这些参数会明显抬高频率、恶化 PF 或直接把策略打成亏损。
 - `bb_z`、`rsi_*`、`donchian`、`wick_atr`、`pullback_bps`、`breakout_bps`、`min_dir_roc_bps`、`max_counter_roc_bps` 等字段在当前 `vwap_revert` 风格下大多是 dormant 参数；它们只有切换 entry style 后才真正参与信号。
 - `sl_bps=400`、`max_dist_ema_bps=130`、较短 `max_hold_bars`、较低 `max_atr_pct_bps` 等变体在本轮更好，但这些是后续 V1.1 候选，不应在逐笔路径、订单维护、重启恢复和 paper/live reconciliation 前替代 V1。
-- 结论状态维持 `paper-audit candidate only / not live-ready`。
+- 结论状态维持 `audit candidate only / not live-ready`。
 
 ## 参数组摘要
 

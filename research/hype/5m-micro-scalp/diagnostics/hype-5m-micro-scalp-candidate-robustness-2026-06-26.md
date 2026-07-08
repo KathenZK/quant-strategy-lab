@@ -96,7 +96,7 @@ Family id: `HYPE-5M-Micro-Scalp`
 
 ## 结论
 
-邻域复核留下多个可推进候选；下一步应针对最稳的 1-2 个生成逐笔路径图、paper audit runner 和 live spec 草案。
+邻域复核留下多个可推进候选；下一步应针对最稳的 1-2 个生成逐笔路径图、audit runner 和 live spec 草案。
 
 ## 产物
 

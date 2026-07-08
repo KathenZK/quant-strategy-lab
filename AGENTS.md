@@ -21,7 +21,7 @@
 
 ## 术语口径
 
-- 策略状态词（`diagnostic baseline`、`paper-audit observation`、`forward-test required`、`candidate`、`dry-run`、`live` 等）的定义与状态机以 `research/strategy-status-glossary.md` 为唯一来源。
+- 策略状态词（`explore`、`registered`、`audit`、`live spec`、`dry-run`、`live`、`NO-GO` 等）的定义与状态机以 `research/strategy-status-glossary.md` 为唯一来源；dry-run 前不得写 `NO-GO`，只能写 `not promoted / not live-ready`。
 - `candidate`、`live`、`dry-run`、`handoff` 或"交接版本"都属于 promotion 状态；进入这些状态前必须完成 live-executable 审计。本仓库不定义额外的模拟盘阶段；模拟盘/仿真运行统一称为 `dry-run`，真实小额下单归入 `live` 并注明 notional 与风险上限。
 - `active research line` 指当前仍在 `research/` 下维护、会继续复现或更新结论的研究方向；不再维护的一次性历史脚本应归入 `archive/scripts/research/`。
 - `current one-off research script` 指只服务某个研究问题的复现、搜索、审计、导出脚本；它可以保留在对应研究目录，但不应提升为 active package code。

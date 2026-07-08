@@ -6,7 +6,7 @@ alwaysApply: true
 # Lab / Runner Handoff Contract
 
 - The sibling repository `/Users/ZK/OpenCode/quant-runner` is the only production execution surface. Research backtest scripts in this repository must never be promoted into runners.
-- A strategy may only be handed to `quant-runner` through a runner handoff spec: a Markdown file under the family's `live-specs/` directory whose status line explicitly states the promotion state (for example `runner implementation target / not live-ready`).
+- A strategy may only be handed to `quant-runner` through a runner handoff spec: a Markdown file under the family's `live-specs/` directory whose status line explicitly states the promotion state (for example `live spec / not live-ready`).
 - Every runner handoff spec must contain at minimum: full family name and version, runner strategy `kind` (matching the actual `quant-runner` config value), exchange/market/symbol/timeframe, a complete parameter table with the exact runner config field names, data-quality requirements and warmup needs, fee/slippage/funding assumptions, closed-bar-only requirement, a runner TOML example, the remaining audit gaps, and links to the core ledger and the supporting research evidence.
 - Runner-side identity must stay in sync: the handoff spec's `kind`, module path, and TOML example must match the current `quant-runner` code and configs. When `quant-runner` renames a kind or moves a module, update the lab-side handoff spec in the same change set.
 - The `quant-runner` strategy directory keeps its own `<STRATEGY_ID>-SPEC.md`; the lab handoff spec and the runner SPEC must link to each other. Parameter changes must be applied to both or explicitly recorded as divergence in the family decision log.

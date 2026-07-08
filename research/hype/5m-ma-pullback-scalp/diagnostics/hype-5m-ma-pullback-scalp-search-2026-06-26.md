@@ -35,7 +35,7 @@ Family id: `HYPE-5M-MA-Pullback-Scalp`
 - paper candidate gate: trades >= `60`，full return > `0`，ann > `1x`，win >= `52%`，PF >= `1.15`，maxDD >= `-20%`，VAL/FWD PF >= `1`，VAL/FWD/recent returns 不得明显失血。
 - 通过 paper candidate gate：`2`。
 
-通过 paper candidate gate 的配置如下；它们仍然只能进入 paper audit，不能直接实盘。
+通过 paper candidate gate 的配置如下；它们仍然只能进入 audit，不能直接实盘。
 | name | trigger | side | fast/slow | TP/SL/hold | trades/day | trades | ann | win | PF | avg | maxDD | VAL PF | FWD PF | recent30 |
 | --- | --- | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
 | `HYPE_5M_MA_PBS_R03072` | `reclaim` | `both` | `21/144` | `180/160/45` | `0.35` | `138` | `1.13x` | `52.90%` | `1.158` | `10.89 bps` | `-12.64%` | `1.134` | `1.768` | `0.90%` |
@@ -80,7 +80,7 @@ Family id: `HYPE-5M-MA-Pullback-Scalp`
 
 ## 结论
 
-本轮找到可进入 paper audit 的盈利配置，但还不能真实资金上线；下一步必须做参数邻域、逐笔路径图、paper runner 和重启/订单维护审计。
+本轮找到可进入 audit 的盈利配置，但还不能真实资金上线；下一步必须做参数邻域、逐笔路径图、paper runner 和重启/订单维护审计。
 
 ## 产物
 

@@ -8,7 +8,7 @@
 - 最近三个月 reused holdout：年化 `7.67x`、收益 `+65.31%`、回撤 `-19.79%`、胜率 `78.57%`（`42` 笔）。
 - 最近 `7d` 仅 `+0.46%`，期间回撤达 `-15.92%`。
 
-状态判定：`registered diagnostic single-position version / NO-GO / not promoted / not live-ready`，并且**最大回撤 `-21.43%` 已穿破仓库 `<20%` 硬门槛**。全期收益数字来自六个样本内强势 diagnostic 策略在全额权益上的高杠杆复利，不能作为实盘收益预期；单仓结构同时把组合的分散保护完全去掉，回撤回到甚至超过单资产水平。
+状态判定：`registered single-position version / NO-GO / not promoted / not live-ready`，并且**最大回撤 `-21.43%` 已穿破仓库 `<20%` 硬门槛**。全期收益数字来自六个样本内强势 diagnostic 策略在全额权益上的高杠杆复利，不能作为实盘收益预期；单仓结构同时把组合的分散保护完全去掉，回撤回到甚至超过单资产水平。
 
 ## 组合规则
 

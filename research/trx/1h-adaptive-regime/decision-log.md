@@ -77,7 +77,7 @@
 - 新增 `scripts/trx_1h_ar_v3.py` 和 `artifacts/trx_1h_ar_v3_config_2026-07-06.json`，校验 V3 指标与微调观察值一致。
 - 新增 `canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`，逐项列出 V3 全部 `36` 个参数、作用、V2/V3 参数值和变化含义。
 - V3 相比 V2：不再与 V1/V2 逐交易等价；MACD leg 更快 HTF、更窄 ADX/ATR、放宽 MACD turn 与 EMA 距离、杠杆提高到 `5x`；Stochastic leg 从 long-only 改为 both，使用更慢 EMA 参考、严格 ADX、较宽 trailing、较短 cooldown 和 `2h` 入场延迟。
-- 决策：`V3` 为 registered diagnostic tuned version。current full 满足收益更高、win `>80%`、DD `<20%`，但 reused holdout 胜率 `77.78%`，且缺 fresh forward OOS 与 production runner，仍为 `NO-GO / not promoted / not live-ready`。
+- 决策：`V3` 为 registered tuned version。current full 满足收益更高、win `>80%`、DD `<20%`，但 reused holdout 胜率 `77.78%`，且缺 fresh forward OOS 与 production runner，仍为 `NO-GO / not promoted / not live-ready`。
 
 ## 2026-07-07：V3 全参数消融、clean 参数面与微调（no-hit）
 

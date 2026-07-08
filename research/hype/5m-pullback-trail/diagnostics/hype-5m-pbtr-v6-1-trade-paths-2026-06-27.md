@@ -2,7 +2,7 @@
 
 Family id：`HYPE-5M-PBTR`
 
-`HYPE-5M-PBTR-V6.1` 定义为 V6 的 sizing/exit 变体：`tp_atr=2.5`，`sl_atr=7`，`time_exit_bars=36`，不使用 trailing，固定 `3x` 仓位。该版本仍是 paper audit candidate，不是生产 sizing 版本。
+`HYPE-5M-PBTR-V6.1` 定义为 V6 的 sizing/exit 变体：`tp_atr=2.5`，`sl_atr=7`，`time_exit_bars=36`，不使用 trailing，固定 `3x` 仓位。该版本仍是 audit candidate，不是生产 sizing 版本。
 
 ## 结果
 

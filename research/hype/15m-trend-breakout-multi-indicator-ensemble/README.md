@@ -18,7 +18,7 @@ Created：2026-07-07
 
 ## 当前状态
 
-- 当前状态：`first combination diagnostic / NO-GO / not live-ready`。
+- 当前状态：`first combination diagnostic / not promoted / not live-ready`。
 - 首次组合回测结论见 `research-notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md`。
 - 家族主账：`hype-15m-tb-mii-ens-core-ledger.md`。
 

@@ -50,7 +50,7 @@ Created：2026-06-30
 | `HYPE-15M-MII-V1base` | diagnostic observation / not live-ready | `RSI(7)` 上穿 `40` 做多、下穿 `60` 做空；MACD 方向过滤；`ATR96 pct >= 0.75%`；`min_rvol96=1.0`；`TP=1.20%`、`SL=3.60%`、`hold=16`、`2x` | `research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`；补算 K+2 延迟压力 | K+1 年化高、Last90 强，但 K+2 回撤扩大到 `-36.28%`；保留为主观察基线，不提升为 candidate/paper-live/dry-run/handoff/live |
 | `HYPE-15M-MII-V1.1` | clean diagnostic expression / not live-ready | 去掉未启用的 `1h confirm`、`RSI14 band`、ADX、H4、ret、churn、cooldown 等表达噪音，只保留生效项 | `research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md` | 行为等同 `V1base`；最近 1 周无交易，K+1 最近 1 月总收益 `34.40%`，全样本总收益 `309.54%`；trailing 动态止盈失败；BTC/ETH 跨资产诊断未证明可迁移；仍为 `NO-GO` |
 | `HYPE-15M-MII-V1.2` | ATR bracket diagnostic observation / not live-ready | 沿用 `V1.1` 入场过滤；下一根 open 入场时按信号 K 已知 `ATR96%` 设置 `TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24` | `live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md` | K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`；去掉 `ATR96 >= 0.75%` 后收益/回撤明显恶化，两个过滤都去掉转负；仍为 `NO-GO` |
-| `HYPE-15M-MII-V1.3` | fixed 2.5x sizing diagnostic / runner implementation target / not live-ready | 沿用 `V1.2` 信号、过滤、ATR bracket 和 `hold=24`；固定 `2.5x` 权益暴露 | `research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`；`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`；`research-notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md` | K+1 总收益 `549.30%`、年化 `472.15%`、回撤 `-22.01%`；K+2 总收益 `239.38%`、年化 `212.47%`、回撤 `-41.89%`；近期不开单主要来自 `ATR96% >= 0.75%` 过滤，仍为 `NO-GO` |
+| `HYPE-15M-MII-V1.3` | fixed 2.5x sizing diagnostic / live spec / not live-ready | 沿用 `V1.2` 信号、过滤、ATR bracket 和 `hold=24`；固定 `2.5x` 权益暴露 | `research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`；`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`；`research-notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md` | K+1 总收益 `549.30%`、年化 `472.15%`、回撤 `-22.01%`；K+2 总收益 `239.38%`、年化 `212.47%`、回撤 `-41.89%`；近期不开单主要来自 `ATR96% >= 0.75%` 过滤，仍为 `NO-GO` |
 
 ## HYPE-15M-MII-V1base 规格
 
@@ -215,7 +215,7 @@ K+2 延迟压力：
 - Exposure：固定 `2.5x` 权益暴露。
 - Execution：闭合 K 信号，下一根 open 入场；单仓不重叠；stop-first；timeout-open；K+2 作为延迟压力测试。
 - Cost：Binance 研究回测使用手续费 `0.1000%`/fill、滑点 `0.0400%`/fill、round-trip `0.2800%`；资金费未计入。
-- Status：`runner implementation target / diagnostic observation only / not live-ready`；不得标记为 candidate、paper-live、dry-run、handoff 或 live。
+- Status：`live spec / diagnostic observation only / not live-ready`；不得标记为 candidate、paper-live、dry-run、handoff 或 live。
 
 ### V1.3 多赚一点方案诊断
 
@@ -310,6 +310,34 @@ K+2 延迟压力：
 
 结论：`rvol0.9` 是唯一接近目标的微调（K+1 多 `32` 笔、胜率持平、收益和 K+2 同时改善、回撤仅差 `-0.87pp`），但它仍是同样本再优化，K+1 滚动 `30d` 中位收益略降、最差回撤略差。只登记为观察候选，不替换 `V1.3 baseline`；替换前需要 OOS/纸面观察和资金费审计。其余提频方向（RSI 阈值放宽、`rvol0.75`、改 TP/SL）都会显著恶化回撤或胜率。
 
+### V1.3 rvol0.9 近期频率对比
+
+按 current Binance futures public kline 已闭合 `15m` K，对比 `V1.3 baseline rvol1.0` 与 `rvol0.9` 观察候选：
+
+| 入场 | 窗口 | `rvol1.0` 交易数 | `rvol0.9` 交易数 | 增量 | `rvol1.0` 笔/周 | `rvol0.9` 笔/周 | `rvol0.9` 最后一笔 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | --- |
+| `K+1` | `最近30d` | `8` | `14` | `+6` | `1.87` | `3.27` | `2026-06-29T22:30:00Z` |
+| `K+1` | `最近90d` | `32` | `41` | `+9` | `2.49` | `3.19` | `2026-06-29T22:30:00Z` |
+| `K+2` | `最近30d` | `8` | `14` | `+6` | `1.87` | `3.27` | `2026-06-29T22:45:00Z` |
+| `K+2` | `最近90d` | `33` | `42` | `+9` | `2.57` | `3.27` | `2026-06-29T22:45:00Z` |
+
+最近 `90d` 自然周：K+1 `rvol1.0` 为 `7` 周开单、`7` 周无单；`rvol0.9` 为 `8` 周开单、`6` 周无单。K+1 增量集中在 `2026-05-25` 周 `+1`、`2026-06-01` 周 `+1`、`2026-06-08` 周 `+3`、`2026-06-15` 周 `+1`、`2026-06-22` 周 `+2`、`2026-06-29` 周 `+1`。最近 `7d/72h/24h` 两个版本仍均为 `0` 笔，因此 `rvol0.9` 是温和提频候选，不是解决当前信号枯竭的开关。
+
+### V1.3 RVOL 阈值定向对比
+
+在 `rvol0.9` 频率对比后，补充 `min_rvol96=0.85/0.8` 定向诊断。保持 `V1.3` 的 RSI/MACD、`min_atr_pct96=75 bps`、ATR bracket 出场、Binance 成本和 `2.5x` 权益暴露不变：
+
+| RVOL 下限 | K+1 笔 | K+1 收益 | K+1 回撤 | K+1 胜率 | K+2 收益 | K+2 回撤 | recent 90d K+1 |
+| ---: | ---: | ---: | ---: | ---: | ---: | ---: | ---: |
+| `1.00` | `185` | `483.23%` | `-22.01%` | `84.32%` | `204.85%` | `-41.89%` | `32` |
+| `0.90` | `217` | `689.05%` | `-22.88%` | `84.33%` | `348.70%` | `-39.30%` | `41` |
+| `0.85` | `232` | `978.36%` | `-24.70%` | `84.91%` | `535.54%` | `-38.30%` | `46` |
+| `0.80` | `244` | `977.26%` | `-28.67%` | `83.20%` | `543.39%` | `-36.37%` | `48` |
+
+滚动窗口：K+1 rolling `30d` 中位收益 `rvol1.0/0.9/0.85/0.8` 分别为 `9.84%/7.45%/8.99%/8.32%`，最差回撤分别为 `-19.30%/-22.88%/-24.70%/-28.67%`；K+2 rolling `90d` 正收益切片分别为 `39/45`、`41/45`、`44/45`、`43/45`。recent API 最近 `7d/72h/24h` 四个阈值仍均为 `0` 笔。
+
+结论：`rvol0.85` 比 `rvol0.9` 更进取，收益、K+2 和 recent 90d 更强，但 K+1 全样本最大回撤比 baseline 深约 `2.70pp`，只登记为进取观察候选；`rvol0.9` 仍是更保守的观察候选。`rvol0.8` 新增交易有限，K+1 回撤和胜率退化更明显，不建议替换 baseline。三者都不改变 `NO-GO / not live-ready` 状态。
+
 ## V1.1 BTC/ETH 跨资产诊断
 
 直接把 `HYPE-15M-MII-V1.1` 套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，目标窗口与 HYPE 标准数据湖相同（`2025-05-30T10:30:00+00:00` 到 `2026-06-26T04:00:00+00:00`）。该数据来自 Binance futures kline API 直接拉取，不是本仓库标准 raw/normalized 数据湖；只用于 sanity check。
@@ -354,6 +382,8 @@ K+2 延迟压力：
 - V1.2 window/slice backtest：`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
 - V1.2 ATR dynamic leverage：`research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`
 - V1.3 profit extension：`research-notes/hype-15m-mii-v1-3-profit-extension-2026-07-02.md`
+- V1.3 rvol0.9 frequency compare：`research-notes/hype-15m-mii-v1-3-rvol09-frequency-2026-07-08.md`
+- V1.3 rvol grid compare：`research-notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`
 - V1.1 BTC/ETH cross asset：`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
 - Decision log：`decision-log.md`
 

@@ -6,7 +6,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 源候选：`R1_relax_frequency_R01242__tp_sl_0011`
 
-状态：`paper-audit candidate only / not live-ready`
+状态：`audit candidate only / not live-ready`
 
 ## 一句话定义
 
@@ -93,7 +93,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 ## 风险与推进边界
 
-V1 只能作为 paper-audit baseline，不能直接实盘：
+V1 只能作为 audit baseline，不能直接实盘：
 
 - 尚未完成逐笔路径图审计，尤其需要检查 stop/target 同 K、gap stop 与 timeout 的实际可维护性。
 - 尚未完成订单维护、重启恢复、状态机复现和 live dry-run reconciliation。

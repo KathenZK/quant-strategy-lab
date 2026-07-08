@@ -6,7 +6,7 @@ Version：`HYPE-15M-MII-V1.3`
 
 Runner kind：`hype_mii`（2026-07-07 校正：quant-runner 实际注册的 kind 为 `hype_mii`，本文早期草稿使用的 `hype_mii_v13` 已废弃）
 
-Status：`runner implementation target / diagnostic observation only / not live-ready / `
+Status：`live spec / diagnostic observation only / not live-ready / `
 
 ## 先读结论
 

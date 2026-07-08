@@ -20,11 +20,11 @@
 
 ## 当前状态
 
-`Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1 registered diagnostic single-position version / NO-GO / not promoted / not live-ready`。
+`Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1 registered single-position version / not promoted / not live-ready`。
 
-首次组合回测（2026-07-07）：全期小时再平衡年化 `4.07x`、最大回撤 `-4.43%`、胜率 `89.66%`；reused holdout（最近三个月，已揭盲）年化降至 `1.62x`。成分策略全部是 diagnostic NO-GO 版本，组合层未做压力与实盘可执行审计，禁止 promotion。详见主账与首次回测报告。
+首次组合回测（2026-07-07）：全期小时再平衡年化 `4.07x`、最大回撤 `-4.43%`、胜率 `89.66%`；reused holdout（最近三个月，已揭盲）年化降至 `1.62x`。成分策略全部是 `not promoted / not live-ready` 版本，组合层未做压力与实盘可执行审计，禁止 promotion。详见主账与首次回测报告。
 
-`V1`（2026-07-07 登记）：全账户同一时间只允许一笔持仓、先到先得、全额权益执行；全期年化 `287.01x` 但最大回撤 `-21.43%` 穿破 `<20%` 硬门槛，reused holdout `7.67x / -19.79% DD`；状态 `NO-GO / not live-ready`。等权 `1/6` 结构保留为 V1 登记前 diagnostic observation，不是正式版本。
+`V1`（2026-07-07 登记）：全账户同一时间只允许一笔持仓、先到先得、全额权益执行；全期年化 `287.01x` 但最大回撤 `-21.43%` 穿破 `<20%` 硬门槛，reused holdout `7.67x / -19.79% DD`；状态 `not promoted / not live-ready`。等权 `1/6` 结构保留为 V1 登记前 diagnostic observation，不是正式版本。
 
 ## 入口
 

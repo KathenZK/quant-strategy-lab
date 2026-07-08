@@ -26,7 +26,7 @@ uv run python research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/
 - Market：Binance USD-M Futures perpetual
 - Symbols：`TRXUSDT`、`SOLUSDT`、`HYPEUSDT`、`ETHUSDT`、`BTCUSDT`、`BNBUSDT`
 - Timeframe：`1h`
-- Status：`registered diagnostic single-position version / NO-GO / not promoted / not live-ready`
+- Status：`registered single-position version / NO-GO / not promoted / not live-ready`
 
 `V1` 是一个账户级组合策略：六个已登记的单资产 `1h adaptive-regime` 策略同时生成候选交易，但全账户同一时间只允许一笔持仓。它不是实盘候选，也不是 paper-live / dry-run / handoff 版本。
 
@@ -902,4 +902,4 @@ Wick reject leg：
 3. V1 是冻结 sleeve 交易路径上的账户级阻塞筛选，不是完整联合状态机；promotion 前必须逐 K 重演跨资产阻塞后的 cooldown / 状态机。
 4. 成分策略全部仍是 diagnostic NO-GO；组合登记不改变任何成分家族的 live-readiness。
 
-因此，正确复现的最终判断应是：`registered diagnostic / NO-GO / not promoted / not live-ready`。
+因此，正确复现的最终判断应是：`registered / NO-GO / not promoted / not live-ready`。

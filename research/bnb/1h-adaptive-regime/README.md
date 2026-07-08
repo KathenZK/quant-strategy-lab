@@ -3,7 +3,7 @@
 - Full family name：`BNB-1H-Adaptive-Regime`（短 id：`BNB-1H-AR`）
 - 市场/周期：Binance USD-M Futures `BNBUSDT` perpetual `1h`
 - 机制：两年闭合 `1h` K 多指标自适应 regime 广搜（EMA/MACD/RSI/Stoch/CCI/ADX/ATR/Keltner/Donchian/VWAP/结构 + 高周期 regime + 资金费过滤），ensemble 组合。
-- 当前状态：V1-V3 已登记（V3 实际最大杠杆 `2.5x`）；reused OOS 属二次读取；`NO-GO / not promoted / not live-ready`。
+- 当前状态：V1-V3 已登记（V3 实际最大杠杆 `2.5x`）；reused OOS 属二次读取；`not promoted / not live-ready`。
 
 ## 边界
 
@@ -23,6 +23,6 @@
 - 主账（V1-V3 版本表、指标与证据链接）：`bnb-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
 - 版本规格：`canonical-specs/`（V1 原始/clean、V2 clean-equivalent、V3 微调）
-- 搜索 NO-GO 证据：`diagnostics/bnb-1h-adaptive-regime-search-2026-07-03.md`、`diagnostics/bnb-1h-ar-cap3-highwin-search-2026-07-06-cap3-highwin.md`
+- 搜索 not-promoted 证据：`diagnostics/bnb-1h-adaptive-regime-search-2026-07-03.md`、`diagnostics/bnb-1h-ar-cap3-highwin-search-2026-07-06-cap3-highwin.md`
 
 脚本在 `scripts/`（fetch / search / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

@@ -2,7 +2,7 @@
 
 生成日期：`2026-06-27`
 
-> Superseded：后续 `diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md` 已完成严格 anti-leakage seed-generation 审计，结果为 `-61.16%`，PF `0.843`，最大回撤 `-65.94%`。因此本报告中的 “research lead / paper-audit lead” 仅代表 strict audit 前的固定 seed-universe 状态；V1 当前已下调为 fixed seed-universe diagnostic。
+> Superseded：后续 `diagnostics/hype-5m-seeded-v1-strict-seed-audit-2026-06-27.md` 已完成严格 anti-leakage seed-generation 审计，结果为 `-61.16%`，PF `0.843`，最大回撤 `-65.94%`。因此本报告中的 “research lead / audit lead” 仅代表 strict audit 前的固定 seed-universe 状态；V1 当前已下调为 fixed seed-universe diagnostic。
 
 ## 结论
 
@@ -12,7 +12,7 @@
 - 近 90 天：`112` 笔，收益 `24.59%`，PF `1.303`，最大回撤 `-16.30%`。
 - 近 30 天：`51` 笔，收益 `46.29%`，PF `2.209`，最大回撤 `-5.24%`。
 
-结论：`Seeded V1` 可以登记为当前 research lead / paper-audit lead，但**不能直接实盘，也不应直接 paper-live**。原因不是回放指标差，而是 seed-selection 前视、paper-runner 缺失、真实下单保护窗口、成本压力和重启恢复还没有完成审计。
+结论：`Seeded V1` 可以登记为当前 research lead / audit lead，但**不能直接实盘，也不应直接 paper-live**。原因不是回放指标差，而是 seed-selection 前视、paper-runner 缺失、真实下单保护窗口、成本压力和重启恢复还没有完成审计。
 
 ## V1 仍然依赖打分系统
 
@@ -91,7 +91,7 @@
 ## Decision
 
 - 记录为：`HYPE-5M-Event-Quality-Scoring-Seeded-V1`。
-- 当前状态：`research lead / paper-audit lead`。
+- 当前状态：`research lead / audit lead`。
 - 不允许状态：`live-ready`、`paper-live-ready`、`dry-run handoff`。
 - 下一步必须完成：seed-generation anti-leakage、paper-runner dry-run 对账、真实 order-maintenance 审计、成本/滑点压力、drawdown-control ablation。
 

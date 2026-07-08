@@ -4,7 +4,7 @@
 
 - Version：`TRX-1H-Adaptive-Regime-V1`
 - Registered：2026-07-05
-- Status：`registered diagnostic baseline / NO-GO / not promoted / not live-ready`
+- Status：`registered baseline / NO-GO / not promoted / not live-ready`
 - Source observation：`ENS__TRX_1H_AR_N131875__TRX_1H_AR_N129128`
 - Canonical implementation：`scripts/trx_1h_ar_v1.py`
 - Clean-equivalent implementation：`scripts/trx_1h_ar_v1_clean.py`

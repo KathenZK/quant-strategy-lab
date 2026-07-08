@@ -3,7 +3,7 @@
 - Full family name：`HYPE-5M-MA-Pullback-Scalp`（无历史别名）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `5m`
 - 机制：双均线回踩 scalp——慢线定趋势、快线定回调波，HH/HL（多）或 LL/LH（空）结构确认，闭合 K 回调结束触发、下一根 open 入场、固定 TP/SL + 最长持仓超时。
-- 当前状态：首轮可执行搜索与邻域稳健性完成；`paper-audit / not promoted / not live-ready`（候选行 `HYPE_5M_MA_PBS_R03072__base` 与其邻域 `__nb_0370`）。
+- 当前状态：首轮可执行搜索与邻域稳健性完成；`audit / not promoted / not live-ready`（候选行 `HYPE_5M_MA_PBS_R03072__base` 与其邻域 `__nb_0370`）。
 
 ## 边界
 

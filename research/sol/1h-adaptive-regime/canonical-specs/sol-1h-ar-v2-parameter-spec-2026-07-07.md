@@ -3,7 +3,7 @@
 ## 版本身份
 
 - Version：`SOL-1H-Adaptive-Regime-V2`
-- Status：`registered diagnostic observation / NO-GO / not promoted / not live-ready`
+- Status：`registered observation / NO-GO / not promoted / not live-ready`
 - Market：Binance USD-M Futures `SOLUSDT` perpetual
 - Timeframe：`1h`
 - Mechanism：`donchian_break + vwap_revert` 双腿 ensemble

@@ -70,9 +70,9 @@ Family id：`HYPE-15M-Pullback-Trail`
 
 ## 结论
 
-本轮找到了满足宽松 balanced gate 的 bracket 候选，但它仍只能作为 paper-audit 研究候选，原因是 OOS 样本较短，且参数来自同一资产同一历史窗口搜索。
+本轮找到了满足宽松 balanced gate 的 bracket 候选，但它仍只能作为 audit 研究候选，原因是 OOS 样本较短，且参数来自同一资产同一历史窗口搜索。
 
-后续若推进，应优先做 walk-forward 阈值固化和 paper audit runner，而不是直接写真钱 live spec。
+后续若推进，应优先做 walk-forward 阈值固化和 audit runner，而不是直接写真钱 live spec。
 
 ## 产物
 

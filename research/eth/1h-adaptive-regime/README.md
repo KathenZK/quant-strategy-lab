@@ -3,7 +3,7 @@
 - Full family name：`ETH-1H-Adaptive-Regime`（短 id：`ETH-1H-AR`）
 - 市场/周期：Binance USD-M Futures `ETHUSDT` perpetual `1h`
 - 机制：两年闭合 `1h` K 多指标自适应 regime 广搜（EMA/MACD/RSI/Stoch/CCI/ADX/ATR/Keltner/Donchian/VWAP/结构 + 高周期 regime），ensemble 组合。
-- 当前状态：V1、V2、V2.1、V3 已登记；reused holdout 仍为负；`NO-GO / not promoted / not live-ready`。
+- 当前状态：V1、V2、V2.1、V3 已登记；reused holdout 仍为负；`not promoted / not live-ready`。
 
 ## 研究协议（冻结口径）
 

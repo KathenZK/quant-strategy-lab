@@ -11,7 +11,7 @@
 - `hype_binance_1h_data_quality.json`：全量 K、资金费和 Binance 合约过滤器快照。
 - `hype_1h_adaptive_regime_search_2026-07-01.json`：第一轮 `120,768` 配置广搜。
 - `hype_1h_adaptive_regime_refine_2026-07-01.json`：第二轮 `180,000` unique-neighbor 精调。
-- `hype_1h_adaptive_regime_boundary_audit_2026-07-01.json`：最终 NO-GO 审计。
+- `hype_1h_adaptive_regime_boundary_audit_2026-07-01.json`：最终 not-promoted 审计。
 - `hype_1h_adaptive_regime_boundary_stress_2026-07-01.csv`：延迟、成本和暴露压力。
 - `hype_1h_adaptive_regime_boundary_ablation_2026-07-01.csv`：`164` 行单腿与 active-field 消融。
 - `hype_1h_ar_v1_full_ablation_2026-07-02.json`：V1 刷新指标、`76/76` 全字段覆盖和分类汇总。

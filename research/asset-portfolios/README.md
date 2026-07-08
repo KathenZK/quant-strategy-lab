@@ -4,6 +4,6 @@
 
 ## 当前研究线
 
-- `Binance-1D-Turtle-Breakout`：`1d-turtle-breakout/`。BTC/ETH/HYPE 日线 20/10 turtle breakout 诊断；`exploratory diagnostic`。
+- `Binance-1D-Turtle-Breakout`：`1d-turtle-breakout/`。BTC/ETH/HYPE 日线 20/10 turtle breakout 诊断；`explore diagnostic`。
 - `Binance-15M-Multi-Indicator-Intraday-Transfer`：`15m-multi-indicator-intraday/`。基于 `HYPE-15M-MII-V1.1` 机制的 BTC/ETH `15m` 受约束参数迁移诊断；整体不提升。
-- `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`）：`1h-adaptive-regime-multi-asset-ensemble/`。六个 `1h` adaptive-regime 家族登记版本的跨资产组合；V1 已登记；当前 `NO-GO / not promoted / not live-ready`。主账：`1h-adaptive-regime-multi-asset-ensemble/binance-1h-ar-mae-core-ledger.md`。
+- `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`）：`1h-adaptive-regime-multi-asset-ensemble/`。六个 `1h` adaptive-regime 家族登记版本的跨资产组合；V1 已登记；当前 `not promoted / not live-ready`。主账：`1h-adaptive-regime-multi-asset-ensemble/binance-1h-ar-mae-core-ledger.md`。

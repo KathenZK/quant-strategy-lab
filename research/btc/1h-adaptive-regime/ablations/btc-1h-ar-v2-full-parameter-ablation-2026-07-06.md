@@ -115,7 +115,7 @@
 
 - 本轮是 V2 冻结参数的 one-at-a-time 全字段敏感性消融，不做组合搜索。
 - reused holdout 已在 V1/V2 研究中解锁，只能作为复用审计列展示，不得用于新版本选参。
-- V2 仍为 paper-audit observation；没有新增 forward trades、production runner、重启恢复、交易所对账、missing-bar fail-closed、kill switch 和真实 stop-market 滑点证据。
+- V2 仍为 audit observation；没有新增 forward trades、production runner、重启恢复、交易所对账、missing-bar fail-closed、kill switch 和真实 stop-market 滑点证据。
 
 ## 机器证据
 

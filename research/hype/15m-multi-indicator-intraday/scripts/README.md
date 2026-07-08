@@ -36,4 +36,5 @@
 - `research_hype_15m_mii_v1_3_recent_trade_frequency.py`：使用当前 Binance futures public kline 已闭合 `15m` K，统计 `HYPE-15M-MII-V1.3` baseline 最近 `24h/72h/7d/30d/90d` 和最近 `90d` 自然周开单频率。
 - `research_hype_15m_mii_v1_3_micro_tune.py`：在"开单更多、胜率不降、收益更高、回撤尽量小"目标下扫描 `126` 个 RSI 阈值/`min_atr_pct96`/`min_rvol96`/TP-SL 组合，输出严格与放宽联合 gate 结果和 `rvol0.9` 候选滚动对比。
 - `research_hype_15m_mii_v1_3_rvol09_frequency_compare.py`：使用当前 Binance futures public kline 已闭合 `15m` K，对比 `V1.3 baseline rvol1.0` 与 `rvol0.9` 观察候选最近 `24h/72h/7d/30d/90d` 和最近 `90d` 自然周开单频率。
+- `research_hype_15m_mii_v1_3_rvol_grid_compare.py`：保持 `V1.3` 其它条件不变，定向比较 `min_rvol96=1.0/0.9/0.85/0.8` 的标准数据湖全样本、滚动窗口、recent API 固定窗口和周度开单。
 - `research_hype_15m_mii_v1_1_btc_eth_cross_asset.py`：把 `HYPE-15M-MII-V1.1` 直接套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，做跨资产迁移诊断；该脚本不使用标准数据湖，结果不得作为 promotion 证据。

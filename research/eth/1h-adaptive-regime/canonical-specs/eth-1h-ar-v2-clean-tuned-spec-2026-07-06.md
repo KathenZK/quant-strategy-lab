@@ -5,7 +5,7 @@
 - 完整名称：`ETH-1H-Adaptive-Regime-V2`。
 - 家族：`ETH-1H-Adaptive-Regime`（`ETH-1H-AR`）。
 - 市场：Binance USD-M Futures `ETHUSDT` perpetual `1h`。
-- 状态：`registered diagnostic tuned observation / NO-GO / not promoted / not live-ready`。
+- 状态：`registered tuned observation / NO-GO / not promoted / not live-ready`。
 - 版本来源：V1 全参数消融后 `29` 参数 clean interface 的 prefit-only 微调观察值；最近三个月 reused holdout 不参与参数选择。
 
 V2 的登记只冻结可复现身份，不代表达到用户要求的 `10x / >=50% / DD<20% / 可实盘` 门槛。

@@ -120,7 +120,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 ## 结论
 
 - 微调阶段可以找到更激进的收益版本，但如果回撤、分段样本或胜率范围不过关，不应替代 V1.1。
-- 推荐观察行虽已登记为 V1.2，仍然只是 paper-audit observation；进入 live/paper-live/handoff 前必须补逐笔路径、订单维护、重启恢复和 paper/live reconciliation。
+- 推荐观察行虽已登记为 V1.2，仍然只是 audit observation；进入 live/paper-live/handoff 前必须补逐笔路径、订单维护、重启恢复和 paper/live reconciliation。
 
 ## 产物
 

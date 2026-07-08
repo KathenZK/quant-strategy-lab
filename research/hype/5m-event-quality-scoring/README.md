@@ -3,7 +3,7 @@
 - Full family name：`HYPE-5M-Event-Quality-Scoring`（历史别名：`HYPE-5M-EQS`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `5m`
 - 机制：事件质量打分——规则只生成候选事件（EMA 收复、VWAP/Bollinger 回归、影线拒绝、微突破、MACD 翻转、动量停顿），研究入场前上下文能否 walk-forward 排序出值得交易的子集；closed-bar 信号、next-open 入场、固定 bracket、stop-first。
-- 当前状态：Seeded V1 在 strict seed-generation audit 中失败（严格滚动 seed 下 `-61.16%`）；`NO-GO`，无 paper-audit lead。
+- 当前状态：Seeded V1 在 strict seed-generation audit 中失败（严格滚动 seed 下 `-61.16%`）；`not promoted / not live-ready`，无 audit lead。
 
 ## 边界
 

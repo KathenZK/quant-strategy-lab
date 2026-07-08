@@ -58,7 +58,7 @@ Family id：`HYPE-5M-PBTR`
 
 明确结论：这套轻量 ML 事件质量选择器没有救回 V3.3.1。相比 baseline scored events，ML top 分位能把部分口径的 PF 从约 `0.56-0.59` 抬到最高 `0.659`，也能把独立标签里的 trailing-positive rate 从 `27.35%` 小幅提高到最高 `29.61%`，但 bad unlock/deadline 仍约 `60%-62%`，exact replay 的 deadline 仍约 `43%-58%`。也就是说，模型确实学到了一点“更容易进入 trailing/target”的事件质量，但幅度不够，不能把原始高频双向 V3.3.1 变成正期望。
 
-因此，不能把“提高 trailing/armed 概率”作为上线标准。后续若继续 ML，只应转向更低频的事件质量路线，例如 deep pullback long-only、强 16h 动量和 EMA spread 约束，再做 walk-forward/paper audit；不要在全量 V3.3.1 上继续叠模型阈值。
+因此，不能把“提高 trailing/armed 概率”作为上线标准。后续若继续 ML，只应转向更低频的事件质量路线，例如 deep pullback long-only、强 16h 动量和 EMA spread 约束，再做 walk-forward/audit；不要在全量 V3.3.1 上继续叠模型阈值。
 
 ## 产物
 

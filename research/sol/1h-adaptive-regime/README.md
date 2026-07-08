@@ -3,7 +3,7 @@
 - Full family name：`SOL-1H-Adaptive-Regime`（短 id：`SOL-1H-AR`）
 - 市场/周期：Binance USD-M Futures `SOLUSDT` perpetual `1h`
 - 机制：两年闭合 `1h` K 多指标自适应 regime 广搜（EMA/MACD/RSI/Stoch/CCI/ADX/ATR/Keltner/Donchian/VWAP/结构 + 高周期 regime + 资金费过滤），ensemble 组合。
-- 当前状态：V1、V2 已登记；高胜率硬目标复搜 `0` 命中；`NO-GO / not promoted / not live-ready`。
+- 当前状态：V1、V2 已登记；高胜率硬目标复搜 `0` 命中；`not promoted / not live-ready`。
 
 ## 研究协议（冻结口径）
 
@@ -19,6 +19,6 @@
 - 主账（V1/V2 版本表、指标与证据链接）：`sol-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
 - V2 参数规格：`canonical-specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`
-- 高胜率硬目标搜索 NO-GO 证据：`diagnostics/sol-1h-ar-high-win-target-search-2026-07-07.md`
+- 高胜率硬目标搜索 not-promoted 证据：`diagnostics/sol-1h-ar-high-win-target-search-2026-07-07.md`
 
 脚本在 `scripts/`（fetch / search / audit / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

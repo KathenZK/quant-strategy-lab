@@ -4,13 +4,13 @@
 
 ## 结论
 
-- Seeded V0 找到 `3` 个 paper-audit 级别候选。
+- Seeded V0 找到 `3` 个 audit 级别候选。
 - 当前最佳：`seeded_source_mean_q80`。
 - OOS：`184` 笔，`1.57` 笔/天，收益 `28.89%`，PF `1.222`，最大回撤 `-15.38%`。
 
 注意：这是 seeded diagnostic。种子配置来自 `HYPE-5M-Micro-Scalp` 的历史搜索产物，
 本脚本只用 2026-03-01 前的 train 指标筛选 seed，但 config universe 本身仍来自既有研究，
-所以当前结论最多是 paper-audit 候选，不是 live-ready。
+所以当前结论最多是 audit 候选，不是 live-ready。
 
 ## 数据质量
 

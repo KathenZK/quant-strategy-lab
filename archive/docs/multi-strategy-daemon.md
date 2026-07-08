@@ -56,7 +56,7 @@ Created: 2026-06-28
 - 同一 timeframe，例如 `5m`。
 - 共用同一批 K 线和指标：EMA、ATR、ret、htf_spread 等。
 - 大量策略只是参数变体或过滤器变体。
-- 主要用途是 dry-run、paper audit、候选观察和信号打分。
+- 主要用途是 dry-run、audit、候选观察和信号打分。
 
 不适合简单合并：
 

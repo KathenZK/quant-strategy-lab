@@ -3,7 +3,7 @@
 - Full family name：`HYPE-1H-Adaptive-Regime`（历史别名：`HYPE-1H-AR`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `1h`
 - 机制：自适应市场状态策略——只在闭合 K 可确认的 regime 中启用对应入场腿（趋势/突破/均值回归），入场即挂保护性 bracket；多指标广搜 + ensemble。
-- 当前状态：V1-V4 已登记（V4 为 25 参数剪枝微调基线）；K+2/8bps 压力回撤仍穿越 `20%`；`NO-GO / not promoted / not live-ready`。
+- 当前状态：V1-V4 已登记（V4 为 25 参数剪枝微调基线）；K+2/8bps 压力回撤仍穿越 `20%`；`not promoted / not live-ready`。
 
 ## 边界
 
@@ -23,6 +23,6 @@
 - 决策记录：`decision-log.md`
 - 版本规格：`canonical-specs/`（V1 baseline、V2 clean、V3 baseline、V4 pruned tuned）
 - 数据质量报告：`diagnostics/hype-binance-1h-data-quality-2026-07-01.md`
-- 最终 NO-GO 审计：`diagnostics/hype-1h-adaptive-regime-boundary-audit-2026-07-01.md`
+- 最终 not-promoted 审计：`diagnostics/hype-1h-adaptive-regime-boundary-audit-2026-07-01.md`
 
 脚本在 `scripts/`（fetch / search / refine / audit），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。
