@@ -414,3 +414,13 @@ V39.1 仍为观察 overlay，未 promotion、未 live-ready；上线前需补跨
 但卫星稳定性一般：最近 1m standalone `-0.12%`，14 个自然月里 7 个正、5 个负、2 个无交易；2026-03 出现 5 笔全亏。对组合的边际贡献是长期正、短期不稳：full 相比 V39 增加 `+2352.88pp` 收益但 maxDD 加深 `1.30pp`，最近 1m 则收益 `+23.40% -> +23.17%`、maxDD `-20.11% -> -24.76%`。卫星 42 笔中 14 笔与 V39 主仓重叠（33.33%），重叠单均笔 `+1.66%`，非重叠均笔 `+0.14%`；它最有效的场景常是主仓随后也参与的上涨段，同时也意味着实盘必须审计组合持仓与订单冲突。
 
 结论：卫星有效，但只适合作为 V39.1 的小仓 overlay，不适合作为独立主策略；V39.1 仍保持观察 overlay，未 live-ready。证据：`notes/hype-ema-tb-v39-1-satellite-effectiveness-diagnostic-2026-07-08.md`；产物：`artifacts/hype_ema_tb_v40_satellite_effectiveness_diagnostic_2026-07-08.json`。
+
+### 2026-07-08 V39 全参数消融
+
+以 `HYPE-EMA-TB-V39` 为新基线跑 71 个逐项消融 / 回退 / 恢复变体，数据仍为 Binance HYPEUSDT 永续 `15m` 本地数据湖 `2025-05-30 10:30 UTC` 至 `2026-07-08 05:30 UTC`，38765 根已闭合 K 线，缺口 0、重复 0、关键 OHLCV/null 0、raw/normalized 对齐最大差异 0；成本 `0.00085`/fill，含 funding。
+
+V39 基线：full `+9969.45% / -23.46% / Sharpe 4.81 / 107 笔 / 胜率 79.44%`，90d `+217.53% / -21.90% / 胜率 77.14%`。回退测试继续支持 V39 定义：`long_vol_min 0.35 -> 0.25` 降至 `+9483.15%`；`short_target_atr_pct 0.022 -> 0.018` 降至 `+8790.15%`；恢复空头 1h EMA 确认与 V39 完全一致，证明该层仍是冗余项。
+
+本轮无条件替代项为空。唯一 full 收益、full maxDD、Sharpe 三项不劣的非等价变体是 `ema_slow_512`：full `+10406.28% / -23.46% / Sharpe 4.88 / 103 笔`，但 90d `+206.85%` 低于 V39 的 `+217.53%`，6m 也略弱，因此只记录为观察项，不登记 V39.2。收益更高的 `cap_40`、`target_long_024`、`no_h1_di_long`、`target_short_026`、`no_ema_spread_long` 均有回撤、Sharpe 或策略身份代价，不替换 V39。
+
+尖峰参数维持原判断：`adx_window=28`、`long_adx_min=28`、`short_adx_min=36`、`take_profit_atr=5`、`hard_stop_atr=7`、`atr_window=672`、`volume_window=192`、`disable_after_mfe_atr=1.5` 不能随意偏移；`no_timeout` 样本内与 V39 完全一致，但实盘继续保留 `max_hold_bars=384` 作为异常兜底。结论：V39 保持当前观察候选定义，未 promotion、未 live-ready。证据：`ablations/hype-ema-tb-v39-full-ablation-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v39_full_ablation.py`；产物：`artifacts/hype_ema_tb_v39_full_ablation_2026-07-08.json`、`artifacts/hype_ema_tb_v39_full_ablation_2026-07-08_trades.csv`。

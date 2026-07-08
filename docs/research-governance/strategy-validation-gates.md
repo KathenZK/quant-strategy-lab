@@ -20,7 +20,7 @@
 | `registered -> audit` | 门禁 0/1/2/5：超额收益、消融、OOS/CPCV、统计显著性 | ablations / diagnostics / decision log |
 | `audit -> live spec` | 门禁 3/4/6/7 + live-executable 审计：MC、压力测试、启动时间、相位、真实下单时序 | diagnostics / live-specs / decision log |
 | `live spec -> dry-run` | runner 实现、指标/信号对拍、smoke test、创建 `runner-tracking/` | live-specs / runner-tracking |
-| `dry-run -> live` | runner 观察证据、运维风控、重启恢复、missing-bar fail-closed、kill switch | runner-tracking / decision log |
+| `dry-run -> live` | runner 观察证据、线上开平仓/成交统计与回测对齐、运维风控、重启恢复、missing-bar fail-closed、kill switch | runner-tracking / artifacts / decision log |
 
 ## 门禁 0：超额收益基准
 
