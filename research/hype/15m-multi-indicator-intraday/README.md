@@ -16,6 +16,6 @@
 - V1 冻结基线规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`
 - V1 实盘可行性审计（NO-GO）：`live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md`
 - V1.3 runner 交接规格：`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`
-- V1.3 近期诊断（信号干旱 / ATR 口径 / min_atr 网格）：`research-notes/` 下 `hype-15m-mii-v1-3-*-2026-07-06.md` 系列
+- V1.3 近期诊断（信号干旱 / ATR 口径 / min_atr 网格 / recent trade frequency）：`research-notes/` 下 `hype-15m-mii-v1-3-*.md` 系列
 
 研究脚本在 `scripts/`，被报告引用的 JSON/CSV/HTML 在 `artifacts/`。逐批结论以主账和 decision-log 为准，不在本 README 复述。

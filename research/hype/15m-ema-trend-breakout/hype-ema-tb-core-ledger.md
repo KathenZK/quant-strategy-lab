@@ -300,3 +300,45 @@
 | V37+V38 floor | +8777.85% | -24.76% | 4.71 | 150 | 73.33% | TP 91 / floor 17 / SL 19 / weak 14 / indicator 9 |
 
 结论：V38 单独作为 V35 的保险版成立，但在样本内付出收益成本；叠加到 V37 后，`V37+V38` 仍高于 V35，但低于纯 V37（`+8777.85%` vs `+10316.90%`），且组合最大回撤仍为 `-24.76%`。因此不把 `V37+V38` 登记成新的 promotion 版本，只记录为“收益让渡换近 TP 回吐保护”的叠加诊断。证据：`research-notes/hype-ema-tb-v38-v37-floor-backtest-2026-07-07.md`；脚本：`scripts/research_hype_ema_tb_v37_v38_floor.py`；产物：`artifacts/hype_ema_tb_v37_v38_floor_2026-07-07.json`。
+
+### 2026-07-08 最近三个月波动率审计
+
+已将 Binance HYPEUSDT 永续 `15m` 数据湖更新到 `2026-07-08 05:30 UTC`。数据质量：`38765` 根已闭合 K 线，缺口 `0`、重复 `0`、关键 OHLCV/null `0`、raw/normalized 对齐最大差异 `0`。
+
+最近 90 天 median `ATR%` 为 `0.68%`，前 90 天为 `0.71%`，下降约 `4.23%`；15m high-low 中位数从 `0.67%` 降到 `0.63%`。波动率确实略有变窄，但 V35 最近 90 天仍有 `26` 次 take-profit、`7` 次 stop-loss、`2` 次 indicator-exit，收益 `+215.41%`、maxDD `-21.90%`。因此不支持“波动率变小导致 TP/SL 失效”的判断。
+
+更可能的问题是低 ATR 下仓位更容易打满：V35 最近 90 天 median entry `ATR%` `0.61%`，`5ATR` TP 价格距离约 `3.05%`、`7ATR` SL 约 `4.26%`，35 笔中 `18` 笔 allocation 达到 `3.0x` cap。相比前 90 天，入场 median ADX28 从 `38.73` 降到 `33.24`，胜率从 `84.85%` 降到 `74.29%`，SL 从 `4` 笔增到 `7` 笔。结论：近期体感变差更像趋势质量下降 + 低 ATR 高仓位风险，而不是 TP/SL 距离机制失效。证据：`research-notes/hype-ema-tb-recent-3m-volatility-audit-2026-07-08.md`；脚本：`scripts/fetch_hype_binance_15m.py`、`scripts/research_hype_ema_tb_recent_volatility_audit.py`；产物：`artifacts/hype_ema_tb_recent_3m_volatility_audit_2026-07-08.json`。
+
+### 2026-07-08 V35 defensive overlay 回测
+
+围绕“低 ATR / 趋势质量变弱 / 仓位打满”的诊断，测试低 ATR 降仓、低 ATR 严格入场、低 ADX 降仓、全局降仓及叠加 V38 floor。结论：低 ATR 本身不是足够好的开关，严格入场明显过度；最平衡的修复方向是低 ADX 降仓。
+
+关键结果：
+
+| 变体 | full收益 | full maxDD | Sharpe | 最近90天收益 | 最近90天maxDD | 判断 |
+| --- | ---: | ---: | ---: | ---: | ---: | --- |
+| V35 base | +8360.80% | -23.46% | 4.75 | +215.41% | -21.90% | 基准 |
+| `low_adx35_cap25` | +6725.98% | -23.46% | 4.74 | +195.10% | -19.79% | 最平衡观察候选 |
+| `global_cap25` | +5303.54% | -23.46% | 4.72 | +190.46% | -19.79% | 回撤改善类似但收益成本更高 |
+| `very_low_atr_cap15` | +7373.95% | -23.46% | 4.90 | +208.35% | -21.90% | 收益保留好但不修最近回撤 |
+| `low_atr_or_low_adx_cap2` | +3415.23% | -23.14% | 4.65 | +160.85% | -16.06% | 防守最强但收益成本太高 |
+| `low_atr_strict_entry` | +2328.18% | -40.53% | 3.76 | +66.47% | -37.98% | 否决 |
+| `all_strict_entry` | +366.78% | -43.08% | 2.23 | -33.38% | -40.65% | 明确否决 |
+
+`low_adx35_cap25` 规则：V35 信号触发时若 `ADX28 < 35`，本笔 `max_allocation` 从 `3.0x` 降到 `2.5x`；其它入场、TP/SL、indicator exit、timeout 全部不变。该规则没有修复历史 full 最大回撤，但对最近 90 天更贴近问题：用约 20.31pp 的最近 90 天收益成本，把最近 90 天 maxDD 从 `-21.90%` 缓和到 `-19.79%`，且 full Sharpe 基本不变。记录为 defensive overlay 观察候选，未 promotion、未 live-ready；上线前需补跨所同窗口检查与 live runner 仓位覆盖审计。证据：`research-notes/hype-ema-tb-v35-low-atr-overlay-backtest-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v35_low_atr_overlays.py`；产物：`artifacts/hype_ema_tb_v35_low_atr_overlays_2026-07-08.json`。
+
+### 2026-07-08 V35 全参数消融与最近 90 天微调
+
+对 V35 的 24 个参数做逐项消融（62 变体，含移除类结构消融）+ 66 组微调网格 + 标准分片最终验证。最近 90/30 天窗口在微调阶段直接参与选参（已在报告声明）；数据为更新后数据湖全量窗口，成本 `0.00085`/fill 含 funding。
+
+无效参数（单独移除后结果逐字节一致）：`max_hold_bars=384` timeout（样本内 0 触发；实盘建议保留为兜底）、空头 1h EMA 确认与空头 `ema_spread<0`（互为备份，只能移除其一，两个都移除 full 从 +8360% 掉到 +2440%）。尖峰参数（任何偏移显著劣化）：`adx_window=28`、`long_adx_min=28`、`adx_exit=22`、`hard_stop_atr=7`、`atr_window=672`、`disable_after_mfe_atr=1.5`、`volume_window=192`。
+
+两个 diagnostic 候选：
+
+| 变体 | 关键改动 | full收益 | full maxDD | Sharpe | 90d收益 | 90d maxDD | 90d胜率 |
+| --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |
+| V35 base | - | +8360.80% | -23.46% | 4.75 | +215.41% | -21.90% | 74.29% |
+| `v35_tuned_mild` | long_vol 0.25->0.35、short target 0.018->0.022、移除冗余空头 1h EMA 确认与 timeout | +9969.45% | -23.46% | 4.81 | +217.53% | -21.90% | 77.14% |
+| `v35_tuned_recent3m` | 上行基础上另移除多头 ema_spread 过滤、cap 3.0->2.5、ema_slow 384->512 | +6223.29% | -25.68% | 4.82 | +254.77% | -19.79% | 82.35% |
+
+判断：`v35_tuned_mild` 是消融驱动的严格改进（1d/7d/1m/3m/6m/1y/full 所有窗口不劣于 V35），优先做跨所迁移检查与 walk-forward；`v35_tuned_recent3m` 达成"最近 3 个月收益更高、胜率更高、回撤更小"三项目标，但牺牲 6m/1y/full 且移除多头 EMA spread 改变策略身份，只作 regime 适配影子观察，不替换 V35。两者均未 promotion、未 live-ready。证据：`research-notes/hype-ema-tb-v35-full-ablation-recent-tune-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v35_full_ablation_recent_tune.py`；产物：`artifacts/hype_ema_tb_v35_ablation_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_tune_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_final_recent_tune_2026-07-08.json`。
