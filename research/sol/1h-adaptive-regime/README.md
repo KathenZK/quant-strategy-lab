@@ -18,7 +18,7 @@
 
 - 主账（V1/V2 版本表、指标与证据链接）：`sol-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
-- V2 参数规格：`canonical-specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`
+- V2 参数规格：`specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`
 - 高胜率硬目标搜索 not-promoted 证据：`diagnostics/sol-1h-ar-high-win-target-search-2026-07-07.md`
 
 脚本在 `scripts/`（fetch / search / audit / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

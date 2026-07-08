@@ -2,7 +2,7 @@
 
 日期：2026-07-01
 
-Canonical ledger：`hype-ema-x-core-ledger.md`
+Main ledger：`hype-ema-x-core-ledger.md`
 
 ## 方法
 
@@ -112,7 +112,7 @@ pullback/reentry/breakout 补单、segment/fallback 分段退出、以及样本�
 ## 7. 精简后官方口径（建议写法）
 
 下面是把无效项剔除后的最小集合；已正式登记为 **`HYPE-EMA-X-V18`**。
-完整规格见 `canonical-specs/hype-ema-x-v18-baseline-spec.md`。
+完整规格见 `specs/hype-ema-x-v18-baseline-spec.md`。
 
 ### 信号
 
@@ -153,4 +153,4 @@ pullback/reentry/breakout 补单、segment/fallback 分段退出、以及样本�
 - 敏感性：`artifacts/hype_v17_1_full_ablation_sensitivity.csv`
 - 剔除表：`artifacts/hype_v17_1_parameter_prune_audit.csv`
 - 本报告：`diagnostics/hype-ema-x-v17-1-parameter-prune-audit-2026-07-01.md`
-- V18 干净规格：`canonical-specs/hype-ema-x-v18-baseline-spec.md`
+- V18 干净规格：`specs/hype-ema-x-v18-baseline-spec.md`

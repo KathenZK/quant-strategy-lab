@@ -14,7 +14,7 @@
 
 - 主账（milestone comparison ledger）：[hype-cc-15m-milestone-comparison.md](hype-cc-15m-milestone-comparison.md)
 - 决策记录：[decision-log.md](decision-log.md)
-- 版本规格：[canonical-specs/](canonical-specs/)（V13、V18 ATR672、V21 双向 early-exit、V35 复现参数等）
+- 版本规格：[specs/](specs/)（V13、V18 ATR672、V21 双向 early-exit、V35 复现参数等）
 - V35 过拟合再诊断：[hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md](diagnostics/hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md)
 - V35 实盘表现不及回测复盘：[hype-cc-v35-live-underperformance-review-2026-06-29.md](diagnostics/hype-cc-v35-live-underperformance-review-2026-06-29.md)
 - V35 forward 跟踪：[forward-tracking/README.md](forward-tracking/README.md)

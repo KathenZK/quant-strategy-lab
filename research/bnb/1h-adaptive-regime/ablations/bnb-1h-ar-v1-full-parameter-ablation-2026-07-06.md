@@ -8,7 +8,7 @@
 - Baseline locked OOS：`0.64x` / `-10.67%` / `-22.86%` / `68.42%` / `19`。
 - Baseline full：`1.87x` / `222.63%` / `-22.86%` / `84.25%` / `127`。
 - Field ablation rows：`60`；可安全删除 no-op 参数：`32`。
-- Clean spec：`canonical-specs/bnb-1h-ar-v1-clean-parameter-spec-2026-07-06.md`。该规格删除 no-op 参数但不改变交易路径，也不改变 `not promoted / not live-ready` 状态。
+- Clean spec：`specs/bnb-1h-ar-v1-clean-parameter-spec-2026-07-06.md`。该规格删除 no-op 参数但不改变交易路径，也不改变 `not promoted / not live-ready` 状态。
 
 ## 可从 clean spec 删除的 no-op 参数
 

@@ -25,4 +25,4 @@ V1.3 自 V1.2 剔除 dormant 与等效关闭参数，仅保留 `18` 个有效字
 
 - JSON：`research/hype/5m-micro-scalp/artifacts/hype_5m_micro_scalp_v1_3_baseline_backtest_2026-07-01.json`
 - Trades CSV：`research/hype/5m-micro-scalp/artifacts/hype_5m_micro_scalp_v1_3_baseline_backtest_trades_2026-07-01.csv`
-- Spec：`research/hype/5m-micro-scalp/canonical-specs/hype-5m-micro-scalp-v1-3-baseline-spec.md`
+- Spec：`research/hype/5m-micro-scalp/specs/hype-5m-micro-scalp-v1-3-baseline-spec.md`

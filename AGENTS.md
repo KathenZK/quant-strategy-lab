@@ -16,7 +16,7 @@
 
 - 不要根据 `V13`、`V21`、`V35`、`V36` 这类裸版本号判断策略身份；版本号只在具体资产、市场、周期和策略家族里有意义。
 - 标准 family name 使用展开写法，优先包含资产、周期和机制；短 id 只作为历史别名。家族清单与别名以 `research/README.md` 和各资产 README 的路由表为准，不在本文件重复维护。
-- 当用户要求"登记为 Vx / 记录为 Vx / 冻结为 Vx / promote 为 Vx"时，必须更新对应家族 core ledger / 主账（细则见 [.cursor/rules/research-report-storage.mdc](.cursor/rules/research-report-storage.mdc)；新建/重构主账用 [docs/research-governance/core-ledger-template.md](docs/research-governance/core-ledger-template.md)）。只更新 canonical spec、research note、diagnostic 或 decision log 不算完成版本登记。
+- 当用户要求"登记为 Vx / 记录为 Vx / 冻结为 Vx / promote 为 Vx"时，必须更新对应家族 core ledger / 主账（细则见 [.cursor/rules/research-report-storage.mdc](.cursor/rules/research-report-storage.mdc)；新建/重构主账用 [docs/research-governance/core-ledger-template.md](docs/research-governance/core-ledger-template.md)）。只更新 `specs/`、research note、diagnostic 或 decision log 不算完成版本登记。
 - 所有新增或更新的长期研究文档默认使用中文，除非用户明确要求其他语言；策略名、版本号、参数、路径、指标名和状态术语可以保留英文原文。
 
 ## 术语口径

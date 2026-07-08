@@ -14,7 +14,7 @@ Source: local Binance, Hyperliquid, OKX HYPE 15m data lake. Audit run: strict ne
 | 结论 | 质疑成立 | 旧口径 `shift(1)+close[t]` 不是未来函数，但会形成一根 K 的人为延迟路径，不能作为可执行主基准 |
 | 处理方式 | 主基准改为 next-open | bar[t] close 生成信号，bar[t+1] open 成交 |
 | 收益变化 | 千位数收益消失 | Binance full 从 legacy `+2188.01%` 降级为参考上限；严格 next-open 审计为 `+456.51%` |
-| 文档修复 | 已更新 spec | `research/hype/15m-ema-trend-breakout/canonical-specs/hype-trend-strategy-v30-spec.md` 默认口径已改成 next-open |
+| 文档修复 | 已更新 spec | `research/hype/15m-ema-trend-breakout/specs/hype-trend-strategy-v30-spec.md` 默认口径已改成 next-open |
 
 ## Lag 口径对照
 

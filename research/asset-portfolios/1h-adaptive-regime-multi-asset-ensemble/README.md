@@ -30,8 +30,8 @@
 
 - 主账：`binance-1h-ar-mae-core-ledger.md`
 - 决策记录：`decision-log.md`
-- V1 完整复现规格（给同事/AI）：`canonical-specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`
-- V1 简版规格：`canonical-specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`
+- V1 完整复现规格（给同事/AI）：`specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`
+- V1 简版规格：`specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`
 - 首次组合回测（等权 `1/6`）：`research-notes/binance-1h-ar-mae-first-combination-backtest-2026-07-07.md`
 - V1 单仓先到先得回测：`research-notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`
 - 复现脚本：`scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py`、`scripts/research_binance_1h_ar_mae_single_position_backtest.py`

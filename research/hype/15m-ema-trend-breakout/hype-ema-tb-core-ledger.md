@@ -72,6 +72,7 @@
 | V37 V35 + early-long卫星版 | V35 主策略不变，额外增加只做多的小仓位 early-long 卫星，用来捕捉 ADX28 尚未确认但 ADX14 已强势启动的早期上涨段 | 15m 信号 / K2 open 执行 / 1h 确认 | V35 多头其它条件满足：EMA spread>0、volume>=0.25、1h ADX21>18、1h +DI>-DI；同时 ADX28<28、ADX14>=35、ADX14 上升、15m +DI14>-DI14 | V35 主仓完全不变；卫星仓 target_atr 0.008、cap 1.0、TP4ATR、SL5ATR、弱势退出，不在 V35 确认时强制移交 | 旧主账窗口组合收益 +8154.08%，最大回撤 -23.49%，合计 138 笔；最新延长窗口 +11450.90% / -23.44% / 143 笔。卫星样本仅 38-40 笔，记录为 V37 影子观察版，不直接替代 V35 |
 | V38 V35极窄浮盈保护线版 | V35 主策略不改入场、仓位、原始 TP/SL、ADX delayed3 与 384 根 timeout；只新增接近止盈时的 profit floor 保险 | 15m 信号 / K2 open 执行 / 1h 确认 | 入场完全同 V35；主仓 MFE 在收盘确认达到 `4.75ATR` 后，把有效止损从原始 `-7ATR` 抬到 `+4.25ATR`，下一根开始生效，只向有利方向移动 | 原始 `5ATR` 止盈保留；floor 触发不加冷却；下一根 open 已穿越 floor 时按 open 成交，否则按 stop 价成交；执行上等价于收盘后上移 STOP_MARKET 触发价 | Binance API 补充窗口收益 +7110.75%，最大回撤 -23.46%，Sharpe 4.60，108 笔；同窗 V35 为 +8360.80% / -23.46% / 4.75。V38 记录为高 MFE 回吐保险观察版，未 promotion、未 live-ready |
 | V39 V35温和消融改进版 | V35 主机制不变，在全参数消融后采用最小严格改进参数 | 15m 信号 / K2 open 执行 / 1h 确认 | 多头入场成交量门槛 `long_vol_min 0.25 -> 0.35`；空头仓位目标 `short_target_atr_pct 0.018 -> 0.022`；移除冗余空头 `h1_ema_spread < 0` 确认，保留 15m `ema_spread < 0` | 原始 `5ATR` 止盈、`7ATR` 硬止损、ADX22 delayed3、`mfe>=1.5` 后关闭指标退出、`max_hold_bars=384` timeout 兜底全部保留；max allocation 仍为 3.0 | 本地数据湖 full `+9969.45% / -23.46% / Sharpe 4.81 / 107 笔 / 胜率 79.44%`；90d `+217.53% / -21.90% / 胜率 77.14%`。登记为 V39 观察候选，未 live-ready；需跨所迁移、walk-forward 与 live-executable 审计 |
+| V40 V39 + V37 early-long卫星版 | V39 主仓不变，原样叠加 V37 标准 early-long 小仓位卫星 | 15m 信号 / K2 open 执行 / 1h 确认 | 主仓完全同 V39；卫星只做多，要求 V39/V35 多头大方向满足但 `ADX28<28`，同时 `volume_surge>=0.25`、`ADX14>=35` 且上升、`+DI14>-DI14` | 主仓 V39 风控不变；卫星 target_atr 0.008、cap 1.0、TP4ATR、SL5ATR、`ADX14<22` 弱势退出；主仓与卫星可重叠，逐根收益相加复利 | 本地数据湖 full `+12322.33% / -24.76% / Sharpe 4.91 / 149 笔 / 胜率 73.15%`；3m `+259.76%`、1y `+13621.22%`。登记为 V40 观察候选，未 live-ready；需跨所迁移、walk-forward 与组合持仓审计 |
 
 ## 回测结果
 
@@ -119,6 +120,7 @@
 | V38 V35极窄浮盈保护线版 | +11.71% | -14.64% | +22.86% | -19.84% | +168.64% | -21.90% | +1552.43% | -22.07% | +8095.45% | -22.07% | 108 |
 | V37+V38 卫星+极窄floor叠加测试 | +11.71% | -14.64% | +22.63% | -24.76% | +204.29% | -24.76% | +1774.26% | -24.76% | +9707.47% | -24.76% | 150 |
 | V39 V35温和消融改进版 | +9.94% | -14.60% | +23.40% | -20.11% | +217.53% | -21.90% | +1802.57% | -22.58% | +11342.95% | -23.08% | 107 |
+| V40 V39+V37 early-long卫星版 | +9.94% | -14.60% | +23.17% | -24.76% | +259.76% | -24.76% | +2058.51% | -24.76% | +13621.22% | -24.76% | 149 |
 
 ## 策略胜率排名
 
@@ -133,6 +135,7 @@
 | 4 | V39 V35温和消融改进版 | 79.44% | 85 / 107 | 83 / 24 | long_vol_min 提高到 0.35、short target 提到 0.022，并移除冗余空头 1h EMA 确认；登记为观察候选 |
 | 4 | V35A V35指标退出一次反手版 | 78.90% | 86 / 109 | 未拆分 | 原始 V35 仓位 indicator_exit 后同 open 反手一次；收益提高且回撤持平，但仅 9 笔反手样本 |
 | 4 | V37 V35+early-long卫星版 | 74.64% | 103 / 138 | 114 / 24 | V35 主仓 + 小仓 early-long 卫星；收益提高但整体胜率被卫星低胜率拉低，定位影子观察 |
+| 5 | V40 V39+V37 early-long卫星版 | 73.15% | 109 / 149 | 125 / 24 | V39 主仓 + V37 标准卫星；收益和 Sharpe 最高，但组合胜率被卫星拉低 |
 | 8 | V35B V35指标退出链式反手版 | 71.03% | 103 / 145 | 未拆分 | 每次 indicator_exit 后下一根 open 链式反手；收益高但交易数和 ping-pong 风险明显上升 |
 | 1 | V2A Keltner-ADX 趋势突破 | 83.33% | 10 / 12 | 12 / 0 | 样本少，但逐笔质量最高 |
 | 1 | V2D Keltner-ADX 3x进攻版 | 83.33% | 10 / 12 | 12 / 0 | 与 V2A 同信号，杠杆只改变收益幅度 |
@@ -221,6 +224,7 @@
 | V37 | V35 + early-long 卫星版 | V35 主仓完全不变；新增只做多小仓卫星：V35 多头其它条件已满足但 ADX28<28 时，若 ADX14>=35 且上升、+DI14>-DI14，则 K2 open 入场，TP4ATR/SL5ATR/弱势退出 | +8154.08% | -23.49% | 138 | 组合收益高于 V35 且旧窗口回撤不变；最新延长窗口 +11450.90% / -23.44% / 143 笔。卫星 standalone 仅 38-40 笔，先作为影子观察版记录 |
 | V38 | V35 + 极窄 profit floor | V35 主仓完全不改入场和原始 TP/SL；当单笔 MFE 收盘确认达到 `4.75ATR`，把保护线抬到 `+4.25ATR`，防止差一口气未触发 `5ATR` TP 后大幅回吐 | +7110.75% | -23.46% | 108 | 同窗收益保留 V35 的约 85%，最大回撤不变；17 次 profit_floor 退出，本质是为高 MFE 回吐买保险。未完成 live-executable 改单审计，不能标记 live/paper-live |
 | V39 | V35 温和消融改进版 | V35 + `long_vol_min 0.35` + `short_target_atr_pct 0.022`，并移除冗余空头 `h1_ema_spread<0` 确认；`max_hold_bars=384` 实盘兜底保留 | +9969.45% | -23.46% | 107 | 相比同窗 V35，full 收益、Sharpe、胜率、90d 胜率、1y/6m 收益均提升，所有标准分片不劣于 V35；登记为 V39 观察候选，需跨所迁移与 live-executable 审计 |
+| V40 | V39 + V37 early-long 卫星版 | V39 主仓完全不变；新增 V37 标准 early-long 小仓卫星：`ADX28<28`、`volume_surge>=0.25`、`ADX14>=35` 且上升、`+DI14>-DI14`，K2 open 入场，TP4ATR/SL5ATR/弱势退出 | +12322.33% | -24.76% | 149 | 所有分片收益优于 V39 和 V37，Sharpe 4.91 最高；代价是 maxDD 加深约 1.3pp、胜率降至 73.15%。登记为 V40 观察候选，未 live-ready |
 | V1C | V1A + RSI 回踩过滤 | 2天涨幅 > 4%；12小时跌幅 <= -3.5%；15m RSI21 <= 50 入场，RSI21 >= 65 或12小时反弹 >= 2% 退出 | +106.82% | -10.32% | 43 | 低回撤候选；收益低于 V1A，但 train/val/test 都为正，回撤更低 |
 | V1D | V1A + RSI + 4h MACD过滤 | 2天涨幅 > 5%；12小时跌幅 <= -3.5%；15m RSI14 <= 55；4h MACD line > 0；RSI>=70、12小时反弹>=2% 或4h MACD转弱退出 | +95.40% | -9.79% | 26 | 更少交易、更低回撤；MACD 适合做大方向过滤，不适合过度约束入场 |
 | V1E | V1A + 4h MACD过滤 | 2天涨幅 > 5%；12小时跌幅 <= -3%；4h MACD line > 0；12小时反弹>=2% 或4h MACD转弱退出 | +49.67% | -5.97% | 29 | 极低回撤防守版，但收益显著低于 V1A，只适合风险预算更小的版本 |
@@ -269,6 +273,7 @@
 | V37 记录判断 | V37 = V35 主策略 + early-long 小仓位卫星。卫星只做多，专门处理 1h 多头和成交量已经确认、但 V35 的 ADX28 尚未达到 28 的上涨早期：要求 EMA spread>0、volume>=0.25、1h ADX21>18、1h +DI>-DI、ADX28<28、ADX14>=35、ADX14 上升、+DI14>-DI14；K2 open 入场，target_atr 0.008、cap 1.0、TP4ATR、SL5ATR、弱势退出，不在 V35 确认时强制移交。旧主账窗口组合 +8154.08% / -23.49% / 138 笔，卫星 standalone +25.55% / -10.55% / 38 笔 / 胜率 60.53%；最新延长窗口组合 +11450.90% / -23.44% / 143 笔，卫星 standalone +32.79% / -10.62% / 40 笔 / 胜率 62.50%。它提高收益但降低组合胜率，且样本仅 38-40 笔，先记为影子观察版，不直接替代 V35。 |
 | V38 记录判断 | V38 = V35 主仓 + 极窄口径 profit floor：`mfe_atr >= 4.75` 后把有效止损抬到 `+4.25ATR`。Binance API 补充窗口 `2025-05-30 10:30 UTC` 至 `2026-07-07 08:00 UTC`：V38 +7110.75% / -23.46% / Sharpe 4.60 / 108 笔 / 胜率 79.63%，相同窗口 V35 +8360.80% / -23.46% / Sharpe 4.75 / 108 笔。V38 没有提高样本内收益，但用约 15% full 收益成本换取 17 次接近 TP 后的利润锁定，定位为线上高 MFE 回吐保险观察版。未完成 STOP_MARKET 收盘后改单、重启恢复和订单时序审计前，不得标记为 live-ready。 |
 | V39 记录判断 | V39 = V35 的温和消融改进版：`long_vol_min 0.25 -> 0.35`、`short_target_atr_pct 0.018 -> 0.022`、移除冗余空头 `h1_ema_spread < 0` 确认，保留 `max_hold_bars=384` timeout 实盘兜底。本地数据湖窗口 `2025-05-30 10:30 UTC` 至 `2026-07-08 05:30 UTC`：V39 full +9969.45% / -23.46% / Sharpe 4.81 / 107 笔 / 胜率 79.44%；90d +217.53% / -21.90% / 胜率 77.14%；1y +11342.95% / -23.08%。所有标准分片不劣于同窗 V35，是消融驱动的严格改进。仍需跨所迁移、walk-forward 和 live-executable 审计，当前登记为观察候选，未 live-ready。 |
+| V40 记录判断 | V40 = V39 主仓 + V37 标准 early-long 卫星。主仓完全沿用 V39；卫星只做多，处理 `ADX28<28` 但 ADX14 已强势启动的早期上涨段，参数为 target_atr 0.008、cap 1.0、TP4ATR、SL5ATR、ADX14<22 弱势退出。本地数据湖窗口 `2025-05-30 10:30 UTC` 至 `2026-07-08 05:30 UTC`：V40 full +12322.33% / -24.76% / Sharpe 4.91 / 149 笔 / 胜率 73.15%；1y +13621.22% / -24.76%；3m +259.76% / -24.76%。相比 V39，收益和 Sharpe 提升，但最大回撤加深 1.30pp、胜率下降 6.29pp；卫星样本 42 笔，需跨所迁移、walk-forward 和组合持仓审计，当前登记为观察候选，未 live-ready。 |
 | V35 记录判断 | V35 = V34 仅放宽 timeout 192 -> 384 根。源自让利润奔跑消融：trailing/放宽止盈/EMA 反转退出全部明显变差，唯一正向项是 timeout 放宽。V34 仅有的 2 笔 timeout 单（2026-01-10 空、2026-04-14 多）放宽后均多拿 5~7 根 K 即触发 5ATR 止盈（+2.15%->+9.00%、+4.18%->+8.01%）。Binance +6474.19% / -23.49% / Sharpe 4.94，HL +543.17%、OKX +945.83%，三家同向改善；样本内 384 口径 timeout 0 触发，最长持仓 50h。最大回撤发生在 2025-06-16 ~ 06-29（1 笔 2.11x 满止损 -14% 叠加下一笔多单盘中浮亏），非连续亏损所致，全样本最大连亏仅 2 笔。 |
 | RSI/MACD 判断 | RSI 比 MACD 更适合 HYPE 的回踩策略：RSI 控制买点质量，MACD 只适合宽松过滤大方向；过强 MACD 过滤会错过核心反弹。 |
 | 纯趋势判断 | 1h 是最适合做纯趋势主信号的周期；4h 更适合做过滤；15m 更适合执行和风控。 |
@@ -346,7 +351,7 @@
 | `v35_tuned_mild` / V39 | long_vol 0.25->0.35、short target 0.018->0.022、移除冗余空头 1h EMA 确认，实盘保留 timeout 兜底 | +9969.45% | -23.46% | 4.81 | +217.53% | -21.90% | 77.14% |
 | `v35_tuned_recent3m` | 上行基础上另移除多头 ema_spread 过滤、cap 3.0->2.5、ema_slow 384->512 | +6223.29% | -25.68% | 4.82 | +254.77% | -19.79% | 82.35% |
 
-判断：`v35_tuned_mild` 已按用户指定登记为 `HYPE-EMA-TB-V39`，它是消融驱动的严格改进（1d/7d/1m/3m/6m/1y/full 所有窗口不劣于 V35），优先做跨所迁移检查与 walk-forward；`v35_tuned_recent3m` 达成"最近 3 个月收益更高、胜率更高、回撤更小"三项目标，但牺牲 6m/1y/full 且移除多头 EMA spread 改变策略身份，只作 regime 适配影子观察，不替换 V35。两者均未 promotion、未 live-ready。用户确认 V39 实盘规格保留 `max_hold_bars=384` 兜底。证据：`canonical-specs/hype-trend-strategy-v39-spec.md`、`research-notes/hype-ema-tb-v35-full-ablation-recent-tune-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v35_full_ablation_recent_tune.py`；产物：`artifacts/hype_ema_tb_v35_ablation_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_tune_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_final_recent_tune_2026-07-08.json`。
+判断：`v35_tuned_mild` 已按用户指定登记为 `HYPE-EMA-TB-V39`，它是消融驱动的严格改进（1d/7d/1m/3m/6m/1y/full 所有窗口不劣于 V35），优先做跨所迁移检查与 walk-forward；`v35_tuned_recent3m` 达成"最近 3 个月收益更高、胜率更高、回撤更小"三项目标，但牺牲 6m/1y/full 且移除多头 EMA spread 改变策略身份，只作 regime 适配影子观察，不替换 V35。两者均未 promotion、未 live-ready。用户确认 V39 实盘规格保留 `max_hold_bars=384` 兜底。证据：`specs/hype-trend-strategy-v39-spec.md`、`research-notes/hype-ema-tb-v35-full-ablation-recent-tune-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v35_full_ablation_recent_tune.py`；产物：`artifacts/hype_ema_tb_v35_ablation_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_tune_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_final_recent_tune_2026-07-08.json`。
 
 ### 2026-07-08 空头放宽扫描
 
@@ -386,4 +391,26 @@ V39 full 共 107 笔，其中多单 83 笔、空单 24 笔；空单胜率 `79.17
 | `V39+sat_v035`（量能对齐 0.35） | +12173.49% | -24.76% | 4.90 | 147 | 73.47% |
 | `V39+sat_gap`（补量能缺口） | +11614.73% | -25.98% | 4.78 | 165 | 70.30% |
 
-`V39+sat_v025` 在所有分片（3m/6m/1y/full）优于纯 V39 与 V37，Sharpe 最高；代价与 V37 同构：maxDD 加深约 1.3pp、组合胜率下降。卫星量能维持 canonical 0.25（与 0.35 几乎无差）；`sat_gap` 试图接回 V39 抬量能门槛放掉的信号（ADX28>=28、vol 0.25~0.35）被否决——该区质量低，回撤打深到 -25.98%，反向验证了 V39 的量能改动。卫星 standalone 仅 42 笔（+25.17% / -9.09% / 胜率 57.14%），影子观察级证据；组合记录为叠加诊断，未登记版本、未 promotion、未 live-ready，待 V39 通过跨所迁移与 walk-forward 后再评估正式登记。证据：`research-notes/hype-ema-tb-v39-v37-satellite-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v39_v37_satellite.py`；产物：`artifacts/hype_ema_tb_v39_v37_satellite_2026-07-08.json`、`artifacts/hype_ema_tb_v39_v37_satellite_trades_2026-07-08.csv`、`artifacts/hype_ema_tb_v39_v37_satellite_equity_2026-07-08.csv`。
+按用户指定，`V39+sat_v025` 正式登记为 `HYPE-EMA-TB-V40`。它在所有分片（3m/6m/1y/full）优于纯 V39 与 V37，Sharpe 最高；代价与 V37 同构：maxDD 加深约 1.3pp、组合胜率下降。卫星量能维持 标准 0.25（与 0.35 几乎无差）；`sat_gap` 试图接回 V39 抬量能门槛放掉的信号（ADX28>=28、vol 0.25~0.35）被否决——该区质量低，回撤打深到 -25.98%，反向验证了 V39 的量能改动。
+
+V40 标准分片开单量（按 `entry_ts` 落入窗口统计；括号为主腿/卫星）：
+
+| 窗口 | 收益 | maxDD | 开单量 | 主腿 | 卫星 |
+| --- | ---: | ---: | ---: | ---: | ---: |
+| 1d | +0.00% | +0.00% | 0 | 0 | 0 |
+| 7d | +9.94% | -14.60% | 3 | 3 | 0 |
+| 1m | +23.17% | -24.76% | 11 | 7 | 4 |
+| 3m | +259.76% | -24.76% | 49 | 35 | 14 |
+| 6m | +2058.51% | -24.76% | 90 | 68 | 22 |
+| 1y | +13621.22% | -24.76% | 145 | 104 | 41 |
+| full | +12322.33% | -24.76% | 149 | 107 | 42 |
+
+V40 仍为观察候选，未 promotion、未 live-ready；上线前需补跨所迁移、walk-forward、主仓+卫星组合持仓/订单冲突、重启恢复和缺失数据处理审计。证据：`research-notes/hype-ema-tb-v39-v37-satellite-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v39_v37_satellite.py`；产物：`artifacts/hype_ema_tb_v39_v37_satellite_2026-07-08.json`、`artifacts/hype_ema_tb_v39_v37_satellite_trades_2026-07-08.csv`、`artifacts/hype_ema_tb_v39_v37_satellite_equity_2026-07-08.csv`。
+
+### 2026-07-08 V40 卫星有效性诊断
+
+进一步拆解 V40 的 V37 canonical early-long 卫星：卫星 standalone 为 `+25.17% / -9.09% / Sharpe 1.57 / 42 笔 / 胜率 57.14%`，profit factor `1.87`；TP/weak/SL 为 `24/14/4`。单笔最大盈利约 `+3.13%`，top 5 盈利合计 `+15.60%`，只占全部盈利约 `26.87%`，因此不是一两笔极端单撑起来的幻觉。
+
+但卫星稳定性一般：最近 1m standalone `-0.12%`，14 个自然月里 7 个正、5 个负、2 个无交易；2026-03 出现 5 笔全亏。对组合的边际贡献是长期正、短期不稳：full 相比 V39 增加 `+2352.88pp` 收益但 maxDD 加深 `1.30pp`，最近 1m 则收益 `+23.40% -> +23.17%`、maxDD `-20.11% -> -24.76%`。卫星 42 笔中 14 笔与 V39 主仓重叠（33.33%），重叠单均笔 `+1.66%`，非重叠均笔 `+0.14%`；它最有效的场景常是主仓随后也参与的上涨段，同时也意味着实盘必须审计组合持仓与订单冲突。
+
+结论：卫星有效，但只适合作为 V40 的小仓 overlay，不适合作为独立主策略；V40 仍保持观察候选，未 live-ready。证据：`research-notes/hype-ema-tb-v40-satellite-effectiveness-diagnostic-2026-07-08.md`；产物：`artifacts/hype_ema_tb_v40_satellite_effectiveness_diagnostic_2026-07-08.json`。

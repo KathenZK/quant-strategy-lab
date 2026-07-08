@@ -36,7 +36,7 @@ REPORT_MD = NOTES_DIR / f"bnb-1h-ar-v2-multiwindow-backtest-{DATE_TAG}.md"
 MAX_LEVERAGE = 3.0
 PRIORITIES = (2.1431344645719372, 1.8729418183646944)
 
-# Active parameters (documented in the clean canonical spec). Removed no-op
+# Active parameters (documented in the clean version spec). Removed no-op
 # fields are set to ablation-verified neutral values below.
 EMA_PULLBACK_V2: dict[str, Any] = {
     "name": "BNB_1H_AR_V2_EMA_PULLBACK",

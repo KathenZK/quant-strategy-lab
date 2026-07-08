@@ -264,7 +264,7 @@ def render_markdown(ranking: pd.DataFrame, table: pd.DataFrame) -> str:
             f"- 敏感性：`artifacts/hype_v17_1_full_ablation_sensitivity.csv`",
             f"- 剔除表：`artifacts/hype_v17_1_parameter_prune_audit.csv`",
             f"- 本报告：`diagnostics/hype-ema-x-v17-1-parameter-prune-audit-2026-07-01.md`",
-            f"- V18 干净规格：`canonical-specs/hype-ema-x-v18-baseline-spec.md`",
+            f"- V18 干净规格：`specs/hype-ema-x-v18-baseline-spec.md`",
         ]
     )
     return "\n".join(lines) + "\n"

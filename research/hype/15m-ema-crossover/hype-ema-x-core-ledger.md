@@ -62,7 +62,7 @@
 | V16 高收益版 | V17 搜索中 promoted 的 atr18 版本：基础 EMA regime 信号 + ATR 不过热，不要求 trend_score >= 7 | 同 V15 的状态机退出；late re-entry 更挑上一笔 MFE，但信号过滤更宽 | 当前高收益主候选：1Y +3202.92%，最大回撤 -28.19%，胜率 86.84%，38 笔交易；收益更高但回撤超出 20% |
 | V17 V15/V16 合体版 | V15 高质量主信号 + V16 低分卫星信号：trend_score 5-6、dir_dist_ema96 <= 4%、atr_ratio96_672 <= 1.1 | 沿用 V15 late re-entry 与退出引擎；HQ/LQ 官方仓位系数均为 1.0 | 正式合体候选：1Y +2910.74%，最大回撤 -17.79%，胜率 90.91%，33 笔交易；比 V15 多 2 笔有效卫星信号，回撤仍保持 V15 水平 |
 | V17.1 HQ 仓位增强版 | 信号完全沿用 V17；只把 HQ 高质量主信号仓位系数从 1.0 提到 1.1，LQ 卫星仍为 1.0 | 退出、late re-entry、止损和结构破坏规则都不变 | 主台账仓位增强版：1Y +3861.48%，最大回撤 -19.44%，胜率 90.91%；收益最高且仍压在 20% 回撤内 |
-| V18 干净参数规格 | 交易逻辑与 V17.1 完全相同 | 官方参数表只保留消融证明有效的项；删除 noop 过滤器与默认关闭模块的文档噪声 | 规格清理版：指标与 V17.1 相同；见 `canonical-specs/hype-ema-x-v18-baseline-spec.md` |
+| V18 干净参数规格 | 交易逻辑与 V17.1 完全相同 | 官方参数表只保留消融证明有效的项；删除 noop 过滤器与默认关闭模块的文档噪声 | 规格清理版：指标与 V17.1 相同；见 `specs/hype-ema-x-v18-baseline-spec.md` |
 
 ## 主结果对比
 
@@ -450,7 +450,7 @@
 | V15/V16/V17/V17.1 分段回测与消融 | artifacts/hype_v15_v16_promoted_window_backfill.*；artifacts/hype_v17_hybrid_ablation*；artifacts/hype_v17_1_full_ablation* |
 | V17.1 严格口径审计 | research/hype/15m-ema-crossover/scripts/research_hype_ema_x_v17_1_strict_live_audit.py；diagnostics/hype-ema-x-v17-1-strict-live-audit-2026-07-01.md；artifacts/hype_ema_x_v17_1_strict_live_audit_*_2026-07-01.* |
 | V17.1 全参数消融与精简 | `scripts/research_hype_v17_1_full_ablation.py`；`scripts/research_hype_v17_1_parameter_prune_audit.py`；`diagnostics/hype-ema-x-v17-1-parameter-prune-audit-2026-07-01.md`；`artifacts/hype_v17_1_full_ablation*` |
-| V18 干净参数规格 | `canonical-specs/hype-ema-x-v18-baseline-spec.md` |
+| V18 干净参数规格 | `specs/hype-ema-x-v18-baseline-spec.md` |
 | V17 合体消融 | `ablations/hype-ema-x-v17-hybrid-ablation.md` |
 | V15/V16 规则镜像 | `research-notes/hype-ema-x-v15-v16-promoted-strategy-specs.md` |
 | V6 图表 | artifacts/hype_ema_v6_binance_trade_chart.html；含 K 线、开平仓文字和交易连线 |

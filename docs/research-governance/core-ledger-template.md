@@ -41,7 +41,7 @@
 
 ## Evidence Map
 
-- Canonical specs：
+- Specs：
 - Diagnostics / ablations：
 - Live specs：
 - Forward tracking：
@@ -49,7 +49,7 @@
 
 ## What Not To Put Here
 
-- 不粘贴完整参数表；放到 canonical spec。
+- 不粘贴完整参数表；放到 `specs/`。
 - 不粘贴消融网格、逐笔交易、JSON/CSV、图表或命令输出；放到 diagnostics / ablations / artifacts。
 - 不把每次研究过程追加成新章节；只更新当前状态、版本表、版本规则和证据链接。
 - 不复述 README 的路由信息或 decision-log 的日期流水。

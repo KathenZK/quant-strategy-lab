@@ -6,7 +6,7 @@
 
 年化倍率在短窗口中会被少数交易显著放大或压低，判断时优先同时看 `total_return`、`trades`、`max_dd` 和 `win_rate`。
 
-## Canonical Split
+## Standard Split
 
 | Window | Start | End | Annual | Return | DD | Win | Trades | Long/Short |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |

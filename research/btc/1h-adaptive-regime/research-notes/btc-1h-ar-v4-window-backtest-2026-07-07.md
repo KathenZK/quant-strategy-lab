@@ -6,7 +6,7 @@ V4 是按用户要求登记的 V3 最小等价参数版本：`27` 个 clean acti
 
 本报告只复用 2026-07-02 已固定两年闭合 `1h` 数据，不引入新增 forward 数据。所有窗口均使用 Binance `0.001` fee/fill、`4 bps` slippage/fill 和历史资金费。
 
-## Canonical Split
+## Standard Split
 
 | Window | Start | End | Annual | Return | DD | Win | Trades | Long/Short |
 | --- | --- | --- | ---: | ---: | ---: | ---: | ---: | ---: |

@@ -9,7 +9,7 @@
 1. 本文件：确定 family 与目录。
 2. 对应资产 README（如 [hype/README.md](hype/README.md)、[btc/README.md](btc/README.md)）。
 3. 目标家族 `README.md` → core ledger / 主账 → `decision-log.md`。
-4. 按需打开 canonical specs、diagnostics、ablations、live specs、artifacts。
+4. 按需打开 `specs/`（研究侧版本规格）、diagnostics、ablations、`live-specs/`（runner 交接规格）、artifacts。
 
 状态词定义见 [strategy-status-glossary.md](../docs/research-governance/strategy-status-glossary.md)（唯一状态机来源）；策略推进门禁见 [strategy-validation-gates.md](../docs/research-governance/strategy-validation-gates.md)。工作约束见 [../AGENTS.md](../AGENTS.md) 与 `../.cursor/rules/`。
 
@@ -79,10 +79,10 @@
 细则以 `../.cursor/rules/research-report-storage.mdc` 为准，要点：
 
 - 新时间片或新机制必须新建 `research/<asset>/<timeframe>-<strategy-family-slug>/`，不得因指标相似塞进旧 family。
-- 家族目录内：`README.md` + core ledger + `decision-log.md` 为长期入口；`diagnostics/`、`ablations/`、`canonical-specs/`、`live-specs/`、`research-notes/` 按性质分类；验证门禁报告按 [strategy-validation-gates.md](../docs/research-governance/strategy-validation-gates.md) 落入对应类型目录；`scripts/` 放一次性研究脚本；`artifacts/` 放需保留的产物；进入 dry-run 后增加 `forward-tracking/`。
+- 家族目录内：`README.md` + core ledger + `decision-log.md` 为长期入口；`specs/` 放研究侧版本规格，`live-specs/` 放 runner 交接规格；`diagnostics/`、`ablations/`、`research-notes/` 按性质分类；验证门禁报告按 [strategy-validation-gates.md](../docs/research-governance/strategy-validation-gates.md) 落入对应类型目录；`scripts/` 放一次性研究脚本；`artifacts/` 放需保留的产物；进入 dry-run 后增加 `forward-tracking/`。
 - 新建或重构主账先使用 [core-ledger-template.md](../docs/research-governance/core-ledger-template.md)；主账只保存版本身份、当前状态、版本规则、版本表和证据链接，不承载完整实验报告或参数表。
 - 新建家族必须同步登记进对应资产 README 和本文件的路由表（索引更新义务）。
-- 长期研究文档默认中文；顶层 `reports/` 已退役；Canvas 不是 canonical storage。
+- 长期研究文档默认中文；顶层 `reports/` 已退役；Canvas 不是长期事实源。
 
 ## 历史或浅层研究
 

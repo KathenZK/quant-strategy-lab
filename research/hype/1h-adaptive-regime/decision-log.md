@@ -43,7 +43,7 @@
 - V2 全参数消融提示的组合复测覆盖 DI `4` 个候选 × Stoch `4` 个候选，共 `16` 组；每组执行 base K+1、K+2 延迟和 `8 bps/fill` 滑点压力。
 - 最佳 base 组合为 `di_roc_off__stoch_th55`，current full `15.0530x / -19.11% / 79.73% / 74 trades`；reused holdout `9.0300x / -19.11% / 76.47% / 17 trades`。
 - 同一组合在 K+2 压力下 current full 为 `3.0574x / -31.93%`；在 `8 bps/fill` 下为 `9.4070x / -28.40%`。因此它不是 promotion，不可标记为 live、paper-live、dry-run、candidate 或 handoff。
-- 按用户要求，将 `di_roc_off__stoch_th55` 正式登记为 `HYPE-1H-Adaptive-Regime-V3` diagnostic baseline，并创建 `canonical-specs/hype-1h-ar-v3-baseline-spec.md` 与主账条目。
+- 按用户要求，将 `di_roc_off__stoch_th55` 正式登记为 `HYPE-1H-Adaptive-Regime-V3` diagnostic baseline，并创建 `specs/hype-1h-ar-v3-baseline-spec.md` 与主账条目。
 - V3 全参数消融覆盖 clean 配置接口 `34` 个字段槽，输出 `98` 行，coverage missing fields 为 `0`；current full 严格改善行 `9`，基础 target-like 行 `5`。这些仍只作诊断，未完成 K+2/滑点/生产 runner/forward trades promotion 证据。
 
 ## 2026-07-07：V3 参数剪枝验证与预拟合微调
@@ -58,6 +58,6 @@
 
 - 按用户要求，将 V3 剪枝后微调的最佳等价组合 `di_cross_00205__stoch_reversal_05554` 登记为 `HYPE-1H-Adaptive-Regime-V4` diagnostic pruned tuned baseline。
 - 选择 `stoch_reversal_05554` 而不是同指标的 `stoch_reversal_04786`，是为了保留 V3 的 `threshold_high=55`，少改一个参数，降低额外过拟合风险。
-- V4 参数字段槽从 V3 的 `34` 个降至 `25` 个：DI `9` 个、Stoch `16` 个。新增 `canonical-specs/hype-1h-ar-v4-pruned-tuned-baseline-spec.md`，逐项解释全部参数、固定执行语义和已移除字段。
+- V4 参数字段槽从 V3 的 `34` 个降至 `25` 个：DI `9` 个、Stoch `16` 个。新增 `specs/hype-1h-ar-v4-pruned-tuned-baseline-spec.md`，逐项解释全部参数、固定执行语义和已移除字段。
 - V4 base K+1 current full `22.8128x / -19.11% / 81.08% / 74 trades`；reused holdout `13.0662x / -19.11% / 77.78% / 18 trades`。
 - V4 仍不是 promotion：K+2 current full `8.7014x / -23.56%`，8bps current full `15.3677x / -22.46%`，压力回撤仍穿越 `20%` 硬门槛。

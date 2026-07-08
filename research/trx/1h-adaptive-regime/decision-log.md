@@ -22,7 +22,7 @@
 - 持续持仓上界覆盖 `392` 个 causal states、`12,936` 个 side/leverage 变体；即使不计 intrabar adverse excursion、不给保护单约束这一偏乐观口径，prefit/locked target 仍均为 `0`。
 - K+2 延迟使领先观察值 full DD 扩大到 `-34.46%`，OOS 仍亏损；`8 bps` 滑点使 full DD `-24.74%`、OOS return `-20.06%`。
 - 订单时序可实现不等于策略可实盘；当前没有生产 runner、restart reconciliation、kill switch 和保护单监控实现。
-- 最终状态保持 `NO-GO`，不生成 canonical live spec，不登记可 promotion 的 V1。
+- 最终状态保持 `NO-GO`，不生成 live spec，不登记可 promotion 的 V1。
 
 ## 2026-07-03：临时 V1base 命名与删参证据
 
@@ -75,7 +75,7 @@
 
 - 按用户明确指令，将 `TRX-1H-AR-V2-ABLATION-GUIDED-TUNE-2026-07-06` 正式登记为 `TRX-1H-Adaptive-Regime-V3`。
 - 新增 `scripts/trx_1h_ar_v3.py` 和 `artifacts/trx_1h_ar_v3_config_2026-07-06.json`，校验 V3 指标与微调观察值一致。
-- 新增 `canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`，逐项列出 V3 全部 `36` 个参数、作用、V2/V3 参数值和变化含义。
+- 新增 `specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`，逐项列出 V3 全部 `36` 个参数、作用、V2/V3 参数值和变化含义。
 - V3 相比 V2：不再与 V1/V2 逐交易等价；MACD leg 更快 HTF、更窄 ADX/ATR、放宽 MACD turn 与 EMA 距离、杠杆提高到 `5x`；Stochastic leg 从 long-only 改为 both，使用更慢 EMA 参考、严格 ADX、较宽 trailing、较短 cooldown 和 `2h` 入场延迟。
 - 决策：`V3` 为 registered tuned version。current full 满足收益更高、win `>80%`、DD `<20%`，但 reused holdout 胜率 `77.78%`，且缺 fresh forward OOS 与 production runner，仍为 `NO-GO / not promoted / not live-ready`。
 

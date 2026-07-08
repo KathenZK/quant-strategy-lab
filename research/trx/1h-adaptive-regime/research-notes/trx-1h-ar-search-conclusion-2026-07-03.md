@@ -80,7 +80,7 @@
 3. K+2 或较高滑点会突破 `20%` 回撤边界。
 4. 研究状态机虽可描述为真实订单时序，但仓库没有 TRX production runner、exchange reconciliation、保护单监控和 kill switch。
 
-因此本轮不生成可 promotion 的版本或 canonical live spec，不进入 paper-live/dry-run/handoff。后续登记的 `V1` 只用于冻结失败边界和删参复现，状态仍为 diagnostic baseline。
+因此本轮不生成可 promotion 的版本或 live spec，不进入 paper-live/dry-run/handoff。后续登记的 `V1` 只用于冻结失败边界和删参复现，状态仍为 diagnostic baseline。
 
 ## 复现命令
 

@@ -21,7 +21,7 @@
 
 - 主账（V1-V4 版本表、指标与证据链接）：`hype-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
-- 版本规格：`canonical-specs/`（V1 baseline、V2 clean、V3 baseline、V4 pruned tuned）
+- 版本规格：`specs/`（V1 baseline、V2 clean、V3 baseline、V4 pruned tuned）
 - 数据质量报告：`diagnostics/hype-binance-1h-data-quality-2026-07-01.md`
 - 最终 not-promoted 审计：`diagnostics/hype-1h-adaptive-regime-boundary-audit-2026-07-01.md`
 

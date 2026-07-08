@@ -6,7 +6,7 @@
 
 - 本家族属于策略规格与归档材料。
 - 它不是 active package code 的事实来源。
-- 需要复现逻辑时，应使用 canonical specs 在一次性脚本或生产 runner 中重建。
+- 需要复现逻辑时，应使用 specs 在一次性脚本或生产 runner 中重建。
 
 ## 版本记录
 

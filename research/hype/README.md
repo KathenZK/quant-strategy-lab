@@ -11,7 +11,7 @@ HYPE 有多个互不相关但复用版本号的策略家族。不要按裸版本
 3. 目标家族 `README.md`
 4. 该家族 core ledger / 主账
 5. 该家族 `decision-log.md`
-6. 按需打开 canonical specs、diagnostics、ablations、live specs、artifacts。
+6. 按需打开 `specs/`（研究侧版本规格）、diagnostics、ablations、`live-specs/`（runner 交接规格）、artifacts。
 
 状态词定义见 [strategy-status-glossary.md](../../docs/research-governance/strategy-status-glossary.md)。
 

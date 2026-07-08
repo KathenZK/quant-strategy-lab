@@ -31,7 +31,7 @@ from research_hype_5m_micro_scalp_v1_simplified_combo_search import verify_raw_n
 RUN_ID = "2026-07-01"
 FAMILY_ROOT = Path("research/hype/5m-micro-scalp")
 ABLATION_ROOT = FAMILY_ROOT / "ablations"
-CANONICAL_ROOT = FAMILY_ROOT / "canonical-specs"
+CANONICAL_ROOT = FAMILY_ROOT / "specs"
 RESEARCH_NOTE_ROOT = FAMILY_ROOT / "research-notes"
 
 CONFIG_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_3_baseline_config_{RUN_ID}.json"

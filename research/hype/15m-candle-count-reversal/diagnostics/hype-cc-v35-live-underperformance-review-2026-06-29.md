@@ -14,7 +14,7 @@ live-underperformance + execution-risk diagnostic
 
 本次复审基于：
 
-- `canonical-specs/hype-v35-reproducible-params.md`
+- `specs/hype-v35-reproducible-params.md`
 - `diagnostics/hype-v35-overfit-diagnosis.md`
 - `hype-cc-15m-milestone-comparison.md`
 - `legacy-canvas/hype-v35-cross-exchange-execution.md`

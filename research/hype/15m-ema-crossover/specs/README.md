@@ -1,4 +1,4 @@
-# HYPE-EMA-X Canonical Specs
+# HYPE-EMA-X Specs
 
 干净、可交接的官方参数规格。
 

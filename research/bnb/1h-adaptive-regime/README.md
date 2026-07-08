@@ -22,7 +22,7 @@
 
 - 主账（V1-V3 版本表、指标与证据链接）：`bnb-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
-- 版本规格：`canonical-specs/`（V1 原始/clean、V2 clean-equivalent、V3 微调）
+- 版本规格：`specs/`（V1 原始/clean、V2 clean-equivalent、V3 微调）
 - 搜索 not-promoted 证据：`diagnostics/bnb-1h-adaptive-regime-search-2026-07-03.md`、`diagnostics/bnb-1h-ar-cap3-highwin-search-2026-07-06-cap3-highwin.md`
 
 脚本在 `scripts/`（fetch / search / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

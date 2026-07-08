@@ -13,7 +13,7 @@
 
 - 主账（V1/V1base/V1.1/V1.2/V1.3/V1.4 版本表与证据索引）：`hype-15m-mii-core-ledger.md`
 - 决策记录（全部日期批次结论）：`decision-log.md`
-- V1 冻结基线规格：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`
+- V1 冻结基线规格：`specs/hype-15m-mii-v1-baseline-spec.md`
 - V1 实盘可行性审计（not-promoted）：`live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md`
 - V1.3 runner 交接规格：`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`
 - V1.4 参数规格（非 runner dry-run）：`live-specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md`

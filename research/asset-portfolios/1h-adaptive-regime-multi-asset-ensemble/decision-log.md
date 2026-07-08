@@ -24,4 +24,4 @@
 - 冻结身份：成分固定为 TRX V3、SOL V2、HYPE V4、ETH V3、BTC V4、BNB V3；全账户单仓槽位；先到先得；持仓期间忽略其他全部信号；同小时平手按家族 current-full 年化降序；中选交易占用全额权益并按 sleeve 冻结杠杆执行。
 - 指标：full `287.01x / -21.43% DD / 90.30% win / 371 trades / PF 6.862`；reused holdout `7.67x / +65.31% / -19.79% DD / 78.57% win / 42 trades`；`last_7d +0.46% / -15.92% DD`；`last_1m +58.18% / -15.92% DD`；`last_3m +66.01% / -19.79% DD`；`last_6m +1089.35% / -21.43% DD`；`last_1y +13315.39% / -21.43% DD`。
 - 决策：登记为 `V1` 但状态保持 `NO-GO / not promoted / not live-ready`。理由：full 与 `last_6m/1y` 回撤 `-21.43%` 穿破 `<20%` 硬门槛；阻塞后未做逐 K 联合状态机重演；成分全部是 diagnostic NO-GO；组合层压力与生产执行审计缺失。
-- 证据：`canonical-specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`、`canonical-specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`、`binance-1h-ar-mae-core-ledger.md`、`research-notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`。
+- 证据：`specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`、`specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`、`binance-1h-ar-mae-core-ledger.md`、`research-notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`。

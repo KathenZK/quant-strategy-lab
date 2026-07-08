@@ -45,7 +45,7 @@ tests/    # active 数据湖内核测试 + 研究文档一致性检查
 archive/   # 历史代码、配置、文档、研究和报告快照
 ```
 
-每个策略家族目录的内部结构（`README.md`、core ledger、`decision-log.md`、`diagnostics/`、`ablations/`、`canonical-specs/`、`live-specs/`、`research-notes/`、`scripts/`、`artifacts/`、`forward-tracking/`）由 `.cursor/rules/research-report-storage.mdc` 与 `.cursor/rules/lab-runner-handoff.mdc` 定义，不在本文件重复。
+每个策略家族目录的内部结构（`README.md`、core ledger、`decision-log.md`、`diagnostics/`、`ablations/`、`specs/`、`live-specs/`、`research-notes/`、`scripts/`、`artifacts/`、`forward-tracking/`）由 `.cursor/rules/research-report-storage.mdc` 与 `.cursor/rules/lab-runner-handoff.mdc` 定义，不在本文件重复。
 
 ## 数据湖约定
 

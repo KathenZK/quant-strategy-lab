@@ -45,12 +45,12 @@
 
 - 按用户要求，将 `ema_pullback + wick_reject` cap3 high-win primary 登记为 `BNB-1H-Adaptive-Regime-V1`。
 - V1 状态为 `diagnostic observation baseline / not promoted / not live-ready`；它只是样本内观察形态，不是 candidate。
-- 参数规格见 `canonical-specs/bnb-1h-ar-v1-parameter-spec-2026-07-06.md`；后续全参数消融只允许删除交易路径完全不变的 no-op 参数，或另行登记 clean diagnostic version。
+- 参数规格见 `specs/bnb-1h-ar-v1-parameter-spec-2026-07-06.md`；后续全参数消融只允许删除交易路径完全不变的 no-op 参数，或另行登记 clean diagnostic version。
 
 ## 2026-07-06：V1 全参数消融与 clean spec
 
 - 完成 `BNB-1H-Adaptive-Regime-V1` 全参数消融，共 `60` 个消融 row；baseline 仍为 prefit `2.20x / -18.66% DD / 87.04% win`、locked OOS `0.64x / -22.86% DD / 68.42% win`、full `1.87x / -22.86% DD / 84.25% win`。
-- 识别出 `32` 个交易路径完全不变的 no-op 字段；已整理为等价 clean spec：`canonical-specs/bnb-1h-ar-v1-clean-parameter-spec-2026-07-06.md`。
+- 识别出 `32` 个交易路径完全不变的 no-op 字段；已整理为等价 clean spec：`specs/bnb-1h-ar-v1-clean-parameter-spec-2026-07-06.md`。
 - `ema_pullback.ema_slow` 与 `wick_reject.sl_atr` 的单项替换在样本内不差但改变交易路径，不能作为 V1 clean 直接采用；如继续研究需另行冻结。
 - 结论不变：V1 clean 只删除无用参数，不修复 locked OOS 失败，不 promotion；证据见 `ablations/bnb-1h-ar-v1-full-parameter-ablation-2026-07-06.md`。
 
@@ -82,6 +82,6 @@
 - 按用户要求，将 V2 消融引导微调首选组合登记为 `BNB-1H-Adaptive-Regime-V3`。
 - V3 状态为 `tuned diagnostic observation / not promoted / not live-ready`；不是 candidate、paper-live、dry-run、handoff 或 live。
 - 当前实际最大杠杆为 `2.5x`：`ema_pullback` 固定 `2.5x`，`wick_reject` 固定 `1.0x`，单仓 merge 后组合最大暴露为 `2.5x`。
-- 参数规格已逐项解释：`canonical-specs/bnb-1h-ar-v3-parameter-spec-2026-07-07.md`。
+- 参数规格已逐项解释：`specs/bnb-1h-ar-v3-parameter-spec-2026-07-07.md`。
 - 指标登记为 prefit `3.37x / -18.24% DD / 89.42% win / 104 trades`，reused locked OOS `1.22x / -15.53% DD / 81.25% win / 16 trades`，full `2.94x / -18.24% DD / 88.33% win / 120 trades`。
 - Promotion 边界不变：OOS 为 reused observation，必须等待未读 forward 数据或重新冻结流程，才能讨论 candidate/live-readiness。

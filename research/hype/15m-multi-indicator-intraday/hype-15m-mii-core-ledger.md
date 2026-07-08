@@ -47,7 +47,7 @@ Created：2026-06-30
 
 | Version | Status | Core idea | Evidence | Decision |
 | --- | --- | --- | --- | --- |
-| `HYPE-15M-MII-V1` | diagnostic baseline / not live-ready | `RSI(7)` 上穿 `30` 做多、下穿 `60` 做空；MACD 方向过滤；ATR96 pct `0.60%-2.80%`；`TP=0.90%`、`SL=2.80%`、`hold=16`、`1.5x` | `canonical-specs/hype-15m-mii-v1-baseline-spec.md`；`ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`；`live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md` | 可执行口径年化 `18.66%`、回撤 `-31.84%`、Last90 年化 `-41.44%`；`not promoted / not live-ready` |
+| `HYPE-15M-MII-V1` | diagnostic baseline / not live-ready | `RSI(7)` 上穿 `30` 做多、下穿 `60` 做空；MACD 方向过滤；ATR96 pct `0.60%-2.80%`；`TP=0.90%`、`SL=2.80%`、`hold=16`、`1.5x` | `specs/hype-15m-mii-v1-baseline-spec.md`；`ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`；`live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md` | 可执行口径年化 `18.66%`、回撤 `-31.84%`、Last90 年化 `-41.44%`；`not promoted / not live-ready` |
 | `HYPE-15M-MII-V1base` | diagnostic observation / not live-ready | `RSI(7)` 上穿 `40` 做多、下穿 `60` 做空；MACD 方向过滤；`ATR96 pct >= 0.75%`；`min_rvol96=1.0`；`TP=1.20%`、`SL=3.60%`、`hold=16`、`2x` | `research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`；补算 K+2 延迟压力 | K+1 年化高、Last90 强，但 K+2 回撤扩大到 `-36.28%`；保留为主观察基线，不进入任何 promotion 状态 |
 | `HYPE-15M-MII-V1.1` | clean diagnostic expression / not live-ready | 去掉未启用的 `1h confirm`、`RSI14 band`、ADX、H4、ret、churn、cooldown 等表达噪音，只保留生效项 | `research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md` | 行为等同 `V1base`；最近 1 周无交易，K+1 最近 1 月总收益 `34.40%`，全样本总收益 `309.54%`；trailing 动态止盈失败；BTC/ETH 跨资产诊断未证明可迁移；仍为 `not promoted / not live-ready` |
 | `HYPE-15M-MII-V1.2` | ATR bracket diagnostic observation / not live-ready | 沿用 `V1.1` 入场过滤；下一根 open 入场时按信号 K 已知 `ATR96%` 设置 `TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24` | `live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md` | K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`；去掉 `ATR96 >= 0.75%` 后收益/回撤明显恶化，两个过滤都去掉转负；仍为 `not promoted / not live-ready` |
@@ -433,7 +433,7 @@ min_rvol96: 1.0 -> 0.85
 
 ## 证据入口
 
-- V1 baseline spec：`canonical-specs/hype-15m-mii-v1-baseline-spec.md`
+- V1 baseline spec：`specs/hype-15m-mii-v1-baseline-spec.md`
 - V1 full ablation：`ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`
 - V1 live feasibility：`live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md`
 - Clean evolution：`research-notes/hype-15m-mii-clean-parameter-evolution-2026-06-29.md`

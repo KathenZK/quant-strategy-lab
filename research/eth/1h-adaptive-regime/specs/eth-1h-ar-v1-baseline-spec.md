@@ -1,4 +1,4 @@
-# ETH-1H-Adaptive-Regime-V1 Canonical Baseline Spec
+# ETH-1H-Adaptive-Regime-V1 Baseline Spec
 
 ## 版本身份
 
@@ -141,4 +141,4 @@ uv run python research/eth/1h-adaptive-regime/scripts/eth_1h_ar_v1.py
 
 - 全参数消融：`78/78` 字段槽；clean interface 保留 `29` 个 active 参数并与本 spec 逐笔完全等价。
 - clean tuned observation 虽改善 prefit 与 current full 的收益/回撤，但 reused holdout 收益仍为负。
-- 该 observation 后续按用户要求登记为 `ETH-1H-Adaptive-Regime-V2`；V1 canonical spec 本身不改写，详见 `eth-1h-ar-v2-clean-tuned-spec-2026-07-06.md`、`../ablations/eth-1h-ar-v1-full-parameter-ablation-2026-07-03.md` 与 `../research-notes/eth-1h-ar-v1-clean-tune-audit-2026-07-03.md`。
+- 该 observation 后续按用户要求登记为 `ETH-1H-Adaptive-Regime-V2`；V1 version spec 本身不改写，详见 `eth-1h-ar-v2-clean-tuned-spec-2026-07-06.md`、`../ablations/eth-1h-ar-v1-full-parameter-ablation-2026-07-03.md` 与 `../research-notes/eth-1h-ar-v1-clean-tune-audit-2026-07-03.md`。

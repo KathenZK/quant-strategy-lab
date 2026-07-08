@@ -9,7 +9,7 @@ Rules:
 - Write retained JSON, CSV, and HTML outputs to `../artifacts/`.
 - Write durable audit/diagnostic Markdown to `../diagnostics/`.
 - Write ablation conclusions to `../ablations/`.
-- Write clean promoted specs to `../canonical-specs/`.
+- Write clean promoted specs to `../specs/`.
 - Promote code to `src/strategy_lab/` only if it becomes reusable data infrastructure or a narrow dataset exporter.
 
 ## Current scripts

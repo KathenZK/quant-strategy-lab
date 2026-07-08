@@ -165,7 +165,7 @@ def test_no_links_to_retired_reports_dir() -> None:
 # 对外复现规格的存量整改清单：这两份写于 external-reproduction-spec 规则之前。
 # 只允许收缩：把仓库内部引用移入"非复现依赖"附录后，从这里删除对应条目。
 GRANDFATHERED_REPRO_SPECS = {
-    "asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/canonical-specs/"
+    "asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/specs/"
     "binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md",
     "hype/15m-multi-indicator-intraday/live-specs/"
     "hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md",

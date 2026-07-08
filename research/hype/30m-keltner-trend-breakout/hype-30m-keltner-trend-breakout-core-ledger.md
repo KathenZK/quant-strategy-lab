@@ -39,7 +39,7 @@
 
 ## Evidence Map
 
-- Canonical specs：外部文件 `/Users/ZK/Downloads/2-k2-fq-v2-atrvt-off-20260707.md`（仓库外来源，不作为 repo 内可复现依赖）。
+- Specs：外部文件 `/Users/ZK/Downloads/2-k2-fq-v2-atrvt-off-20260707.md`（仓库外来源，不作为 repo 内可复现依赖）。
 - Diagnostics / ablations：[research-notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](research-notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md)
 - Live specs：无。
 - Forward tracking：无。

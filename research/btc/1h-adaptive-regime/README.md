@@ -18,7 +18,7 @@
 
 - 主账（V1-V4 版本表、指标与证据链接）：`btc-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
-- V1 冻结规格：`canonical-specs/btc-1h-ar-v1-baseline-spec.md`
+- V1 冻结规格：`specs/btc-1h-ar-v1-baseline-spec.md`
 - 数据质量报告：`diagnostics/btc-binance-1h-data-quality-2026-07-02.md`
 - 主搜索与 not-promoted 审计：`diagnostics/btc-1h-adaptive-regime-search-2026-07-02.md`、`diagnostics/btc-1h-adaptive-regime-boundary-audit-2026-07-02.md`
 

@@ -316,7 +316,7 @@ def load_eth() -> dict[str, Any]:
     engine, frame, funding, quality = v1.load_context()
     funding_times, funding_cumulative = engine.funding_prefix(funding)
     # ETH-1H-Adaptive-Regime-V3 frozen clean parameters
-    # (canonical-specs/eth-1h-ar-v3-clean-tuned-spec-2026-07-07.md)
+    # (specs/eth-1h-ar-v3-clean-tuned-spec-2026-07-07.md)
     bb_v3 = v21c.BBBreakV21CleanConfig(
         indicator_window=72,
         band_k=2.5,

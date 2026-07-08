@@ -97,7 +97,7 @@ Best add-signal candidates increased trade count into the 60s, but win rate fell
 - `HYPE-EMA-X-V17`: promoted V15/V16 hybrid row, `HYBRID_score5_dist04_atr11` / `HYPE_EMA_X_V17`, added after comparing V15 and V16. It keeps V15 high-quality entries and admits only V16 low-score satellite entries with `trend_score` 5-6, `dir_dist_ema96 <= 0.04`, and `atr_ratio96_672 <= 1.1`.
 - `HYPE-EMA-X-V17.1`: promoted V17 sizing-enhanced row, `HYPE_EMA_X_V17__hq_scale=1p1`, added after V17 ablation. It keeps V17 signals unchanged and sets `hq_scale=1.1`, `lq_scale=1.0`.
 
-The main ledger is `../hype-ema-x-core-ledger.md`. Full rules and parameters are mirrored in `hype-ema-x-v15-v16-promoted-strategy-specs.md` and `../ablations/hype-ema-x-v17-hybrid-ablation.md`. Clean spec: `../canonical-specs/hype-ema-x-v18-baseline-spec.md`.
+The main ledger is `../hype-ema-x-core-ledger.md`. Full rules and parameters are mirrored in `hype-ema-x-v15-v16-promoted-strategy-specs.md` and `../ablations/hype-ema-x-v17-hybrid-ablation.md`. Clean spec: `../specs/hype-ema-x-v18-baseline-spec.md`.
 
 ## Interpretation
 

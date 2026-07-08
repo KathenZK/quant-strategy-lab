@@ -38,6 +38,6 @@
 ## 2026-07-07：按用户要求将高胜率最佳观察值登记为 V2
 
 - 将 `ENS__SOL_1H_AR_HW_R132002__SOL_1H_AR_HW_R243705` 登记为 `SOL-1H-Adaptive-Regime-V2`。
-- V2 机制：`donchian_break + vwap_revert` 双腿 ensemble；完整参数规格见 `canonical-specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`。
+- V2 机制：`donchian_break + vwap_revert` 双腿 ensemble；完整参数规格见 `specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`。
 - V2 指标：full annual `2.07x`、return `290.00%`、DD `-17.41%`、win `93.91%`、trades `115`；last `1y` annual `1.60x`、win `92.31%`；reused holdout annual `0.70x`、return `-8.53%`、DD `-15.69%`、win `66.67%`、trades `6`。
 - V2 状态：`registered observation / NO-GO / not promoted / not live-ready`。登记 V2 只固定高胜率观察参数，不代表 candidate、paper-live、dry-run、handoff 或 live。

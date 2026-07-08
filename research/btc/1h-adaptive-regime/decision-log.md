@@ -19,7 +19,7 @@
 ## 2026-07-02 — 按用户要求登记 V1
 
 - 将原 prefit 预冻结冠军正式登记为 `BTC-1H-Adaptive-Regime-V1`。
-- V1 身份固定为 Keltner breakout + CCI reversal ensemble；完整参数见 `canonical-specs/btc-1h-ar-v1-baseline-spec.md` 与 `artifacts/btc_1h_ar_v1_config_2026-07-02.json`。
+- V1 身份固定为 Keltner breakout + CCI reversal ensemble；完整参数见 `specs/btc-1h-ar-v1-baseline-spec.md` 与 `artifacts/btc_1h_ar_v1_config_2026-07-02.json`。
 - 此次登记只创建正式研究基线，不改变 `NO-GO / not live-ready`；此前“未登记 V1”决策由本条用户指令覆盖。
 - V1 将作为全参数消融、删参和 prefit-only 微调的基线；reused holdout 不参与挑参数。
 

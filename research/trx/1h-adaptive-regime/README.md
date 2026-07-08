@@ -18,7 +18,7 @@
 
 - 主账（V1-V3 版本表、指标与证据链接）：`trx-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
-- V3 参数规格：`canonical-specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`
+- V3 参数规格：`specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`
 - 实盘可行性 not-promoted 证据：`live-specs/trx-1h-ar-live-feasibility-2026-07-03.md`
 - 本轮总报告：`research-notes/trx-1h-ar-search-conclusion-2026-07-03.md`
 
