@@ -26,7 +26,7 @@ import trx_1h_ar_v3_clean as v3c  # noqa: E402
 DATE_TAG = "2026-07-07"
 FAMILY_DIR = ROOT / "research/trx/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 SUMMARY_JSON = ARTIFACT_DIR / f"trx_1h_ar_v3_clean_tune_{DATE_TAG}.json"
 CANDIDATES_CSV = ARTIFACT_DIR / f"trx_1h_ar_v3_clean_tune_candidates_{DATE_TAG}.csv"
 TRADES_CSV = ARTIFACT_DIR / f"trx_1h_ar_v3_clean_tune_trades_{DATE_TAG}.csv"

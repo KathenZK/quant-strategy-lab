@@ -18,7 +18,7 @@ import btc_1h_ar_v3 as v3  # noqa: E402
 
 FAMILY_DIR = ROOT / "research/btc/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-07"
 SUMMARY_JSON = ARTIFACT_DIR / f"btc_1h_ar_v3_param_necessity_{DATE_TAG}.json"
 REPORT_MD = NOTES_DIR / f"btc-1h-ar-v3-param-necessity-{DATE_TAG}.md"

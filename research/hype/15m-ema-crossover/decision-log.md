@@ -38,7 +38,7 @@
 - `research_hype_ema_x_v17_1_strict_live_audit.py`（2026-07-01）：`HYPE-EMA-X-V17.1` 严格口径复审。在台账切片 `<= 2026-06-01 03:00 UTC` 上复现 `+3861.48% / -19.44% / 33 trades`；126 个 feature-point 因果性检查失败 `0`；信号时序异常 `0`；`stop_gap_open` / `stop_delay_1bar` / `stop_market_extra_slip` 与 baseline 相同（样本内 `0` 笔 stop_loss）。结论：未发现未来函数或 PBTR 式 stale stop 穿价补成交；硬止损仍属 stop-price 乐观上界，不得 live-approved。见 `diagnostics/hype-ema-x-v17-1-strict-live-audit-2026-07-01.md`。
 - `research_hype_v17_1_full_ablation.py` + `research_hype_v17_1_parameter_prune_audit.py`（2026-07-01）：`HYPE-EMA-X-V17.1` 146 项单参数消融。结论：3 项 noop；多项默认关闭模块打开伤收益；`stop_atr` 8–12 样本内等价。剔除证据见 `diagnostics/hype-ema-x-v17-1-parameter-prune-audit-2026-07-01.md`；干净参数升格为 **`HYPE-EMA-X-V18`**，见 `specs/hype-ema-x-v18-baseline-spec.md`。
 - `research_hype_ema_x_v18_retest.py`（2026-07-01）：按 `HYPE-EMA-X-V18` 干净规格重新回测并增加固定步长滚动窗口。台账切片 `<= 2026-06-01 03:00 UTC` 复现 `+3861.48% / -19.44% / 90.91% / 33 trades / 7 late`；30D 滚动窗口 `13` 段中 `1` 段负收益，90D/180D/365D 滚动窗口均为正收益，但短窗口交易数少。结论：复测确认 V18 台账指标，当时维持 `registered / not live-ready` 状态。见 `diagnostics/hype-ema-x-v18-retest-and-rolling-windows-2026-07-01.md`。
-- `2026-07-08`：确认 `HYPE-EMA-X-V18` 确实在 quant-runner 以 `hype_ema_x` dry-run 配置运行（`configs/dryrun.toml`），状态更新为 `dry-run / forward-test required`，并建立 [forward-tracking/README.md](forward-tracking/README.md)。首份 forward 报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
+- `2026-07-08`：确认 `HYPE-EMA-X-V18` 确实在 quant-runner 以 `hype_ema_x` dry-run 配置运行（`configs/dryrun.toml`），状态更新为 `dry-run / forward-test required`，并建立 [runner-tracking/README.md](runner-tracking/README.md)。首份 runner 观察报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
 
 ## 证据政策
 

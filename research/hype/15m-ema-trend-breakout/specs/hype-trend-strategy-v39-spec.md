@@ -127,8 +127,8 @@ exits:
 
 ## 证据
 
-- 研究报告：`../research-notes/hype-ema-tb-v35-full-ablation-recent-tune-2026-07-08.md`
-- 空头放宽扫描：`../research-notes/hype-ema-tb-v35-short-relaxation-scan-2026-07-08.md`
+- 研究报告：`../notes/hype-ema-tb-v35-full-ablation-recent-tune-2026-07-08.md`
+- 空头放宽扫描：`../notes/hype-ema-tb-v35-short-relaxation-scan-2026-07-08.md`
 - 复现脚本：`../scripts/research_hype_ema_tb_v35_full_ablation_recent_tune.py`
 - 最终候选 JSON：`../artifacts/hype_ema_tb_v35_final_recent_tune_2026-07-08.json`
 - 最终候选逐笔：`../artifacts/hype_ema_tb_v35_final_candidates_trades_2026-07-08.csv`

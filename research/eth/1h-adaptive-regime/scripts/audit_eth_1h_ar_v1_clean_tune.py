@@ -22,7 +22,7 @@ import research_eth_1h_ar_v1_clean_tune as tune  # noqa: E402
 
 FAMILY_DIR = ROOT / "research/eth/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-03"
 SUMMARY_JSON = ARTIFACT_DIR / f"eth_1h_ar_v1_clean_tune_audit_{DATE_TAG}.json"
 NEIGHBORHOOD_CSV = (

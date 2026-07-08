@@ -10,4 +10,4 @@
 
 结论：独立回测与外部验收基本对账成功，但继续结算到 `2026-07-06 23:59 UTC` 后新增一笔亏损 time exit，单相位 6 bps/side 从外部验收等价的 `+7698.66% / 113 笔`降至 `+7516.88% / 114 笔`；策略保持 `explore / not promoted / not live-ready`。
 
-证据：[research-notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](research-notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md)。
+证据：[notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md)。

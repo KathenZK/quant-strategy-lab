@@ -131,7 +131,7 @@ satellite_leg:
 
 ## 证据
 
-- 研究报告：`../research-notes/hype-ema-tb-v39-v37-satellite-2026-07-08.md`
+- 研究报告：`../notes/hype-ema-tb-v39-v37-satellite-2026-07-08.md`
 - 复现脚本：`../scripts/research_hype_ema_tb_v39_v37_satellite.py`
 - 汇总 JSON：`../artifacts/hype_ema_tb_v39_v37_satellite_2026-07-08.json`
 - 逐笔 CSV：`../artifacts/hype_ema_tb_v39_v37_satellite_trades_2026-07-08.csv`

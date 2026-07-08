@@ -37,7 +37,7 @@ RUN_ID = "2026-06-30"
 FAMILY_ROOT = Path("research/hype/5m-micro-scalp")
 ABLATION_ROOT = FAMILY_ROOT / "ablations"
 CANONICAL_ROOT = FAMILY_ROOT / "specs"
-RESEARCH_NOTE_ROOT = FAMILY_ROOT / "research-notes"
+RESEARCH_NOTE_ROOT = FAMILY_ROOT / "notes"
 
 BASELINE_CONFIG_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_1_baseline_config_{RUN_ID}.json"
 ABLATION_SUMMARY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_1_full_ablation_summary_{RUN_ID}.csv"

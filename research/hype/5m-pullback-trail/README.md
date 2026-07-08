@@ -3,7 +3,7 @@
 - Full family name：`HYPE-5M-Pullback-Trail`（历史别名：`HYPE-5M-PBTR`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `5m`
 - 机制：回踩/恢复入场 + ATR trailing-stop / 固定 bracket 出场；V5 起强制 executable-first（闭合 K 信号、下一根 open 入场、入场即挂 bracket）。
-- 当前状态：`HYPE-5M-PBTR-V6.2.1` 为 `dry-run / forward-test required`（quant-runner 模拟盘运行中，forward 报告见 `forward-tracking/`）；早期 V1-V4 因 stale stop fill / 锁仓止损问题 `not promoted / not live-ready`。
+- 当前状态：`HYPE-5M-PBTR-V6.2.1` 为 `dry-run / forward-test required`（quant-runner 模拟盘运行中，runner 观察报告见 `runner-tracking/`）；早期 V1-V4 因 stale stop fill / 锁仓止损问题 `not promoted / not live-ready`。
 
 ## 边界
 
@@ -19,4 +19,4 @@
 - 当前版本全参数消融：`ablations/hype-5m-pbtr-v6-2-1-full-parameter-ablation-2026-06-29.md`
 - 与 MII V1.3 共享账户组合诊断：`../cross-strategy-account/diagnostics/hype-pbtr-v6-2-1-mii-v1-3-shared-account-2026-07-02.md`
 
-历史批次报告按性质存放于 `diagnostics/`、`ablations/`、`research-notes/`、`live-specs/`；脚本在 `scripts/`，被报告引用的产物在 `artifacts/`。逐批结论与文件清单以主账和 decision-log 为准，不在本 README 复述。
+历史批次报告按性质存放于 `diagnostics/`、`ablations/`、`notes/`、`live-specs/`；脚本在 `scripts/`，被报告引用的产物在 `artifacts/`。逐批结论与文件清单以主账和 decision-log 为准，不在本 README 复述。

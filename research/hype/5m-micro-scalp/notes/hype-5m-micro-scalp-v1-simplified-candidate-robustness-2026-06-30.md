@@ -6,7 +6,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 ## 输入
 
-- 来源组合报告：`research/hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-combo-search-2026-06-30.md`。
+- 来源组合报告：`research/hype/5m-micro-scalp/notes/hype-5m-micro-scalp-v1-simplified-combo-search-2026-06-30.md`。
 - 来源 summary：`research/hype/5m-micro-scalp/artifacts/hype_5m_micro_scalp_v1_simplified_combo_summary_2026-06-30.csv`。
 - seed candidates：`V1S_core_032883, V1S_core_023723, V1S_core_023702, V1S_core_034033, V1S_rand_016782`。
 - 每个候选 random local configs：`2500`。

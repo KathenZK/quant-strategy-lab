@@ -27,7 +27,7 @@
 
 | Version / Observation | Status | Role / Core Idea | Key Frozen Metrics | Evidence | Decision / Live Readiness |
 | --- | --- | --- | --- | --- | --- |
-| `K2-FQ-V2-ATRVT-OFF` external observation | `explore / not promoted / not live-ready` | 外部 30m Keltner + 1h EMA regime + ATRVT 进攻档复现 | `2025-05-30 10:30` 至 `2026-07-06 23:59 UTC`；单相位 6 bps `+7516.88% / MDD -26.08% / 114 笔`；剔除最新一笔后对齐外部 `+7698.66% / 113 笔` | [research-notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](research-notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md) | 复现可信，但不提升；需完成 funding、滑点和 live-executable 审计 |
+| `K2-FQ-V2-ATRVT-OFF` external observation | `explore / not promoted / not live-ready` | 外部 30m Keltner + 1h EMA regime + ATRVT 进攻档复现 | `2025-05-30 10:30` 至 `2026-07-06 23:59 UTC`；单相位 6 bps `+7516.88% / MDD -26.08% / 114 笔`；剔除最新一笔后对齐外部 `+7698.66% / 113 笔` | [notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md) | 复现可信，但不提升；需完成 funding、滑点和 live-executable 审计 |
 
 ## Shared Assumptions
 
@@ -40,7 +40,7 @@
 ## Evidence Map
 
 - Specs：外部文件 `/Users/ZK/Downloads/2-k2-fq-v2-atrvt-off-20260707.md`（仓库外来源，不作为 repo 内可复现依赖）。
-- Diagnostics / ablations：[research-notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](research-notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md)
+- Diagnostics / ablations：[notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md)
 - Live specs：无。
 - Forward tracking：无。
 - Scripts / artifacts：[scripts/research_hype_30m_k2_fq_v2_atrvt_off_backtest.py](scripts/research_hype_30m_k2_fq_v2_atrvt_off_backtest.py)，[artifacts/hype_30m_k2_fq_v2_atrvt_off_backtest_2026-07-08.json](artifacts/hype_30m_k2_fq_v2_atrvt_off_backtest_2026-07-08.json)，[artifacts/hype_30m_k2_fq_v2_atrvt_off_trades_2026-07-08.csv](artifacts/hype_30m_k2_fq_v2_atrvt_off_trades_2026-07-08.csv)

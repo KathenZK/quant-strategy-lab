@@ -39,7 +39,7 @@ min_rvol96 = 0.85
 | Runner status | 尚未实现为独立 runner 配置 |
 | Current dry-run version | `HYPE-15M-MII-V1.3` |
 | Core ledger | `../hype-15m-mii-core-ledger.md` |
-| Main evidence | `../research-notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`、`../research-notes/hype-15m-mii-v1-3-rvol-fine-grid-2026-07-08.md` |
+| Main evidence | `../notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`、`../notes/hype-15m-mii-v1-3-rvol-fine-grid-2026-07-08.md` |
 
 不要用裸 `V1.4` 判断策略身份；它只在 `HYPE-15M-MII` 家族内有效。
 

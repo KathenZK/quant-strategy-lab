@@ -34,7 +34,7 @@ SCRIPT_PATH = (
     FAMILY_DIR / "scripts" / "research_hype_15m_mii_v1_1_window_backtest.py"
 )
 ARTIFACTS_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 CSV_PATH = ARTIFACTS_DIR / "hype_15m_mii_v1_1_window_backtest_2026-06-30.csv"
 JSON_PATH = ARTIFACTS_DIR / "hype_15m_mii_v1_1_window_backtest_2026-06-30.json"
 MARKDOWN_PATH = NOTES_DIR / "hype-15m-mii-v1-1-window-backtest-2026-06-30.md"

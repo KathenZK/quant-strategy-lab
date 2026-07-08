@@ -8,7 +8,7 @@
 - Timeframe：`1h`
 - 状态：`tuned diagnostic observation / not promoted / not live-ready`
 - 来源：`BNB-1H-Adaptive-Regime-V2` 消融引导微调的唯一首选组合。
-- Evidence：`../research-notes/bnb-1h-ar-v2-micro-tune-2026-07-07.md`
+- Evidence：`../notes/bnb-1h-ar-v2-micro-tune-2026-07-07.md`
 - 重要边界：locked OOS 在 V1/V2 阶段已揭盲，本版本的 OOS 结果是 reused observation，不能作为 promotion 依据。
 
 ## 杠杆倍数

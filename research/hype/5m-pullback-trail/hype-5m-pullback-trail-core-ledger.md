@@ -1086,7 +1086,7 @@ V6 audit 验收线：
 ## Reports
 
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`
-- `research-notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
+- `notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
 - `ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`
 - `ablations/hype-5m-pullback-trail-v21-live-cost-variants-2026-06-23.md`
 - `diagnostics/hype-5m-pbtr-v21a-live-realistic-audit-2026-06-24.md`

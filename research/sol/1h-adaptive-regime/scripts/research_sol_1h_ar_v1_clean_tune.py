@@ -25,7 +25,7 @@ import sol_1h_ar_v1_clean as clean  # noqa: E402
 
 FAMILY_DIR = ROOT / "research/sol/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-03"
 SUMMARY_JSON = ARTIFACT_DIR / f"sol_1h_ar_v1_clean_tune_{DATE_TAG}.json"
 LEG_POOL_CSV = ARTIFACT_DIR / f"sol_1h_ar_v1_tune_leg_pool_{DATE_TAG}.csv"

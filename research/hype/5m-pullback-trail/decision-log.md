@@ -14,15 +14,15 @@
 
 ## 研究批次记录
 
-- `research-notes/hype-5m-indicator-ensemble-search.md`：在 `2025-06-01` 到 `2026-06-01` 的 Binance HYPE 永续 `5m` 数据上进行指标组合搜索。单条原始或精炼策略均未达到 `20x 年化 / >=80% 胜率 / >-20% 回撤`；一个由高胜率 EMA/Bollinger 回归腿组成的单仓 ensemble 达到全样本目标。该批次只作为研究前身，存在明显过拟合风险，不是已提升的 live 版本。
+- `notes/hype-5m-indicator-ensemble-search.md`：在 `2025-06-01` 到 `2026-06-01` 的 Binance HYPE 永续 `5m` 数据上进行指标组合搜索。单条原始或精炼策略均未达到 `20x 年化 / >=80% 胜率 / >-20% 回撤`；一个由高胜率 EMA/Bollinger 回归腿组成的单仓 ensemble 达到全样本目标。该批次只作为研究前身，存在明显过拟合风险，不是已提升的 live 版本。
 - `live-specs/ensemble-specs/README.md`：记录最初 `7` 个 `target_pass=True` 的 HYPE Binance `5m` 单仓 ensemble 组合作为 live-code 交接规格。它们共享相同精炼腿，只是腿数和杠杆不同；当前仅保留为历史支撑材料，不是现行提升路线。
-- `research-notes/hype-5m-ensemble-forward-oos-2026-06-23.md`：加入 `2026-06-01` 到 `2026-06-23 04:00 UTC` 的 Binance HYPE `5m` 数据后，早期 7 个 ensemble 配置无法保持 `>=80%` 胜率和 `<20%` 回撤。这否定了高胜率小利润路径作为 live-ready 方向。
-- `research-notes/hype-5m-positive-payoff-search-2026-06-23.md`：要求 `payoff_ratio > 1`、每个切片胜率 `>=60%`、每个切片年化 `>=20x` 后，基础搜索没有命中。定向 refinement 虽产生数学命中，但回撤不可接受；结论是在讨论收益前必须加入生存约束。
-- `research-notes/hype-5m-survival-frontier-2026-06-23.md`：生存前沿要求每个切片 `payoff_ratio > 1`、交易数、胜率底线 `55%/58%/60%`，以及回撤底线 `-20%/-25%/-30%`。最有用的中间候选是 `HYPE_PP_R05732__dir_htf_ge_0.688442`，全样本年化 `29.07x`，最差切片年化 `9.75x`，最差切片胜率 `58.29%`，payoff `2.19`。
+- `notes/hype-5m-ensemble-forward-oos-2026-06-23.md`：加入 `2026-06-01` 到 `2026-06-23 04:00 UTC` 的 Binance HYPE `5m` 数据后，早期 7 个 ensemble 配置无法保持 `>=80%` 胜率和 `<20%` 回撤。这否定了高胜率小利润路径作为 live-ready 方向。
+- `notes/hype-5m-positive-payoff-search-2026-06-23.md`：要求 `payoff_ratio > 1`、每个切片胜率 `>=60%`、每个切片年化 `>=20x` 后，基础搜索没有命中。定向 refinement 虽产生数学命中，但回撤不可接受；结论是在讨论收益前必须加入生存约束。
+- `notes/hype-5m-survival-frontier-2026-06-23.md`：生存前沿要求每个切片 `payoff_ratio > 1`、交易数、胜率底线 `55%/58%/60%`，以及回撤底线 `-20%/-25%/-30%`。最有用的中间候选是 `HYPE_PP_R05732__dir_htf_ge_0.688442`，全样本年化 `29.07x`，最差切片年化 `9.75x`，最差切片胜率 `58.29%`，payoff `2.19`。
 - `ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`：将 R05732 提升为 `HYPE-5M-PBTR-V1` 候选。消融显示 `trail_atr=0.75` 和 `min_hold_bars=6` 是核心；删除最终 `dir_htf` 会显著提高频率和收益，但降低最差切片胜率；`pullback_buffer=0.01` 以及删除/提高固定止盈是最佳后续方向。
 - `diagnostics/hype-5m-pbtr-v1-strict-live-audit-2026-06-27.md`：按严格可实盘订单时序重测 `HYPE-5M-PBTR-V1`，确认旧口径确实赚钱但不可交接实盘。更新数据到 `2026-06-26 04:15 UTC` 后，legacy stop-price fill 为 `1358` 笔、总收益 `+1713.55%`、PF `2.806`、最大回撤 `-7.77%`；但 live-realistic 口径变为 `1357` 笔、总收益 `-87.29%`、PF `0.637`、最大回撤 `-88.27%`。解锁时 stop 可正常挂上的比例仅 `31.47%`，`68.53%` 需要解锁市价平仓；开仓即挂 `0.75 ATR` 初始保护止损的反事实口径 PF 也只有 `0.510`。结论：V1 不是被后续版本“改坏”后才失效，V1 本身已经依赖 crossed/stale stop 或 target 的不可实盘成交假设，不能作为回退上线版本。
 - `hype-5m-pullback-trail-core-ledger.md`：`HYPE-5M-PBTR-V1/V2` 主账。
-- `research-notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`：围绕 V1 消融发现测试 `10240` 个同步组合，`1568` 个通过 V2 门槛。提升 `HYPE-5M-PBTR-V2`，参数为 `pullback_buffer=0.01`、`tp_atr=99`、`stop_atr=0.5`、`roc_window=96`、`min_efficiency=0`、`dir_htf>=0.5`。
+- `notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`：围绕 V1 消融发现测试 `10240` 个同步组合，`1568` 个通过 V2 门槛。提升 `HYPE-5M-PBTR-V2`，参数为 `pullback_buffer=0.01`、`tp_atr=99`、`stop_atr=0.5`、`roc_window=96`、`min_efficiency=0`、`dir_htf>=0.5`。
 - `live-specs/hype-5m-pullback-trail-v2-live-spec.md`：`HYPE-5M-PBTR-V2` 的详细复现规格，供实现 AI 使用，包含指标公式、信号构造、单仓执行、ATR trailing-stop 管理、重启恢复和验收指标。
 - `ablations/hype-5m-pullback-trail-v2-ablation-slices-2026-06-23.md`：V2 全参数消融，包含 `56` 个周切片、滚动 1w/1m/3m/6m/full 统计，以及 V1/V2 横向对比。
 - `ablations/hype-5m-pullback-trail-v2-live-cost-ablation-slices-2026-06-23.md`：用观测到的实盘执行成本重跑 V2 全参数消融和时间切片，成本为手续费 `4.1466 bps/turnover`、开仓滑点 `+10.73 bps`、平仓滑点 `-2.64 bps`、净滑点 `+4.0449 bps/total turnover`。
@@ -105,4 +105,4 @@
 - `HYPE-5M-executable-broad-search-2026-06-25`：按用户提出的 `>=20x` 年化、`>=50%` 胜率、最大回撤优于 `-20%`、可实盘四项硬条件，对旧 indicator entry styles 做 `13134` 个入场即 bracket 的严格可执行搜索。无命中；即使不设最低交易数，最高年化也只有约 `1.18x`，`>=100` 笔交易时最高年化约 `1.05x`。V6 paper candidate 是目前最接近“可实盘 + 胜率/回撤达标”的候选，但年化远低于 `20x`，不能包装成满足本次目标的策略。
 - 下一轮 `HYPE-5M-PBTR` 研究优先级：第一是让 `hype-pullback-enhance` 先跑 V6.2.1 dry-run / run-once，记录接受信号、虚拟或真实 bracket TP/SL/timeout、撤单一致性和真实盘口偏差；第二是继续对 `dir_ret192_bps` 与 long HTF 阈值做 walk-forward 固化，确认 `788.123 bps` 与 `htf_spread >= 0` 不是事后阈值；第三才是考虑极小资金 live。不要再把旧 `min_hold_bars + trailing` 回测当作实盘依据。
 - V1/V2/V2.1/V3/V3.1/V3.2/V3.3/V3.3.1/V4/V5.1/V5.2/V6/V6.1/V6.2/V6.2.1 候选在生产 sizing 前都必须先有 live dry-run 或 audit 证据；其中 V3.3.1 当前已是 no-go research，只能保留其线上风控/审计启发。
-- `2026-07-08`：状态口径对齐。`HYPE-5M-PBTR-V6.2.1` 已在 quant-runner 以 `hype_pullback` dry-run 配置运行（`configs/dryrun.toml`），状态确认为 `dry-run / forward-test required`，并补建 `forward-tracking/` 目录（此前缺失，违反 dry-run 准入条件）。首份 forward 报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
+- `2026-07-08`：状态口径对齐。`HYPE-5M-PBTR-V6.2.1` 已在 quant-runner 以 `hype_pullback` dry-run 配置运行（`configs/dryrun.toml`），状态确认为 `dry-run / forward-test required`，并补建 `runner-tracking/` 目录（此前缺失，违反 dry-run 准入条件）。首份 runner 观察报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。

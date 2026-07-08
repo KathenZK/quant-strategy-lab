@@ -17,4 +17,4 @@
 - 当前 版本规格：`specs/hype-5m-micro-scalp-v1-3-baseline-spec.md`（18 个有效参数，与 V1.2 逐笔等价）
 - 首次广搜（原始形态 not-promoted 证据）：`diagnostics/hype-5m-micro-scalp-search-2026-06-26.md`
 
-研究脚本在 `scripts/`，被报告引用的 JSON/CSV 在 `artifacts/`；搜索报告与审计在 `diagnostics/`，探索笔记在 `research-notes/`。逐批结论以主账和 decision-log 为准。
+研究脚本在 `scripts/`，被报告引用的 JSON/CSV 在 `artifacts/`；搜索报告与审计在 `diagnostics/`，探索笔记在 `notes/`。逐批结论以主账和 decision-log 为准。

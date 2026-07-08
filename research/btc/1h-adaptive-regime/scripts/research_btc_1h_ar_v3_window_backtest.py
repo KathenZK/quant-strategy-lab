@@ -19,7 +19,7 @@ import btc_1h_ar_v3 as v3  # noqa: E402
 
 FAMILY_DIR = ROOT / "research/btc/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-06"
 SUMMARY_JSON = ARTIFACT_DIR / f"btc_1h_ar_v3_window_backtest_{DATE_TAG}.json"
 WINDOWS_CSV = ARTIFACT_DIR / f"btc_1h_ar_v3_window_backtest_windows_{DATE_TAG}.csv"

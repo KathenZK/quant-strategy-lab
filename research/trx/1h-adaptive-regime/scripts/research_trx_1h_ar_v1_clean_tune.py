@@ -24,7 +24,7 @@ import trx_1h_ar_v1_clean as clean  # noqa: E402
 
 FAMILY_DIR = ROOT / "research/trx/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-05"
 SUMMARY_JSON = ARTIFACT_DIR / f"trx_1h_ar_v1_clean_tune_{DATE_TAG}.json"
 MACD_POOL_CSV = ARTIFACT_DIR / f"trx_1h_ar_v1_tune_macd_pool_{DATE_TAG}.csv"

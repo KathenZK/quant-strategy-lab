@@ -60,7 +60,7 @@
 - no-op 字段固定为 V1 消融验证的 neutral 值；逐笔重放确认 V2 与 V1 trade signature 完全相等，指标原样继承。
 - 多时间窗口回测已落盘：train/validation/prefit/locked OOS/full、8 个 90d block、last `1d/7d/1m/3m/6m/1y`（锚定数据集末端 `2026-07-03T06:00Z`，数据未刷新）。
 - 分片显示亏损集中在 `block_90d_04`（2025-05 至 2025-08，`-8.09%`）与 locked OOS（last_3m `0.64x / -22.86% DD / 68.42% win`）；其余 block 均为正。
-- V2 状态：`clean-equivalent diagnostic observation / not promoted / not live-ready`；证据见 `research-notes/bnb-1h-ar-v2-multiwindow-backtest-2026-07-07.md`。
+- V2 状态：`clean-equivalent diagnostic observation / not promoted / not live-ready`；证据见 `notes/bnb-1h-ar-v2-multiwindow-backtest-2026-07-07.md`。
 
 ## 2026-07-07：V2 全参数消融
 
@@ -75,7 +75,7 @@
 - 首选组合（按 prefit score 唯一选出后才复用 OOS 一次）：`ema_pullback` 改 `ema_slow=144`、trailing 出场（activation `2.0`、trail `1.5` ATR）、`max_hold=240`、`cooldown=12`、`2.5x`；`wick_reject` 改 `threshold 0.40/0.75`、`min_adx=28`、`max_hold=48`、`1.0x`。
 - 结果：prefit `3.37x / -18.24% DD / 89.42% win / 104 trades`；reused locked OOS 观察值 `1.22x / -15.53% DD / 81.25% win / 16 trades`；full `2.94x / -18.24% DD / 88.33% win / 120 trades`；实际最大暴露 `2.5x`。
 - 三个维度均优于 V2（收益 `1.87x -> 2.94x`、回撤 `-22.86% -> -18.24%`、胜率 `84.25% -> 88.33%`），但 locked OOS 为二次读取，只能作为 tuned observation；后续按用户要求登记为 V3，不 promotion。
-- 证据见 `research-notes/bnb-1h-ar-v2-micro-tune-2026-07-07.md`。
+- 证据见 `notes/bnb-1h-ar-v2-micro-tune-2026-07-07.md`。
 
 ## 2026-07-07：登记 `BNB-1H-Adaptive-Regime-V3`
 

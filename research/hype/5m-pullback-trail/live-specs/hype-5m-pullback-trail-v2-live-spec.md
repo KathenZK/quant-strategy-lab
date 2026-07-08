@@ -987,7 +987,7 @@ any position not protected after it becomes trailing-stop eligible
 ## 参考研究产物
 
 - 主 ledger：`../hype-5m-pullback-trail-core-ledger.md`
-- V2 combo 报告：`../research-notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
+- V2 combo 报告：`../notes/hype-5m-pullback-trail-v2-combo-test-2026-06-23.md`
 - V1/R05732 ablation：`../ablations/hype-5m-r05732-strategy-ablation-2026-06-23.md`
 - V2 搜索脚本：`research/hype/5m-pullback-trail/scripts/test_hype_5m_r05732_v2_combos.py`
 - 信号实现来源：`research/hype/5m-pullback-trail/scripts/research_hype_5m_indicator_search.py`

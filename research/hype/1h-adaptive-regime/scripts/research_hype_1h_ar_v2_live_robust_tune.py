@@ -33,7 +33,7 @@ STRESS_CSV = ARTIFACT_DIR / f"hype_1h_ar_v2_live_robust_stress_{DATE_TAG}.csv"
 TRADES_CSV = ARTIFACT_DIR / f"hype_1h_ar_v2_live_robust_trades_{DATE_TAG}.csv"
 REPORT_MD = (
     FAMILY_DIR
-    / "research-notes"
+    / "notes"
     / f"hype-1h-ar-v2-live-robust-prefit-tune-{DATE_TAG}.md"
 )
 

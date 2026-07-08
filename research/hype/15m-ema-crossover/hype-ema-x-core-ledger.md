@@ -7,7 +7,7 @@
 数据源：Binance HYPEUSDT perp 15m；normalized OHLCV data lake；V15/V16/V17/V17.1 使用最新 365-day HYPE-EMA-X research slice。
 
 > **当前状态：HYPE-EMA-X-V18 dry-run / forward-test required**
-> V17 是信号层平衡版：1Y +2910.74%，最大回撤 -17.79%。V17.1 信号不变，HQ 仓位 1.1：1Y +3861.48%，最大回撤 -19.44%。**V18** 是 V17.1 经全参数消融后的干净参数规格，成交逻辑与指标与 V17.1 相同；当前已在 quant-runner 以 `hype_ema_x` dry-run 配置运行。forward 报告见 [forward-tracking/README.md](forward-tracking/README.md)；首份 forward 报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
+> V17 是信号层平衡版：1Y +2910.74%，最大回撤 -17.79%。V17.1 信号不变，HQ 仓位 1.1：1Y +3861.48%，最大回撤 -19.44%。**V18** 是 V17.1 经全参数消融后的干净参数规格，成交逻辑与指标与 V17.1 相同；当前已在 quant-runner 以 `hype_ema_x` dry-run 配置运行。runner 观察报告见 [runner-tracking/README.md](runner-tracking/README.md)；首份 runner 观察报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
 
 ## 关键指标
 
@@ -452,6 +452,6 @@
 | V17.1 全参数消融与精简 | `scripts/research_hype_v17_1_full_ablation.py`；`scripts/research_hype_v17_1_parameter_prune_audit.py`；`diagnostics/hype-ema-x-v17-1-parameter-prune-audit-2026-07-01.md`；`artifacts/hype_v17_1_full_ablation*` |
 | V18 干净参数规格 | `specs/hype-ema-x-v18-baseline-spec.md` |
 | V17 合体消融 | `ablations/hype-ema-x-v17-hybrid-ablation.md` |
-| V15/V16 规则镜像 | `research-notes/hype-ema-x-v15-v16-promoted-strategy-specs.md` |
+| V15/V16 规则镜像 | `notes/hype-ema-x-v15-v16-promoted-strategy-specs.md` |
 | V6 图表 | artifacts/hype_ema_v6_binance_trade_chart.html；含 K 线、开平仓文字和交易连线 |
 | 当前候选 | 信号层：`HYPE-EMA-X-V17`；收益增强：`HYPE-EMA-X-V17.1`；干净规格：`HYPE-EMA-X-V18` |

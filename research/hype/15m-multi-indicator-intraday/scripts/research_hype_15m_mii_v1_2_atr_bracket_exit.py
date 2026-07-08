@@ -36,7 +36,7 @@ SCRIPT_PATH = (
     FAMILY_DIR / "scripts" / "research_hype_15m_mii_v1_2_atr_bracket_exit.py"
 )
 ARTIFACTS_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 RANKING_CSV_PATH = (
     ARTIFACTS_DIR / "hype_15m_mii_v1_2_atr_bracket_exit_ranking_2026-06-30.csv"
 )

@@ -16,7 +16,7 @@ from research_hype_5m_micro_scalp_v1_simplified_combo_search import verify_raw_n
 RUN_ID = "2026-07-01"
 FAMILY_ROOT = Path("research/hype/5m-micro-scalp")
 ARTIFACT_ROOT = FAMILY_ROOT / "artifacts"
-RESEARCH_NOTE_ROOT = FAMILY_ROOT / "research-notes"
+RESEARCH_NOTE_ROOT = FAMILY_ROOT / "notes"
 
 REPORT_PATH = RESEARCH_NOTE_ROOT / f"hype-5m-micro-scalp-v1-2-registration-and-leverage-retest-{RUN_ID}.md"
 JSON_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_2_registration_and_leverage_retest_{RUN_ID}.json"

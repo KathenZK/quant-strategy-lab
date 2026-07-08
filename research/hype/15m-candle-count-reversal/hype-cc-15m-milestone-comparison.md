@@ -3,7 +3,7 @@
 > 迁移说明：本文由 legacy Cursor Canvas `hype-strategy-milestone-comparison.canvas.tsx` 转换为 Markdown；原 Canvas 未删除，仅作为历史来源。
 
 > **当前状态：HYPE-CC-V35 dry-run / forward-test required**
-> V35 曾 live underperformance，相关诊断仍作为 execution-risk 历史证据保留；当前 quant-runner `hype_candle_count` dry-run 是重新观察/对账状态，不等于 live 批准。forward 报告见 [forward-tracking/README.md](forward-tracking/README.md)；首份 forward 报告缺失前不得升级 `live`，也不得据此给出新的 `NO-GO`。
+> V35 曾 live underperformance，相关诊断仍作为 execution-risk 历史证据保留；当前 quant-runner `hype_candle_count` dry-run 是重新观察/对账状态，不等于 live 批准。runner 观察报告见 [runner-tracking/README.md](runner-tracking/README.md)；首份 runner 观察报告缺失前不得升级 `live`，也不得据此给出新的 `NO-GO`。
 
 统一口径：Hyperliquid taker 0.045%，滑点 4bps，包含 funding，close 进场，mark high/low 触发止损止盈。早期 V0-V17 主表沿用原历史窗口；V18-V36 已使用补齐后的 2026-06-01 03:00 UTC 最新数据湖。
 

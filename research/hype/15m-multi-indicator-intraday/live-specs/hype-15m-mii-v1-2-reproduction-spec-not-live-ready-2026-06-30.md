@@ -488,8 +488,8 @@ Sharpe/Sortino 在本研究中使用交易净收益序列年化，净收益已�
 ## 复现证据入口
 
 - 主账：`../hype-15m-mii-core-ledger.md`
-- ATR bracket 搜索报告：`../research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`
-- V1.2 窗口/滚动/随机切片：`../research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
+- ATR bracket 搜索报告：`../notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`
+- V1.2 窗口/滚动/随机切片：`../notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
 - V1.2 ATR bracket 脚本：`../scripts/research_hype_15m_mii_v1_2_atr_bracket_exit.py`
 - V1.2 时间片脚本：`../scripts/research_hype_15m_mii_v1_2_window_slice_backtest.py`
 - ATR bracket JSON：`../artifacts/hype_15m_mii_v1_2_atr_bracket_exit_2026-06-30.json`

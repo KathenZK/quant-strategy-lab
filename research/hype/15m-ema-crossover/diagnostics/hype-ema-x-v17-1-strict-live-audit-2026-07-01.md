@@ -66,7 +66,7 @@ Family id：`HYPE-EMA-X`
 
 ## 当前决策
 
-本审计当时仅支持 `registered / not live-ready`，不升级为 live。2026-07-08 后续确认 V18（V17.1 的干净参数规格）已进入 quant-runner `dry-run / forward-test required`，以家族主账和 [../forward-tracking/README.md](../forward-tracking/README.md) 为准。
+本审计当时仅支持 `registered / not live-ready`，不升级为 live。2026-07-08 后续确认 V18（V17.1 的干净参数规格）已进入 quant-runner `dry-run / forward-test required`，以家族主账和 [../runner-tracking/README.md](../runner-tracking/README.md) 为准。
 `+3861.48% / -19.44%` 应继续按 1Y 研究切片 + baseline 执行上界阅读。
 若使用截至当前 data lake 全量末端（例如 `2026-06-26`）的 rolling 1Y 窗口，收益会降到约 `+3365.62%`；这不代表执行口径错误，而是研究切片末端漂移。
 若要做 promotion，下一步必须补：stop-market 实盘日志、保护单延迟/重启恢复、以及 `0.001 fee + 4bps` 的统一 Binance 压力复跑。

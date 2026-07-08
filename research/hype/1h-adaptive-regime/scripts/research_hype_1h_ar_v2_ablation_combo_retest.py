@@ -23,7 +23,7 @@ import research_hype_1h_ar_v2_clean_tune as v2  # noqa: E402
 DATE_TAG = "2026-07-06"
 FAMILY_DIR = ROOT / "research/hype/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTE_DIR = FAMILY_DIR / "research-notes"
+NOTE_DIR = FAMILY_DIR / "notes"
 SUMMARY_JSON = ARTIFACT_DIR / f"hype_1h_ar_v2_ablation_combo_retest_{DATE_TAG}.json"
 ROWS_CSV = ARTIFACT_DIR / f"hype_1h_ar_v2_ablation_combo_retest_rows_{DATE_TAG}.csv"
 WINDOWS_CSV = ARTIFACT_DIR / f"hype_1h_ar_v2_ablation_combo_retest_windows_{DATE_TAG}.csv"

@@ -24,7 +24,7 @@ import research_btc_1h_ar_v2_full_ablation as v2_ablation  # noqa: E402
 
 FAMILY_DIR = ROOT / "research/btc/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-06"
 SUMMARY_JSON = ARTIFACT_DIR / f"btc_1h_ar_v2_micro_tune_{DATE_TAG}.json"
 GRID_CSV = ARTIFACT_DIR / f"btc_1h_ar_v2_micro_tune_grid_{DATE_TAG}.csv"

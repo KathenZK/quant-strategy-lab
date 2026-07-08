@@ -22,7 +22,7 @@ from research_hype_5m_micro_scalp_v1_simplified_combo_search import verify_raw_n
 RUN_ID = "2026-07-01"
 FAMILY_ROOT = Path("research/hype/5m-micro-scalp")
 ARTIFACT_ROOT = FAMILY_ROOT / "artifacts"
-RESEARCH_NOTE_ROOT = FAMILY_ROOT / "research-notes"
+RESEARCH_NOTE_ROOT = FAMILY_ROOT / "notes"
 
 SUMMARY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_3_atr_dynamic_tp_summary_{RUN_ID}.csv"
 SLICES_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_3_atr_dynamic_tp_slices_{RUN_ID}.csv"

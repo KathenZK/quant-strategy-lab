@@ -120,9 +120,9 @@ V1.1 全参数消融后的组合微调搜索评估 `44001` 组配置，找到 `2
 
 ## 关联报告与产物
 
-- V1 simplified combo：`research/hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-combo-search-2026-06-30.md`
-- V1 simplified candidate robustness：`research/hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md`
+- V1 simplified combo：`research/hype/5m-micro-scalp/notes/hype-5m-micro-scalp-v1-simplified-combo-search-2026-06-30.md`
+- V1 simplified candidate robustness：`research/hype/5m-micro-scalp/notes/hype-5m-micro-scalp-v1-simplified-candidate-robustness-2026-06-30.md`
 - V1.1 full ablation：`research/hype/5m-micro-scalp/ablations/hype-5m-micro-scalp-v1-1-full-parameter-ablation-2026-06-30.md`
-- V1.1 micro tune：`research/hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`
+- V1.1 micro tune：`research/hype/5m-micro-scalp/notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`
 - V1.2 baseline spec：`research/hype/5m-micro-scalp/specs/hype-5m-micro-scalp-v1-2-baseline-spec.md`
 - Repro script：`research/hype/5m-micro-scalp/scripts/research_hype_5m_micro_scalp_v1_1_ablation_and_tuning.py`

@@ -1,5 +1,5 @@
 ---
-description: Contract for handing strategies to quant-runner and feeding forward results back
+description: Contract for handing strategies to quant-runner and feeding runner observations back
 alwaysApply: true
 ---
 
@@ -11,6 +11,6 @@ alwaysApply: true
 - Live notional is not a required field in strategy specs. If live sizing is controlled by a funded subaccount rather than by strategy parameters, record the funding/risk boundary in runner operations or the launch decision log instead of forcing it into the spec.
 - Runner-side identity must stay in sync: the handoff spec's `kind`, module path, and TOML example must match the current `quant-runner` code and configs. When `quant-runner` renames a kind or moves a module, update the lab-side handoff spec in the same change set.
 - The `quant-runner` strategy directory keeps its own `<STRATEGY_ID>-SPEC.md`; the lab handoff spec and the runner SPEC must link to each other. Parameter changes must be applied to both or explicitly recorded as divergence in the family decision log.
-- Forward results must flow back: the `forward-tracking/` subdirectory must be created in the same change that marks a version `dry-run`, and it holds dated Markdown reports (`<family-id>-forward-<YYYY-MM-DD>.md`). Each report states the runner config used, the observation window, trade count, realized fees/slippage versus backtest assumptions, signal/indicator parity mismatches, incidents (restarts, missing bars, order rejections), and a keep/stop/adjust conclusion. This repository does not use an additional simulated-live state; simulation is `dry-run`, and real-order small-notional execution is `live`.
-- Statements like `forward-test required` in a core ledger are only satisfied by reports under `forward-tracking/`; verbal claims about dry-run performance do not count as evidence.
-- The family core ledger must reference the latest forward-tracking report whenever the version's status depends on forward evidence, and any promotion or demotion driven by forward results must be recorded in the family `decision-log.md`.
+- Runner observations must flow back: the `runner-tracking/` subdirectory must be created in the same change that marks a version `dry-run`, and it holds dated Markdown reports (`<family-id>-runner-<YYYY-MM-DD>.md`). Each report states the runner config used, the observation window, trade count, realized fees/slippage versus backtest assumptions, signal/indicator parity mismatches, incidents (restarts, missing bars, order rejections), and a keep/stop/adjust conclusion. This repository does not use an additional simulated-live state; simulation is `dry-run`, and real-order small-notional execution is `live`.
+- Statements like `forward-test required` in a core ledger are only satisfied by reports under `runner-tracking/`; verbal claims about dry-run performance do not count as evidence.
+- The family core ledger must reference the latest runner-tracking report whenever the version's status depends on runner evidence, and any promotion or demotion driven by runner observations must be recorded in the family `decision-log.md`.

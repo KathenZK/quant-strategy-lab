@@ -16,9 +16,9 @@
 | Version | Identity | Status | Prefit annual / DD / win | Reused holdout annual / DD / win | Evidence | Live-readiness |
 | --- | --- | --- | --- | --- | --- | --- |
 | `BTC-1H-Adaptive-Regime-V1` | Keltner breakout + CCI reversal prefit-frozen ensemble | diagnostic baseline / NO-GO | `2.82x` / `-18.68%` / `68.29%` | `0.17x` / `-42.73%` / `38.46%` | `specs/btc-1h-ar-v1-baseline-spec.md`；`artifacts/btc_1h_ar_v1_config_2026-07-02.json` | not live-ready；不生成 live spec |
-| `BTC-1H-Adaptive-Regime-V2` | V1 clean surface scaled frontier：Keltner breakout + CCI reversal ensemble，曝光统一缩放至 Keltner `1.8x`、CCI `2.7x` | registered observation / forward-test required | `3.18x` / `-13.99%` / `84.85%` | `1.52x` / `-13.48%` / `81.82%` | `research-notes/btc-1h-ar-v1-scaled-frontier-audit-2026-07-02.md`；`ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md`；`artifacts/btc_1h_ar_v1_scaled_frontier_audit_2026-07-02.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
-| `BTC-1H-Adaptive-Regime-V3` | V2 micro-tune：Keltner breakout + CCI reversal ensemble，Keltner `2.4x`、CCI `3.5x`，CCI 更高 TP、无冷却、较严 ADX 上限 | diagnostic micro-tune observation / forward-test required | `6.16x` / `-12.87%` / `87.30%` | `1.90x` / `-17.47%` / `81.82%` | `research-notes/btc-1h-ar-v2-micro-tune-2026-07-06.md`；`ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md`；`research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md`；`artifacts/btc_1h_ar_v3_config_2026-07-06.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
-| `BTC-1H-Adaptive-Regime-V4` | V3 minimal-equivalent clean surface：只保留 `19` 个必要参数，`8` 个非必要槽位以中和值固定；与 V3 逐笔等价 | registered minimal-equivalent observation / forward-test required | `6.16x` / `-12.87%` / `87.30%` | `1.90x` / `-17.47%` / `81.82%` | `research-notes/btc-1h-ar-v3-param-necessity-2026-07-07.md`；`research-notes/btc-1h-ar-v4-window-backtest-2026-07-07.md`；`artifacts/btc_1h_ar_v4_config_2026-07-07.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
+| `BTC-1H-Adaptive-Regime-V2` | V1 clean surface scaled frontier：Keltner breakout + CCI reversal ensemble，曝光统一缩放至 Keltner `1.8x`、CCI `2.7x` | registered observation / forward-test required | `3.18x` / `-13.99%` / `84.85%` | `1.52x` / `-13.48%` / `81.82%` | `notes/btc-1h-ar-v1-scaled-frontier-audit-2026-07-02.md`；`ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md`；`artifacts/btc_1h_ar_v1_scaled_frontier_audit_2026-07-02.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
+| `BTC-1H-Adaptive-Regime-V3` | V2 micro-tune：Keltner breakout + CCI reversal ensemble，Keltner `2.4x`、CCI `3.5x`，CCI 更高 TP、无冷却、较严 ADX 上限 | diagnostic micro-tune observation / forward-test required | `6.16x` / `-12.87%` / `87.30%` | `1.90x` / `-17.47%` / `81.82%` | `notes/btc-1h-ar-v2-micro-tune-2026-07-06.md`；`ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md`；`notes/btc-1h-ar-v3-window-backtest-2026-07-06.md`；`artifacts/btc_1h_ar_v3_config_2026-07-06.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
+| `BTC-1H-Adaptive-Regime-V4` | V3 minimal-equivalent clean surface：只保留 `19` 个必要参数，`8` 个非必要槽位以中和值固定；与 V3 逐笔等价 | registered minimal-equivalent observation / forward-test required | `6.16x` / `-12.87%` / `87.30%` | `1.90x` / `-17.47%` / `81.82%` | `notes/btc-1h-ar-v3-param-necessity-2026-07-07.md`；`notes/btc-1h-ar-v4-window-backtest-2026-07-07.md`；`artifacts/btc_1h_ar_v4_config_2026-07-07.json` | not live-ready；需要新增 forward trades、production runner 与实盘可执行审计 |
 
 V1 是用户明确要求登记的研究基线。版本登记不代表 promotion，也不覆盖原始硬门槛和 reused holdout 失败。
 
@@ -170,7 +170,7 @@ V2 继承 V1 clean interface，只暴露 `27` 个 active 参数；其余字段�
 | --- | --- | --- | --- | --- | --- | --- |
 | `BTC-1H-AR-V1-SCALED-FRONTIER-2026-07-02` | 已按用户要求登记为 `BTC-1H-Adaptive-Regime-V2` | `3.18x` / `-13.99%` / `84.85%` | `2.50x` / `-19.70%` / `80.30%` | `1.52x` / `-13.48%` / `81.82%` | `2.88x` / `-13.99%` / `84.42%` | 明显优于 V1；等待新增 forward trades 与 runner 审计；not live-ready |
 
-观察参数与证据：`research-notes/btc-1h-ar-v1-scaled-frontier-audit-2026-07-02.md`、`artifacts/btc_1h_ar_v1_scaled_frontier_audit_2026-07-02.json`。
+观察参数与证据：`notes/btc-1h-ar-v1-scaled-frontier-audit-2026-07-02.md`、`artifacts/btc_1h_ar_v1_scaled_frontier_audit_2026-07-02.json`。
 
 ## 研究边界记录
 
@@ -184,17 +184,17 @@ V1 后续研究：全消融覆盖 `78/78` 字段槽；clean interface 从 `78` �
 
 V2 全参数消融：`ablations/btc-1h-ar-v2-full-parameter-ablation-2026-07-06.md` 覆盖两腿全部 `78/78` 个 `StrategyConfig` 字段槽，生成 `205` 行 baseline/variant 证据；分类仍为 `27` active tunable、`12` contract fixed、`35` baseline fixed、`4` neutral fixed。相对 V2 基线，one-at-a-time prefit 严格改善行数为 `5`，但本轮不做组合搜索、不登记 V2.1、不改变 `not live-ready`。
 
-V2 微调观察：`research-notes/btc-1h-ar-v2-micro-tune-2026-07-06.md` 基于 V2 消融前沿方向做 active 参数受约束网格。网格 `7,200` 组，`3,852` 组满足 prefit 年化高于 V2、train/validation/prefit 胜率均 `>=80%`、回撤均 `<20%`。当前首选观察 `BTC-1H-AR-V2-MICRO-TUNE-2026-07-06` 已按用户要求登记为 `BTC-1H-Adaptive-Regime-V3`：prefit `6.16x / -12.87% / 87.30%`，reused holdout `1.90x / -17.47% / 81.82%`，current full `5.27x / -17.47% / 86.49%`。该登记不改变 `not live-ready`。
+V2 微调观察：`notes/btc-1h-ar-v2-micro-tune-2026-07-06.md` 基于 V2 消融前沿方向做 active 参数受约束网格。网格 `7,200` 组，`3,852` 组满足 prefit 年化高于 V2、train/validation/prefit 胜率均 `>=80%`、回撤均 `<20%`。当前首选观察 `BTC-1H-AR-V2-MICRO-TUNE-2026-07-06` 已按用户要求登记为 `BTC-1H-Adaptive-Regime-V3`：prefit `6.16x / -12.87% / 87.30%`，reused holdout `1.90x / -17.47% / 81.82%`，current full `5.27x / -17.47% / 86.49%`。该登记不改变 `not live-ready`。
 
 V3 全参数消融：`ablations/btc-1h-ar-v3-full-parameter-ablation-2026-07-06.md` 覆盖两腿全部 `78/78` 个 `StrategyConfig` 字段槽，生成 `205` 行 baseline/variant 证据；分类仍为 `27` active tunable、`12` contract fixed、`35` baseline fixed、`4` neutral fixed。相对 V3 基线，同时满足 prefit 年化更高、回撤更小、train/validation/prefit 胜率均 `>=80%`、train/validation 同正且 validation DD<20% 的 one-at-a-time 严格改善行数为 `0`。本轮不做组合搜索；原“不登记 V4”的诊断口径后续已被用户指令覆盖，但不改变 `not live-ready`。
 
-V3 多窗口回测：`research-notes/btc-1h-ar-v3-window-backtest-2026-07-06.md` 复用 V3 冻结参数，不引入新增 forward 数据。recent 90d 为 `1.91x / +17.34% / -17.47% / 81.82% / 11`，recent 30d 为 `1.29x / +2.13% / -17.47% / 75.00% / 4`，recent 7d 无交易；2026 YTD 为 `3.90x / +97.37% / -17.47% / 84.00% / 25`。这些窗口只用于风险画像，不能视为新鲜 OOS。
+V3 多窗口回测：`notes/btc-1h-ar-v3-window-backtest-2026-07-06.md` 复用 V3 冻结参数，不引入新增 forward 数据。recent 90d 为 `1.91x / +17.34% / -17.47% / 81.82% / 11`，recent 30d 为 `1.29x / +2.13% / -17.47% / 75.00% / 4`，recent 7d 无交易；2026 YTD 为 `3.90x / +97.37% / -17.47% / 84.00% / 25`。这些窗口只用于风险画像，不能视为新鲜 OOS。
 
-V3 参数必要性审计（2026-07-07）：`research-notes/btc-1h-ar-v3-param-necessity-2026-07-07.md` 对 `27` 个 clean active 槽位逐项中和验证。`8` 个槽位在 V3 冻结值下从不生效（Keltner `max_atr_bps`/`min_dir_roc_bps`/`roc_window`/`max_aligned_funding_bps`/`max_hold_bars`/`cooldown_bars=0`，CCI `max_atr_bps`/`cooldown_bars=0`），移除后与 V3 逐笔交易签名完全一致。最小等价表面为 `19` 个必要参数（Keltner `8`、CCI `11`），指标与 V3 逐字节相同；该表面已按用户要求登记为 `BTC-1H-Adaptive-Regime-V4`。
+V3 参数必要性审计（2026-07-07）：`notes/btc-1h-ar-v3-param-necessity-2026-07-07.md` 对 `27` 个 clean active 槽位逐项中和验证。`8` 个槽位在 V3 冻结值下从不生效（Keltner `max_atr_bps`/`min_dir_roc_bps`/`roc_window`/`max_aligned_funding_bps`/`max_hold_bars`/`cooldown_bars=0`，CCI `max_atr_bps`/`cooldown_bars=0`），移除后与 V3 逐笔交易签名完全一致。最小等价表面为 `19` 个必要参数（Keltner `8`、CCI `11`），指标与 V3 逐字节相同；该表面已按用户要求登记为 `BTC-1H-Adaptive-Regime-V4`。
 
-V3 最小表面微调（2026-07-07）：`research-notes/btc-1h-ar-v3-minimal-micro-tune-2026-07-07.md` 在 19 参数最小表面上做受约束网格（杠杆冻结为 V3 值）。腿级变体 Keltner `486`、CCI `1,728`，组合 `24,576` 组：没有组合能同时严格提升 prefit 年化、回撤、胜率三项；Pareto 口径（年化更高、回撤与胜率不劣）仅 `8` 组，首选 prefit `6.24x / -12.87% / 87.30%`（vs V3 `6.16x`，改善约 `+1.4%`，来自 CCI `max_hold_bars 72->96`、`max_dist_ema_bps 750->700`），reused holdout 与 V3 完全相同。结论：V4/V3 在其冻结邻域是局部最优，微调收益属噪声级别；不登记额外 V4.1/V5，不改变 `not live-ready`。
+V3 最小表面微调（2026-07-07）：`notes/btc-1h-ar-v3-minimal-micro-tune-2026-07-07.md` 在 19 参数最小表面上做受约束网格（杠杆冻结为 V3 值）。腿级变体 Keltner `486`、CCI `1,728`，组合 `24,576` 组：没有组合能同时严格提升 prefit 年化、回撤、胜率三项；Pareto 口径（年化更高、回撤与胜率不劣）仅 `8` 组，首选 prefit `6.24x / -12.87% / 87.30%`（vs V3 `6.16x`，改善约 `+1.4%`，来自 CCI `max_hold_bars 72->96`、`max_dist_ema_bps 750->700`），reused holdout 与 V3 完全相同。结论：V4/V3 在其冻结邻域是局部最优，微调收益属噪声级别；不登记额外 V4.1/V5，不改变 `not live-ready`。
 
-V4 多窗口回测（2026-07-07）：`research-notes/btc-1h-ar-v4-window-backtest-2026-07-07.md` 复用 V4 最小等价参数并验证与 V3 逐笔等价。standard split 与 V3 完全一致：prefit `6.16x / -12.87% / 87.30% / 63`，reused holdout `1.90x / -17.47% / 81.82% / 11`，current full `5.27x / -17.47% / 86.49% / 74`；recent 30d `1.29x / +2.13% / -17.47% / 75.00% / 4`，recent 7d 无交易。该回测只是 V4 身份下的风险画像，不是新增 OOS。
+V4 多窗口回测（2026-07-07）：`notes/btc-1h-ar-v4-window-backtest-2026-07-07.md` 复用 V4 最小等价参数并验证与 V3 逐笔等价。standard split 与 V3 完全一致：prefit `6.16x / -12.87% / 87.30% / 63`，reused holdout `1.90x / -17.47% / 81.82% / 11`，current full `5.27x / -17.47% / 86.49% / 74`；recent 30d `1.29x / +2.13% / -17.47% / 75.00% / 4`，recent 7d 无交易。该回测只是 V4 身份下的风险画像，不是新增 OOS。
 
 ## Promotion 门槛
 

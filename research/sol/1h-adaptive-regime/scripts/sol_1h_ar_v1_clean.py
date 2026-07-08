@@ -17,7 +17,7 @@ import sol_1h_ar_v1 as v1  # noqa: E402
 
 FAMILY_DIR = ROOT / "research/sol/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-03"
 ABLATION_JSON = ARTIFACT_DIR / "sol_1h_ar_v1_full_ablation_2026-07-03.json"
 CLEAN_JSON = ARTIFACT_DIR / "sol_1h_ar_v1_clean_config_2026-07-03.json"

@@ -17,10 +17,10 @@ audit（短暂 gate，不是失败后的长期状态）
    │ live-executable 审计通过 + 参数/状态机可被 runner 复现 + 写出交接规格
    ▼
 live spec
-   │ quant-runner 实现完成 + 指标对拍/smoke test 通过 + 进入 dry-run 时立即建立 forward-tracking/
+   │ quant-runner 实现完成 + 指标对拍/smoke test 通过 + 进入 dry-run 时立即建立 runner-tracking/
    ▼
-dry-run（模拟盘，forward-tracking 持续记录）
-   │ forward 证据达标 + 运维审计（重启恢复、missing-bar fail-closed、kill switch）完成
+dry-run（模拟盘，runner-tracking 持续记录）
+   │ runner 观察证据达标 + 运维审计（重启恢复、missing-bar fail-closed、kill switch）完成
    ▼
 live（真实资金运行；资金边界由子账户、runner 配置或上线决策记录管理）
 
@@ -41,10 +41,10 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 | `registered` | 用户要求登记的冻结版本（基线或观察值），仅固定研究身份 | core ledger 已更新版本表、参数、证据链接；不代表策略可行 |
 | `audit` | dry-run 前的 live-executable promotion review：审计该 registered 版本是否可被真实订单时序和 runner 状态机复现 | 已登记版本具备推进意图；已核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的研究侧门禁（超额收益、消融、OOS/CPCV、统计显著性）；分片回测无执行不可能性；成本口径明确 |
 | `live spec` | 已写出 runner 交接规格，等待/正在 quant-runner 实现；未启用 | live-executable 审计通过；已核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的上线前门禁（MC、压力测试、启动时间、相位）；参数/状态机可被 runner 复现；满足 `lab-runner-handoff.mdc` 交接规格必备字段；core ledger 链接该规格 |
-| `dry-run` | 在 quant-runner 以 dry-run 模式运行（模拟盘，不下真实订单） | quant-runner 实现完成；指标对拍/smoke test 通过；进入 dry-run 的同一变更中建立 `forward-tracking/` |
-| `live` | 真实资金运行 | dry-run forward 证据达标；资金费、盘口滑点、订单失败处理已审计；decision log 记录批准；资金边界由子账户资金、runner 配置或上线 decision log 管理，策略 spec 不强制写 live notional |
-| `NO-GO` | dry-run 或 live 后的最终否决状态 | 必须有 `forward-tracking/`、dry-run 对账或真实订单证据；记录否决原因，重开需新证据并写 decision log |
-| `archived` | 研究线已封存：不再推进、不再复现，仅作历史证据保留 | decision log 记录封存原因；封存不需要负面 forward 证据；重开视同新研究线 |
+| `dry-run` | 在 quant-runner 以 dry-run 模式运行（模拟盘，不下真实订单） | quant-runner 实现完成；指标对拍/smoke test 通过；进入 dry-run 的同一变更中建立 `runner-tracking/` |
+| `live` | 真实资金运行 | dry-run 的 runner 观察证据达标；资金费、盘口滑点、订单失败处理已审计；decision log 记录批准；资金边界由子账户资金、runner 配置或上线 decision log 管理，策略 spec 不强制写 live notional |
+| `NO-GO` | dry-run 或 live 后的最终否决状态 | 必须有 `runner-tracking/`、dry-run 对账或真实订单证据；记录否决原因，重开需新证据并写 decision log |
+| `archived` | 研究线已封存：不再推进、不再复现，仅作历史证据保留 | decision log 记录封存原因；封存不需要负面 runner 观察证据；重开视同新研究线 |
 
 `handoff` / "交接版本"：把规格与实现移交给人或其他系统维护的动作标签，可叠加在 `live spec` 及之后的主状态上；要求双向链接的 SPEC 齐备、参数一致性验证记录在案。`handoff` 不是独立主状态。
 
@@ -55,10 +55,10 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 以下词只能作为主状态的修饰或备注，单独出现不构成状态：
 
 - `baseline` / `candidate` / `observation` / `clean-equivalent`：`registered` 或 `explore` 的来源/角色修饰——基线锚点、参数候选、微调观察值、与 parent 逐笔等价的参数精简版（clean-equivalent 需 trade signature 一致证据，且不提供新增收益证据）。
-- `forward-test required`：gate 备注，表示状态推进依赖 `forward-tracking/` 下尚不存在的报告；口头描述不算证据。
+- `forward-test required`：gate 备注，表示状态推进依赖 `runner-tracking/` 下尚不存在的报告；口头描述不算证据。
 - `not promoted / not live-ready`：dry-run 前证据不足、回测失败、可执行性审计不通过、或暂不继续推进时使用的通用后缀；它不是最终否决，后续可以因新机制、新数据或新审计重开。
 
-历史文档中的 `diagnostic baseline`、`diagnostic observation`、`clean-equivalent observation`、`audit observation`、`audit candidate` 等旧标签按 `registered baseline/observation` 或 `registered / not promoted / not live-ready` 理解，不需要批量改写。历史文档中若在 dry-run 前使用了 `NO-GO`，按新口径理解为 `not promoted / not live-ready`，除非同一文档明确引用了 dry-run/live forward 证据。
+历史文档中的 `diagnostic baseline`、`diagnostic observation`、`clean-equivalent observation`、`audit observation`、`audit candidate` 等旧标签按 `registered baseline/observation` 或 `registered / not promoted / not live-ready` 理解，不需要批量改写。历史文档中若在 dry-run 前使用了 `NO-GO`，按新口径理解为 `not promoted / not live-ready`，除非同一文档明确引用了 dry-run/live runner 观察证据。
 
 ## 使用规则
 

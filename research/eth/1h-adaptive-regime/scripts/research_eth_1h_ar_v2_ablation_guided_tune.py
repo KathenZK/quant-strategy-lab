@@ -27,7 +27,7 @@ import research_eth_1h_ar_v2_full_ablation as ablation  # noqa: E402
 DATE_TAG = "2026-07-06"
 FAMILY_DIR = ROOT / "research/eth/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 V2_ABLATION_JSON = ARTIFACT_DIR / f"eth_1h_ar_v2_full_ablation_{DATE_TAG}.json"
 SUMMARY_JSON = ARTIFACT_DIR / f"eth_1h_ar_v2_ablation_guided_tune_{DATE_TAG}.json"
 BB_POOL_CSV = ARTIFACT_DIR / f"eth_1h_ar_v2_tune_bb_break_pool_{DATE_TAG}.csv"

@@ -112,13 +112,13 @@ uv run python research/eth/1h-adaptive-regime/scripts/audit_eth_1h_ar_v1_clean_t
 ```
 
 - 全参数消融：`../ablations/eth-1h-ar-v1-full-parameter-ablation-2026-07-03.md`。
-- clean 参数微调：`../research-notes/eth-1h-ar-v1-clean-parameter-tune-2026-07-03.md`。
-- 最终审计：`../research-notes/eth-1h-ar-v1-clean-tune-audit-2026-07-03.md`。
+- clean 参数微调：`../notes/eth-1h-ar-v1-clean-parameter-tune-2026-07-03.md`。
+- 最终审计：`../notes/eth-1h-ar-v1-clean-tune-audit-2026-07-03.md`。
 
 ## 登记后消融与微调
 
 - V2 全参数消融：`../ablations/eth-1h-ar-v2-full-parameter-ablation-2026-07-06.md`，覆盖 `29/29` 个 clean 参数槽；单字段 high-win gate 命中 `0`。
-- V2 消融引导高胜率微调：`../research-notes/eth-1h-ar-v2-ablation-guided-tune-2026-07-06.md`，observation 后续登记为 `ETH-1H-Adaptive-Regime-V2.1`；current full 为 `3.0277x / -19.55% / 87.50% / 40`，但 reused holdout 为负且压力测试穿越 `20%` 回撤。
+- V2 消融引导高胜率微调：`../notes/eth-1h-ar-v2-ablation-guided-tune-2026-07-06.md`，observation 后续登记为 `ETH-1H-Adaptive-Regime-V2.1`；current full 为 `3.0277x / -19.55% / 87.50% / 40`，但 reused holdout 为负且压力测试穿越 `20%` 回撤。
 - V2.1 参数说明：`eth-1h-ar-v2-1-high-win-tuned-spec-2026-07-06.md`。V2.1 不修改本 V2 version spec，不构成 candidate、paper-live、dry-run、handoff 或 live。
 
 ## 登记结论

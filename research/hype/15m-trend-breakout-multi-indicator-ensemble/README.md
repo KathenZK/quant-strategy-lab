@@ -19,7 +19,7 @@ Created：2026-07-07
 ## 当前状态
 
 - 当前状态：`explore / not promoted / not live-ready`（首次组合诊断）。
-- 首次组合回测结论见 `research-notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md`。
+- 首次组合回测结论见 `notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md`。
 - 家族主账：`hype-15m-tb-mii-ens-core-ledger.md`。
 
 ## 阅读顺序
@@ -29,4 +29,4 @@ Created：2026-07-07
 3. 本文件
 4. `hype-15m-tb-mii-ens-core-ledger.md`
 5. `decision-log.md`
-6. `research-notes/` 内具体报告
+6. `notes/` 内具体报告

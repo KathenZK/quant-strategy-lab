@@ -43,7 +43,7 @@ from research_hype_5m_micro_scalp_v1_simplified_combo_search import (
 
 RUN_ID = "2026-06-30"
 FAMILY_ROOT = Path("research/hype/5m-micro-scalp")
-RESEARCH_NOTE_ROOT = FAMILY_ROOT / "research-notes"
+RESEARCH_NOTE_ROOT = FAMILY_ROOT / "notes"
 SUMMARY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_candidate_robustness_summary_{RUN_ID}.csv"
 SEED_SUMMARY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_candidate_robustness_by_seed_{RUN_ID}.csv"
 MONTHLY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_candidate_robustness_monthly_{RUN_ID}.csv"

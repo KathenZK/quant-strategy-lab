@@ -37,7 +37,7 @@ Status：`live spec / diagnostic observation only / not live-ready / `
 | Runner strategy kind | `hype_mii` |
 | Runner strategy module | `crates/quant-runner/src/runner/strategies/hype_mii/mod.rs` |
 | Runner strategy SPEC | `crates/quant-runner/src/runner/strategies/hype_mii/HYPE-15M-MII-V1.3-SPEC.md` |
-| Research evidence | `research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md` |
+| Research evidence | `notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md` |
 | Core ledger | `hype-15m-mii-core-ledger.md` |
 
 `V1.3` 不属于 `HYPE-EMA-Crossover`、`HYPE-EMA-Trend-Breakout`、`HYPE-Candle-Count-Reversal` 或 `HYPE-15M-Pullback-Trail`。不要用裸 `V1.3` 判断策略身份。
@@ -449,6 +449,6 @@ for each newly closed 15m candle t:
 
 - 主账：`../hype-15m-mii-core-ledger.md`
 - `V1.2` 完整复现规格：`hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`
-- 杠杆诊断：`../research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`
-- 时间片复核：`../research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
-- 过滤消融：`../research-notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md`
+- 杠杆诊断：`../notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`
+- 时间片复核：`../notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
+- 过滤消融：`../notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md`

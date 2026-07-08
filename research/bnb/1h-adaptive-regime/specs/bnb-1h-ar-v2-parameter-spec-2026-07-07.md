@@ -9,7 +9,7 @@
 - 状态：`clean-equivalent diagnostic observation / not promoted / not live-ready`
 - 定义：V1 的 clean 参数版本。V1 全参数消融识别的 no-op 字段全部固定为已验证的 neutral 值；逐笔重放确认 V2 与 V1 交易路径完全一致（trade signature 相等）。
 - 可执行定义：`../scripts/bnb_1h_ar_v2.py`
-- 验证与多窗口证据：`../research-notes/bnb-1h-ar-v2-multiwindow-backtest-2026-07-07.md`
+- 验证与多窗口证据：`../notes/bnb-1h-ar-v2-multiwindow-backtest-2026-07-07.md`
 - 来源消融：`../ablations/bnb-1h-ar-v1-full-parameter-ablation-2026-07-06.md`
 
 ## 数据与执行口径

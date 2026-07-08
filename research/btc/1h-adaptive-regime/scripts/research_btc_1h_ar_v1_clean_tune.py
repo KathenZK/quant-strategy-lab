@@ -23,7 +23,7 @@ import btc_1h_ar_v1_clean as clean  # noqa: E402
 
 FAMILY_DIR = ROOT / "research/btc/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-02"
 SUMMARY_JSON = ARTIFACT_DIR / f"btc_1h_ar_v1_clean_tune_{DATE_TAG}.json"
 KELTNER_POOL_CSV = ARTIFACT_DIR / f"btc_1h_ar_v1_tune_keltner_pool_{DATE_TAG}.csv"

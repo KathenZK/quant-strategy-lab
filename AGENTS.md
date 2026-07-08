@@ -42,6 +42,6 @@
 - `live-executable-strategy-research.mdc`：订单时序、成交假设、stop/lockout 审计和 promotion 前置条件。
 - `backtest-standards.mdc`：回测默认包含最近 `1d/7d/1m/3m/6m/1y` 分片；Binance 默认手续费 `0.001`、滑点 `4 bps`，其他市场需明确成本口径。
 - `research-report-storage.mdc`：研究目录、core ledger、索引更新义务、共享内核、artifacts 存放和 Canvas 边界。
-- `lab-runner-handoff.mdc`：向 `quant-runner` 交接的规格契约、双向同步和 `forward-tracking/` 回流要求。
+- `lab-runner-handoff.mdc`：向 `quant-runner` 交接的规格契约、双向同步和 `runner-tracking/` 回流要求。
 - `external-reproduction-spec.mdc`：对外（同事/外部 AI）复现规格必须自包含；仓库内部引用只能放在标记为"非复现依赖"的附录里，交付前做 no-repo 自检。
 - `clickable-file-references.mdc`：对话回复和研究文档中的文件引用必须可点击——文档内跨文件引用用相对路径 Markdown 链接，对话中给用户的文件指引用 Markdown 链接或代码引用格式，不要只给纯文本路径。

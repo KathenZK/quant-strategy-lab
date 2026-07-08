@@ -22,8 +22,8 @@
 - V1 冻结身份来自 2026-07-03 广搜最佳 finalist `ENS__SOL_1H_AR_R594184__SOL_1H_AR_R736318`，机制为 `donchian_break + bb_revert` ensemble；新增 `scripts/sol_1h_ar_v1.py` 作为 V1 冻结 wrapper。
 - V1 full annual `2.18x`、return `330.75%`、DD `-18.86%`、win `76.60%`、trades `94`；最近三个月 locked OOS annual `0.71x`、return `-8.09%`、DD `-16.19%`、win `50.00%`、trades `8`，不通过 `10x / 50% / <20% DD` 硬门槛。
 - V1 全参数消融报告：`ablations/sol-1h-ar-v1-full-parameter-ablation-2026-07-03.md`；覆盖 `78/78` 个字段槽，clean surface 保留 `40` 个 active tunable 字段槽。
-- V1 clean interface 报告：`research-notes/sol-1h-ar-v1-clean-interface-2026-07-03.md`；原始 `78` 个字段槽收敛为 `40` 个 clean tunable 字段槽，逐笔交易签名与 V1 相等。
-- V1 clean tune 报告：`research-notes/sol-1h-ar-v1-clean-parameter-tune-2026-07-03.md`；每腿随机样本 `250000`，组合评估 `160000`，K+2/8 bps prefit 稳健候选 `395`。
+- V1 clean interface 报告：`notes/sol-1h-ar-v1-clean-interface-2026-07-03.md`；原始 `78` 个字段槽收敛为 `40` 个 clean tunable 字段槽，逐笔交易签名与 V1 相等。
+- V1 clean tune 报告：`notes/sol-1h-ar-v1-clean-parameter-tune-2026-07-03.md`；每腿随机样本 `250000`，组合评估 `160000`，K+2/8 bps prefit 稳健候选 `395`。
 - clean tune 只能作为 diagnostic observation；prefit annual `5.7104x`、DD `-18.81%`、win `85.71%`，但 reused holdout annual `0.1607x`、DD `-42.87%`、win `0.00%`，current full DD `-42.87%`，不能登记为 `V1.1/V2`，也不能 promotion。
 
 ## 2026-07-07：高胜率硬目标（10x / 80% / <20% DD）重新搜索，结论 NO-GO

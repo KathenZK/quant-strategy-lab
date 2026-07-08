@@ -9,7 +9,7 @@
 - 门禁用于状态迁移：回测结果再好，也不能跳过 `registered -> audit -> live spec -> dry-run -> live`。
 - 阈值是默认口径：默认按本文执行；若因策略频率、样本长度、市场结构或数据可得性需要偏离，报告必须说明原因、替代口径和影响，并在家族 `decision-log.md` 记录。
 - 缺数据不是通过：例如相位检验缺少足够细的 K 线数据时，只能记录为未完成 blocker。
-- 证据按现有目录落地：Markdown 报告进 `diagnostics/`、`ablations/` 或 `research-notes/`；脚本进 `scripts/`；需保留的 JSON/CSV/图表进 `artifacts/`；状态迁移结论进 `decision-log.md`；core ledger 放紧凑链接。
+- 证据按现有目录落地：Markdown 报告进 `diagnostics/`、`ablations/` 或 `notes/`；脚本进 `scripts/`；需保留的 JSON/CSV/图表进 `artifacts/`；状态迁移结论进 `decision-log.md`；core ledger 放紧凑链接。
 - 现有 dry-run 或历史版本不因本文件自动降级；但任何后续升 `live` 或重新 promotion，都应按本文补齐缺口。
 
 ## 状态迁移映射
@@ -19,8 +19,8 @@
 | `explore -> registered` | 不新增门禁；只固定版本身份、参数和证据链接 | core ledger |
 | `registered -> audit` | 门禁 0/1/2/5：超额收益、消融、OOS/CPCV、统计显著性 | ablations / diagnostics / decision log |
 | `audit -> live spec` | 门禁 3/4/6/7 + live-executable 审计：MC、压力测试、启动时间、相位、真实下单时序 | diagnostics / live-specs / decision log |
-| `live spec -> dry-run` | runner 实现、指标/信号对拍、smoke test、创建 `forward-tracking/` | live-specs / forward-tracking |
-| `dry-run -> live` | forward 证据、运维风控、重启恢复、missing-bar fail-closed、kill switch | forward-tracking / decision log |
+| `live spec -> dry-run` | runner 实现、指标/信号对拍、smoke test、创建 `runner-tracking/` | live-specs / runner-tracking |
+| `dry-run -> live` | runner 观察证据、运维风控、重启恢复、missing-bar fail-closed、kill switch | runner-tracking / decision log |
 
 ## 门禁 0：超额收益基准
 

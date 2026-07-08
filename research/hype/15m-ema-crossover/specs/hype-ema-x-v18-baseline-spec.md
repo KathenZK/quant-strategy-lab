@@ -10,14 +10,14 @@ Family id：`HYPE-EMA-X`
 
 ## 一句话定义
 
-`HYPE-EMA-X-V18` 不是新的信号搜索版本，而是 **V17.1 经 146 项单参数消融后的干净参数规格**。交易逻辑与 V17.1 相同，只删除对当前 HYPE 1Y 样本 **无成交影响** 或 **默认关闭且打开伤收益** 的参数项，便于 runner 和交接文档维护；当前 forward 证据见 [../forward-tracking/README.md](../forward-tracking/README.md)。
+`HYPE-EMA-X-V18` 不是新的信号搜索版本，而是 **V17.1 经 146 项单参数消融后的干净参数规格**。交易逻辑与 V17.1 相同，只删除对当前 HYPE 1Y 样本 **无成交影响** 或 **默认关闭且打开伤收益** 的参数项，便于 runner 和交接文档维护；当前 runner 观察证据见 [../runner-tracking/README.md](../runner-tracking/README.md)。
 
 ## 版本身份
 
 - 2026-07-01：`research_hype_v17_1_full_ablation.py` 完成 V17.1 全参数消融；`research_hype_v17_1_parameter_prune_audit.py` 给出剔除结论。
 - V18 继承 V17.1 的 HQ/LQ 信号、late re-entry、状态机退出和 `HQ×1.1` 仓位。
 - 证据：`diagnostics/hype-ema-x-v17-1-parameter-prune-audit-2026-07-01.md`；`artifacts/hype_v17_1_full_ablation*`。
-- 2026-07-08：确认 V18 已进入 quant-runner dry-run；这不表示 live 批准，live / NO-GO 必须等待 [../forward-tracking/README.md](../forward-tracking/README.md) 下的 forward 报告。
+- 2026-07-08：确认 V18 已进入 quant-runner dry-run；这不表示 live 批准，live / NO-GO 必须等待 [../runner-tracking/README.md](../runner-tracking/README.md) 下的 runner 观察报告。
 
 ## 台账指标（与 V17.1 相同）
 

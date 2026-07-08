@@ -23,7 +23,7 @@ import trx_1h_ar_v2 as v2  # noqa: E402
 DATE_TAG = "2026-07-06"
 FAMILY_DIR = ROOT / "research/trx/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 PAIR_POOL_CSV = ARTIFACT_DIR / "trx_1h_ar_v1_tune_pairs_2026-07-05.csv"
 V2_ABLATION_JSON = ARTIFACT_DIR / f"trx_1h_ar_v2_full_ablation_{DATE_TAG}.json"
 SUMMARY_JSON = ARTIFACT_DIR / f"trx_1h_ar_v2_ablation_guided_tune_{DATE_TAG}.json"

@@ -17,8 +17,8 @@ Created：2026-06-30
 - 当前登记观察版本：`HYPE-15M-MII-V1.4`（`V1.3 + min_rvol96=0.85`）。
 - 当前 dry-run 实现版本：`HYPE-15M-MII-V1.3`（`HYPE-15M-MII-V1.2` + 固定 `2.5x` 权益暴露）。
 - 当前状态：`HYPE-15M-MII-V1.3` 为 `dry-run / forward-test required`（quant-runner `hype_mii` dry-run 配置运行中）；`HYPE-15M-MII-V1.4` 为 `registered / not promoted / not live-ready`（进取观察版本，尚未实现为 runner dry-run）；V1、V1base、V1.1、V1.2 为 `not promoted / not live-ready`。
-- live 前 blockers：资金费核算、盘口级 stop-market 证据、真实成交滑点、重启恢复、交易所对账、missing-bar fail-closed、kill switch 审计，以及 `forward-tracking/` 下达标的 forward 证据。
-- 是否 `live` 或 `NO-GO` 只能在 forward 证据出来后判定。
+- live 前 blockers：资金费核算、盘口级 stop-market 证据、真实成交滑点、重启恢复、交易所对账、missing-bar fail-closed、kill switch 审计，以及 `runner-tracking/` 下达标的 runner 观察证据。
+- 是否 `live` 或 `NO-GO` 只能在 runner 观察证据出来后判定。
 
 ## 数据与成本口径
 
@@ -48,11 +48,11 @@ Created：2026-06-30
 | Version | Status | Core idea | Evidence | Decision |
 | --- | --- | --- | --- | --- |
 | `HYPE-15M-MII-V1` | diagnostic baseline / not live-ready | `RSI(7)` 上穿 `30` 做多、下穿 `60` 做空；MACD 方向过滤；ATR96 pct `0.60%-2.80%`；`TP=0.90%`、`SL=2.80%`、`hold=16`、`1.5x` | `specs/hype-15m-mii-v1-baseline-spec.md`；`ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`；`live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md` | 可执行口径年化 `18.66%`、回撤 `-31.84%`、Last90 年化 `-41.44%`；`not promoted / not live-ready` |
-| `HYPE-15M-MII-V1base` | diagnostic observation / not live-ready | `RSI(7)` 上穿 `40` 做多、下穿 `60` 做空；MACD 方向过滤；`ATR96 pct >= 0.75%`；`min_rvol96=1.0`；`TP=1.20%`、`SL=3.60%`、`hold=16`、`2x` | `research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`；补算 K+2 延迟压力 | K+1 年化高、Last90 强，但 K+2 回撤扩大到 `-36.28%`；保留为主观察基线，不进入任何 promotion 状态 |
-| `HYPE-15M-MII-V1.1` | clean diagnostic expression / not live-ready | 去掉未启用的 `1h confirm`、`RSI14 band`、ADX、H4、ret、churn、cooldown 等表达噪音，只保留生效项 | `research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md` | 行为等同 `V1base`；最近 1 周无交易，K+1 最近 1 月总收益 `34.40%`，全样本总收益 `309.54%`；trailing 动态止盈失败；BTC/ETH 跨资产诊断未证明可迁移；仍为 `not promoted / not live-ready` |
-| `HYPE-15M-MII-V1.2` | ATR bracket diagnostic observation / not live-ready | 沿用 `V1.1` 入场过滤；下一根 open 入场时按信号 K 已知 `ATR96%` 设置 `TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24` | `live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；`research-notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md` | K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`；去掉 `ATR96 >= 0.75%` 后收益/回撤明显恶化，两个过滤都去掉转负；仍为 `not promoted / not live-ready` |
-| `HYPE-15M-MII-V1.3` | dry-run / forward-test required | 沿用 `V1.2` 信号、过滤、ATR bracket 和 `hold=24`；固定 `2.5x` 权益暴露 | `research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`；`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`；`research-notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md`；forward 报告见 `forward-tracking/` | K+1 总收益 `549.30%`、年化 `472.15%`、回撤 `-22.01%`；K+2 总收益 `239.38%`、年化 `212.47%`、回撤 `-41.89%`；近期不开单主要来自 `ATR96% >= 0.75%` 过滤；已在 quant-runner dry-run，live/NO-GO 待 forward 证据 |
-| `HYPE-15M-MII-V1.4` | registered / not promoted / not live-ready（进取观察，未实现为 runner dry-run） | 沿用 `V1.3`，仅把 `min_rvol96` 从 `1.0` 下调为 `0.85` | `live-specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md`；`research-notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`；`research-notes/hype-15m-mii-v1-3-rvol-fine-grid-2026-07-08.md`；`research-notes/hype-15m-mii-v1-4-tp-sl-grid-2026-07-08.md`；`research-notes/hype-15m-mii-v1-4-loss-regime-filters-2026-07-08.md` | 标准数据湖 K+1 `232` 笔、总收益 `978.36%`、回撤 `-24.70%`、胜率 `84.91%`；K+2 总收益 `535.54%`、回撤 `-38.30%`；亏损环境过滤中 `ATR14/ATR96 <= 1.75` 是唯一 strict DD gate 观察候选，但只是风控层诊断。尚未 runner dry-run，不进入 promotion 状态 |
+| `HYPE-15M-MII-V1base` | diagnostic observation / not live-ready | `RSI(7)` 上穿 `40` 做多、下穿 `60` 做空；MACD 方向过滤；`ATR96 pct >= 0.75%`；`min_rvol96=1.0`；`TP=1.20%`、`SL=3.60%`、`hold=16`、`2x` | `notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`；补算 K+2 延迟压力 | K+1 年化高、Last90 强，但 K+2 回撤扩大到 `-36.28%`；保留为主观察基线，不进入任何 promotion 状态 |
+| `HYPE-15M-MII-V1.1` | clean diagnostic expression / not live-ready | 去掉未启用的 `1h confirm`、`RSI14 band`、ADX、H4、ret、churn、cooldown 等表达噪音，只保留生效项 | `notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`；`notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`；`notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`；`notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md` | 行为等同 `V1base`；最近 1 周无交易，K+1 最近 1 月总收益 `34.40%`，全样本总收益 `309.54%`；trailing 动态止盈失败；BTC/ETH 跨资产诊断未证明可迁移；仍为 `not promoted / not live-ready` |
+| `HYPE-15M-MII-V1.2` | ATR bracket diagnostic observation / not live-ready | 沿用 `V1.1` 入场过滤；下一根 open 入场时按信号 K 已知 `ATR96%` 设置 `TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24` | `live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`；`notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；`notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md` | K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`；去掉 `ATR96 >= 0.75%` 后收益/回撤明显恶化，两个过滤都去掉转负；仍为 `not promoted / not live-ready` |
+| `HYPE-15M-MII-V1.3` | dry-run / forward-test required | 沿用 `V1.2` 信号、过滤、ATR bracket 和 `hold=24`；固定 `2.5x` 权益暴露 | `notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`；`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`；`notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md`；runner 观察报告见 `runner-tracking/` | K+1 总收益 `549.30%`、年化 `472.15%`、回撤 `-22.01%`；K+2 总收益 `239.38%`、年化 `212.47%`、回撤 `-41.89%`；近期不开单主要来自 `ATR96% >= 0.75%` 过滤；已在 quant-runner dry-run，live/NO-GO 待 runner 观察证据 |
+| `HYPE-15M-MII-V1.4` | registered / not promoted / not live-ready（进取观察，未实现为 runner dry-run） | 沿用 `V1.3`，仅把 `min_rvol96` 从 `1.0` 下调为 `0.85` | `live-specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md`；`notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-3-rvol-fine-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-4-tp-sl-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-4-loss-regime-filters-2026-07-08.md` | 标准数据湖 K+1 `232` 笔、总收益 `978.36%`、回撤 `-24.70%`、胜率 `84.91%`；K+2 总收益 `535.54%`、回撤 `-38.30%`；亏损环境过滤中 `ATR14/ATR96 <= 1.75` 是唯一 strict DD gate 观察候选，但只是风控层诊断。尚未 runner dry-run，不进入 promotion 状态 |
 
 ## HYPE-15M-MII-V1base 规格
 
@@ -436,27 +436,27 @@ min_rvol96: 1.0 -> 0.85
 - V1 baseline spec：`specs/hype-15m-mii-v1-baseline-spec.md`
 - V1 full ablation：`ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`
 - V1 live feasibility：`live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md`
-- Clean evolution：`research-notes/hype-15m-mii-clean-parameter-evolution-2026-06-29.md`
-- Delay-aware selection：`research-notes/hype-15m-mii-delay-aware-selection-2026-06-29.md`
-- Relaxed DD high-return selection：`research-notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`
-- Fast validation ranking：`research-notes/hype-15m-mii-fast-validation-frequency-ranking-2026-06-30.md`
-- Balanced leverage stress：`research-notes/hype-15m-mii-balanced-leverage-stress-2026-06-30.md`
-- V1.1 window backtest：`research-notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`
-- V1.1 trade paths：`research-notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`
-- V1.1 dynamic take profit：`research-notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`
+- Clean evolution：`notes/hype-15m-mii-clean-parameter-evolution-2026-06-29.md`
+- Delay-aware selection：`notes/hype-15m-mii-delay-aware-selection-2026-06-29.md`
+- Relaxed DD high-return selection：`notes/hype-15m-mii-relaxed-dd-high-return-selection-2026-06-30.md`
+- Fast validation ranking：`notes/hype-15m-mii-fast-validation-frequency-ranking-2026-06-30.md`
+- Balanced leverage stress：`notes/hype-15m-mii-balanced-leverage-stress-2026-06-30.md`
+- V1.1 window backtest：`notes/hype-15m-mii-v1-1-window-backtest-2026-06-30.md`
+- V1.1 trade paths：`notes/hype-15m-mii-v1-1-trade-paths-2026-06-30.md`
+- V1.1 dynamic take profit：`notes/hype-15m-mii-v1-1-dynamic-take-profit-2026-06-30.md`
 - V1.2 reproduction spec：`live-specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`
 - V1.3 live parameter spec：`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`
 - V1.4 parameter spec：`live-specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md`
-- V1.2 ATR bracket exit：`research-notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`
-- V1.2 window/slice backtest：`research-notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
-- V1.2 ATR dynamic leverage：`research-notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`
-- V1.3 profit extension：`research-notes/hype-15m-mii-v1-3-profit-extension-2026-07-02.md`
-- V1.3 rvol0.9 frequency compare：`research-notes/hype-15m-mii-v1-3-rvol09-frequency-2026-07-08.md`
-- V1.3 rvol grid compare：`research-notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`
-- V1.3 rvol fine grid：`research-notes/hype-15m-mii-v1-3-rvol-fine-grid-2026-07-08.md`
-- V1.4 TP/SL grid：`research-notes/hype-15m-mii-v1-4-tp-sl-grid-2026-07-08.md`
-- V1.4 loss regime filters：`research-notes/hype-15m-mii-v1-4-loss-regime-filters-2026-07-08.md`
-- V1.1 BTC/ETH cross asset：`research-notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
+- V1.2 ATR bracket exit：`notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`
+- V1.2 window/slice backtest：`notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`
+- V1.2 ATR dynamic leverage：`notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`
+- V1.3 profit extension：`notes/hype-15m-mii-v1-3-profit-extension-2026-07-02.md`
+- V1.3 rvol0.9 frequency compare：`notes/hype-15m-mii-v1-3-rvol09-frequency-2026-07-08.md`
+- V1.3 rvol grid compare：`notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`
+- V1.3 rvol fine grid：`notes/hype-15m-mii-v1-3-rvol-fine-grid-2026-07-08.md`
+- V1.4 TP/SL grid：`notes/hype-15m-mii-v1-4-tp-sl-grid-2026-07-08.md`
+- V1.4 loss regime filters：`notes/hype-15m-mii-v1-4-loss-regime-filters-2026-07-08.md`
+- V1.1 BTC/ETH cross asset：`notes/hype-15m-mii-v1-1-btc-eth-cross-asset-2026-06-30.md`
 - Decision log：`decision-log.md`
 
 ## 下一步

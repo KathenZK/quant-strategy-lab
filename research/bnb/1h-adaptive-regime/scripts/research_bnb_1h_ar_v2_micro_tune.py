@@ -42,7 +42,7 @@ v2 = load_v2()
 
 FAMILY_DIR = ROOT / "research/bnb/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 DATE_TAG = "2026-07-07"
 LEGS_CSV = ARTIFACT_DIR / f"bnb_1h_ar_v2_micro_tune_legs_{DATE_TAG}.csv"
 ENSEMBLES_CSV = ARTIFACT_DIR / f"bnb_1h_ar_v2_micro_tune_ensembles_{DATE_TAG}.csv"

@@ -129,7 +129,7 @@ Family id：`HYPE-5M-Micro-Scalp`
 
 ## 关联报告与产物
 
-- V1.1 micro tune：`research/hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`
-- V1.2 registration and leverage retest：`research/hype/5m-micro-scalp/research-notes/hype-5m-micro-scalp-v1-2-registration-and-leverage-retest-2026-07-01.md`
+- V1.1 micro tune：`research/hype/5m-micro-scalp/notes/hype-5m-micro-scalp-v1-1-micro-tune-2026-06-30.md`
+- V1.2 registration and leverage retest：`research/hype/5m-micro-scalp/notes/hype-5m-micro-scalp-v1-2-registration-and-leverage-retest-2026-07-01.md`
 - Repro script：`research/hype/5m-micro-scalp/scripts/research_hype_5m_micro_scalp_v1_2_registration_and_leverage_retest.py`
 - Config JSON：`research/hype/5m-micro-scalp/artifacts/hype_5m_micro_scalp_v1_2_baseline_config_2026-07-01.json`

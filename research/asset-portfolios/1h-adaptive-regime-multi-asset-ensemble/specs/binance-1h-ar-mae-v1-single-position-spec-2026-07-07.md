@@ -76,7 +76,7 @@
 ## 证据
 
 - 主账：`../binance-1h-ar-mae-core-ledger.md`
-- 回测报告：`../research-notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`
+- 回测报告：`../notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`
 - 汇总 JSON：`../artifacts/binance_1h_ar_mae_single_position_2026-07-07.json`
 - 权益曲线：`../artifacts/binance_1h_ar_mae_single_position_equity_2026-07-07.csv`
 - 中选交易：`../artifacts/binance_1h_ar_mae_single_position_trades_2026-07-07.csv`

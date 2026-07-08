@@ -24,7 +24,7 @@ import research_hype_1h_ar_v1_full_ablation as v1_ablation  # noqa: E402
 DATE_TAG = "2026-07-02"
 FAMILY_DIR = ROOT / "research/hype/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTE_DIR = FAMILY_DIR / "research-notes"
+NOTE_DIR = FAMILY_DIR / "notes"
 SUMMARY_JSON = ARTIFACT_DIR / f"hype_1h_ar_v2_clean_tune_{DATE_TAG}.json"
 DI_CSV = ARTIFACT_DIR / f"hype_1h_ar_v2_di_coordinate_{DATE_TAG}.csv"
 STOCH_CSV = ARTIFACT_DIR / f"hype_1h_ar_v2_stoch_coordinate_{DATE_TAG}.csv"

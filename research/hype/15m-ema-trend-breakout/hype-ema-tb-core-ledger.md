@@ -290,11 +290,11 @@
 
 诊断结论：不直接合入 V35 主策略。Binance API 补充窗口（`2025-05-30 10:30 UTC` 至 `2026-07-07 07:15 UTC`）显示，profit floor 对最近 `7d/1m` 有小幅改善（`7d +9.94% -> +11.00%`，`1m +23.40% -> +29.94%`），但全样本收益从 `+8360.80%` 降到 `+898.31%`，Sharpe 从 `4.75` 降到 `3.18`，最大回撤从 `-23.46%` 加深到 `-26.72%`，交易数从 `108` 增到 `213`，其中 `profit_floor` 退出 `142` 次。该保护线会把大量本应打到 `5ATR` 的趋势单截断，并在 `cooldown_bars=0` 下造成频繁重进和成本翻倍。
 
-证据：`research-notes/hype-ema-tb-v35-profit-floor-diagnostic-2026-07-07.md`；复现脚本：`scripts/research_hype_ema_tb_v35_profit_floor.py`；保留产物：`artifacts/hype_ema_tb_v35_profit_floor_binance_api_2026-07-07.json`。
+证据：`notes/hype-ema-tb-v35-profit-floor-diagnostic-2026-07-07.md`；复现脚本：`scripts/research_hype_ema_tb_v35_profit_floor.py`；保留产物：`artifacts/hype_ema_tb_v35_profit_floor_binance_api_2026-07-07.json`。
 
 ### 同日第二轮：窄口径 profit floor 找到可用解
 
-把启动线收窄后结论反转：只在 `mfe_atr >= 4.75` 启动、锁 `4.25 ATR`（`floor_475_lock425`）得 full `+7053.02% / -23.46% / Sharpe 4.60`，保留 base（`+8360.80% / -23.46% / 4.75`）的 84% 收益且 maxDD 完全不变；`mfe >= 4.9` 锁 `4.4 ATR`（`floor_49_lock44`）保留 95%（`+7972.54% / Sharpe 4.72`），但覆盖不到当前实盘这单的 `4.86 ATR` 峰值。结构性依据：base 中 `mfe >= 4.5` 的 41 笔样本内全部打到 TP，窄口径 floor 在样本内只付出小额“保险费”（floor 单均比对应 TP 单少约 1.7pp），防护对象是样本外的高浮盈回吐。启动线 `<= 4.5` 的所有档位、floor 退出后 16 根冷却、直接把 TP 收紧到 4.75 全部劣化明显，均否决。两个窄口径变体为 diagnostic 观察候选，未 promotion、未 live-ready；上线前需补 live-executable 审计（收盘后上移 STOP_MARKET 触发价的改单路径）。证据：`research-notes/hype-ema-tb-v35-narrow-profit-floor-2026-07-07.md`；产物：`artifacts/hype_ema_tb_v35_profit_floor_variants_binance_api_2026-07-07.json`。
+把启动线收窄后结论反转：只在 `mfe_atr >= 4.75` 启动、锁 `4.25 ATR`（`floor_475_lock425`）得 full `+7053.02% / -23.46% / Sharpe 4.60`，保留 base（`+8360.80% / -23.46% / 4.75`）的 84% 收益且 maxDD 完全不变；`mfe >= 4.9` 锁 `4.4 ATR`（`floor_49_lock44`）保留 95%（`+7972.54% / Sharpe 4.72`），但覆盖不到当前实盘这单的 `4.86 ATR` 峰值。结构性依据：base 中 `mfe >= 4.5` 的 41 笔样本内全部打到 TP，窄口径 floor 在样本内只付出小额“保险费”（floor 单均比对应 TP 单少约 1.7pp），防护对象是样本外的高浮盈回吐。启动线 `<= 4.5` 的所有档位、floor 退出后 16 根冷却、直接把 TP 收紧到 4.75 全部劣化明显，均否决。两个窄口径变体为 diagnostic 观察候选，未 promotion、未 live-ready；上线前需补 live-executable 审计（收盘后上移 STOP_MARKET 触发价的改单路径）。证据：`notes/hype-ema-tb-v35-narrow-profit-floor-2026-07-07.md`；产物：`artifacts/hype_ema_tb_v35_profit_floor_variants_binance_api_2026-07-07.json`。
 
 ### V38 登记与 V37 叠加回测
 
@@ -309,7 +309,7 @@
 | V37 复现（V35+early-long） | +10316.90% | -24.76% | 4.85 | 150 | 72.67% | TP 107 / SL 19 / weak 14 / indicator 10 |
 | V37+V38 floor | +8777.85% | -24.76% | 4.71 | 150 | 73.33% | TP 91 / floor 17 / SL 19 / weak 14 / indicator 9 |
 
-结论：V38 单独作为 V35 的保险版成立，但在样本内付出收益成本；叠加到 V37 后，`V37+V38` 仍高于 V35，但低于纯 V37（`+8777.85%` vs `+10316.90%`），且组合最大回撤仍为 `-24.76%`。因此不把 `V37+V38` 登记成新的 promotion 版本，只记录为“收益让渡换近 TP 回吐保护”的叠加诊断。证据：`research-notes/hype-ema-tb-v38-v37-floor-backtest-2026-07-07.md`；脚本：`scripts/research_hype_ema_tb_v37_v38_floor.py`；产物：`artifacts/hype_ema_tb_v37_v38_floor_2026-07-07.json`。
+结论：V38 单独作为 V35 的保险版成立，但在样本内付出收益成本；叠加到 V37 后，`V37+V38` 仍高于 V35，但低于纯 V37（`+8777.85%` vs `+10316.90%`），且组合最大回撤仍为 `-24.76%`。因此不把 `V37+V38` 登记成新的 promotion 版本，只记录为“收益让渡换近 TP 回吐保护”的叠加诊断。证据：`notes/hype-ema-tb-v38-v37-floor-backtest-2026-07-07.md`；脚本：`scripts/research_hype_ema_tb_v37_v38_floor.py`；产物：`artifacts/hype_ema_tb_v37_v38_floor_2026-07-07.json`。
 
 ### 2026-07-08 最近三个月波动率审计
 
@@ -317,7 +317,7 @@
 
 最近 90 天 median `ATR%` 为 `0.68%`，前 90 天为 `0.71%`，下降约 `4.23%`；15m high-low 中位数从 `0.67%` 降到 `0.63%`。波动率确实略有变窄，但 V35 最近 90 天仍有 `26` 次 take-profit、`7` 次 stop-loss、`2` 次 indicator-exit，收益 `+215.41%`、maxDD `-21.90%`。因此不支持“波动率变小导致 TP/SL 失效”的判断。
 
-更可能的问题是低 ATR 下仓位更容易打满：V35 最近 90 天 median entry `ATR%` `0.61%`，`5ATR` TP 价格距离约 `3.05%`、`7ATR` SL 约 `4.26%`，35 笔中 `18` 笔 allocation 达到 `3.0x` cap。相比前 90 天，入场 median ADX28 从 `38.73` 降到 `33.24`，胜率从 `84.85%` 降到 `74.29%`，SL 从 `4` 笔增到 `7` 笔。结论：近期体感变差更像趋势质量下降 + 低 ATR 高仓位风险，而不是 TP/SL 距离机制失效。证据：`research-notes/hype-ema-tb-recent-3m-volatility-audit-2026-07-08.md`；脚本：`scripts/fetch_hype_binance_15m.py`、`scripts/research_hype_ema_tb_recent_volatility_audit.py`；产物：`artifacts/hype_ema_tb_recent_3m_volatility_audit_2026-07-08.json`。
+更可能的问题是低 ATR 下仓位更容易打满：V35 最近 90 天 median entry `ATR%` `0.61%`，`5ATR` TP 价格距离约 `3.05%`、`7ATR` SL 约 `4.26%`，35 笔中 `18` 笔 allocation 达到 `3.0x` cap。相比前 90 天，入场 median ADX28 从 `38.73` 降到 `33.24`，胜率从 `84.85%` 降到 `74.29%`，SL 从 `4` 笔增到 `7` 笔。结论：近期体感变差更像趋势质量下降 + 低 ATR 高仓位风险，而不是 TP/SL 距离机制失效。证据：`notes/hype-ema-tb-recent-3m-volatility-audit-2026-07-08.md`；脚本：`scripts/fetch_hype_binance_15m.py`、`scripts/research_hype_ema_tb_recent_volatility_audit.py`；产物：`artifacts/hype_ema_tb_recent_3m_volatility_audit_2026-07-08.json`。
 
 ### 2026-07-08 V35 defensive overlay 回测
 
@@ -335,7 +335,7 @@
 | `low_atr_strict_entry` | +2328.18% | -40.53% | 3.76 | +66.47% | -37.98% | 否决 |
 | `all_strict_entry` | +366.78% | -43.08% | 2.23 | -33.38% | -40.65% | 明确否决 |
 
-`low_adx35_cap25` 规则：V35 信号触发时若 `ADX28 < 35`，本笔 `max_allocation` 从 `3.0x` 降到 `2.5x`；其它入场、TP/SL、indicator exit、timeout 全部不变。该规则没有修复历史 full 最大回撤，但对最近 90 天更贴近问题：用约 20.31pp 的最近 90 天收益成本，把最近 90 天 maxDD 从 `-21.90%` 缓和到 `-19.79%`，且 full Sharpe 基本不变。记录为 defensive overlay 观察候选，未 promotion、未 live-ready；上线前需补跨所同窗口检查与 live runner 仓位覆盖审计。证据：`research-notes/hype-ema-tb-v35-low-atr-overlay-backtest-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v35_low_atr_overlays.py`；产物：`artifacts/hype_ema_tb_v35_low_atr_overlays_2026-07-08.json`。
+`low_adx35_cap25` 规则：V35 信号触发时若 `ADX28 < 35`，本笔 `max_allocation` 从 `3.0x` 降到 `2.5x`；其它入场、TP/SL、indicator exit、timeout 全部不变。该规则没有修复历史 full 最大回撤，但对最近 90 天更贴近问题：用约 20.31pp 的最近 90 天收益成本，把最近 90 天 maxDD 从 `-21.90%` 缓和到 `-19.79%`，且 full Sharpe 基本不变。记录为 defensive overlay 观察候选，未 promotion、未 live-ready；上线前需补跨所同窗口检查与 live runner 仓位覆盖审计。证据：`notes/hype-ema-tb-v35-low-atr-overlay-backtest-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v35_low_atr_overlays.py`；产物：`artifacts/hype_ema_tb_v35_low_atr_overlays_2026-07-08.json`。
 
 ### 2026-07-08 V35 全参数消融与最近 90 天微调
 
@@ -351,7 +351,7 @@
 | `v35_tuned_mild` / V39 | long_vol 0.25->0.35、short target 0.018->0.022、移除冗余空头 1h EMA 确认，实盘保留 timeout 兜底 | +9969.45% | -23.46% | 4.81 | +217.53% | -21.90% | 77.14% |
 | `v35_tuned_recent3m` | 上行基础上另移除多头 ema_spread 过滤、cap 3.0->2.5、ema_slow 384->512 | +6223.29% | -25.68% | 4.82 | +254.77% | -19.79% | 82.35% |
 
-判断：`v35_tuned_mild` 已按用户指定登记为 `HYPE-EMA-TB-V39`，它是消融驱动的严格改进（1d/7d/1m/3m/6m/1y/full 所有窗口不劣于 V35），优先做跨所迁移检查与 walk-forward；`v35_tuned_recent3m` 达成"最近 3 个月收益更高、胜率更高、回撤更小"三项目标，但牺牲 6m/1y/full 且移除多头 EMA spread 改变策略身份，只作 regime 适配影子观察，不替换 V35。两者均未 promotion、未 live-ready。用户确认 V39 实盘规格保留 `max_hold_bars=384` 兜底。证据：`specs/hype-trend-strategy-v39-spec.md`、`research-notes/hype-ema-tb-v35-full-ablation-recent-tune-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v35_full_ablation_recent_tune.py`；产物：`artifacts/hype_ema_tb_v35_ablation_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_tune_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_final_recent_tune_2026-07-08.json`。
+判断：`v35_tuned_mild` 已按用户指定登记为 `HYPE-EMA-TB-V39`，它是消融驱动的严格改进（1d/7d/1m/3m/6m/1y/full 所有窗口不劣于 V35），优先做跨所迁移检查与 walk-forward；`v35_tuned_recent3m` 达成"最近 3 个月收益更高、胜率更高、回撤更小"三项目标，但牺牲 6m/1y/full 且移除多头 EMA spread 改变策略身份，只作 regime 适配影子观察，不替换 V35。两者均未 promotion、未 live-ready。用户确认 V39 实盘规格保留 `max_hold_bars=384` 兜底。证据：`specs/hype-trend-strategy-v39-spec.md`、`notes/hype-ema-tb-v35-full-ablation-recent-tune-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v35_full_ablation_recent_tune.py`；产物：`artifacts/hype_ema_tb_v35_ablation_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_tune_recent_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v35_final_recent_tune_2026-07-08.json`。
 
 ### 2026-07-08 空头放宽扫描
 
@@ -365,19 +365,19 @@
 | `s_adx33_voff` | +7351.71% | -38.36% | 43 | 65.12% | +2.74% |
 | `s_adx32_v025` | +5605.59% | -47.30% | 50 | 58.00% | +1.89% |
 
-每放宽一档 ADX，新增空单质量急剧下降；`ADX < 35` 档位把 full maxDD 打到 -38%~-47%，与早期 V1B "HYPE 空头易被 squeeze" 的结论一致。空单少是该机制的生存方式，不是缺陷；候选 A 空头参数维持 `short_adx_min=36`、`short_vol_min=0.50`。若要增加空头敞口，方向是独立小仓位空头卫星（此前 early-short 研究 standalone 仅 +8.61%，也只值得影子观察）。证据：`research-notes/hype-ema-tb-v35-short-relaxation-scan-2026-07-08.md`；产物：`artifacts/hype_ema_tb_v35_short_recent_tune_2026-07-08.json`。
+每放宽一档 ADX，新增空单质量急剧下降；`ADX < 35` 档位把 full maxDD 打到 -38%~-47%，与早期 V1B "HYPE 空头易被 squeeze" 的结论一致。空单少是该机制的生存方式，不是缺陷；候选 A 空头参数维持 `short_adx_min=36`、`short_vol_min=0.50`。若要增加空头敞口，方向是独立小仓位空头卫星（此前 early-short 研究 standalone 仅 +8.61%，也只值得影子观察）。证据：`notes/hype-ema-tb-v35-short-relaxation-scan-2026-07-08.md`；产物：`artifacts/hype_ema_tb_v35_short_recent_tune_2026-07-08.json`。
 
 ### 2026-07-08 V39 只做多诊断
 
 按 V39 参数关闭空头（`allow_short=false`）后，full 收益从 `+9969.45%` 降到 `+3231.34%`，Sharpe 从 `4.81` 降到 `4.21`，maxDD 仍为 `-23.46%`；1y 从 `+11342.95%` 降到 `+3685.75%`。最近 90 天变化很小（`+217.53%` vs `+215.77%`），说明近期主要由多单贡献，但全样本长期复利明显依赖少量高质量空单。
 
-V39 full 共 107 笔，其中多单 83 笔、空单 24 笔；空单胜率 `79.17%`、均笔 `+5.59%`，高于多单均笔 `+4.81%`。结论：V39 空单确实少，但不是可删除噪音；只做多没有改善回撤，反而显著降低长期收益，不建议把 V39 改成 long-only。证据：`research-notes/hype-ema-tb-v39-long-only-diagnostic-2026-07-08.md`；产物：`artifacts/hype_ema_tb_v39_long_only_diagnostic_2026-07-08.json`。
+V39 full 共 107 笔，其中多单 83 笔、空单 24 笔；空单胜率 `79.17%`、均笔 `+5.59%`，高于多单均笔 `+4.81%`。结论：V39 空单确实少，但不是可删除噪音；只做多没有改善回撤，反而显著降低长期收益，不建议把 V39 改成 long-only。证据：`notes/hype-ema-tb-v39-long-only-diagnostic-2026-07-08.md`；产物：`artifacts/hype_ema_tb_v39_long_only_diagnostic_2026-07-08.json`。
 
 ### 2026-07-08 V39 空头专项结构微调
 
 针对"连续明显下跌也不开空"的观察，先做下跌区间归因，再做空头结构微调（多头侧冻结）。归因结论：全样本 96 个 24h 跌幅 <= -10% 的区间中，82% 被 `ADX28 >= 36` 门槛卡住（急跌段 ADX28 普遍只有 15~35），慢速 `EMA96/384 spread < 0` 过滤单独挡下的区间为 0。**"明显下跌不开空"的主因是 ADX 门槛，而两轮扫描均证明降 ADX 接这些区间会被 squeeze 打回（full maxDD -38%~-47%），属于机制的生存方式。**
 
-结构微调扫描 4 种空头趋势确认（快速 EMA24/96、-DI>+DI、组合、增量 or 路径）× ADX 32/34/36 × vol 0.35/0.50 共 24 变体：所有降 ADX 档位再次全灭；增量 or 路径在 adx36 下无增量；唯一改善是等严格度下把空头趋势过滤从 EMA96/384 换成 EMA24/96（`fast_adx36_v05`：full `+11581.22% / -23.46% / Sharpe 4.94`，90d `+268.57%`）。但逐笔对比显示它与 V39 空单集合仅差 2 笔，全部改善来自避开一笔 `-9.12%` 止损，证据太薄。结论：V39 空头参数维持不变；`fast_adx36_v05` 仅记录为空头结构观察候选，不登记版本、不替换 V39；若需要急跌段空头敞口，应独立立项小仓位恐慌空头卫星线。证据：`research-notes/hype-ema-tb-v39-short-structure-tune-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v39_short_structure_tune.py`；产物：`artifacts/hype_ema_tb_v39_short_structure_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v39_short_structure_final_2026-07-08.json`。
+结构微调扫描 4 种空头趋势确认（快速 EMA24/96、-DI>+DI、组合、增量 or 路径）× ADX 32/34/36 × vol 0.35/0.50 共 24 变体：所有降 ADX 档位再次全灭；增量 or 路径在 adx36 下无增量；唯一改善是等严格度下把空头趋势过滤从 EMA96/384 换成 EMA24/96（`fast_adx36_v05`：full `+11581.22% / -23.46% / Sharpe 4.94`，90d `+268.57%`）。但逐笔对比显示它与 V39 空单集合仅差 2 笔，全部改善来自避开一笔 `-9.12%` 止损，证据太薄。结论：V39 空头参数维持不变；`fast_adx36_v05` 仅记录为空头结构观察候选，不登记版本、不替换 V39；若需要急跌段空头敞口，应独立立项小仓位恐慌空头卫星线。证据：`notes/hype-ema-tb-v39-short-structure-tune-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v39_short_structure_tune.py`；产物：`artifacts/hype_ema_tb_v39_short_structure_tune_2026-07-08.json`、`artifacts/hype_ema_tb_v39_short_structure_final_2026-07-08.json`。
 
 ### 2026-07-08 V39 + V37 卫星叠加回测
 
@@ -405,7 +405,7 @@ V40 标准分片开单量（按 `entry_ts` 落入窗口统计；括号为主腿/
 | 1y | +13621.22% | -24.76% | 145 | 104 | 41 |
 | full | +12322.33% | -24.76% | 149 | 107 | 42 |
 
-V40 仍为观察候选，未 promotion、未 live-ready；上线前需补跨所迁移、walk-forward、主仓+卫星组合持仓/订单冲突、重启恢复和缺失数据处理审计。证据：`research-notes/hype-ema-tb-v39-v37-satellite-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v39_v37_satellite.py`；产物：`artifacts/hype_ema_tb_v39_v37_satellite_2026-07-08.json`、`artifacts/hype_ema_tb_v39_v37_satellite_trades_2026-07-08.csv`、`artifacts/hype_ema_tb_v39_v37_satellite_equity_2026-07-08.csv`。
+V40 仍为观察候选，未 promotion、未 live-ready；上线前需补跨所迁移、walk-forward、主仓+卫星组合持仓/订单冲突、重启恢复和缺失数据处理审计。证据：`notes/hype-ema-tb-v39-v37-satellite-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v39_v37_satellite.py`；产物：`artifacts/hype_ema_tb_v39_v37_satellite_2026-07-08.json`、`artifacts/hype_ema_tb_v39_v37_satellite_trades_2026-07-08.csv`、`artifacts/hype_ema_tb_v39_v37_satellite_equity_2026-07-08.csv`。
 
 ### 2026-07-08 V40 卫星有效性诊断
 
@@ -413,4 +413,4 @@ V40 仍为观察候选，未 promotion、未 live-ready；上线前需补跨所�
 
 但卫星稳定性一般：最近 1m standalone `-0.12%`，14 个自然月里 7 个正、5 个负、2 个无交易；2026-03 出现 5 笔全亏。对组合的边际贡献是长期正、短期不稳：full 相比 V39 增加 `+2352.88pp` 收益但 maxDD 加深 `1.30pp`，最近 1m 则收益 `+23.40% -> +23.17%`、maxDD `-20.11% -> -24.76%`。卫星 42 笔中 14 笔与 V39 主仓重叠（33.33%），重叠单均笔 `+1.66%`，非重叠均笔 `+0.14%`；它最有效的场景常是主仓随后也参与的上涨段，同时也意味着实盘必须审计组合持仓与订单冲突。
 
-结论：卫星有效，但只适合作为 V40 的小仓 overlay，不适合作为独立主策略；V40 仍保持观察候选，未 live-ready。证据：`research-notes/hype-ema-tb-v40-satellite-effectiveness-diagnostic-2026-07-08.md`；产物：`artifacts/hype_ema_tb_v40_satellite_effectiveness_diagnostic_2026-07-08.json`。
+结论：卫星有效，但只适合作为 V40 的小仓 overlay，不适合作为独立主策略；V40 仍保持观察候选，未 live-ready。证据：`notes/hype-ema-tb-v40-satellite-effectiveness-diagnostic-2026-07-08.md`；产物：`artifacts/hype_ema_tb_v40_satellite_effectiveness_diagnostic_2026-07-08.json`。

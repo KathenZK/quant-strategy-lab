@@ -23,7 +23,7 @@ import research_hype_1h_ar_v2_clean_tune as v2  # noqa: E402
 DATE_TAG = "2026-07-02"
 FAMILY_DIR = ROOT / "research/hype/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTE_DIR = FAMILY_DIR / "research-notes"
+NOTE_DIR = FAMILY_DIR / "notes"
 SUMMARY_JSON = ARTIFACT_DIR / f"hype_1h_ar_v2_window_backtest_{DATE_TAG}.json"
 RECENT_WINDOWS_CSV = ARTIFACT_DIR / f"hype_1h_ar_v2_recent_windows_{DATE_TAG}.csv"
 ROLLING_WINDOWS_CSV = ARTIFACT_DIR / f"hype_1h_ar_v2_rolling_windows_{DATE_TAG}.csv"

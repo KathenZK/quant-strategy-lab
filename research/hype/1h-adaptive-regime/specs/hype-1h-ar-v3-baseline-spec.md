@@ -112,6 +112,6 @@ uv run python research/hype/1h-adaptive-regime/scripts/research_hype_1h_ar_v3_fu
 
 关键证据：
 
-- `research-notes/hype-1h-ar-v2-ablation-combo-retest-2026-07-06.md`
+- `notes/hype-1h-ar-v2-ablation-combo-retest-2026-07-06.md`
 - `ablations/hype-1h-ar-v3-full-parameter-ablation-2026-07-06.md`
 - `artifacts/hype_1h_ar_v3_full_ablation_2026-07-06.json`

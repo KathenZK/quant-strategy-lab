@@ -20,6 +20,6 @@
 - 决策记录：`decision-log.md`
 - V3 参数规格：`specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`
 - 实盘可行性 not-promoted 证据：`live-specs/trx-1h-ar-live-feasibility-2026-07-03.md`
-- 本轮总报告：`research-notes/trx-1h-ar-search-conclusion-2026-07-03.md`
+- 本轮总报告：`notes/trx-1h-ar-search-conclusion-2026-07-03.md`
 
 脚本在 `scripts/`（fetch / search / refine / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

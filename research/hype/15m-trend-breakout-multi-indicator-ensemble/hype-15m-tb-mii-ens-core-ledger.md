@@ -39,7 +39,7 @@ Created：2026-07-07
 
 ## 证据入口
 
-- 首次组合回测：`research-notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md`
+- 首次组合回测：`notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md`
 - 复现脚本：`scripts/research_hype_15m_tb_mii_ensemble_backtest.py`
 - 保留产物：`artifacts/hype_15m_tb_mii_ensemble_backtest_2026-07-07.json` 及配套 equity/trades CSV
 - Decision log：`decision-log.md`

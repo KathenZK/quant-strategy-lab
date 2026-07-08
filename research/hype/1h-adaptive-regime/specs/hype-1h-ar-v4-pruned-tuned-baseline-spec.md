@@ -120,6 +120,6 @@ uv run python research/hype/1h-adaptive-regime/scripts/research_hype_1h_ar_v3_pr
 
 关键证据：
 
-- `research-notes/hype-1h-ar-v3-prune-and-tune-2026-07-07.md`
+- `notes/hype-1h-ar-v3-prune-and-tune-2026-07-07.md`
 - `artifacts/hype_1h_ar_v3_prune_and_tune_2026-07-07.json`
 - `artifacts/hype_1h_ar_v3_prune_and_tune_combos_2026-07-07.csv`

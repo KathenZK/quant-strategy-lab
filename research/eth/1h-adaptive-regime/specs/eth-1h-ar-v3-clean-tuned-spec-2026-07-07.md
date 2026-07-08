@@ -108,7 +108,7 @@ V2.1 全参数消融判定以下字段为 `merged_path_inert_remove`，在 V3 cl
 ## 证据
 
 - V2.1 全参数消融：`../ablations/eth-1h-ar-v2-1-full-parameter-ablation-2026-07-07.md`。
-- V3 clean 微调报告：`../research-notes/eth-1h-ar-v2-1-clean-tune-2026-07-07.md`。
+- V3 clean 微调报告：`../notes/eth-1h-ar-v2-1-clean-tune-2026-07-07.md`。
 - 交易明细：`../artifacts/eth_1h_ar_v2_1_clean_tune_trades_2026-07-07.csv`。
 
 ## 登记结论

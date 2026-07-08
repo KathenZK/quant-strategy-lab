@@ -37,7 +37,7 @@ from research_hype_5m_micro_scalp_v1_full_ablation import baseline_config
 
 RUN_ID = "2026-06-30"
 FAMILY_ROOT = Path("research/hype/5m-micro-scalp")
-RESEARCH_NOTE_ROOT = FAMILY_ROOT / "research-notes"
+RESEARCH_NOTE_ROOT = FAMILY_ROOT / "notes"
 SUMMARY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_combo_summary_{RUN_ID}.csv"
 MONTHLY_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_combo_monthly_{RUN_ID}.csv"
 TRADES_PATH = ARTIFACT_ROOT / f"hype_5m_micro_scalp_v1_simplified_combo_top_trades_{RUN_ID}.csv"

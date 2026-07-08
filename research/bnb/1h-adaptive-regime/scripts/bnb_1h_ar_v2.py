@@ -23,7 +23,7 @@ import pandas as pd
 ROOT = Path(__file__).resolve().parents[4]
 FAMILY_DIR = ROOT / "research/bnb/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
-NOTES_DIR = FAMILY_DIR / "research-notes"
+NOTES_DIR = FAMILY_DIR / "notes"
 BASE_SCRIPT = FAMILY_DIR / "scripts/research_bnb_1h_adaptive_regime_search.py"
 FREEZE_JSON = (
     ARTIFACT_DIR / "bnb_1h_ar_cap3_highwin_frozen_primary_2026-07-06-cap3-highwin.json"
