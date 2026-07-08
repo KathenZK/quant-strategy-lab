@@ -1,6 +1,6 @@
 # Quant Strategy Lab
 
-本仓库定位为"数据优先"的量化研究档案，而不是通用策略平台。研究对象是**线上可实盘执行的策略**：任何策略在进入 promotion 状态（`live spec`、`dry-run`、`live`）前，都必须先证明它能被真实订单时序复现。本仓库不定义额外的模拟盘阶段；模拟盘/仿真运行统一称为 `dry-run`，真实小额下单归入 `live` 并注明 notional 与风险上限。回测依赖无法真实成交的假设时，它不是"高收益候选"，而是失败诊断——这是本项目从趋势策略和 `HYPE-5M-Pullback-Trail` V2.1A/V3.3/V4 锁仓止损审计中反复付出代价换来的硬门槛（细则见 `.cursor/rules/live-executable-strategy-research.mdc`）。
+本仓库定位为"数据优先"的量化研究档案，而不是通用策略平台。研究对象是**线上可实盘执行的策略**：任何策略在进入 promotion 状态（`live spec`、`dry-run`、`live`）前，都必须先证明它能被真实订单时序复现。本仓库不定义额外的模拟盘阶段；模拟盘/仿真运行统一称为 `dry-run`，真实下单归入 `live`，资金边界由子账户资金、runner 配置或上线 decision log 管理。回测依赖无法真实成交的假设时，它不是"高收益候选"，而是失败诊断——这是本项目从趋势策略和 `HYPE-5M-Pullback-Trail` V2.1A/V3.3/V4 锁仓止损审计中反复付出代价换来的硬门槛（细则见 `.cursor/rules/live-executable-strategy-research.mdc`）。
 
 策略通过研究审计后，在同级仓库 `/Users/ZK/OpenCode/quant-runner` 中实现并进行 dry-run 或小额实盘；交接契约见 `.cursor/rules/lab-runner-handoff.mdc`。
 

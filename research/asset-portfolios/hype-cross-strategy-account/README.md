@@ -1,15 +1,15 @@
 # HYPE Cross-Strategy Account
 
-本目录记录 HYPE 多策略共享子账户、全局仓位约束、跨策略优先级和账户级风控相关的组合诊断。
+本目录记录 HYPE 单资产多策略共享子账户、全局仓位约束、跨策略优先级和账户级风控相关的组合诊断。它放在 `asset-portfolios/` 下，因为研究对象是账户/portfolio layer，而不是新的 HYPE alpha family。
 
 它不是一个新的 alpha family，也不改变各策略原本的 promotion 状态。被组合的策略仍必须回到各自 family 文档判断：
 
-- `HYPE-5M-Pullback-Trail`：`../5m-pullback-trail/README.md`
-- `HYPE-15M-Multi-Indicator-Intraday`：`../15m-multi-indicator-intraday/README.md`
+- `HYPE-5M-Pullback-Trail`：[README.md](../../hype/5m-pullback-trail/README.md)
+- `HYPE-15M-Multi-Indicator-Intraday`：[README.md](../../hype/15m-multi-indicator-intraday/README.md)
 
 ## 当前诊断
 
-- `diagnostics/hype-pbtr-v6-2-1-mii-v1-3-shared-account-2026-07-02.md`：`HYPE-5M-PBTR-V6.2.1` 与 `HYPE-15M-MII-V1.3` 在同一 HYPEUSDT 子账户、全局单仓约束下的组合回放。
+- [hype-pbtr-v6-2-1-mii-v1-3-shared-account-2026-07-02.md](diagnostics/hype-pbtr-v6-2-1-mii-v1-3-shared-account-2026-07-02.md)：`HYPE-5M-PBTR-V6.2.1` 与 `HYPE-15M-MII-V1.3` 在同一 HYPEUSDT 子账户、全局单仓约束下的组合回放。
 
 ## 结论口径
 

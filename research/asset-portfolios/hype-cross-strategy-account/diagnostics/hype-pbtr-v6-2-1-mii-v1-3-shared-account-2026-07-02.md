@@ -79,9 +79,9 @@
 
 ## 产物
 
-- 脚本：`research/hype/cross-strategy-account/scripts/research_hype_pbtr_v621_mii_v13_shared_account.py`
-- 汇总 CSV：`research/hype/cross-strategy-account/artifacts/hype_pbtr_v621_mii_v13_shared_account_summary_2026-07-02.csv`
-- 来源拆分 CSV：`research/hype/cross-strategy-account/artifacts/hype_pbtr_v621_mii_v13_shared_account_sources_2026-07-02.csv`
-- 阻塞矩阵 CSV：`research/hype/cross-strategy-account/artifacts/hype_pbtr_v621_mii_v13_shared_account_blocks_2026-07-02.csv`
-- 成交明细 CSV：`research/hype/cross-strategy-account/artifacts/hype_pbtr_v621_mii_v13_shared_account_trades_2026-07-02.csv`
-- JSON：`research/hype/cross-strategy-account/artifacts/hype_pbtr_v621_mii_v13_shared_account_2026-07-02.json`
+- 脚本：[research_hype_pbtr_v621_mii_v13_shared_account.py](../scripts/research_hype_pbtr_v621_mii_v13_shared_account.py)
+- 汇总 CSV：[hype_pbtr_v621_mii_v13_shared_account_summary_2026-07-02.csv](../artifacts/hype_pbtr_v621_mii_v13_shared_account_summary_2026-07-02.csv)
+- 来源拆分 CSV：[hype_pbtr_v621_mii_v13_shared_account_sources_2026-07-02.csv](../artifacts/hype_pbtr_v621_mii_v13_shared_account_sources_2026-07-02.csv)
+- 阻塞矩阵 CSV：[hype_pbtr_v621_mii_v13_shared_account_blocks_2026-07-02.csv](../artifacts/hype_pbtr_v621_mii_v13_shared_account_blocks_2026-07-02.csv)
+- 成交明细 CSV：[hype_pbtr_v621_mii_v13_shared_account_trades_2026-07-02.csv](../artifacts/hype_pbtr_v621_mii_v13_shared_account_trades_2026-07-02.csv)
+- JSON：[hype_pbtr_v621_mii_v13_shared_account_2026-07-02.json](../artifacts/hype_pbtr_v621_mii_v13_shared_account_2026-07-02.json)

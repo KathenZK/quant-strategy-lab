@@ -35,14 +35,13 @@
 | `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | [hype/15m-multi-indicator-intraday/](hype/15m-multi-indicator-intraday/README.md) | `15m` 多指标日内广搜 | V1.3 dry-run / forward-test required |
 | `HYPE-15M-Riptide` | - | [hype/15m-riptide/](hype/15m-riptide/README.md) | `15m` EMA 趋势背景 RSI 回踩 + RV regime | explore / not promoted（复现对账未完成） |
 | `HYPE-30M-Keltner-Trend-Breakout` | `K2-FQ-V2-ATRVT-OFF` | [hype/30m-keltner-trend-breakout/](hype/30m-keltner-trend-breakout/README.md) | `30m` Keltner 突破 + `1h` EMA regime + ATRVT 动态杠杆 | explore / not promoted / not live-ready |
-| `HYPE-15M-Pullback-Trail` | - | [hype/15m-pullback-trail/](hype/15m-pullback-trail/README.md) | `15m` 回踩事件源 + bracket 搜索 | V3.3 迁移 not promoted；bracket audit only |
+| `HYPE-15M-Pullback-Trail` | - | [hype/15m-pullback-trail/](hype/15m-pullback-trail/README.md) | `15m` 回踩事件源 + bracket 搜索 | explore / not promoted / not live-ready |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | [hype/5m-pullback-trail/](hype/5m-pullback-trail/README.md) | `5m` 回踩/恢复入场 + ATR trailing stop | V6.2.1 dry-run / forward-test required |
-| `HYPE-5M-MA-Pullback-Scalp` | - | [hype/5m-ma-pullback-scalp/](hype/5m-ma-pullback-scalp/README.md) | `5m` 双 MA 回踩 scalp | audit / not promoted / not live-ready |
-| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | [hype/5m-micro-scalp/](hype/5m-micro-scalp/README.md) | `5m` 高频小利 scalp 搜索 | V1-V1.3 audit / not promoted / not live-ready |
+| `HYPE-5M-MA-Pullback-Scalp` | - | [hype/5m-ma-pullback-scalp/](hype/5m-ma-pullback-scalp/README.md) | `5m` 双 MA 回踩 scalp | explore / not promoted / not live-ready |
+| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | [hype/5m-micro-scalp/](hype/5m-micro-scalp/README.md) | `5m` 高频小利 scalp 搜索 | V1-V1.3 registered / not promoted / not live-ready |
 | `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | [hype/5m-event-quality-scoring/](hype/5m-event-quality-scoring/README.md) | `5m` 事件质量打分 | V1 registered / not promoted（strict seed audit 未通过） |
 | `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | [hype/15m-trend-breakout-multi-indicator-ensemble/](hype/15m-trend-breakout-multi-indicator-ensemble/README.md) | `EMA-TB-V35` + `MII-V1.3` 组合研究 | explore / not promoted / not live-ready |
 | `HYPE-6H-RS4-Regime-Switch` | - | [hype/6h-rs4-regime-switch/](hype/6h-rs4-regime-switch/README.md) | `6h` regime-switch 趋势（压缩动量腿 + 扩张突破腿）复现 | V1 registered / not promoted / not live-ready |
-| （研究主题，非策略家族）HYPE cross-strategy account | - | [hype/cross-strategy-account/](hype/cross-strategy-account/README.md) | 多策略共享子账户 / 全局单仓组合诊断 | explore；不提升任何子策略状态 |
 
 ## 单资产研究（非 HYPE）
 
@@ -66,6 +65,7 @@
 | `Binance-1D-Turtle-Breakout` | [asset-portfolios/1d-turtle-breakout/](asset-portfolios/1d-turtle-breakout/README.md) | explore |
 | `Binance-15M-Multi-Indicator-Intraday-Transfer` | [asset-portfolios/15m-multi-indicator-intraday/](asset-portfolios/15m-multi-indicator-intraday/README.md) | explore / not promoted |
 | `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`） | [asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/](asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/README.md) | V1 registered / not promoted / not live-ready |
+| `HYPE-Cross-Strategy-Account` | [asset-portfolios/hype-cross-strategy-account/](asset-portfolios/hype-cross-strategy-account/README.md) | explore；HYPE 单资产多策略子账户诊断，不提升子策略状态 |
 | `MU-HYPE-Transfer`（`MU-HYPE-XFER`） | [mu/](mu/README.md)（扁平结构，grandfathered） | explore |
 
 旧 HYPE cross-asset transfer 材料位于 `../archive/research/hype-transfer/`。

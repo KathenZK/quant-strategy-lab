@@ -36,7 +36,7 @@ GRANDFATHERED_NO_CORE_LEDGER = {
   "hype/1m-ma-pullback-scalp",
   "hype/5m-ma-pullback-scalp",
   # 诊断主题目录，非策略家族。
-  "hype/cross-strategy-account",
+  "asset-portfolios/hype-cross-strategy-account",
 }
 
 
@@ -223,8 +223,15 @@ _ALLOWED_MAIN_STATUS = (
   "NO-GO",
   "archived",
 )
-# 已废弃/禁止的状态词（见 glossary：candidate 已废弃，paper-live 无此阶段）。
-_FORBIDDEN_STATUS_TOKENS = ("candidate", "paper-live", "sim-paper", "blocked")
+# 已废弃/禁止的状态词（见 glossary：paper-live 无此阶段，candidate 只能作研究角色词）。
+_FORBIDDEN_STATUS_TOKENS = ("paper-live", "sim-paper", "blocked")
+_FORBIDDEN_STATUS_PHRASES = (
+  "audit / not promoted",
+  "audit only",
+  "live candidate",
+  "dry-run candidate",
+  "promotion candidate",
+)
 
 
 def _iter_status_cells(md: Path):
@@ -255,6 +262,9 @@ def test_routing_table_status_labels_use_glossary_vocabulary() -> None:
       hit_forbidden = [t for t in _FORBIDDEN_STATUS_TOKENS if t in lowered]
       if hit_forbidden:
         problems.append(f"{rel}:L{lineno}: 状态含已废弃词 {hit_forbidden}: {cell}")
+      hit_phrases = [p for p in _FORBIDDEN_STATUS_PHRASES if p in lowered]
+      if hit_phrases:
+        problems.append(f"{rel}:L{lineno}: audit gate 失败后应回到 registered/explore: {hit_phrases}: {cell}")
       # "live-ready" 属于修饰词后缀，不算主状态 `live` 命中。
       cleaned = re.sub(r"live-ready", "", lowered)
       if not any(

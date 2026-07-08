@@ -4,7 +4,7 @@
 
 Family id：`HYPE-5M-PBTR`
 
-状态：`dry-run / tiny-notional live audit candidate`。本文档用于同事或另一个 AI 完整复现策略、跑 paper/live-dry-run、核对订单行为；不是生产 sizing 批准。
+状态：`dry-run / forward-test required`。本文档用于同事或另一个 AI 完整复现策略、跑 dry-run、核对订单行为；不是生产 sizing 批准。
 
 创建时间：2026-06-30
 

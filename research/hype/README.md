@@ -29,16 +29,16 @@ HYPE 有多个互不相关但复用版本号的策略家族。不要按裸版本
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | [1m-ema-crossover/](1m-ema-crossover/README.md) | [1m-ema-crossover/README.md](1m-ema-crossover/README.md) | `1m` EMA cross，next-bar 入场、固定/trailing TP | 不是 `15m-ema-crossover` 的子文档 | explore / not promoted / not live-ready |
 | `HYPE-1M-MA-Pullback-Scalp` | - | [1m-ma-pullback-scalp/](1m-ma-pullback-scalp/README.md) | [1m-ma-pullback-scalp/README.md](1m-ma-pullback-scalp/README.md) | `1m` 双 MA 回踩 + HH/HL 结构 + 固定 bracket | 不是 `HYPE-1M-EMA-Crossover` 的版本 | explore / not promoted / not live-ready |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | [5m-pullback-trail/](5m-pullback-trail/README.md) | [hype-5m-pullback-trail-core-ledger.md](5m-pullback-trail/hype-5m-pullback-trail-core-ledger.md) | `5m` 回踩/恢复入场 + ATR trailing stop | 本地 `V1/V2` 不是 15m `EMA-TB` 的 V1/V2 | V6.2.1 dry-run / forward-test required |
-| `HYPE-15M-Pullback-Trail` | - | [15m-pullback-trail/](15m-pullback-trail/README.md) | [15m-pullback-trail/README.md](15m-pullback-trail/README.md) | `15m` 回踩事件源 + V3.3 迁移 + bracket 搜索 | 不是 `HYPE-5M-Pullback-Trail` 的 promoted 版本 | V3.3 迁移 not promoted；bracket audit only |
-| `HYPE-5M-MA-Pullback-Scalp` | - | [5m-ma-pullback-scalp/](5m-ma-pullback-scalp/README.md) | [5m-ma-pullback-scalp/README.md](5m-ma-pullback-scalp/README.md) | `5m` 双 MA 回踩 scalp + 固定 bracket | 不是 `HYPE-5M-Micro-Scalp` 的版本 | audit / not promoted / not live-ready |
-| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | [5m-micro-scalp/](5m-micro-scalp/README.md) | [hype-5m-micro-scalp-core-ledger.md](5m-micro-scalp/hype-5m-micro-scalp-core-ledger.md) | `5m` 高频小利 scalp 搜索 + 立即 TP/SL bracket | 高胜率失败行不得当作 pullback-trail 或 live 输入 | V1-V1.3 audit / not promoted / not live-ready |
+| `HYPE-15M-Pullback-Trail` | - | [15m-pullback-trail/](15m-pullback-trail/README.md) | [15m-pullback-trail/README.md](15m-pullback-trail/README.md) | `15m` 回踩事件源 + V3.3 迁移 + bracket 搜索 | 不是 `HYPE-5M-Pullback-Trail` 的 promoted 版本 | explore / not promoted / not live-ready |
+| `HYPE-5M-MA-Pullback-Scalp` | - | [5m-ma-pullback-scalp/](5m-ma-pullback-scalp/README.md) | [5m-ma-pullback-scalp/README.md](5m-ma-pullback-scalp/README.md) | `5m` 双 MA 回踩 scalp + 固定 bracket | 不是 `HYPE-5M-Micro-Scalp` 的版本 | explore / not promoted / not live-ready |
+| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | [5m-micro-scalp/](5m-micro-scalp/README.md) | [hype-5m-micro-scalp-core-ledger.md](5m-micro-scalp/hype-5m-micro-scalp-core-ledger.md) | `5m` 高频小利 scalp 搜索 + 立即 TP/SL bracket | 高胜率失败行不得当作 pullback-trail 或 live 输入 | V1-V1.3 registered / not promoted / not live-ready |
 | `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | [5m-event-quality-scoring/](5m-event-quality-scoring/README.md) | [hype-5m-event-quality-scoring-core-ledger.md](5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md) | `5m` 事件质量打分（候选事件 + seeded 信号） | seeded audit 行不是 micro-scalp 或 live 输入 | V1 registered / not promoted（strict seed audit 未通过） |
 | `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | [15m-trend-breakout-multi-indicator-ensemble/](15m-trend-breakout-multi-indicator-ensemble/README.md) | [hype-15m-tb-mii-ens-core-ledger.md](15m-trend-breakout-multi-indicator-ensemble/hype-15m-tb-mii-ens-core-ledger.md) | `EMA-TB-V35` + `MII-V1.3` 组合（双子账户 / 单账户仲裁） | 不重定义任一 parent 版本 | explore / not promoted / not live-ready |
 | `HYPE-6H-RS4-Regime-Switch` | - | [6h-rs4-regime-switch/](6h-rs4-regime-switch/README.md) | [hype-6h-rs4-regime-switch-core-ledger.md](6h-rs4-regime-switch/hype-6h-rs4-regime-switch-core-ledger.md) | `6h` regime-switch：v10 压缩动量腿 + melt 扩张突破腿 | 同事外部规格复现线，与其他 HYPE 家族无版本关系 | V1 registered / not promoted / not live-ready |
 
-## 诊断主题（非策略家族）
+## 组合与账户层诊断
 
-- [cross-strategy-account/README.md](cross-strategy-account/README.md)：HYPE 多策略共享子账户 / 全局单仓组合诊断入口。当前含 `HYPE-5M-PBTR-V6.2.1` + `HYPE-15M-MII-V1.3` 共享子账户回放；结论与风险数字见该目录文档，不提升任何子策略状态。
+- [../asset-portfolios/hype-cross-strategy-account/README.md](../asset-portfolios/hype-cross-strategy-account/README.md)：HYPE 多策略共享子账户 / 全局单仓组合诊断入口。当前含 `HYPE-5M-PBTR-V6.2.1` + `HYPE-15M-MII-V1.3` 共享子账户回放；结论与风险数字见该目录文档，不提升任何子策略状态。
 
 ## Hard Rules
 

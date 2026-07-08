@@ -39,7 +39,7 @@ mii_v12 = load_module(
 
 
 RUN_DATE = "2026-07-02"
-TOPIC_DIR = Path("research/hype/cross-strategy-account")
+TOPIC_DIR = Path("research/asset-portfolios/hype-cross-strategy-account")
 SCRIPT_PATH = TOPIC_DIR / "scripts" / Path(__file__).name
 ARTIFACTS_DIR = TOPIC_DIR / "artifacts"
 DIAGNOSTICS_DIR = TOPIC_DIR / "diagnostics"

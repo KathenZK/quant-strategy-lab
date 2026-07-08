@@ -3,7 +3,7 @@
 - Full family name：`HYPE-5M-Micro-Scalp`（历史别名：`HYPE-5M-MS`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `5m`
 - 机制：高频高胜率小单笔利润 scalp 搜索；closed-bar 信号、next-open 入场、入场即固定 TP/SL bracket、同 K 冲突 stop-first。
-- 当前状态：原始 `3-5` 笔/天形态 `not promoted / not live-ready`；放宽频率后 V1-V1.3 已登记，均为 `audit / not promoted / not live-ready`。
+- 当前状态：原始 `3-5` 笔/天形态 `not promoted / not live-ready`；放宽频率后 V1-V1.3 已登记，均为 `registered / not promoted / not live-ready`。
 
 ## 边界
 

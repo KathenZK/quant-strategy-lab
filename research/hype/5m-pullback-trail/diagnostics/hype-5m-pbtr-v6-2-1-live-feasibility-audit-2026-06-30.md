@@ -61,7 +61,7 @@ baseline 采用当前研究口径：入场 bar 起 TP/SL 已经存在；同一�
 
 ## 实盘结论
 
-状态维持为 `dry-run / tiny-notional live audit candidate`，不升级为 production sizing。上线前必须至少记录 `30-50` 笔：信号生成时间、入场订单回报、TP/SL 下单时间与 order id、单边成交后的撤单、timeout 市价单、重启恢复、实际滑点和 SQLite 复盘口径。若真实 runner 出现 bracket 下单延迟、撤单失败或 timeout 偏差，应按 `bracket_delay_1bar` 甚至更保守口径重新评估。
+状态维持为 `dry-run / forward-test required`，不升级为 production sizing。上线前必须至少记录 `30-50` 笔：信号生成时间、入场订单回报、TP/SL 下单时间与 order id、单边成交后的撤单、timeout 市价单、重启恢复、实际滑点和 SQLite 复盘口径。若真实 runner 出现 bracket 下单延迟、撤单失败或 timeout 偏差，应按 `bracket_delay_1bar` 甚至更保守口径重新评估。
 
 ## 产物
 
