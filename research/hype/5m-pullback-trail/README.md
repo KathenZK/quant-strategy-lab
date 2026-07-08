@@ -3,7 +3,7 @@
 - Full family name：`HYPE-5M-Pullback-Trail`（历史别名：`HYPE-5M-PBTR`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `5m`
 - 机制：回踩/恢复入场 + ATR trailing-stop / 固定 bracket 出场；V5 起强制 executable-first（闭合 K 信号、下一根 open 入场、入场即挂 bracket）。
-- 当前状态：`HYPE-5M-PBTR-V6.2.1` 为 `dry-run`（quant-runner 模拟盘运行中）；早期 V1-V4 因 stale stop fill / 锁仓止损问题判为不可实盘。
+- 当前状态：`HYPE-5M-PBTR-V6.2.1` 为 `dry-run / forward-test required`（quant-runner 模拟盘运行中，forward 报告见 `forward-tracking/`）；早期 V1-V4 因 stale stop fill / 锁仓止损问题 `not promoted / not live-ready`。
 
 ## 边界
 

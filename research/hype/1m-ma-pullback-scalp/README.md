@@ -3,7 +3,7 @@
 - Full family name：`HYPE-1M-MA-Pullback-Scalp`（无历史别名）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `1m`
 - 机制：双均线回踩 scalp——慢线定趋势、快线定回调波，HH/HL 或 LL/LH 结构确认，闭合 K 触发、下一根 open 入场、固定 TP/SL + 最长持仓超时。
-- 当前状态：`not promoted / not live-ready`。首轮可执行搜索 `6,740` 组配置在该执行/成本模型下 `0` 个通过 paper gate；`>=60` 笔样本无盈利配置。
+- 当前状态：`explore / not promoted / not live-ready`。首轮可执行搜索 `6,740` 组配置在该执行/成本模型下 `0` 个通过 paper gate；`>=60` 笔样本无盈利配置。
 
 ## 边界
 

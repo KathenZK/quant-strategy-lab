@@ -6,8 +6,8 @@
 
 数据源：Binance HYPEUSDT perp 15m；normalized OHLCV data lake；V15/V16/V17/V17.1 使用最新 365-day HYPE-EMA-X research slice。
 
-> **当前主候选：HYPE-EMA-X-V17 / V17.1 / V18**
-> V17 是信号层平衡版：1Y +2910.74%，最大回撤 -17.79%。V17.1 信号不变，HQ 仓位 1.1：1Y +3861.48%，最大回撤 -19.44%。**V18** 是 V17.1 经全参数消融后的干净参数规格，成交逻辑与指标与 V17.1 相同。
+> **当前状态：HYPE-EMA-X-V18 dry-run / forward-test required**
+> V17 是信号层平衡版：1Y +2910.74%，最大回撤 -17.79%。V17.1 信号不变，HQ 仓位 1.1：1Y +3861.48%，最大回撤 -19.44%。**V18** 是 V17.1 经全参数消融后的干净参数规格，成交逻辑与指标与 V17.1 相同；当前已在 quant-runner 以 `hype_ema_x` dry-run 配置运行。forward 报告见 [forward-tracking/README.md](forward-tracking/README.md)；首份 forward 报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
 
 ## 关键指标
 
@@ -31,7 +31,7 @@
 | HYPE-EMA-X-V16 | 高收益版 | V17_atr18_base_age384_pnlm03_either2_stop8 | +3202.92% | 33.03x | -28.19% | 86.84% | 38 | 10 | 进攻收益版；收益更高，但回撤回到 28% 左右 |
 | HYPE-EMA-X-V17 | V15/V16 合体平衡版 | HYBRID_score5_dist04_atr11 / HYPE_EMA_X_V17 | +2910.74% | 30.11x | -17.79% | 90.91% | 33 | 7 | 当前平衡主候选；收益接近 V16，回撤保持 V15 水平，消融后仍保留官方仓位 1.0 |
 | HYPE-EMA-X-V17.1 | V17 仓位增强版 | HYPE_EMA_X_V17__hq_scale=1p1 | +3861.48% | 39.61x | -19.44% | 90.91% | 33 | 7 | 收益最高且仍低于 20% 回撤；HQ×1.1 sizing 版本 |
-| HYPE-EMA-X-V18 | V17.1 干净参数规格 | V17_1_pruned_spec | +3861.48% | 39.61x | -19.44% | 90.91% | 33 | 7 | 逻辑同 V17.1；146 项消融后剔除 noop/关闭模块；供 live spec / handoff |
+| HYPE-EMA-X-V18 | V17.1 干净参数规格 / dry-run | V17_1_pruned_spec | +3861.48% | 39.61x | -19.44% | 90.91% | 33 | 7 | 逻辑同 V17.1；146 项消融后剔除 noop/关闭模块；当前 quant-runner dry-run / forward-test required |
 
 ## 版本演化
 
@@ -421,8 +421,8 @@
 | V12.6 age128 + move48 + ADX18 | +432.32% | -20.39% | 3.30 | 27 | 回撤最低，但收益牺牲过大，可作极端稳健参考 |
 | V13 age128 + dist08 | +1573.15% | -20.39% | 4.29 | 27 | 在 age128 上增加 EMA96 距离过滤，收益接近高收益分支，回撤降到最低档 |
 | V14 late re-entry | +2191.92% | -24.66% | 4.30 | 33 | 保留 V13 首入场过滤，只补同一 regime 盈利后的 late re-entry，收益显著增强 |
-| V15 atr18_trend7 | +2303.65% | -17.79% | - | 31 | 高胜率/低回撤 promoted candidate；trend_score >= 7 后回撤压进 20% |
-| V16 atr18 | +3202.92% | -28.19% | - | 38 | 高收益 promoted candidate；只挡 ATR 过热，放宽趋势质量过滤 |
+| V15 atr18_trend7 | +2303.65% | -17.79% | - | 31 | 高胜率/低回撤 registered version；trend_score >= 7 后回撤压进 20% |
+| V16 atr18 | +3202.92% | -28.19% | - | 38 | 高收益 registered version；只挡 ATR 过热，放宽趋势质量过滤 |
 | V17 hybrid | +2910.74% | -17.79% | 4.79 | 33 | V15 高质量主信号 + 少量 V16 卫星信号；收益接近 V16，回撤保持 V15 |
 | V17.1 hq_scale=1.1 | +3861.48% | -19.44% | 4.77 | 33 | V17 信号不变，只放大 HQ 主信号仓位；收益最高但贴近 20% 风险边界 |
 

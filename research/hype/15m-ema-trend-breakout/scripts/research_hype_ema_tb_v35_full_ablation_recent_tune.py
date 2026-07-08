@@ -130,6 +130,23 @@ def window_stats(run: base.RunResult, days: int | None) -> dict[str, Any]:
     }
 
 
+def side_stats(run: base.RunResult, direction: int) -> dict[str, Any]:
+    trades = run.trades
+    if trades.empty:
+        return {"trades": 0, "wins": 0, "win_rate_pct": None, "sum_trade_return_pct": 0.0, "avg_trade_return_pct": None}
+    sub = trades.loc[trades["direction"] == direction]
+    count = int(len(sub))
+    wins = int((sub["trade_return"] > 0).sum())
+    return {
+        "trades": count,
+        "wins": wins,
+        "win_rate_pct": round(wins / count * 100.0, 2) if count else None,
+        "sum_trade_return_pct": round(float(sub["trade_return"].sum()) * 100.0, 2),
+        "avg_trade_return_pct": round(float(sub["trade_return"].mean()) * 100.0, 2) if count else None,
+        "exit_counts": {str(k): int(v) for k, v in sub["exit_reason"].value_counts().items()},
+    }
+
+
 def summarize(spec: ExpSpec, run: base.RunResult) -> dict[str, Any]:
     return {
         "name": spec.name,
@@ -141,6 +158,8 @@ def summarize(spec: ExpSpec, run: base.RunResult) -> dict[str, Any]:
         "sharpe": run.metrics["sharpe"],
         "d90": window_stats(run, 90),
         "d30": window_stats(run, 30),
+        "short_side": side_stats(run, -1),
+        "long_side": side_stats(run, 1),
     }
 
 
@@ -280,6 +299,46 @@ def tune_specs(cfg: base.V35Config) -> list[ExpSpec]:
     return specs
 
 
+def short_specs(cfg: base.V35Config) -> list[ExpSpec]:
+    """空头专项微调：在候选 A（v35_tuned_mild，保留 timeout）基线上放宽空头入场。
+
+    V35 空头入场：ema_spread<0、ADX28>=36、volume_surge>=0.50（1h EMA 确认已证明冗余，基线移除）。
+    扫描 short_adx_min × short_vol_min 组合，观察空单数量、胜率和组合影响。
+    """
+    mild = replace(cfg, long_vol_min=0.35, short_target_atr_pct=0.022)
+    flags = SignalFlags(short_use_h1_ema=False)
+    specs = [
+        ExpSpec("v35_base", cfg, group="base"),
+        ExpSpec("v35_tuned_mild", mild, flags, group="base", note="候选 A 基线"),
+    ]
+    for adx in [32.0, 33.0, 34.0, 35.0, 36.0]:
+        for vol in [-10.0, 0.25, 0.35, 0.50]:
+            if adx == 36.0 and vol == 0.50:
+                continue  # 即候选 A 本身
+            vol_tag = "off" if vol < 0 else str(vol).replace(".", "")
+            specs.append(
+                ExpSpec(
+                    f"s_adx{int(adx)}_v{vol_tag}",
+                    replace(mild, short_adx_min=adx, short_vol_min=vol),
+                    flags,
+                    group="short",
+                )
+            )
+    return specs
+
+
+def print_short_row(row: dict[str, Any]) -> None:
+    short = row["short_side"]
+    full = row["full"]
+    d90 = row["d90"]
+    print(
+        f"{row['name']:>20} | full {full['return_pct']:>9.2f}% dd {full['max_drawdown_pct']:>7.2f}% sh {row['sharpe']:>5.2f} "
+        f"| 90d {d90['return_pct']:>8.2f}% dd {d90['max_drawdown_pct']:>7.2f}% "
+        f"| shorts n {short['trades']:>3} win {short['win_rate_pct'] or 0:>6.2f}% "
+        f"sum {short['sum_trade_return_pct']:>8.2f}% avg {short['avg_trade_return_pct'] or 0:>6.2f}%"
+    )
+
+
 def final_specs(cfg: base.V35Config) -> list[ExpSpec]:
     """最终候选对照：base、温和微调版、最近 90 天优化版。"""
     return [
@@ -333,7 +392,7 @@ def rank_tune(rows: list[dict[str, Any]]) -> list[dict[str, Any]]:
 
 def main() -> None:
     parser = ArgumentParser()
-    parser.add_argument("--stage", choices=["ablation", "tune", "final"], default="ablation")
+    parser.add_argument("--stage", choices=["ablation", "tune", "final", "short"], default="ablation")
     args = parser.parse_args()
     ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
     warehouse = base.DuckDBWarehouse(base.DataLakeLayout.from_settings(base.load_settings(None)))
@@ -344,6 +403,8 @@ def main() -> None:
         specs = ablation_specs(cfg)
     elif args.stage == "tune":
         specs = tune_specs(cfg)
+    elif args.stage == "short":
+        specs = short_specs(cfg)
     else:
         specs = final_specs(cfg)
 
@@ -354,7 +415,10 @@ def main() -> None:
         runs.append(run)
         row = summarize(spec, run)
         rows.append(row)
-        print_row(row)
+        if args.stage == "short":
+            print_short_row(row)
+        else:
+            print_row(row)
 
     payload: dict[str, Any] = {
         "strategy_family": "HYPE-EMA-Trend-Breakout",

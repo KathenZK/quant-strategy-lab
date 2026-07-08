@@ -2,6 +2,9 @@
 
 > 迁移说明：本文由 legacy Cursor Canvas `hype-strategy-milestone-comparison.canvas.tsx` 转换为 Markdown；原 Canvas 未删除，仅作为历史来源。
 
+> **当前状态：HYPE-CC-V35 dry-run / forward-test required**
+> V35 曾 live underperformance，相关诊断仍作为 execution-risk 历史证据保留；当前 quant-runner `hype_candle_count` dry-run 是重新观察/对账状态，不等于 live 批准。forward 报告见 [forward-tracking/README.md](forward-tracking/README.md)；首份 forward 报告缺失前不得升级 `live`，也不得据此给出新的 `NO-GO`。
+
 统一口径：Hyperliquid taker 0.045%，滑点 4bps，包含 funding，close 进场，mark high/low 触发止损止盈。早期 V0-V17 主表沿用原历史窗口；V18-V36 已使用补齐后的 2026-06-01 03:00 UTC 最新数据湖。
 
 ## 版本区别点
@@ -46,7 +49,7 @@
 | V32 V30全局0.006仓位版 | 同 V30 | 同 V30：target_atr_pct 0.006，max 3x，连续止损最低风险 0.0625 | 同 V30：min_take_profit_pct 2.0%；counter 14/10；3/3保留 | 24h趋势禁入5%；冷却8根；反向间隔8根 | V30 的全局加仓版，收益很高但回撤扩大到 -35.70% |
 | V33 V31/32中间0.005仓位版 | 同 V31 / V32 | target_atr_pct 0.005，max 3x，连续止损最低风险 0.0625 | 同 V30 / V31 / V32：min_take_profit_pct 2.0%；counter 14/10；3/3保留 | 24h趋势禁入5%；冷却8根；反向间隔8根 | 参数等价于 V30，作为 V31 与 V32 之间的中间仓位版本记录 |
 | V34 V32双向10/8退出版 | 同 V32 | 同 V32：target_atr_pct 0.006，max 3x，连续止损最低风险 0.0625 | V32 + 反向10/8坏单退出 + 顺向10/8提前止盈；3/3保留 | 24h趋势禁入5%；冷却8根；反向间隔8根 | V32 的 counter 重构版，收益和 Sharpe 较高，但回撤仍为 -35.70% |
-| V35 V34双向12/9退出版 | 同 V34 | 同 V34：target_atr_pct 0.006，max 3x，连续止损最低风险 0.0625 | V34 的双向10/8改为双向12/9；3/3保留 | 24h趋势禁入5%；冷却8根；反向间隔8根 | 当前收益和 Sharpe 最高，且回撤低于 V34 |
+| V35 V34双向12/9退出版 | 同 V34 | 同 V34：target_atr_pct 0.006，max 3x，连续止损最低风险 0.0625 | V34 的双向10/8改为双向12/9；3/3保留 | 24h趋势禁入5%；冷却8根；反向间隔8根 | 当前 quant-runner dry-run / forward-test required；历史 live underperformance 仍是 execution-risk 证据 |
 | V36 Hyperliquid重调版 | 10根K里8根同色反转 | target_atr_pct 0.004，max 3x，连续止损最低风险 0.0625 | 止损/止盈上限都放宽到4%；关闭3/3；保留双向12/9 | 24h趋势禁入5%；冷却8根；反向间隔8根 | 基于 Hyperliquid 数据重调，牺牲部分收益换取更低回撤和近期稳定性 |
 
 ## 核心回测结果

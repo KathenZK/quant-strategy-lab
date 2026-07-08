@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-- 状态：diagnostic only / not promoted。
+- 状态：`explore / not promoted`。
 - 数据：Binance `/fapi/v1/klines` USD-M Futures `1d` 已收盘 UTC 日K。
 - 规则：收盘价突破前 20 根日K最高价时收盘买入；持仓后收盘价跌破前 10 根日K最低价时收盘卖出。
 - 最新诊断：`diagnostics/binance-1d-turtle-breakout-2026-06-27.md`。

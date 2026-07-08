@@ -7,7 +7,7 @@ RS4 是 HYPE USDT 永续 `6h` regime-switch 趋势策略：`v10` 压缩动量腿
 ## 当前状态
 
 - 当前主版本：`HYPE-6H-RS4-Regime-Switch-V1`。
-- 状态：diagnostic only / not promoted。
+- 状态：`V1 registered / not promoted / not live-ready`。
 - 数据：本仓库标准数据湖 Binance HYPEUSDT perpetual `5m` normalized OHLCV，聚合为 `6h`。
 - 主要限制：本地没有 HTML 声称的 Bybit 2024-12 全史口径；当前结果只能验证 Binance/canonical 近期段。
 

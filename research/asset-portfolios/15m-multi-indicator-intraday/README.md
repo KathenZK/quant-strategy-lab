@@ -7,7 +7,7 @@
 - Family：`Binance-15M-Multi-Indicator-Intraday-Transfer`
 - 数据：Binance futures kline API 直接拉取，`2025-05-30T10:30:00+00:00` 到 `2026-06-26T04:00:00+00:00`。
 - 成本：手续费 `0.1000%`/fill，滑点 `0.0400%`/fill，round-trip `0.2800%`；资金费未计入。
-- 状态：`diagnostic only / not live-ready / not paper-live-ready`。
+- 状态：`explore / not promoted / not live-ready`。
 
 ## 当前结论
 

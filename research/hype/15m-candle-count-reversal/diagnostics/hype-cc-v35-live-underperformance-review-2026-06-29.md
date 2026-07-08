@@ -18,7 +18,7 @@ live-underperformance + execution-risk diagnostic
 - `diagnostics/hype-v35-overfit-diagnosis.md`
 - `hype-cc-15m-milestone-comparison.md`
 - `legacy-canvas/hype-v35-cross-exchange-execution.md`
-- `../15m-live-execution-feasibility-audit-2026-06-25.md`
+- [15m-live-execution-feasibility-audit-2026-06-25.md](../../../../archive/research/legacy-strategies/15m-live-execution-feasibility-audit-2026-06-25.md)
 - 2026-06-29 运维口径记录的 Binance / Hyperliquid 实盘摘要
 - `scripts/replay_hype_cc_v35_oos_proxy_2026_06_29.py`
 - `artifacts/hype_cc_v35_oos_proxy_review_2026-06-29.json`
@@ -142,7 +142,7 @@ net loss:                         -30.99410259 USDT
 
 ## 实盘偏差来源
 
-`15m-live-execution-feasibility-audit-2026-06-25.md` 已经把 `HYPE-Candle-Count-Reversal` 降级为 execution-risk / diagnostic。对 V35 最关键的偏差是：
+[15m-live-execution-feasibility-audit-2026-06-25.md](../../../../archive/research/legacy-strategies/15m-live-execution-feasibility-audit-2026-06-25.md) 已经把 `HYPE-Candle-Count-Reversal` 降级为 execution-risk / diagnostic。对 V35 最关键的偏差是：
 
 1. 回测在信号 bar 的 close 入场，实盘只能在信号确认后市价或下一可成交时点入场。
 2. `early_main`、`early_counter_opposite`、`early_counter_favorable` 回测按当前 close 平仓，实盘确认条件时已经知道 close，无法保证按该 close 成交。

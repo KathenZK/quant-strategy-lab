@@ -152,4 +152,3 @@
 1. `HYPE-Candle-Count-Reversal`: 目前最危险，高收益需要先重跑 live-realistic；现有 `+8357%` 不可信为实盘预期。
 2. `HYPE-EMA-Crossover`: 没看到 pullback 同类穿价 bug，但只有 research candidate 级别；高收益需大幅折价，不能 live-approved。
 3. `HYPE-EMA-Trend-Breakout`: 已经识别并修正旧执行口径，是三者里最接近可实盘的一条；但 Binance 高收益仍是样本内高估，实盘应按保守 sizing 和跨所/滑点压力结果折价。
-

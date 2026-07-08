@@ -5,7 +5,7 @@
 - 数据切片：Binance HYPEUSDT perpetual `15m`，`2025-05-30 10:30:00+00:00` 至 `2026-06-01 03:00:00+00:00`，本次强制截断到 `2026-06-01 03:00:00+00:00`，共 `35203` 根 K 线。
 - 成本：`trade_cost=0.00085`，`slippage=0.0005`；信号收盘确认、下一根 open 成交；1h 指标 resample 后 `shift(1)`。
 - V18 基线 365D：收益 `+3861.48%`，最大回撤 `-19.44%`，胜率 `+90.91%`，交易 `33` 笔，late `7` 笔。
-- 状态仍为 `research candidate / not live-ready`；本复测不改变 live 审计结论。
+- 本复测当时未改变 promotion 状态；2026-07-08 后续确认 V18 已进入 quant-runner `dry-run / forward-test required`，以家族主账和 [../forward-tracking/README.md](../forward-tracking/README.md) 为准。
 
 ## V18 基线与最近窗口
 

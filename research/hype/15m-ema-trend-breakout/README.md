@@ -3,7 +3,7 @@
 - Full family name：`HYPE-EMA-Trend-Breakout`（历史别名：`HYPE-EMA-TB`）
 - 市场/周期：HYPE `15m`
 - 机制：EMA96/EMA384 趋势突破 / 追多追空，带 ADX、成交量、1h 确认、live-realistic 执行检查与跨所执行变体。
-- 当前状态：archived/canonical specs；V35 在 quant-runner 侧有历史实现。
+- 当前状态：`archived`；保留 canonical specs 作历史证据，V35 在 quant-runner 侧有历史实现。
 
 ## 边界
 

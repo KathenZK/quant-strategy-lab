@@ -2,6 +2,8 @@
 
 `BNB-15M-Adaptive-Regime`（短 id：`BNB-15M-AR`）是 Binance USD-M Futures `BNBUSDT` perpetual `15m` 的 BNB 专属多机制策略研究家族，与 `BNB-1H-Adaptive-Regime` 及其他资产 family 没有版本继承关系。
 
+当前状态：`explore / not promoted / not live-ready`。
+
 ## 研究目标
 
 - 数据：运行时最近两年的全部闭合 `15m` K，直接刷新自 Binance FAPI；同步保存 raw/normalized 分区、资金费和合约过滤器快照。

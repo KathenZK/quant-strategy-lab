@@ -7,11 +7,11 @@
 ## 阅读顺序
 
 1. 本文件：确定 family 与目录。
-2. 对应资产 `README.md`（如 `hype/README.md`、`btc/README.md`）。
+2. 对应资产 README（如 [hype/README.md](hype/README.md)、[btc/README.md](btc/README.md)）。
 3. 目标家族 `README.md` → core ledger / 主账 → `decision-log.md`。
 4. 按需打开 canonical specs、diagnostics、ablations、live specs、artifacts。
 
-状态词定义见 `strategy-status-glossary.md`（唯一状态机来源）。工作约束见 `../AGENTS.md` 与 `../.cursor/rules/`。
+状态词定义见 [strategy-status-glossary.md](strategy-status-glossary.md)（唯一状态机来源）。工作约束见 [../AGENTS.md](../AGENTS.md) 与 `../.cursor/rules/`。
 
 ## 命名规则
 
@@ -22,56 +22,57 @@
 
 ## HYPE 策略家族
 
-详细路由与防串线警告见 `hype/README.md`。
+详细路由与防串线警告见 [hype/README.md](hype/README.md)。
 
 | Full family name | Alias | Directory | 机制 | 状态 |
 | --- | --- | --- | --- | --- |
-| `HYPE-Candle-Count-Reversal` | `HYPE-CC` | `hype/15m-candle-count-reversal/` | 10-of-8 K 线颜色反转 + ATR 风控 | archived/canonical specs |
-| `HYPE-EMA-Crossover` | `HYPE-EMA-X` | `hype/15m-ema-crossover/` | EMA 金叉/死叉家族（V14 时代演化） | promoted research candidates（V15-V18），未 live |
-| `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | `hype/15m-ema-trend-breakout/` | EMA96/384 趋势突破 / 追多追空 | archived/canonical specs；V35 在 runner 侧有历史实现 |
-| `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | `hype/1m-ema-crossover/` | `1m` EMA 金叉/死叉，可执行时序 | diagnostic / dry-run candidate only |
-| `HYPE-1M-MA-Pullback-Scalp` | - | `hype/1m-ma-pullback-scalp/` | `1m` 双 MA 回踩 scalp | not promoted / not live-ready |
-| `HYPE-1H-Adaptive-Regime` | `HYPE-1H-AR` | `hype/1h-adaptive-regime/` | `1h` DI 趋势 + 随机指标反转自适应 ensemble | V1-V4 registered / not promoted / not live-ready |
-| `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | `hype/15m-multi-indicator-intraday/` | `15m` 多指标日内广搜 | V1.3 live spec / not live-ready |
-| `HYPE-15M-Riptide` | - | `hype/15m-riptide/` | `15m` EMA 趋势背景 RSI 回踩 + RV regime | diagnostic / reproduction-pending |
-| `HYPE-15M-Pullback-Trail` | - | `hype/15m-pullback-trail/` | `15m` 回踩事件源 + bracket 搜索 | V3.3 迁移 not promoted；bracket audit only |
-| `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | `hype/5m-pullback-trail/` | `5m` 回踩/恢复入场 + ATR trailing stop | active research candidate；V6.2.1 在 runner dry-run |
-| `HYPE-5M-MA-Pullback-Scalp` | - | `hype/5m-ma-pullback-scalp/` | `5m` 双 MA 回踩 scalp | audit candidates only |
-| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | `hype/5m-micro-scalp/` | `5m` 高频小利 scalp 搜索 | V1-V1.3 registered audit observations / not live-ready |
-| `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | `hype/5m-event-quality-scoring/` | `5m` 事件质量打分 | V1 failed strict seed audit / no candidate |
-| `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | `hype/15m-trend-breakout-multi-indicator-ensemble/` | `EMA-TB-V35` + `MII-V1.3` 组合研究 | first combination diagnostic / not promoted |
-| `HYPE-6H-RS4-Regime-Switch` | - | `hype/6h-rs4-regime-switch/` | `6h` regime-switch 趋势（压缩动量腿 + 扩张突破腿）复现 | V1 diagnostic only / not promoted |
-| （诊断主题）HYPE cross-strategy account | - | `hype/cross-strategy-account/` | 多策略共享子账户 / 全局单仓组合诊断 | diagnostic topic；不提升任何子策略状态 |
+| `HYPE-Candle-Count-Reversal` | `HYPE-CC` | [hype/15m-candle-count-reversal/](hype/15m-candle-count-reversal/README.md) | 10-of-8 K 线颜色反转 + ATR 风控 | V35 dry-run / forward-test required |
+| `HYPE-EMA-Crossover` | `HYPE-EMA-X` | [hype/15m-ema-crossover/](hype/15m-ema-crossover/README.md) | EMA 金叉/死叉家族（V14 时代演化） | V18 dry-run / forward-test required |
+| `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | [hype/15m-ema-trend-breakout/](hype/15m-ema-trend-breakout/README.md) | EMA96/384 趋势突破 / 追多追空 | archived（V35 在 runner 侧有历史实现） |
+| `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | [hype/1m-ema-crossover/](hype/1m-ema-crossover/README.md) | `1m` EMA 金叉/死叉，可执行时序 | explore / not promoted / not live-ready |
+| `HYPE-1M-MA-Pullback-Scalp` | - | [hype/1m-ma-pullback-scalp/](hype/1m-ma-pullback-scalp/README.md) | `1m` 双 MA 回踩 scalp | explore / not promoted / not live-ready |
+| `HYPE-1H-Adaptive-Regime` | `HYPE-1H-AR` | [hype/1h-adaptive-regime/](hype/1h-adaptive-regime/README.md) | `1h` DI 趋势 + 随机指标反转自适应 ensemble | V1-V4 registered / not promoted / not live-ready |
+| `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | [hype/15m-multi-indicator-intraday/](hype/15m-multi-indicator-intraday/README.md) | `15m` 多指标日内广搜 | V1.3 dry-run / forward-test required |
+| `HYPE-15M-Riptide` | - | [hype/15m-riptide/](hype/15m-riptide/README.md) | `15m` EMA 趋势背景 RSI 回踩 + RV regime | explore / not promoted（复现对账未完成） |
+| `HYPE-30M-Keltner-Trend-Breakout` | `K2-FQ-V2-ATRVT-OFF` | [hype/30m-keltner-trend-breakout/](hype/30m-keltner-trend-breakout/README.md) | `30m` Keltner 突破 + `1h` EMA regime + ATRVT 动态杠杆 | explore / not promoted / not live-ready |
+| `HYPE-15M-Pullback-Trail` | - | [hype/15m-pullback-trail/](hype/15m-pullback-trail/README.md) | `15m` 回踩事件源 + bracket 搜索 | V3.3 迁移 not promoted；bracket audit only |
+| `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | [hype/5m-pullback-trail/](hype/5m-pullback-trail/README.md) | `5m` 回踩/恢复入场 + ATR trailing stop | V6.2.1 dry-run / forward-test required |
+| `HYPE-5M-MA-Pullback-Scalp` | - | [hype/5m-ma-pullback-scalp/](hype/5m-ma-pullback-scalp/README.md) | `5m` 双 MA 回踩 scalp | audit / not promoted / not live-ready |
+| `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | [hype/5m-micro-scalp/](hype/5m-micro-scalp/README.md) | `5m` 高频小利 scalp 搜索 | V1-V1.3 audit / not promoted / not live-ready |
+| `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | [hype/5m-event-quality-scoring/](hype/5m-event-quality-scoring/README.md) | `5m` 事件质量打分 | V1 registered / not promoted（strict seed audit 未通过） |
+| `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | [hype/15m-trend-breakout-multi-indicator-ensemble/](hype/15m-trend-breakout-multi-indicator-ensemble/README.md) | `EMA-TB-V35` + `MII-V1.3` 组合研究 | explore / not promoted / not live-ready |
+| `HYPE-6H-RS4-Regime-Switch` | - | [hype/6h-rs4-regime-switch/](hype/6h-rs4-regime-switch/README.md) | `6h` regime-switch 趋势（压缩动量腿 + 扩张突破腿）复现 | V1 registered / not promoted / not live-ready |
+| （研究主题，非策略家族）HYPE cross-strategy account | - | [hype/cross-strategy-account/](hype/cross-strategy-account/README.md) | 多策略共享子账户 / 全局单仓组合诊断 | explore；不提升任何子策略状态 |
 
 ## 单资产研究（非 HYPE）
 
 | Family | Alias | Directory | 状态 |
 | --- | --- | --- | --- |
-| `BTC-1H-Adaptive-Regime` | `BTC-1H-AR` | `btc/1h-adaptive-regime/` | V1-V4 registered；V4 为 V3 最小等价干净版；forward-test required / not live-ready |
-| `ETH-1H-Adaptive-Regime` | `ETH-1H-AR` | `eth/1h-adaptive-regime/` | V1-V3 registered / not promoted / not live-ready |
-| `SOL-1H-Adaptive-Regime` | `SOL-1H-AR` | `sol/1h-adaptive-regime/` | V1-V2 registered / not promoted / not live-ready |
-| `TRX-1H-Adaptive-Regime` | `TRX-1H-AR` | `trx/1h-adaptive-regime/` | V1-V3 registered / not promoted / not live-ready |
-| `BNB-1H-Adaptive-Regime` | `BNB-1H-AR` | `bnb/1h-adaptive-regime/` | V1-V3 registered / not promoted / not live-ready |
-| `BNB-15M-Adaptive-Regime` | `BNB-15M-AR` | `bnb/15m-adaptive-regime/` | active diagnostic research / not promoted |
+| `BTC-1H-Adaptive-Regime` | `BTC-1H-AR` | [btc/1h-adaptive-regime/](btc/1h-adaptive-regime/README.md) | V1-V4 registered / not promoted / forward-test required（V4 为 V3 clean-equivalent） |
+| `ETH-1H-Adaptive-Regime` | `ETH-1H-AR` | [eth/1h-adaptive-regime/](eth/1h-adaptive-regime/README.md) | V1-V3 registered / not promoted / not live-ready |
+| `SOL-1H-Adaptive-Regime` | `SOL-1H-AR` | [sol/1h-adaptive-regime/](sol/1h-adaptive-regime/README.md) | V1-V2 registered / not promoted / not live-ready |
+| `TRX-1H-Adaptive-Regime` | `TRX-1H-AR` | [trx/1h-adaptive-regime/](trx/1h-adaptive-regime/README.md) | V1-V3 registered / not promoted / not live-ready |
+| `BNB-1H-Adaptive-Regime` | `BNB-1H-AR` | [bnb/1h-adaptive-regime/](bnb/1h-adaptive-regime/README.md) | V1-V3 registered / not promoted / not live-ready |
+| `BNB-15M-Adaptive-Regime` | `BNB-15M-AR` | [bnb/15m-adaptive-regime/](bnb/15m-adaptive-regime/README.md) | explore / not promoted |
 
-各资产入口：`btc/README.md`、`eth/README.md`、`sol/README.md`、`trx/README.md`、`bnb/README.md`。
+各资产入口：[btc/README.md](btc/README.md)、[eth/README.md](eth/README.md)、[sol/README.md](sol/README.md)、[trx/README.md](trx/README.md)、[bnb/README.md](bnb/README.md)。
 
 ## 组合与跨资产研究
 
-入口：`asset-portfolios/README.md`。跨资产研究不是 HYPE 策略家族，除非文档明确把它提升为某个 HYPE family variant。
+入口：[asset-portfolios/README.md](asset-portfolios/README.md)。跨资产研究不是 HYPE 策略家族，除非文档明确把它提升为某个 HYPE family variant。
 
 | Family / Topic | Directory | 状态 |
 | --- | --- | --- |
-| `Binance-1D-Turtle-Breakout` | `asset-portfolios/1d-turtle-breakout/` | diagnostic |
-| `Binance-15M-Multi-Indicator-Intraday-Transfer` | `asset-portfolios/15m-multi-indicator-intraday/` | 迁移诊断；整体不提升 |
-| `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`） | `asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/` | V1 registered / not promoted / not live-ready |
-| `MU-HYPE-Transfer`（`MU-HYPE-XFER`） | `mu/`（扁平结构，grandfathered） | core transfer research line |
+| `Binance-1D-Turtle-Breakout` | [asset-portfolios/1d-turtle-breakout/](asset-portfolios/1d-turtle-breakout/README.md) | explore |
+| `Binance-15M-Multi-Indicator-Intraday-Transfer` | [asset-portfolios/15m-multi-indicator-intraday/](asset-portfolios/15m-multi-indicator-intraday/README.md) | explore / not promoted |
+| `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`） | [asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/](asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/README.md) | V1 registered / not promoted / not live-ready |
+| `MU-HYPE-Transfer`（`MU-HYPE-XFER`） | [mu/](mu/README.md)（扁平结构，grandfathered） | explore |
 
 旧 HYPE cross-asset transfer 材料位于 `../archive/research/hype-transfer/`。
 
 ## 共享研究内核
 
-跨资产复用的研究引擎存放在 `_shared-kernels/`，按冻结版本目录管理（见 `_shared-kernels/README.md`）。当前内核：`1h-adaptive-regime-search/`（六个资产的 `1h` adaptive-regime 系列脚本共享引擎）。
+跨资产复用的研究引擎存放在 `_shared-kernels/`，按冻结版本目录管理（见 [_shared-kernels/README.md](_shared-kernels/README.md)）。当前内核：[1h-adaptive-regime-search/](_shared-kernels/1h-adaptive-regime-search/README.md)（六个资产的 `1h` adaptive-regime 系列脚本共享引擎）。
 
 ## 目录与存储约定
 
@@ -79,6 +80,7 @@
 
 - 新时间片或新机制必须新建 `research/<asset>/<timeframe>-<strategy-family-slug>/`，不得因指标相似塞进旧 family。
 - 家族目录内：`README.md` + core ledger + `decision-log.md` 为长期入口；`diagnostics/`、`ablations/`、`canonical-specs/`、`live-specs/`、`research-notes/` 按性质分类；`scripts/` 放一次性研究脚本；`artifacts/` 放需保留的产物；进入 dry-run 后增加 `forward-tracking/`。
+- 新建或重构主账先使用 [core-ledger-template.md](core-ledger-template.md)；主账只保存版本身份、当前状态、版本规则、版本表和证据链接，不承载完整实验报告或参数表。
 - 新建家族必须同步登记进对应资产 README 和本文件的路由表（索引更新义务）。
 - 长期研究文档默认中文；顶层 `reports/` 已退役；Canvas 不是 canonical storage。
 

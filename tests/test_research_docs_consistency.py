@@ -85,6 +85,23 @@ def test_family_dirs_have_core_ledger_unless_grandfathered() -> None:
   assert not problems, "core-ledger 覆盖检查失败:\n" + "\n".join(problems)
 
 
+def test_core_ledger_template_defines_required_sections() -> None:
+  template = RESEARCH / "core-ledger-template.md"
+  assert template.is_file(), "缺少 research/core-ledger-template.md"
+  text = template.read_text(encoding="utf-8")
+  required_headings = [
+    "## Family Identity",
+    "## Current State",
+    "## Version Rules",
+    "## Version Table",
+    "## Shared Assumptions",
+    "## Evidence Map",
+    "## What Not To Put Here",
+  ]
+  missing = [heading for heading in required_headings if heading not in text]
+  assert not missing, "core-ledger-template.md 缺少标准章节:\n" + "\n".join(missing)
+
+
 def test_families_registered_in_top_level_index() -> None:
   """索引更新义务：每个家族目录必须出现在 research/README.md 路由表中。"""
   index_text = (RESEARCH / "README.md").read_text(encoding="utf-8")
@@ -107,17 +124,25 @@ def test_families_registered_in_asset_index() -> None:
 
 
 def test_top_level_index_links_resolve() -> None:
-  """research/README.md 与 hype/README.md 中引用的仓库相对路径必须存在。"""
+  """research/README.md 与 hype/README.md 中引用的仓库相对路径必须存在。
+
+  同时校验反引号路径和 Markdown 链接（clickable-file-references.mdc 要求
+  路由表使用可点击链接，链接失效同样属于索引漂移）。
+  """
   problems = []
-  for md, base in [
-    (RESEARCH / "README.md", RESEARCH),
-    (RESEARCH / "hype" / "README.md", RESEARCH / "hype"),
-  ]:
+  index_files = [(RESEARCH / "README.md", RESEARCH)]
+  for asset in ASSET_DIRS + sorted(FLAT_GRANDFATHERED):
+    index_files.append((RESEARCH / asset / "README.md", RESEARCH / asset))
+  for md, base in index_files:
     text = md.read_text(encoding="utf-8")
-    for match in re.finditer(r"`([^`\s]+?\.md)`", text):
-      rel = match.group(1)
-      # 无目录成分的裸文件名（如泛指的 decision-log.md）不视为链接。
-      if rel.startswith(("http", "/")) or "/" not in rel:
+    refs = [m.group(1) for m in re.finditer(r"`([^`\s]+?\.md)`", text)]
+    refs += [m.group(1) for m in re.finditer(r"\]\(([^)\s]+?\.md)\)", text)]
+    for rel in refs:
+      # 无目录成分的裸反引号文件名（如泛指的 decision-log.md）不视为链接；
+      # Markdown 链接则总是校验。
+      if rel.startswith(("http", "/")):
+        continue
+      if "/" not in rel and f"`{rel}`" in text and f"]({rel})" not in text:
         continue
       if not (base / rel).resolve().exists():
         problems.append(f"{md.relative_to(ROOT)}: 引用不存在的文件 {rel}")
@@ -185,6 +210,59 @@ def test_external_reproduction_specs_are_self_contained() -> None:
         if not violations and rel in GRANDFATHERED_REPRO_SPECS:
             problems.append(f"{rel}: 已整改，请从 GRANDFATHERED_REPRO_SPECS 移除")
     assert not problems, "对外复现规格自包含检查失败:\n" + "\n".join(problems)
+
+
+# 状态词校验：路由表状态列必须使用 strategy-status-glossary.md 的主状态词表。
+_ALLOWED_MAIN_STATUS = (
+  "explore",
+  "registered",
+  "audit",
+  "live spec",
+  "dry-run",
+  "live",
+  "NO-GO",
+  "archived",
+)
+# 已废弃/禁止的状态词（见 glossary：candidate 已废弃，paper-live 无此阶段）。
+_FORBIDDEN_STATUS_TOKENS = ("candidate", "paper-live", "sim-paper", "blocked")
+
+
+def _iter_status_cells(md: Path):
+  """遍历 Markdown 表格中"状态"列的单元格，返回 (行号, 内容)。"""
+  status_col = None
+  for lineno, line in enumerate(md.read_text(encoding="utf-8").splitlines(), 1):
+    stripped = line.strip()
+    if not stripped.startswith("|"):
+      status_col = None
+      continue
+    cells = [c.strip() for c in stripped.strip("|").split("|")]
+    if "状态" in cells:
+      status_col = cells.index("状态")
+      continue
+    if status_col is None or set(stripped) <= {"|", "-", " ", ":"}:
+      continue
+    if len(cells) > status_col:
+      yield lineno, cells[status_col]
+
+
+def test_routing_table_status_labels_use_glossary_vocabulary() -> None:
+  """research/README.md 与 hype/README.md 路由表状态列只能用 glossary 主状态词。"""
+  problems = []
+  for md in [RESEARCH / "README.md", RESEARCH / "hype" / "README.md"]:
+    for lineno, cell in _iter_status_cells(md):
+      rel = md.relative_to(ROOT)
+      lowered = cell.lower()
+      hit_forbidden = [t for t in _FORBIDDEN_STATUS_TOKENS if t in lowered]
+      if hit_forbidden:
+        problems.append(f"{rel}:L{lineno}: 状态含已废弃词 {hit_forbidden}: {cell}")
+      # "live-ready" 属于修饰词后缀，不算主状态 `live` 命中。
+      cleaned = re.sub(r"live-ready", "", lowered)
+      if not any(
+        re.search(rf"\b{re.escape(s.lower())}\b", cleaned)
+        for s in _ALLOWED_MAIN_STATUS
+      ):
+        problems.append(f"{rel}:L{lineno}: 状态未包含任何 glossary 主状态词: {cell}")
+  assert not problems, "路由表状态词校验失败:\n" + "\n".join(problems)
 
 
 def test_shared_kernel_versions_are_frozen() -> None:

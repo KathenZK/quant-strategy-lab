@@ -8,7 +8,7 @@
 
 三个核心发现：
 
-1. **V35 有两个可以直接移除的无效参数**：`max_hold_bars=384` timeout（样本内 0 触发，移除后结果逐字节一致）和空头 1h EMA 确认（与空头 `ema_spread<0` 互为备份，单独移除任一个结果完全一致，但两个都移除会严重劣化）。
+1. **V35 有两个回测等价的无效项**：`max_hold_bars=384` timeout（样本内 0 触发，移除后结果逐字节一致，但实盘保留为兜底）和空头 1h EMA 确认（与空头 `ema_spread<0` 互为备份，单独移除任一个结果完全一致，但两个都移除会严重劣化）。
 2. **V35 大部分参数处在尖峰上，不能动**：`adx_window=28`、`long_adx_min=28`、`adx_exit=22`、`hard_stop_atr=7`、`atr_window=672`、`disable_after_mfe_atr=1.5`、`volume_window=192` 任何方向的偏移都显著劣化，多数直接把 full 收益砍半以上。
 3. **找到两个改进候选**：`v35_tuned_mild`（全面严格优于 base）和 `v35_tuned_recent3m`（最近 90 天收益/胜率/回撤三项全部改善，但牺牲 6m/1y/full）。
 
@@ -70,7 +70,7 @@
 
 ### 候选 A：`v35_tuned_mild`（全面严格改进版）
 
-改动最小：`long_vol_min 0.25 -> 0.35`、`short_target_atr_pct 0.018 -> 0.022`、移除冗余空头 1h EMA 确认、移除 timeout。其余参数全部不动。
+改动最小：`long_vol_min 0.25 -> 0.35`、`short_target_atr_pct 0.018 -> 0.022`、移除冗余空头 1h EMA 确认；实盘规格继续保留 `max_hold_bars=384` timeout 兜底。其余参数全部不动。
 
 | 指标 | V35 base | v35_tuned_mild |
 | --- | ---: | ---: |
@@ -107,9 +107,9 @@
 
 ## 判断与建议
 
-1. **候选 A（`v35_tuned_mild`）值得优先推进**：它是消融驱动的严格改进，所有窗口不劣于 V35，且只动了两个数值参数加移除两个无效参数。建议先做 Hyperliquid/OKX 跨所同窗迁移检查和 walk-forward，再考虑登记版本。
+1. **候选 A（`v35_tuned_mild`，已登记为 V39）值得优先推进**：它是消融驱动的严格改进，所有窗口不劣于 V35，且只动了两个数值参数加移除一个实盘可删的冗余过滤。下一步应先做 Hyperliquid/OKX 跨所同窗迁移检查和 walk-forward，再讨论 live/paper-live。
 2. **候选 B（`v35_tuned_recent3m`）作为 regime 适配观察**：最近 90 天三项全优，但它明确牺牲历史全窗口表现，且移除多头 EMA spread 过滤改变了策略身份。如果最近的"弱趋势、低波动"行情持续，它会继续占优；如果回到 2025 下半年的强趋势 regime，V35/候选 A 更强。建议只做影子观察，不替换 V35。
-3. **参数移除结论**：`max_hold_bars` timeout 和空头 1h EMA 确认可从规格中移除（各自单独移除结果逐字节一致）；实盘 timeout 建议保留为异常兜底。
+3. **参数移除结论**：`max_hold_bars` timeout 与空头 1h EMA 确认在回测中单独移除结果均逐字节一致；但按实盘安全口径，timeout 保留为异常兜底，只有空头 1h EMA 确认进入候选 A 的删除项。
 4. 两个候选均为 diagnostic，未 promotion、未 live-ready；上线前需按 live-executable 口径完成订单时序、止损挂单、重启恢复审计。
 
 ## 复现与证据

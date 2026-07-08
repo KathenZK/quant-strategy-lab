@@ -3,7 +3,7 @@
 - Full family name：`HYPE-1M-EMA-Crossover`（历史别名：`HYPE-1M-EMA-X`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `1m`
 - 机制：`1m` EMA 金叉/死叉，live-executable 时序（next-bar 入场、固定/trailing TP）。
-- 当前状态：`diagnostic / dry-run candidate only`；当前首选规则 `HYPE-1M-EMA-Crossover-TRAIL-144-1597`（试验 sizing `2x`、硬上限 `3x`）；未完成 forward 验证、funding/滑点审计与 runner 重启/幂等检查前不得 live。
+- 当前状态：`explore / not promoted / not live-ready`；当前首选规则 `HYPE-1M-EMA-Crossover-TRAIL-144-1597`（试验 sizing `2x`、硬上限 `3x`）；未完成 forward 验证、funding/滑点审计与 runner 重启/幂等检查前不得进入 promotion 状态。
 
 ## 边界
 

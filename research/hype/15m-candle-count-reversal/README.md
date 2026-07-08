@@ -3,7 +3,7 @@
 - Full family name：`HYPE-Candle-Count-Reversal`（历史别名：`HYPE-CC`）
 - 市场/周期：HYPE `15m`
 - 机制：10 根 K 中 8 根同色的颜色计数反转 + ATR 风控，后续演化 early-exit 变体。
-- 当前状态：archived/canonical specs；V35 曾实盘并出现 live underperformance，已降级为 execution-risk diagnostic（见下方诊断）。
+- 当前状态：`HYPE-CC-V35` 为 `dry-run / forward-test required`（quant-runner `hype_candle_count` 模拟盘运行中，forward 报告见 [forward-tracking/README.md](forward-tracking/README.md)）；V35 曾 live underperformance 的诊断仍作为 execution-risk 历史证据保留。
 
 ## 边界
 
@@ -12,10 +12,11 @@
 
 ## 入口
 
-- 主账（milestone comparison ledger）：`hype-cc-15m-milestone-comparison.md`
-- 决策记录：`decision-log.md`
-- 版本规格：`canonical-specs/`（V13、V18 ATR672、V21 双向 early-exit、V35 复现参数等）
-- V35 过拟合再诊断：`diagnostics/hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md`
-- V35 实盘表现不及回测复盘：`diagnostics/hype-cc-v35-live-underperformance-review-2026-06-29.md`
+- 主账（milestone comparison ledger）：[hype-cc-15m-milestone-comparison.md](hype-cc-15m-milestone-comparison.md)
+- 决策记录：[decision-log.md](decision-log.md)
+- 版本规格：[canonical-specs/](canonical-specs/)（V13、V18 ATR672、V21 双向 early-exit、V35 复现参数等）
+- V35 过拟合再诊断：[hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md](diagnostics/hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md)
+- V35 实盘表现不及回测复盘：[hype-cc-v35-live-underperformance-review-2026-06-29.md](diagnostics/hype-cc-v35-live-underperformance-review-2026-06-29.md)
+- V35 forward 跟踪：[forward-tracking/README.md](forward-tracking/README.md)
 
 脚本在 `scripts/`，被报告引用的产物在 `artifacts/`，`legacy-canvas/` 为冻结迁移历史。

@@ -15,7 +15,7 @@
 
 - 组合收益不能简单等于两个策略独立收益相加；必须按实际 entry 时间排序并阻塞重叠持仓。
 - 账户级回撤、全局 notional cap、跨策略 kill switch、挂单对账和重启恢复是组合运行的新增风险。
-- 若任一子策略仍为 `not-live-ready`，组合也不得被提升为 `paper-live`、`dry-run handoff` 或 `live`。
+- 若任一子策略仍为 `not live-ready`，组合层面也不得进入任何 promotion 状态（`live spec`、`dry-run`、`live`）。
 
 ## 产物规则
 
