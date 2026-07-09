@@ -26,6 +26,14 @@
 - 决策：登记为 `V1` 但状态保持 `NO-GO / not promoted / not live-ready`。理由：full 与 `last_6m/1y` 回撤 `-21.43%` 穿破 `<20%` 硬门槛；阻塞后未做逐 K 联合状态机重演；成分全部是 diagnostic NO-GO；组合层压力与生产执行审计缺失。
 - 证据：`specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`、`specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`、`binance-1h-ar-mae-core-ledger.md`、`notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`。
 
+## 2026-07-09 quant-runner dry-run 接入
+
+- 背景：用户要求在 `quant-runner` 实现 `BIN-1H-AR-MAE-V1`，达到可跑 dry-run。
+- 实现：`kind = six_asset_ensemble`；六资产联合状态机 dry-run（非 lab 冻结交易路径后筛选的 diagnostic 近似）；live 禁止；`configs/dryrun.toml` 增加 `six-asset-ensemble-dry-run`。
+- 验证：本地 `smoke-test` 通过；本地 `run-once` 返回 `flat_no_signal`（当前小时无 due 候选）。
+- 决策：dry-run 可观察，但状态仍为 `NO-GO / not promoted / not live-ready`。未改变 promotion 结论；`replay-dry-run` 与研究路径对拍未完成。
+- 证据：`runner-tracking/binance-1h-ar-mae-v1-runner-status.md`。
+
 ## 2026-07-09 V1 风险覆盖层与 TRX MACD 消融诊断
 
 - 背景：用户要求按优化建议做一轮 V1 风险约束、TRX MACD 消融与成本压力诊断。

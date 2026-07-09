@@ -1,5 +1,13 @@
 # Decision Log
 
+## 2026-07-09 V2 production dry-run deployed
+
+- 问题：用户要求把 V2 “发到线上去”，本次范围确认为只部署/重启 `dryrun` 服务，不开启 live。
+- 做法：将 `quant-runner` 当前分支快进合入 `main` 并推送到 `origin/main`；服务器 `47.80.57.36:/home/admin/quant-runner` 从 `origin/main` fast-forward 到 `0391054 Restore TB-MII ensemble V2 spec.`，远端执行 `cargo fmt --check`、`cargo test -p quant-runner`、`cargo build --release` 后只重启 `quant-runner-dryrun.service`。
+- 验证：本地与远端测试均通过（`61` library tests + `2` integration tests）；`quant-runner-dryrun.service` 重启后 active/running，`MainPID=740299`；10 分钟 warning/error journal 检查无记录；`strategy_health` 显示 `hype-tb-mii-ens-dry-run` 为 `ok`、`position_open=0`、`last_bar_ts=2026-07-09T12:00:00+00:00`、`updated_at=2026-07-09T12:23:38.905367617+00:00`。首个运行周期输出 `event=holding`、`active_leg=none`、`position_open=false`、pending signal 均为 `null`。
+- 决定：状态更新为 `production dry-run deployed and healthy / disabled live pilot code path implemented / live not enabled / not promoted`。本次未重启 live 服务，也未将 `hype-tb-mii-ens-live` 设为 enabled。下一步是累计 dry-run 运行窗口并抽取 open/close/fill 生命周期数据做回测/运行对齐。
+- 证据：[runtime/live-pilot tracking](runner-tracking/hype-15m-tb-mii-ens-v2-runtime-live-pilot-2026-07-09.md)、[V2 主账](hype-15m-tb-mii-ens-core-ledger.md)。
+
 ## 2026-07-09 V2 continuous runtime 与 disabled live pilot 代码路径实现
 
 - 问题：用户要求完成 `V2 小额实盘执行链计划`，达到可小额 live pilot 的代码条件，但默认不直接开启 live。

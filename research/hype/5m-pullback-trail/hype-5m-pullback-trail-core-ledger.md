@@ -82,7 +82,7 @@ Created：2026-06-23
 | `HYPE-5M-PBTR-V6` | 可执行修复版：`EMA21/55` 多头回踩恢复 + `dir_ret192_bps>=788.123` + 入场即 `TP=3ATR/SL=7ATR` + `36` 根 K 超时。 | registered / not promoted | `147` | `1.70x` | `59.86%` | `1.15` | `-11.28%` | OOS PF `1.45` | 放弃旧 `min_hold + trailing` 成交假设；未进入 dry-run，不是生产 sizing 版本。 |
 | `HYPE-5M-PBTR-V6.1` | V6 sizing/exit 变体：`TP=2.5ATR/SL=7ATR/timeout=36`，fixed `3x`。 | registered sizing observation / not promoted | `157` | 见诊断 | `63.69%` | `1.01` | `-25.63%` | 见诊断 | 回测总收益 `+408.95%`、PF `1.773`；收益漂亮但 sizing 风险高，不是生产版本。 |
 | `HYPE-5M-PBTR-V6.2` | V6.1 long-only + short rank2：long `EMA21/55 TP2.5/SL7/tx36`，short `EMA34/144 TP1.5/SL2/tx48`，组合严格单仓。 | registered / not promoted / not live-ready | `210` | 见诊断 | `64.76%` | `0.96` | `-22.38%` | OOS PF `1.439` | 由 `combo_short_rank2` 固化；总收益 `+833.71%`、PF `1.771`，但 short OOS 只有 `5` 笔。只允许 1x 或极小 notional 验证，不是生产版本。 |
-| `HYPE-5M-PBTR-V6.2.1` | V6.2 的 long `htf_spread >= 0` 变体：long `EMA21/55 TP2.5/SL7/tx36`，short 仍为 V6.2 short rank2，组合严格单仓。 | dry-run / forward-test required | `219` | 见诊断 | `64.38%` | `1.00` | `-22.35%` | OOS PF `1.439` | 来自 V6.2 full ablation 的 `long_htf_threshold_0p0`；fixed `3x` 总收益 `+1022.25%`、PF `1.804`，但 short OOS 仍只有 `5` 笔。新 live runner `hype-pullback-enhance` 默认先 dry-run，不是生产 sizing。 |
+| `HYPE-5M-PBTR-V6.2.1` | V6.2 的 long `htf_spread >= 0` 变体：long `EMA21/55 TP2.5/SL7/tx36`，short 仍为 V6.2 short rank2，组合严格单仓。 | dry-run / forward-test required | `219` | 见诊断 | `64.38%` | `1.00` | `-22.35%` | OOS PF `1.439` | 来自 V6.2 full ablation 的 `long_htf_threshold_0p0`；fixed `3x` 总收益 `+1022.25%`、PF `1.804`，但 short OOS 仍只有 `5` 笔。quant-runner `hype_pullback` 已 dry-run；2026-07-09 对 2026-06 已知窗口 runtime/research 对拍 `16/16 MATCH`，仍缺真实成交 forward-test，不是生产 sizing。 |
 
 注：上表从 `2026-06-24` 起采用线上实盘成本口径。早期 V1/V2 小节中的历史切片表来自旧默认成本报告，仅作为研究来源记录；当前候选横向比较以上表和实盘成本诊断为准。
 
@@ -860,7 +860,7 @@ fixed `3x` ablation 结果：`219` 笔、总收益 `+1022.25%`、PF `1.804`、�
 
 2026-06-30 动态 ATR TP/SL 测试补充：V6.2.1 默认不是 trailing，也不是持仓中动态重算 TP/SL；它是入场时用信号 K `ATR14` 一次性计算固定 bracket。本轮测试 `entry_anchor_dynamic_atr`、`entry_anchor_no_widen_stop`、`close_reset_dynamic_atr`、`close_reset_no_widen_stop` 四类可执行动态 ATR bracket，并扫描 `TP scale=0.75/1.0/1.25/1.5`、`SL scale=0.75/1.0/1.25`。当前数据湖 fixed baseline 为 `220` 笔、`+1054.07%`、PF `1.813`、DD `-22.35%`；最高收益动态行为 `entry_anchor_dynamic_atr__tp1p5__sl1p0` 为 `190` 笔、`+1124.81%`、PF `1.870`，但 DD 扩大到 `-29.89%`，且 `186` 笔实际发生止损放宽。最好的低回撤动态行 `close_reset_dynamic_atr__tp0p75__sl1p25` 为 `+882.65%`、PF `1.838`、DD `-20.25%`，收益低于 baseline。结论：没有动态版本在收益、PF、回撤三者上同时稳健优于固定 bracket；默认继续保留 fixed entry-ATR bracket。
 
-实盘状态：V6.2.1 进入 `hype-pullback-enhance` runner 的默认实现，但状态只允许 dry-run / 极小 notional live audit。原因是收益提升主要来自 long HTF 阈值放宽，short leg 的 OOS 仍只有 `5` 笔，且 fixed `3x` 的历史最大回撤约 `-22%`；本地默认配置使用 `1x` 和小 notional，先验证真实 bracket 下单、单边成交后撤单、timeout、重启恢复和 SQLite 复盘口径。
+实盘状态：V6.2.1 进入 quant-runner `hype_pullback` 的默认实现，但状态只允许 dry-run / 极小 notional live audit。原因是收益提升主要来自 long HTF 阈值放宽，short leg 的 OOS 仍只有 `5` 笔，且 fixed `3x` 的历史最大回撤约 `-22%`；本地默认配置使用 `1x` 和小 notional，先验证真实 bracket 下单、单边成交后撤单、timeout、重启恢复和 SQLite 复盘口径。2026-07-09 已完成 2026-06 已知信号窗口 runtime/research 对拍（`16/16 MATCH`），见 `runner-tracking/hype-5m-pbtr-runner-2026-07-09.md`；真实成交生命周期仍待首笔线上信号后验收。
 
 ### V2.1B: 去掉 ROC
 
@@ -1050,7 +1050,7 @@ trail_stop = min(initial_stop, previous_trough + trail_atr * ATR14(current_bar))
 10. `HYPE-5M-PBTR-V6` 正式记录为 registered / not promoted 的可执行修复观察行。它放弃旧 `min_hold_bars + trailing`，使用强动量多头回踩恢复、入场即固定 bracket、36 根 K 时间退出；下一步若要推进，应先触发 live-executable promotion review，再写 runner 规格。
 11. `HYPE-5M-PBTR-V6.1` 记录为 V6 的 `TP=2.5ATR + fixed 3x` sizing/exit 变体；回测收益高但回撤和单笔风险已明显放大，只能 audit，不能直接生产 sizing。
 12. `HYPE-5M-PBTR-V6.2` 记录为 short-only 组合后的 paper/live-dry-run 候选：`combo_short_rank2` 在严格单仓组合下把 V6.1 fixed `3x` 从 `+408.95%/-25.63% DD` 改善到 `+833.71%/-22.38% DD`，但 short OOS 只有 `5` 笔；小额实盘应从 `1x` 或极小 notional 验证订单偏差，不直接生产。
-13. `HYPE-5M-PBTR-V6.2.1` 记录为 V6.2 的默认 dry-run 表达：long `htf_spread>=0` 在 2026-06-29 专项全参数消融中仍优于收紧回 `0.5` 和完全删除 HTF 过滤；fixed `3x` 只是横向比较口径，真实观察仍从 `1x` 或极小 notional 开始。
+13. `HYPE-5M-PBTR-V6.2.1` 记录为 V6.2 的默认 dry-run 表达：long `htf_spread>=0` 在 2026-06-29 专项全参数消融中仍优于收紧回 `0.5` 和完全删除 HTF 过滤；fixed `3x` 只是横向比较口径，真实观察仍从 `1x` 或极小 notional 开始。2026-07-09 runtime/research 对拍：June baseline `16/16 MATCH`（见 `runner-tracking/hype-5m-pbtr-runner-2026-07-09.md`）；这只证明信号引擎口径，不替代真实 fill forward-test。
 14. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
 15. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
 16. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。

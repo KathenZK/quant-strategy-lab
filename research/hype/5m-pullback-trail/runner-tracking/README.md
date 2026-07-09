@@ -8,4 +8,4 @@
 
 ## 当前跟踪对象
 
-- `HYPE-5M-PBTR-V6.2.1`：quant-runner `hype_pullback` dry-run 配置（`configs/dryrun.toml`，`dry_run_notional_usdt = 10`），状态 `dry-run / forward-test required`。尚无 runner 观察报告；首份报告缺失前不得升级到 `live`，也不得据此给出 `NO-GO`。
+- `HYPE-5M-PBTR-V6.2.1`：quant-runner `hype_pullback` dry-run 配置（`configs/dryrun.toml`，`dry_run_notional_usdt = 10`），状态 `dry-run / forward-test required`。已有 [`hype-5m-pbtr-runner-2026-07-09.md`](hype-5m-pbtr-runner-2026-07-09.md)：2026-06 已知信号窗口 runtime/research 对拍 `16/16 MATCH`；这只证明信号引擎口径一致，**不**替代真实成交 forward-test，也不得据此升级生产 sizing。

@@ -20,6 +20,8 @@
 
 2026-07-09 对 V1 做风险覆盖层与 TRX MACD 消融诊断：全局 `3x` cap 虽可把最差回撤压到 `-19.99%`，但额外 `4 bps/fill` 滑点即失败到 `-20.18%`；全局 `2.5x` cap 在基准成本下为 `122.81x / -18.68% DD`，额外 `4 bps/fill` 下为 `88.47x / -19.19% DD`，是下一轮冻结候选中相对更稳的方向。但该结果仍是账户层 overlay，不是逐 K 联合状态机重演，不登记为新版本。
 
+同日 `quant-runner` 接入 `kind = six_asset_ensemble` dry-run（六资产联合状态机近似，live 禁止）。这只是 runtime 观察接线，不改变 `NO-GO / not promoted / not live-ready`，也不等于研究回测路径已对拍。见 `runner-tracking/binance-1h-ar-mae-v1-runner-status.md`。
+
 ## 成分版本冻结表
 
 | Sleeve | 成分版本 | 成分主账 | V1 账户槽位 |

@@ -320,7 +320,7 @@ for trade, priority in tagged:
 ### TRX V3：MACD flip + Stochastic reversal
 
 - MACD leg 用 `MACD(34,89,13)` histogram 零轴翻转作为趋势/动量切换信号，双向交易；过滤器要求 `ADX 20-24`、`ATR <= 150 bps`、方向 ROC6 不低于 `-100 bps`、价格不限制 EMA 距离（`10000 bps`）、且方向符合闭合 `12h` regime；固定止盈 `2 ATR`、止损 `5 ATR`、最长 `120h`、入场延迟 `1h`、暴露 `5x`。
-- Stoch leg 用 `Stoch(21)` 的 `K-D` 反转交叉：低位上穿做多，高位下穿做空；双向交易；过滤器要求 `ADX <= 24`、`RVOL >= 1`、方向 ROC3 不低于 `-300 bps`、K 线实体同向；使用 trailing exit，初始止损 `6 ATR`，浮盈 `3 ATR` 后用 `2 ATR` trailing，最长 `120h`，入场延迟 `2h`，暴露 `3.5x`。
+- Stoch leg 用 `Stoch(21)` 的 `K-D` 反转交叉：低位上穿做多，高位下穿做空；双向交易；过滤器要求 `ADX <= 24`、`RVOL >= 1`、方向 ROC3 不低于 `-300 bps`、K 线实体同向、价格距 EMA233 不超过 `1500 bps`、funding 顺向拥挤不超过 `4 bps`（后两项继承自 TRX V1 基线）；使用 trailing exit，初始止损 `6 ATR`，浮盈 `3 ATR` 后用 `2 ATR` trailing，最长 `120h`，入场延迟 `2h`，暴露 `3.5x`。
 - TRX sleeve 内部用 V3 clean wrapper 复现；优先级由成分脚本按 prefit leg score 计算。
 
 ### SOL V2：Donchian break + VWAP revert
@@ -337,8 +337,8 @@ for trade, priority in tagged:
 
 ### ETH V3：BB break + RSI reversal
 
-- BB break leg 是布林突破：`bb_z(72)` 上穿 `+2.5` 做多，下穿 `-2.5` 做空；过滤器要求 `ADX >= 16`、`RVOL >= 3.5`、`ATR >= 75 bps`、方向 ROC24 至少 `+200 bps`、价格距 EMA55 不超过 `750 bps`、funding 顺向拥挤不超过 `8 bps`；固定 TP `3 ATR`、SL `5 ATR`、最长 `72h`、暴露 `1.5x`。
-- RSI reversal leg 是极端 RSI 恢复/反转：`RSI7` 上穿 `5` 做多，下穿 `75` 做空；过滤器要求 `20 <= ADX <= 45`、`ATR >= 125 bps`、方向 ROC6 不低于 `-300 bps`、价格距 EMA233 不超过 `750 bps`；固定 TP `2 ATR`、SL `3 ATR`、最长 `48h`、cooldown `24h`、暴露 `2.5x`。
+- BB break leg 是布林突破，V1 冻结路径只做多（`side_mode=long`，继承自 ETH V1 基线）：`bb_z(72)` 上穿 `+2.5` 做多；过滤器要求 `ADX >= 16`、`RVOL >= 3.5`、`75 <= ATR <= 250 bps`、方向 ROC24 至少 `+200 bps`、价格距 EMA55 不超过 `750 bps`、funding 顺向拥挤不超过 `8 bps`；固定 TP `3 ATR`、SL `5 ATR`、最长 `72h`、暴露 `1.5x`。
+- RSI reversal leg 是极端 RSI 恢复/反转：`RSI7` 上穿 `5` 做多，下穿 `75` 做空；过滤器要求 `20 <= ADX <= 45`、`125 <= ATR <= 600 bps`、方向 ROC6 不低于 `-300 bps`、价格距 EMA233 不超过 `750 bps`、K 线实体同向（`require_body_dir=true`）、funding 顺向拥挤不超过 `2 bps`；固定 TP `2 ATR`、SL `3 ATR`、最长 `48h`、cooldown `24h`、暴露 `2.5x`。
 - ETH sleeve 内部 priority 由成分 `simulate_clean` 的 prefit leg score 计算。
 
 ### BTC V4：Keltner break + CCI reversal
@@ -364,13 +364,13 @@ for trade, priority in tagged:
 | Asset / leg | style | side_mode | exit_kind | entry_delay_bars | sizing_kind | 固定说明 |
 | --- | --- | --- | --- | ---: | --- | --- |
 | TRX MACD | `macd_flip` | `both` | `fixed` | `1` | `fixed` | `min_atr_bps=0`、`max_aligned_funding_bps=10000`、`require_body_dir=false` |
-| TRX Stoch | `stoch_reversal` | 参数内 `both` | `trailing` | 参数内 `2` | `fixed` | `min_adx=0`、`min_atr_bps=0`、`max_atr_bps=10000`、`htf_mode=none`、`require_macd_turn=false`、`tp_atr` 不生效 |
+| TRX Stoch | `stoch_reversal` | 参数内 `both` | `trailing` | 参数内 `2` | `fixed` | `min_adx=0`、`min_atr_bps=0`、`max_atr_bps=10000`、`max_dist_ema_bps=1500`、`max_aligned_funding_bps=4.0`、`htf_mode=none`、`require_macd_turn=false`、`tp_atr` 不生效 |
 | SOL Donchian | `donchian_break` | `both` | `fixed` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
 | SOL VWAP | `vwap_revert` | `short` | `fixed` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
 | HYPE DI | `di_cross` | `both` | `fixed` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
 | HYPE Stoch | `stoch_reversal` | `both` | `trailing` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |
-| ETH BB | `bb_break` | `both` | `fixed` | `1` | `fixed` | `min_atr_bps=75`、`max_atr_bps=10000`、`require_macd_turn=false`、`require_body_dir=false` |
-| ETH RSI | `rsi_reversal` | `both` | `fixed` | `1` | `fixed` | `min_rvol=0`、`max_atr_bps=10000`、`htf_mode=none`、`require_macd_turn=false`、`require_body_dir=false` |
+| ETH BB | `bb_break` | `long` | `fixed` | `1` | `fixed` | `min_atr_bps=75`、`max_atr_bps=250`、`htf_mode=none`、`require_macd_turn=false`、`require_body_dir=false` |
+| ETH RSI | `rsi_reversal` | `both` | `fixed` | `1` | `fixed` | `min_rvol=0`、`max_atr_bps=600`、`max_aligned_funding_bps=2.0`、`htf_mode=none`、`require_macd_turn=false`、`require_body_dir=true` |
 | BTC Keltner | `keltner_break` | `both` | `fixed` | `1` | `fixed` | `ema_fast=55`、`ema_slow=144`、`ema_htf=55`；完整有效字段见 JSON |
 | BTC CCI | `cci_reversal` | `long` | `fixed` | `1` | `fixed` | `ema_fast=89`、`ema_slow=233`；完整有效字段见 JSON |
 | BNB EMA pullback | `ema_pullback` | `both` | `trailing` | `1` | `fixed` | 完整 engine config 已在 JSON 中列出 |

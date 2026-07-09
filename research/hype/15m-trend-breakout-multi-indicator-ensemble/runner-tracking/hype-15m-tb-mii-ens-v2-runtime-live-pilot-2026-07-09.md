@@ -3,7 +3,7 @@
 ## Status
 
 ```text
-continuous dry-run runtime implemented / disabled live pilot execution chain implemented / live not enabled / not promoted
+production dry-run deployed and healthy / disabled live pilot execution chain implemented / live not enabled / not promoted
 ```
 
 ## Source
@@ -55,7 +55,7 @@ cargo run -- replay-dry-run --config configs/dryrun.toml --name hype-tb-mii-ens-
 ```text
 cargo fmt --check: pass
 cargo clippy --all-targets: pass
-cargo test: pass, 60 library tests + 2 integration tests
+cargo test: pass, 61 library tests + 2 integration tests
 smoke-test: ok = true, issues = []
 full replay:
   replay_start_ts = 2025-06-16T02:30:00+00:00
@@ -69,6 +69,28 @@ full replay:
   win_rate        = 0.8281786941580757
 ```
 
+## Production Dry-run Deployment
+
+```text
+deployed_at: 2026-07-09T12:23:38Z
+runner_commit: 0391054 Restore TB-MII ensemble V2 spec.
+host: 47.80.57.36
+service: quant-runner-dryrun
+strategy_instance: hype-tb-mii-ens-dry-run
+config: /home/admin/quant-runner/configs/dryrun.toml
+mode: dry_run
+restart_scope: dryrun service only
+```
+
+Checks:
+
+- Local preflight: `cargo fmt --check` pass; `cargo test -p quant-runner` pass (`61` library tests + `2` integration tests).
+- Remote deploy: `git pull --ff-only origin main` to `0391054`, `cargo fmt --check` pass, `cargo test -p quant-runner` pass, `cargo build --release` pass.
+- Service status after restart: `quant-runner-dryrun.service` active/running, `MainPID=740299`.
+- Journal check since restart window: no warning/error entries for `quant-runner-dryrun.service`.
+- First runtime cycle for `hype-tb-mii-ens-dry-run`: `event=holding`, `active_leg=none`, `position_open=false`, `pending_trend_signal_ts=null`, `pending_mii_signal_ts=null`.
+- Platform health snapshot: `hype-tb-mii-ens-dry-run` status `ok`, `position_open=0`, `last_bar_ts=2026-07-09T12:00:00+00:00`, `updated_at=2026-07-09T12:23:38.905367617+00:00`.
+
 ## Boundary
 
-This implements the code path for continuous dry-run and a disabled small live pilot, but it is not an operator approval to start live. Before setting `enabled = true`, the user must provide dedicated subaccount API env vars, confirm the subaccount balance size that controls pilot notional, and explicitly approve activation. The first production step should still be dry-run observation and live-readiness review of runtime logs/fills before real orders.
+The production dry-run service is deployed and running. This is not an operator approval to start live. Before setting `enabled = true`, the user must provide dedicated subaccount API env vars, confirm the subaccount balance size that controls pilot notional, and explicitly approve activation. The next gate is dry-run observation and live-readiness review of runtime logs/fills before real orders.
