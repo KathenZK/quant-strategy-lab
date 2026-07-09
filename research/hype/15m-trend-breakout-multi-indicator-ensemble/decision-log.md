@@ -1,5 +1,21 @@
 # Decision Log
 
+## 2026-07-09 V2 continuous runtime 与 disabled live pilot 代码路径实现
+
+- 问题：用户要求完成 `V2 小额实盘执行链计划`，达到可小额 live pilot 的代码条件，但默认不直接开启 live。
+- 做法：在 `quant-runner` 抽出 V2 纯决策 helper，扩展 `TbMiiEnsembleState`，新增 `trading/runner/tb_mii_ensemble.rs` continuous runtime；实现 V39 K+2、MII K+1、MII open 型出场先于 V39、V39 优先 preempt、live 市价入场与 reduce-only TP/SL、preempt close-confirm-open、交易所 position/open-orders 核对、保护单一次恢复、fail-closed 门禁；新增 enabled dry-run 配置 `hype-tb-mii-ens-dry-run` 和 disabled live 配置 `hype-tb-mii-ens-live`。
+- 验证：`cargo fmt --check`、`cargo clippy --all-targets`、`cargo test` 全通过；`smoke-test --name hype-tb-mii-ens-dry-run` 返回 `ok=true`；full replay 命令 `replay-dry-run --limit 38900 --end-ts 2026-07-08T05:30:00Z` 仍为 `291` 笔 / V39 `107` / V1.4 `184` / preempt `3`，窗口 `2025-06-16T02:30:00Z` 至 `2026-07-08T05:30:00Z`。
+- 决定：状态更新为 `continuous dry-run runtime implemented / disabled live pilot code path implemented / live not enabled / not promoted`。这满足代码侧 live pilot 前置条件，但不等于实盘批准；下一步需要用户提供独立 subaccount env、确认小余额规模，并显式批准把 live pilot `enabled = true`。先跑 dry-run 观察并回写线上生命周期数据。
+- 证据：[runtime/live-pilot tracking](runner-tracking/hype-15m-tb-mii-ens-v2-runtime-live-pilot-2026-07-09.md)、[V2 主账](hype-15m-tb-mii-ens-core-ledger.md)、[runner-side spec](file:///Users/ZK/OpenCode/quant-runner/crates/quant-runner/src/runner/strategies/hype_tb_mii_ensemble/HYPE-15M-TB-MII-ENS-V2-SPEC.md)。
+
+## 2026-07-09 V2 runner replay 全样本对拍通过（交易路径）
+
+- 问题：用户希望尽快小资金实盘，要求先确认 runner 实现与 spec 的对齐情况、replay 是否与研究引擎一致。
+- 做法：runner commit `53e4b6d`（含第二轮对齐修复：MII open 型出场先于 V39 入场、逐 K mark-to-market、公共指标复用、warmup 2500）。用 `replay-dry-run --limit 38900 --end-ts 2026-07-08T05:30:00Z` 拉取 Binance 公共 kline `37,165` 根闭合 15m K，覆盖组合评估起点 `2025-06-16T02:30:00Z` 至数据湖末尾，对拍研究脚本 `single_v39_priority_k1` 的 291 笔逐笔路径。
+- 结果：逐笔路径零不一致——`291` 笔、V39 `107` + V1.4 `184`、preempt `3`、出场原因逐类计数一致（词表映射 1:1）、entry/exit 价格最大相对差 `4.33e-16`、allocation 精确一致。MII 腿逐笔收益 engine-exact（最大差 `6.7e-16`）；V39 腿逐笔收益最大差 `0.48%`，全部来自 runner smoke 不计 funding。整体：`+69593%` vs 研究含 funding `+68193%`，回撤 `-27.85%` vs `-28.01%`，胜率同为 `82.82%`；6m/3m 近期窗口（137 笔 / 72 笔、腿分布、preempt）全部一致。
+- 决定：验证门禁第 3 条（组合 replay gate）交易路径部分判定 PASS，状态更新为 `runner replay parity PASS (trade path) / live-executable FAILED / NO-GO / not promoted / not dry-run handoff / not live-ready`。**不构成 live 批准**：连续 dry-run runtime、live preempt 原子流程、保护单、重启恢复、kill switch、V39 funding 记账仍未实现。若用户坚持小资金 pilot，顺序为：实现连续 runtime -> shadow/dry-run 差异报告 -> live-executable 审计 -> 用户显式批准。
+- 证据：[replay parity 报告](runner-tracking/hype-15m-tb-mii-ens-v2-runner-replay-parity-2026-07-09.md)、[runner 逐笔 CSV](artifacts/hype_15m_tb_mii_ens_v2_runner_replay_parity_trades_2026-07-09.csv)、[对拍摘要 JSON](artifacts/hype_15m_tb_mii_ens_v2_runner_replay_parity_summary_2026-07-09.json)。
+
 ## 2026-07-09 V2 runner replay validation kind implemented
 
 - 问题：用户要求按 `live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md` 在 `quant-runner` 实现 V2 策略。

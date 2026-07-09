@@ -3,7 +3,7 @@
 Status：
 
 ```text
-runner kind implemented for replay validation / continuous dry-run runtime blocked / live blocked / not dry-run handoff / not live-ready
+runner kind implemented / replay parity pass / continuous dry-run runtime implemented / disabled live pilot code path implemented / live not enabled
 ```
 
 ## Source
@@ -26,7 +26,7 @@ runner kind implemented for replay validation / continuous dry-run runtime block
   - Default `warmup_bars` for the kind raised to `2500` per validation spec preload requirement.
   - Removed the duplicated full validation-spec copy from the runner strategy directory; the runner-side SPEC now declares loop-order/mark alignment and the remaining known differences (funding excluded; gap-through-stop booked at bar open via shared `trading/bracket.rs` with runner exit-reason names mapped 1:1 to research labels).
 - Added disabled validation TOML instance: `configs/dryrun.toml` / `hype-tb-mii-ens-v2-validation`.
-- Continuous dry-run/live runtime is intentionally blocked. The current runner cannot yet execute V39 K+2 pending open entries, atomic live preempt close-confirm-open, restart recovery, kill switch, notional caps, or funding reconciliation.
+- 2026-07-09 runtime/live-pilot pass: continuous dry-run is implemented; disabled live pilot code path implements V39 K+2, MII K+1, live protection orders, atomic preempt close-confirm-open, restart state, protection recovery, exchange reconciliation, and fail-closed gates. See `runner-tracking/hype-15m-tb-mii-ens-v2-runtime-live-pilot-2026-07-09.md`.
 
 ## Smoke Command
 
@@ -88,6 +88,6 @@ smoke-test: ok = true, issues = []
 
 ## Decision
 
-Implementation removes the previous blocker “strategy kind does not exist” for replay validation only. It does not remove live-executable blockers. Status remains `NO-GO / not dry-run handoff / not live-ready`.
+Implementation removed the previous blocker “strategy kind does not exist”. The later runtime/live-pilot pass removes the continuous runtime blocker at code level, but live remains disabled and requires explicit operator approval, dedicated subaccount credentials, and balance-size confirmation before `enabled = true`.
 
 Next gate is full standard data lake parity against `research_hype_15m_tb_mii_ensemble_backtest.py --trend v39 --mii v14`, including逐 K state, all trades, preempt count, and equity curve tolerance.

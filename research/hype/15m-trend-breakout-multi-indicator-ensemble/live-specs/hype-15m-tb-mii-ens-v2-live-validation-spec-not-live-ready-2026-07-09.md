@@ -333,7 +333,7 @@ V2 live pilot 前必须实现：
 
 ```toml
 [[strategies]]
-name = "hype-tb-mii-ens-v2-dry-run"
+name = "hype-tb-mii-ens-dry-run"
 enabled = false
 group = "validation"
 kind = "hype_tb_mii_ensemble"
@@ -341,7 +341,7 @@ mode = "dry_run"
 symbol = "HYPE/USDT:USDT"
 timeframe = "15m"
 account_id = "dryrun"
-state_dir = "/home/admin/quant-runner/state/hype-tb-mii-ens-v2-dry-run"
+state_dir = "/home/admin/quant-runner/state/hype-tb-mii-ens-dry-run"
 leverage = 3
 margin_mode = "isolated"
 warmup_bars = 2500

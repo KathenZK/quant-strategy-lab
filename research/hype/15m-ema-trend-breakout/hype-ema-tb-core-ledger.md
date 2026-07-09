@@ -442,3 +442,11 @@ V39 基线：full `+9969.45% / -23.46% / Sharpe 4.81 / 107 笔 / 胜率 79.44%`�
 按用户要求，为同事验证导出 `HYPE-EMA-TB-V39` runner handoff 规格：`live-specs/hype-ema-tb-v39-live-spec-not-live-ready-2026-07-09.md`。该规格完整固定 V39 的身份、数据质量要求、成本/funding 口径、15m/1h 指标定义、K0/K1/K2 入场时序、sizing、TP/SL、indicator exit、timeout、禁用项、runner TOML 草案和同事验证清单。
 
 重要状态：这只是 `live spec draft / not implemented in quant-runner / not dry-run / not live-ready`。当前 `/Users/ZK/OpenCode/quant-runner` 还没有 `hype_ema_tb` kind、module 或 runner-side SPEC；文档中的 `kind = "hype_ema_tb"` 是建议实现值，不能直接粘贴到当前 runner 配置运行。V39 当前仍停留 `registered / not promoted / not dry-run / not live-ready`；只有 runner 实现、Python/runner 指标与交易路径对拍、验证门禁 3/4/6/7、live-executable 审计、runner-tracking 证据补齐后，才允许讨论 dry-run 或 live。
+
+### 2026-07-09 V39 K+1 execution diagnostic
+
+针对“V39 能否使用 K+1 入场替代当前 K+2 base”的问题，跑同窗执行时序诊断。唯一改动是 `entry_delay_bars=2 -> 1`：K2 base 为 K0 close 信号、跳过 K1、K2 open 入场、entry ATR 取 K1 已完成 `ATR672`；K1 诊断为 K0 close 信号、K1 open 入场、entry ATR 取 K0 已完成 `ATR672`。信号、sizing、TP/SL、indicator exit、timeout、成本和 funding 全部沿用 V39。
+
+结论：**不把 V39 改成 K+1，不登记 V39.2**。K1 full `+3256.99% / -37.14% / Sharpe 3.76 / 112 笔 / 胜率 72.32%`，显著弱于 K2 base `+9969.45% / -23.46% / Sharpe 4.81 / 107 笔 / 胜率 79.44%`；90d 也从 K2 `+217.53% / -21.90% / 胜率 77.14%` 降为 K1 `+109.24% / -25.20% / 胜率 66.67%`。分片上 6m `+1802.57% -> +799.41%`，1y `+11342.95% -> +4701.93%`，近期 7d/1m 大致接近但不能抵消中长期劣化。
+
+路径差异不是单纯“早一根成交”的价差：K2 共 107 笔、K1 共 112 笔，按 `signal_bar + direction` 只能对齐 72 笔；K2-only 35 笔、K1-only 40 笔。72 笔共同交易里，K1 相对 K2 的单笔收益差中位数仅 `-0.0075pp`，但均值为 `-1.0085pp`，且 4 笔 K2 take_profit 在 K1 中变成 stop_loss。说明更早入场改变了持仓占用、出场时点与后续信号集合，并非稳定改善执行。当前 V39 live spec 的 K0 close -> skip K1 -> K2 open 入场口径保持不变。证据：[diagnostics/hype-ema-tb-v39-k1-execution-diagnostic-2026-07-09.md](diagnostics/hype-ema-tb-v39-k1-execution-diagnostic-2026-07-09.md)；脚本：[scripts/research_hype_ema_tb_v39_k1_execution_diagnostic.py](scripts/research_hype_ema_tb_v39_k1_execution_diagnostic.py)；产物：[json](artifacts/hype_ema_tb_v39_k1_execution_diagnostic_2026-07-09.json)、[trades.csv](artifacts/hype_ema_tb_v39_k1_execution_diagnostic_2026-07-09_trades.csv)、[annotated_trades.csv](artifacts/hype_ema_tb_v39_k1_execution_diagnostic_2026-07-09_annotated_trades.csv)、[equity.csv](artifacts/hype_ema_tb_v39_k1_execution_diagnostic_2026-07-09_equity.csv)。
