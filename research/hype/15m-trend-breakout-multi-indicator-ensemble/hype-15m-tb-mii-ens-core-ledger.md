@@ -12,10 +12,10 @@ Created：2026-07-07
 
 ## 当前状态
 
-- 当前状态：`V2 live validation spec draft / NO-GO / not promoted / not live-ready`。
+- 当前状态：`V2 runner replay validation implemented / live-executable FAILED / NO-GO / not promoted / not dry-run handoff / not live-ready`。
 - 当前登记版本：`V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4`，单账户 `single_v39_priority_k1` 主口径（V39 优先 + V1.4 强平让位）。
 - `V2` 是用户于 2026-07-09 指定登记的组合版本号；此前 V35+V1.3 与 V39+V1.3 仍为 diagnostic evidence，不反推登记为 V1。
-- 2026-07-09 已导出 V2 live validation spec，但它不是实盘批准书；V2 仍未实现 runner、未 replay/dry-run 对拍、未完成 preempt 换仓和重启恢复审计。
+- 2026-07-09 已导出 V2 live validation spec，并完成 live-executable 审计；审计结论为 `FAILED / NO-GO`。同日 `quant-runner` 已新增 `hype_tb_mii_ensemble` replay validation kind 和 disabled validation 配置；仅通过 Binance public kline 小窗口 smoke，尚未完成标准数据湖 parity、连续 dry-run runtime、preempt live 执行、重启恢复和 kill switch 审计。
 - 母版本状态：`HYPE-EMA-TB-V39` 为观察候选（未跨所迁移、未 walk-forward、未 live-executable 审计）；`HYPE-15M-MII-V1.4` 为 registered / not live-ready（未 runner dry-run）。组合继承全部 blocker（趋势腿：盘口级 stop 证据、闪崩尾部风险；V1.4：资金费、重启恢复、kill switch、同样本选参风险），并新增单账户杠杆叠加与 preempt 换仓时序风险。
 
 ## 数据与成本口径
@@ -37,7 +37,7 @@ Created：2026-07-07
 
 | Version | 组合定义 | 主口径指标 | 周度审计 | 状态 | 证据 |
 | --- | --- | --- | --- | --- | --- |
-| `V2` | `HYPE-EMA-TB-V39` + `HYPE-15M-MII-V1.4`；单账户 `single_v39_priority_k1`；V39 优先，V1.4 持仓遇 V39 信号强平让位；MII K+1 open | `+68192.54%` 总收益 / `-28.01%` 最大回撤 / Sharpe `5.79` / `291` 笔 / 胜率 `82.82%`；让位 `3` 次 | 过去一年 `274` 笔，`228` 胜 / `46` 负，胜率 `83.21%`；V39 `104` 笔，V1.4 `170` 笔；零交易周 `5` | `registered diagnostic / live validation spec draft / NO-GO / not promoted / not live-ready` | [组合回测报告](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)、[周度审计](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)、[live validation spec](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)、[周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv) |
+| `V2` | `HYPE-EMA-TB-V39` + `HYPE-15M-MII-V1.4`；单账户 `single_v39_priority_k1`；V39 优先，V1.4 持仓遇 V39 信号强平让位；MII K+1 open | `+68192.54%` 总收益 / `-28.01%` 最大回撤 / Sharpe `5.79` / `291` 笔 / 胜率 `82.82%`；让位 `3` 次 | 过去一年 `274` 笔，`228` 胜 / `46` 负，胜率 `83.21%`；V39 `104` 笔，V1.4 `170` 笔；零交易周 `5` | `runner replay validation implemented / live-executable FAILED / NO-GO / not promoted / not dry-run handoff / not live-ready` | [组合回测报告](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)、[runner smoke](runner-tracking/hype-15m-tb-mii-ens-v2-runner-implementation-smoke-2026-07-09.md)、[周度审计](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)、[live validation spec](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)、[live-executable 审计](diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)、[周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv) |
 
 ## 组合结构台账
 
@@ -84,7 +84,7 @@ Created：2026-07-07
 
 两腿日收益相关系数 `-0.074`（组合窗口，K+1）。与 V1.3 轮（同窗口）相比：`single_v39_priority_k1` 从 `+39829%` 提升到 `+68193%` 而全样本回撤不变（回撤主导段来自 V39 腿）；K+2 延迟压力回撤从 `-33.82%` 收敛到 `-30.98%`；最近 1 月 MII 腿负收益从 `-11.02%` 缓和到 `-3.50%` 但仍拖累组合。注意 V1.4 的 `min_rvol96=0.85` 本身是同一数据湖上网格选出的进取观察点，组合改善继承该同样本选参风险。
 
-2026-07-09 后续登记：该轮单账户 `single_v39_priority_k1` 被用户指定记录为 `V2`。登记不改变 live-readiness 结论，状态仍为 `NO-GO / not promoted / not live-ready`。近一年周度开单审计见 [hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)。
+2026-07-09 后续登记：该轮单账户 `single_v39_priority_k1` 被用户指定记录为 `V2`。登记不改变 live-readiness 结论；同日 live-executable 审计结论为 `FAILED / NO-GO`。近一年周度开单审计见 [hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)，live-executable 审计见 [hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md](diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)。
 
 ## 证据入口
 
@@ -93,8 +93,10 @@ Created：2026-07-07
 - V39 + V1.4 组合回测含门禁：[hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)
 - V2 近一年周度开单审计：[hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)
 - V2 live validation spec（非实盘批准）：[hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)
+- V2 live-executable 审计（失败）：[hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md](diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)
+- V2 runner implementation smoke：[hype-15m-tb-mii-ens-v2-runner-implementation-smoke-2026-07-09.md](runner-tracking/hype-15m-tb-mii-ens-v2-runner-implementation-smoke-2026-07-09.md)
 - 复现脚本：[research_hype_15m_tb_mii_ensemble_backtest.py](scripts/research_hype_15m_tb_mii_ensemble_backtest.py)（`--trend v35|v39 --mii v13|v14`）
-- 保留产物：[hype_15m_tb_mii_ensemble_backtest_2026-07-07.json](artifacts/hype_15m_tb_mii_ensemble_backtest_2026-07-07.json)、[hype_15m_tb_mii_ensemble_backtest_v39_2026-07-08.json](artifacts/hype_15m_tb_mii_ensemble_backtest_v39_2026-07-08.json)、[hype_15m_tb_mii_ensemble_backtest_v39_v14_2026-07-09.json](artifacts/hype_15m_tb_mii_ensemble_backtest_v39_v14_2026-07-09.json)、[V2 周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv) 及配套 equity/trades CSV。
+- 保留产物：[hype_15m_tb_mii_ensemble_backtest_2026-07-07.json](artifacts/hype_15m_tb_mii_ensemble_backtest_2026-07-07.json)、[hype_15m_tb_mii_ensemble_backtest_v39_2026-07-08.json](artifacts/hype_15m_tb_mii_ensemble_backtest_v39_2026-07-08.json)、[hype_15m_tb_mii_ensemble_backtest_v39_v14_2026-07-09.json](artifacts/hype_15m_tb_mii_ensemble_backtest_v39_v14_2026-07-09.json)、[V2 合并周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv)、[V2 分腿周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_by_leg_1y_2026-07-09.csv) 及配套 equity/trades CSV。
 - Decision log：[decision-log.md](decision-log.md)
 
 ## 已知风险

@@ -6,11 +6,13 @@ Family：`HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble`（alias：`HYPE-15M-
 
 Version：`V2`
 
-Status：`live validation spec draft / not implemented in runner / not dry-run / not live-ready`
+Status：`live validation spec draft / live-executable FAILED / not implemented in runner / not dry-run / not live-ready`
 
 ## 先读结论
 
 本文档用于把 `HYPE-15M-TB-MII-ENS-V2` 导出为可实现、可 replay、可 dry-run 对拍的 live validation spec。它不是实盘批准书，也不是 dry-run 启动批准。
+
+后续审计：2026-07-09 已完成 live-executable 静态审计，结论为 `FAILED / NO-GO`。主要 blocker 是 V2 runner kind 未实现、V39 trend-breakout runner 未实现、`quant-runner` 的 MII 默认仍是 V1.3、组合 preempt/重启恢复/kill switch 未实现。详见 [`../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md`](../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)。
 
 `V2` 的定义是：
 
@@ -62,7 +64,7 @@ V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4
 当前状态保持：
 
 ```text
-V2 live validation spec draft / NO-GO / not promoted / not live-ready
+V2 live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready
 ```
 
 进入 runner dry-run 前至少需要完成：
@@ -473,6 +475,8 @@ V1.4 必须对拍：
 - 组合 decision log：[`../decision-log.md`](../decision-log.md)
 - V2 组合回测报告：[`../notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md`](../notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)
 - V2 周度与近期审计：[`../notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md`](../notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)
+- V2 live-executable 审计（失败）：[`../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md`](../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)
+- V2 live-executable 静态检查摘要：[`../artifacts/hype_15m_tb_mii_ens_v2_live_executable_static_audit_2026-07-09.md`](../artifacts/hype_15m_tb_mii_ens_v2_live_executable_static_audit_2026-07-09.md)
 - V2 周度 CSV：[`../artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv`](../artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv)
 - V2 6m/3m CSV：[`../artifacts/hype_15m_tb_mii_ens_v2_recent_6m_3m_trade_audit_2026-07-09.csv`](../artifacts/hype_15m_tb_mii_ens_v2_recent_6m_3m_trade_audit_2026-07-09.csv)
 - 组合回测脚本：[`../scripts/research_hype_15m_tb_mii_ensemble_backtest.py`](../scripts/research_hype_15m_tb_mii_ensemble_backtest.py)
@@ -486,7 +490,7 @@ V1.4 必须对拍：
 建议状态仍为：
 
 ```text
-HYPE-15M-TB-MII-ENS-V2: live validation spec draft / NO-GO / not promoted / not dry-run / not live-ready
+HYPE-15M-TB-MII-ENS-V2: live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready
 ```
 
 只有 runner 实现、replay 对拍、shadow/dry-run、订单时序审计和 kill-switch 验证全部完成后，才允许讨论小资金 live pilot。

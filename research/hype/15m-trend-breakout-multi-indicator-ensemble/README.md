@@ -18,13 +18,14 @@ Created：2026-07-07
 
 ## 当前状态
 
-- 当前状态：`V2 live validation spec draft / NO-GO / not promoted / not live-ready`。
+- 当前状态：`V2 live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready`。
 - 当前登记版本：`V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4`，单账户 `single_v39_priority_k1`（V39 优先 + V1.4 强平让位）。
 - 首次组合回测（V35 + V1.3）见 [hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md](notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md)。
 - V39 + V1.3 组合回测（含门禁校验）见 [hype-15m-tb-mii-ensemble-v39-combination-backtest-2026-07-08.md](notes/hype-15m-tb-mii-ensemble-v39-combination-backtest-2026-07-08.md)。
 - V39 + V1.4 组合回测（含门禁校验）见 [hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)。
 - V2 近一年周度开单审计见 [hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)。
 - V2 live validation spec（非实盘批准）见 [hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)。
+- V2 live-executable 审计（失败）见 [hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md](diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)。
 - 家族主账：[hype-15m-tb-mii-ens-core-ledger.md](hype-15m-tb-mii-ens-core-ledger.md)。
 
 ## 阅读顺序

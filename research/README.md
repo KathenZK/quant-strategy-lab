@@ -40,7 +40,7 @@
 | `HYPE-5M-MA-Pullback-Scalp` | - | [hype/5m-ma-pullback-scalp/](hype/5m-ma-pullback-scalp/README.md) | `5m` 双 MA 回踩 scalp | explore / not promoted / not live-ready |
 | `HYPE-5M-Micro-Scalp` | `HYPE-5M-MS` | [hype/5m-micro-scalp/](hype/5m-micro-scalp/README.md) | `5m` 高频小利 scalp 搜索 | V1-V1.3 registered / not promoted / not live-ready |
 | `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | [hype/5m-event-quality-scoring/](hype/5m-event-quality-scoring/README.md) | `5m` 事件质量打分 | V1 registered / not promoted（strict seed audit 未通过） |
-| `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | [hype/15m-trend-breakout-multi-indicator-ensemble/](hype/15m-trend-breakout-multi-indicator-ensemble/README.md) | `EMA-TB-V39` + `MII-V1.4` 单账户组合（V39 优先 + 强平让位） | V2 live validation spec draft / NO-GO / not promoted / not live-ready |
+| `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | [hype/15m-trend-breakout-multi-indicator-ensemble/](hype/15m-trend-breakout-multi-indicator-ensemble/README.md) | `EMA-TB-V39` + `MII-V1.4` 单账户组合（V39 优先 + 强平让位） | V2 live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready |
 | `HYPE-6H-RS4-Regime-Switch` | - | [hype/6h-rs4-regime-switch/](hype/6h-rs4-regime-switch/README.md) | `6h` regime-switch 趋势（压缩动量腿 + 扩张突破腿）复现 | V1 registered / not promoted / not live-ready |
 
 ## 单资产研究（非 HYPE）

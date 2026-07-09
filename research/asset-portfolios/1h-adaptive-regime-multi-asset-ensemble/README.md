@@ -26,6 +26,8 @@
 
 `V1`（2026-07-07 登记）：全账户同一时间只允许一笔持仓、先到先得、全额权益执行；全期年化 `287.01x` 但最大回撤 `-21.43%` 穿破 `<20%` 硬门槛，reused holdout `7.67x / -19.79% DD`；状态 `not promoted / not live-ready`。等权 `1/6` 结构保留为 V1 登记前 diagnostic observation，不是正式版本。
 
+2026-07-09 V1 风险覆盖层诊断显示：全局 `3x` cap 只是在基准成本下贴线过关（最差 DD `-19.99%`），额外 `4 bps/fill` 滑点即失败；全局 `2.5x` cap 在基准成本与额外滑点下都守住 `<20%` DD，但仍未做逐 K 联合状态机重演，因此只是下一轮冻结候选方向，不是新登记版本。
+
 ## 入口
 
 - 主账：`binance-1h-ar-mae-core-ledger.md`
@@ -34,5 +36,7 @@
 - V1 简版规格：`specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`
 - 首次组合回测（等权 `1/6`）：`notes/binance-1h-ar-mae-first-combination-backtest-2026-07-07.md`
 - V1 单仓先到先得回测：`notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`
+- V1 风险覆盖层诊断：`notes/binance-1h-ar-mae-v1-risk-overlay-diagnostics-2026-07-09.md`
+- V1 每周交易统计：`notes/binance-1h-ar-mae-v1-weekly-stats-2026-07-09.md`
 - 复现脚本：`scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py`、`scripts/research_binance_1h_ar_mae_single_position_backtest.py`
 - 产物：`artifacts/`

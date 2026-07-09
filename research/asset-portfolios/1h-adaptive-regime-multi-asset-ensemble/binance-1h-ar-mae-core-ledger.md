@@ -18,6 +18,8 @@
 
 同日按用户要求补测了“全账户单仓、先到先得”结构，并在用户后续指令下正式登记为 `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1`（短 id：`BIN-1H-AR-MAE-V1`）：全期年化 `287.01x` 但最大回撤 `-21.43%` 穿破 `<20%` 硬门槛，且阻塞反事实未做逐 K 联合状态机重演，因此 `V1` 只是 diagnostic registered version，不是 candidate、paper-live、dry-run、handoff 或 live。
 
+2026-07-09 对 V1 做风险覆盖层与 TRX MACD 消融诊断：全局 `3x` cap 虽可把最差回撤压到 `-19.99%`，但额外 `4 bps/fill` 滑点即失败到 `-20.18%`；全局 `2.5x` cap 在基准成本下为 `122.81x / -18.68% DD`，额外 `4 bps/fill` 下为 `88.47x / -19.19% DD`，是下一轮冻结候选中相对更稳的方向。但该结果仍是账户层 overlay，不是逐 K 联合状态机重演，不登记为新版本。
+
 ## 成分版本冻结表
 
 | Sleeve | 成分版本 | 成分主账 | V1 账户槽位 |
@@ -45,6 +47,7 @@
 | --- | --- | --- | --- | --- | --- |
 | `BIN-1H-AR-MAE-FIRST-2026-07-07` | first combination diagnostic / not promoted | 六 sleeve 等权 `1/6`，小时再平衡主口径 + 不再平衡对照 | full `4.069x / +1284.22% / -4.43% DD / 89.66% win / 522 trades / PF 6.627`；六 sleeve 齐备段 `3.821x / -4.43%`；reused holdout `1.625x / +12.72% / 75.38% win`；`last_7d -1.71%`；日收益相关性最大 `0.185`；平均毛暴露 `0.247x`、最大 `1.83x` | `notes/binance-1h-ar-mae-first-combination-backtest-2026-07-07.md`；`artifacts/binance_1h_ar_mae_first_backtest_2026-07-07.json`；`scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py` | `NO-GO / not live-ready`：成分全 NO-GO、reused holdout 走弱、组合层压力与 runner 审计缺失 |
 | `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` (`BIN-1H-AR-MAE-V1`) | registered single-position version / not promoted | 全账户单仓槽位、先到先得；持仓期间忽略所有其他信号；同小时平手按家族 current-full 年化降序；中选交易占用全额权益并按 sleeve 冻结杠杆（最高 `5x`）执行 | full `287.01x / -21.43% DD / 90.30% win / 371 trades / PF 6.862`（候选 `522` 笔、阻塞跳过 `151` 笔）；reused holdout `7.67x / +65.31% / -19.79% DD / 78.57% win / 42 trades`；`last_7d +0.46% / -15.92% DD`；`last_1m +58.18% / -15.92% DD`；`last_3m +66.01% / -19.79% DD`；`last_6m +1089.35% / -21.43% DD`；`last_1y +13315.39% / -21.43% DD` | `specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`；`specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`；`notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`；`artifacts/binance_1h_ar_mae_single_position_2026-07-07.json`；`scripts/research_binance_1h_ar_mae_single_position_backtest.py` | `NO-GO / not live-ready`：full 与 `last_6m/1y` DD `-21.43%` 穿破 `<20%` 硬门槛；阻塞后未做逐 K 联合状态机重演（cooldown 反事实近似）；成分全 NO-GO；无压力与 runner 审计 |
+| `BIN-1H-AR-MAE-V1-RISK-OVERLAY-2026-07-09` | diagnostic observation / not registered | 复用 V1 中选规则，测试全局 `3x`/`2.5x` cap、TRX `macd_flip` cap/剔除、`>3x` 候选过滤和成本压力；均为账户层 overlay | `cap3x` full `192.49x / -19.99% DD`，但 extra `4 bps/fill` 后 `134.46x / -20.18% DD` 失败；`cap2.5x` full `122.81x / -18.68% DD`，extra `4 bps/fill` 后 `88.47x / -19.19% DD`；double fee+slippage 下 `3x/2.5x` 均约 `-25.5% DD` 失败 | `notes/binance-1h-ar-mae-v1-risk-overlay-diagnostics-2026-07-09.md`；`artifacts/binance_1h_ar_mae_v1_risk_overlay_diagnostics_2026-07-09.json`；`artifacts/binance_1h_ar_mae_v1_risk_overlay_matrix_2026-07-09.csv`；`scripts/research_binance_1h_ar_mae_v1_risk_overlay_diagnostics.py` | `NO-GO / not live-ready`：overlay 未重演逐 K 联合状态机；成本压力是交易后近似；成分全 NO-GO；若冻结下一版需优先审计 `cap2.5x` |
 
 ## Promotion 边界
 

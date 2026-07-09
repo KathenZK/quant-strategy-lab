@@ -25,3 +25,11 @@
 - 指标：full `287.01x / -21.43% DD / 90.30% win / 371 trades / PF 6.862`；reused holdout `7.67x / +65.31% / -19.79% DD / 78.57% win / 42 trades`；`last_7d +0.46% / -15.92% DD`；`last_1m +58.18% / -15.92% DD`；`last_3m +66.01% / -19.79% DD`；`last_6m +1089.35% / -21.43% DD`；`last_1y +13315.39% / -21.43% DD`。
 - 决策：登记为 `V1` 但状态保持 `NO-GO / not promoted / not live-ready`。理由：full 与 `last_6m/1y` 回撤 `-21.43%` 穿破 `<20%` 硬门槛；阻塞后未做逐 K 联合状态机重演；成分全部是 diagnostic NO-GO；组合层压力与生产执行审计缺失。
 - 证据：`specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`、`specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`、`binance-1h-ar-mae-core-ledger.md`、`notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`。
+
+## 2026-07-09 V1 风险覆盖层与 TRX MACD 消融诊断
+
+- 背景：用户要求按优化建议做一轮 V1 风险约束、TRX MACD 消融与成本压力诊断。
+- 方法：保持 V1 六个冻结 sleeve 交易路径与全账户单仓先到先得选择规则；只在账户层叠加风险覆盖层，包括全局 `3x`/`2.5x` cap、TRX `macd_flip` cap 或剔除、`>3x` 候选过滤，以及 cap 后的额外 `4 bps/fill` 滑点和 double fee+slippage 压力。成本压力为交易后账户层近似，不是逐 K 成交重演。
+- 结果：V1 baseline 复现为 full `287.01x / -21.43% DD`；全局 `3x` cap 为 `192.49x / -19.99% DD`，但加 `4 bps/fill` 额外滑点后失败为 `134.46x / -20.18% DD`；全局 `2.5x` cap 为 `122.81x / -18.68% DD`，加 `4 bps/fill` 后仍为 `88.47x / -19.19% DD`；double fee+slippage 下 `3x` 与 `2.5x` 都失败，最差回撤约 `-25.5%`。
+- 决策：登记为未编号 diagnostic observation `BIN-1H-AR-MAE-V1-RISK-OVERLAY-2026-07-09`，不登记 `V1.1/V1.2`，状态 `NO-GO / not promoted / not live-ready`。若后续要冻结新版本，优先研究 `V1 + 全账户单笔暴露 cap 2.5x`，并先完成逐 K 联合状态机重演与真实 K+2/成本压力。
+- 证据：`notes/binance-1h-ar-mae-v1-risk-overlay-diagnostics-2026-07-09.md`、`artifacts/binance_1h_ar_mae_v1_risk_overlay_diagnostics_2026-07-09.json`、`artifacts/binance_1h_ar_mae_v1_risk_overlay_matrix_2026-07-09.csv`、`scripts/research_binance_1h_ar_mae_v1_risk_overlay_diagnostics.py`。

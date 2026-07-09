@@ -1,11 +1,27 @@
 # Decision Log
 
+## 2026-07-09 V2 runner replay validation kind implemented
+
+- 问题：用户要求按 `live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md` 在 `quant-runner` 实现 V2 策略。
+- 做法：在 `quant-runner` 新增 `hype_tb_mii_ensemble` strategy kind、runner-side SPEC、固定代码默认参数、V39 + MII V1.4 组合 replay 状态机、`replay-dry-run` CLI 分支和 disabled validation TOML 实例。普通连续 dry-run/live runtime 显式 blocked，避免未审计 preempt 下单路径误运行。
+- 验证：`cargo fmt`、`cargo clippy --all-targets --all-features`、`cargo test` 均通过；`cargo run -- smoke-test --config configs/dryrun.toml --name hype-tb-mii-ens-v2-validation` 返回 `ok=true`；`cargo run -- replay-dry-run --config configs/dryrun.toml --name hype-tb-mii-ens-v2-validation --limit 1000` 跑通，窗口 `2026-06-28T21:45:00Z` 至 `2026-07-09T07:30:00Z`，`1000` 根 K，输出 `2` 笔（V39 `1`、MII `1`、preempt `0`）。
+- 决定：移除“runner kind 不存在”这一 replay validation blocker；状态更新为 `runner replay validation implemented / live-executable FAILED / NO-GO / not promoted / not dry-run handoff / not live-ready`。这不构成 dry-run handoff 或 live approval；下一步必须做标准数据湖 parity，对拍 `291` 笔、V39 `107`、MII V1.4 `184`、preempt `3` 和权益曲线。
+- 证据：[runner implementation smoke](runner-tracking/hype-15m-tb-mii-ens-v2-runner-implementation-smoke-2026-07-09.md)、[V2 live validation spec](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)、[V2 主账](hype-15m-tb-mii-ens-core-ledger.md)。
+
+## 2026-07-09 V2 live-executable 审计失败
+
+- 问题：用户要求对 `HYPE-15M-TB-MII-ENS-V2` 做 live-executable 验证，确认是否可以进入 dry-run/live。
+- 做法：核对 V2 live validation spec、组合回测报告、Python 组合状态机、本地 [`quant-runner`](file:///Users/ZK/OpenCode/quant-runner) 与 [`hype-trend`](file:///Users/ZK/OpenCode/hype-trend) 静态实现。生成静态检查 JSON，并撰写 diagnostics 报告。
+- 结果：研究侧数据质量与 Python replay 门禁保持通过；执行侧审计失败。主要 blocker：`quant-runner` 没有 `hype_tb_mii_ensemble` / V2 strategy kind，没有 `HYPE-EMA-TB-V39` trend-breakout kind；现有 `hype_mii` 默认仍是 `HYPE-15M-MII-V1.3 / min_rvol96=1.0`，不是 V1.4；`hype-trend` 是 V35 单腿 runner；组合全局单仓、V39 优先、V1.4 preempt 原子强平、V2 state/restart、funding 统一、kill switch 和 notional cap 均无实现证据。
+- 决定：状态更新为 `live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready`。不得直接 live、不得直接替换 V35 live、不得与 V35 live 同账户同 symbol 并行真单。下一步只能先做 V2 runner 实现与标准数据湖 replay 对拍。
+- 证据：[V2 live-executable 审计](diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)、[静态检查摘要](artifacts/hype_15m_tb_mii_ens_v2_live_executable_static_audit_2026-07-09.md)、[V2 live validation spec](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)。
+
 ## 2026-07-09 V2 live validation spec 导出（非实盘批准）
 
 - 问题：用户说明此前 `HYPE-EMA-Trend-Breakout-V35` 在实盘运行过，现在希望把 `HYPE-15M-TB-MII-ENS-V2` “实盘看看”，要求先出一份 live spec 文档。
 - 做法：导出 V2 live validation spec，明确 V2 不是 V35 runner 配置改参即可运行，而是需要新增组合状态机、`HYPE-15M-MII-V1.4` 腿、全局单仓仲裁、`preempted_by_v39` 强平让位流程、保护单、重启恢复、交易所对账和 kill switch。
 - 关键边界：V2 live 前不得与现有 V35 live service 在同一 Binance 账户 / `HYPEUSDT` 上同时真单运行；若只做 shadow/dry-run，可以并行但不得提交真实订单或撤改 V35 订单。preempt 必须先取消 V1.4 保护单、只减仓平 V1.4、确认 flat，再开 V39。
-- 决定：状态更新为 `live validation spec draft / NO-GO / not promoted / not live-ready`，不构成 dry-run 或 live 批准。下一步应先实现 runner replay，对拍标准数据湖 `291` 笔、V39 `107` 笔、V1.4 `184` 笔、preempt `3` 次，再做 shadow/dry-run。
+- 决定：当时状态更新为 `live validation spec draft / NO-GO / not promoted / not live-ready`，不构成 dry-run 或 live 批准。后续同日 live-executable 审计结论为 `FAILED / NO-GO`，当前状态以主账为准：`live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready`；下一步应先实现 runner replay，对拍标准数据湖 `291` 笔、V39 `107` 笔、V1.4 `184` 笔、preempt `3` 次，再做 shadow/dry-run。
 - 证据：[V2 live validation spec](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)、[V2 主账](hype-15m-tb-mii-ens-core-ledger.md)。
 
 ## 2026-07-09 V2 登记与近一年周度开单审计
@@ -13,7 +29,7 @@
 - 问题：用户要求把 `HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4` 组合记录为 `V2`，并查看过去一年每周开单数与周胜率。
 - 登记：`V2` 固定为单账户主口径 `single_v39_priority_k1`，即 V39 优先、V1.4 只在 V39 空档开仓，若 V39 入场信号出现则强平 V1.4 让位；MII 腿使用 K+1 open。
 - 周度审计：窗口锚定数据末尾 `2026-07-08T05:30:00Z` 向前一年；按 `entry_ts` 归入 UTC ISO 周。过去一年共 `274` 笔，`228` 胜 / `46` 负，整体胜率 `83.21%`；V39 `104` 笔，V1.4 `170` 笔；有交易周 `48` 个，零交易周 `5` 个；最高开单周为 `2026-W05`，`20` 笔，胜率 `90.00%`。
-- 决定：主账登记为 `V2 registered diagnostic / NO-GO / not promoted / not live-ready`。登记只表示组合版本留名，不构成 promotion；仍继承 V39 未跨所/未 walk-forward/未 live-executable 审计、V1.4 未 runner dry-run 与同样本选参风险，以及组合特有 preempt 换仓时序风险。
+- 决定：当时主账登记为 `V2 registered diagnostic / NO-GO / not promoted / not live-ready`。登记只表示组合版本留名，不构成 promotion；后续同日 live-executable 审计结论为 `FAILED / NO-GO`，当前状态以主账为准：`live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready`。V2 仍继承 V39 未跨所/未 walk-forward/未 live-executable 审计、V1.4 未 runner dry-run 与同样本选参风险，以及组合特有 preempt 换仓时序风险。
 - 证据：[组合回测报告](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)、[V2 周度审计](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)、[V2 周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv)。
 
 ## 2026-07-09 V39 + V1.4 组合复测（含门禁校验）

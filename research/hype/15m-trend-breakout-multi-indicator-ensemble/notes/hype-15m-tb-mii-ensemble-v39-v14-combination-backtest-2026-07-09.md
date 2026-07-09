@@ -4,7 +4,7 @@ Family：`HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble`（alias：`HYPE-15M-
 
 本报告把反转腿从 `HYPE-15M-MII-V1.3` 升级为 `HYPE-15M-MII-V1.4`（唯一变更：`min_rvol96 1.0 -> 0.85`，进取观察版本），与 `HYPE-EMA-Trend-Breakout-V39` 组合回测，并对全链路做门禁校验。
 
-后续登记：2026-07-09 按用户要求，本轮单账户主口径 `single_v39_priority_k1` 记录为 `V2`；状态仍为 `registered diagnostic / NO-GO / not promoted / not live-ready`。主账见 [hype-15m-tb-mii-ens-core-ledger.md](../hype-15m-tb-mii-ens-core-ledger.md)，近一年周度开单审计见 [hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md](hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)。
+后续登记：2026-07-09 按用户要求，本轮单账户主口径 `single_v39_priority_k1` 记录为 `V2`；登记不构成 promotion。后续 live-executable 审计结论为 `FAILED / NO-GO`，当前状态以主账为准。主账见 [hype-15m-tb-mii-ens-core-ledger.md](../hype-15m-tb-mii-ens-core-ledger.md)，近一年周度开单审计见 [hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md](hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)，live-executable 审计见 [hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md](../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)。
 
 ## 门禁校验结果（全部通过）
 
