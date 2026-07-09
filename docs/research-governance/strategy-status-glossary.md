@@ -25,7 +25,7 @@ dry-run（模拟盘，runner-tracking 持续记录）
 live（真实资金运行；资金边界由子账户、runner 配置或上线决策记录管理）
 
 dry-run 前任一阶段如果证据不足、回测失败、可执行性审计不通过，回到或停留在 `registered` / `explore`，并写 `not promoted / not live-ready`；
-只有 dry-run 或 live 已运行并给出负面 forward/实盘证据后，才允许写 NO-GO。
+只有 dry-run 或 live 已运行并给出负面 runner 观察/实盘证据后，才允许写 NO-GO。
 研究线不再推进且无意重开时，任一阶段可以封存为 archived（终态，重开视同新研究线）。
 ```
 
@@ -55,7 +55,7 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 以下词只能作为主状态的修饰或备注，单独出现不构成状态：
 
 - `baseline` / `candidate` / `observation` / `clean-equivalent`：`registered` 或 `explore` 的来源/角色修饰——基线锚点、参数候选、微调观察值、与 parent 逐笔等价的参数精简版（clean-equivalent 需 trade signature 一致证据，且不提供新增收益证据）。
-- `forward-test required`：gate 备注，表示状态推进依赖 `runner-tracking/` 下尚不存在的报告；口头描述不算证据。
+- `forward-test required`：gate 备注，表示状态推进依赖 `runner-tracking/` 下尚不存在的报告；口头描述不算证据。只能用于已进入 `dry-run` / `live` 的版本；未进入任何 runner 的版本没有可满足该备注的证据路径，应写 `not promoted / not live-ready`。
 - `not promoted / not live-ready`：dry-run 前证据不足、回测失败、可执行性审计不通过、或暂不继续推进时使用的通用后缀；它不是最终否决，后续可以因新机制、新数据或新审计重开。
 
 历史文档中的 `diagnostic baseline`、`diagnostic observation`、`clean-equivalent observation`、`audit observation`、`audit candidate` 等旧标签按 `registered baseline/observation` 或 `registered / not promoted / not live-ready` 理解，不需要批量改写。历史文档中若在 dry-run 前使用了 `NO-GO`，按新口径理解为 `not promoted / not live-ready`，除非同一文档明确引用了 dry-run/live runner 观察证据。

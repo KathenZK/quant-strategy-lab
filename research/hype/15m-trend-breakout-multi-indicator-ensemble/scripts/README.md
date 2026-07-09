@@ -11,4 +11,4 @@
 
 ## 当前脚本
 
-- `research_hype_15m_tb_mii_ensemble_backtest.py`：首次组合回测。双子账户组合（50/50、70/30、30/70 逐 K 再平衡、50/50 固定拆分）与单账户冲突仲裁（V35 优先 preempt / no-preempt），含 V1.3 K+2 延迟压力、canonical 引擎逐 K 对照校验与 `1d/7d/1m/3m/6m/1y` 审计分片。
+- `research_hype_15m_tb_mii_ensemble_backtest.py`：组合回测（`--trend v35|v39`，`--mii v13|v14`，`--run-date`）。双子账户组合（50/50、70/30、30/70 逐 K 再平衡、50/50 固定拆分）与单账户冲突仲裁（趋势腿优先 preempt / no-preempt），含 MII 腿 K+2 延迟压力与 `1d/7d/1m/3m/6m/1y` 审计分片。内置门禁：数据质量 gate、趋势腿与 canonical 引擎逐 K 权益零差、趋势腿/MII 腿与各自主账登记值对照（窗口一致时启用）、MII 腿单仓选择链与 MII 引擎逐笔/终值对照。

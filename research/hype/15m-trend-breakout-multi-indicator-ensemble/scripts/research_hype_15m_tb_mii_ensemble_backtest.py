@@ -1,23 +1,27 @@
-"""HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble 首次组合回测。
+"""HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble 组合回测。
 
-把 `HYPE-EMA-Trend-Breakout-V35`（趋势突破）与 `HYPE-15M-Multi-Indicator-Intraday-V1.3`
-（RSI 短促反转 + ATR bracket）组合成一个新策略，比较：
+把 `HYPE-EMA-Trend-Breakout` 趋势腿（`--trend v35` 或 `--trend v39`）与
+`HYPE-15M-Multi-Indicator-Intraday-V1.3`（RSI 短促反转 + ATR bracket）组合成一个新策略，比较：
 
 1. 独立双子账户组合（50/50、70/30、30/70，逐 K 再平衡；以及 50/50 固定拆分不再平衡）。
-2. 单账户冲突仲裁：V35 优先。V1.3 只在 V35 空仓时开单；V35 信号到来时
-   要么强制平掉 V1.3（preempt 变体），要么放弃该笔 V35（no-preempt 变体）。
+2. 单账户冲突仲裁：趋势腿优先。V1.3 只在趋势腿空仓时开单；趋势信号到来时
+   要么强制平掉 V1.3（preempt 变体），要么放弃该笔趋势单（no-preempt 变体）。
 
 两条腿各自保持家族 canonical 成本口径：
-- V35 腿：`0.00085`/fill（taker fee + 4 bps 解释），计入 Binance funding；K+2 open 入场。
+- 趋势腿：`0.00085`/fill（taker fee + 4 bps 解释），计入 Binance funding；K+2 open 入场。
 - V1.3 腿：fee `0.001`/fill + slippage `4 bps`/fill（round-trip `0.28%`），funding 未计；
   K+1 open 入场为主口径，K+2 为延迟压力。
+
+门禁校验：数据质量 gate、趋势腿与 canonical 引擎逐 K 权益零差、
+V1.3 腿与 MII 引擎单仓选择链及终值精确对照。
 """
 
 from __future__ import annotations
 
+import argparse
 import json
 import sys
-from dataclasses import asdict
+from dataclasses import asdict, replace
 from pathlib import Path
 from typing import Any
 
@@ -29,7 +33,8 @@ sys.path.insert(0, str(REPO_ROOT / "src"))
 sys.path.insert(0, str(REPO_ROOT / "research/hype/15m-ema-trend-breakout/scripts"))
 sys.path.insert(0, str(REPO_ROOT / "research/hype/15m-multi-indicator-intraday/scripts"))
 
-import research_hype_ema_tb_v35_profit_floor as tb  # noqa: E402  V35 canonical engine
+import research_hype_ema_tb_v35_profit_floor as tb  # noqa: E402  V35/V39 canonical engine
+import research_hype_ema_tb_v35_full_ablation_recent_tune as tbab  # noqa: E402  SignalFlags/build_signals
 import research_hype_15m_mii_v1_2_atr_bracket_exit as mii12  # noqa: E402
 import research_hype_15m_mii_v1_full_ablation as mii1  # noqa: E402
 
@@ -39,9 +44,20 @@ from strategy_lab.data.settings import load_settings  # noqa: E402
 
 FAMILY = "HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble"
 ALIAS = "HYPE-15M-TB-MII-ENS"
-RUN_DATE = "2026-07-07"
 FAMILY_DIR = REPO_ROOT / "research/hype/15m-trend-breakout-multi-indicator-ensemble"
 ARTIFACTS_DIR = FAMILY_DIR / "artifacts"
+
+
+def trend_setup(trend: str) -> tuple[tb.V35Config, tbab.SignalFlags]:
+    """按主账定义构造趋势腿配置。V39 = V35 + long_vol_min 0.35 + short_target 0.022 - 空头 1h EMA 确认。"""
+    if trend == "v35":
+        return tb.V35Config(), tbab.SignalFlags()
+    if trend == "v39":
+        return (
+            replace(tb.V35Config(), long_vol_min=0.35, short_target_atr_pct=0.022),
+            tbab.SignalFlags(short_use_h1_ema=False),
+        )
+    raise ValueError(f"unsupported trend leg: {trend}")
 
 MII_EXPOSURE = 2.5
 MII_ROUND_TRIP = mii12.ROUND_TRIP_COST  # 0.0028
@@ -58,12 +74,23 @@ V13_CANDIDATE = mii12.AtrBracketCandidate(
 )
 
 
-def mii_candidates_by_entry(context: Any, entry_delay_bars: int) -> dict[int, Any]:
-    """通过入场过滤后的 V1.3 候选交易，按 entry_i 索引（单仓选择在组合循环里完成）。"""
+def mii_setup(mii: str) -> Any:
+    """按 MII 主账定义构造反转腿过滤器。V1.4 = V1.3 + min_rvol96 1.0 -> 0.85。"""
+    if mii == "v13":
+        return mii12.BASE_CONFIG.filter
+    if mii == "v14":
+        return replace(mii12.BASE_CONFIG.filter, min_rvol96=0.85)
+    raise ValueError(f"unsupported mii leg: {mii}")
+
+
+def mii_candidates_by_entry(
+    context: Any, entry_delay_bars: int, filter_spec: Any
+) -> dict[int, Any]:
+    """通过入场过滤后的 MII 候选交易，按 entry_i 索引（单仓选择在组合循环里完成）。"""
     raw = mii12.simulate_atr_bracket_trades(context, V13_CANDIDATE, entry_delay_bars=entry_delay_bars)
     by_entry: dict[int, Any] = {}
     for trade in raw:
-        if mii1.passes_filter(trade, mii12.BASE_CONFIG.filter):
+        if mii1.passes_filter(trade, filter_spec):
             by_entry.setdefault(int(trade.entry_i), trade)
     return by_entry
 
@@ -75,11 +102,12 @@ def close_mii_record(
     exit_ts: pd.Timestamp,
     exit_bar: int,
     reason: str,
+    leg_label: str = "mii_v13",
 ) -> tuple[float, dict[str, Any]]:
     raw_return = trade.direction * (exit_price / trade.entry_price - 1.0)
     exit_equity = entry_equity * max(0.0, 1.0 + MII_EXPOSURE * (raw_return - MII_ROUND_TRIP))
     record = {
-        "leg": "mii_v13",
+        "leg": leg_label,
         "entry_ts": pd.Timestamp(trade.entry_ts),
         "exit_ts": exit_ts,
         "direction": int(trade.direction),
@@ -105,6 +133,8 @@ def run_account(
     enable_v35: bool,
     enable_mii: bool,
     preempt: bool = True,
+    trend_label: str = "v35",
+    mii_label: str = "mii_v13",
 ) -> dict[str, Any]:
     """单账户逐 K 状态机。任一时刻最多持有一条腿的仓位。
 
@@ -153,7 +183,7 @@ def run_account(
                 trades=trades,
                 config=config,
             )
-            trades[-1]["leg"] = "v35"
+            trades[-1]["leg"] = trend_label
             v35_pos = None
             v35_pending = None
             v35_last_exit = i
@@ -166,7 +196,8 @@ def run_account(
             and mii_trade.exit_reason in MII_OPEN_EXIT_REASONS
         ):
             equity, record = close_mii_record(
-                mii_trade, mii_entry_equity, float(mii_trade.exit_price), ts, i, mii_trade.exit_reason
+                mii_trade, mii_entry_equity, float(mii_trade.exit_price), ts, i, mii_trade.exit_reason,
+                leg_label=mii_label,
             )
             trades.append(record)
             mii_available_i = i  # open 型出场允许同根 open 再入（沿用上游口径）
@@ -191,7 +222,8 @@ def run_account(
                 if mii_trade is not None:
                     if preempt:
                         equity, record = close_mii_record(
-                            mii_trade, mii_entry_equity, open_price, ts, i, "preempted_by_v35"
+                            mii_trade, mii_entry_equity, open_price, ts, i, f"preempted_by_{trend_label}",
+                            leg_label=mii_label,
                         )
                         trades.append(record)
                         mii_available_i = i
@@ -233,7 +265,7 @@ def run_account(
                     trades=trades,
                     config=config,
                 )
-                trades[-1]["leg"] = "v35"
+                trades[-1]["leg"] = trend_label
                 v35_pos = None
                 v35_pending = None
                 v35_last_exit = i
@@ -272,7 +304,8 @@ def run_account(
             if int(mii_trade.exit_i) == i:
                 is_open_exit = mii_trade.exit_reason in MII_OPEN_EXIT_REASONS
                 equity, record = close_mii_record(
-                    mii_trade, mii_entry_equity, float(mii_trade.exit_price), ts, i, mii_trade.exit_reason
+                    mii_trade, mii_entry_equity, float(mii_trade.exit_price), ts, i, mii_trade.exit_reason,
+                    leg_label=mii_label,
                 )
                 trades.append(record)
                 mii_available_i = i if is_open_exit else i + 1  # intrabar 出场：下一根才可再入
@@ -291,14 +324,14 @@ def run_account(
     returns = pd.Series(period_returns, index=index, name=f"{name}_return")
     trades_frame = pd.DataFrame(trades)
     if not trades_frame.empty and "leg" not in trades_frame.columns:
-        trades_frame["leg"] = "v35"
+        trades_frame["leg"] = trend_label
     return {
         "name": name,
         "equity_curve": equity_curve,
         "returns": returns,
         "trades": trades_frame,
         "open_position": {
-            "v35": tb.open_position_summary(v35_pos, frame.index[-1]) if v35_pos is not None else None,
+            "trend": tb.open_position_summary(v35_pos, frame.index[-1]) if v35_pos is not None else None,
             "mii": {
                 "entry_ts": pd.Timestamp(mii_trade.entry_ts).isoformat(),
                 "direction": int(mii_trade.direction),
@@ -366,32 +399,122 @@ def run_metrics(run: dict[str, Any]) -> dict[str, Any]:
     }
 
 
+LEDGER_EXPECTATIONS: dict[tuple[str, str], dict[str, float]] = {
+    # 主账登记值，用于门禁校验（窗口必须一致才启用）
+    ("v39", "2026-07-08T05:30:00+00:00"): {
+        "total_return_pct": 9969.45,
+        "max_drawdown_pct": -23.46,
+        "trades": 107,
+        "win_rate_pct": 79.44,
+    },
+}
+
+MII_LEDGER_EXPECTATIONS: dict[tuple[str, str], dict[str, dict[str, float]]] = {
+    # MII 主账登记值（engine 全样本口径），窗口一致时启用门禁
+    ("v13", "2026-07-08T05:30:00+00:00"): {
+        "K+1": {"total_return_pct": 483.23, "max_drawdown_pct": -22.01, "trades": 185, "win_rate_pct": 84.32},
+        "K+2": {"total_return_pct": 204.85, "max_drawdown_pct": -41.89},
+    },
+    ("v14", "2026-07-08T05:30:00+00:00"): {
+        "K+1": {"total_return_pct": 978.36, "max_drawdown_pct": -24.70, "trades": 232, "win_rate_pct": 84.91},
+        "K+2": {"total_return_pct": 535.54, "max_drawdown_pct": -38.30},
+    },
+}
+
+
+def data_quality_gate(tb_quality: dict[str, Any]) -> dict[str, Any]:
+    checks = {
+        "missing_15m_bars": int(tb_quality["missing_15m_bars"]),
+        "duplicate_ts_before_dedup": int(tb_quality["duplicate_ts_before_dedup"]),
+        "invalid_ohlc_rows": int(tb_quality["invalid_ohlc_rows"]),
+        "critical_nulls_total": int(sum(tb_quality["critical_nulls"].values())),
+        "is_utc_index": bool(tb_quality["is_utc_index"]),
+        "raw_vs_normalized_mismatch_rows": int(
+            sum(tb_quality["raw_vs_normalized"].get("mismatch_rows", {}).values())
+        )
+        if tb_quality["raw_vs_normalized"].get("available")
+        else -1,
+    }
+    passed = (
+        checks["missing_15m_bars"] == 0
+        and checks["duplicate_ts_before_dedup"] == 0
+        and checks["invalid_ohlc_rows"] == 0
+        and checks["critical_nulls_total"] == 0
+        and checks["is_utc_index"]
+        and checks["raw_vs_normalized_mismatch_rows"] == 0
+    )
+    if not passed:
+        raise ValueError(f"data-quality gate failed: {json.dumps(checks)}")
+    return {"passed": True, **checks}
+
+
+def mii_chain_gate(
+    mii_run: dict[str, Any],
+    raw_trades: list[Any],
+    start_bar: int,
+    filter_spec: Any,
+) -> dict[str, Any]:
+    """MII 腿门禁：组合循环里的单仓选择链与 MII canonical 引擎逐笔一致，且终值 engine-exact。"""
+    eligible = [t for t in raw_trades if int(t.entry_i) >= start_bar]
+    chain = mii1.selected_trades_live(eligible, filter_spec)
+    expected = [(int(t.entry_i), int(t.exit_i), str(t.exit_reason)) for t in chain]
+    got = [
+        (int(row["entry_bar"]), int(row["exit_bar"]), str(row["exit_reason"]))
+        for row in mii_run["trades"].to_dict("records")
+    ]
+    if expected != got:
+        raise ValueError(
+            f"MII chain gate failed: engine chain {len(expected)} trades vs loop {len(got)} trades; "
+            f"first diff at index {next((k for k in range(min(len(expected), len(got))) if expected[k] != got[k]), None)}"
+        )
+    engine_equity = 1.0
+    for trade in chain:
+        engine_equity *= max(0.0, 1.0 + MII_EXPOSURE * (float(trade.raw_return) - MII_ROUND_TRIP))
+    loop_equity = float(mii_run["equity_curve"].iloc[-1])
+    diff = abs(engine_equity - loop_equity)
+    if diff > 1e-9:
+        raise ValueError(f"MII equity gate failed: engine {engine_equity} vs loop {loop_equity}")
+    return {"passed": True, "chain_trades": len(expected), "final_equity_abs_diff": diff}
+
+
 def main() -> None:
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--trend", choices=["v35", "v39"], default="v39")
+    parser.add_argument("--mii", choices=["v13", "v14"], default="v14")
+    parser.add_argument("--run-date", default="2026-07-09")
+    args = parser.parse_args()
+    trend = args.trend
+    mii = args.mii
+    mii_label = f"mii_{mii}"
+    run_date = args.run_date
     ARTIFACTS_DIR.mkdir(parents=True, exist_ok=True)
 
     warehouse = DuckDBWarehouse(DataLakeLayout.from_settings(load_settings(None)))
     frame, funding, tb_quality = tb.load_data(warehouse)
-    config = tb.V35Config()
-    features = tb.build_features(frame, config)
+    quality_gate = data_quality_gate(tb_quality)
+    config, flags = trend_setup(trend)
+    features = tbab.build_signals(tb.build_features(frame, config), config, flags)
+    mii_filter = mii_setup(mii)
 
-    mii_context, mii_metadata, mii_quality = mii12.build_context()
+    mii_context, mii_metadata, mii_quality = mii12.build_context()  # 内部含 MII 数据质量 gate
     if len(mii_context.features) != len(frame):
-        raise ValueError("V35 与 MII 数据湖行数不一致，先排查数据口径")
+        raise ValueError("趋势腿与 MII 数据湖行数不一致，先排查数据口径")
     mii_ts = pd.to_datetime(mii_context.features["ts"], utc=True).to_numpy()
     if not (mii_ts == frame.index.to_numpy()).all():
-        raise ValueError("V35 与 MII 时间索引不一致，先排查数据口径")
+        raise ValueError("趋势腿与 MII 时间索引不一致，先排查数据口径")
 
-    mii_k1 = mii_candidates_by_entry(mii_context, 1)
-    mii_k2 = mii_candidates_by_entry(mii_context, 2)
+    mii_k1 = mii_candidates_by_entry(mii_context, 1, mii_filter)
+    mii_k2 = mii_candidates_by_entry(mii_context, 2, mii_filter)
+    mii_raw_k1 = mii12.simulate_atr_bracket_trades(mii_context, V13_CANDIDATE, entry_delay_bars=1)
+    mii_raw_k2 = mii12.simulate_atr_bracket_trades(mii_context, V13_CANDIDATE, entry_delay_bars=2)
 
-    # V1.3 engine-exact 全样本复核（与家族主账对照）
+    # MII 腿 engine-exact 全样本复核（与家族主账对照；窗口为当前数据湖全量）
     period_days = (mii_context.end_ts - mii_context.start_ts).total_seconds() / 86_400.0
     mii_ledger_check = {}
-    for delay, label in ((1, "K+1"), (2, "K+2")):
-        raw = mii12.simulate_atr_bracket_trades(mii_context, V13_CANDIDATE, entry_delay_bars=delay)
+    for raw, label in ((mii_raw_k1, "K+1"), (mii_raw_k2, "K+2")):
         result = mii1.engine.evaluate_trades(
             trades=raw,
-            filter_spec=mii12.BASE_CONFIG.filter,
+            filter_spec=mii_filter,
             exposure=MII_EXPOSURE,
             period_days=period_days,
             exit_spec=mii12.candidate_exit_spec(V13_CANDIDATE),
@@ -406,41 +529,89 @@ def main() -> None:
             "trades": int(result.trades),
         }
 
+    # 门禁：MII 腿 engine 全样本结果与 MII 主账登记值对照（窗口一致时启用）
+    data_end_iso = frame.index.max().isoformat()
+    mii_ledger_key = (mii, data_end_iso)
+    mii_ledger_gate: dict[str, Any]
+    if mii_ledger_key in MII_LEDGER_EXPECTATIONS:
+        mismatches: dict[str, Any] = {}
+        for label, expected in MII_LEDGER_EXPECTATIONS[mii_ledger_key].items():
+            for key, value in expected.items():
+                got_value = mii_ledger_check[label][key]
+                if abs(float(got_value) - float(value)) > 0.01:
+                    mismatches[f"{label}.{key}"] = {"expected": value, "got": got_value}
+        if mismatches:
+            raise ValueError(f"MII 腿主账对照失败: {json.dumps(mismatches)}")
+        mii_ledger_gate = {"passed": True, "checked_against": MII_LEDGER_EXPECTATIONS[mii_ledger_key]}
+    else:
+        mii_ledger_gate = {"passed": None, "reason": f"no ledger expectation for {mii_ledger_key}"}
+
     def account(name: str, mii_by_entry: dict[int, Any] | None, **kwargs: Any) -> dict[str, Any]:
-        return run_account(name, frame, funding, features, config, mii_by_entry, **kwargs)
+        return run_account(
+            name, frame, funding, features, config, mii_by_entry,
+            trend_label=trend, mii_label=mii_label, **kwargs
+        )
 
-    leg_v35 = account("leg_v35_only", None, enable_v35=True, enable_mii=False)
-    leg_mii_k1 = account("leg_mii_v13_k1", mii_k1, enable_v35=False, enable_mii=True)
-    leg_mii_k2 = account("leg_mii_v13_k2", mii_k2, enable_v35=False, enable_mii=True)
+    leg_trend = account(f"leg_{trend}_only", None, enable_v35=True, enable_mii=False)
+    leg_mii_k1 = account(f"leg_{mii_label}_k1", mii_k1, enable_v35=False, enable_mii=True)
+    leg_mii_k2 = account(f"leg_{mii_label}_k2", mii_k2, enable_v35=False, enable_mii=True)
 
-    # 与 canonical V35 引擎逐 K 对照，防止组合循环实现漂移
-    canonical_v35 = tb.run_backtest(
-        "v35_canonical", frame, funding, features, config, tb.ProfitFloorConfig(enabled=False)
+    # 门禁：组合循环的趋势腿与 canonical 引擎逐 K 对照，防止实现漂移
+    canonical_trend = tb.run_backtest(
+        f"{trend}_canonical", frame, funding, features, config, tb.ProfitFloorConfig(enabled=False)
     )
-    v35_max_diff = float(
-        (leg_v35["equity_curve"] - canonical_v35.equity_curve).abs().max()
+    trend_max_diff = float(
+        (leg_trend["equity_curve"] - canonical_trend.equity_curve).abs().max()
     )
-    if v35_max_diff > 1e-9:
-        raise ValueError(f"组合循环的 V35 腿与 canonical 引擎不一致，max diff={v35_max_diff}")
+    if trend_max_diff > 1e-9:
+        raise ValueError(f"组合循环的趋势腿与 canonical 引擎不一致，max diff={trend_max_diff}")
+
+    # 门禁：趋势腿 canonical 结果与主账登记值对照（窗口一致时启用）
+    ledger_key = (trend, data_end_iso)
+    trend_ledger_gate: dict[str, Any]
+    if ledger_key in LEDGER_EXPECTATIONS:
+        expected = LEDGER_EXPECTATIONS[ledger_key]
+        got = canonical_trend.metrics
+        metric_map = {
+            "total_return_pct": got["return_pct"],
+            "max_drawdown_pct": got["max_drawdown_pct"],
+            "trades": got["trades"],
+            "win_rate_pct": got["win_rate_pct"],
+        }
+        mismatches = {
+            key: {"expected": value, "got": metric_map[key]}
+            for key, value in expected.items()
+            if abs(float(metric_map[key]) - float(value)) > 0.01
+        }
+        if mismatches:
+            raise ValueError(f"趋势腿主账对照失败: {json.dumps(mismatches)}")
+        trend_ledger_gate = {"passed": True, "checked_against": expected}
+    else:
+        trend_ledger_gate = {"passed": None, "reason": f"no ledger expectation for {ledger_key}"}
+
+    # 门禁：MII 腿单仓选择链 + 终值 engine-exact 对照
+    start_bar = max(config.warmup_bars, config.entry_delay_bars + 1)
+    mii_gate_k1 = mii_chain_gate(leg_mii_k1, mii_raw_k1, start_bar, mii_filter)
+    mii_gate_k2 = mii_chain_gate(leg_mii_k2, mii_raw_k2, start_bar, mii_filter)
 
     runs = [
-        leg_v35,
+        leg_trend,
         leg_mii_k1,
         leg_mii_k2,
-        portfolio_from_returns("portfolio_5050_rebal_k1", 0.5, leg_v35, leg_mii_k1, rebalanced=True),
-        portfolio_from_returns("portfolio_5050_rebal_k2", 0.5, leg_v35, leg_mii_k2, rebalanced=True),
-        portfolio_from_returns("portfolio_7030_rebal_k1", 0.7, leg_v35, leg_mii_k1, rebalanced=True),
-        portfolio_from_returns("portfolio_3070_rebal_k1", 0.3, leg_v35, leg_mii_k1, rebalanced=True),
-        portfolio_from_returns("portfolio_5050_fixed_k1", 0.5, leg_v35, leg_mii_k1, rebalanced=False),
-        account("single_v35_priority_k1", mii_k1, enable_v35=True, enable_mii=True, preempt=True),
-        account("single_v35_priority_k2", mii_k2, enable_v35=True, enable_mii=True, preempt=True),
+        portfolio_from_returns("portfolio_5050_rebal_k1", 0.5, leg_trend, leg_mii_k1, rebalanced=True),
+        portfolio_from_returns("portfolio_5050_rebal_k2", 0.5, leg_trend, leg_mii_k2, rebalanced=True),
+        portfolio_from_returns("portfolio_7030_rebal_k1", 0.7, leg_trend, leg_mii_k1, rebalanced=True),
+        portfolio_from_returns("portfolio_3070_rebal_k1", 0.3, leg_trend, leg_mii_k1, rebalanced=True),
+        portfolio_from_returns("portfolio_5050_fixed_k1", 0.5, leg_trend, leg_mii_k1, rebalanced=False),
+        account(f"single_{trend}_priority_k1", mii_k1, enable_v35=True, enable_mii=True, preempt=True),
+        account(f"single_{trend}_priority_k2", mii_k2, enable_v35=True, enable_mii=True, preempt=True),
         account("single_no_preempt_k1", mii_k1, enable_v35=True, enable_mii=True, preempt=False),
         account("single_no_preempt_k2", mii_k2, enable_v35=True, enable_mii=True, preempt=False),
     ]
 
-    daily_v35 = leg_v35["returns"].resample("1D").sum()
+    daily_trend = leg_trend["returns"].resample("1D").sum()
     daily_mii = leg_mii_k1["returns"].resample("1D").sum()
-    leg_daily_corr = round(float(daily_v35.corr(daily_mii)), 4)
+    leg_daily_corr = round(float(daily_trend.corr(daily_mii)), 4)
 
     results = []
     for run in runs:
@@ -458,11 +629,16 @@ def main() -> None:
     summary = {
         "strategy_family": FAMILY,
         "alias": ALIAS,
-        "run_date": RUN_DATE,
-        "status": "first_combination_diagnostic_not_promoted",
+        "run_date": run_date,
+        "trend_leg": trend,
+        "mii_leg": mii,
+        "status": "combination_diagnostic_not_promoted",
         "components": {
-            "trend_leg": "HYPE-EMA-Trend-Breakout-V35 (canonical engine, funding included, cost 0.00085/fill, K+2 open entry)",
-            "reversal_leg": "HYPE-15M-Multi-Indicator-Intraday-V1.3 (fee 0.001/fill + slippage 4bps/fill, funding excluded, 2.5x, K+1 open entry; K+2 stress)",
+            "trend_leg": f"HYPE-EMA-Trend-Breakout-{trend.upper()} (canonical engine, funding included, cost 0.00085/fill, K+2 open entry)",
+            "reversal_leg": (
+                f"HYPE-15M-Multi-Indicator-Intraday-{'V1.4' if mii == 'v14' else 'V1.3'} "
+                "(fee 0.001/fill + slippage 4bps/fill, funding excluded, 2.5x, K+1 open entry; K+2 stress)"
+            ),
         },
         "data": {
             "exchange": "binance",
@@ -472,15 +648,24 @@ def main() -> None:
             "tb_quality": tb_quality,
             "mii_quality": mii_quality,
             "mii_metadata": mii_metadata,
-            "evaluation_window_note": "组合曲线从 V35 warmup(1600 根 15m) 结束后开始；V1.3 单腿在该窗口内重新锚定单仓 availability 链。",
+            "evaluation_window_note": "组合曲线从趋势腿 warmup(1600 根 15m) 结束后开始；V1.3 单腿在该窗口内重新锚定单仓 availability 链。",
         },
-        "mii_ledger_check_full_sample": mii_ledger_check,
-        "v35_leg_vs_canonical_max_equity_diff": v35_max_diff,
+        "gates": {
+            "data_quality": quality_gate,
+            "trend_leg_vs_canonical_max_equity_diff": trend_max_diff,
+            "trend_ledger_check": trend_ledger_gate,
+            "mii_ledger_check": mii_ledger_gate,
+            "mii_chain_k1": mii_gate_k1,
+            "mii_chain_k2": mii_gate_k2,
+        },
+        "mii_full_sample_engine_check": mii_ledger_check,
         "leg_daily_return_corr_k1": leg_daily_corr,
-        "v35_config": asdict(config),
+        "trend_config": asdict(config),
+        "trend_flags": asdict(flags),
+        "mii_filter": asdict(mii_filter),
         "results": results,
     }
-    stem = f"hype_15m_tb_mii_ensemble_backtest_{RUN_DATE}"
+    stem = f"hype_15m_tb_mii_ensemble_backtest_{trend}_{mii}_{run_date}"
     json_path = ARTIFACTS_DIR / f"{stem}.json"
     json_path.write_text(json.dumps(summary, indent=2, ensure_ascii=False, default=str), encoding="utf-8")
 
@@ -499,9 +684,14 @@ def main() -> None:
         ARTIFACTS_DIR / f"{stem}_trades.csv", index=False
     )
 
+    print(f"trend leg: {trend}  mii leg: {mii}")
     print(f"leg daily corr (K+1): {leg_daily_corr}")
-    print(f"v35 leg vs canonical max equity diff: {v35_max_diff:.2e}")
-    print("mii ledger check:", json.dumps(mii_ledger_check, ensure_ascii=False))
+    print(f"gate: data quality passed = {quality_gate['passed']}")
+    print(f"gate: trend leg vs canonical max equity diff = {trend_max_diff:.2e}")
+    print(f"gate: trend ledger check = {json.dumps(trend_ledger_gate, ensure_ascii=False)}")
+    print(f"gate: mii ledger check = {json.dumps(mii_ledger_gate, ensure_ascii=False)}")
+    print(f"gate: mii chain k1 = {json.dumps(mii_gate_k1)}  k2 = {json.dumps(mii_gate_k2)}")
+    print("mii full-sample engine check:", json.dumps(mii_ledger_check, ensure_ascii=False))
     print()
     header = f"{'variant':>26}  {'total%':>10}  {'annual%':>10}  {'maxDD%':>8}  {'sharpe':>6}  {'trades':>6}  {'win%':>6}"
     print(header)

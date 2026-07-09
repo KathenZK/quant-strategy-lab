@@ -39,6 +39,7 @@
 - `research_hype_v17_1_full_ablation.py` + `research_hype_v17_1_parameter_prune_audit.py`（2026-07-01）：`HYPE-EMA-X-V17.1` 146 项单参数消融。结论：3 项 noop；多项默认关闭模块打开伤收益；`stop_atr` 8–12 样本内等价。剔除证据见 `diagnostics/hype-ema-x-v17-1-parameter-prune-audit-2026-07-01.md`；干净参数升格为 **`HYPE-EMA-X-V18`**，见 `specs/hype-ema-x-v18-baseline-spec.md`。
 - `research_hype_ema_x_v18_retest.py`（2026-07-01）：按 `HYPE-EMA-X-V18` 干净规格重新回测并增加固定步长滚动窗口。台账切片 `<= 2026-06-01 03:00 UTC` 复现 `+3861.48% / -19.44% / 90.91% / 33 trades / 7 late`；30D 滚动窗口 `13` 段中 `1` 段负收益，90D/180D/365D 滚动窗口均为正收益，但短窗口交易数少。结论：复测确认 V18 台账指标，当时维持 `registered / not live-ready` 状态。见 `diagnostics/hype-ema-x-v18-retest-and-rolling-windows-2026-07-01.md`。
 - `2026-07-08`：确认 `HYPE-EMA-X-V18` 确实在 quant-runner 以 `hype_ema_x` dry-run 配置运行（`configs/dryrun.toml`），状态更新为 `dry-run / forward-test required`，并建立 [runner-tracking/README.md](runner-tracking/README.md)。首份 runner 观察报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
+- `2026-07-08`（live-specs 缺口记录）：治理审计发现 V18 进入 runner 早于 `lab-runner-handoff` 契约成文，lab 侧没有 `live-specs/` 交接规格，runner 侧以 `HYPE-EMA-X-V18-SPEC.md` 为实现事实源，属 grandfathered 例外。升级 `live` 前必须按 handoff 契约补写 `live-specs/` 交接规格并与 runner SPEC 互链；在此之前该缺口保持为 live-readiness blocker。
 
 ## 证据政策
 

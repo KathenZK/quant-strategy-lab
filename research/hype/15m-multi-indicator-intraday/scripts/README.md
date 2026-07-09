@@ -39,5 +39,7 @@
 - `research_hype_15m_mii_v1_3_rvol_grid_compare.py`：保持 `V1.3` 其它条件不变，定向比较 `min_rvol96=1.0/0.9/0.85/0.8` 的标准数据湖全样本、滚动窗口、recent API 固定窗口和周度开单。
 - `research_hype_15m_mii_v1_3_rvol_fine_grid.py`：在 `rvol0.85-0.90` 之间按 `0.01` 做细网格，并保留 `1.0/0.8` 参照，比较全样本、K+2、recent API 和滚动窗口。
 - `research_hype_15m_mii_v1_4_tp_sl_grid.py`：针对 `HYPE-15M-MII-V1.4` 固定 `min_rvol96=0.85`，只扫描 `tp_atr_mult/sl_atr_mult`，验证是否存在优于 `TP=1.25*ATR96 / SL=5*ATR96` 的出场倍数组合。
+- `research_hype_15m_mii_v1_4_tp_sl_neighborhood.py`：在 `V1.4` 粗 TP/SL 网格后，对 `TP=0.90-1.60`、`SL=2.50-6.00` 做 `0.05/0.25` 细邻域搜索，复核是否有可替换 baseline 的组合。
 - `research_hype_15m_mii_v1_4_loss_regime_filters.py`：针对 `HYPE-15M-MII-V1.4` 固定入场与出场，只叠加亏损环境过滤，测试更严格 `max_atr_pct96`、ATR ratio、短期波动扩张、近期方向/波动异常和信号拥挤过滤。
+- `research_hype_15m_mii_v1_4_dynamic_stop.py`：针对 `HYPE-15M-MII-V1.4` 固定入场与 `TP=1.25*ATR96`，测试盈利后上移止损、分档止损和 activation trailing stop，并用可执行的下一根 K 生效时序评估。
 - `research_hype_15m_mii_v1_1_btc_eth_cross_asset.py`：把 `HYPE-15M-MII-V1.1` 直接套到 Binance USD-M `BTCUSDT`、`ETHUSDT` `15m` API 数据，做跨资产迁移诊断；该脚本不使用标准数据湖，结果不得作为 promotion 证据。

@@ -98,5 +98,5 @@ V1 不能直接实盘，主要原因如下：
 完整证据：
 
 - `../ablations/hype-15m-mii-v1-full-parameter-ablation-2026-06-29.md`
-- `../live-specs/hype-15m-mii-v1-live-feasibility-2026-06-29.md`
+- `../diagnostics/hype-15m-mii-v1-live-feasibility-2026-06-29.md`
 - `../scripts/research_hype_15m_mii_v1_full_ablation.py`

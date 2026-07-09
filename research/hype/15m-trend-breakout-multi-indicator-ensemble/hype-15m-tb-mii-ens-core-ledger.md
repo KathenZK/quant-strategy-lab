@@ -8,23 +8,40 @@ Created：2026-07-07
 
 ## 边界
 
-本台账只覆盖 `HYPE-EMA-Trend-Breakout-V35` 与 `HYPE-15M-Multi-Indicator-Intraday-V1.3` 的组合研究。裸版本号不具有策略身份；母版本定义以各自家族主账为准。
+本台账覆盖 `HYPE-EMA-Trend-Breakout` 趋势腿（V35 或 V39）与 `HYPE-15M-Multi-Indicator-Intraday` 反转腿（V1.3 或 V1.4）的组合研究。裸版本号不具有策略身份；母版本定义以各自家族主账为准。
 
 ## 当前状态
 
-- 当前状态：`first combination diagnostic / not registered as version / NO-GO / not live-ready`。
-- 尚无登记版本；首次组合回测只用于回答"结合起来会怎样"，不是 promotion。
-- 两个母版本各自为 `NO-GO / not live-ready`，组合继承全部 blocker（V35：盘口级 stop 证据、闪崩尾部风险；V1.3：资金费、runner、重启恢复、kill switch），并新增单账户杠杆叠加与 preempt 换仓时序风险。
+- 当前状态：`V2 live validation spec draft / NO-GO / not promoted / not live-ready`。
+- 当前登记版本：`V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4`，单账户 `single_v39_priority_k1` 主口径（V39 优先 + V1.4 强平让位）。
+- `V2` 是用户于 2026-07-09 指定登记的组合版本号；此前 V35+V1.3 与 V39+V1.3 仍为 diagnostic evidence，不反推登记为 V1。
+- 2026-07-09 已导出 V2 live validation spec，但它不是实盘批准书；V2 仍未实现 runner、未 replay/dry-run 对拍、未完成 preempt 换仓和重启恢复审计。
+- 母版本状态：`HYPE-EMA-TB-V39` 为观察候选（未跨所迁移、未 walk-forward、未 live-executable 审计）；`HYPE-15M-MII-V1.4` 为 registered / not live-ready（未 runner dry-run）。组合继承全部 blocker（趋势腿：盘口级 stop 证据、闪崩尾部风险；V1.4：资金费、重启恢复、kill switch、同样本选参风险），并新增单账户杠杆叠加与 preempt 换仓时序风险。
 
 ## 数据与成本口径
 
 - Exchange：Binance；Market：USD-M perpetual；Symbol：`HYPE/USDT:USDT`；Timeframe：`15m`。
-- 数据：标准 raw/normalized 数据湖，`2025-05-30T10:30:00Z` 到 `2026-06-26T04:00:00Z`；质量 gate 全通过。
-- V35 腿成本：`0.00085`/fill（家族 canonical 覆盖），计入 Binance funding。
-- V1.3 腿成本：fee `0.001`/fill + slippage `4 bps`/fill（round-trip `0.28%`），funding 未计。
-- 组合评估窗口从 V35 warmup（1600 根 15m）后开始：`2025-06-16T02:30:00Z` 起。
+- 数据：标准 raw/normalized 数据湖；首轮至 `2026-06-26T04:00:00Z`，第二轮至 `2026-07-08T05:30:00Z`；质量 gate 全通过。
+- 趋势腿成本：`0.00085`/fill（家族 canonical 覆盖），计入 Binance funding。
+- MII 腿成本：fee `0.001`/fill + slippage `4 bps`/fill（round-trip `0.28%`），funding 未计。
+- 组合评估窗口从趋势腿 warmup（1600 根 15m）后开始：`2025-06-16T02:30:00Z` 起。
+
+## 版本规则
+
+- 本家族版本号只登记组合层定义，不改写任一母家族版本。
+- 可登记版本必须写明：趋势腿版本、MII 腿版本、账户结构、冲突仲裁、入场延迟口径、成本口径、门禁结果、证据链接与 live-readiness 结论。
+- `registered` 只代表研究主账留名；若未完成 live-executable 审计、walk-forward、runner dry-run、资金费统一口径和重启/kill-switch 设计，不得标记为 candidate、paper-live、dry-run、handoff 或 live。
+- `V2` 的主口径固定为 `single_v39_priority_k1`；双子账户 50/50 与 no-preempt 只作为对照，不属于 V2 实盘/单账户定义。
+
+## 版本表
+
+| Version | 组合定义 | 主口径指标 | 周度审计 | 状态 | 证据 |
+| --- | --- | --- | --- | --- | --- |
+| `V2` | `HYPE-EMA-TB-V39` + `HYPE-15M-MII-V1.4`；单账户 `single_v39_priority_k1`；V39 优先，V1.4 持仓遇 V39 信号强平让位；MII K+1 open | `+68192.54%` 总收益 / `-28.01%` 最大回撤 / Sharpe `5.79` / `291` 笔 / 胜率 `82.82%`；让位 `3` 次 | 过去一年 `274` 笔，`228` 胜 / `46` 负，胜率 `83.21%`；V39 `104` 笔，V1.4 `170` 笔；零交易周 `5` | `registered diagnostic / live validation spec draft / NO-GO / not promoted / not live-ready` | [组合回测报告](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)、[周度审计](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)、[live validation spec](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)、[周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv) |
 
 ## 组合结构台账
+
+### 2026-07-07 首轮：V35 + V1.3（数据湖至 `2026-06-26`）
 
 | 结构 | 说明 | K+1 全样本 | 最大回撤 | Sharpe | 结论 |
 | --- | --- | ---: | ---: | ---: | --- |
@@ -37,24 +54,60 @@ Created：2026-07-07
 
 两腿日收益相关系数 `-0.087`（组合窗口，K+1）。
 
+### 2026-07-08 第二轮：V39 + V1.3（数据湖至 `2026-07-08`，含门禁校验）
+
+门禁：数据质量 gate 全 `0`；V39 腿与 canonical 引擎逐 K 权益零差；V39 canonical 与主账登记值（`+9969.45% / -23.46% / 107 笔 / 79.44%`）逐项一致；V1.3 腿单仓链与 MII 引擎 K+1 `176` 笔、K+2 `181` 笔逐笔一致，终值零差。
+
+| 结构 | 说明 | K+1 全样本 | 最大回撤 | Sharpe | 结论 |
+| --- | --- | ---: | ---: | ---: | --- |
+| `leg_v39_only` | V39 单独（对照） | `+9969.45%` | `-23.46%` | `4.81` | 收益主力腿，替代 V35 后腿内改进 |
+| `leg_mii_v13_k1` | V1.3 单独（对照，组合窗口） | `+435.69%` | `-21.54%` | `2.85` | 最近 1 月 `-11.02%`，低波动期有负收益段 |
+| `portfolio_5050_rebal` | 双子账户 50/50 逐 K 再平衡 | `+2748.51%` | `-13.96%` | `5.87` | 回撤/Sharpe 形状最好 |
+| `portfolio_3070_rebal` | 30% V39 / 70% V1.3 | `+1433.32%` | `-11.85%` | `5.35` | 全表最浅回撤 |
+| `single_v39_priority` | 单账户，V39 优先 + preempt（让位 `2` 次） | `+39829.29%` | `-28.01%` | `5.47` | 收益最高（`248` 笔 = V39 `107` + V1.3 `141`）；K+2 压力 `-33.82%` |
+| `single_no_preempt` | 单账户，V1.3 持仓时放弃 V39 | `+27682.78%` | `-30.28%` | `5.15` | 劣于 preempt，不建议 |
+
+两腿日收益相关系数 `-0.084`（组合窗口，K+1）。结构性结论与首轮一致；新增发现：最近 1 月 V1.3 腿把 `single_v39_priority` 拖到 `+5.89%`（V39 单独 `+23.40%`），组合在低波动期不只是退化为纯趋势腿，还可能被 V1.3 的负收益段拖累。
+
+### 2026-07-09 第三轮：V39 + V1.4（数据湖至 `2026-07-08`，含门禁校验）
+
+反转腿升级为 `HYPE-15M-MII-V1.4`（`V1.3 + min_rvol96 1.0 -> 0.85`，MII 主账进取观察版本）。门禁：数据质量 gate 全 `0`；V39 腿与 canonical 引擎逐 K 零差且与主账登记值一致；V1.4 engine 全样本与 MII 主账登记值一致（K+1 `+978.36% / -24.70% / 232 笔 / 84.91%`；K+2 `+535.54% / -38.30%`）；V1.4 腿单仓链与 MII 引擎 K+1 `221` 笔、K+2 `228` 笔逐笔一致，终值零差。
+
+| 结构 | 说明 | K+1 全样本 | 最大回撤 | Sharpe | 结论 |
+| --- | --- | ---: | ---: | ---: | --- |
+| `leg_v39_only` | V39 单独（对照） | `+9969.45%` | `-23.46%` | `4.81` | 收益主力腿 |
+| `leg_mii_v14_k1` | V1.4 单独（对照，组合窗口） | `+844.18%` | `-22.03%` | `3.42` | 比 V1.3 腿收益近翻倍，回撤持平；最近 1 月 `-3.50%` |
+| `portfolio_5050_rebal` | 双子账户 50/50 逐 K 再平衡 | `+3733.19%` | `-13.96%` | `6.23` | 回撤/Sharpe 形状最好 |
+| `portfolio_3070_rebal` | 30% V39 / 70% V1.4 | `+2206.12%` | `-13.60%` | `5.75` | 低回撤方向 |
+| `single_v39_priority` | 单账户，V39 优先 + preempt（让位 `3` 次） | `+68192.54%` | `-28.01%` | `5.79` | 收益最高（`291` 笔 = V39 `107` + V1.4 `184`）；K+2 压力 `-30.98%` |
+| `single_no_preempt` | 单账户，V1.4 持仓时放弃 V39 | `+51471.60%` | `-28.75%` | `5.54` | 劣于 preempt，不建议 |
+
+两腿日收益相关系数 `-0.074`（组合窗口，K+1）。与 V1.3 轮（同窗口）相比：`single_v39_priority_k1` 从 `+39829%` 提升到 `+68193%` 而全样本回撤不变（回撤主导段来自 V39 腿）；K+2 延迟压力回撤从 `-33.82%` 收敛到 `-30.98%`；最近 1 月 MII 腿负收益从 `-11.02%` 缓和到 `-3.50%` 但仍拖累组合。注意 V1.4 的 `min_rvol96=0.85` 本身是同一数据湖上网格选出的进取观察点，组合改善继承该同样本选参风险。
+
+2026-07-09 后续登记：该轮单账户 `single_v39_priority_k1` 被用户指定记录为 `V2`。登记不改变 live-readiness 结论，状态仍为 `NO-GO / not promoted / not live-ready`。近一年周度开单审计见 [hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)。
+
 ## 证据入口
 
-- 首次组合回测：`notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md`
-- 复现脚本：`scripts/research_hype_15m_tb_mii_ensemble_backtest.py`
-- 保留产物：`artifacts/hype_15m_tb_mii_ensemble_backtest_2026-07-07.json` 及配套 equity/trades CSV
-- Decision log：`decision-log.md`
+- 首次组合回测（V35 + V1.3）：[hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md](notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md)
+- V39 + V1.3 组合回测含门禁：[hype-15m-tb-mii-ensemble-v39-combination-backtest-2026-07-08.md](notes/hype-15m-tb-mii-ensemble-v39-combination-backtest-2026-07-08.md)
+- V39 + V1.4 组合回测含门禁：[hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)
+- V2 近一年周度开单审计：[hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)
+- V2 live validation spec（非实盘批准）：[hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)
+- 复现脚本：[research_hype_15m_tb_mii_ensemble_backtest.py](scripts/research_hype_15m_tb_mii_ensemble_backtest.py)（`--trend v35|v39 --mii v13|v14`）
+- 保留产物：[hype_15m_tb_mii_ensemble_backtest_2026-07-07.json](artifacts/hype_15m_tb_mii_ensemble_backtest_2026-07-07.json)、[hype_15m_tb_mii_ensemble_backtest_v39_2026-07-08.json](artifacts/hype_15m_tb_mii_ensemble_backtest_v39_2026-07-08.json)、[hype_15m_tb_mii_ensemble_backtest_v39_v14_2026-07-09.json](artifacts/hype_15m_tb_mii_ensemble_backtest_v39_v14_2026-07-09.json)、[V2 周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv) 及配套 equity/trades CSV。
+- Decision log：[decision-log.md](decision-log.md)
 
 ## 已知风险
 
 - 同样本组合，无 untouched OOS；权重与仲裁规则未做稳健性搜索。
-- 单账户组合的超额收益来自资金利用率（V35 空档被 V1.3 复利），不是新 alpha；回撤同样叠加。
-- 成本口径两腿不统一；V1.3 腿 funding 未计。
-- 单账户全时段带 `2.5x-3x` 暴露，Binance 闪崩插针尾部风险大于 V35 单独。
-- V1.3 近期信号枯竭时组合退化为纯 V35。
+- 单账户组合的超额收益来自资金利用率（趋势腿空档被 MII 腿复利），不是新 alpha；回撤同样叠加。
+- 成本口径两腿不统一；MII 腿 funding 未计。
+- 单账户全时段带 `2.5x-3x` 暴露，Binance 闪崩插针尾部风险大于趋势腿单独。
+- MII 近期信号枯竭时组合退化为纯趋势腿；且 2026-06 段显示低波动期 MII 还可能贡献负收益（V1.4 最近 1 月 `-3.50%`）。
 
 ## 下一步（若继续）
 
-- 统一成本口径并给 V1.3 腿补 funding 回放。
-- 对仲裁规则做邻域测试（如 V1.3 持仓中允许 V35 只在反向信号时 preempt）。
+- 统一成本口径并给 MII 腿补 funding 回放。
+- 对仲裁规则做邻域测试（如 MII 持仓中允许趋势腿只在反向信号时 preempt）。
 - 滚动窗口与随机切片复核组合回撤叠加的频率。
 - 若要任何 promotion 讨论，先完成两个母家族各自的 live-executable 审计。

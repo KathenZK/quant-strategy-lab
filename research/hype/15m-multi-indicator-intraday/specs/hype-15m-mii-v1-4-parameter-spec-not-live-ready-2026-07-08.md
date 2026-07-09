@@ -117,6 +117,8 @@ Recent Binance API K+1：
 
 结论：`V1.4` 暂不改变 `tp_atr_mult=1.25` 和 `sl_atr_mult=5.0`。该结构确实是“小止盈、宽止损、高胜率”，但在当前网格里仍是最稳的联合折中；更高 TP 或更窄 SL 会牺牲 K+1/K+2 联合形状。
 
+后续注记：`2026-07-09` 用户指定将 `TP=1.4*ATR96 / SL=3.0*ATR96` 登记为 `HYPE-15M-MII-V1.4A`，见 [`hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md`](hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md)。`V1.4A` 是近期窗口观察变体，不替换本文件定义的 `V1.4 baseline`。
+
 ## 上线前硬性 blocker
 
 即便后续要把 `V1.4` 加入 dry-run，也必须先补齐：

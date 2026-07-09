@@ -4,6 +4,8 @@
 
 这是 HYPE 趋势策略版本研究台账。当前按策略族编号：V1 是趋势回踩族，V2 是趋势突破族；同族变体使用字母后缀。
 
+> **当前状态：HYPE-EMA-TB-V35 live（独立 hype-trend live runner 真实资金运行，部署早于当前 handoff 约定）；V36-V39.1 registered / not promoted / not live-ready。** 线上表现结论与开平仓对齐统计回流见 [runner-tracking/README.md](runner-tracking/README.md)。
+
 数据源：本地 Binance HYPE/USDT 永续数据湖；15m 主回测主要覆盖 2025-05-30 至 2026-05-26 UTC，V2Q/V2R/V2S/V2T/V2U/V2V/V2W/V2X/V2Y/V2Z/V29/V30/V31/V32/V33/V34/V35/V36/V37 补测覆盖至 2026-06-01 UTC；V2R/V2S/V2T/V2U/V2V/V2W/V2X/V2Y/V2Z/V29/V30/V31/V32/V33/V34/V35 已按 2026-05-19 HYPE 元数据修复后的完整口径重测；V36 为跨所执行版，统计窗口为 Binance/HL 共同区间 2025-07-27 至 2026-06-01 UTC；V37 为 V35 + early-long 卫星影子观察版，并额外用 2026-06-16 延长窗口复核；V38 与 `V37+V38` 使用 Binance public API 补充窗口 `2025-05-30 10:30 UTC` 至 `2026-07-07 08:00 UTC`；V39 使用更新后本地数据湖窗口 `2025-05-30 10:30 UTC` 至 `2026-07-08 05:30 UTC`；结果计入 8.5 bps 换手成本和 funding。
 
 ## 版本规则
@@ -424,3 +426,19 @@ V39 基线：full `+9969.45% / -23.46% / Sharpe 4.81 / 107 笔 / 胜率 79.44%`�
 本轮无条件替代项为空。唯一 full 收益、full maxDD、Sharpe 三项不劣的非等价变体是 `ema_slow_512`：full `+10406.28% / -23.46% / Sharpe 4.88 / 103 笔`，但 90d `+206.85%` 低于 V39 的 `+217.53%`，6m 也略弱，因此只记录为观察项，不登记 V39.2。收益更高的 `cap_40`、`target_long_024`、`no_h1_di_long`、`target_short_026`、`no_ema_spread_long` 均有回撤、Sharpe 或策略身份代价，不替换 V39。
 
 尖峰参数维持原判断：`adx_window=28`、`long_adx_min=28`、`short_adx_min=36`、`take_profit_atr=5`、`hard_stop_atr=7`、`atr_window=672`、`volume_window=192`、`disable_after_mfe_atr=1.5` 不能随意偏移；`no_timeout` 样本内与 V39 完全一致，但实盘继续保留 `max_hold_bars=384` 作为异常兜底。结论：V39 保持当前观察候选定义，未 promotion、未 live-ready。证据：`ablations/hype-ema-tb-v39-full-ablation-2026-07-08.md`；脚本：`scripts/research_hype_ema_tb_v39_full_ablation.py`；产物：`artifacts/hype_ema_tb_v39_full_ablation_2026-07-08.json`、`artifacts/hype_ema_tb_v39_full_ablation_2026-07-08_trades.csv`。
+
+### 2026-07-09 V39 trailing stop 诊断
+
+针对“V39 当前止损太宽，trailing stop 是否能改善收益、回撤、胜率”的问题，在 V39 上测试 53 组 trailing stop 参数。Trailing 口径为：MFE 与 trailing stop 只在 15m bar 收盘后更新，下一根 bar 起生效；若下一根 open 已穿越 trailing stop，按 open 成交，否则按 stop 价成交；同 bar stop 与 TP 同时触发时按 stop-first。
+
+结论：**不合入 V39，不登记 V39.2**。没有任何 trailing 变体能同时改善 full 收益、full maxDD、胜率；也没有任何变体能同时改善最近 90 天收益、maxDD、胜率。V39 基线为 `+9969.45% / -23.46% / Sharpe 4.81 / 107 笔 / 胜率 79.44%`，90d `+217.53% / -21.90% / 胜率 77.14%`。
+
+最接近可用的 `trail_a40_d35`（MFE>=4ATR 后，以 3.5ATR 距离 trailing）full `+7510.79% / -28.92% / Sharpe 4.70 / 胜率 82.76%`，90d `+184.86% / -21.90%`：胜率提高，但 full 收益少 `2458.66pp`、回撤恶化 `5.46pp`。少数能改善 full maxDD 的 `trail_a30_d25` 为 `+2670.07% / -22.58% / Sharpe 3.85 / 胜率 84.03%`，收益损失超过 `7000pp`。说明 trailing stop 能减少部分亏损，但会系统性截断 V39 依赖的 `5ATR` 趋势 TP 尾部，收益代价远高于回撤改善。
+
+判断：若要处理“止损太宽”，方向不应是通用 trailing stop，而应另做入场质量、ADX/ATR regime、仓位 cap 或更窄范围保护规则诊断。V39 当前定义不变，仍为观察候选，未 promotion、未 live-ready。证据：`diagnostics/hype-ema-tb-v39-trailing-stop-diagnostic-2026-07-09.md`；脚本：`scripts/research_hype_ema_tb_v39_trailing_stop.py`；产物：`artifacts/hype_ema_tb_v39_trailing_stop_2026-07-09.json`、`artifacts/hype_ema_tb_v39_trailing_stop_2026-07-09_trades.csv`、`artifacts/hype_ema_tb_v39_trailing_stop_2026-07-09_equity.csv`。
+
+### 2026-07-09 V39 live spec 导出
+
+按用户要求，为同事验证导出 `HYPE-EMA-TB-V39` runner handoff 规格：`live-specs/hype-ema-tb-v39-live-spec-not-live-ready-2026-07-09.md`。该规格完整固定 V39 的身份、数据质量要求、成本/funding 口径、15m/1h 指标定义、K0/K1/K2 入场时序、sizing、TP/SL、indicator exit、timeout、禁用项、runner TOML 草案和同事验证清单。
+
+重要状态：这只是 `live spec draft / not implemented in quant-runner / not dry-run / not live-ready`。当前 `/Users/ZK/OpenCode/quant-runner` 还没有 `hype_ema_tb` kind、module 或 runner-side SPEC；文档中的 `kind = "hype_ema_tb"` 是建议实现值，不能直接粘贴到当前 runner 配置运行。V39 当前仍停留 `registered / not promoted / not dry-run / not live-ready`；只有 runner 实现、Python/runner 指标与交易路径对拍、验证门禁 3/4/6/7、live-executable 审计、runner-tracking 证据补齐后，才允许讨论 dry-run 或 live。

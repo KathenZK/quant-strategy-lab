@@ -5,9 +5,11 @@ alwaysApply: true
 
 # Clickable File References
 
-- In chat replies, when citing a repository file the user may want to open, use a clickable form: a Markdown link with the file path (absolute path preferred), or the code-reference format for code snippets. Do not dump bare backtick paths as the only pointer when the reply's purpose is to direct the user to files; many research filenames differ only by date or version suffix and are hard to locate by eye.
-- In durable research Markdown (README routing tables, core ledgers, decision logs, diagnostics, live specs), cross-document references must be relative Markdown links like `[hype-15m-mii-core-ledger.md](15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md)`, so they are clickable in Cursor and on git hosting. Reserve bare backticks for parameters, code identifiers, status labels, and paths that intentionally must not resolve (retired dirs, external machines).
-- Link text should keep the real filename (optionally with a short Chinese label before it); do not hide the filename behind generic text like 「见这里」.
+- **Hard requirement for final chat replies:** when telling the user to view any repository document, report, script, artifact, directory, or file, provide a Markdown link. Do not provide only a bare backtick path.
+- Prefer backticked path text inside the link so the reference is both literal and clickable: [`research/hype/README.md`](../../research/hype/README.md). A short Chinese label may precede the real filename, but the actual filename/path must remain visible in the link text.
+- Bad: `research/hype/README.md`
+- Good: [`research/hype/README.md`](../../research/hype/README.md)
+- In durable research Markdown (README routing tables, core ledgers, decision logs, diagnostics, live specs), cross-document references must be relative Markdown links like [`hype-15m-mii-core-ledger.md`](15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md), so they are clickable in Cursor and on git hosting.
 - Routing tables must link at least the family directory and the core-ledger entry; evidence lists in family docs must link each cited report.
 - Existing documents do not need a bulk rewrite. Convert bare-path references to Markdown links whenever you touch the surrounding content, and always use links in newly written or updated sections.
-- Exceptions: file paths inside code blocks, TOML/config examples, script output samples, and `external-reproduction-spec` main bodies (which must stay repo-independent) keep plain text.
+- Bare backticks are reserved for parameters, code identifiers, status labels, paths inside code blocks/config examples/script output, paths that intentionally must not resolve, and `external-reproduction-spec` main bodies.

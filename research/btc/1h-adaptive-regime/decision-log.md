@@ -95,3 +95,8 @@
 - V4 指标与 V3 完全一致：prefit `6.1574x / -12.87% / 87.30%`；reused holdout `1.8998x / -17.47% / 81.82%`；current full `5.2669x / -17.47% / 86.49%`。
 - 分时间片回测：recent 7d 无交易；recent 30d `1.2931x / +2.13% / -17.47% / 75.00% / 4`；recent 90d `1.9134x / +17.34% / -17.47% / 81.82% / 11`；2025 全年 `4.4421x / +343.75% / -11.04% / 88.24% / 34`；2026 YTD `3.9017x / +97.37% / -17.47% / 84.00% / 25`。
 - 决策：V4 登记只固定“参数干净版”身份，不是新增 OOS 或收益证据；不标记 candidate/paper-live/live-ready。证据见 `artifacts/btc_1h_ar_v4_config_2026-07-07.json`、`notes/btc-1h-ar-v4-window-backtest-2026-07-07.md`、`artifacts/btc_1h_ar_v4_window_backtest_2026-07-07.json`。
+
+## 2026-07-08 — 状态修饰词修正
+
+- 治理审计发现本家族状态里挂着 `forward-test required`，但按词表该修饰词专指依赖 `runner-tracking/` 下尚不存在的报告；本家族未进入任何 runner，没有可满足该备注的证据路径。
+- 决策：README、路由表与主账版本表统一去掉 `forward-test required`，改为 `registered / not promoted / not live-ready`。原意（升级前需要前向验证与 production runner）已由 Live-readiness 列的文字说明承载。历史 decision-log 条目不改写。

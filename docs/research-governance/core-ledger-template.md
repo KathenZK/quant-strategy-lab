@@ -1,6 +1,6 @@
 # <Family Full Name> Core Ledger
 
-> 本模板定义主账应写什么。复制到家族目录后，把文件名改为 `<family-id>-core-ledger.md`。主账是版本身份与状态的事实表，不是实验报告、日志或参数说明书。
+> 本模板定义主账应写什么。复制到家族目录后，把文件名改为 `<family-id>-core-ledger.md`，并把模板内指向本目录的相对链接改为从家族目录出发的路径（如 `strategy-status-glossary.md` 改为 `../../../docs/research-governance/strategy-status-glossary.md`）。主账是版本身份与状态的事实表，不是实验报告、日志或参数说明书。
 
 ## Family Identity
 
@@ -44,7 +44,7 @@
 - Specs：
 - Diagnostics / ablations：
 - Live specs：
-- Forward tracking：
+- Runner tracking：
 - Scripts / artifacts：
 
 ## What Not To Put Here
