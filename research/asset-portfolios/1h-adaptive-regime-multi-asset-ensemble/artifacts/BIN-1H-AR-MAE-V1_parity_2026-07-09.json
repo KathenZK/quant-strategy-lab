@@ -1,0 +1,29 @@
+{
+  "schema_version": "1.0",
+  "strategy_id": "BIN-1H-AR-MAE-V1",
+  "runner_kind": "six_asset_ensemble",
+  "runner_commit": "34b770a",
+  "lab_commit": "not-recorded-in-source-report",
+  "snapshot_id": "binance-1h-ar-mae-v1-2026-07-03",
+  "gate_level": "parity",
+  "command": "quant-runner replay-dry-run --name six-asset-ensemble-dry-run",
+  "window": {
+    "start": "2024-07-02T10:00:00Z",
+    "end": "2026-07-03T05:00:00Z",
+    "bars": 17520
+  },
+  "trade_path": {
+    "reference_trades": 371,
+    "runtime_trades": 371,
+    "path_mismatches": 0,
+    "fields_compared": [
+      "asset", "style", "entry_ts", "exit_ts", "side",
+      "exposure", "equity_ret", "exit_reason"
+    ]
+  },
+  "conclusion": "PASS",
+  "blockers": [
+    "strategy remains NO-GO and dry-run only",
+    "runtime lifecycle approximation differs from strict replay"
+  ]
+}
