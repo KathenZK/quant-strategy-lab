@@ -1,4 +1,14 @@
-# HYPE-15M-MII-V1.3 实盘参数规格（非实盘批准）2026-07-01
+---
+spec_role: lab_handoff
+strategy_id: HYPE-15M-MII-V1.3
+family_id: HYPE-15M-MII
+runner_kind: hype_mii
+spec_status: superseded
+superseded_by: hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md
+approval_level_max: none
+---
+
+# HYPE-15M-MII-V1.3 实盘参数规格（已被 V1.4A 取代）2026-07-01
 
 Family：`HYPE-15M-Multi-Indicator-Intraday`（alias：`HYPE-15M-MII`）
 

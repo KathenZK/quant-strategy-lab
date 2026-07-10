@@ -56,6 +56,10 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 
 - `baseline` / `candidate` / `observation` / `clean-equivalent`：`registered` 或 `explore` 的来源/角色修饰——基线锚点、参数候选、微调观察值、与 parent 逐笔等价的参数精简版（clean-equivalent 需 trade signature 一致证据，且不提供新增收益证据）。
 - `forward-test required`：gate 备注，表示状态推进依赖 `runner-tracking/` 下尚不存在的报告；口头描述不算证据。只能用于已进入 `dry-run` / `live` 的版本；未进入任何 runner 的版本没有可满足该备注的证据路径，应写 `not promoted / not live-ready`。
+- `tiny-live-pilot`：`live` 主状态的限时修饰，表示真实下单只用于执行审计，
+  资金必须在专用子账户内隔离，并在 manifest 中记录
+  `approval_level=tiny_live_pilot`、资金边界、decision-log 引用和到期时间。
+  它不是 production sizing，也不能由散文单独授权。
 - `not promoted / not live-ready`：dry-run 前证据不足、回测失败、可执行性审计不通过、或暂不继续推进时使用的通用后缀；它不是最终否决，后续可以因新机制、新数据或新审计重开。
 
 历史文档中的 `diagnostic baseline`、`diagnostic observation`、`clean-equivalent observation`、`audit observation`、`audit candidate` 等旧标签按 `registered baseline/observation` 或 `registered / not promoted / not live-ready` 理解，不需要批量改写。历史文档中若在 dry-run 前使用了 `NO-GO`，按新口径理解为 `not promoted / not live-ready`，除非同一文档明确引用了 dry-run/live runner 观察证据。

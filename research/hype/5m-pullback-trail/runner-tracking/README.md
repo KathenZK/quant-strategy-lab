@@ -8,4 +8,8 @@
 
 ## 当前跟踪对象
 
-- `HYPE-5M-PBTR-V6.2.1`：quant-runner `hype_pullback` dry-run 配置（`configs/dryrun.toml`，`dry_run_notional_usdt = 10`），状态 `dry-run / forward-test required`。已有 [`hype-5m-pbtr-runner-2026-07-09.md`](hype-5m-pbtr-runner-2026-07-09.md)：2026-06 已知信号窗口 runtime/research 对拍 `16/16 MATCH`；这只证明信号引擎口径一致，**不**替代真实成交 forward-test，也不得据此升级生产 sizing。
+- `HYPE-5M-PBTR-V6.2.1`：quant-runner 同时保留 dry-run，并追认既有
+  `hype-pullback-live` 为限时 `live / tiny-live-pilot / forward-test required`
+  （复核截止 2026-07-24）。已有
+  [`hype-5m-pbtr-runner-2026-07-09.md`](hype-5m-pbtr-runner-2026-07-09.md)
+  的 16/16 replay parity；它不替代真实成交生命周期验收，也不允许 production sizing。

@@ -8,4 +8,7 @@
 
 ## 当前跟踪对象
 
-- `HYPE-EMA-X-V18`：quant-runner `hype_ema_x` dry-run 配置（`configs/dryrun.toml`，`dry_run_notional_usdt = 10`），状态 `dry-run / forward-test required`。尚无 runner 观察报告；首份报告缺失前不得升级到 `live`，也不得据此给出 `NO-GO`。
+- `HYPE-EMA-X-V18`：quant-runner `hype_ema_x` dry-run 配置，状态
+  `dry-run / forward-test required`。首份治理报告见
+  [`hype-ema-x-runner-2026-07-10.md`](hype-ema-x-runner-2026-07-10.md)；
+  full-window parity 和真实 runtime lifecycle 仍缺失，不得升级 live。

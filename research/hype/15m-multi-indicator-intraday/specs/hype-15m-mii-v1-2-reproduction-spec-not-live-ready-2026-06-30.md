@@ -485,7 +485,7 @@ Sharpe/Sortino 在本研究中使用交易净收益序列年化，净收益已�
 8. kill switch：日损、连续亏损、最大回撤、API 错误、订单拒绝、异常滑点、人工急停。
 9. 小额观察额度：若用户仍要人工观察，必须在策略外定义最大名义本金和最大可亏损金额。
 
-## 复现证据入口
+## 非复现依赖：仓库证据入口
 
 - 主账：`../hype-15m-mii-core-ledger.md`
 - ATR bracket 搜索报告：`../notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`

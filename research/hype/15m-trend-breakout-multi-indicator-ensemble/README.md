@@ -18,7 +18,7 @@ Created：2026-07-07
 
 ## 当前状态
 
-- 当前状态：`V2 live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready`。
+- 当前状态：`V2 dry-run active / replay parity PASS / live disabled / not live-ready`。
 - 当前登记版本：`V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4`，单账户 `single_v39_priority_k1`（V39 优先 + V1.4 强平让位）。
 - 首次组合回测（V35 + V1.3）见 [hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md](notes/hype-15m-tb-mii-ensemble-first-combination-backtest-2026-07-07.md)。
 - V39 + V1.3 组合回测（含门禁校验）见 [hype-15m-tb-mii-ensemble-v39-combination-backtest-2026-07-08.md](notes/hype-15m-tb-mii-ensemble-v39-combination-backtest-2026-07-08.md)。

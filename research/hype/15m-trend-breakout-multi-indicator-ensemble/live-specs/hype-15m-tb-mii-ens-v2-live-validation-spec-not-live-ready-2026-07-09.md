@@ -1,4 +1,17 @@
-# HYPE-15M-TB-MII-ENS V2 Live Validation Spec（非实盘批准）2026-07-09
+---
+spec_role: lab_handoff
+strategy_id: HYPE-15M-TB-MII-ENS-V2
+family_id: HYPE-15M-TB-MII-ENS
+runner_kind: hype_tb_mii_ensemble
+spec_status: active
+peer_spec: crates/quant-runner/src/runner/strategies/hype_tb_mii_ensemble/HYPE-15M-TB-MII-ENS-V2-SPEC.md
+manifest_instance_ids:
+  - hype-tb-mii-ens-dry-run
+  - hype-tb-mii-ens-live
+approval_level_max: dry_run
+---
+
+# HYPE-15M-TB-MII-ENS V2 Runtime Validation Spec（dry-run active）
 
 规格 id：`HYPE-15M-TB-MII-ENS-V2-LIVE-VALIDATION-SPEC-2026-07-09`
 
@@ -6,7 +19,7 @@ Family：`HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble`（alias：`HYPE-15M-
 
 Version：`V2`
 
-Status：`live validation spec draft / live-executable FAILED / not implemented in runner / not dry-run / not live-ready`
+Status：`dry-run active / replay parity PASS / live disabled / not live-ready`
 
 ## 先读结论
 
@@ -64,7 +77,7 @@ V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4
 当前状态保持：
 
 ```text
-V2 live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready
+V2 dry-run active / replay parity PASS / live disabled / not live-ready
 ```
 
 进入 runner dry-run 前至少需要完成：
@@ -490,7 +503,7 @@ V1.4 必须对拍：
 建议状态仍为：
 
 ```text
-HYPE-15M-TB-MII-ENS-V2: live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready
+HYPE-15M-TB-MII-ENS-V2: dry-run active / replay parity PASS / live disabled / not live-ready
 ```
 
 只有 runner 实现、replay 对拍、shadow/dry-run、订单时序审计和 kill-switch 验证全部完成后，才允许讨论小资金 live pilot。

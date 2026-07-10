@@ -8,4 +8,8 @@
 
 ## 当前跟踪对象
 
-- `HYPE-CC-V35`：quant-runner `hype_candle_count` dry-run 配置（`configs/dryrun.toml`，`dry_run_notional_usdt = 10`），状态 `dry-run / forward-test required`。历史上 V35 曾 live underperformance；当前 dry-run 是重新观察/对账状态，不等于 live 批准。尚无 runner 观察报告；首份报告缺失前不得升级到 `live`，也不得据此给出新的 `NO-GO`。
+- `HYPE-CC-V35`：quant-runner `hype_candle_count` dry-run 配置，状态
+  `dry-run / forward-test required`。首份治理报告见
+  [`hype-cc-runner-2026-07-10.md`](hype-cc-runner-2026-07-10.md)。
+  历史 live underperformance、full-window parity 和真实 runtime lifecycle
+  仍是 blocker；当前 dry-run 不等于 live 批准。

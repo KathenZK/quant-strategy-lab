@@ -1,3 +1,16 @@
+---
+spec_role: lab_handoff
+strategy_id: HYPE-5M-PBTR-V6.2.1
+family_id: HYPE-5M-PBTR
+runner_kind: hype_pullback
+spec_status: active
+peer_spec: crates/quant-runner/src/runner/strategies/hype_pullback/HYPE-5M-PBTR-V6.2.1-SPEC.md
+manifest_instance_ids:
+  - hype-pullback-dry-run
+  - hype-pullback-live
+approval_level_max: tiny_live_pilot
+---
+
 # HYPE-5M-PBTR-V6.2.1 实盘复现规格
 
 规格 id：`HYPE-5M-PBTR-V6.2.1-LIVE-SPEC`

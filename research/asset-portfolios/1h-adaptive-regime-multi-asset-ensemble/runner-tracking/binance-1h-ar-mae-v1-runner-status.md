@@ -49,3 +49,12 @@
 保持 lab 结论：`registered diagnostic / NO-GO / not promoted / not live-ready`。
 dry-run 仅用于观察 runtime 信号与持仓生命周期，不改变 promotion 状态。
 replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但不改变 V1 的 NO-GO 判定（回撤穿破 `<20%` 硬门槛、成分均为 diagnostic NO-GO）。
+
+## 2026-07-10 Runner architecture governance
+
+- `six_asset_ensemble` is now declared `SelfManagedMultiSymbol` in the central
+  strategy registry and no longer enters the ordinary BTC placeholder
+  market-data group before pulling its six sleeves.
+- Platform manual halt, risk observations, critical outbox, graceful shutdown,
+  watchdog and manifest lock apply to the self-managed runtime too.
+- Source tests pass; no deployment or change to the dry-run/live decision was made.

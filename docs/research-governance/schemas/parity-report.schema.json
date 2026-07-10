@@ -1,0 +1,44 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Runner parity report",
+  "type": "object",
+  "required": [
+    "schema_version", "strategy_id", "runner_kind", "runner_commit",
+    "lab_commit", "snapshot_id", "gate_level", "command", "window",
+    "trade_path", "conclusion", "blockers"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "strategy_id": {"type": "string"},
+    "runner_kind": {"type": "string"},
+    "runner_commit": {"type": "string"},
+    "lab_commit": {"type": "string"},
+    "snapshot_id": {"type": "string"},
+    "gate_level": {"enum": ["smoke", "parity"]},
+    "command": {"type": "string"},
+    "window": {
+      "type": "object",
+      "required": ["start", "end", "bars"],
+      "properties": {
+        "start": {"type": "string"},
+        "end": {"type": "string"},
+        "bars": {"type": "integer", "minimum": 0}
+      },
+      "additionalProperties": false
+    },
+    "trade_path": {
+      "type": "object",
+      "required": ["reference_trades", "runtime_trades", "path_mismatches", "fields_compared"],
+      "properties": {
+        "reference_trades": {"type": "integer", "minimum": 0},
+        "runtime_trades": {"type": "integer", "minimum": 0},
+        "path_mismatches": {"type": "integer", "minimum": 0},
+        "fields_compared": {"type": "array", "items": {"type": "string"}}
+      },
+      "additionalProperties": false
+    },
+    "conclusion": {"enum": ["PASS", "FAIL"]},
+    "blockers": {"type": "array", "items": {"type": "string"}}
+  },
+  "additionalProperties": true
+}

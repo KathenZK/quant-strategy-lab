@@ -107,3 +107,15 @@
 - V1/V2/V2.1/V3/V3.1/V3.2/V3.3/V3.3.1/V4/V5.1/V5.2/V6/V6.1/V6.2/V6.2.1 候选在生产 sizing 前都必须先有 live dry-run 或 audit 证据；其中 V3.3.1 当前已是 no-go research，只能保留其线上风控/审计启发。
 - `2026-07-08`：状态口径对齐。`HYPE-5M-PBTR-V6.2.1` 已在 quant-runner 以 `hype_pullback` dry-run 配置运行（`configs/dryrun.toml`），状态确认为 `dry-run / forward-test required`，并补建 `runner-tracking/` 目录（此前缺失，违反 dry-run 准入条件）。首份 runner 观察报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
 - `2026-07-09`：对 2026-06 已知信号窗口做 runtime/research 对拍。Research 源为 feasibility audit `baseline_stop_first` 的 16 笔 June 成交；runtime 用 `quant-runner replay-dry-run --name hype-pullback-dry-run --limit 15000 --start-ts 2026-06-01T00:00:00Z --end-ts 2026-06-30T06:15:00Z`。结果 `16/16 MATCH`（`signal_ts/side/entry_ts/exit_ts/reason/entry_price/net_ret_1x`）。报告：[`runner-tracking/hype-5m-pbtr-runner-2026-07-09.md`](runner-tracking/hype-5m-pbtr-runner-2026-07-09.md)。同日确认线上 7/1-7/9 无信号是市场空窗，不是实现漏信号。状态仍为 `dry-run / forward-test required`；真实 fill 生命周期尚未验收。
+
+## 2026-07-10 既有 tiny-notional live 追认
+
+- 本条是对已经存在的 `hype-pullback-live enabled=true` 运行事实的追认，
+  不是事前生产批准，也不把 V6.2.1 提升为 production sizing。
+- 允许级别固定为 `tiny_live_pilot`，复核截止
+  `2026-07-24T00:00:00Z`；到期前必须重新确认，否则后续部署/重启门禁应拒绝。
+- 资金边界是专用 `hype-pullback-live` 子账户当时的全部余额；禁止未写
+  decision log 的追加资金。
+- 当前仍缺真实 fill 生命周期、部分成交、本地 OCO、重启恢复和平台安全闸
+  的线上验收。Runner 新 execution v2 在完成离线故障注入和 flat 窗口切换前
+  默认关闭。

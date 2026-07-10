@@ -1,3 +1,16 @@
+---
+spec_role: lab_handoff
+strategy_id: HYPE-15M-MII-V1.4A
+family_id: HYPE-15M-MII
+runner_kind: hype_mii
+spec_status: active
+peer_spec: crates/quant-runner/src/runner/strategies/hype_mii/HYPE-15M-MII-V1.4A-DRY-RUN-SPEC.md
+manifest_instance_ids:
+  - hype-mii-dry-run
+  - hype-mii-live
+approval_level_max: dry_run
+---
+
 # HYPE-15M-MII-V1.4A Dry-Run Validation Spec（非实盘批准）2026-07-10
 
 Family：`HYPE-15M-Multi-Indicator-Intraday`（alias：`HYPE-15M-MII`）

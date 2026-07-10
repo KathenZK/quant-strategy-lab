@@ -94,3 +94,26 @@ Checks:
 ## Boundary
 
 The production dry-run service is deployed and running. This is not an operator approval to start live. Before setting `enabled = true`, the user must provide dedicated subaccount API env vars, confirm the subaccount balance size that controls pilot notional, and explicitly approve activation. The next gate is dry-run observation and live-readiness review of runtime logs/fills before real orders.
+
+## 2026-07-10 P0b Local Execution Governance Evidence
+
+Runner working tree now includes an opt-in `execution_v2` live single-instance event loop with Binance USD-M user-data-stream order/account events, independent closed-bar scheduling, REST reconciliation fallback, protection partial-fill recovery, startup reconciliation, and protection-missing deadline fail-closed behavior.
+
+Platform configuration added by this local implementation:
+
+- `user_stream_enabled` (default `false`);
+- `reconcile_interval_seconds` (default `2`);
+- `protection_deadline_seconds` (default `10`);
+- shared HTTP timeout and Binance `recvWindow` controls.
+
+Local verification:
+
+```text
+cargo fmt --all --check: pass
+cargo test -p quant-runner: pass (93 library + 4 integration tests)
+cargo clippy -p quant-runner --all-targets -- -D warnings: pass
+real Binance network access: not used
+deployment/live activation: not performed
+```
+
+This evidence improves the disabled live pilot execution path but does not promote the strategy or authorize live activation. The runner changes remain uncommitted and require review plus offline/controlled operational validation before the live-readiness gate can change.

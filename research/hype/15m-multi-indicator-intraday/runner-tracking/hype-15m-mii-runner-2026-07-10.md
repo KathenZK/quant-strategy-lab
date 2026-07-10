@@ -82,3 +82,15 @@ using signal/bar timestamps, fill proxy, side, quantity/notional, bracket,
 exit reason, fees, and stable ledger event/trade IDs before any keep/adjust
 decision. Current conclusion: continue small dry-run observation; no live
 promotion.
+
+## Execution governance implementation
+
+The Runner working tree now adds shared stable order identity, pending recovery,
+actual-fill sizing, confirmed emergency flatten, private order stream/REST
+reconciliation, manual halt, critical outbox, exchange request guards, graceful
+shutdown and stale-health watchdog. These changes are locally tested but not
+deployed. `hype_mii` remains code-level dry-run only.
+
+The existing 2500-bar recent-window 10/10 comparison remains useful evidence but
+is not yet the standardized full-window parity gate; manifest parity therefore
+remains `PENDING` under a time-limited grandfather.

@@ -1,0 +1,54 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Active strategy manifest",
+  "type": "object",
+  "required": ["schema_version", "updated_at", "entries"],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "updated_at": {"type": "string", "format": "date-time"},
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": [
+          "instance_id", "family_id", "family_path", "strategy_id",
+          "runner_kind", "mode", "main_status", "approval_level",
+          "enabled_allowed", "lab_live_spec", "runner_spec",
+          "ledger_identity", "decision_log_ref", "parity_gate"
+        ],
+        "properties": {
+          "instance_id": {"type": "string", "minLength": 1},
+          "family_id": {"type": "string", "minLength": 1},
+          "family_path": {"type": "string", "minLength": 1},
+          "strategy_id": {"type": "string", "minLength": 1},
+          "runner_kind": {"type": "string", "minLength": 1},
+          "mode": {"enum": ["dry_run", "live"]},
+          "main_status": {"type": "string"},
+          "approval_level": {
+            "enum": ["none", "dry_run", "tiny_live_pilot", "live"]
+          },
+          "approval_expires_at": {"type": "string", "format": "date-time"},
+          "enabled_allowed": {"type": "boolean"},
+          "lab_live_spec": {"type": "string"},
+          "runner_spec": {"type": "string"},
+          "ledger_identity": {"type": "string"},
+          "funding_boundary": {"type": "string"},
+          "decision_log_ref": {"type": "string"},
+          "parity_gate": {
+            "type": "object",
+            "required": ["required", "status"],
+            "properties": {
+              "required": {"type": "boolean"},
+              "status": {"enum": ["PASS", "FAIL", "PENDING"]},
+              "last_pass_report": {"type": "string"},
+              "grandfather_until": {"type": "string", "format": "date-time"}
+            },
+            "additionalProperties": false
+          }
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

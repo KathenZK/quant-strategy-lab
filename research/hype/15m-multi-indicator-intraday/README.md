@@ -3,7 +3,7 @@
 - Full family name：`HYPE-15M-Multi-Indicator-Intraday`（历史别名：`HYPE-15M-MII`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `15m`
 - 机制：多指标日内广搜（RSI/MACD/EMA/ADX/ATR/Donchian/Bollinger/成交量/结构），强制可执行时序：闭合 K 信号、下一根 open 入场、显式成本、单仓不重叠、stop-first 同 K 冲突处理。
-- 当前状态：`HYPE-15M-MII-V1.4` 已登记为 `V1.3 + min_rvol96=0.85` 的进取观察版本；`HYPE-15M-MII-V1.4A` 已登记为 `V1.4 + TP=1.4*ATR96 / SL=3.0*ATR96` 的近期窗口观察变体。二者均尚未实现为 runner dry-run；当前 quant-runner 模拟盘仍是 `HYPE-15M-MII-V1.3`（V1.2 的固定 `2.5x` sizing 版），runner 观察报告见 `runner-tracking/`。
+- 当前状态：`HYPE-15M-MII-V1.4A`（`V1.4 + TP=1.4*ATR96 / SL=3.0*ATR96`）已替代 V1.3，当前 quant-runner `hype-mii-dry-run` 实例运行 V1.4A；状态为 `dry-run validation / not live-ready`。V1.3 已停止并标记 superseded，历史事件保留；runner 证据见 `runner-tracking/`。
 
 ## 边界
 

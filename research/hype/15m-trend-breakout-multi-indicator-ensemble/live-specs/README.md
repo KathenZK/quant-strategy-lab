@@ -2,7 +2,8 @@
 
 本目录保存 `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` 的 runner / dry-run / live validation 规格。
 
-这里出现 `live spec` 不代表 promotion；当前 V2 仍为 `live validation spec draft / live-executable FAILED / NO-GO / not promoted / not dry-run / not live-ready`。
+这里出现 `live spec` 不代表 live 批准；当前 V2 为
+`dry-run active / replay parity PASS / live disabled / not live-ready`。
 
 ## 当前文件
 
