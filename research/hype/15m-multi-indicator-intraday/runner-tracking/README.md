@@ -8,4 +8,5 @@
 
 ## 当前跟踪对象
 
-- `HYPE-15M-MII-V1.3`：quant-runner `hype_mii` dry-run 配置（`configs/dryrun.toml`，`dry_run_notional_usdt = 10`，固定 `2.5x` 暴露），状态 `dry-run / forward-test required`。尚无 runner 观察报告；首份报告缺失前不得升级到 `live`，也不得据此给出 `NO-GO`。
+- `HYPE-15M-MII-V1.3`：已于 `2026-07-10T07:13:16Z` 被同一实例上的 V1.4A dry-run 替代；历史事件仍按 V1.3 identity 保留。
+- `HYPE-15M-MII-V1.4A`：quant-runner `hype_mii` 当前 dry-run（实例仍名为 `hype-mii-dry-run`，内部 ledger identity 为 `HYPE-15M-MII-V1.4A`，`dry_run_notional_usdt = 10`，固定 `2.5x` 暴露）；旧实例从未开仓，因此沿用既有 state 目录。状态 `dry-run validation running / not live-ready`。首个 cycle 健康且无信号，后续逐笔证据见 `hype-15m-mii-runner-2026-07-10.md`。

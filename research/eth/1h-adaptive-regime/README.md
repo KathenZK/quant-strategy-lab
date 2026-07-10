@@ -19,6 +19,7 @@
 - 主账（V1-V3 版本表、指标与证据链接）：`eth-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
 - 版本规格：`specs/`（V1 baseline、V2 clean tuned、V2.1 high-win tuned、V3 clean tuned）
+- V3 频率与 fresh forward 诊断：`notes/eth-1h-ar-v3-frequency-forward-diagnostic-2026-07-10.md`
 - 数据质量报告：`diagnostics/eth-binance-1h-data-quality-2026-07-03.md`
 
 脚本在 `scripts/`（fetch / search / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

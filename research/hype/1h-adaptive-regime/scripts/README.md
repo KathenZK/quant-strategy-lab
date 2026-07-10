@@ -10,6 +10,7 @@
 - `research_hype_1h_ar_v2_ablation_combo_retest.py`：复测 V2 全参数消融提示的少量 DI/Stoch 组合，并同时输出 base K+1、K+2 和 8 bps 压力结果。
 - `research_hype_1h_ar_v3_full_ablation.py`：将 `di_roc_off__stoch_th55` 作为 V3 baseline，覆盖 clean 配置接口 `34` 个字段槽的 one-at-a-time 全参数消融，并输出最近窗口与滚动窗口复核。
 - `research_hype_1h_ar_v3_prune_and_tune.py`：验证移除 V3 中 `9` 个 dormant 字段槽后逐笔路径与 V3 exact equal，再只用 prefit（含 K+1/K+2/8bps 三场景 gate）对剪枝后 `25` 个字段槽做网格微调，冻结后揭示 reused holdout 与压力结果。
+- `audit_hype_1h_ar_v4_pressure_optimization.py`：用精确单账户联合状态机对账 V4，修正“两腿独立模拟后合并”的 cooldown 路径偏差，并对止损、最长持仓、trailing、固定/风险封顶仓位执行压力优先搜索。
 - `audit_hype_1h_ar_v2_tune_frontier.py`：对基础达标微调前沿执行 K+2、成本、暴露和相邻参数审计。
 - `research_hype_1h_ar_v2_live_robust_tune.py`：只用 prefit 的 K+1/K+2/8 bps 三场景联合 gate 扩大搜索；后段仅作冻结后诊断。
 

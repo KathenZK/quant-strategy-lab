@@ -41,3 +41,13 @@
 - V2 机制：`donchian_break + vwap_revert` 双腿 ensemble；完整参数规格见 `specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`。
 - V2 指标：full annual `2.07x`、return `290.00%`、DD `-17.41%`、win `93.91%`、trades `115`；last `1y` annual `1.60x`、win `92.31%`；reused holdout annual `0.70x`、return `-8.53%`、DD `-15.69%`、win `66.67%`、trades `6`。
 - V2 状态：`registered observation / NO-GO / not promoted / not live-ready`。登记 V2 只固定高胜率观察参数，不代表 candidate、paper-live、dry-run、handoff 或 live。
+
+## 2026-07-10：V2 机制诊断与改进方向
+
+- V2 的高胜率来自大量小 TP；full 平均盈利 `+1.75%`、平均亏损 `-6.89%`、payoff `0.253`，最大单笔亏损 `-14.36%`。少数 stop 是收益上限的主要约束。
+- 双腿拆分显示：收益结构重做后的 Donchian core full annual `2.0023x`、DD `-17.41%`、win `98.00%`，reused holdout return `+4.89%`；VWAP satellite full annual `1.5110x`，但 reused holdout return `-11.05%`、win `25.00%`。近期失效来自 VWAP short。
+- 收益结构重做的 prefit-only 观察将 ensemble full annual 提升到 `3.0520x`，payoff 提升到 `0.616`，reused holdout DD 压至 `-10.04%`，但 reused holdout 仍为 `-6.71%`，不登记版本。
+- 快速 entry veto 没有进入 prefit 前 100；分段止盈/failure exit 的 full annual `2.6188x`、reused holdout `-7.59%`，弱于收益结构重做；腿级 cooldown 的 prefit 最优仍为 `0 bars`。这些机制均不足以修复 VWAP regime 定义。
+- `arm → confirm → expire` 状态机已完成验证：prefit-only 选中 `3-bar roc6+MACD confirm`，prefit annual `2.3129x`、DD `-19.05%`；full annual `2.0977x`；reused holdout 从负转为 return `+2.61%`、annual `1.1089x`、DD `-4.55%`，但只有 `3` 笔。
+- 决策：冻结 V2 身份，不登记 V3。将状态机观察记为 `V2-SM-OBS`，不再依据 reused holdout 调参；后续采用 `Donchian core + VWAP arm-confirm-expire satellite`，等待新增 fresh forward trades。
+- 综合结论：`notes/sol-1h-ar-v2-improvement-conclusion-2026-07-10.md`。

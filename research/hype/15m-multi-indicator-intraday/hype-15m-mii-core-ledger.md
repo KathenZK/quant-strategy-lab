@@ -15,8 +15,8 @@ Created：2026-06-30
 ## 当前状态
 
 - 当前登记观察版本：`HYPE-15M-MII-V1.4`（`V1.3 + min_rvol96=0.85`）。
-- 当前 dry-run 实现版本：`HYPE-15M-MII-V1.3`（`HYPE-15M-MII-V1.2` + 固定 `2.5x` 权益暴露）。
-- 当前状态：`HYPE-15M-MII-V1.3` 为 `dry-run / forward-test required`（quant-runner `hype_mii` dry-run 配置运行中）；`HYPE-15M-MII-V1.4` 为 `registered / not promoted / not live-ready`（进取观察版本，尚未实现为 runner dry-run）；V1、V1base、V1.1、V1.2 为 `not promoted / not live-ready`。
+- 当前 dry-run 实现版本：`HYPE-15M-MII-V1.4A`，于 `2026-07-10T07:13:16Z` 替代同一 `hype-mii-dry-run` 实例上的 V1.3。
+- 当前状态：`HYPE-15M-MII-V1.4A` 为 `dry-run validation running / not live-ready`；V1.3 dry-run 已停止但历史事件保留；`HYPE-15M-MII-V1.4` 为 `registered / not promoted / not live-ready`；V1、V1base、V1.1、V1.2 为 `not promoted / not live-ready`。
 - live 前 blockers：资金费核算、盘口级 stop-market 证据、真实成交滑点、重启恢复、交易所对账、missing-bar fail-closed、kill switch 审计，以及 `runner-tracking/` 下达标的 runner 观察证据。
 - 是否 `live` 或 `NO-GO` 只能在 runner 观察证据出来后判定。
 
@@ -53,7 +53,7 @@ Created：2026-06-30
 | `HYPE-15M-MII-V1.2` | ATR bracket diagnostic observation / not live-ready | 沿用 `V1.1` 入场过滤；下一根 open 入场时按信号 K 已知 `ATR96%` 设置 `TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24` | `specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`；`notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；`notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md` | K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`；去掉 `ATR96 >= 0.75%` 后收益/回撤明显恶化，两个过滤都去掉转负；仍为 `not promoted / not live-ready` |
 | `HYPE-15M-MII-V1.3` | dry-run / forward-test required | 沿用 `V1.2` 信号、过滤、ATR bracket 和 `hold=24`；固定 `2.5x` 权益暴露 | `notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`；`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`；`notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md`；runner 观察报告见 `runner-tracking/` | K+1 总收益 `549.30%`、年化 `472.15%`、回撤 `-22.01%`；K+2 总收益 `239.38%`、年化 `212.47%`、回撤 `-41.89%`；近期不开单主要来自 `ATR96% >= 0.75%` 过滤；已在 quant-runner dry-run，live/NO-GO 待 runner 观察证据 |
 | `HYPE-15M-MII-V1.4` | registered / not promoted / not live-ready（进取观察，未实现为 runner dry-run） | 沿用 `V1.3`，仅把 `min_rvol96` 从 `1.0` 下调为 `0.85` | `specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md`；`live-specs/hype-15m-mii-v1-4-live-validation-spec-not-live-ready-2026-07-09.md`；`notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-3-rvol-fine-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-4-tp-sl-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-4-loss-regime-filters-2026-07-08.md`；`notes/hype-15m-mii-v1-4-dynamic-stop-2026-07-09.md` | 标准数据湖 K+1 `232` 笔、总收益 `978.36%`、回撤 `-24.70%`、胜率 `84.91%`；K+2 总收益 `535.54%`、回撤 `-38.30%`；亏损环境过滤中 `ATR14/ATR96 <= 1.75` 是唯一 strict DD gate 观察候选；动态止损 strict/defensive gate `0/12`。尚未 runner dry-run，不进入 promotion 状态 |
-| `HYPE-15M-MII-V1.4A` | recent-window TP/SL observation / not promoted / not live-ready（未实现为 runner dry-run） | 沿用 `V1.4` 入场与过滤，仅把出场改为 `TP=1.40*ATR96`、`SL=3.0*ATR96` | `specs/hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md`；`notes/hype-15m-mii-v1-4-tp-sl-neighborhood-2026-07-09.md` | Recent API K+1 最近 `90d/30d` 总收益 `78.82%/27.09%`，优于 `V1.4 baseline` 的 `51.61%/16.65%`，最差单笔更浅；但全样本 K+1 总收益仅 `584.90%`、回撤 `-32.85%`、胜率 `78.72%`，明显弱于 `V1.4 baseline`。最近 `7d/72h/24h` 仍 `0` 笔；不替换 baseline |
+| `HYPE-15M-MII-V1.4A` | dry-run validation running / not live-ready | 沿用 `V1.4` 入场与过滤，仅把出场改为 `TP=1.40*ATR96`、`SL=3.0*ATR96`；quant-runner `hype_mii` 默认值已切换，TOML 实例名称和 state path 不带版本；旧实例从未开仓，故沿用原 state；`2026-07-10T07:13:16Z` 已部署 | `specs/hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md`；`live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md`；`runner-tracking/hype-15m-mii-runner-2026-07-10.md`；`notes/hype-15m-mii-v1-4-tp-sl-neighborhood-2026-07-09.md` | Recent API K+1 最近 `90d/30d` 总收益 `78.82%/27.09%`，优于 `V1.4 baseline` 的 `51.61%/16.65%`，最差单笔更浅；但全样本 K+1 总收益仅 `584.90%`、回撤 `-32.85%`、胜率 `78.72%`，明显弱于 `V1.4 baseline`。首个 post-deploy cycle 健康、无信号、无持仓；仅用于小额 dry-run validation，不 live-ready |
 
 ## HYPE-15M-MII-V1base 规格
 
@@ -474,6 +474,7 @@ recent API K+1 最近 `90d` 中，固定 `SL=3.0*ATR96` 从 baseline `51.61%` �
 - V1.3 live parameter spec：`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`
 - V1.4 parameter spec：`specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md`
 - V1.4A parameter spec：`specs/hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md`
+- V1.4A dry-run validation spec：`live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md`
 - V1.4 live validation spec：`live-specs/hype-15m-mii-v1-4-live-validation-spec-not-live-ready-2026-07-09.md`
 - V1.2 ATR bracket exit：`notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`
 - V1.2 window/slice backtest：`notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`

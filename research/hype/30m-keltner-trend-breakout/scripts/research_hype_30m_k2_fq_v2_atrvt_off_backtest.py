@@ -185,6 +185,8 @@ def fetch_1m_klines(*, since_ms: int, until_ms: int, timeout: float) -> pd.DataF
     ]
     for column in numeric:
         frame[column] = pd.to_numeric(frame[column], errors="coerce")
+    frame["vwap"] = frame["quote_volume"] / frame["volume"].replace(0.0, np.nan)
+    frame["vwap"] = frame["vwap"].fillna(frame["close"])
     cutoff = pd.to_datetime(until_ms, unit="ms", utc=True)
     frame = frame.loc[frame["close_time"] < cutoff].copy()
     frame["exchange"] = "binance"
@@ -208,6 +210,7 @@ def fetch_1m_klines(*, since_ms: int, until_ms: int, timeout: float) -> pd.DataF
                 "volume",
                 "quote_volume",
                 "trade_count",
+                "vwap",
                 "is_closed",
                 "source",
             ]
@@ -224,7 +227,9 @@ def load_or_fetch_1m(args: argparse.Namespace) -> pd.DataFrame:
     if CACHE_PATH.exists() and not args.refresh_cache:
         cached = pd.read_parquet(CACHE_PATH)
         cached["ts"] = pd.to_datetime(cached["ts"], utc=True)
-        cached = cached.loc[(cached["ts"].astype("int64") // 1_000_000 >= since_ms) & (cached["ts"].astype("int64") // 1_000_000 < until_ms)]
+        since_ts = pd.to_datetime(since_ms, unit="ms", utc=True)
+        until_ts = pd.to_datetime(until_ms, unit="ms", utc=True)
+        cached = cached.loc[(cached["ts"] >= since_ts) & (cached["ts"] < until_ts)]
         if not cached.empty:
             return cached.reset_index(drop=True)
     frame = fetch_1m_klines(since_ms=since_ms, until_ms=until_ms, timeout=args.timeout)

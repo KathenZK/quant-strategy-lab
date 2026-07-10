@@ -62,3 +62,8 @@
 - `btc_1h_ar_v4_window_backtest_2026-07-07.json`
 - `btc_1h_ar_v4_window_backtest_windows_2026-07-07.csv`
 - `btc_1h_ar_v4_window_backtest_trades_2026-07-07.csv`
+
+2026-07-10 V4 新腿增量与结构优化证据：
+
+- `btc_1h_ar_v4_new_leg_increment_2026-07-10.json`
+- `btc_1h_ar_v4_new_leg_increment_rows_2026-07-10.csv`

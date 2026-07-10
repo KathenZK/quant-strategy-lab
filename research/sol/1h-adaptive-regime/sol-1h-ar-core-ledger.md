@@ -33,6 +33,8 @@ V1 是 2026-07-03 百万组广搜后按 prefit 规则冻结并揭盲 locked OOS 
 
 `V1` 后续 full ablation、clean interface、clean tune 只用于诊断删参与参数面观察；clean tune 不登记为 `V1.1`。V2 来自独立的高胜率硬目标搜索，不继承 clean tune 的版本身份。V2 登记只固定最佳观察值与参数规格，不改变 `NO-GO` 结论。
 
+2026-07-10 机制诊断确认 V2 的核心问题是负偏收益结构与 VWAP short regime 失效。收益结构重做观察可把 full annual 提升到 `3.0520x`、payoff 提升到 `0.616`，但 reused holdout 仍为 return `-6.71%`；分段止盈、快速 failure exit 和腿级 cooldown 均未修复该问题。`arm → confirm → expire` 状态机的 prefit-only 观察则把 reused holdout 改为 return `+2.61%`、annual `1.1089x`、DD `-4.55%`，但只有 `3` 笔且窗口已揭盲。V2 继续冻结为 registered observation，不登记 V3；状态机观察记为 `V2-SM-OBS`，等待新增 fresh forward trades。
+
 ## 证据索引
 
 - 数据抓取与质量检查：`scripts/fetch_sol_binance_1h.py`
@@ -49,4 +51,9 @@ V1 是 2026-07-03 百万组广搜后按 prefit 规则冻结并揭盲 locked OOS 
 - V2 高胜率硬目标搜索：`scripts/research_sol_1h_ar_high_win_target_search.py`
 - V2 高胜率硬目标搜索报告：`diagnostics/sol-1h-ar-high-win-target-search-2026-07-07.md`
 - V2 参数规格：`specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`
+- V2 改进综合结论：`notes/sol-1h-ar-v2-improvement-conclusion-2026-07-10.md`
+- V2 收益结构改造：`diagnostics/sol-1h-ar-v2-mechanism-redesign-2026-07-10.md`
+- V2 分段止盈/失效退出：`diagnostics/sol-1h-ar-v2-staged-exit-2026-07-10.md`
+- V2 腿级 governor：`diagnostics/sol-1h-ar-v2-leg-governor-2026-07-10.md`
+- V2 VWAP 状态机：`diagnostics/sol-1h-ar-v2-vwap-state-machine-2026-07-10.md`
 - 数据与搜索产物：`artifacts/`

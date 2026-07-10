@@ -20,6 +20,7 @@
 - V1.4 参数规格（非 runner dry-run）：[`specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md`](specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md)
 - V1.4A 参数规格（近期窗口 TP/SL 观察变体）：[`specs/hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md`](specs/hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md)
 - V1.4 live validation spec（同事验证交接，非实盘批准）：[`live-specs/hype-15m-mii-v1-4-live-validation-spec-not-live-ready-2026-07-09.md`](live-specs/hype-15m-mii-v1-4-live-validation-spec-not-live-ready-2026-07-09.md)
+- V1.4A dry-run validation spec（小额 dry-run 交接，非实盘批准）：[`live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md`](live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md)
 - V1.3/V1.4 近期诊断（信号干旱 / ATR 口径 / min_atr 网格 / recent trade frequency / RVOL 阈值对比 / V1.4 TP-SL、TP-SL 邻域、亏损环境过滤与动态止损）：`notes/` 下 `hype-15m-mii-v1-3-*.md` 与 `hype-15m-mii-v1-4-*.md` 系列
 
 研究脚本在 `scripts/`，被报告引用的 JSON/CSV/HTML 在 `artifacts/`。逐批结论以主账和 decision-log 为准，不在本 README 复述。

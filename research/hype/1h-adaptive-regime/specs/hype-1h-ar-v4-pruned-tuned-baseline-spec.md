@@ -81,45 +81,50 @@ V4 接口来自 V3 的 clean interface 剪枝：V3 原有 `34` 个字段槽，�
 | `stop_order_model` | `stop-first / gap-open` | 同一根 K 内止损和止盈同时触发时按 stop-first；gap 穿 stop 时按 open 成交。 |
 | Stoch `sl_atr` | `4.0` | 不作为调参字段；只保留为硬止损安全兜底。 |
 
-## 冻结结果
+## 冻结结果（2026-07-10 精确联合状态机修正）
 
 | Window / Scenario | Annual multiple | Max DD | Win rate | Trades | 备注 |
 | --- | ---: | ---: | ---: | ---: | --- |
-| Base K+1 Prefit | `16.3191x` | - | - | - | 三场景 prefit 稳健排名的最小年化值为 `16.3191x`。 |
-| Base K+1 Reused holdout | `13.0662x` | `-19.11%` | - | - | 冻结后揭示；后段年化首次明显高于 `10x`。 |
-| Base K+1 Current full | `22.8128x` | `-19.11%` | `81.08%` | `74` | 收益、回撤、胜率三项均不差于 V3。 |
-| K+2 Current full | `8.7014x` | `-23.56%` | - | - | 回撤仍穿越 `20%`，压力失败。 |
-| 8 bps Current full | `15.3677x` | `-22.46%` | - | - | 回撤仍穿越 `20%`，压力失败。 |
+| Base K+1 Prefit | `26.8626x` | `-16.93%` | `82.14%` | `56` | 精确单账户联合回放。 |
+| Base K+1 Reused holdout | `9.0210x` | `-19.11%` | `73.68%` | `19` | 已解锁后段；低于 `10x`。 |
+| Base K+1 Current full | `20.9748x` | `-19.11%` | `80.00%` | `75` | 精确联合回放比旧近似多 `1` 笔 Stoch 空单。 |
+| K+2 Current full | `7.8530x` | `-25.04%` | `74.32%` | `74` | 年化和回撤都失败。 |
+| 8 bps Current full | `14.1032x` | `-22.46%` | `79.73%` | `74` | 年化通过，但回撤失败。 |
 
-## 与 V3 对比
+此前登记的 `22.8128x / -19.11% / 81.08% / 74 trades` 来自“先独立模拟两腿、再合并”的近似回放。该流程会让被另一腿挡掉的虚拟交易错误触发单腿持仓/冷却，并压掉后续真实可入场信号，不能作为 live runner 的精确事实源。2026-07-10 起以上表精确联合回放为准。
 
-| Metric | V3 | V4 |
-| --- | ---: | ---: |
-| 参数字段槽 | `34` | `25` |
-| Current full annual | `15.0530x` | `22.8128x` |
-| Current full max DD | `-19.11%` | `-19.11%` |
-| Current full win rate | `79.73%` | `81.08%` |
-| Current full trades | `74` | `74` |
-| Reused holdout annual | `9.0300x` | `13.0662x` |
-| K+2 current full / DD | `3.0574x / -31.93%` | `8.7014x / -23.56%` |
-| 8 bps current full / DD | `9.4070x / -28.40%` | `15.3677x / -22.46%` |
+## 执行压力优化结论
+
+`diagnostics/hype-1h-ar-v4-execution-pressure-optimization-2026-07-10.md` 用精确联合回放搜索 `223` 个 DI 风险变体、`589` 个 Stoch 风险变体和 `930` 个 ensemble。`431` 个组合通过 prefit 三场景压力 gate，但冻结前 `12` 名在 reused holdout/current full 中没有一行能让三个场景回撤都小于 `20%`。
+
+后验机制诊断显示，最直接的回撤修复方向为：
+
+- DI 固定杠杆 `3.0x -> 2.5x`；
+- Stoch 硬止损 `4 ATR -> 2 ATR`；
+- Stoch 最长持仓 `8h -> 6h`。
+
+该方向精确回放为：base `14.3901x / -14.20%`、K+2 `7.9815x / -19.64%`、8bps `11.2061x / -18.71%`。它能修复回撤，但 K+2 年化仍低于 `10x`，且 K+2 reused holdout 仅 `1.4286x`；因此只说明风险预算方向有效，不构成 V5 或 promotion。
 
 ## 决策
 
 V4 作为更干净、更强的 diagnostic baseline 登记，但不提升状态。原因：
 
-- K+2 延迟下最大回撤 `-23.56%`，仍超过 `20%` 硬门槛。
+- K+2 延迟下最大回撤 `-25.04%`，年化仅 `7.8530x`。
 - 8 bps/fill 滑点下最大回撤 `-22.46%`，仍超过 `20%` 硬门槛。
+- 精确联合回放下 reused holdout 年化为 `9.0210x`，低于 `10x`。
 - 还没有生产 runner、重启恢复、交易所订单/仓位对账、missing-bar fail-closed、kill switch、真实 stop-market 滑点和新增 forward trades 证据。
 
 ## 复现
 
 ```bash
 uv run python research/hype/1h-adaptive-regime/scripts/research_hype_1h_ar_v3_prune_and_tune.py
+uv run python research/hype/1h-adaptive-regime/scripts/audit_hype_1h_ar_v4_pressure_optimization.py
 ```
 
 关键证据：
 
 - `notes/hype-1h-ar-v3-prune-and-tune-2026-07-07.md`
+- `diagnostics/hype-1h-ar-v4-execution-pressure-optimization-2026-07-10.md`
 - `artifacts/hype_1h_ar_v3_prune_and_tune_2026-07-07.json`
 - `artifacts/hype_1h_ar_v3_prune_and_tune_combos_2026-07-07.csv`
+- `artifacts/hype_1h_ar_v4_pressure_optimization_2026-07-10.json`

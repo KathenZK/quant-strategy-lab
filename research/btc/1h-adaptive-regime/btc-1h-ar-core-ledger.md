@@ -196,6 +196,8 @@ V3 最小表面微调（2026-07-07）：`notes/btc-1h-ar-v3-minimal-micro-tune-2
 
 V4 多窗口回测（2026-07-07）：`notes/btc-1h-ar-v4-window-backtest-2026-07-07.md` 复用 V4 最小等价参数并验证与 V3 逐笔等价。standard split 与 V3 完全一致：prefit `6.16x / -12.87% / 87.30% / 63`，reused holdout `1.90x / -17.47% / 81.82% / 11`，current full `5.27x / -17.47% / 86.49% / 74`；recent 30d `1.29x / +2.13% / -17.47% / 75.00% / 4`，recent 7d 无交易。该回测只是 V4 身份下的风险画像，不是新增 OOS。
 
+V4 结构优化研究（2026-07-10）：`notes/btc-1h-ar-v4-structural-optimization-study-2026-07-10.md` 复核原 30 万组搜索和六类低重叠候选腿，并以 V4 绝对优先、候选只填空仓的合同做增量审计。`fixed 1x` 下，`vwap_revert` 与 `wick_reject` 在 prefit 分别增加 `+272.66%` / `+174.19%` 总收益，但 reused holdout 分别减少 `-19.38%` / `-1.97%`；`macd_flip` prefit 减少 `-819.79%`，却在 validation/reused holdout 增加 `+21.83%` / `+19.90%`。没有现成候选可直接登记新版本。决策：停止 V4 的 19 参数邻域微调；下一阶段只研究相对 V4 的 `VWAP revert short-only`、`wick reject transition-only`、`MACD flip replace-Keltner`，通过边际贡献、purged walk-forward、成本延迟和 untouched forward 后才讨论新版本。
+
 ## Promotion 门槛
 
 必须同时通过：最近三个月 locked OOS、年化权益倍率 `>=10.0x`、胜率 `>=50%`、最大回撤 `<20%`、K+2/成本压力、参数邻域、时间切片、bootstrap、订单时序、保护单、重启恢复、missing-bar fail-closed、交易所对账和 kill switch 审计。

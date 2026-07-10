@@ -4,4 +4,4 @@
 
 ## 当前研究线
 
-- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：[1h-adaptive-regime/](1h-adaptive-regime/README.md)。Binance USD-M Futures `BTCUSDT` perpetual `1h` 多指标自适应 regime 家族；V1-V4 已登记；当前 `registered / not promoted / not live-ready`。主账：[btc-1h-ar-core-ledger.md](1h-adaptive-regime/btc-1h-ar-core-ledger.md)。
+- `BTC-1H-Adaptive-Regime`（`BTC-1H-AR`）：[1h-adaptive-regime/](1h-adaptive-regime/README.md)。Binance USD-M Futures `BTCUSDT` perpetual `1h` 多指标自适应 regime 家族；V1-V4 已登记；V4 参数邻域已判定局部耗尽，下一阶段转向相对 V4 的新腿边际搜索与显式 regime router；当前 `registered / not promoted / not live-ready`。主账：[btc-1h-ar-core-ledger.md](1h-adaptive-regime/btc-1h-ar-core-ledger.md)。

@@ -1,5 +1,7 @@
 # HYPE-1H-Adaptive-Regime-V3 参数剪枝与预拟合微调 - 2026-07-07
 
+> **Superseded 指标警告（2026-07-10）**：本报告采用“先独立模拟两腿、再合并”的近似 ensemble 回放。精确单账户联合状态机发现该方法会让被挡掉的虚拟交易错误触发单腿持仓/cooldown，并压掉后续信号。V4 精确 current full 已修正为 `20.9748x / -19.11% / 80.00% / 75 trades`，reused holdout 为 `9.0210x`；详见 `diagnostics/hype-1h-ar-v4-execution-pressure-optimization-2026-07-10.md`。本报告其余数字只保留为历史搜索证据，不再作为 live runner 事实源。
+
 ## 结论
 
 V3 的 `34` 个字段槽中有 `9` 个在当前数据上 dormant：DI 腿 `ema_htf`、`max_adx`、`roc_window`、`min_dir_roc_bps`、`max_dist_ema_bps`、`max_aligned_funding_bps`；Stoch 腿 `ema_htf`、`max_dist_ema_bps`、`sl_atr`。全部移除后逐笔交易路径与 V3 exact equal（DI、Stoch、merged 三层签名一致），剪枝后剩 `25` 个字段槽（DI `9` + Stoch `16`）。

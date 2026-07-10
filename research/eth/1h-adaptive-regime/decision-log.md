@@ -63,3 +63,11 @@
 - 在 27 参数干净面上微调：每腿随机 `100,000` 组，保留 `400 + 400`，组合评估 `160,000`，可评分 `128,759`；严格改善组合 `5` 个，经 K+2/8 bps 稳健排序后冻结 `ETH-1H-AR-V2-1-CLEAN-TUNE-2026-07-07`，并按用户要求登记为 `ETH-1H-Adaptive-Regime-V3`。
 - 冻结 observation：prefit `4.0591x / -12.15% / 100.00% / 42 trades`，current full `3.3084x / -15.70% / 95.65% / 46 trades`；相对 V2.1 收益更高、胜率更高、回撤更小，冻结后 current full 三项同时改善。
 - 失败边界：reused holdout `0.8706x / -15.70% / 50.00% / 4 trades`，亏损从 V2.1 的 `-8.35%` 收敛到 `-3.39%` 但仍为负；K+2 下 prefit 退化为 `2.7964x / -16.66% / 90.24%`、holdout 胜率 `25%`；近三个月分片仍为负。登记结论为 `registered clean tuned observation / NO-GO / not promoted / not live-ready`，不生成 live spec。
+
+## 2026-07-10：V3 频率与 fresh forward 优化诊断
+
+- 用户指出 V3 胜率很高但交易太少、reused holdout 仍为负，要求重点研究增加有效交易数和 fresh forward。新增复现脚本 `scripts/research_eth_1h_ar_v3_frequency_forward_diagnostic.py` 与研究 note `notes/eth-1h-ar-v3-frequency-forward-diagnostic-2026-07-10.md`。
+- V3 的高胜率来自过强筛选：prefit `42` 笔、reused holdout `4` 笔；holdout 4 笔全是 BB long，RSI reversal 在 holdout 没有任何成交。
+- 过滤瓶颈：BB 从 prefit/holdout 原始信号 `138/17` 被压到 `22/4`，主要卡在 `min_rvol`、`min_atr_bps`、`max_dist_ema_bps`；RSI 从 `362/60` 被压到 `27/0`，主要卡在 `min_atr_bps=125`、`min_dir_roc_bps=-300`、`max_dist_ema_bps=750`。
+- 频率优先网格（不使用 reused holdout 排序）显示，放宽 BB `min_rvol=3.0`、`min_atr_bps<=50`、`max_dist_ema_bps>=2500` 可把 prefit 提高到约 `64` 笔、validation `17` 笔，但 reused holdout 只读仍为负；单项放宽 RSI `min_atr_bps=75` 可把 prefit 提到 `109` 笔、holdout 只读转正，但胜率回落到 `72.50%`，更像后续可研究的频率方向而非可直接 promotion 的版本。
+- 结论：下一轮目标应从“继续提高胜率”改为 `prefit trades >=80-120`、`validation trades >=15`、`win >=65%-70%`、DD 不穿 `20%`；冻结 3-5 个候选后，从 `2026-07-03T05:00:00Z` 之后等待 fresh forward `20-30` 笔或 `2-3` 个月。V3 状态不变：`NO-GO / not promoted / not live-ready`。

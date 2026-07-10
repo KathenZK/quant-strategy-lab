@@ -8,5 +8,9 @@
 - `sol_1h_ar_v1_clean.py`：从消融 JSON 动态构建 clean 配置类型，把非 active 字段从调参接口移除，要求 V1 逐笔签名完全相等，并写入 `notes/sol-1h-ar-v1-clean-interface-2026-07-03.md`。
 - `research_sol_1h_ar_v1_clean_tune.py`：基于消融保留字段做高密度微调；选择不使用 reused OOS，胜率只要求适中且评分在 `65%` 封顶，并写入 `notes/sol-1h-ar-v1-clean-parameter-tune-2026-07-03.md`。
 - `research_sol_1h_ar_high_win_target_search.py`：`10x / 80% / <20% DD` 高胜率硬目标重新搜索；沿用 V1 冻结研究帧，最近三个月按 reused holdout 只审计不选参，并写入 `diagnostics/sol-1h-ar-high-win-target-search-2026-07-07.md`。
+- `research_sol_1h_ar_v2_mechanism_redesign.py`：V2 双腿贡献、收益结构、entry gate、fixed/trailing exit 与风险分配对照；选择只用 train/validation/prefit。
+- `research_sol_1h_ar_v2_staged_exit.py`：V2 部分止盈、延伸目标、次 K 保本 stop 与快速失效次根 open 退出诊断。
+- `research_sol_1h_ar_v2_leg_governor.py`：VWAP satellite 在 stop/亏损后的在线 cooldown 治理诊断；验证事后暂停能否修复 regime 失效。
+- `research_sol_1h_ar_v2_vwap_state_machine.py`：把 VWAP 偏离事件改写为 `arm → confirm → expire` 状态机；confirm 使用闭合 K，下一根 open 入场。
 
 统一从仓库根目录使用 `uv run python ...` 执行。

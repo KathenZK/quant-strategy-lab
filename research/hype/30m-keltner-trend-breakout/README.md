@@ -16,9 +16,14 @@
 
 - [hype-30m-keltner-trend-breakout-core-ledger.md](hype-30m-keltner-trend-breakout-core-ledger.md)
 - [decision-log.md](decision-log.md)
+- [notes/hype-30m-k2-v2-full-ablation-pruned-tune-2026-07-10.md](notes/hype-30m-k2-v2-full-ablation-pruned-tune-2026-07-10.md)
+- [notes/hype-30m-k2-strict-validation-gates-2026-07-10.md](notes/hype-30m-k2-strict-validation-gates-2026-07-10.md)
 - [notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md)
+- [scripts/research_hype_30m_k2_strict_validation_gates.py](scripts/research_hype_30m_k2_strict_validation_gates.py)
+- [scripts/research_hype_30m_k2_v2_full_ablation_and_tune.py](scripts/research_hype_30m_k2_v2_full_ablation_and_tune.py)
+- [scripts/repair_hype_1m_standard_data_lake.py](scripts/repair_hype_1m_standard_data_lake.py)
 - [scripts/research_hype_30m_k2_fq_v2_atrvt_off_backtest.py](scripts/research_hype_30m_k2_fq_v2_atrvt_off_backtest.py)
 
 ## 当前结论
 
-本仓库独立复现与外部验收数字基本对账成功：剔除最新一笔 `2026-07-05` 开仓的 time exit 后，单相位 6 bps/side 收益对齐到 `+7698.66% / 113 笔`；继续结算到 `2026-07-06 23:59 UTC` 后为 `+7516.88% / 114 笔`。该策略仍保持 `explore / not promoted / not live-ready`，因为高杠杆、样本截止敏感、funding/止损滑点/live-executable 审计尚未完成。
+严格基线为 `+4827.01% / MDD -27.97% / 胜率 55.26%`。全参数消融后保留一个 `PRUNED-TUNED` 观察值：移除 close-vs-slow、opposite-regime 排除和最低杠杆 floor，微调 1h slow/slope 与 ATRVT，得到 `+4638.01% / MDD -25.84% / 胜率 56.64%`。候选 Gate 5 转为通过，但 Gate 3/6/7 仍失败；30m 非原生/原生中位 CAGR 比仅 `9.72%`。状态保持 `explore / not promoted / not live-ready`。

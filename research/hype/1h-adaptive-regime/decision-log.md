@@ -61,3 +61,13 @@
 - V4 参数字段槽从 V3 的 `34` 个降至 `25` 个：DI `9` 个、Stoch `16` 个。新增 `specs/hype-1h-ar-v4-pruned-tuned-baseline-spec.md`，逐项解释全部参数、固定执行语义和已移除字段。
 - V4 base K+1 current full `22.8128x / -19.11% / 81.08% / 74 trades`；reused holdout `13.0662x / -19.11% / 77.78% / 18 trades`。
 - V4 仍不是 promotion：K+2 current full `8.7014x / -23.56%`，8bps current full `15.3677x / -22.46%`，压力回撤仍穿越 `20%` 硬门槛。
+
+## 2026-07-10：精确联合状态机推翻旧 V4 指标并完成压力优先优化
+
+- 发现旧 ensemble 先独立模拟 DI/Stoch，再合并交易；如果某条腿的交易被另一腿挡掉，该虚拟交易仍会在单腿流中触发持仓与 cooldown，错误压掉后续真实可入场信号。该路径与生产单账户状态机不等价，属于 live-executable blocker。
+- 新增精确联合回放：按 entry 时刻全局单仓、DI 优先，并只在实际成交后更新对应腿 cooldown。base/K+2/8bps 三个场景均比旧近似多 `1` 笔 Stoch 空单。
+- V4 精确指标修正为：base current full `20.9748x / -19.11% / 80.00% / 75 trades`，reused holdout `9.0210x / -19.11% / 73.68% / 19 trades`；K+2 `7.8530x / -25.04%`；8bps `14.1032x / -22.46%`。旧 `22.8128x / 13.0662x holdout` 只保留为 superseded 历史近似口径。
+- 压力归因显示固定杠杆与 ATR 宽止损让单笔风险接近或越过组合 `20%` 预算：K+2 最差 DI 交易持仓内 MAE 约 `-25.04%`，8bps 下 Stoch 宽止损与连续损失构成主要回撤。
+- 压力优先搜索只改止损、最长持仓、trailing 和固定/风险封顶仓位：DI `223` 个、Stoch `589` 个、精确 ensemble `930` 个；`431` 个通过 prefit 三场景 gate，冻结前 `12` 名在后段完整回撤通过为 `0`，完整 target pass 为 `0`。
+- 后验机制诊断中，DI `3x -> 2.5x`、Stoch `SL 4 ATR -> 2 ATR`、Stoch `8h -> 6h` 可把 base/K+2/8bps current-full DD 分别压至 `-14.20% / -19.64% / -18.71%`，对应年化 `14.3901x / 7.9815x / 11.2061x`。它修复回撤但未修复 K+2 与后段收益边际，不登记 V5。
+- 决策：V4 继续 `NO-GO / not live-ready`；后续必须以精确联合状态机为唯一事实源。若继续研究，应优先重做延迟鲁棒入场机制，而不是继续放大杠杆或围绕旧近似指标调参。

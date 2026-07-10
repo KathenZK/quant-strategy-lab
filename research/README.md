@@ -49,7 +49,7 @@
 | --- | --- | --- | --- |
 | `BTC-1H-Adaptive-Regime` | `BTC-1H-AR` | [btc/1h-adaptive-regime/](btc/1h-adaptive-regime/README.md) | V1-V4 registered / not promoted / not live-ready（V4 为 V3 clean-equivalent） |
 | `ETH-1H-Adaptive-Regime` | `ETH-1H-AR` | [eth/1h-adaptive-regime/](eth/1h-adaptive-regime/README.md) | V1-V3 registered / not promoted / not live-ready |
-| `SOL-1H-Adaptive-Regime` | `SOL-1H-AR` | [sol/1h-adaptive-regime/](sol/1h-adaptive-regime/README.md) | V1-V2 registered / not promoted / not live-ready |
+| `SOL-1H-Adaptive-Regime` | `SOL-1H-AR` | [sol/1h-adaptive-regime/](sol/1h-adaptive-regime/README.md) | V1-V2 registered；Donchian core / VWAP satellite redesign；not promoted / not live-ready |
 | `TRX-1H-Adaptive-Regime` | `TRX-1H-AR` | [trx/1h-adaptive-regime/](trx/1h-adaptive-regime/README.md) | V1-V3 registered / not promoted / not live-ready |
 | `BNB-1H-Adaptive-Regime` | `BNB-1H-AR` | [bnb/1h-adaptive-regime/](bnb/1h-adaptive-regime/README.md) | V1-V3 registered / not promoted / not live-ready |
 | `BNB-15M-Adaptive-Regime` | `BNB-15M-AR` | [bnb/15m-adaptive-regime/](bnb/15m-adaptive-regime/README.md) | explore / not promoted |

@@ -15,3 +15,4 @@
 - `research_eth_1h_ar_v2_1_full_ablation.py`：覆盖 V2.1 `29/29` 个 clean 参数槽的全参数消融，并按 merged-path inert 规则判定无意义参数。
 - `eth_1h_ar_v2_1_clean.py`：删除 2 个 inert 字段后的 27 参数 V2.1 clean interface，fail closed 校验与 V2.1 逐笔等价。
 - `research_eth_1h_ar_v2_1_clean_tune.py`：在 27 参数干净面上搜索相对 V2.1 收益更高、胜率更高、回撤更小的组合，并做 K+2/8 bps 稳健排序与冻结后审计。
+- `research_eth_1h_ar_v3_frequency_forward_diagnostic.py`：复现 V3 后做频率/forward 诊断，输出过滤瓶颈、单项放松、频率优先网格和 fresh forward 优化建议；不登记新版本。

@@ -22,6 +22,8 @@
 
 同日 `quant-runner` 接入 `kind = six_asset_ensemble` dry-run（六资产联合状态机近似，live 禁止）。这只是 runtime 观察接线，不改变 `NO-GO / not promoted / not live-ready`，也不等于研究回测路径已对拍。见 `runner-tracking/binance-1h-ar-mae-v1-runner-status.md`。
 
+同日晚些完成 runner `replay-dry-run` 与 V1 冻结路径的严格对拍：选择统计 `522/371/151/22` 与逐笔 `371/371`（含 equity_ret <1e-9）零误差；对拍中修复了 runner 公共指标层 `rolling_mean` 的 NaN 污染 bug（修复前 TRX/HYPE Stoch 腿永不出信号），并修正 lab/runner 两份 V1 spec 中三处与冻结路径不符的字段记载（ETH BB `side_mode=long`/`max_atr_bps=250`、ETH RSI `max_atr_bps=600`/`require_body_dir=true`/`max_aligned_funding_bps=2.0`、TRX Stoch `max_dist_ema_bps=1500`/`max_aligned_funding_bps=4.0`）。冻结交易路径与判定不变。证据：`artifacts/binance_1h_ar_mae_v1_runner_replay_parity_2026-07-09.json`。
+
 ## 成分版本冻结表
 
 | Sleeve | 成分版本 | 成分主账 | V1 账户槽位 |

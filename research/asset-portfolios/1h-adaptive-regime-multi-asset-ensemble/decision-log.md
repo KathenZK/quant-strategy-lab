@@ -34,6 +34,16 @@
 - 决策：dry-run 可观察，但状态仍为 `NO-GO / not promoted / not live-ready`。未改变 promotion 结论；`replay-dry-run` 与研究路径对拍未完成。
 - 证据：`runner-tracking/binance-1h-ar-mae-v1-runner-status.md`。
 
+## 2026-07-09 runner replay 对拍零误差 + spec 修正 + runner 指标 bug 修复
+
+- 背景：用户要求审核 `quant-runner` 中 `six_asset_ensemble` 实现与 spec 的对齐情况，并回放对拍 lab 回测。
+- 参数审核：runner 冻结 leg 参数与六个家族冻结引擎配置逐字段一致（含 V1 基线继承的隐含字段与冻结 sleeve priorities）；spec 文档发现三处与冻结路径不符（ETH BB `side_mode`/`max_atr_bps`、ETH RSI `max_atr_bps`/`require_body_dir`/`max_aligned_funding_bps`、TRX Stoch 漏记 `max_dist_ema_bps`/`max_aligned_funding_bps`），已同步修正 lab 与 runner 两份 spec；代码与冻结路径本来正确。
+- runner bug：审核发现 `indicators::rolling_mean` 被前导 NaN 永久污染，导致 `stoch_d` 全 NaN、TRX/HYPE Stoch 腿在 runtime/replay 中永不出信号；已修复为 pandas `rolling(min_periods=window)` 语义。
+- replay 对拍：runner 新增 `replay-dry-run` 严格回放（Binance 公共 klines+funding，数据边界锁定 lab parquet 快照），复现 candidates `522` / selected `371` / skipped `151` / ties `22`，逐笔 `371/371` 与冻结 trades CSV 全字段一致（equity_ret 误差 <1e-9），full/reused_holdout/last_* 窗口指标与 V1 spec 期望一致。
+- dry-run：本地 `smoke-test`、`run-once`（`flat_no_signal`）、重复周期幂等（`already_processed`）通过。
+- 决策：runner 引擎实现确认与 V1 冻结路径一致；V1 状态不变，仍为 `registered diagnostic / NO-GO / not promoted / not live-ready`。
+- 证据：`runner-tracking/binance-1h-ar-mae-v1-runner-status.md`、`artifacts/binance_1h_ar_mae_v1_runner_replay_parity_2026-07-09.json`、`specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`（修正）。
+
 ## 2026-07-09 V1 风险覆盖层与 TRX MACD 消融诊断
 
 - 背景：用户要求按优化建议做一轮 V1 风险约束、TRX MACD 消融与成本压力诊断。

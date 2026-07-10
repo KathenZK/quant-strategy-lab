@@ -100,3 +100,12 @@
 
 - 治理审计发现本家族状态里挂着 `forward-test required`，但按词表该修饰词专指依赖 `runner-tracking/` 下尚不存在的报告；本家族未进入任何 runner，没有可满足该备注的证据路径。
 - 决策：README、路由表与主账版本表统一去掉 `forward-test required`，改为 `registered / not promoted / not live-ready`。原意（升级前需要前向验证与 production runner）已由 Live-readiness 列的文字说明承载。历史 decision-log 条目不改写。
+
+## 2026-07-10 — V4 结构优化方向
+
+- V4 的 `19` 参数邻域已经被全消融和 `24,576` 组最小表面微调证明局部耗尽；后续停止继续调现有 Keltner/CCI 参数，也不通过提高杠杆冲年化。
+- 原 `300,768` 组搜索已经覆盖 16 类 style，因此“直接新增现有 style”不是新机制。下一阶段必须固定 V4，以候选对 V4 的边际贡献、低重叠和 1x 正期望作为搜索目标。
+- 对原搜索中 `ema_pullback`、`macd_flip`、`wick_reject`、`squeeze_release`、`di_cross`、`vwap_revert` 的最佳 retained single 做增量占用审计：V4 拥有绝对优先级，候选只填充空仓。
+- `fixed 1x` 结果：`vwap_revert` / `wick_reject` 的 prefit 边际总收益为 `+272.66%` / `+174.19%`，但 reused holdout 边际为 `-19.38%` / `-1.97%`；`macd_flip` prefit 边际 `-819.79%`，但 validation/reused holdout 为 `+21.83%` / `+19.90%`。其余候选当前参数三窗口边际均弱。
+- 决策：没有现成候选可登记 V5。优先研究 `VWAP revert short-only`（补 CCI 只做多缺口）、`wick reject transition-only`（低杠杆过渡态）、`MACD flip replace-Keltner`（替换实验，不直接叠加）；只有出现正边际腿后才实现显式三态 regime router。reused holdout 永久只作污染审计，候选冻结后等待 `>=90` 天且 `>=20` 笔 untouched forward。
+- 状态不变：`V4 registered / not promoted / not live-ready`。证据见 `notes/btc-1h-ar-v4-structural-optimization-study-2026-07-10.md`、`artifacts/btc_1h_ar_v4_new_leg_increment_2026-07-10.json` 和 `artifacts/btc_1h_ar_v4_new_leg_increment_rows_2026-07-10.csv`。
