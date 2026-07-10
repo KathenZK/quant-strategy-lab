@@ -51,3 +51,20 @@
 - 结果：V1 baseline 复现为 full `287.01x / -21.43% DD`；全局 `3x` cap 为 `192.49x / -19.99% DD`，但加 `4 bps/fill` 额外滑点后失败为 `134.46x / -20.18% DD`；全局 `2.5x` cap 为 `122.81x / -18.68% DD`，加 `4 bps/fill` 后仍为 `88.47x / -19.19% DD`；double fee+slippage 下 `3x` 与 `2.5x` 都失败，最差回撤约 `-25.5%`。
 - 决策：登记为未编号 diagnostic observation `BIN-1H-AR-MAE-V1-RISK-OVERLAY-2026-07-09`，不登记 `V1.1/V1.2`，状态 `NO-GO / not promoted / not live-ready`。若后续要冻结新版本，优先研究 `V1 + 全账户单笔暴露 cap 2.5x`，并先完成逐 K 联合状态机重演与真实 K+2/成本压力。
 - 证据：`notes/binance-1h-ar-mae-v1-risk-overlay-diagnostics-2026-07-09.md`、`artifacts/binance_1h_ar_mae_v1_risk_overlay_diagnostics_2026-07-09.json`、`artifacts/binance_1h_ar_mae_v1_risk_overlay_matrix_2026-07-09.csv`、`scripts/research_binance_1h_ar_mae_v1_risk_overlay_diagnostics.py`。
+
+## 2026-07-10 TRX MACD 尾部根因与全局风险预算诊断
+
+- 背景：TRX V3 clean tune 已处于局部最优；组合层的重点改为处理 `TRX macd_flip 5x` 高暴露尾部，而不是继续追单资产收益。
+- 根因：V1 中选 TRX MACD `37` 笔仅 `2` 笔最终亏损，但最差单笔账户 MAE `-17.17%`、最大计划初始止损风险 `24.72%`。组合最深 close-marked DD 由 BNB 连续亏损先造成账户下沉，再由一笔 TRX MACD 盈利交易到达 TP 前的浮亏加深。
+- 全局方案：prefit-only 选中 `1.0% signal-ATR budget + 8%/12% account-DD cap 2x/1x`，将 full DD 压到 `-14.93%`、TRX 最差 MAE 压到 `-7.09%`，但 full 年化只剩 `7.88x`，reused holdout 只剩 `+1.70%`；对所有 sleeve 过度降杠杆。
+- 决策：不采用全局 `1% ATR` 作为下一版；继续研究只作用于 TRX MACD 的定向覆盖层。
+- 证据：`notes/binance-1h-ar-mae-v1-trx-tail-risk-optimization-2026-07-10.md`、`artifacts/binance_1h_ar_mae_v1_trx_tail_risk_2026-07-10.json`、`scripts/research_binance_1h_ar_mae_v1_trx_tail_risk_optimization.py`。
+
+## 2026-07-10 TRX MACD 定向尾部覆盖层
+
+- 方法：保持 V1 六 sleeve、单仓先到先得选择、entry/exit、费用、滑点和 funding 全部冻结；只有中选 TRX MACD 暴露可变。sizing 只使用 signal ATR 与入场前账户 close-marked DD。
+- prefit-only 选择：计划初始止损账户风险 `<=10%`；入场前账户 DD 达 `2%` 时 TRX MACD cap `3x`，达 `6%` 时 cap `2x`。门槛为 prefit close DD `<20%`、TRX 最差 MAE `<10%`、账户状态叠加 MAE `<20%`，且 prefit annual 至少保留 V1 的 `50%`；排序优先保留收益。
+- 冻结后结果：full `231.59x / -19.99% DD / 90.30% win / 371 trades`，相对 V1 `287.01x / -21.43%`；reused holdout `6.31x / +57.37% / -17.38% DD`。TRX MACD `34/37` 笔降暴露，平均 `5.00x -> 3.03x`，最大计划止损风险 `24.72% -> 10.00%`，最差 MAE `-17.17% -> -9.71%`，账户状态叠加 MAE `-23.10% -> -18.80%`。
+- 压力：额外 `4 bps/fill` full `160.18x / -20.18% DD`；double-cost `62.93x / -27.53% DD`。TRX-only 网格无法突破 `-20.18%` 的额外滑点 DD 下限，因为 TRX 风险压下后 close-DD 主因转为 BNB 连续亏损；保守 account-tail 主因转为 HYPE DI 与 SOL Donchian。
+- 决策：TRX 定向规则是目前更有效的风险—收益折中，但仍为未编号 diagnostic observation，不登记 `V2`；下一步应测试轻量跨 sleeve account-tail guard 或 BNB loss-cluster 专项，而不是继续压 TRX。
+- 证据：`notes/binance-1h-ar-mae-v1-trx-targeted-tail-overlay-2026-07-10.md`、`artifacts/binance_1h_ar_mae_v1_trx_targeted_tail_2026-07-10.json`、`artifacts/binance_1h_ar_mae_v1_trx_targeted_tail_matrix_2026-07-10.csv`、`scripts/research_binance_1h_ar_mae_v1_trx_targeted_tail_overlay.py`。

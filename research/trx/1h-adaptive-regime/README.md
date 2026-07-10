@@ -3,7 +3,7 @@
 - Full family name：`TRX-1H-Adaptive-Regime`（短 id：`TRX-1H-AR`）
 - 市场/周期：Binance USD-M Futures `TRXUSDT` perpetual `1h`
 - 机制：两年闭合 `1h` K 多指标自适应 regime 广搜（EMA/MACD/RSI/Stoch/CCI/ADX/ATR/Keltner/Donchian/VWAP/结构 + 高周期 regime + 资金费过滤），ensemble 组合。
-- 当前状态：V1-V3 已登记；V3 clean 面微调与近期适配复搜均无命中，V3 为局部最优；`not promoted / not live-ready`。
+- 当前状态：V1-V3 已登记；V3 clean 面微调与近期适配复搜均无命中，V3 为局部最优；组合层已对 `macd_flip 5x` 做定向尾部治理（只改变组合账户暴露，不改变 V3 身份）；`not promoted / not live-ready`。
 
 ## 研究协议（冻结口径）
 
@@ -19,6 +19,7 @@
 - 主账（V1-V3 版本表、指标与证据链接）：`trx-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
 - V3 参数规格：`specs/trx-1h-ar-v3-parameter-spec-2026-07-06.md`
+- 组合层 TRX MACD 定向尾部治理：`../../asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/notes/binance-1h-ar-mae-v1-trx-targeted-tail-overlay-2026-07-10.md`
 - 实盘可行性 not-promoted 证据：`live-specs/trx-1h-ar-live-feasibility-2026-07-03.md`
 - 本轮总报告：`notes/trx-1h-ar-search-conclusion-2026-07-03.md`
 

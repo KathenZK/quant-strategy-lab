@@ -53,6 +53,13 @@ class ExecutionConfig:
     bracket_delay_bars: int = 0
     include_funding: bool = True
     signal_mode: str = "full"
+    bracket_atr_column: str = "atr96"
+    dynamic_tp_atr_mult: float | None = None
+    dynamic_sl_atr_mult: float | None = None
+    dynamic_tp_floor_pct: float = 0.0
+    dynamic_tp_cap_pct: float = 10.0
+    dynamic_sl_floor_pct: float = 0.0
+    dynamic_sl_cap_pct: float = 10.0
 
 
 @dataclass(frozen=True, slots=True)
@@ -268,6 +275,9 @@ def simulate(
     low = features["low"].to_numpy("float64")
     close = features["close"].to_numpy("float64")
     atr96 = features["atr96"].to_numpy("float64")
+    if execution.bracket_atr_column not in features.columns:
+        raise KeyError(f"missing bracket ATR column: {execution.bracket_atr_column}")
+    bracket_atr = features[execution.bracket_atr_column].to_numpy("float64")
 
     funding_frame = funding.copy()
     if funding_frame.empty:
@@ -323,17 +333,49 @@ def simulate(
             if np.isfinite(atr) and atr > 0.0 and np.isfinite(raw_entry) and raw_entry > 0.0:
                 entry_fill = adverse_fill(raw_entry, direction, is_entry=True, slippage=execution.slippage_rate)
                 leverage = float(np.clip(strategy.atr_target_pct / (atr / raw_entry), strategy.min_leverage, strategy.max_leverage))
+                bracket_atr_value = bracket_atr[i - 1] if i > 0 else np.nan
+                bracket_atr_pct = (
+                    float(bracket_atr_value / raw_entry)
+                    if np.isfinite(bracket_atr_value) and bracket_atr_value > 0.0
+                    else float("nan")
+                )
+                tp_pct = strategy.take_profit_pct
+                sl_pct = strategy.stop_loss_pct
+                if execution.dynamic_tp_atr_mult is not None:
+                    if not np.isfinite(bracket_atr_pct):
+                        pending = None
+                        rejected_warmup += 1
+                        continue
+                    tp_pct = float(
+                        np.clip(
+                            execution.dynamic_tp_atr_mult * bracket_atr_pct,
+                            execution.dynamic_tp_floor_pct,
+                            execution.dynamic_tp_cap_pct,
+                        )
+                    )
+                if execution.dynamic_sl_atr_mult is not None:
+                    if not np.isfinite(bracket_atr_pct):
+                        pending = None
+                        rejected_warmup += 1
+                        continue
+                    sl_pct = float(
+                        np.clip(
+                            execution.dynamic_sl_atr_mult * bracket_atr_pct,
+                            execution.dynamic_sl_floor_pct,
+                            execution.dynamic_sl_cap_pct,
+                        )
+                    )
                 equity_before = equity
                 entry_notional = equity_before * leverage
                 quantity = entry_notional / entry_fill
                 entry_fee = entry_notional * execution.fee_rate
                 cash = equity_before - entry_fee
                 if direction == 1:
-                    tp = entry_fill * (1.0 + strategy.take_profit_pct)
-                    sl = entry_fill * (1.0 - strategy.stop_loss_pct)
+                    tp = entry_fill * (1.0 + tp_pct)
+                    sl = entry_fill * (1.0 - sl_pct)
                 else:
-                    tp = entry_fill * (1.0 - strategy.take_profit_pct)
-                    sl = entry_fill * (1.0 + strategy.stop_loss_pct)
+                    tp = entry_fill * (1.0 - tp_pct)
+                    sl = entry_fill * (1.0 + sl_pct)
                 position = {
                     "direction": direction,
                     "entry_i": i,
@@ -347,6 +389,9 @@ def simulate(
                     "equity_before": equity_before,
                     "tp": tp,
                     "sl": sl,
+                    "entry_atr_pct": bracket_atr_pct,
+                    "tp_pct": tp_pct,
+                    "sl_pct": sl_pct,
                     "funding_pnl": 0.0,
                 }
             else:
@@ -404,6 +449,9 @@ def simulate(
                         "exit_reason": exit_reason,
                         "hold_bars": i - int(position["entry_i"]),
                         "leverage": position["leverage"],
+                        "entry_atr_pct": position["entry_atr_pct"],
+                        "tp_pct": position["tp_pct"],
+                        "sl_pct": position["sl_pct"],
                         "entry_fee": position["entry_fee"],
                         "exit_fee": exit_fee,
                         "funding_pnl": position["funding_pnl"],
@@ -452,6 +500,9 @@ def simulate(
                 "exit_reason": "window_end",
                 "hold_bars": i - int(position["entry_i"]),
                 "leverage": position["leverage"],
+                "entry_atr_pct": position["entry_atr_pct"],
+                "tp_pct": position["tp_pct"],
+                "sl_pct": position["sl_pct"],
                 "entry_fee": position["entry_fee"],
                 "exit_fee": exit_fee,
                 "funding_pnl": position["funding_pnl"],

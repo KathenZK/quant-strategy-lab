@@ -4,9 +4,9 @@
 
 对象：`K2-FQ-V2-ATRVT-OFF`
 
-研究候选：`K2-FQ-V2-ATRVT-OFF-PRUNED-TUNED`
+登记版本：`HYPE-30M-Keltner-Trend-Breakout-V2.1`
 
-状态：`explore / not promoted / not live-ready`
+状态：`registered / not promoted / not live-ready`
 
 ## 结论
 
@@ -187,7 +187,7 @@ Validation 同样实现胜率提高、MDD 降低、收益小幅下降。Holdout 
 
 ## 决策
 
-保留 `K2-FQ-V2-ATRVT-OFF-PRUNED-TUNED` 为 **精简微调观察值**，不覆盖外部 V2 严格基线，不登记正式版本，不进入 runner。
+按用户决定将 `K2-FQ-V2-ATRVT-OFF-PRUNED-TUNED` 登记为 `HYPE-30M-Keltner-Trend-Breakout-V2.1`。登记只冻结研究身份，不覆盖外部 V2 严格基线，不代表 promotion，也不进入 runner。
 
 后续最值得做的不是继续在原生 `:00/:30` 相位追收益，而是研究如何让非原生 30m 相位收敛；否则继续微调容易强化已有的相位选择偏差。
 

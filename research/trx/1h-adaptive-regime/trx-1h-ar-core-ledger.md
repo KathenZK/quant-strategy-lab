@@ -114,6 +114,12 @@ V3 clean 参数面保留 `31` 个可调槽（MACD `15`、Stochastic `16`），`t
 
 单指标改善候选存在（annual `114`、win `145`、DD `719`），但 annual+win 仅 `1`、annual+DD 仅 `1`、三者同收 `0`——收益与胜率/回撤在此参数面上形成明确 trade-off。结论：V3 参数保持不变，本轮为 no-hit 诊断，未产生新版本。
 
+## 组合层 TRX MACD 尾部治理（不改变 V3）
+
+2026-07-10 在 `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` 组合层对 V3 `macd_flip 5x` 做风险治理。该研究不改变 TRX V3 的信号、交易路径或版本身份；只在组合账户中按 signal ATR 与入场前账户 DD 缩放中选 TRX MACD 暴露。
+
+prefit-only 冻结的定向规则为计划初始止损账户风险 `<=10%`，账户 DD 达 `2%/6%` 时 TRX MACD cap `3x/2x`。组合 full DD `-21.43% -> -19.99%`，TRX MACD 最差 MAE `-17.17% -> -9.71%`、账户状态叠加 MAE `-23.10% -> -18.80%`，同时保留 full `231.59x` 年化；但额外 `4 bps/fill` DD 仍为 `-20.18%`，风险主因已转移到其他 sleeve。证据见 `../../asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/notes/binance-1h-ar-mae-v1-trx-targeted-tail-overlay-2026-07-10.md`。
+
 ## 版本表
 
 | Version | Status | Metrics | Evidence | Live readiness |

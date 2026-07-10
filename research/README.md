@@ -34,7 +34,7 @@
 | `HYPE-1H-Adaptive-Regime` | `HYPE-1H-AR` | [hype/1h-adaptive-regime/](hype/1h-adaptive-regime/README.md) | `1h` DI 趋势 + 随机指标反转自适应 ensemble | V1-V4 registered / not promoted / not live-ready |
 | `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | [hype/15m-multi-indicator-intraday/](hype/15m-multi-indicator-intraday/README.md) | `15m` 多指标日内广搜 | V1.3 dry-run / forward-test required |
 | `HYPE-15M-Riptide` | - | [hype/15m-riptide/](hype/15m-riptide/README.md) | `15m` EMA 趋势背景 RSI 回踩 + RV regime | explore / not promoted（复现对账未完成） |
-| `HYPE-30M-Keltner-Trend-Breakout` | `K2-FQ-V2-ATRVT-OFF` | [hype/30m-keltner-trend-breakout/](hype/30m-keltner-trend-breakout/README.md) | `30m` Keltner 突破 + `1h` EMA regime + ATRVT 动态杠杆 | explore / not promoted / not live-ready |
+| `HYPE-30M-Keltner-Trend-Breakout` | `K2-FQ-V2-ATRVT-OFF` | [hype/30m-keltner-trend-breakout/](hype/30m-keltner-trend-breakout/README.md) | `30m` Keltner 突破 + `1h` EMA regime + ATRVT 动态杠杆 | V2.1 registered / not promoted / not live-ready |
 | `HYPE-15M-Pullback-Trail` | - | [hype/15m-pullback-trail/](hype/15m-pullback-trail/README.md) | `15m` 回踩事件源 + bracket 搜索 | explore / not promoted / not live-ready |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | [hype/5m-pullback-trail/](hype/5m-pullback-trail/README.md) | `5m` 回踩/恢复入场 + ATR trailing stop | V6.2.1 dry-run / forward-test required |
 | `HYPE-5M-MA-Pullback-Scalp` | - | [hype/5m-ma-pullback-scalp/](hype/5m-ma-pullback-scalp/README.md) | `5m` 双 MA 回踩 scalp | explore / not promoted / not live-ready |
