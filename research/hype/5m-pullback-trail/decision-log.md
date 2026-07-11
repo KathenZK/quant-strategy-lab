@@ -130,3 +130,14 @@
   孤儿仓位，然后继续 fail-closed 等待人工复核。
 - 下一步只能在 live flat、无挂单且 artifact/unit 原子安装 preflight 通过后
   部署；部署后必须回写首次 user stream/reconcile 和真实 fill 证据。
+
+## 2026-07-11 execution v2 live-only cutover
+
+- preflight 再次确认 live flat、无挂单、无 open live trade，远端 main 干净。
+- Runner `712b3e9` 的 GitHub Actions artifact 经 ELF x86-64 与 SHA-256
+  校验后安装；只替换/restart live，dry-run 进程和 unit 未改动。
+- live 已运行 `Type=notify + WatchdogSec=120`，私有 user stream 已连接，
+  首周期 health `ok`，跨完整 watchdog 周期 PID 不变、重启数为 0、journal
+  无 warning/error。
+- 状态保持 `live / tiny-live-pilot / forward-test required`，不扩大资金；
+  第一笔真实 fill 仍必须逐单回写并在 2026-07-24 前复核。
