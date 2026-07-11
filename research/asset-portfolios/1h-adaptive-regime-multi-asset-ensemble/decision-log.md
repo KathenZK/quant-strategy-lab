@@ -76,3 +76,12 @@
 - 处理：quant-runner 补齐 open/holding/close 的 `trades` 写入，增加 closed trade 不得被重复 open 重开的终态保护；并对当前 open 持仓做 DB 回填。状态仍 `NO-GO / not promoted / not live-ready`。
 - SPEC 复核：strict replay 的 371/371 逐笔 parity 仍有效；持续 dry-run runtime 是近似联合状态机。已修复 funding 获取失败静默按零、runtime ledger PnL 未计 funding及 Runner SPEC dry-run 身份冲突；跨 symbol 最新 K 不一致时可能混用执行小时的风险仍待处理。任何 promotion 讨论前仍必须统一既有 runtime 差异或建立正式新规格。
 - 证据：`runner-tracking/binance-1h-ar-mae-v1-runner-status.md`。
+
+## 2026-07-12 ledger / funding 修复部署
+
+- Runner `main@282bf9c` 已通过 GitHub Actions governance、quality、Linux release
+  build，并部署到 `quant-runner-dryrun.service`。
+- 重启后服务 active、journal 无 warning/error、全部 strategy health 为 `ok`；
+  six-asset 当前 flat。已有 candle-count dry-run short 从本地状态正常恢复。
+- live 进程未重启；本次部署不改变 `NO-GO / not promoted / not live-ready`。
+- 证据：`runner-tracking/binance-1h-ar-mae-v1-runner-status.md`。

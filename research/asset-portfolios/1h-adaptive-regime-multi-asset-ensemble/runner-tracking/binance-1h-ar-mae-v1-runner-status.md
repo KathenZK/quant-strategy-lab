@@ -77,3 +77,21 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
 - 新确认差异 3：runtime 用六个 sleeve 最新闭合时间的最小值推进 cycle，但选仓仍按各 sleeve 自身最后一根 K 计算；若某个 symbol 数据滞后，候选信号可能不在同一执行小时。
 - 文档漂移已修复：Runner SPEC 现明确研究身份仍为 diagnostic NO-GO，Runner 只获准 `dry_run` 观察，并直接列出 strict replay 与持续 runtime 的边界。
 - 结论：策略参数/信号引擎及 strict replay 对齐；funding 获取和 PnL 缺口已关闭。持续 dry-run 的三项既有观测差异和跨 symbol 时钟风险仍不改变 `NO-GO / not live-ready`，任何 promotion 前必须统一实现或建立新的正式规格。
+
+## 2026-07-12 dry-run deployment
+
+- Runner source：`main@282bf9c9e5bf482e90eecc67a3f77da842e24ad7`。
+- Build：GitHub Actions
+  [`Build Linux release #29159239033`](https://github.com/KathenZK/quant-runner/actions/runs/29159239033)
+  的 governance、quality、build 全部通过；artifact 为 Linux x86-64 ELF，
+  SHA-256 `f53f0c88ab2c5f2157172bbf582c43014375e170535a50188510c7ef2c1e9e67`。
+- Deploy：服务器 `/home/admin/quant-runner` fast-forward 到该提交，预编译二进制
+  经哈希校验后原子安装；`quant-runner-dryrun.service` 于
+  `2026-07-12 00:19:49 CST` 重启并保持 active。
+- Verification：重启后 journal 无 warning/error；全部 strategy health 为 `ok`；
+  six-asset 当前 `position_open=0`，已有 candle-count dry-run short
+  `position_open=1` 正常从本地状态恢复。
+- Live：`quant-runner-live.service` 没有 open trade 且持续 active，但因本次只影响
+  dry-run、平台仍有未平 dry-run 交易，未主动重启 live 进程；共享磁盘二进制已更新，
+  live 下次受控重启会加载该版本。
+- Decision gate：保持 `NO-GO / not promoted / not live-ready`。
