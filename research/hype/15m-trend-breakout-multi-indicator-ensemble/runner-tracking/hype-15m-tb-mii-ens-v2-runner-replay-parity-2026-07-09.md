@@ -1,5 +1,10 @@
 # HYPE-15M-TB-MII-ENS-V2 Runner Replay 全样本对拍 2026-07-09
 
+> 历史快照：本报告产生时 continuous runtime 尚未实现。其“未实现”清单已被
+> 同日后续 runtime/deployment 报告取代；逐笔 parity 数值仍有效。当前状态以
+> [`hype-15m-tb-mii-ens-v2-runtime-live-pilot-2026-07-09.md`](hype-15m-tb-mii-ens-v2-runtime-live-pilot-2026-07-09.md)
+> 和 active manifest 为准。
+
 Status：
 
 ```text

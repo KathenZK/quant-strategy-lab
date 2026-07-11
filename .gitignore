@@ -21,5 +21,8 @@ web/.next/
 **/artifacts/**
 !**/artifacts/**/
 !**/artifacts/**/*.md
+!research/hype/15m-multi-indicator-intraday/artifacts/HYPE-15M-MII-V1.4A_parity_pending_2026-07-11.json
+!research/hype/15m-ema-crossover/artifacts/HYPE-EMA-X-V18_parity_pending_2026-07-11.json
+!research/hype/15m-candle-count-reversal/artifacts/HYPE-CANDLE-COUNT-V35_parity_pending_2026-07-11.json
 .coverage
 htmlcov/

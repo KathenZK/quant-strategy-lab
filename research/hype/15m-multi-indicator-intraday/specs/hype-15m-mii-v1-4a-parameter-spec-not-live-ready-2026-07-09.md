@@ -6,7 +6,7 @@ Version：`HYPE-15M-MII-V1.4A`
 
 Parent version：`HYPE-15M-MII-V1.4`
 
-Status：`recent-window TP/SL observation / not implemented in runner / not dry-run / not live-ready`
+Status：`dry-run validation / parity pending / not live-ready`
 
 ## 结论
 
@@ -38,13 +38,15 @@ sl_atr_mult = 3.0
 | Market | `USD-M perpetual` |
 | Symbol | `HYPEUSDT` / `HYPE/USDT:USDT` |
 | Timeframe | `15m` |
-| Runner status | 尚未实现为独立 runner 配置 |
-| Current dry-run version | `HYPE-15M-MII-V1.3` |
+| Runner status | 已由 `hype_mii` 实现并运行 dry-run |
+| Current dry-run version | `HYPE-15M-MII-V1.4A` |
 | Core ledger | [`../hype-15m-mii-core-ledger.md`](../hype-15m-mii-core-ledger.md) |
 | Dry-run validation spec | [`../live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md`](../live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md) |
 | Main evidence | [`../notes/hype-15m-mii-v1-4-tp-sl-neighborhood-2026-07-09.md`](../notes/hype-15m-mii-v1-4-tp-sl-neighborhood-2026-07-09.md) |
 
-不要用裸 `V1.4A` 判断策略身份；它只在 `HYPE-15M-MII` 家族内有效。`V1.4A` 不是 `V1.4 baseline`，也不是当前 quant-runner dry-run 版本。
+不要用裸 `V1.4A` 判断策略身份；它只在 `HYPE-15M-MII` 家族内有效。
+`V1.4A` 不是 `V1.4 baseline`；它是当前 quant-runner dry-run 版本，
+但标准 full-window parity 仍为 blocker。
 
 ## 参数总表
 

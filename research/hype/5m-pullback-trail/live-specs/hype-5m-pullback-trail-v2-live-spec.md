@@ -1,4 +1,14 @@
-# HYPE-5M-PBTR-V2 实盘复现规格
+---
+spec_role: lab_handoff
+strategy_id: HYPE-5M-PBTR-V2
+family_id: HYPE-5M-PBTR
+runner_kind: hype_pullback
+spec_status: superseded
+superseded_by: hype-5m-pbtr-v6-2-1-live-spec.md
+approval_level_max: none
+---
+
+# HYPE-5M-PBTR-V2 实盘复现规格（已被 V6.2.1 取代）
 
 规格 id: `HYPE-5M-PBTR-V2-LIVE-SPEC`
 

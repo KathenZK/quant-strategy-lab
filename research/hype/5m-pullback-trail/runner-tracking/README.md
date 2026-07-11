@@ -13,3 +13,5 @@
   （复核截止 2026-07-24）。已有
   [`hype-5m-pbtr-runner-2026-07-09.md`](hype-5m-pbtr-runner-2026-07-09.md)
   的 16/16 replay parity；它不替代真实成交生命周期验收，也不允许 production sizing。
+- 2026-07-11 执行安全收尾与 v2 待部署状态见
+  [`hype-5m-pbtr-runner-2026-07-11.md`](hype-5m-pbtr-runner-2026-07-11.md)。

@@ -6,7 +6,7 @@ alwaysApply: true
 # Lab / Runner Handoff Contract
 
 - Machine-readable promotion authority is
-  `docs/research-governance/machine/active-strategy-manifest.yaml`. Narrative
+  `docs/research-governance/machine/active-strategy-manifest.json`. Narrative
   documents explain decisions but cannot authorize an enabled runner instance
   without a matching manifest entry. Runner consumes the committed
   `configs/active-strategy.lock.json` projection pinned to a Lab commit/hash.

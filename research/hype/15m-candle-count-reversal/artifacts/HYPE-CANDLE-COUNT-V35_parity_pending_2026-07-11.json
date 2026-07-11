@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "strategy_id": "HYPE-CANDLE-COUNT-V35",
+  "runner_kind": "hype_candle_count",
+  "runner_commit": "WORKTREE@bf909ca",
+  "lab_commit": "WORKTREE@a356895e66b8d1ebe116646f822776acb46caab8",
+  "snapshot_id": "hype-cc-v35-official-review-2026-06-29",
+  "gate_level": "parity",
+  "command": "not run",
+  "window": {"start": "official-review-window", "end": "2026-06-29", "bars": 0},
+  "trade_path": {
+    "reference_trades": 18,
+    "runtime_trades": 0,
+    "path_mismatches": 18,
+    "fields_compared": []
+  },
+  "conclusion": "FAIL",
+  "blockers": [
+    "runner strict full-window trade export has not been compared with official trades",
+    "mark-price, funding and early-exit lifecycle comparison remains pending"
+  ]
+}

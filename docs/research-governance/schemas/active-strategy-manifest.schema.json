@@ -41,6 +41,7 @@
               "required": {"type": "boolean"},
               "status": {"enum": ["PASS", "FAIL", "PENDING"]},
               "last_pass_report": {"type": "string"},
+              "pending_report": {"type": "string"},
               "grandfather_until": {"type": "string", "format": "date-time"}
             },
             "additionalProperties": false

@@ -32,13 +32,14 @@ def main() -> int:
         missing = REQUIRED - report.keys()
         if missing:
             errors.append(f"{path}: missing {sorted(missing)}")
-        if report.get("gate_level") != "parity":
-            errors.append(f"{path}: gate_level must be parity")
         trade_path = report.get("trade_path", {})
-        if report.get("conclusion") == "PASS" and trade_path.get("path_mismatches") != 0:
-            errors.append(f"{path}: PASS report has path mismatches")
-        if trade_path.get("reference_trades") != trade_path.get("runtime_trades"):
-            errors.append(f"{path}: trade counts differ")
+        if report.get("conclusion") == "PASS":
+            if report.get("gate_level") != "parity":
+                errors.append(f"{path}: PASS report gate_level must be parity")
+            if trade_path.get("path_mismatches") != 0:
+                errors.append(f"{path}: PASS report has path mismatches")
+            if trade_path.get("reference_trades") != trade_path.get("runtime_trades"):
+                errors.append(f"{path}: PASS report trade counts differ")
     if errors:
         print("\n".join(f"ERROR: {error}" for error in errors))
         return 1

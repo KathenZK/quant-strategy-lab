@@ -25,6 +25,9 @@ jobs:
           python3 scripts/governance/check_parity_report.py \
             research/hype/5m-pullback-trail/artifacts/HYPE-5M-PBTR-V6.2.1_parity_2026-07-09.json \
             research/hype/15m-trend-breakout-multi-indicator-ensemble/artifacts/HYPE-15M-TB-MII-ENS-V2_parity_2026-07-09.json \
-            research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/artifacts/BIN-1H-AR-MAE-V1_parity_2026-07-09.json
+            research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/artifacts/BIN-1H-AR-MAE-V1_parity_2026-07-09.json \
+            research/hype/15m-multi-indicator-intraday/artifacts/HYPE-15M-MII-V1.4A_parity_pending_2026-07-11.json \
+            research/hype/15m-ema-crossover/artifacts/HYPE-EMA-X-V18_parity_pending_2026-07-11.json \
+            research/hype/15m-candle-count-reversal/artifacts/HYPE-CANDLE-COUNT-V35_parity_pending_2026-07-11.json
       - name: Run research document consistency tests
         run: pytest -q tests/test_research_docs_consistency.py

@@ -8,7 +8,7 @@ from pathlib import Path
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_MANIFEST = ROOT / "docs/research-governance/machine/active-strategy-manifest.yaml"
+DEFAULT_MANIFEST = ROOT / "docs/research-governance/machine/active-strategy-manifest.json"
 
 
 def parse_time(value: str) -> dt.datetime:
@@ -54,6 +54,9 @@ def validate(manifest_path: Path, runner_root: Path | None) -> list[str]:
         if not (ROOT / decision_path).is_file():
             errors.append(f"{instance_id}: missing decision log {decision_path}")
         parity = entry.get("parity_gate", {})
+        pending_report = parity.get("pending_report")
+        if pending_report and not (ROOT / pending_report).is_file():
+            errors.append(f"{instance_id}: missing pending parity report {pending_report}")
         if (
             entry.get("enabled_allowed")
             and parity.get("required")

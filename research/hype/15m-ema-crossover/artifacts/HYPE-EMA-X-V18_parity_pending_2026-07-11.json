@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "strategy_id": "HYPE-EMA-X-V18",
+  "runner_kind": "hype_ema_x",
+  "runner_commit": "WORKTREE@bf909ca",
+  "lab_commit": "WORKTREE@a356895e66b8d1ebe116646f822776acb46caab8",
+  "snapshot_id": "hype-ema-x-v18-retest-2026-07-01",
+  "gate_level": "parity",
+  "command": "not run",
+  "window": {"start": "research-window", "end": "2026-06-01T03:00:00Z", "bars": 0},
+  "trade_path": {
+    "reference_trades": 33,
+    "runtime_trades": 0,
+    "path_mismatches": 33,
+    "fields_compared": []
+  },
+  "conclusion": "FAIL",
+  "blockers": [
+    "runner full-window trade export has not been produced",
+    "indicator and late-reentry path comparison remains pending"
+  ]
+}

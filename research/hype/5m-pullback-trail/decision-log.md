@@ -119,3 +119,14 @@
 - 当前仍缺真实 fill 生命周期、部分成交、本地 OCO、重启恢复和平台安全闸
   的线上验收。Runner 新 execution v2 在完成离线故障注入和 flat 窗口切换前
   默认关闭。
+
+## 2026-07-11 execution v2 source gate complete
+
+- `live_execution_sim.rs` 已覆盖超时已成交、partial fill、保护/紧急平仓失败、
+  entry-arm kill、孤儿单撤销和 user-stream 断线。
+- source config 已切换为 `execution.enabled=true` /
+  `user_stream_enabled=true`，但尚未部署，现网服务不因此改变。
+- entry-arm kill 的恢复策略固定为自动撤未成交 entry，或 reduce-only 平掉
+  孤儿仓位，然后继续 fail-closed 等待人工复核。
+- 下一步只能在 live flat、无挂单且 artifact/unit 原子安装 preflight 通过后
+  部署；部署后必须回写首次 user stream/reconcile 和真实 fill 证据。

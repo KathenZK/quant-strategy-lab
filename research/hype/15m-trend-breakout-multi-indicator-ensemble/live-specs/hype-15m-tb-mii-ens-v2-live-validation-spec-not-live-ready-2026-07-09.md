@@ -23,9 +23,14 @@ Status：`dry-run active / replay parity PASS / live disabled / not live-ready`
 
 ## 先读结论
 
-本文档用于把 `HYPE-15M-TB-MII-ENS-V2` 导出为可实现、可 replay、可 dry-run 对拍的 live validation spec。它不是实盘批准书，也不是 dry-run 启动批准。
+本文档现用于描述已实现的 replay 与连续 dry-run runtime；它不是实盘批准书，
+live 实例仍保持 disabled。
 
-后续审计：2026-07-09 已完成 live-executable 静态审计，结论为 `FAILED / NO-GO`。主要 blocker 是 V2 runner kind 未实现、V39 trend-breakout runner 未实现、`quant-runner` 的 MII 默认仍是 V1.3、组合 preempt/重启恢复/kill switch 未实现。详见 [`../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md`](../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)。
+历史说明：2026-07-09 的首次 live-executable 静态审计曾因 runner、
+preempt、恢复和 kill switch 未实现而失败；这些代码缺口后来已关闭。
+该历史报告不再描述当前实现状态，但真实订单故障注入、funding 和 live 审批
+仍是 blocker。详见
+[`../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md`](../diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)。
 
 `V2` 的定义是：
 
@@ -340,21 +345,22 @@ V2 live pilot 前必须实现：
 
 这些是 replay 对拍目标，不是 live 收益承诺。
 
-## Runner 配置草案
+## Runner 配置
 
-当前 V2 runner 尚未实现。以下只是目标配置草案，默认关闭，不能直接粘贴到现有 V35 live service 后上线。
+V2 runner 已实现，生产 dry-run 实例为 `hype-tb-mii-ens-dry-run`。
+以下配置仍只用于说明身份；live 必须继续由 manifest/lock 门禁控制。
 
 ```toml
 [[strategies]]
-name = "hype-tb-mii-ens-v2-dry-run"
-enabled = false
-group = "validation"
+name = "hype-tb-mii-ens-dry-run"
+enabled = true
+group = "dryrun"
 kind = "hype_tb_mii_ensemble"
 mode = "dry_run"
 symbol = "HYPE/USDT:USDT"
 timeframe = "15m"
 account_id = "dryrun"
-state_dir = "/home/admin/quant-runner/state/hype-tb-mii-ens-v2-dry-run"
+state_dir = "/home/admin/quant-runner/state/hype-tb-mii-ens-dry-run"
 leverage = 3
 margin_mode = "isolated"
 warmup_bars = 2500
