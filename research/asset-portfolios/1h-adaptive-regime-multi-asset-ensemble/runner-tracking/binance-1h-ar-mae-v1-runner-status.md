@@ -58,3 +58,22 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
 - Platform manual halt, risk observations, critical outbox, graceful shutdown,
   watchdog and manifest lock apply to the self-managed runtime too.
 - Source tests pass; no deployment or change to the dry-run/live decision was made.
+
+## 2026-07-11 Platform `trades` ledger wiring
+
+- Issue：dry-run 已有 BNB 持仓（`holding` / `position_open=1`），但 platform `trades` 表无行。根因是 runtime 只写 `events`（`open`/`cycle`）和 `strategy_health`，未调用 `emit_ledger_trade_open`；平仓虽走公共 `close_position`→`emit_ledger_trade_close`，没有 open 行时 update 会静默 0 行。
+- Fix（quant-runner，未部署）：`six_asset_ensemble` 开仓补 `emit_ledger_trade_open`；holding 周期 upsert 对账；平仓前先 upsert open，避免历史孤儿持仓关单丢记录。公共 ledger upsert 同时增加终态保护，重复 `TradeOpen` 不得把 `closed` 交易重新改回 `open`。
+- Backfill（线上 DB，已做）：从 `state/six-asset-ensemble-dry-run/engine_state.json` 回填当前 open 行 `armae-bnb-1783699210359`（BNB long，entry `2026-07-10T16:00Z` @ `574.369656`）。
+- Source validation：`cargo fmt --check`、`cargo clippy --all-targets -- -D warnings`、`cargo test` 通过；新增 `open -> close -> duplicate open` 仍保持 closed 的回归测试。
+- Decision gate：不变，仍为 `NO-GO / not promoted / not live-ready`。此修复只补观测完整性。
+- 部署前：新开仓/对账逻辑需发布二进制后才生效；当前 open 行已可在 `trades` 查询。
+
+## 2026-07-11 SPEC alignment re-audit
+
+- Strict replay：参数、特征、leg 级 cooldown、sleeve merge、账户级阻塞、费用/滑点/funding 与冻结 SPEC 的逐笔 parity 证据仍有效（371/371 零误差）。
+- Continuous dry-run runtime：仍是观测用联合状态机近似，不等同于冻结 diagnostic replay；已知 mark-price 入场、asset 级 cooldown 和 timeout 优先级差异继续成立。
+- 已修复差异 1：空仓时任一 sleeve funding 获取失败或返回空集都会阻止新入场；已有持仓退出不受 funding API 故障阻断，但 active sleeve funding 不可得时 net PnL 保持 `null`，不再静默按零 funding。
+- 已修复差异 2：runtime 按 strict replay 的 `[entry_ts, exit_ts)` 半开区间累计 `-side × funding_rate`，纳入 `trades.net_pnl_usdt` / `net_ret_1x`，并把 `funding_ret_1x`、`funding_pnl_usdt` 写入 close payload。
+- 新确认差异 3：runtime 用六个 sleeve 最新闭合时间的最小值推进 cycle，但选仓仍按各 sleeve 自身最后一根 K 计算；若某个 symbol 数据滞后，候选信号可能不在同一执行小时。
+- 文档漂移已修复：Runner SPEC 现明确研究身份仍为 diagnostic NO-GO，Runner 只获准 `dry_run` 观察，并直接列出 strict replay 与持续 runtime 的边界。
+- 结论：策略参数/信号引擎及 strict replay 对齐；funding 获取和 PnL 缺口已关闭。持续 dry-run 的三项既有观测差异和跨 symbol 时钟风险仍不改变 `NO-GO / not live-ready`，任何 promotion 前必须统一实现或建立新的正式规格。

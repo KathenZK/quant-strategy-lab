@@ -68,3 +68,11 @@
 - 压力：额外 `4 bps/fill` full `160.18x / -20.18% DD`；double-cost `62.93x / -27.53% DD`。TRX-only 网格无法突破 `-20.18%` 的额外滑点 DD 下限，因为 TRX 风险压下后 close-DD 主因转为 BNB 连续亏损；保守 account-tail 主因转为 HYPE DI 与 SOL Donchian。
 - 决策：TRX 定向规则是目前更有效的风险—收益折中，但仍为未编号 diagnostic observation，不登记 `V2`；下一步应测试轻量跨 sleeve account-tail guard 或 BNB loss-cluster 专项，而不是继续压 TRX。
 - 证据：`notes/binance-1h-ar-mae-v1-trx-targeted-tail-overlay-2026-07-10.md`、`artifacts/binance_1h_ar_mae_v1_trx_targeted_tail_2026-07-10.json`、`artifacts/binance_1h_ar_mae_v1_trx_targeted_tail_matrix_2026-07-10.csv`、`scripts/research_binance_1h_ar_mae_v1_trx_targeted_tail_overlay.py`。
+
+## 2026-07-11 dry-run platform `trades` 漏记修复
+
+- 背景：线上 `six-asset-ensemble-dry-run` 已持有 BNB，但 platform ledger `trades` 无记录；`events`/`strategy_health` 正常。
+- 根因：runtime 未接 `emit_ledger_trade_open`。
+- 处理：quant-runner 补齐 open/holding/close 的 `trades` 写入，增加 closed trade 不得被重复 open 重开的终态保护；并对当前 open 持仓做 DB 回填。状态仍 `NO-GO / not promoted / not live-ready`。
+- SPEC 复核：strict replay 的 371/371 逐笔 parity 仍有效；持续 dry-run runtime 是近似联合状态机。已修复 funding 获取失败静默按零、runtime ledger PnL 未计 funding及 Runner SPEC dry-run 身份冲突；跨 symbol 最新 K 不一致时可能混用执行小时的风险仍待处理。任何 promotion 讨论前仍必须统一既有 runtime 差异或建立正式新规格。
+- 证据：`runner-tracking/binance-1h-ar-mae-v1-runner-status.md`。
