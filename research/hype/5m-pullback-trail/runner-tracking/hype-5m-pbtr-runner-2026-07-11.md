@@ -18,7 +18,7 @@
 - 已删除 `platform.execution.enabled` 和 live V1 fallback。配置不再允许绕过统一
   execution；V6.2.1 的 alpha、固定 bracket、timeout 和 sizing 边界没有变化。
 - strict replay/parity 路径继续与 venue/runtime 隔离，本次迁移不应改变既有 replay
-  结果。当前 runner workspace `131` 个 unit tests 与 `12` 个 integration tests 全部通过；
+  结果。当前 runner workspace `134` 个 unit tests 与 `12` 个 integration tests 全部通过；
   `cargo clippy --workspace --all-targets -- -D warnings` 通过；本 family 未产生新的
   strict parity 结论。
 - 最终执行安全审查保留 timeout open 的 gap-stop/gap-target reason，并补齐
@@ -33,6 +33,36 @@
 - 状态保持 `tiny-live-pilot / forward-test required`，不得据此扩大资金、提升
   promotion、宣告 parity 新结论或改变 live-readiness。交接约束见
   [V6.2.1 active live spec](../live-specs/hype-5m-pbtr-v6-2-1-live-spec.md)。
+
+## 2026-07-13 统一 execution 双服务切换
+
+- Runner `cd00ef24c8f2c33d17bee19c51d017e264c76356` 经
+  [GitHub Actions run 29223536186](https://github.com/KathenZK/quant-runner/actions/runs/29223536186)
+  构建，artifact SHA-256
+  `0ce2b5513716cd84cf825abf19db4c65d6509b6386721c438bbc06fc022735a5`。
+- 发布前 live 本地 position、Binance position/open orders、ledger open trades
+  全部为空且 reconcile=`match`。用户明确批准迁移两笔 dry-run open trade 后，
+  dry-run/live 于 `2026-07-13T04:25:04Z` 停止并同批切换配置/二进制。
+- 切换后 dry-run PID=`786473`、live PID=`786481`，跨完整 watchdog 周期均
+  `NRestarts=0`、active/running、journal 无 warning/error；7 个 strategy
+  health 全部 `ok`。live 再次 reconcile=`match` 且仍 flat。
+- 本次没有 PBTR 新开/平仓/fill；状态保持
+  `live / tiny-live-pilot / forward-test required`，不得扩大资金。
+
+## 2026-07-13 graceful shutdown 通知放大事件
+
+- 来源：用户钉钉截图，以及服务器
+  `events/event_outbox` 在 `2026-07-13T04:25:04Z` 切换窗口的 SQLite 查询。
+- 旧实现按 7 个策略各写一条 `graceful_shutdown`；live/dry-run 两个 watchdog
+  又会先读取同一批 pending outbox 再分别发送。结果 7 条中 6 条
+  `attempts=2`、1 条 `attempts=1`，与用户实际收到约 `13-14` 条一致。
+- 修复（Runner source，未部署）：策略 runner 不再逐条写 critical shutdown；
+  dispatcher 每个 systemd service 只写一条 `service_graceful_shutdown`，汇总
+  strategy/position，并在退出前按 dedupe key 立即投递；共享 SQLite outbox 增加
+  `BEGIN IMMEDIATE` 原子 claim、5 分钟 lease 与 `lease_owner` completion fencing，
+  阻止跨进程重复消费或旧 lease 覆盖新 owner。
+- 同时发布 dry-run/live 时预期两条汇总（每个 service 一条），不是每策略一条。
+  本事件没有订单、持仓或 PnL 影响，不改变 promotion/live-readiness。
 
 ## 已完成的保护措施
 

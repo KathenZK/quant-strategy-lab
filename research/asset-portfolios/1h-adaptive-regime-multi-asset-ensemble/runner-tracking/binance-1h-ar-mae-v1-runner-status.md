@@ -111,7 +111,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
 - 已删除 `platform.execution.enabled` 和 live V1 fallback。strict replay/parity
   继续走隔离路径，不读取或改写 simulated venue；既有 `371/371` 零误差 parity
   结论应保持不变。
-- 当前 runner workspace `131` 个 unit tests 与 `12` 个 integration tests 全部通过；
+- 当前 runner workspace `134` 个 unit tests 与 `12` 个 integration tests 全部通过；
   `cargo clippy --workspace --all-targets -- -D warnings` 通过；完整 strict replay
   再次得到 `522/371/151/22`，与冻结 Lab reference 一致，既有 `371/371`
   parity PASS 不变。
@@ -122,3 +122,26 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   2026-07-12 已部署二进制和服务状态仍是当前线上事实，没有新增成交统计。
 - 结论保持 `DryRunOnly / NO-GO / not promoted / not live-ready`。交接约束见
   [V1 active handoff](../live-specs/binance-1h-ar-mae-v1-handoff-not-live-ready.md)。
+
+## 2026-07-13 统一 execution symbol-explicit venue 切换
+
+- Runner `cd00ef24c8f2c33d17bee19c51d017e264c76356` 经
+  [GitHub Actions run 29223536186](https://github.com/KathenZK/quant-runner/actions/runs/29223536186)
+  构建，artifact SHA-256
+  `0ce2b5513716cd84cf825abf19db4c65d6509b6386721c438bbc06fc022735a5`。
+- 用户明确批准在两笔 dry-run open trade 存续时切换。服务于
+  `2026-07-13T04:25:04Z` 停止并同批更新配置/二进制；跨完整 watchdog 周期
+  PID 稳定、`NRestarts=0`、无 warning/error。
+- 当前 HYPE long `0.443` 持仓迁入 symbol-explicit `HYPEUSDT` venue，entry
+  order `1` 已成交，无其他 symbol 暴露；pending/fail-closed 均为空，
+  health=`ok`。本策略继续用逐 bar fixed target/stop/timeout，不创建 resting
+  venue TP/SL。完整生命周期快照见
+  [迁移 artifact](../artifacts/binance_1h_ar_mae_v1_unified_execution_migration_2026-07-13.json)。
+- 该 runtime 迁移不改变 strict replay 的 `522/371/151/22` 与 `371/371`
+  parity PASS，也不改变 `DryRunOnly / NO-GO / not live-ready`。
+
+## 2026-07-13 shutdown 通知去重（source，未部署）
+
+- 双服务切换的 7 条策略级 shutdown 因两个 watchdog 竞态被放大到约 13-14 条。
+  Runner 改为每 service 一条汇总，并用 SQLite 原子 claim/lease 阻止重复消费。
+- 仅影响运维通知，不影响当前 HYPE 持仓、多 symbol venue 或 parity。

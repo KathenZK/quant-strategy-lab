@@ -16,7 +16,7 @@
 - 已删除 `platform.execution.enabled` 和 live V1 fallback；不得绕回旧 executor。
 - strict replay/parity 路径保持隔离，本次迁移不应改变 replay 结果。Parity 仍为
   `PENDING`；offline baseline 不能替代 Python/Rust 全窗口 trade-path parity。
-- 当前 runner workspace `131` 个 unit tests 与 `12` 个 integration tests 全部通过；
+- 当前 runner workspace `134` 个 unit tests 与 `12` 个 integration tests 全部通过；
   `cargo clippy --workspace --all-targets -- -D warnings` 通过；本 family 未产生新的
   strict parity 结论。
 - EMA-X stop-only 存量迁移和迁移中断恢复已有定向测试；execution pause 只能在
@@ -27,3 +27,18 @@
   [V18 active handoff](../live-specs/hype-ema-x-v18-handoff-not-live-ready.md)。
 
 结论：`keep dry-run / do not enable live`。
+
+## 2026-07-13 统一 execution dry-run 已部署
+
+- `main@cd00ef24c8f2c33d17bee19c51d017e264c76356` 与 SHA-256
+  `0ce2b5513716cd84cf825abf19db4c65d6509b6386721c438bbc06fc022735a5`
+  已随双服务切换安装；本实例启动时 flat、无迁移订单，health=`ok`。
+- 跨 watchdog 周期 dry-run service PID 稳定、`NRestarts=0`、无 warning/error；
+  未采集到新 EMA-X open/close/fill。状态保持
+  `dry-run / forward-test required / not live-ready`。
+
+## 2026-07-13 shutdown 通知去重（source，未部署）
+
+- 双服务切换的 7 条策略级 shutdown 因两个 watchdog 竞态被放大到约 13-14 条。
+  Runner 改为每 service 一条汇总，并用 SQLite 原子 claim/lease 阻止重复消费。
+- 仅影响运维通知，不影响本策略状态、订单或 PnL。

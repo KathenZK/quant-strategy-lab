@@ -17,7 +17,7 @@
 - strict replay/parity 保持隔离，本次迁移不应改变 replay 结果。Parity 仍为
   `PENDING`；offline baseline 与既有 strict replay tests 都不能替代
   Lab-vs-Runner 全窗口路径对拍。
-- 当前 runner workspace `131` 个 unit tests 与 `12` 个 integration tests 全部通过；
+- 当前 runner workspace `134` 个 unit tests 与 `12` 个 integration tests 全部通过；
   `cargo clippy --workspace --all-targets -- -D warnings` 通过；另以 Binance 最新
   `2000` 根 15m 数据完成 strict replay smoke（`mark_missing_bars=0`、`12` 笔已
   平仓），但这不是 Lab-vs-Runner 全窗口 parity，状态仍为 `PENDING`。
@@ -31,3 +31,25 @@
   [V35 active handoff](../live-specs/hype-cc-v35-handoff-not-live-ready.md)。
 
 结论：`keep dry-run / do not enable live`。
+
+## 2026-07-13 统一 execution 生产 dry-run 切换
+
+- Runner `cd00ef24c8f2c33d17bee19c51d017e264c76356` 经
+  [GitHub Actions run 29223536186](https://github.com/KathenZK/quant-runner/actions/runs/29223536186)
+  构建，artifact SHA-256
+  `0ce2b5513716cd84cf825abf19db4c65d6509b6386721c438bbc06fc022735a5`。
+- 用户明确批准在两笔 dry-run open trade 存续时切换。服务于
+  `2026-07-13T04:25:04Z` 停止，配置与二进制同批更新，dry-run/live 均恢复
+  active；跨完整 watchdog 周期 PID 稳定、`NRestarts=0`、无 warning/error。
+- 本策略原 short `0.44` 持仓迁入 `HYPEUSDT` simulated venue：entry order
+  `1` 已成交，TP `2` 与 SL `3` 为 NEW reduce-only，pending 为空、
+  fail-closed 为空、health=`ok`。完整来源、时间、价格、费用/滑点和 stable client
+  ID 见 [迁移 artifact](../artifacts/hype_cc_v35_unified_execution_migration_2026-07-13.json)。
+- 这是执行状态迁移，不是新的 replay parity 或 live 批准；状态保持
+  `dry-run / forward-test required / not live-ready`。
+
+## 2026-07-13 shutdown 通知去重（source，未部署）
+
+- 双服务切换的 7 条策略级 shutdown 因两个 watchdog 竞态被放大到约 13-14 条。
+  Runner 改为每 service 一条汇总，并用 SQLite 原子 claim/lease 阻止重复消费。
+- 仅影响运维通知，不影响当前 short 持仓、订单生命周期或 PnL。

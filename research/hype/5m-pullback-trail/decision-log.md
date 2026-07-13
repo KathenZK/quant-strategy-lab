@@ -159,3 +159,27 @@
   mismatch 拒绝 resume 和 candle-count memo/ledger 滑点一致性均增加回归覆盖。
 - 当前仍是代码变更，未部署、未重启，也没有新的真实 fill 证据；PBTR 状态保持
   `live / tiny-live-pilot / forward-test required`，不得扩大资金。
+
+## 2026-07-13 统一 execution 引擎已部署
+
+- 用户明确批准在 candle-count 与 six-asset 两笔 dry-run open trade 存续时执行
+  双服务切换；live 自身在发布前后均为 local/exchange/ledger flat 且无挂单。
+- Runner `cd00ef24c8f2c33d17bee19c51d017e264c76356` 的 Actions artifact
+  `0ce2b5513716cd84cf825abf19db4c65d6509b6386721c438bbc06fc022735a5`
+  已按 stopped-service 原子流程安装；配置先由新 binary `validate-config`，
+  安装失败不会 binary-only rollback。
+- 两笔 dry-run 状态均完成 `simulated_venue_migrated`：candle-count 恢复 entry +
+  reduce-only TP/SL，six-asset 恢复 symbol-explicit HYPE entry。跨 watchdog 周期
+  PID 稳定、重启数为 0、无 warning/error、全部 health=`ok`。
+- PBTR 没有新交易证据，live 仍为 tiny pilot；本次只完成执行引擎切换，不改变
+  promotion、资金边界或 2026-07-24 复核期限。
+
+## 2026-07-13 graceful shutdown 通知去重决定
+
+- 双服务切换产生 7 条策略级 shutdown outbox；因 live/dry-run watchdog 对共享
+  SQLite pending rows 非原子读取，其中 6 条被发送两次，用户实际收到约 13-14 条。
+- 决定删除逐策略 critical shutdown，改为每个 systemd service 一条汇总；共享
+  outbox 消费改为 SQLite 原子 claim + lease owner fencing；dispatcher 在退出前
+  按 dedupe key 立即投递，避免两个进程重复投递或依赖已退出 watchdog。
+- 该修复只影响运维通知，不影响策略、订单、持仓、PnL 或 live-readiness；source
+  完成验证后再按标准 artifact 流程部署。

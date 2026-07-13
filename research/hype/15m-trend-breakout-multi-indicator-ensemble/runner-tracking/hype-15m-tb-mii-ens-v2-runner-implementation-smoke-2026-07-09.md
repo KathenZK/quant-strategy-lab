@@ -20,7 +20,7 @@ runner kind implemented / replay parity pass / continuous dry-run runtime implem
   legacy executor。
 - strict replay/parity 路径继续隔离，不读写任何 venue state；既有 `291/291`
   trade-path replay parity PASS 应保持不变，本次迁移不产生新的 parity 结论。
-- 当前 runner workspace `131` 个 unit tests 与 `12` 个 integration tests 全部通过；
+- 当前 runner workspace `134` 个 unit tests 与 `12` 个 integration tests 全部通过；
   `cargo clippy --workspace --all-targets -- -D warnings` 通过；另完成最新
   `400` 根 15m 的 combo replay smoke（该短窗口 `0` 笔交易），既有全窗口
   `291/291` parity 证据和状态均不变。
@@ -152,3 +152,18 @@ smoke-test: ok = true, issues = []
 `research_hype_15m_tb_mii_ensemble_backtest.py --trend v39 --mii v14`
 做标准数据湖全量 parity，覆盖逐 K state、全部 trades、preempt count 和 equity
 curve tolerance。
+
+## 2026-07-13 统一 execution dry-run 已部署
+
+- `main@cd00ef24c8f2c33d17bee19c51d017e264c76356` 与 SHA-256
+  `0ce2b5513716cd84cf825abf19db4c65d6509b6386721c438bbc06fc022735a5`
+  已随双服务切换安装；本实例启动时 flat、无迁移订单，health=`ok`。
+- 跨 watchdog 周期 dry-run service PID 稳定、`NRestarts=0`、无 warning/error；
+  未采集到新 TB-MII open/close/fill。既有 parity PASS、live disabled 与
+  not live-ready 状态不变。
+
+## 2026-07-13 shutdown 通知去重（source，未部署）
+
+- 双服务切换的 7 条策略级 shutdown 因两个 watchdog 竞态被放大到约 13-14 条。
+  Runner 改为每 service 一条汇总，并用 SQLite 原子 claim/lease 阻止重复消费。
+- 仅影响运维通知，不影响 parity、preempt 或 live-readiness。

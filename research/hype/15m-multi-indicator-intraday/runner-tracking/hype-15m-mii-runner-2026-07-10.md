@@ -89,7 +89,7 @@ Python K+1/K+2 对账，完成前不得形成 keep/adjust 决策。当前结论�
   dry-run only，不能因为统一状态机存在而启用 live。
 - strict replay/parity 路径保持隔离，本次迁移不应改变既有 2500-bar `10/10`
   对比；该证据仍不是标准全窗口 parity gate，manifest parity 继续为 `PENDING`。
-- 当前 runner workspace `131` 个 unit tests 与 `12` 个 integration tests 全部通过；
+- 当前 runner workspace `134` 个 unit tests 与 `12` 个 integration tests 全部通过；
   `cargo clippy --workspace --all-targets -- -D warnings` 通过；本 family 未产生新的
   strict parity 结论。
 - 最终执行安全审查保留 timeout open 的 gap-stop/gap-target reason，并补齐
@@ -102,3 +102,17 @@ Python K+1/K+2 对账，完成前不得形成 keep/adjust 决策。当前结论�
 - 结论保持 `dry-run validation / not live-ready`，不改变 promotion、parity 或
   live-readiness。执行契约见
   [V1.4A active handoff](../live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md)。
+
+## 2026-07-13 统一 execution dry-run 已部署
+
+- `main@cd00ef24c8f2c33d17bee19c51d017e264c76356` 与 SHA-256
+  `0ce2b5513716cd84cf825abf19db4c65d6509b6386721c438bbc06fc022735a5`
+  已随双服务切换安装；本实例启动时 flat、无迁移订单，health=`ok`。
+- 跨 watchdog 周期 dry-run service PID 稳定、`NRestarts=0`、无 warning/error；
+  未采集到新 MII open/close/fill。状态保持 `dry-run validation / not live-ready`。
+
+## 2026-07-13 shutdown 通知去重（source，未部署）
+
+- 双服务切换的 7 条策略级 shutdown 因两个 watchdog 竞态被放大到约 13-14 条。
+  Runner 改为每 service 一条汇总，并用 SQLite 原子 claim/lease 阻止重复消费。
+- 仅影响运维通知，不影响本策略状态、订单或 PnL。
