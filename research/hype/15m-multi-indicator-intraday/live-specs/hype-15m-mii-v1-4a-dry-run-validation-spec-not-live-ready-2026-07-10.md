@@ -43,6 +43,26 @@ strategy_id = HYPE-15M-MII-V1.4A
 
 不要只改显示名称，不改实际策略参数。
 
+## 统一 execution / venue 契约（2026-07-12 代码迁移）
+
+本节只同步 runner 执行架构，不修改 V1.4A 的 RSI/MACD/ATR/RVOL、`2.5x`
+exposure、固定 bracket、timeout 或成本口径：
+
+- dry-run 与 live 共用唯一 execution 状态机：稳定 client ID、submit 前持久化、
+  `pending/tracked`、按 fill 建仓、保护单、兄弟单撤销、timeout exit、reconcile、
+  fail-closed 和 platform ledger。
+- live venue 是 Binance REST + User Data Stream；dry-run venue 是实例独立的
+  `state/<instance>/simulated_venue.json`。dry-run 也必须通过 symbol-explicit
+  order/fill/protection/exit 生命周期，不能直接写策略 position。
+- `platform.execution.enabled` 和 live V1 fallback 已删除；V1.4A 仍只允许
+  `mode=dry_run`，统一 execution 不是 live approval。
+- strict replay/parity 与 venue/runtime 隔离，不读写模拟 venue 状态；本次迁移不应
+  改变既有 replay 结果或 `PENDING` parity 状态。
+- 当前仅完成代码迁移，尚未部署、未重启线上；promotion 与 live-readiness 不变。
+
+实现状态见
+[runner tracking](../runner-tracking/hype-15m-mii-runner-2026-07-10.md)。
+
 ## 身份与边界
 
 | 项 | 值 |

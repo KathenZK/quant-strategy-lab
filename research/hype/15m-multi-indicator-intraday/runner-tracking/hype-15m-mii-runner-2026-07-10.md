@@ -1,96 +1,104 @@
-# HYPE-15M-MII V1.4A dry-run deployment — 2026-07-10
+# HYPE-15M-MII V1.4A dry-run 部署记录 — 2026-07-10
 
-## Status
+## 状态
 
-`HYPE-15M-MII-V1.4A` was deployed to the existing `hype-mii-dry-run`
-instance at `2026-07-10T07:13:16Z`. The first post-deployment 15m cycle was
-healthy. It remains not live-ready.
+`HYPE-15M-MII-V1.4A` 已于 `2026-07-10T07:13:16Z` 部署到既有
+`hype-mii-dry-run` 实例。部署后的首个 15m cycle 健康；状态仍为 not live-ready。
 
-## Prepared runner configuration
+## Runner 配置
 
-- Runner: `quant-runner`, `kind=hype_mii`, `mode=dry_run`.
-- Instance: `hype-mii-dry-run` (instance name intentionally has no version).
-- Identity: `HYPE-15M-MII-V1.4A`.
-- Market: Binance USD-M `HYPEUSDT`, `15m`, closed candles only.
-- Sizing: `dry_run_notional_usdt=10`, `exposure=2.5`, `leverage=3`,
-  `margin_mode=isolated`.
-- State: existing `/home/admin/quant-runner/state/hype-mii-dry-run`; retained
-  because the prior V1.3 instance had never opened a position.
-- Fixed strategy parameters: `min_rvol96=0.85`, `tp_atr_mult=1.40`,
-  `sl_atr_mult=3.0`, `timeout_bars=24`, fee `0.001`/fill, slippage
-  `0.0004`/fill.
-- Live boundary: the runner rejects this identity in `live` mode.
+- Runner：`quant-runner`，`kind=hype_mii`，`mode=dry_run`。
+- Instance：`hype-mii-dry-run`（实例名有意不带版本）。
+- Identity：`HYPE-15M-MII-V1.4A`。
+- Market：Binance USD-M `HYPEUSDT`，`15m`，仅闭合 K。
+- Sizing：`dry_run_notional_usdt=10`、`exposure=2.5`、`leverage=3`、
+  `margin_mode=isolated`。
+- State：沿用 `/home/admin/quant-runner/state/hype-mii-dry-run`，因为此前 V1.3
+  实例从未开仓。
+- 固定策略参数：`min_rvol96=0.85`、`tp_atr_mult=1.40`、
+  `sl_atr_mult=3.0`、`timeout_bars=24`、fee `0.001`/fill、slippage
+  `0.0004`/fill。
+- Live 边界：runner 在 `live` mode 拒绝此 identity。
 
-## Local verification
+## 本地验证
 
-Source workspace: `/Users/ZK/OpenCode/quant-runner`.
+来源 workspace：`/Users/ZK/OpenCode/quant-runner`。
 
-- `cargo fmt --check`: passed.
-- `cargo test -p quant-runner`: passed (`63` library tests, `2` integration
-  tests).
-- `smoke-test --name hype-mii-dry-run`: passed.
-- Binance public closed-Kline smoke replay, `2500` bars: `11` signals and
-  `10` simulated trades; replay emitted the required V1.4A parameter snapshot.
+- `cargo fmt --check`：通过。
+- `cargo test -p quant-runner`：通过（`63` 个 library tests、`2` 个 integration
+  tests）。
+- `smoke-test --name hype-mii-dry-run`：通过。
+- Binance public closed-Kline smoke replay（`2500` bars）：`11` 个 signals、
+  `10` 笔 simulated trades；replay 输出了要求的 V1.4A 参数快照。
 
-The same recent 2500-bar window was also checked against the Python research
-engine: both selected the same 10 trades with matching entry/exit timestamps,
-side, and exit reason. Rust applies its configured fill slippage at the price
-level, so fill prices are intentionally not raw K+1 opens.
+同一 recent 2500-bar 窗口也与 Python research engine 对拍：两边选出相同的 `10`
+笔交易，entry/exit 时间戳、side 和 exit reason 一致。Rust 在价格层应用配置的 fill
+slippage，因此 fill price 有意不等于 raw K+1 open。
 
-## Deployment evidence
+## 部署证据
 
-- Initial V1.4A deployment commit:
+- 初次 V1.4A 部署 commit：
   `a52562ee057c19f28541a5ccc8ff5522d31efefc`
-  (implementation commit `7e30d6d` plus Linux artifact workflow).
-- Initial build source: GitHub Actions run `29075757922`, native
-  `x86_64-unknown-linux-gnu`; no compilation occurred on the trading server.
-- Initial artifact SHA-256:
+  （implementation commit `7e30d6d` + Linux artifact workflow）。
+- 初次 build 来源：GitHub Actions run `29075757922`，native
+  `x86_64-unknown-linux-gnu`；交易服务器未执行编译。
+- 初次 artifact SHA-256：
   `db7f446b835a9d39d25670d2e510f26f6c2d107bdf3f843c1592e8ce98e6a480`.
-- Current deployed commit: `61cb32a01944efe9011167cbb9ab0bef6fcfccf2`.
-- Current build source: GitHub Actions run `29076613028`; artifact SHA-256
+- 当前已部署 commit：`61cb32a01944efe9011167cbb9ab0bef6fcfccf2`。
+- 当前 build 来源：GitHub Actions run `29076613028`；artifact SHA-256
   `f76cfcffa3908c25d2b29913895937819c313fc34487e1efcf3a665f66bb5380`.
-- Current dry-run config SHA-256:
+- 当前 dry-run config SHA-256：
   `444cc8407e61e5ba3d23a692d5ed2700795238027042d01d336dace832201a1d`.
-- Source commands/evidence: systemd status/journal, platform SQLite
-  `strategy_instances`, `strategy_health`, `events`, and installed-binary
+- 来源命令/证据：systemd status/journal、platform SQLite
+  `strategy_instances`、`strategy_health`、`events`，以及已安装 binary 的
   `replay-dry-run --limit 300` parameter snapshot.
-- Only `quant-runner-dryrun.service` was restarted. The live service remained
-  active on its existing PID.
-- Pre-restart MII state: flat, zero historical/open trades, no prior signal;
-  existing state path retained.
-- First post-deployment cycle: runner start
-  `2026-07-10T07:13:16Z`; processed closed signal bar
-  `2026-07-10T07:00:00Z` at `2026-07-10T07:15:03Z`; event `no_signal`;
-  `strategy_health.status=ok`, `position_open=0`.
-- Installed parameter snapshot: internal identity `HYPE-15M-MII-V1.4A`,
+- 仅重启 `quant-runner-dryrun.service`；live service 保持既有 PID active。
+- 重启前 MII state：flat，historical/open trades 均为 `0`，无历史 signal；沿用既有
+  state path。
+- 部署后首个 cycle：runner 于 `2026-07-10T07:13:16Z` 启动，并在
+  `2026-07-10T07:15:03Z` 处理 `2026-07-10T07:00:00Z` 闭合 signal bar；
+  event 为 `no_signal`，`strategy_health.status=ok`、`position_open=0`。
+- 已安装参数快照：internal identity `HYPE-15M-MII-V1.4A`、
   `min_rvol96=0.85`, `tp_atr_mult=1.40`, `sl_atr_mult=3.0`,
   `timeout_bars=24`.
-- No warning-or-higher journal entries appeared after restart. All other
-  strategy health rows remained `ok`.
-- At `2026-07-10T07:31Z`, dry-run startup notification support was deployed.
-  `quant-runner-dryrun.service` restarted successfully and sent
-  `QuantRunner dry-run 服务启动` through the configured DingTalk webhook.
-  Dry-run trade notifications and its daily-summary scheduler remain disabled;
-  the live service stayed on its existing PID. No warning-or-higher journal
-  entries followed the notification restart.
+- 重启后 journal 未出现 warning 或更高等级记录；其他 strategy health rows
+  均保持 `ok`。
+- `2026-07-10T07:31Z` 部署 dry-run 启动通知支持；随后
+  `quant-runner-dryrun.service` 重启成功，并通过已配置 DingTalk webhook 发送
+  `QuantRunner dry-run 服务启动`。Dry-run trade 通知和 daily-summary scheduler
+  仍禁用；live service 保持既有 PID。通知重启后 journal 未出现 warning 或更高等级
+  记录。
 
-## Observation gate
+## 观察门禁
 
-No V1.4A runtime open, close, fill, fee, funding-boundary, slippage, or order
-IDs exist yet. The first actual trade must be reconciled against Python K+1/K+2
-using signal/bar timestamps, fill proxy, side, quantity/notional, bracket,
-exit reason, fees, and stable ledger event/trade IDs before any keep/adjust
-decision. Current conclusion: continue small dry-run observation; no live
-promotion.
+当前尚无 V1.4A runtime open、close、fill、fee、funding-boundary、slippage 或
+order ID。首笔实际交易必须用 signal/bar 时间戳、fill proxy、side、
+quantity/notional、bracket、exit reason、fees 和稳定 ledger event/trade ID 与
+Python K+1/K+2 对账，完成前不得形成 keep/adjust 决策。当前结论：继续小额 dry-run
+观察，不做 live promotion。
 
-## Execution governance implementation
+## 2026-07-12 统一执行架构迁移（仅代码，未部署）
 
-The Runner working tree now adds shared stable order identity, pending recovery,
-actual-fill sizing, confirmed emergency flatten, private order stream/REST
-reconciliation, manual halt, critical outbox, exchange request guards, graceful
-shutdown and stale-health watchdog. These changes are locally tested but not
-deployed. `hype_mii` remains code-level dry-run only.
-
-The existing 2500-bar recent-window 10/10 comparison remains useful evidence but
-is not yet the standardized full-window parity gate; manifest parity therefore
-remains `PENDING` under a time-limited grandfather.
+- 当前 `quant-runner` 工作区已让 dry-run/live 共用唯一 execution 状态机：稳定 client
+  ID、submit 前持久化、`pending/tracked`、按实际 fill sizing、保护单、reconcile、
+  fail-closed 与 platform ledger。
+- live venue 固定为 Binance REST + User Data Stream；dry-run venue 为实例独立的
+  `state/<instance>/simulated_venue.json`。MII 的模拟 entry、bracket、timeout exit
+  也进入与 live 相同的订单生命周期，不再由 runner 直接改 position。
+- 已删除 `platform.execution.enabled` 和 live V1 fallback；`hype_mii` 仍为代码级
+  dry-run only，不能因为统一状态机存在而启用 live。
+- strict replay/parity 路径保持隔离，本次迁移不应改变既有 2500-bar `10/10`
+  对比；该证据仍不是标准全窗口 parity gate，manifest parity 继续为 `PENDING`。
+- 当前 runner workspace `131` 个 unit tests 与 `12` 个 integration tests 全部通过；
+  `cargo clippy --workspace --all-targets -- -D warnings` 通过；本 family 未产生新的
+  strict parity 结论。
+- 最终执行安全审查保留 timeout open 的 gap-stop/gap-target reason，并补齐
+  simulated orphan/emergency flatten 的成交价；无未解决 blocker。
+- Runner-wide 发布门禁已补强：execution pause 只能在 lock + venue/local/protection
+  reconcile clean 后由 `risk-resume` 清除；schema 切换禁止 binary-only rollback，
+  失败时 service 保持停止。
+- 这是代码迁移，**未部署、未重启线上**；2026-07-10 已部署实例、状态目录和线上
+  进程事实不变，也没有新增 open/close/fill 统计。
+- 结论保持 `dry-run validation / not live-ready`，不改变 promotion、parity 或
+  live-readiness。执行契约见
+  [V1.4A active handoff](../live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md)。

@@ -860,7 +860,7 @@ fixed `3x` ablation 结果：`219` 笔、总收益 `+1022.25%`、PF `1.804`、�
 
 2026-06-30 动态 ATR TP/SL 测试补充：V6.2.1 默认不是 trailing，也不是持仓中动态重算 TP/SL；它是入场时用信号 K `ATR14` 一次性计算固定 bracket。本轮测试 `entry_anchor_dynamic_atr`、`entry_anchor_no_widen_stop`、`close_reset_dynamic_atr`、`close_reset_no_widen_stop` 四类可执行动态 ATR bracket，并扫描 `TP scale=0.75/1.0/1.25/1.5`、`SL scale=0.75/1.0/1.25`。当前数据湖 fixed baseline 为 `220` 笔、`+1054.07%`、PF `1.813`、DD `-22.35%`；最高收益动态行为 `entry_anchor_dynamic_atr__tp1p5__sl1p0` 为 `190` 笔、`+1124.81%`、PF `1.870`，但 DD 扩大到 `-29.89%`，且 `186` 笔实际发生止损放宽。最好的低回撤动态行 `close_reset_dynamic_atr__tp0p75__sl1p25` 为 `+882.65%`、PF `1.838`、DD `-20.25%`，收益低于 baseline。结论：没有动态版本在收益、PF、回撤三者上同时稳健优于固定 bracket；默认继续保留 fixed entry-ATR bracket。
 
-实盘状态：V6.2.1 进入 quant-runner `hype_pullback` 的默认实现，但状态只允许 dry-run / 极小 notional live audit。原因是收益提升主要来自 long HTF 阈值放宽，short leg 的 OOS 仍只有 `5` 笔，且 fixed `3x` 的历史最大回撤约 `-22%`；本地默认配置使用 `1x` 和小 notional，先验证真实 bracket 下单、单边成交后撤单、timeout、重启恢复和 SQLite 复盘口径。2026-07-09 已完成 2026-06 已知信号窗口 runtime/research 对拍（`16/16 MATCH`），见 `runner-tracking/hype-5m-pbtr-runner-2026-07-09.md`；真实成交生命周期仍待首笔线上信号后验收。
+实盘状态：V6.2.1 进入 quant-runner `hype_pullback` 的默认实现，但状态只允许 dry-run / 极小 notional live audit。原因是收益提升主要来自 long HTF 阈值放宽，short leg 的 OOS 仍只有 `5` 笔，且 fixed `3x` 的历史最大回撤约 `-22%`；本地默认配置使用 `1x` 和小 notional，先验证真实 bracket 下单、单边成交后撤单、timeout、重启恢复和 SQLite 复盘口径。2026-07-09 已完成 2026-06 已知信号窗口 runtime/research 对拍（`16/16 MATCH`）；当前 runner 状态与后续未部署 execution 迁移见 [最新 runner tracking](runner-tracking/hype-5m-pbtr-runner-2026-07-11.md)。真实成交生命周期仍待首笔线上信号后验收。
 
 ### V2.1B: 去掉 ROC
 

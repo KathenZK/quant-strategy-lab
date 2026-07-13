@@ -22,7 +22,7 @@
 
 2026-07-10 进一步把目标收窄为 TRX MACD 定向尾部治理。prefit-only 选中的账户层规则为：TRX MACD 计划初始止损账户风险 `<=10%`；入场前账户 DD 达 `2%/6%` 时，仅将 TRX MACD 暴露上限降至 `3x/2x`，其他 sleeve 暴露不变。冻结后 full `231.59x / -19.99% DD`，reused holdout `6.31x / +57.37% / -17.38% DD`；TRX MACD 最差单笔 MAE `-17.17% -> -9.71%`，账户状态叠加 MAE 尾部 `-23.10% -> -18.80%`。该规则比全局 `1% ATR` overlay 大幅保留收益，但额外 `4 bps/fill` 仍为 `-20.18% DD`；剩余 close-DD 下限来自 BNB 连续亏损，剩余 account-tail 来自 HYPE/SOL，故不登记新版本。
 
-同日 `quant-runner` 接入 `kind = six_asset_ensemble` dry-run（六资产联合状态机近似，live 禁止）。这只是 runtime 观察接线，不改变 `NO-GO / not promoted / not live-ready`，也不等于研究回测路径已对拍。见 `runner-tracking/binance-1h-ar-mae-v1-runner-status.md`。
+同日 `quant-runner` 接入 `kind = six_asset_ensemble` dry-run（六资产联合状态机近似，live 禁止）。这只是 runtime 观察接线，不改变 `NO-GO / not promoted / not live-ready`；后续 strict replay 已对拍，最新运行状态与未部署 execution 迁移见 [runner tracking](runner-tracking/binance-1h-ar-mae-v1-runner-status.md)。
 
 同日晚些完成 runner `replay-dry-run` 与 V1 冻结路径的严格对拍：选择统计 `522/371/151/22` 与逐笔 `371/371`（含 equity_ret <1e-9）零误差；对拍中修复了 runner 公共指标层 `rolling_mean` 的 NaN 污染 bug（修复前 TRX/HYPE Stoch 腿永不出信号），并修正 lab/runner 两份 V1 spec 中三处与冻结路径不符的字段记载（ETH BB `side_mode=long`/`max_atr_bps=250`、ETH RSI `max_atr_bps=600`/`require_body_dir=true`/`max_aligned_funding_bps=2.0`、TRX Stoch `max_dist_ema_bps=1500`/`max_aligned_funding_bps=4.0`）。冻结交易路径与判定不变。证据：`artifacts/binance_1h_ar_mae_v1_runner_replay_parity_2026-07-09.json`。
 

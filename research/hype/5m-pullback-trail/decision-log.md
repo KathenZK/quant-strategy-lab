@@ -141,3 +141,21 @@
   无 warning/error。
 - 状态保持 `live / tiny-live-pilot / forward-test required`，不扩大资金；
   第一笔真实 fill 仍必须逐单回写并在 2026-07-24 前复核。
+
+## 2026-07-13 统一 execution 引擎代码门禁（未部署）
+
+- Runner 已删除 `platform.execution.enabled` 和 live V1 fallback；dry-run/live
+  共用唯一订单生命周期，只在 venue 层分别使用持久化 simulated venue 与
+  Binance REST + User Data Stream。上文“默认关闭/切换为 true”是当时的历史
+  记录，不再代表下一版配置能力。
+- 本次配置 schema 与旧二进制不兼容，禁止 binary-only rollback。发布必须在
+  live flat、无挂单、无 open trade 时先停止 service，再同步 `origin/main`
+  配置并安装匹配 Actions artifact；失败后保持 service 停止，只允许 forward fix
+  或 `origin/main` revert commit + 对应 artifact。
+- `risk-resume` 改为拿 `runner.lock` 后执行 pending、venue/local position 和保护单
+  reconcile；只有 clean 才清除 execution/strategy pause 与 `MANUAL_HALT`，禁止
+  手工编辑 `engine_state.json` 恢复。
+- 存量 dry-run 持仓迁移、迁移中断恢复、EMA-X 仅 stop、six-asset 显式 symbol、
+  mismatch 拒绝 resume 和 candle-count memo/ledger 滑点一致性均增加回归覆盖。
+- 当前仍是代码变更，未部署、未重启，也没有新的真实 fill 证据；PBTR 状态保持
+  `live / tiny-live-pilot / forward-test required`，不得扩大资金。

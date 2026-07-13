@@ -28,6 +28,20 @@ approval_level_max: dry_run
 - Live blockers：标准 parity、dated runner observation、真实费用/滑点、
   保护单/重启恢复、missing-bar 与 kill-switch 验收。
 
+## 统一 execution / venue 契约（2026-07-12 代码迁移）
+
+- V18 的 dry-run 与任何未来 live 必须走唯一 execution 状态机：稳定 client ID、
+  submit 前持久化、`pending/tracked`、按 fill 建仓、保护单、exit order、
+  reconcile、fail-closed 与 platform ledger。
+- live venue 是 Binance REST + User Data Stream；dry-run venue 是实例独立的
+  `state/<instance>/simulated_venue.json`，不得由 EMA-X runner 直接模拟或改写仓位。
+- `platform.execution.enabled` 与 live V1 fallback 已删除；旧 execution 不能作为
+  兼容回退。
+- strict replay/parity 与 venue/runtime 保持隔离，本次迁移不应改变既有结果。
+- 当前仅完成代码迁移，未部署、未重启线上；V18 的 alpha、状态机信号规则、
+  promotion、parity 与 live-readiness 均不变。实现补记见
+  [runner tracking](../runner-tracking/hype-ema-x-runner-2026-07-10.md)。
+
 ```toml
 name = "hype-ema-x-dry-run"
 kind = "hype_ema_x"

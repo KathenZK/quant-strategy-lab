@@ -27,6 +27,19 @@ underperformance 不因当前 dry-run 重新观察而失效。
 - Live blockers：标准 parity、dated runner report、历史 underperformance
   复核、保护单/重启恢复、费用/滑点/funding 和平台安全闸验收。
 
+## 统一 execution / venue 契约（2026-07-12 代码迁移）
+
+- V35 dry-run 与任何未来 live 必须走唯一 execution 状态机：稳定 client ID、
+  submit 前持久化、`pending/tracked`、按 fill 建仓、保护单、entry/exit order
+  lifecycle、reconcile、fail-closed 与 platform ledger。
+- live venue 是 Binance REST + User Data Stream；dry-run venue 是实例独立的
+  `state/<instance>/simulated_venue.json`，不得由 candle-count runner 直接改仓。
+- `platform.execution.enabled` 与 live V1 fallback 已删除；旧 executor 不再是回退。
+- strict replay/parity 保持隔离，本次迁移不应改变既有 replay 结果。
+- 当前仅完成代码迁移，未部署、未重启线上；V35 参数、历史 underperformance、
+  promotion、parity 与 live-readiness 均不变。实现补记见
+  [runner tracking](../runner-tracking/hype-cc-runner-2026-07-10.md)。
+
 ```toml
 name = "hype-candle-count-v35-dry-run"
 kind = "hype_candle_count"

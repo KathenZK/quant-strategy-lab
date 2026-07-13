@@ -95,3 +95,30 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   dry-run、平台仍有未平 dry-run 交易，未主动重启 live 进程；共享磁盘二进制已更新，
   live 下次受控重启会加载该版本。
 - Decision gate：保持 `NO-GO / not promoted / not live-ready`。
+
+## 2026-07-12 统一执行架构迁移（后续代码，未部署）
+
+- `six_asset_ensemble` 已改为通过 symbol-explicit simulated venue 执行六个 symbol
+  的 entry/exit order lifecycle，不再由 self-managed runner 直接写入持仓。
+- dry-run 与 live 共用唯一 execution 状态机能力：稳定 client ID、submit 前持久化、
+  `pending/tracked`、按 fill 建仓、保护单、撤单、reconcile、fail-closed 与
+  platform ledger；但本 family 仍有代码级 live 拒绝，只允许 dry-run。
+- dry-run venue 的独立持久化文件为
+  `state/<instance>/simulated_venue.json`；每笔订单必须显式携带真实 sleeve symbol，
+  不能使用 TOML 中 `BTC/USDT:USDT` placeholder 代替实际交易合约。
+- live venue 的平台实现为 Binance REST + User Data Stream，但 V1 未获 live 权限，
+  不得据此创建或启用 live 实例。
+- 已删除 `platform.execution.enabled` 和 live V1 fallback。strict replay/parity
+  继续走隔离路径，不读取或改写 simulated venue；既有 `371/371` 零误差 parity
+  结论应保持不变。
+- 当前 runner workspace `131` 个 unit tests 与 `12` 个 integration tests 全部通过；
+  `cargo clippy --workspace --all-targets -- -D warnings` 通过；完整 strict replay
+  再次得到 `522/371/151/22`，与冻结 Lab reference 一致，既有 `371/371`
+  parity PASS 不变。
+- six-asset 存量持仓显式 symbol 迁移与 venue/local mismatch 拒绝 resume 已有定向
+  测试；execution pause 只能在 lock + 多 symbol reconcile clean 后由
+  `risk-resume` 清除。schema 切换禁止 binary-only rollback。
+- 本节记录的是 00:19 CST 部署之后的后续代码迁移，**尚未部署、未重启线上**；
+  2026-07-12 已部署二进制和服务状态仍是当前线上事实，没有新增成交统计。
+- 结论保持 `DryRunOnly / NO-GO / not promoted / not live-ready`。交接约束见
+  [V1 active handoff](../live-specs/binance-1h-ar-mae-v1-handoff-not-live-ready.md)。

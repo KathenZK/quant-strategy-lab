@@ -31,6 +31,25 @@ approval_level_max: dry_run
 - 现有逐笔 parity 只支持保持 dry-run；任何 live 提案都必须新开决策并修改
   manifest approval，当前 Runner 仍有代码级 live 拒绝。
 
+## 统一 execution / venue 契约（2026-07-12 代码迁移）
+
+- V1 的持续 dry-run 必须通过 symbol-explicit simulated venue 走完整 entry/exit
+  order lifecycle；每个候选订单携带 sleeve 的真实 symbol，不能把 TOML placeholder
+  当成实际合约。
+- dry-run venue 独立持久化到
+  `state/<instance>/simulated_venue.json`，并与平台唯一 execution 状态机共同实现稳定
+  client ID、submit 前持久化、`pending/tracked`、按 fill 建仓、保护单、撤单、
+  reconcile、fail-closed 与 platform ledger。
+- 平台 live venue 是 Binance REST + User Data Stream，但 V1 继续 `DryRunOnly`，
+  Runner 的 live 拒绝和 manifest approval 边界不变。
+- `platform.execution.enabled` 与 live V1 fallback 已删除；不得通过旧开关或旧 executor
+  绕开 `DryRunOnly`。
+- strict replay/parity 与 simulated venue 隔离，不读取或改写 venue state；既有
+  `371/371` 零误差结果应保持不变。
+- 当前仅完成代码迁移，未部署、未重启线上；V1 的组合定义、promotion、parity、
+  `NO-GO` 与 live-readiness 均不变。实现补记见
+  [runner tracking](../runner-tracking/binance-1h-ar-mae-v1-runner-status.md)。
+
 ```toml
 name = "six-asset-ensemble-dry-run"
 kind = "six_asset_ensemble"

@@ -17,6 +17,7 @@ Created：2026-06-30
 - 当前登记观察版本：`HYPE-15M-MII-V1.4`（`V1.3 + min_rvol96=0.85`）。
 - 当前 dry-run 实现版本：`HYPE-15M-MII-V1.4A`，于 `2026-07-10T07:13:16Z` 替代同一 `hype-mii-dry-run` 实例上的 V1.3。
 - 当前状态：`HYPE-15M-MII-V1.4A` 为 `dry-run validation running / not live-ready`；V1.3 dry-run 已停止但历史事件保留；`HYPE-15M-MII-V1.4` 为 `registered / not promoted / not live-ready`；V1、V1base、V1.1、V1.2 为 `not promoted / not live-ready`。
+- 当前 runner 观察与后续未部署 execution 迁移见 [2026-07-10 runner tracking](runner-tracking/hype-15m-mii-runner-2026-07-10.md)。
 - live 前 blockers：资金费核算、盘口级 stop-market 证据、真实成交滑点、重启恢复、交易所对账、missing-bar fail-closed、kill switch 审计，以及 `runner-tracking/` 下达标的 runner 观察证据。
 - 是否 `live` 或 `NO-GO` 只能在 runner 观察证据出来后判定。
 

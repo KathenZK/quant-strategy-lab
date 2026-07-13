@@ -38,6 +38,34 @@ Binance HYPEUSDT 永续 5m 已收盘 K
 -> TP/SL 或 timeout open 退出
 ```
 
+## 统一 execution / venue 契约（2026-07-12 代码迁移）
+
+本节只同步 `quant-runner` 执行架构，不修改 V6.2.1 的信号、参数、固定 bracket、
+timeout、成本假设或状态：
+
+- dry-run 与 live 必须走同一 execution 状态机：稳定 client ID、submit 前先持久化
+  order intent、`pending/tracked` 恢复、按实际 fill 建仓、TP/SL 保护单、兄弟单撤销、
+  timeout exit、reconcile、fail-closed 与 platform ledger。
+- `mode=live` 的 venue 是 Binance REST + User Data Stream；stream 丢失或事件缺口由
+  REST 对账补齐，对账不干净时禁止新增风险。
+- `mode=dry_run` 的 venue 是独立持久化模拟交易所，状态文件固定落在实例目录下的
+  `simulated_venue.json`（即 `state/<instance>/simulated_venue.json`）。模拟 entry、
+  fill、保护单、撤单与 exit 也必须走完整订单生命周期，不能直接改策略 position。
+- `platform.execution.enabled` 已删除；live V1 fallback 已删除。不得通过旧开关或旧
+  executor 绕开本契约。
+- 新配置与旧二进制不组成可运行回滚对；live 发布必须 flat/无挂单/无 open trade，
+  先停止 service，再同步配置和匹配 artifact。失败后保持停止，只允许 forward fix
+  或 `origin/main` revert commit + 匹配 artifact，禁止 binary-only rollback。
+- execution pause 只能通过先拿 runner lock、再完成 venue/local/protection reconcile
+  的 `risk-resume` 清除；禁止直接编辑状态 JSON。
+- strict replay/parity 继续使用隔离路径，不读取或改写 simulated/live venue 状态；
+  execution 迁移本身不得改变既有 parity 结论。
+- 当前仅完成代码迁移，尚未部署、未重启线上，也没有新增真实 fill 证据；promotion、
+  parity 与 live-readiness 状态全部不变。
+
+实现状态见
+[2026-07-11 runner tracking（含 2026-07-12 未部署迁移补记）](../runner-tracking/hype-5m-pbtr-runner-2026-07-11.md)。
+
 ## 策略身份
 
 | 字段 | 值 |

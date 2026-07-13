@@ -49,6 +49,26 @@ V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4
 3. 用 Binance recent closed candles 做 shadow/dry-run，不下真实单。
 4. 通过风控、恢复、保护单、preempt 审计后，再由用户显式批准小资金 live pilot。
 
+## 统一 execution / venue 契约（2026-07-12 代码迁移）
+
+本节只同步 runner 执行架构，不改 V39/V1.4 参数、组合仲裁或 replay 定义：
+
+- dry-run 与 live 共用唯一 execution 状态机：稳定 client ID、submit 前持久化、
+  `pending/tracked`、按 fill 建仓、保护单、兄弟单撤销、reconcile、fail-closed
+  与 platform ledger。
+- V39 与 MII 的 entry/exit、timeout、保护单，以及 V39 优先的
+  `preempt close -> confirm flat -> open V39` 都必须通过同一订单生命周期。
+- live venue 是 Binance REST + User Data Stream；dry-run venue 是实例独立的
+  `state/<instance>/simulated_venue.json`。dry-run preempt 也要经过显式 cancel、
+  close fill、flat reconcile，再允许新 entry。
+- `platform.execution.enabled` 和 live V1 fallback 已删除；旧 executor 不得用于
+  bypass。
+- strict replay/parity 保持隔离，不读取或改写 simulated/live venue state；
+  既有 `291` 笔 trade-path parity PASS 不因本次迁移改变。
+- 当前仅完成代码迁移，未部署、未重启线上；promotion、parity 与 live-readiness
+  状态全部不变。实现补记见
+  [runner implementation tracking](../runner-tracking/hype-15m-tb-mii-ens-v2-runner-implementation-smoke-2026-07-09.md)。
+
 ## 身份与边界
 
 | 项 | 值 |

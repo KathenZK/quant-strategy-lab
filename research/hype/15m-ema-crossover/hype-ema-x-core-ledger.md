@@ -7,7 +7,7 @@
 数据源：Binance HYPEUSDT perp 15m；normalized OHLCV data lake；V15/V16/V17/V17.1 使用最新 365-day HYPE-EMA-X research slice。
 
 > **当前状态：HYPE-EMA-X-V18 dry-run / forward-test required**
-> V17 是信号层平衡版：1Y +2910.74%，最大回撤 -17.79%。V17.1 信号不变，HQ 仓位 1.1：1Y +3861.48%，最大回撤 -19.44%。**V18** 是 V17.1 经全参数消融后的干净参数规格，成交逻辑与指标与 V17.1 相同；当前已在 quant-runner 以 `hype_ema_x` dry-run 配置运行。runner 观察报告见 [runner-tracking/README.md](runner-tracking/README.md)；首份 runner 观察报告缺失前不得升级 `live`，也不得据此给出 `NO-GO`。
+> V17 是信号层平衡版：1Y +2910.74%，最大回撤 -17.79%。V17.1 信号不变，HQ 仓位 1.1：1Y +3861.48%，最大回撤 -19.44%。**V18** 是 V17.1 经全参数消融后的干净参数规格，成交逻辑与指标与 V17.1 相同；当前已在 quant-runner 以 `hype_ema_x` dry-run 配置运行。当前 runner 观察与未部署 execution 迁移见 [2026-07-10 runner tracking](runner-tracking/hype-ema-x-runner-2026-07-10.md)；不得据此升级 `live` 或给出 `NO-GO`。
 
 ## 关键指标
 
