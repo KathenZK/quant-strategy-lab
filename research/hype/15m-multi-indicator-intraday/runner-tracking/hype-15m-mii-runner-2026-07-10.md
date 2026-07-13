@@ -119,11 +119,12 @@ Python K+1/K+2 对账，完成前不得形成 keep/adjust 决策。当前结论�
   `attempts=1`。
 - 仅影响运维通知，不影响本策略状态、订单或 PnL。
 
-## 2026-07-13 service 稳定性修复（source，未部署）
+## 2026-07-13 service 稳定性修复已部署
 
 - 同组 six-asset transient timeout 曾使整个 dry-run service 退出，暴露出单组故障
   会中断 MII 的错误故障域；历史 watchdog 也可能把正常 `already_processed`
   误判为 stale。
 - Runner source 已改为 group 独立 supervisor、transient 原地降级/恢复、
-  entry-only 风险闸和 control-plane watchdog。当前生产仍为 `bd3f33d`；
+  entry-only 风险闸和 control-plane watchdog。Runner `e69589f` 已于
+  `21:02 CST` 部署 dry-run，初检 health=`ok`、flat、无 warning/error；
   MII 配置、状态、订单、PnL 与 live-readiness 不变。

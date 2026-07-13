@@ -130,10 +130,12 @@
   传播，以及 dispatcher 将任一 group 退出扩大为整个 service 退出。另有历史
   `already_processed` 不更新 runtime heartbeat，曾造成 1h 策略启动后的
   watchdog false-stale 重启。
-- Runner workspace 已完成 source-level 修复（**尚未提交、未部署**）：完整 error
+- Runner `e69589ffbf823218c0ef7d1ccb30767b010e3a38` 已部署：完整 error
   chain 分类、仅幂等 GET 有界退避、transient reconcile 关闭入场闸但保持 user
   stream/持仓维护、confirmed mismatch 持久 fail-closed、group 独立 supervisor
   与 control-plane watchdog。
-- 当前生产仍运行 `bd3f33d`；本节不是新部署证据，也不改变 tiny-live-pilot、
-  资金边界、promotion、parity 或 live-readiness。发布前必须通过故障注入矩阵，
-  先 dry-run canary，再在 live flat/open-orders clean 时切换。
+- Actions run `29251245126` 通过 quality/governance/build；artifact SHA-256
+  `e6b4420df1e9e9cc7eea4d011e21c3cb3619c441131ec33c881b3c9e8f123b30`。
+  dry-run/live 分别于 `2026-07-13 21:02:29` / `21:03:05 CST` 切换；发布前
+  live ledger/health 均 flat，切换后 PBTR live health=`ok`、无新订单或 fill。
+- 本发布不改变 tiny-live-pilot、资金边界、promotion、parity 或 live-readiness。

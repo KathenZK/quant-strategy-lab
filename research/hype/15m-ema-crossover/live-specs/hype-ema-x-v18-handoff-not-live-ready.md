@@ -42,7 +42,8 @@ approval_level_max: dry_run
   health=`ok`，没有新增 EMA-X fill。V18 的 alpha、状态机信号规则、promotion、
   parity 与 live-readiness 均不变。实现补记见
   [runner tracking](../runner-tracking/hype-ema-x-runner-2026-07-10.md)。
-- 稳定性补充契约（Runner source，尚未部署）：transient dependency 只关闭新入场，
+- 稳定性补充契约（Runner `e69589f`，已于 `2026-07-13 21:02 CST`
+  部署 dry-run）：transient dependency 只关闭新入场，
   不得停止 EMA-X 已有仓位维护、撤单、保护或平仓；单 group 故障不得终止兄弟策略。
 
 ```toml

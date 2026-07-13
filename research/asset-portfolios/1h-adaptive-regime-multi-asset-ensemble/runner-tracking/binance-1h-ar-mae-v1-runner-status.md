@@ -159,8 +159,12 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   net PnL `-0.5179818656 USDT`。完整 source、时间、mark/fill、滑点、order/client
   ID 和 reconciliation 限制见
   [incident artifact](../artifacts/binance_1h_ar_mae_v1_timeout_restart_trade_2026-07-13.json)。
-- Runner workspace 已完成 source-level 修复（**尚未提交、未部署**）：完整 error
+- Runner `e69589ffbf823218c0ef7d1ccb30767b010e3a38` 已于
+  `2026-07-13 21:02:29 CST` 部署 dry-run：完整 error
   chain 分类、幂等 GET 有界退避、残缺多资产 snapshot 禁止入场、已有仓位继续风险
   维护、group 独立 supervisor，以及策略 freshness 与 control-plane watchdog 分离。
+- Actions run `29251245126` 通过，artifact SHA-256
+  `e6b4420df1e9e9cc7eea4d011e21c3cb3619c441131ec33c881b3c9e8f123b30`；
+  发布前后本实例 flat，切换后 health=`ok`，无 warning/error。
 - strict backtest-vs-runtime 对拍未在本事件中独立重算，因此 match 仍 pending；
   本事件不改变 `DryRunOnly / NO-GO / not promoted / not live-ready` 或既有 parity。

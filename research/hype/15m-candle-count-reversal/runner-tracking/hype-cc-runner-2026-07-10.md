@@ -56,11 +56,12 @@
   `attempts=1`。
 - 仅影响运维通知，不影响本策略状态、订单生命周期或 PnL。
 
-## 2026-07-13 service 稳定性修复（source，未部署）
+## 2026-07-13 service 稳定性修复已部署
 
 - 同组 six-asset transient timeout 曾使整个 dry-run service 退出，暴露出单组故障
   会中断 candle-count 持仓维护的错误故障域。
 - Runner source 已改为 group 独立 supervisor；transient 只关闭新入场，已有仓位
   的 simulated venue reconcile、保护、撤单和平仓必须继续。control-plane
-  watchdog 不再因单策略 stale 重启兄弟策略。当前生产仍为 `bd3f33d`，
+  watchdog 不再因单策略 stale 重启兄弟策略。Runner `e69589f` 已于
+  `21:02 CST` 部署 dry-run，初检 health=`ok`、flat、无 warning/error；
   策略状态、PnL 与 live-readiness 不变。

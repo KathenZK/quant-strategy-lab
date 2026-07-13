@@ -60,7 +60,8 @@ exposure、固定 bracket、timeout 或成本口径：
   改变既有 replay 结果或 `PENDING` parity 状态。
 - 统一 execution 已于 `2026-07-13T04:25Z` 部署到 dry-run service；本实例 flat、
   health=`ok`，没有新增 MII fill。promotion 与 live-readiness 不变。
-- 稳定性补充契约（Runner source，尚未部署）：transient dependency 只关闭新入场，
+- 稳定性补充契约（Runner `e69589f`，已于 `2026-07-13 21:02 CST`
+  部署 dry-run）：transient dependency 只关闭新入场，
   不得停止已有风险维护；单 group 故障不得终止兄弟策略。该契约不构成 MII live
   approval。
 

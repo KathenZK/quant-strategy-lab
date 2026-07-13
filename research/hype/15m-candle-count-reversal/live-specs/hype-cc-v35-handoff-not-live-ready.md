@@ -40,7 +40,8 @@ underperformance 不因当前 dry-run 重新观察而失效。
   simulated venue + TP/SL 迁移并保持 health=`ok`。V35 参数、历史
   underperformance、promotion、parity 与 live-readiness 均不变。实现补记见
   [runner tracking](../runner-tracking/hype-cc-runner-2026-07-10.md)。
-- 稳定性补充契约（Runner source，尚未部署）：transient dependency 只关闭新入场，
+- 稳定性补充契约（Runner `e69589f`，已于 `2026-07-13 21:02 CST`
+  部署 dry-run）：transient dependency 只关闭新入场，
   不得停止 candle-count 已有仓位、保护单、撤单或平仓；单 group 故障不得终止
   兄弟策略。
 

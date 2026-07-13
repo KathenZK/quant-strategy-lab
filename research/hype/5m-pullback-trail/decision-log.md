@@ -198,5 +198,8 @@
   不得停止。只有成功 snapshot 确认的 mismatch 才进入持久 fail-closed。
 - market-data/self-managed/live group 改为独立 supervisor；单组错误不再终止兄弟
   group。systemd watchdog 只证明 control plane 可调度，策略 freshness 独立告警。
-- 当前仅完成 Runner source，尚未提交/部署；继续保持 tiny-live-pilot，不增资，
-  不改变 promotion、parity 或 2026-07-24 复核门禁。
+- Runner `e69589f` 已于 `2026-07-13 21:02-21:03 CST` 按 dry-run → live
+  两阶段部署，Actions run `29251245126` 与 artifact SHA-256
+  `e6b4420df1e9e9cc7eea4d011e21c3cb3619c441131ec33c881b3c9e8f123b30`
+  已校验。继续保持 tiny-live-pilot，不增资，不改变 promotion、parity 或
+  2026-07-24 复核门禁。

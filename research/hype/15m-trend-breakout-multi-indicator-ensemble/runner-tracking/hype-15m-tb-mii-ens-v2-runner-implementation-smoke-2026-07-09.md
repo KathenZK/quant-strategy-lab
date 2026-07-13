@@ -170,11 +170,12 @@ curve tolerance。
   `attempts=1`。
 - 仅影响运维通知，不影响 parity、preempt 或 live-readiness。
 
-## 2026-07-13 service 稳定性修复（source，未部署）
+## 2026-07-13 service 稳定性修复已部署
 
 - 同组 six-asset transient timeout 曾使整个 dry-run service 退出，暴露出单组故障
   会中断 TB-MII 的错误故障域。
 - Runner source 已改为 group 独立 supervisor、transient entry-only gate 和
   control-plane watchdog；confirmed mismatch/preempt fail-closed 仍保持持久化且
-  只能经 clean `risk-resume` 清除。当前生产仍为 `bd3f33d`，既有 parity、
+  只能经 clean `risk-resume` 清除。Runner `e69589f` 已于 `21:02 CST`
+  部署 dry-run，初检 health=`ok`、flat、无 warning/error；既有 parity、
   live disabled 与 not live-ready 结论不变。

@@ -50,7 +50,8 @@ approval_level_max: dry_run
   symbol-explicit venue 迁移并保持 health=`ok`。V1 的组合定义、promotion、
   parity、`NO-GO` 与 live-readiness 均不变。实现补记见
   [runner tracking](../runner-tracking/binance-1h-ar-mae-v1-runner-status.md)。
-- 稳定性补充契约（Runner source，尚未部署）：任一资产 transient 数据缺失时，
+- 稳定性补充契约（Runner `e69589f`，已于 `2026-07-13 21:02 CST`
+  部署 dry-run）：任一资产 transient 数据缺失时，
   不得用残缺 universe 开新仓；已有仓位必须继续止损/平仓维护并重试缺失依赖。
   self-managed group 的失败不得终止同 service 的其他策略。该契约不授权 V1 live。
 

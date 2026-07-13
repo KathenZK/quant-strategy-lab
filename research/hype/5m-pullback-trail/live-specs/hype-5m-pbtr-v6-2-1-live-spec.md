@@ -63,7 +63,8 @@ timeout、成本假设或状态：
 - 统一 execution 已于 `2026-07-13T04:25Z` 随 dry-run/live 双服务切换部署；
   live 发布前后均 reconcile=`match` 且 flat，没有新增 PBTR fill。promotion、
   parity 与 live-readiness 状态全部不变。
-- 运行稳定性补充契约（Runner source，尚未部署）：Binance transient timeout、
+- 运行稳定性补充契约（Runner `e69589f`，已于 `2026-07-13 21:03 CST`
+  部署 live）：Binance transient timeout、
   429、5xx 或短暂 user-stream 断开必须关闭新开仓闸并重试，但不能退出进程或停止
   已有持仓的撤单、保护、reconcile 与平仓；只有 clean snapshot 确认 mismatch
   才进入持久 fail-closed，仍需 `risk-resume`。订单 POST 继续禁止盲重试。
