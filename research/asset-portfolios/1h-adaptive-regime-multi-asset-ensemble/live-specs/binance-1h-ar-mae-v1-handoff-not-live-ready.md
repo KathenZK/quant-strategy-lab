@@ -46,9 +46,13 @@ approval_level_max: dry_run
   绕开 `DryRunOnly`。
 - strict replay/parity 与 simulated venue 隔离，不读取或改写 venue state；既有
   `371/371` 零误差结果应保持不变。
-- 当前仅完成代码迁移，未部署、未重启线上；V1 的组合定义、promotion、parity、
-  `NO-GO` 与 live-readiness 均不变。实现补记见
+- 统一 execution 已于 `2026-07-13T04:25Z` 部署，原 HYPE long 持仓完成
+  symbol-explicit venue 迁移并保持 health=`ok`。V1 的组合定义、promotion、
+  parity、`NO-GO` 与 live-readiness 均不变。实现补记见
   [runner tracking](../runner-tracking/binance-1h-ar-mae-v1-runner-status.md)。
+- 稳定性补充契约（Runner source，尚未部署）：任一资产 transient 数据缺失时，
+  不得用残缺 universe 开新仓；已有仓位必须继续止损/平仓维护并重试缺失依赖。
+  self-managed group 的失败不得终止同 service 的其他策略。该契约不授权 V1 live。
 
 ```toml
 name = "six-asset-ensemble-dry-run"

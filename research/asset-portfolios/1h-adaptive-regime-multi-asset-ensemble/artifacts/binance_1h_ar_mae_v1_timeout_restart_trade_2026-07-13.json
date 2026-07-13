@@ -1,0 +1,68 @@
+{
+  "report_id": "BIN-1H-AR-MAE-V1-timeout-restart-trade-2026-07-13",
+  "source": {
+    "host": "47.80.57.36",
+    "service": "quant-runner-dryrun.service",
+    "runner_commit": "bd3f33ddddb5c9bc74b63f206a276eee3e4975a4",
+    "config": "configs/dryrun.toml",
+    "ledger_snapshot": "state/platform/platform.sqlite3",
+    "commands": [
+      "journalctl -u quant-runner-dryrun.service --since 2026-07-13 17:55:00 --until 2026-07-13 18:05:00",
+      "sqlite3 state/platform/platform.sqlite3 select from trades/events for six-asset-ensemble-dry-run"
+    ]
+  },
+  "observation_window": {
+    "start": "2026-07-13T09:55:00Z",
+    "end": "2026-07-13T11:00:06Z"
+  },
+  "incident": {
+    "at": "2026-07-13T10:00:12.835470835Z",
+    "error": "fetch ohlcv SOL -> Binance /fapi/v1/time operation timed out",
+    "process_result": "exit 1",
+    "restart_at": "2026-07-13T10:00:43.926461Z"
+  },
+  "runtime_trade": {
+    "trade_id": "armae-trx-1783936848060",
+    "strategy_name": "six-asset-ensemble-dry-run",
+    "strategy_id": "BIN-1H-AR-MAE-V1",
+    "mode": "dry_run",
+    "symbol": "TRXUSDT",
+    "leg": "TRX_1H_AR_V2_STOCH",
+    "side": "long",
+    "signal_ts": "2026-07-13T10:00:00Z",
+    "entry_ts_logical": "2026-07-13T10:00:00Z",
+    "entry_event_at": "2026-07-13T10:00:48.066215340Z",
+    "entry_reference_mark": 0.33003,
+    "entry_fill_price": 0.33016201199999995,
+    "entry_slippage_bps": 4.0,
+    "quantity": 106.008,
+    "notional_usdt": 34.99981456809599,
+    "leverage": 3.5,
+    "stop_price": 0.3260622781767301,
+    "target_price": null,
+    "timeout_bars": 120,
+    "entry_order_id": "3",
+    "entry_client_order_id": "qc15511db7d5918b9ben0",
+    "exit_ts_logical": "2026-07-13T10:00:00Z",
+    "exit_event_at": "2026-07-13T11:00:05.833389823Z",
+    "exit_reason": "stop_market",
+    "exit_reference_price": 0.3260622781767301,
+    "exit_fill_price": 0.3259318532654594,
+    "exit_slippage_bps": 4.0,
+    "exit_order_id": "4",
+    "exit_client_order_id": "qc15511db7d5918b9bex0",
+    "gross_pnl_usdt": -0.4484306671311718,
+    "entry_fee_usdt": 0.03499981456809599,
+    "exit_fee_usdt_estimated": 0.03455138390096481,
+    "total_fee_usdt": 0.0695511984690608,
+    "net_pnl_usdt": -0.5179818656002326,
+    "pnl_source": "simulated"
+  },
+  "backtest_reconciliation": {
+    "expected_entry": "not independently recomputed in this incident investigation",
+    "expected_exit": "not independently recomputed in this incident investigation",
+    "runtime_conclusion": "The persisted simulated lifecycle is internally complete and used stable entry/exit client IDs. The timeout caused a service restart before the 10:00Z cycle; the recovered cycle opened the TRX trade and the next hourly cycle closed it at stop_market.",
+    "match_conclusion": "strict backtest-vs-runtime match pending; do not treat this incident snapshot as new parity evidence"
+  },
+  "governance_conclusion": "Runtime evidence only. No promotion, live-readiness, funding, or parity status change."
+}

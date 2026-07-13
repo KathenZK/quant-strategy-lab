@@ -140,8 +140,27 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
 - 该 runtime 迁移不改变 strict replay 的 `522/371/151/22` 与 `371/371`
   parity PASS，也不改变 `DryRunOnly / NO-GO / not live-ready`。
 
-## 2026-07-13 shutdown 通知去重（source，未部署）
+## 2026-07-13 shutdown 通知去重已部署
 
 - 双服务切换的 7 条策略级 shutdown 因两个 watchdog 竞态被放大到约 13-14 条。
-  Runner 改为每 service 一条汇总，并用 SQLite 原子 claim/lease 阻止重复消费。
-- 仅影响运维通知，不影响当前 HYPE 持仓、多 symbol venue 或 parity。
+  Runner `bd3f33d` 已部署：每 service 一条 `service_graceful_shutdown` 汇总，
+  SQLite 原子 claim/lease 阻止重复消费；验证重启 outbox 仅 2 条且
+  `attempts=1`。
+- 仅影响运维通知，不影响本策略状态、多 symbol venue 或 parity。
+
+## 2026-07-13 SOL timeout 重启事件与恢复交易
+
+- `2026-07-13T10:00:12Z`，six-asset 拉取 SOL OHLCV 时 Binance time 请求超时；
+  旧 self-managed 错误路径使整个 dry-run service `exit 1`，systemd 于
+  `10:00:43Z` 自动重启。该事件不是 OOM、panic 或主机故障。
+- 重启后的 10:00Z cycle 选择 TRX long，并在下一小时按 `stop_market` 关闭：
+  quantity `106.008`、notional `34.9998145681 USDT`、entry
+  `0.3301620120`、exit `0.3259318533`、总费用 `0.0695511985 USDT`、
+  net PnL `-0.5179818656 USDT`。完整 source、时间、mark/fill、滑点、order/client
+  ID 和 reconciliation 限制见
+  [incident artifact](../artifacts/binance_1h_ar_mae_v1_timeout_restart_trade_2026-07-13.json)。
+- Runner workspace 已完成 source-level 修复（**尚未提交、未部署**）：完整 error
+  chain 分类、幂等 GET 有界退避、残缺多资产 snapshot 禁止入场、已有仓位继续风险
+  维护、group 独立 supervisor，以及策略 freshness 与 control-plane watchdog 分离。
+- strict backtest-vs-runtime 对拍未在本事件中独立重算，因此 match 仍 pending；
+  本事件不改变 `DryRunOnly / NO-GO / not promoted / not live-ready` 或既有 parity。

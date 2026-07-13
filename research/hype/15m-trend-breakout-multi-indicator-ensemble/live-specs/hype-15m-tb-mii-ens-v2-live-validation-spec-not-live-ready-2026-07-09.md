@@ -65,9 +65,13 @@ V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4
   bypass。
 - strict replay/parity 保持隔离，不读取或改写 simulated/live venue state；
   既有 `291` 笔 trade-path parity PASS 不因本次迁移改变。
-- 当前仅完成代码迁移，未部署、未重启线上；promotion、parity 与 live-readiness
+- 统一 execution 已于 `2026-07-13T04:25Z` 部署到 dry-run service；本实例 flat、
+  health=`ok`，没有新增 TB-MII fill。promotion、parity 与 live-readiness
   状态全部不变。实现补记见
   [runner implementation tracking](../runner-tracking/hype-15m-tb-mii-ens-v2-runner-implementation-smoke-2026-07-09.md)。
+- 稳定性补充契约（Runner source，尚未部署）：transient dependency 只关闭新入场，
+  不能清除或绕过 preempt/execution fail-closed，也不得停止已有风险维护；单 group
+  故障不得终止兄弟策略。
 
 ## 身份与边界
 

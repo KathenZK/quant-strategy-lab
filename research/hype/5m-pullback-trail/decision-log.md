@@ -181,5 +181,22 @@
 - 决定删除逐策略 critical shutdown，改为每个 systemd service 一条汇总；共享
   outbox 消费改为 SQLite 原子 claim + lease owner fencing；dispatcher 在退出前
   按 dedupe key 立即投递，避免两个进程重复投递或依赖已退出 watchdog。
-- 该修复只影响运维通知，不影响策略、订单、持仓、PnL 或 live-readiness；source
-  完成验证后再按标准 artifact 流程部署。
+- 该修复只影响运维通知，不影响策略、订单、持仓、PnL 或 live-readiness。
+- 已按标准 artifact 流程部署到 `bd3f33d`
+  （Actions run `29231086156`，SHA-256
+  `1af8a2df3591bfb4dd28991302ad03d215ae8491d2202c59612d68ef8d703f48`）。
+  新二进制验证重启时 outbox 仅 2 条汇总 `service_graceful_shutdown`，
+  各 `attempts=1`，确认去重生效。
+
+## 2026-07-13 runtime 稳定性故障域调整决定
+
+- live `positionRisk` 和 dry-run SOL OHLCV 各发生一次 transient timeout，旧运行
+  模型均把单次依赖失败扩大为 service `exit 1`；另确认旧 watchdog 会因
+  `already_processed` 缺少 success timestamp 形成 false-stale 重启。
+- 决定把安全边界改为“未知状态禁止增加风险，但持续风险管理”：transient
+  reconcile 关闭 entry gate 并原地重试；已有仓位、user stream、撤单、保护和平仓
+  不得停止。只有成功 snapshot 确认的 mismatch 才进入持久 fail-closed。
+- market-data/self-managed/live group 改为独立 supervisor；单组错误不再终止兄弟
+  group。systemd watchdog 只证明 control plane 可调度，策略 freshness 独立告警。
+- 当前仅完成 Runner source，尚未提交/部署；继续保持 tiny-live-pilot，不增资，
+  不改变 promotion、parity 或 2026-07-24 复核门禁。

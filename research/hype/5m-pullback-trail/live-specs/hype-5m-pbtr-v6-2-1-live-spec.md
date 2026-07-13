@@ -60,8 +60,13 @@ timeout、成本假设或状态：
   的 `risk-resume` 清除；禁止直接编辑状态 JSON。
 - strict replay/parity 继续使用隔离路径，不读取或改写 simulated/live venue 状态；
   execution 迁移本身不得改变既有 parity 结论。
-- 当前仅完成代码迁移，尚未部署、未重启线上，也没有新增真实 fill 证据；promotion、
+- 统一 execution 已于 `2026-07-13T04:25Z` 随 dry-run/live 双服务切换部署；
+  live 发布前后均 reconcile=`match` 且 flat，没有新增 PBTR fill。promotion、
   parity 与 live-readiness 状态全部不变。
+- 运行稳定性补充契约（Runner source，尚未部署）：Binance transient timeout、
+  429、5xx 或短暂 user-stream 断开必须关闭新开仓闸并重试，但不能退出进程或停止
+  已有持仓的撤单、保护、reconcile 与平仓；只有 clean snapshot 确认 mismatch
+  才进入持久 fail-closed，仍需 `risk-resume`。订单 POST 继续禁止盲重试。
 
 实现状态见
 [2026-07-11 runner tracking（含 2026-07-12 未部署迁移补记）](../runner-tracking/hype-5m-pbtr-runner-2026-07-11.md)。

@@ -56,13 +56,28 @@
 - 旧实现按 7 个策略各写一条 `graceful_shutdown`；live/dry-run 两个 watchdog
   又会先读取同一批 pending outbox 再分别发送。结果 7 条中 6 条
   `attempts=2`、1 条 `attempts=1`，与用户实际收到约 `13-14` 条一致。
-- 修复（Runner source，未部署）：策略 runner 不再逐条写 critical shutdown；
-  dispatcher 每个 systemd service 只写一条 `service_graceful_shutdown`，汇总
-  strategy/position，并在退出前按 dedupe key 立即投递；共享 SQLite outbox 增加
-  `BEGIN IMMEDIATE` 原子 claim、5 分钟 lease 与 `lease_owner` completion fencing，
-  阻止跨进程重复消费或旧 lease 覆盖新 owner。
-- 同时发布 dry-run/live 时预期两条汇总（每个 service 一条），不是每策略一条。
-  本事件没有订单、持仓或 PnL 影响，不改变 promotion/live-readiness。
+- 修复：策略 runner 不再逐条写 critical shutdown；dispatcher 每个 systemd
+  service 只写一条 `service_graceful_shutdown`，汇总 strategy/position，并在
+  退出前按 dedupe key 立即投递；共享 SQLite outbox 增加 `BEGIN IMMEDIATE`
+  原子 claim、5 分钟 lease 与 `lease_owner` completion fencing，阻止跨进程
+  重复消费或旧 lease 覆盖新 owner。
+- 本事件没有订单、持仓或 PnL 影响，不改变 promotion/live-readiness。
+
+## 2026-07-13 shutdown 去重双服务已部署
+
+- Runner `bd3f33ddddb5c9bc74b63f206a276eee3e4975a4` 经
+  [GitHub Actions run 29231086156](https://github.com/KathenZK/quant-runner/actions/runs/29231086156)
+  构建，artifact SHA-256
+  `1af8a2df3591bfb4dd28991302ad03d215ae8491d2202c59612d68ef8d703f48`。
+- 发布前 ledger open trades 为空；`2026-07-13T08:26:15Z` 先停旧二进制切到
+  `bd3f33d`，dry-run/live 于 `16:27:09` / `16:27:18` CST 首次拉起；随后在
+  `2026-07-13T08:30:55Z` 用新二进制再做一次验证重启。
+- 验证停服 outbox 仅新增 2 条 `service_graceful_shutdown`
+  （`dryrun:...` / `live:...`），各 `attempts=1`、`status=notified`，无策略级
+  `graceful_shutdown` 放大。
+- 当前 dry-run PID=`791586`、live PID=`791595`，`NRestarts=0`，7 个 strategy
+  health 全部 `ok` / flat；journal 无 warning/error。无新 PBTR 开平仓/fill。
+  状态保持 `live / tiny-live-pilot / forward-test required`。
 
 ## 已完成的保护措施
 
@@ -104,3 +119,21 @@
 `keep tiny-live-pilot / execution v2 deployed and healthy`，不得增加资金。下一项强制
 证据是首个真实 signal/order/fill 对账，需包含稳定 client ID、保护单、手续费、滑点
 和 user-stream 时间戳。
+
+## 2026-07-13 transient timeout 稳定性事件与 source 修复
+
+- 生产证据：`journalctl` 显示 live 于 `2026-07-12T16:58:44Z`
+  查询 Binance `positionRisk` 时总请求超时并 `exit 1`；systemd 30 秒后重启。
+  dry-run 又于 `2026-07-13T10:00:12Z` 因 six-asset 拉取 SOL OHLCV 时
+  Binance `/fapi/v1/time` 超时而 `exit 1`。两次均非 OOM、panic 或主机故障。
+- 根因是最外层 error context 丢失 timeout 分类、self-managed/live task 错误向上
+  传播，以及 dispatcher 将任一 group 退出扩大为整个 service 退出。另有历史
+  `already_processed` 不更新 runtime heartbeat，曾造成 1h 策略启动后的
+  watchdog false-stale 重启。
+- Runner workspace 已完成 source-level 修复（**尚未提交、未部署**）：完整 error
+  chain 分类、仅幂等 GET 有界退避、transient reconcile 关闭入场闸但保持 user
+  stream/持仓维护、confirmed mismatch 持久 fail-closed、group 独立 supervisor
+  与 control-plane watchdog。
+- 当前生产仍运行 `bd3f33d`；本节不是新部署证据，也不改变 tiny-live-pilot、
+  资金边界、promotion、parity 或 live-readiness。发布前必须通过故障注入矩阵，
+  先 dry-run canary，再在 live flat/open-orders clean 时切换。

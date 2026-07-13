@@ -111,8 +111,19 @@ Python K+1/K+2 对账，完成前不得形成 keep/adjust 决策。当前结论�
 - 跨 watchdog 周期 dry-run service PID 稳定、`NRestarts=0`、无 warning/error；
   未采集到新 MII open/close/fill。状态保持 `dry-run validation / not live-ready`。
 
-## 2026-07-13 shutdown 通知去重（source，未部署）
+## 2026-07-13 shutdown 通知去重已部署
 
 - 双服务切换的 7 条策略级 shutdown 因两个 watchdog 竞态被放大到约 13-14 条。
-  Runner 改为每 service 一条汇总，并用 SQLite 原子 claim/lease 阻止重复消费。
+  Runner `bd3f33d` 已部署：每 service 一条 `service_graceful_shutdown` 汇总，
+  SQLite 原子 claim/lease 阻止重复消费；验证重启 outbox 仅 2 条且
+  `attempts=1`。
 - 仅影响运维通知，不影响本策略状态、订单或 PnL。
+
+## 2026-07-13 service 稳定性修复（source，未部署）
+
+- 同组 six-asset transient timeout 曾使整个 dry-run service 退出，暴露出单组故障
+  会中断 MII 的错误故障域；历史 watchdog 也可能把正常 `already_processed`
+  误判为 stale。
+- Runner source 已改为 group 独立 supervisor、transient 原地降级/恢复、
+  entry-only 风险闸和 control-plane watchdog。当前生产仍为 `bd3f33d`；
+  MII 配置、状态、订单、PnL 与 live-readiness 不变。

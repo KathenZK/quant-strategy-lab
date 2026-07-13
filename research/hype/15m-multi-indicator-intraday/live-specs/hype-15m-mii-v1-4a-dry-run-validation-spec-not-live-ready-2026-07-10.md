@@ -58,7 +58,11 @@ exposure、固定 bracket、timeout 或成本口径：
   `mode=dry_run`，统一 execution 不是 live approval。
 - strict replay/parity 与 venue/runtime 隔离，不读写模拟 venue 状态；本次迁移不应
   改变既有 replay 结果或 `PENDING` parity 状态。
-- 当前仅完成代码迁移，尚未部署、未重启线上；promotion 与 live-readiness 不变。
+- 统一 execution 已于 `2026-07-13T04:25Z` 部署到 dry-run service；本实例 flat、
+  health=`ok`，没有新增 MII fill。promotion 与 live-readiness 不变。
+- 稳定性补充契约（Runner source，尚未部署）：transient dependency 只关闭新入场，
+  不得停止已有风险维护；单 group 故障不得终止兄弟策略。该契约不构成 MII live
+  approval。
 
 实现状态见
 [runner tracking](../runner-tracking/hype-15m-mii-runner-2026-07-10.md)。

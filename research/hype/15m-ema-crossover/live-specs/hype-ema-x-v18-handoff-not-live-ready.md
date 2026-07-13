@@ -38,9 +38,12 @@ approval_level_max: dry_run
 - `platform.execution.enabled` 与 live V1 fallback 已删除；旧 execution 不能作为
   兼容回退。
 - strict replay/parity 与 venue/runtime 保持隔离，本次迁移不应改变既有结果。
-- 当前仅完成代码迁移，未部署、未重启线上；V18 的 alpha、状态机信号规则、
-  promotion、parity 与 live-readiness 均不变。实现补记见
+- 统一 execution 已于 `2026-07-13T04:25Z` 部署到 dry-run service；本实例 flat、
+  health=`ok`，没有新增 EMA-X fill。V18 的 alpha、状态机信号规则、promotion、
+  parity 与 live-readiness 均不变。实现补记见
   [runner tracking](../runner-tracking/hype-ema-x-runner-2026-07-10.md)。
+- 稳定性补充契约（Runner source，尚未部署）：transient dependency 只关闭新入场，
+  不得停止 EMA-X 已有仓位维护、撤单、保护或平仓；单 group 故障不得终止兄弟策略。
 
 ```toml
 name = "hype-ema-x-dry-run"
