@@ -67,3 +67,10 @@
 
 - `btc_1h_ar_v4_new_leg_increment_2026-07-10.json`
 - `btc_1h_ar_v4_new_leg_increment_rows_2026-07-10.csv`
+
+2026-07-13 V4 结构优化顺序验证证据：
+
+- `btc_1h_ar_v4_structural_trials_2026-07-13.json`
+- `btc_1h_ar_v4_structural_trials_rows_2026-07-13.csv`
+
+本轮没有通过 gate 的新增腿，三态 router 按停止条件跳过，因此不生成 router CSV。

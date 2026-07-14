@@ -26,11 +26,7 @@ ENGINE_PATH = (
 ENGINE_SHA256 = "0420ea44854201e17d4bf5b9142fb8335d143e78772656473a1dcf4594a5f04c"
 DATA_PATH = ARTIFACT_DIR / "bnb_binance_1h_closed_klines_2y.parquet"
 QUALITY_PATH = ARTIFACT_DIR / "bnb_binance_1h_data_quality_2y.json"
-FUNDING_PATH = (
-    ROOT
-    / "data/normalized/funding/exchange=binance/market_type=perp"
-    / "symbol=bnb_usdt_usdt/funding.parquet"
-)
+FUNDING_PATH = ARTIFACT_DIR / "bnb_binance_funding_history_2y.csv"
 DATE_TAG = "2026-07-03"
 FREEZE_JSON = ARTIFACT_DIR / f"bnb_1h_adaptive_regime_frozen_primary_{DATE_TAG}.json"
 SUMMARY_JSON = ARTIFACT_DIR / f"bnb_1h_adaptive_regime_search_{DATE_TAG}.json"
@@ -175,8 +171,8 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
             f"BNBUSDT exact frame failed quality gate: missing={len(missing)} "
             f"duplicate={duplicate} nulls={nulls} violations={violations}"
         )
-    funding = pd.read_parquet(FUNDING_PATH)
-    funding["ts"] = pd.to_datetime(funding["ts"], utc=True)
+    funding = pd.read_csv(FUNDING_PATH)
+    funding["ts"] = pd.to_datetime(funding["ts"], utc=True, format="mixed")
     funding = funding.drop_duplicates("ts", keep="last").sort_values("ts").reset_index(drop=True)
     if funding.empty or funding["funding_rate"].isna().any():
         raise RuntimeError("BNB funding history is empty or contains null rates")

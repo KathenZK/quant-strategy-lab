@@ -64,6 +64,19 @@ exposure、固定 bracket、timeout 或成本口径：
   部署 dry-run）：transient dependency 只关闭新入场，
   不得停止已有风险维护；单 group 故障不得终止兄弟策略。该契约不构成 MII live
   approval。
+- 2026-07-14 runner workspace 已把 `hype_mii` 迁到通用
+  `StrategyDriver` 执行核（尚未部署）：策略通过 `MarketRequirement` 读取共享
+  15m featured snapshot，输出 `TargetPosition`；禁止在策略内调用 exchange、
+  ledger 或通知。
+- Driver 必须输出基于信号 K `ATR96%` 的相对保护距离；execution kernel 只能在
+  entry fill 确认后计算绝对 TP/SL。该顺序必须继续满足本文件“Bracket 计算”
+  章节的公式，不能用 decide 时参考价直接挂保护。
+- MII Driver 私有状态进入 `engine_state.json` 的版本化 `strategy_state`
+  envelope；V1.4A 当前 payload 为空。现有 position、pending/tracked orders 和
+  simulated venue 文件的恢复语义不变。
+- 该迁移不改变 kind、TOML、state path、参数、资金边界、promotion 或
+  live-readiness；部署后必须补 no-signal cycle、首笔 fill/bracket 和重启恢复
+  证据。
 
 实现状态见
 [runner tracking](../runner-tracking/hype-15m-mii-runner-2026-07-10.md)。
@@ -441,3 +454,13 @@ Recent Binance API 最近 `24h/72h/7d`：`0` 笔。dry-run 刚启动后可能长
 - V1.4 TP/SL 邻域搜索：[`../notes/hype-15m-mii-v1-4-tp-sl-neighborhood-2026-07-09.md`](../notes/hype-15m-mii-v1-4-tp-sl-neighborhood-2026-07-09.md)
 - 标准数据湖 TP/SL 邻域 CSV：[`../artifacts/hype_15m_mii_v1_4_tp_sl_neighborhood_standard_2026-07-09.csv`](../artifacts/hype_15m_mii_v1_4_tp_sl_neighborhood_standard_2026-07-09.csv)
 - Recent API TP/SL 邻域 CSV：[`../artifacts/hype_15m_mii_v1_4_tp_sl_neighborhood_recent_2026-07-09.csv`](../artifacts/hype_15m_mii_v1_4_tp_sl_neighborhood_recent_2026-07-09.csv)
+
+## Runner 实现绑定（2026-07-14，未部署）
+
+当前 quant-runner 实现为 `StrategyDriver -> TargetPosition -> execution kernel`。
+Driver 保留本文件全部 V1.4A 参数，输出 ATR96 相对 TP/SL，执行核在实际 fill 后
+解析绝对价格。策略状态使用 versioned `StrategyStateEnvelope`，策略模块通过
+`inventory` 自注册 Driver/replay。该架构变更不授权 live，也不替代本文件要求的
+dry-run 首笔成交、保护几何、重启恢复和 ledger 对账。
+非零新仓 target 只能 `NextOpen`；任何 side/symbol/allocation 替换都必须使用
+persisted `AfterFlat`，不提供隐式仓内 resize。

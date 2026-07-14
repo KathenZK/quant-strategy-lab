@@ -20,7 +20,7 @@ import research_hype_30m_k2_v2_1_dynamic_atr_bracket as dynamic  # noqa: E402
 import research_hype_30m_k2_v2_full_ablation_and_tune as tune  # noqa: E402
 
 
-RUN_DATE = "2026-07-10"
+RUN_DATE = "2026-07-13"
 ARTIFACT_DIR = base.ARTIFACT_DIR
 SUMMARY_PATH = ARTIFACT_DIR / f"hype_30m_k2_v2_1_rsi_macd_filters_{RUN_DATE}.json"
 SEARCH_PATH = ARTIFACT_DIR / f"hype_30m_k2_v2_1_rsi_macd_filter_search_{RUN_DATE}.csv"

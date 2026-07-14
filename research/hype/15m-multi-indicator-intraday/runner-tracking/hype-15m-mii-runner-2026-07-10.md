@@ -128,3 +128,37 @@ Python K+1/K+2 对账，完成前不得形成 keep/adjust 决策。当前结论�
   entry-only 风险闸和 control-plane watchdog。Runner `e69589f` 已于
   `21:02 CST` 部署 dry-run，初检 health=`ok`、flat、无 warning/error；
   MII 配置、状态、订单、PnL 与 live-readiness 不变。
+
+## 2026-07-14 StrategyDriver 迁移（仅代码，未部署）
+
+- `hype_mii` 是首个迁入通用 `StrategyDriver` 执行核的策略。策略层现在声明
+  `MarketRequirement`，读取共享 `FeaturedFrame`，输出带符号
+  `TargetPosition`；执行核仍复用既有 stable client ID、persist-before-submit、
+  simulated/live venue、保护单、reconcile、ledger 和通知链。
+- V1.4A 的 RSI/MACD/ATR96/RVOL 信号、`exposure=2.5`、fee/slippage、
+  `TP=1.40*ATR96`、`SL=3.0*ATR96`、`timeout=24` 均未改变。Driver 输出相对
+  TP/SL 距离，执行核在真实/模拟 entry fill 后解析绝对保护价格，避免参考价与
+  成交价偏差改变 bracket。
+- 现有 `engine_state.json` 路径不变；新增
+  `strategy_state={strategy_id,schema_version,payload}` envelope。MII 当前是
+  stateless payload，旧 flat/open position 均继续由原 `PositionState` 和统一
+  execution safety 字段恢复。
+- 最终架构已删除中心 `RuntimeModel`、legacy adapter、runtime handler 与
+  descriptor 数组；MII 在自己的策略模块通过 `inventory` 自注册 Driver factory
+  和 replay handler，执行核不再因新增策略增加分支。
+- 本地验证：workspace 全量 `cargo test --workspace` 与
+  `cargo clippy --workspace --all-targets -- -D warnings` 通过；Driver/legacy
+  entry geometry 对拍通过；`smoke-test --name hype-mii-dry-run` 为
+  `ok=true`。Binance public closed-Kline `replay-dry-run --limit 2500` 在当前
+  窗口输出 `6` signals / `6` trades；这是滚动 smoke，不替代标准窗口 parity。
+- 本次没有部署、没有重启 service，也没有采集新的 runtime open/close/fill；
+  当前线上仍是 Runner `e69589f`。结论保持
+  `dry-run validation / not live-ready`，首个 Driver 版本部署后仍需检查
+  no-signal cycle、首笔 fill 后 TP/SL 几何、重启恢复和 ledger 生命周期。
+
+补充：最终 workspace 六条策略均已迁入 Driver；`EngineState` 不再保存策略专属
+顶层字段，旧字段只读迁移到 versioned `StrategyStateEnvelope` 后即停止写回。
+全量 `162` 个 unit tests、`12` 个 integration tests、strict Clippy、六策略
+smoke/replay 与 dry-run/live 配置校验通过；这仍是未部署的代码证据，不提升状态。
+执行契约已固定：新仓 target 只能 `NextOpen`，allocation/side/symbol 变化必须
+显式 `Replace` 并使用 persisted `AfterFlat`，不提供隐式仓内 resize。

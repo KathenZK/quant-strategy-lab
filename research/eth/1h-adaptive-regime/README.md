@@ -3,7 +3,7 @@
 - Full family name：`ETH-1H-Adaptive-Regime`（短 id：`ETH-1H-AR`）
 - 市场/周期：Binance USD-M Futures `ETHUSDT` perpetual `1h`
 - 机制：两年闭合 `1h` K 多指标自适应 regime 广搜（EMA/MACD/RSI/Stoch/CCI/ADX/ATR/Keltner/Donchian/VWAP/结构 + 高周期 regime），ensemble 组合。
-- 当前状态：V1、V2、V2.1、V3 已登记；reused holdout 仍为负；`not promoted / not live-ready`。
+- 当前状态：V1、V2、V2.1、V3、V4 已登记；V4 为高胜率全策略风险重配 observation；`not promoted / not live-ready`。
 
 ## 研究协议（冻结口径）
 
@@ -16,10 +16,12 @@
 
 ## 入口
 
-- 主账（V1-V3 版本表、指标与证据链接）：`eth-1h-ar-core-ledger.md`
-- 决策记录：`decision-log.md`
-- 版本规格：`specs/`（V1 baseline、V2 clean tuned、V2.1 high-win tuned、V3 clean tuned）
-- V3 频率与 fresh forward 诊断：`notes/eth-1h-ar-v3-frequency-forward-diagnostic-2026-07-10.md`
-- 数据质量报告：`diagnostics/eth-binance-1h-data-quality-2026-07-03.md`
+- 主账（V1-V4 版本表、指标与证据链接）：[eth-1h-ar-core-ledger.md](eth-1h-ar-core-ledger.md)
+- 决策记录：[decision-log.md](decision-log.md)
+- 版本规格：`specs/`（V1 baseline、V2 clean tuned、V2.1 high-win tuned、V3 clean tuned、[V4 high-win refined](specs/eth-1h-ar-v4-high-win-strategy-refined-spec-2026-07-13.md)）
+- V3 频率与 fresh forward 诊断：[notes/eth-1h-ar-v3-frequency-forward-diagnostic-2026-07-10.md](notes/eth-1h-ar-v3-frequency-forward-diagnostic-2026-07-10.md)
+- V3 高胜率频率优化：[notes/eth-1h-ar-v3-high-win-frequency-tune-2026-07-13.md](notes/eth-1h-ar-v3-high-win-frequency-tune-2026-07-13.md)
+- V4 来源：高胜率全策略优化 [notes/eth-1h-ar-v3-high-win-strategy-refine-2026-07-13.md](notes/eth-1h-ar-v3-high-win-strategy-refine-2026-07-13.md)
+- 数据质量报告：[diagnostics/eth-binance-1h-data-quality-2026-07-03.md](diagnostics/eth-binance-1h-data-quality-2026-07-03.md)
 
 脚本在 `scripts/`（fetch / search / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

@@ -71,3 +71,18 @@
 - 过滤瓶颈：BB 从 prefit/holdout 原始信号 `138/17` 被压到 `22/4`，主要卡在 `min_rvol`、`min_atr_bps`、`max_dist_ema_bps`；RSI 从 `362/60` 被压到 `27/0`，主要卡在 `min_atr_bps=125`、`min_dir_roc_bps=-300`、`max_dist_ema_bps=750`。
 - 频率优先网格（不使用 reused holdout 排序）显示，放宽 BB `min_rvol=3.0`、`min_atr_bps<=50`、`max_dist_ema_bps>=2500` 可把 prefit 提高到约 `64` 笔、validation `17` 笔，但 reused holdout 只读仍为负；单项放宽 RSI `min_atr_bps=75` 可把 prefit 提到 `109` 笔、holdout 只读转正，但胜率回落到 `72.50%`，更像后续可研究的频率方向而非可直接 promotion 的版本。
 - 结论：下一轮目标应从“继续提高胜率”改为 `prefit trades >=80-120`、`validation trades >=15`、`win >=65%-70%`、DD 不穿 `20%`；冻结 3-5 个候选后，从 `2026-07-03T05:00:00Z` 之后等待 fresh forward `20-30` 笔或 `2-3` 个月。V3 状态不变：`NO-GO / not promoted / not live-ready`。
+
+## 2026-07-13：V3 高胜率频率与全策略风险优化
+
+- 用户接受增加有效交易数的方向，但要求胜率不能下降太多，以免拖累后续策略组合。先在 V3 的 27 参数 clean surface 上重做高胜率频率搜索：每腿 `120,000` 组、组合 `250,000`，基础门槛命中 `37,750`，K+2/8 bps 稳健门槛命中 `33`。
+- 首轮 high-win frequency observation 的 prefit 为 `8.0199x / -17.71% / 91.67% / 60`，current full 为 `6.1083x / -22.55% / 88.41% / 69`；交易和收益提高，但 current-full/holdout DD 超过 `20%`，不能作为最终优化结果。
+- 随后从 33 个稳健候选出发，对 BB/RSI 杠杆做 `990` 个组合级风险重配；选择仍只使用 train/validation/prefit，要求 prefit `>=65` 笔、胜率 `>=90%`、DD `<15%`，并要求 K+2/8 bps 保持高胜率和 DD 门槛。共 `78` 个组合通过。
+- 冻结 diagnostic observation `ETH-1H-AR-V3-HIGH-WIN-STRATEGY-REFINE-2026-07-13`：BB/RSI 杠杆 `1.5x / 2.0x`；prefit `5.4898x / -14.29% / 91.04% / 67`，reused holdout 只读 `+1.46% / -17.08% / 66.67% / 12`，current full `4.4124x / -17.08% / 87.34% / 79`。
+- 相对首轮 high-win frequency observation，prefit/current-full 胜率仅下降 `0.62/1.07` 个百分点，交易增加 `7/10` 笔，current-full DD 从 `-22.55%` 收敛到 `-17.08%`。但 K+3 prefit DD `-23.85%`，12 bps、fee12+8bps 与 double-cost 的 reused holdout 均略为负。
+
+## 2026-07-13：登记 ETH-1H-Adaptive-Regime-V4
+
+- 按用户要求，将 `ETH-1H-AR-V3-HIGH-WIN-STRATEGY-REFINE-2026-07-13` 正式登记为 `ETH-1H-Adaptive-Regime-V4`。
+- V4 继承 V3 的 `27` 参数 clean surface 与执行/成本口径；相对 V3 交易数更高（prefit `67`、full `79`），current-full 胜率 `87.34%`，DD `-17.08%`，reused holdout 只读 `+1.46%`。
+- 登记结论：`registered high-win strategy refined observation / NO-GO / not promoted / not live-ready`；不生成 live spec。仍须从 `2026-07-03T05:00:00Z` 后积累 fresh forward，并完成 live-executable 审计。
+- 证据：[version spec](specs/eth-1h-ar-v4-high-win-strategy-refined-spec-2026-07-13.md)、[频率优化](notes/eth-1h-ar-v3-high-win-frequency-tune-2026-07-13.md)、[全策略风险优化](notes/eth-1h-ar-v3-high-win-strategy-refine-2026-07-13.md)、[复现入口](scripts/eth_1h_ar_v4.py)。

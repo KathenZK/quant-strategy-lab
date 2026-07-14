@@ -22,7 +22,7 @@ from strategy_lab.data.settings import load_settings  # noqa: E402
 from strategy_lab.data.store import write_dataframe  # noqa: E402
 
 
-RUN_DATE = "2026-07-10"
+RUN_DATE = "2026-07-13"
 SUMMARY_PATH = base.ARTIFACT_DIR / f"hype_1m_standard_data_lake_repair_{RUN_DATE}.json"
 CONFLICT_TS = pd.Timestamp("2026-06-25 08:46:00+00:00")
 EXPECTED_CONFLICT_BAR = {
@@ -60,7 +60,38 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser()
     parser.add_argument("--cache", type=Path, default=base.CACHE_PATH)
     parser.add_argument("--dry-run", action="store_true")
+    parser.add_argument("--refresh", action="store_true")
+    parser.add_argument("--timeout", type=float, default=45.0)
     return parser.parse_args()
+
+
+def refresh_cache(path: Path, *, timeout: float) -> dict[str, Any]:
+    if not path.exists():
+        raise FileNotFoundError(path)
+    existing = pd.read_parquet(path)
+    existing["ts"] = pd.to_datetime(existing["ts"], utc=True)
+    old_end = existing["ts"].max()
+    since_ms = int((old_end + pd.Timedelta(minutes=1)).timestamp() * 1000)
+    until_ms = base.server_time_ms(timeout)
+    fetched = base.fetch_1m_klines(
+        since_ms=since_ms,
+        until_ms=until_ms,
+        timeout=timeout,
+    )
+    combined = (
+        pd.concat([existing, fetched], ignore_index=True, sort=False)
+        .sort_values("ts")
+        .drop_duplicates("ts", keep="last")
+        .reset_index(drop=True)
+    )
+    combined.to_parquet(path, index=False)
+    return {
+        "old_rows": int(len(existing)),
+        "fetched_rows": int(len(fetched)),
+        "new_rows": int(len(combined)),
+        "old_end": str(old_end),
+        "new_end": str(pd.to_datetime(combined["ts"], utc=True).max()),
+    }
 
 
 def prepare_cache(path: Path) -> pd.DataFrame:
@@ -245,6 +276,11 @@ def verify_written_lake(cache: pd.DataFrame) -> dict[str, Any]:
 def main() -> None:
     args = parse_args()
     base.ARTIFACT_DIR.mkdir(parents=True, exist_ok=True)
+    refresh_summary = (
+        refresh_cache(args.cache, timeout=args.timeout)
+        if args.refresh
+        else {"refreshed": False}
+    )
     cache = prepare_cache(args.cache)
     quality = quality_gate(cache)
     if not quality["pass"]:
@@ -261,6 +297,7 @@ def main() -> None:
     summary = {
         "run_date": RUN_DATE,
         "source_cache": str(args.cache),
+        "refresh": refresh_summary,
         "quality": quality,
         "conflict_bar_verification": conflict,
         "write": write_summary,

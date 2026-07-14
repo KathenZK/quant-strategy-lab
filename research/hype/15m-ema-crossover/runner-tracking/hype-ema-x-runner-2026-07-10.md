@@ -54,3 +54,30 @@
   entry-only 风险闸和 control-plane watchdog；EMA-X 持仓维护不得被 transient
   entry gate 阻断。Runner `e69589f` 已于 `21:02 CST` 部署 dry-run，初检
   health=`ok`、flat、无 warning/error；策略状态与 live-readiness 不变。
+
+## 2026-07-14 StrategyDriver 最终迁移（仅代码，未部署）
+
+- `hype_ema_x` 已从 legacy runtime adapter 迁入通用 `StrategyDriver`。EMA-X 的
+  动态 allocation、normal/late entry、hard stop、warning-confirm、MFE 与
+  exit memo 仍是策略本地纯状态机；订单、副作用、reconcile 和 ledger 统一由
+  execution kernel 处理。
+- 策略私有状态已进入 versioned `StrategyStateEnvelope`；旧扁平 exit memo
+  仅允许一次性读取迁移，下次保存不再写回 `EngineState` 顶层。持仓期仍计算并
+  记录当前 signal，不因 Driver `Hold` 丢失信号审计。
+- EMA-X 显式声明 touch-only stop bar 口径，避免误套 bracket gap priority。
+  replay handler 与 Driver factory 在策略模块通过 `inventory` 自注册。
+- Runner workspace `152` 个 unit tests、`12` 个 integration tests、strict
+  Clippy、六策略 smoke/replay 及两份配置校验通过。本次未部署、未采集新
+  runtime trade/fill；结论继续为 `keep dry-run / do not enable live`。
+
+## 2026-07-14 Driver 收尾验证（仅代码，未部署）
+
+- execution kernel 已固定 target timing：新开仓只能 `NextOpen`，仓位替换必须
+  persisted `AfterFlat`；同仓位 target 只更新保护，不把 allocation 变化静默当作
+  resize。
+- 旧 EMA-X exit memo 会在任何平台状态保存前先恢复进
+  `StrategyStateEnvelope`；legacy JSON 定向测试覆盖方向、regime、index、reason、
+  PnL 与 MFE。
+- 最终验证为 `162` 个 unit tests、`12` 个 integration tests、strict Clippy、
+  dry-run/live 配置校验和六策略 Binance smoke replay 全通过。本次未部署且无新
+  trade/fill；`keep dry-run / do not enable live` 不变。

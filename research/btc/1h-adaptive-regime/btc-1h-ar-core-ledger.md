@@ -198,6 +198,8 @@ V4 多窗口回测（2026-07-07）：`notes/btc-1h-ar-v4-window-backtest-2026-07
 
 V4 结构优化研究（2026-07-10）：`notes/btc-1h-ar-v4-structural-optimization-study-2026-07-10.md` 复核原 30 万组搜索和六类低重叠候选腿，并以 V4 绝对优先、候选只填空仓的合同做增量审计。`fixed 1x` 下，`vwap_revert` 与 `wick_reject` 在 prefit 分别增加 `+272.66%` / `+174.19%` 总收益，但 reused holdout 分别减少 `-19.38%` / `-1.97%`；`macd_flip` prefit 减少 `-819.79%`，却在 validation/reused holdout 增加 `+21.83%` / `+19.90%`。没有现成候选可直接登记新版本。决策：停止 V4 的 19 参数邻域微调；下一阶段只研究相对 V4 的 `VWAP revert short-only`、`wick reject transition-only`、`MACD flip replace-Keltner`，通过边际贡献、purged walk-forward、成本延迟和 untouched forward 后才讨论新版本。
 
+V4 结构优化顺序验证（2026-07-13）：`notes/btc-1h-ar-v4-structural-trials-2026-07-13.md` 按冻结顺序完成 `VWAP short-only 2,500`、`wick transition-only 2,500`、`MACD replace-Keltner 2,000` 组研究，三阶段严格增量 gate 命中均为 `0`。VWAP 高分点候选腿自身 prefit `-22.58%` 且组合胜率下降 `13.11pp`；wick 高分点候选腿仅 `3` 笔、组合新增 `2` 笔；MACD `2,000` 组没有任何一组 prefit 边际收益为正。三态 router 因没有过门新增腿按协议跳过。没有 V5；若继续优化，应转向当前 16 类 OHLCV style 之外的新信息源，或等待 untouched forward。
+
 ## Promotion 门槛
 
 必须同时通过：最近三个月 locked OOS、年化权益倍率 `>=10.0x`、胜率 `>=50%`、最大回撤 `<20%`、K+2/成本压力、参数邻域、时间切片、bootstrap、订单时序、保护单、重启恢复、missing-bar fail-closed、交易所对账和 kill switch 审计。

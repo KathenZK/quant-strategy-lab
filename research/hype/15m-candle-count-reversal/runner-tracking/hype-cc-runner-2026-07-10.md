@@ -65,3 +65,28 @@
   watchdog 不再因单策略 stale 重启兄弟策略。Runner `e69589f` 已于
   `21:02 CST` 部署 dry-run，初检 health=`ok`、flat、无 warning/error；
   策略状态、PnL 与 live-readiness 不变。
+
+## 2026-07-14 StrategyDriver 最终迁移（仅代码，未部署）
+
+- `hype_candle_count` 已从 legacy runtime adapter 迁入通用 `StrategyDriver`。
+  entry filter、early exits、risk multiplier 与 cooldown 保持在策略模块；
+  open/close/protection/reconcile 统一由 execution kernel 执行。
+- risk multiplier/cooldown 已进入 versioned `StrategyStateEnvelope`；旧扁平字段
+  只读迁移后停止写回。`ExecutionEvent::Closed` 定向测试覆盖 stop 后
+  `risk_multiplier=0.5`、`cooldown=8`，持仓期 signal 继续写 ledger。
+- mark-price stop/take 显式声明 touch-only bar 口径；funding/mark 由
+  `MarketRequirement` 驱动 dispatcher 快照，不再由策略自行拉取。
+- Runner workspace `152` 个 unit tests、`12` 个 integration tests、strict
+  Clippy、六策略 smoke/replay 及配置校验通过。本次未部署、未采集新 fill；
+  历史 underperformance blocker 和 `do not enable live` 结论不变。
+
+## 2026-07-14 Driver 收尾验证（仅代码，未部署）
+
+- execution kernel 已明确 target 语义：同仓位 target 只更新保护，symbol/side/
+  allocation 变化必须显式 `Replace` 并按 persisted `AfterFlat` 先平后开；不提供
+  隐式仓内 resize。
+- 旧 `risk_multiplier` / `cooldown_remaining` 会在任何平台状态保存前先恢复进
+  `StrategyStateEnvelope`，并有 legacy JSON 定向测试，避免 early-save 丢状态。
+- 最终验证为 `162` 个 unit tests、`12` 个 integration tests、strict Clippy、
+  dry-run/live 配置校验和六策略 Binance smoke replay 全通过。本次未部署且无新
+  trade/fill；`keep dry-run / do not enable live` 不变。

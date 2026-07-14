@@ -51,3 +51,35 @@
 - `arm → confirm → expire` 状态机已完成验证：prefit-only 选中 `3-bar roc6+MACD confirm`，prefit annual `2.3129x`、DD `-19.05%`；full annual `2.0977x`；reused holdout 从负转为 return `+2.61%`、annual `1.1089x`、DD `-4.55%`，但只有 `3` 笔。
 - 决策：冻结 V2 身份，不登记 V3。将状态机观察记为 `V2-SM-OBS`，不再依据 reused holdout 调参；后续采用 `Donchian core + VWAP arm-confirm-expire satellite`，等待新增 fresh forward trades。
 - 综合结论：`notes/sol-1h-ar-v2-improvement-conclusion-2026-07-10.md`。
+
+## 2026-07-13：按用户要求将 V2-SM-OBS 登记为 V3
+
+- 将 `V2-SM-OBS` 正式登记为 `SOL-1H-Adaptive-Regime-V3`。
+- V3 机制为 `Donchian core + VWAP arm-confirm-expire satellite`；VWAP arm 后最多等待 `3` 根 K，要求 short 方向 `roc6 + MACD histogram` 同向确认，confirm 后下一根 open 入场。
+- V3 prefit annual `2.3129x`、DD `-19.05%`、win `79.57%`、trades `93`；full annual `2.0977x`、DD `-19.05%`、win `79.17%`、trades `96`。
+- reused holdout return `+2.61%`、DD `-4.55%`，但只有 `3` 笔且窗口已揭盲。
+- 状态：`registered / not promoted / not live-ready`；登记不代表 dry-run/live，必须等待 fresh forward 和 live-executable audit。
+- 参数规格：`specs/sol-1h-ar-v3-parameter-spec-2026-07-13.md`。
+
+## 2026-07-13：V3 首个 Fresh Forward 审计为零交易
+
+- 使用刷新至 `2026-07-13T06:00:00Z` 的闭合 `1h` 数据重放 V3。
+- `2026-07-03T05:00:00Z` 至 `2026-07-13T07:00:00Z` 共约 10 天，V3 产生 `0` 笔交易。
+- 零交易不能验证或否定 V3，也不构成 forward gate 通过；状态保持 `registered / not promoted / not live-ready`。
+- 报告：`diagnostics/sol-1h-ar-v3-fresh-forward-2026-07-13.md`。
+
+## 2026-07-13：V3 首个 Fresh Forward 审计为零交易
+
+- 使用刷新至 `2026-07-13T06:00:00Z` 的闭合 `1h` 数据重放 V3。
+- `2026-07-03T05:00:00Z` 至 `2026-07-13T07:00:00Z` 共约 10 天，V3 产生 `0` 笔交易。
+- 零交易不能验证或否定 V3，也不构成 forward gate 通过；状态保持 `registered / not promoted / not live-ready`。
+- 报告：`diagnostics/sol-1h-ar-v3-fresh-forward-2026-07-13.md`。
+
+## 2026-07-13：按用户要求将 V2-SM-OBS 登记为 V3
+
+- 将 `V2-SM-OBS` 正式登记为 `SOL-1H-Adaptive-Regime-V3`。
+- V3 机制为 `Donchian core + VWAP arm-confirm-expire satellite`；VWAP arm 后最多等待 `3` 根 K，要求 short 方向 `roc6 + MACD histogram` 同向确认，confirm 后下一根 open 入场。
+- V3 prefit annual `2.3129x`、DD `-19.05%`、win `79.57%`、trades `93`；full annual `2.0977x`、DD `-19.05%`、win `79.17%`、trades `96`。
+- reused holdout return `+2.61%`、DD `-4.55%`，但只有 `3` 笔且窗口已揭盲。
+- 状态：`registered / not promoted / not live-ready`；登记不代表 dry-run/live，必须等待 fresh forward 和 live-executable audit。
+- 参数规格：`specs/sol-1h-ar-v3-parameter-spec-2026-07-13.md`。

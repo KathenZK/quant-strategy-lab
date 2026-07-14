@@ -22,6 +22,7 @@
 
 ## 研究批次记录
 
+- 2026-07-14（V35/V39 临近 TP floor 复测）：扩展数据湖至 `2026-07-14T03:00Z`，并把当前 V39 dry-run `4.84ATR` 临门回吐纳入路径回放。`4.75 -> lock 4.25` 能在本次案例锁定约 `+6.62%`，但无冷却会 15m 后同向重入；V39 截止事件前 full 从 `+9969.45%` 降到 `+7417.48%`，maxDD 不改善。post-hoc `cd16` 虽阻止本次重入，却把 V39 full 降到 `+5308.74%`、maxDD 恶化到 `-24.21%`；`4.90 -> 4.40` 不覆盖本次 `4.84ATR`，固定 TP `4.75ATR` 将 V39 maxDD 恶化到 `-32.57%`。决定：V35/V39 保持原规则，不采用 floor、固定缩 TP 或固定冷却；若继续，只研究“同向 trend episode reset 后才允许重入”的独立状态机。报告见 [hype-ema-tb-v35-v39-near-tp-floor-diagnostic-2026-07-14.md](notes/hype-ema-tb-v35-v39-near-tp-floor-diagnostic-2026-07-14.md)。
 - Binance HYPE `5m` pullback/trailing-stop 研究已迁移到 `../5m-pullback-trail/` 下独立的 `HYPE-5M-PBTR` 家族。不要把本 `HYPE-EMA-TB` 决策日志作为 `HYPE-5M-PBTR-V1/V2` 的事实来源。
 - 2026-07-07：针对线上 `HYPE-EMA-TB-V35` 出现“接近 TP 后 ADX 变弱但指标退出被 MFE 禁用，利润回吐”的场景，测试分阶段 `profit floor`。结论：近期 `7d/1m` 有小幅改善，但全样本收益、Sharpe 和退出结构显著劣化，不建议直接合入 V35 主策略。报告见 `notes/hype-ema-tb-v35-profit-floor-diagnostic-2026-07-07.md`。
 - 2026-07-07（第二轮）：13 变体窄口径扫描发现可用解：只在 `mfe_atr >= 4.75~4.9` 启动、锁 `4.25~4.4 ATR` 的极窄 profit floor 能把 full 收益保留在 base 的 84%~95%，maxDD 与 base 完全相同；启动线 `<= 4.5` 的档位、floor 后冷却、直接收紧 TP 全部否决。`floor_475_lock425` 与 `floor_49_lock44` 记为 diagnostic 观察候选，未 promotion。报告见 `notes/hype-ema-tb-v35-narrow-profit-floor-2026-07-07.md`。

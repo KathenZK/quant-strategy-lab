@@ -85,3 +85,18 @@
 - 参数规格已逐项解释：`specs/bnb-1h-ar-v3-parameter-spec-2026-07-07.md`。
 - 指标登记为 prefit `3.37x / -18.24% DD / 89.42% win / 104 trades`，reused locked OOS `1.22x / -15.53% DD / 81.25% win / 16 trades`，full `2.94x / -18.24% DD / 88.33% win / 120 trades`。
 - Promotion 边界不变：OOS 为 reused observation，必须等待未读 forward 数据或重新冻结流程，才能讨论 candidate/live-readiness。
+
+## 2026-07-13：V3 prefit-only walk-forward 优化未产生 V4
+
+- 新增 `scripts/bnb_1h_ar_v3.py`，在不读取 reused OOS 的默认入口中逐项复现 V3 prefit：`3.3672x / -18.24% DD / 89.42% win / 104 trades`。
+- 数据边界复核发现共享 funding 湖已被 BNB 15m 抓取更新到 2026-07-05；1h 搜索/复现入口已改为固定读取 Jul-3 家族 artifact `bnb_binance_funding_history_2y.csv`（`2190` rows，至 `2026-07-03T00:00Z`）。重叠 rate 一致，V3 prefit 与本轮优化结果未变化。
+- 修正规格语义：`ema_pullback` 为 trailing 模式时引擎不创建固定 target，`tp_atr=3.0` 不参与实际出场。
+- 优化物理截断在 `oos_start` 前，并按 `entry_delay + max_hold + 1` 小时剔除末端 entry；排序和报告没有 OOS 字段。
+- 分阶段扫描 EMA exit `144`、EMA filter `54`、wick exit `24`、wick filter `162` 个配置；再做 EMA/wick 各 `49` 个受限合装与最终 `49` 个 ensemble。
+- 联合门槛包含 base K+1、K+2、8bps/fill、四个 chronological 90d prefit block、`<20%` DD、最低交易数和 `<=2.5x` 最大暴露；通过数为 `0`。
+- 同一边界净化口径下，V3 base K+1 `3.05x / -18.24% / 89.11% / 101 trades`，K+2 `1.36x / -31.04% / 79.21% / 101 trades`，8bps `2.64x / -18.42% / 87.25% / 102 trades`。
+- K+2 归因：EMA 腿从 K+1 `2.39x / -18.24%` 降至 K+2 `1.28x / -34.12%`，是主要回撤来源；wick 腿也从 `1.20x / -7.13%` 降至 `0.93x / -17.98%`。9 个多空方向组合同样 `0` 通过。
+- 最高分 near-miss 的 K+1/K+2/8bps 年化为 `3.83x/3.44x/3.50x`，但回撤分别 `-22.92%/-22.49%/-23.32%`；仍不合格。
+- 对 near-miss 只做机械降风险压力：EMA `2.25x` 时回撤仍约 `-20.4%~-21.3%`；`2.0x` 时回撤合格，但 K+1 年化 `3.10x` 未严格改善 V3。拒绝继续搜索贴近门槛的 `2.1x/2.15x`。
+- 决策：不登记 V4，不继续扩大 exit/filter 网格。下一项仅允许低自由度、live-executable 的信号新鲜度/过期取消结构实验；若仍不能修复 K+2，则停止历史调参并等待 fresh forward。
+- 证据见 `notes/bnb-1h-ar-v3-prefit-walkforward-optimization-2026-07-13.md`。

@@ -52,7 +52,7 @@
 | `min_rvol` | `1.0` | 最小相对成交量，过滤低流动性/低确认度信号。 |
 | `min_atr_bps` | `50.0` | 最小 ATR 波动率，单位 bps；过滤波动过低的环境。 |
 | `exit_kind` | `trailing` | 出场类型。V3 使用 trailing 出场，而不是 V2 的固定 TP/SL。 |
-| `tp_atr` | `3.0` | 初始/保护性止盈距离，单位 ATR；用于 bracket 目标价。 |
+| `tp_atr` | `3.0` | trailing 模式下的保留字段；当前引擎只在 `exit_kind=fixed` 时创建 target，因此该值不参与 V3 实际出场。 |
 | `sl_atr` | `5.0` | 初始止损距离，单位 ATR；定义保护性 stop。 |
 | `trail_activation_atr` | `2.0` | 浮盈达到 `2 ATR` 后启动 trailing stop。 |
 | `trail_atr` | `1.5` | trailing stop 与最新有利价格之间的距离，单位 ATR。 |
@@ -96,6 +96,7 @@
 - 数据：Binance USD-M Futures `BNBUSDT` perpetual `1h`，沿用 V1/V2 冻结数据，UTC 至 `2026-07-03`。
 - 入场：闭合 K 产生信号，下一根 `1h` open 市价成交。
 - 出场：入场后 bracket 立即生效；同 K 双触发 stop-first；open 穿 stop 按 open 成交。
+- `ema_pullback` trailing 出场没有固定 TP；当前 K 更新 trailing stop，更新后的 stop 从下一根 K 生效。
 - 成本：`0.001` fee/fill、`4 bps` adverse slippage/fill。
 - Funding：逐笔计入 Binance 历史 funding。
 

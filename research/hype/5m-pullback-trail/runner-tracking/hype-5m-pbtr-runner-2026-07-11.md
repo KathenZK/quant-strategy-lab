@@ -139,3 +139,26 @@
   dry-run/live 分别于 `2026-07-13 21:02:29` / `21:03:05 CST` 切换；发布前
   live ledger/health 均 flat，切换后 PBTR live health=`ok`、无新订单或 fill。
 - 本发布不改变 tiny-live-pilot、资金边界、promotion、parity 或 live-readiness。
+
+## 2026-07-14 StrategyDriver 迁移（仅代码，未部署）
+
+- Runner workspace 已将 `hype_pullback` 从中心 bracket runtime 分支迁入通用
+  `StrategyDriver -> TargetPosition -> execution kernel`。信号、配置、allocation、
+  next-open 时序、费用、滑点、timeout 与订单生命周期不变。
+- V6.2.1 的保护距离继续使用信号 K `ATR14` 的绝对价格距离。Driver 冻结
+  `tp_atr * ATR14` / `sl_atr * ATR14`，execution kernel 在真实 entry fill 后解析
+  TP/SL，因此与旧实现“按实际 fill 加减同一 ATR 距离”的几何关系一致。
+- Runner 最终架构已将六条策略全部迁入 `StrategyDriver`，删除 legacy adapter、
+  runtime handler 和中心 descriptor 数组。每个策略模块通过 `inventory` 自注册
+  Driver factory、replay handler 与执行能力；新增策略无需修改 `catalog.rs`。
+- 本地验证：workspace `162` 个 unit tests 与 `12` 个 integration tests 全部
+  通过，strict Clippy 通过；dry-run/live 配置分别以 `6` / `1` 个 enabled
+  strategy 校验通过；PBTR smoke-test=`ok=true`，Binance public closed-Kline
+  2500-bar smoke replay 成功（当前窗口 `0` signal / `0` trade，不构成 parity
+  样本）。
+- 本次未修改 TOML、kind、state path、live notional、promotion、parity 或
+  live-readiness，未部署、未重启服务，也未采集新的真实 signal/order/fill。
+  当前线上仍是 2026-07-13 已部署版本，状态继续保持
+  `live / tiny-live-pilot / forward-test required`。
+- execution contract 已固定：新仓 target 只能 `NextOpen`；allocation/side/symbol
+  变化必须显式 `Replace` 并使用 persisted `AfterFlat`，不提供隐式仓内 resize。

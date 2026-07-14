@@ -3,8 +3,8 @@
 - Full family name：`SOL-1H-Adaptive-Regime`（短 id：`SOL-1H-AR`）
 - 市场/周期：Binance USD-M Futures `SOLUSDT` perpetual `1h`
 - 机制：两年闭合 `1h` K 多指标自适应 regime 广搜（EMA/MACD/RSI/Stoch/CCI/ADX/ATR/Keltner/Donchian/VWAP/结构 + 高周期 regime + 资金费过滤），ensemble 组合。
-- 当前状态：V1、V2 已登记；高胜率硬目标复搜 `0` 命中；`not promoted / not live-ready`。
-- V2 改进结论：问题是负偏收益结构与 VWAP short regime 失效；收益结构重做可把 full annual 提高到 `3.05x`，但 reused holdout 仍为负。`3-bar roc6+MACD confirm` 状态机把 reused holdout 改为 `+2.61%`，但只有 `3` 笔。后续冻结 V2 和 `V2-SM-OBS`，采用 `Donchian core + VWAP arm-confirm-expire satellite`，等待 fresh forward，不登记 V3。
+- 当前状态：V1、V2、V3 已登记；`not promoted / not live-ready`。
+- V3：此前 `V2-SM-OBS`，采用 `Donchian core + VWAP arm-confirm-expire satellite`；full annual `2.10x`、DD `-19.05%`、win `79.17%`，reused holdout `+2.61%` 但只有 `3` 笔；首个约 10 天 fresh forward 为 `0` 笔，继续等待证据。
 
 ## 研究协议（冻结口径）
 
@@ -20,6 +20,8 @@
 - 主账（V1/V2 版本表、指标与证据链接）：`sol-1h-ar-core-ledger.md`
 - 决策记录：`decision-log.md`
 - V2 参数规格：`specs/sol-1h-ar-v2-parameter-spec-2026-07-07.md`
+- V3 参数规格：`specs/sol-1h-ar-v3-parameter-spec-2026-07-13.md`
+- V3 fresh forward：`diagnostics/sol-1h-ar-v3-fresh-forward-2026-07-13.md`
 - 高胜率硬目标搜索 not-promoted 证据：`diagnostics/sol-1h-ar-high-win-target-search-2026-07-07.md`
 - V2 改进综合结论：`notes/sol-1h-ar-v2-improvement-conclusion-2026-07-10.md`
 - V2 收益结构改造：`diagnostics/sol-1h-ar-v2-mechanism-redesign-2026-07-10.md`

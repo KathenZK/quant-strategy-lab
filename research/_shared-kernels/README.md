@@ -16,3 +16,4 @@
 | Kernel | 最新冻结版本 | 机制 | 消费方 |
 | --- | --- | --- | --- |
 | `1h-adaptive-regime-search/` | `v2` | Binance USD-M `1h` 多指标自适应 regime 广搜/回测引擎 | HYPE、BTC、ETH、SOL、BNB、TRX、asset-portfolios ensemble 的 `1h-adaptive-regime` 脚本 |
+| [multi-horizon-ema-forecast/](multi-horizon-ema-forecast/README.md) | `v1` | 多参数 EMA 波动率归一化 forecast、连续仓位、成本与 funding 回测 | HYPE `15m` / `1h` multi-horizon EMA forecast 家族 |

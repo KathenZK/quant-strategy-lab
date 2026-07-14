@@ -41,3 +41,21 @@
 结论：433 个 ATR10/ATR84 动态 TP/SL 配置中，没有任何配置同时提高胜率、降低 MDD并满足全样本/validation 收益保留约束；V2.1 继续冻结固定 `TP=10% / SL=2.5%`，不创建 V2.2。
 
 证据：[notes/hype-30m-k2-v2-1-dynamic-atr-bracket-2026-07-10.md](notes/hype-30m-k2-v2-1-dynamic-atr-bracket-2026-07-10.md)。
+
+## 2026-07-13：V2.1 RSI / MACD 入场过滤
+
+结论：刷新至 `2026-07-13` 后重跑 369 个 RSI14、MACD(12,26,9) 及组合过滤，没有配置同时提高胜率、降低 MDD并满足收益保留约束。最佳 1h RSI≥58/≤42 过滤把胜率提高约 `1pp`、收益保留 `95%`，但全样本 MDD不变且 holdout 从 `-5.23%` 恶化至 `-10.50%`；MACD 最佳行与基线逐指标等价。V2.1 保持不变，不创建 V2.2。
+
+证据：[notes/hype-30m-k2-v2-1-rsi-macd-filter-study-2026-07-13.md](notes/hype-30m-k2-v2-1-rsi-macd-filter-study-2026-07-13.md)。
+
+## 2026-07-13：V2.1 损失 Regime 优化
+
+结论：`ATR84/entry <= 1.25%` 与方向化突破 bar close location `>=65%` 的组合，在刷新样本上将胜率从 `56.14%` 提高到 `67.95%`、MDD 从 `-25.84%` 降到 `-22.68%`、收益从 `+4522.03%` 提高到 `+6328.98%`，prefit/validation/Monte Carlo 同步改善。当时保留为未登记候选观察。
+
+证据：[notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md](notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md)。
+
+## 2026-07-13：登记 V3
+
+结论：按用户决定，将损失-regime 过滤候选正式登记为 `HYPE-30M-Keltner-Trend-Breakout-V3：registered / not promoted / not live-ready`。V3 = V2.1 + 入场 ATR cap `1.25%` + 方向化 close-location `>=65%`；因过滤语义变化升主版本。Gate 6/7 仍失败，不进入 `audit` / runner。
+
+证据：[specs/hype-30m-keltner-trend-breakout-v3-spec.md](specs/hype-30m-keltner-trend-breakout-v3-spec.md)，[notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md](notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md)。

@@ -17,7 +17,8 @@ approval_level_max: dry_run
 - Exchange / market：Binance USD-M Futures。
 - Assets / timeframe：六资产组合 / `1h`。
 - Runner kind：`six_asset_ensemble`。
-- Runtime：组合级严格单仓，自管多资产 K 线和 funding；不得按占位
+- Runtime：组合级严格单仓；Driver 声明六资产 K 线、mark 和 funding 依赖，
+  dispatcher 统一构建 multi-market snapshot。不得按占位
   `BTC/USDT:USDT` 进入普通单标的共享行情组。
 - Funding：空仓时任一 sleeve funding 获取失败必须阻止新入场；已有持仓仍须
   执行止损、止盈和 timeout，若 active sleeve funding 暂时不可得，则本次
@@ -53,7 +54,7 @@ approval_level_max: dry_run
 - 稳定性补充契约（Runner `e69589f`，已于 `2026-07-13 21:02 CST`
   部署 dry-run）：任一资产 transient 数据缺失时，
   不得用残缺 universe 开新仓；已有仓位必须继续止损/平仓维护并重试缺失依赖。
-  self-managed group 的失败不得终止同 service 的其他策略。该契约不授权 V1 live。
+  multi-market Driver bundle 的失败不得终止同 service 的其他策略。该契约不授权 V1 live。
 
 ```toml
 name = "six-asset-ensemble-dry-run"
@@ -65,3 +66,14 @@ state_dir = "/home/admin/quant-runner/state/six-asset-ensemble-dry-run"
 warmup_bars = 1500
 dry_run_notional_usdt = 10.0
 ```
+
+## Runner 实现绑定（2026-07-14，未部署）
+
+V1 runtime 已统一为 multi-market `StrategyDriver`。六组 `MarketRequirement` 驱动
+dispatcher 构建 candles/mark/funding 完整快照；任一依赖缺失时禁止新开仓。
+sleeve/active-position/cooldown 私有状态保存到 versioned
+`StrategyStateEnvelope`，动态 symbol 订单仍走统一 execution kernel。策略通过
+`inventory` 自注册，不再存在 self-managed runtime 分支。该变更不替代
+`371/371` parity，也不改变 `DryRunOnly / NO-GO / not live-ready`。
+symbol/side/allocation 变化必须显式 `Replace` 并按 persisted `AfterFlat`
+close-confirm-open；重启时从 `pending_replacement` 续做，不提供隐式仓内 resize。

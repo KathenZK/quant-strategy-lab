@@ -15,3 +15,4 @@
 - `sol_1h_ar_v2_staged_exit_*_2026-07-10.*`：分段止盈、保本 stop、failure exit 候选与交易路径。
 - `sol_1h_ar_v2_leg_governor_*_2026-07-10.*`：VWAP 腿级 cooldown governor 候选与交易路径。
 - `sol_1h_ar_v2_vwap_state_machine_*_2026-07-10.*`：VWAP arm-confirm-expire 状态机候选、选中观察与交易路径。
+- `sol_1h_ar_v3_fresh_forward_2026-07-13.json`：V3 在 `2026-07-03` 后新增数据上的 forward 重放摘要。

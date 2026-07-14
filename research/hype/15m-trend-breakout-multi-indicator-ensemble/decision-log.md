@@ -1,5 +1,11 @@
 # Decision Log
 
+## 2026-07-14 V39 腿临近 TP 回吐与保护线复测
+
+- 运行证据：`hype-tb-mii-ens-dry-run` 的 `ema_tb_v39` 空单于 `2026-07-13T14:45Z` 以 `64.156` 入场，最大 MFE `4.8387ATR`，截至 `2026-07-14T07:45Z` 仍 open；runner signal/entry timestamp 与研究回放一致，entry price 仅差约 `0.47 bps`，close 对齐待实际平仓后补充。
+- 决定：保持 V2 当前 `5ATR TP / 7ATR SL` 和 runner 配置不变。`4.75 -> lock 4.25` 虽能在本次锁定约 `+6.62%`，但 V39 full 从 `+9969.45%` 降到 `+7417.48%` 且会立即同向重入；固定 16 根冷却、`4.90 -> 4.40` 和固定 `4.75ATR TP` 也均不成立。不修改 dry-run，不启用 live。
+- 证据：[runtime 对齐报告](runner-tracking/hype-15m-tb-mii-ens-v2-near-tp-runtime-reconciliation-2026-07-14.md)、[V35/V39 floor 复测](../15m-ema-trend-breakout/notes/hype-ema-tb-v35-v39-near-tp-floor-diagnostic-2026-07-14.md)。
+
 ## 2026-07-09 V2 production dry-run deployed
 
 - 问题：用户要求把 V2 “发到线上去”，本次范围确认为只部署/重启 `dryrun` 服务，不开启 live。

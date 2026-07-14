@@ -38,6 +38,21 @@ runner kind implemented / replay parity pass / continuous dry-run runtime implem
   live-ready`。交接契约见
   [V2 active validation spec](../live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)。
 
+## 2026-07-14 StrategyDriver 最终迁移（仅代码，未部署）
+
+- `hype_tb_mii_ensemble` 已从 legacy runtime adapter 迁入通用
+  `StrategyDriver`。V39/MII pending signal、active leg、warning state 和
+  preempt gate 均保存到 versioned `StrategyStateEnvelope`。
+- preempt 由声明式 `StrategyDecision::Replace` 表达，execution kernel 强制
+  close-confirm-open；未确认平仓时不允许增加风险。trend/MII 的 fee、slippage
+  和 bar 出场口径仍按 entry kind 区分。
+- `MarketRequirement` 统一提供 featured/mark 数据；持仓期 trend 与 MII signal
+  仍被计算并写入 cycle/signal ledger。策略模块通过 `inventory` 自注册 Driver
+  factory 与 replay handler，不再存在 adapter 或中心 runtime match。
+- Runner workspace `152` 个 unit tests、`12` 个 integration tests、strict
+  Clippy、六策略 smoke/replay 及配置校验通过。本次未部署，也不替代既有
+  `291/291` parity；状态保持不变。
+
 ## 来源
 
 - Runner repo：`/Users/ZK/OpenCode/quant-runner`
@@ -179,3 +194,20 @@ curve tolerance。
   只能经 clean `risk-resume` 清除。Runner `e69589f` 已于 `21:02 CST`
   部署 dry-run，初检 health=`ok`、flat、无 warning/error；既有 parity、
   live disabled 与 not live-ready 结论不变。
+
+## 2026-07-14 StrategyDriver 迁移与收尾（仅代码，未部署）
+
+- `hype_tb_mii_ensemble` 已迁入通用 `StrategyDriver`。V39/MII 信号、leg
+  fee/slippage、保护和 preempt 决策留在策略目录；订单、reconcile、ledger
+  和 fail-closed 由 execution kernel 统一处理。
+- preempt 现在显式输出 `StrategyDecision::Replace`，目标必须使用 persisted
+  `AfterFlat`。执行核先保存 replacement target，再平旧仓、确认 flat 后开新仓；
+  重启时从 `pending_replacement` 续做，不允许 close 未确认时开新 leg。
+- `trend_last_exit_ts` / `mii_available_ts` 等私有状态进入 versioned
+  `StrategyStateEnvelope`。历史 `preempt_in_progress=true` 不能安全自动推断，
+  因此启动时继续 fail-closed，要求 operator reconciliation。
+- Driver/replay 通过策略模块 `inventory` 自注册；legacy adapter 和中心
+  runtime/replay kind match 已删除。该迁移不替代既有 parity，也不改变
+  `dry-run active / live disabled / not live-ready`。
+- 最终本地验证为 `162` 个 unit tests、`12` 个 integration tests、strict
+  Clippy、dry-run/live 配置校验和六策略 2500-bar Binance smoke replay 全通过。

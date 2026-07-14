@@ -18,5 +18,6 @@
 - `btc_1h_ar_v4.py`：`BTC-1H-Adaptive-Regime-V4` 最小等价干净参数复现入口；强制验证与 V3 逐笔等价。
 - `research_btc_1h_ar_v4_window_backtest.py`：V4 canonical/recent/calendar/half-year/monthly 多时间窗口回测。
 - `audit_btc_1h_ar_v4_new_leg_increment.py`：从原搜索 retained singles 中抽取候选 style，以 V4 绝对优先、候选填空仓的合同审计新腿重叠、占用和边际贡献。
+- `research_btc_1h_ar_v4_structural_trials.py`：按顺序搜索 VWAP short-only、wick transition-only、MACD replace-Keltner，并仅在新增腿过门时测试三态 router。
 
 这些 wrapper 固定校验被复用引擎的 SHA-256；依赖脚本漂移时 fail closed，避免静默改变历史复现结果。

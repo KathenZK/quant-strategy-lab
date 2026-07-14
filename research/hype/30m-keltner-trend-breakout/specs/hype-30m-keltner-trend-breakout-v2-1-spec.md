@@ -92,6 +92,10 @@ notional      = equity_at_entry * leverage
 
 ATR10/ATR84 动态 TP/SL 已完成 433 组诊断，没有配置同时提高胜率、降低 MDD并满足收益保留约束；动态 bracket 不属于 V2.1，固定 TP/SL 继续冻结。
 
+RSI14/MACD(12,26,9) 入场过滤已完成 369 组诊断；最佳 RSI 过滤提高约 `1pp` 胜率但 MDD不变且新增 holdout 更差，最佳 MACD 行与基线逐指标等价。RSI/MACD 不属于 V2.1。
+
+损失-regime 优化得到的过滤已登记为 [`HYPE-30M-Keltner-Trend-Breakout-V3`](hype-30m-keltner-trend-breakout-v3-spec.md)；该过滤不属于 V2.1，V2.1 参数仍按本规格冻结。
+
 ## 成本口径
 
 | 项 | 值 |
@@ -137,6 +141,8 @@ ATR10/ATR84 动态 TP/SL 已完成 433 组诊断，没有配置同时提高胜�
 
 - [全参数消融与微调报告](../notes/hype-30m-k2-v2-full-ablation-pruned-tune-2026-07-10.md)
 - [ATR 动态 TP/SL 诊断](../notes/hype-30m-k2-v2-1-dynamic-atr-bracket-2026-07-10.md)
+- [RSI / MACD 入场过滤诊断](../notes/hype-30m-k2-v2-1-rsi-macd-filter-study-2026-07-13.md)
+- [损失 Regime 过滤优化](../notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md)
 - [严格门禁报告](../notes/hype-30m-k2-strict-validation-gates-2026-07-10.md)
 - [研究脚本](../scripts/research_hype_30m_k2_v2_full_ablation_and_tune.py)
 - [汇总 JSON](../artifacts/hype_30m_k2_v2_full_ablation_tune_2026-07-10.json)

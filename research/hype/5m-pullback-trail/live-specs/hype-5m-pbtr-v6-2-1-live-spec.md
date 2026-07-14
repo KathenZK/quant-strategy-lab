@@ -68,6 +68,13 @@ timeout、成本假设或状态：
   429、5xx 或短暂 user-stream 断开必须关闭新开仓闸并重试，但不能退出进程或停止
   已有持仓的撤单、保护、reconcile 与平仓；只有 clean snapshot 确认 mismatch
   才进入持久 fail-closed，仍需 `risk-resume`。订单 POST 继续禁止盲重试。
+- 2026-07-14 Runner workspace 已把 `hype_pullback` 迁入通用
+  `StrategyDriver -> TargetPosition -> execution kernel`（尚未部署）。Driver
+  输出信号 K `ATR14` 的绝对 TP/SL 距离，execution kernel 必须在真实 entry fill
+  后加减该固定距离；不得按 decide 参考价换算百分比，以免改变 V6.2.1 bracket。
+- 中心 `RuntimeModel` 已删除，Driver factory 由 `catalog.rs` 注册。此代码迁移
+  不改变 signal、next-open、TOML、state path、allocation、费用、滑点、timeout、
+  live notional 或恢复语义，也不构成增资、promotion 或 parity 结论。
 
 实现状态见
 [2026-07-11 runner tracking（含 2026-07-12 未部署迁移补记）](../runner-tracking/hype-5m-pbtr-runner-2026-07-11.md)。
@@ -711,3 +718,13 @@ K 线缺口或未闭合 K 被用于信号
 - V6.2.1 feasibility audit script：`../scripts/research_hype_5m_pbtr_v6_2_1_live_feasibility_audit.py`
 - V6.2 base ablation script：`../scripts/research_hype_5m_pbtr_v6_2_full_ablation.py`
 - V6 executable search source：`../scripts/research_hype_5m_pbtr_v6_live_executable_search.py`
+
+## Runner 实现绑定（2026-07-14，未部署）
+
+当前 quant-runner 实现为 `StrategyDriver -> TargetPosition -> execution kernel`。
+Driver 声明 `5m HYPE` 行情依赖和 ATR14 绝对保护距离；执行核在实际 fill 后解析
+TP/SL，并统一处理 stable client ID、订单持久化、reconcile 与通知。策略模块通过
+`inventory` 自注册，不存在 PBTR runtime 分支。此实现变更不修改本规格参数、
+tiny-live-pilot 边界或 promotion 结论；部署前仍需按本文件执行验收。
+非零新仓 target 只能 `NextOpen`；任何 side/symbol/allocation 替换都必须使用
+persisted `AfterFlat`，不提供隐式仓内 resize。

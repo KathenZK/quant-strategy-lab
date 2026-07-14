@@ -24,5 +24,6 @@
 - 决策记录：`decision-log.md`
 - 版本规格：`specs/`（V1 原始/clean、V2 clean-equivalent、V3 微调）
 - 搜索 not-promoted 证据：`diagnostics/bnb-1h-adaptive-regime-search-2026-07-03.md`、`diagnostics/bnb-1h-ar-cap3-highwin-search-2026-07-06-cap3-highwin.md`
+- V3 prefit-only 优化：`notes/bnb-1h-ar-v3-prefit-walkforward-optimization-2026-07-13.md`；exit/filter 分阶段搜索 `0` 个候选通过 K+2/8bps/inner-WF 联合门槛，未产生 V4。
 
 脚本在 `scripts/`（fetch / search / ablation / tune / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

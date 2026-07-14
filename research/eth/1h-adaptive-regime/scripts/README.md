@@ -16,3 +16,6 @@
 - `eth_1h_ar_v2_1_clean.py`：删除 2 个 inert 字段后的 27 参数 V2.1 clean interface，fail closed 校验与 V2.1 逐笔等价。
 - `research_eth_1h_ar_v2_1_clean_tune.py`：在 27 参数干净面上搜索相对 V2.1 收益更高、胜率更高、回撤更小的组合，并做 K+2/8 bps 稳健排序与冻结后审计。
 - `research_eth_1h_ar_v3_frequency_forward_diagnostic.py`：复现 V3 后做频率/forward 诊断，输出过滤瓶颈、单项放松、频率优先网格和 fresh forward 优化建议；不登记新版本。
+- `research_eth_1h_ar_v3_high_win_frequency_tune.py`：在 V3 的 27 参数 clean surface 上，以高胜率、交易数和 DD 联合门槛重做全策略搜索，并审计 K+2/8 bps、邻域和 bootstrap；不登记新版本。
+- `research_eth_1h_ar_v3_high_win_strategy_refine.py`：从 high-win frequency 的 33 个稳健候选出发重配两腿风险暴露，在胜率只允许小幅下降的约束下增加交易数并压低回撤；其冻结 observation 已登记为 V4。
+- `eth_1h_ar_v4.py`：`ETH-1H-Adaptive-Regime-V4` 冻结 clean 参数、标准分片与逐笔复现入口。

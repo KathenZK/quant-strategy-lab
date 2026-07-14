@@ -109,3 +109,13 @@
 - `fixed 1x` 结果：`vwap_revert` / `wick_reject` 的 prefit 边际总收益为 `+272.66%` / `+174.19%`，但 reused holdout 边际为 `-19.38%` / `-1.97%`；`macd_flip` prefit 边际 `-819.79%`，但 validation/reused holdout 为 `+21.83%` / `+19.90%`。其余候选当前参数三窗口边际均弱。
 - 决策：没有现成候选可登记 V5。优先研究 `VWAP revert short-only`（补 CCI 只做多缺口）、`wick reject transition-only`（低杠杆过渡态）、`MACD flip replace-Keltner`（替换实验，不直接叠加）；只有出现正边际腿后才实现显式三态 regime router。reused holdout 永久只作污染审计，候选冻结后等待 `>=90` 天且 `>=20` 笔 untouched forward。
 - 状态不变：`V4 registered / not promoted / not live-ready`。证据见 `notes/btc-1h-ar-v4-structural-optimization-study-2026-07-10.md`、`artifacts/btc_1h_ar_v4_new_leg_increment_2026-07-10.json` 和 `artifacts/btc_1h_ar_v4_new_leg_increment_rows_2026-07-10.csv`。
+
+## 2026-07-13 — 按推荐顺序验证 V4 结构优化
+
+- 固定 V4 参数、交易路径和执行成本；候选加法腿统一 `fixed 1x`，MACD 替换腿固定为 Keltner 同等 `2.4x`。选参只读取 train/validation/prefit，reused holdout 只在阶段 winner 冻结后展示。
+- `VWAP revert short-only` 搜索 `2,500` 组，严格 gate 命中 `0`。高分点组合 prefit/validation 边际为 `+67.55pp / +83.12pp`，但候选腿自身 train/prefit 为 `-32.76% / -22.58%`，且组合 prefit 胜率下降 `13.11pp`，拒绝。
+- `wick reject transition-only` 搜索 `2,500` 组，严格 gate 命中 `0`。高分点组合 prefit 提升 `+152.69pp` 且形状不恶化，但候选腿自身仅 train `2` 笔、validation `1` 笔，组合只新增 `2` 笔，属于小样本幻觉，拒绝。
+- `MACD flip replace-Keltner` 搜索 `2,000` 组，严格 gate 命中 `0`；没有任何一组 prefit 边际收益为正。高分点 prefit 总收益减少 `556.20pp`、DD 恶化 `9.31pp`、胜率下降 `15.66pp`，拒绝。
+- 三态 regime router 的前置条件是至少一条新增腿通过 gate；本轮前置条件未满足，因此按协议跳过，不放宽门槛强行搜索 router。
+- 决策：不登记 V5，不继续扩大当前 16 类 OHLCV style 的参数搜索。若继续研究收益提升，应转向 funding/basis 独立机制、更细粒度真实成交/订单流、realized-vol 状态或跨资产已闭合 lead-lag，并重新执行数据质量和防泄漏审计；也可以先等待 V4 untouched forward。
+- 状态不变：`V4 registered / not promoted / not live-ready`。证据见 `notes/btc-1h-ar-v4-structural-trials-2026-07-13.md`、`artifacts/btc_1h_ar_v4_structural_trials_2026-07-13.json` 和 `artifacts/btc_1h_ar_v4_structural_trials_rows_2026-07-13.csv`。

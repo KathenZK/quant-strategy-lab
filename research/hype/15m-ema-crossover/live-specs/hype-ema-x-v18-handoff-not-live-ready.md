@@ -56,3 +56,13 @@ state_dir = "/home/admin/quant-runner/state/hype-ema-x-dry-run"
 warmup_bars = 5000
 dry_run_notional_usdt = 10.0
 ```
+
+## Runner 实现绑定（2026-07-14，未部署）
+
+EMA-X runtime 已统一为 `StrategyDriver`。策略目录拥有 normal/late entry、
+warning-confirm、hard stop、MFE 与 exit memo；执行核拥有订单、保护、reconcile
+和 ledger。私有状态保存到 versioned `StrategyStateEnvelope`，旧扁平状态只读
+迁移；stop 使用显式 touch-only bar 口径。该变更不修改 V18 参数、dry-run 配置、
+state path 或 `not live-ready` 结论。
+新仓 target 只能使用 `NextOpen`；allocation/side 变化必须显式 `Replace` 并按
+persisted `AfterFlat` close-confirm-open，不提供隐式仓内 resize。

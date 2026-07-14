@@ -22,5 +22,6 @@
 - 数据质量报告：`diagnostics/btc-binance-1h-data-quality-2026-07-02.md`
 - 主搜索与 not-promoted 审计：`diagnostics/btc-1h-adaptive-regime-search-2026-07-02.md`、`diagnostics/btc-1h-adaptive-regime-boundary-audit-2026-07-02.md`
 - V4 结构优化研究：`notes/btc-1h-ar-v4-structural-optimization-study-2026-07-10.md`；结论为停止 V4 参数邻域微调，改做相对 V4 的新腿边际搜索与显式 regime router 研究。
+- V4 结构顺序验证：`notes/btc-1h-ar-v4-structural-trials-2026-07-13.md`；VWAP short-only `2,500` 组、wick transition-only `2,500` 组、MACD replace-Keltner `2,000` 组均为 `0` 严格 gate 命中，router 按停止条件跳过；未产生 V5。
 
 脚本在 `scripts/`（fetch / search / ablation / tune / window backtest / vN 复现入口），被报告引用的产物在 `artifacts/`。逐版本演进结论以主账和 decision-log 为准。

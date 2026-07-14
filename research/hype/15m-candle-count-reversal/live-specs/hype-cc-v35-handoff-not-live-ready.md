@@ -55,3 +55,13 @@ state_dir = "/home/admin/quant-runner/state/hype-candle-count-v35-dry-run"
 warmup_bars = 5000
 dry_run_notional_usdt = 10.0
 ```
+
+## Runner 实现绑定（2026-07-14，未部署）
+
+Candle-Count runtime 已统一为 `StrategyDriver`。risk multiplier、cooldown 和
+early-exit 状态由 Driver 保存到 versioned `StrategyStateEnvelope`；mark/funding
+由声明式 `MarketRequirement` 提供，mark stop/take 使用 touch-only bar 口径。
+订单、保护、reconcile 与 ledger 仍由统一 execution kernel 执行。该变更不修改
+V35 参数、state path、历史 underperformance blocker 或 live 禁用结论。
+新仓 target 只能使用 `NextOpen`；allocation/side 变化必须显式 `Replace` 并按
+persisted `AfterFlat` close-confirm-open，不提供隐式仓内 resize。

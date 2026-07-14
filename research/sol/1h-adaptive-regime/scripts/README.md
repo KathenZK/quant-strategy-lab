@@ -12,5 +12,6 @@
 - `research_sol_1h_ar_v2_staged_exit.py`：V2 部分止盈、延伸目标、次 K 保本 stop 与快速失效次根 open 退出诊断。
 - `research_sol_1h_ar_v2_leg_governor.py`：VWAP satellite 在 stop/亏损后的在线 cooldown 治理诊断；验证事后暂停能否修复 regime 失效。
 - `research_sol_1h_ar_v2_vwap_state_machine.py`：把 VWAP 偏离事件改写为 `arm → confirm → expire` 状态机；confirm 使用闭合 K，下一根 open 入场。
+- `audit_sol_1h_ar_v3_fresh_forward.py`：使用刷新数据重放 V3，并审计 `2026-07-03` 之后的新增 forward 交易。
 
 统一从仓库根目录使用 `uv run python ...` 执行。

@@ -168,3 +168,35 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   发布前后本实例 flat，切换后 health=`ok`，无 warning/error。
 - strict backtest-vs-runtime 对拍未在本事件中独立重算，因此 match 仍 pending；
   本事件不改变 `DryRunOnly / NO-GO / not promoted / not live-ready` 或既有 parity。
+
+## 2026-07-14 Multi-market StrategyDriver 迁移（仅代码，未部署）
+
+- `six_asset_ensemble` 已从 self-managed legacy runtime 迁入 multi-market
+  `StrategyDriver`。Driver 声明六组 `MarketRequirement`；dispatcher bundle
+  统一拉取每个 symbol 的 closed candles、mark 与 funding，并构建完整
+  `MarketSnapshot`。
+- 任一依赖缺失时 Driver 返回 `dependency_degraded`，禁止新开仓；定向测试覆盖
+  残缺六资产快照不能增加风险。已有仓位仍按可用 mark 和 symbol-explicit venue
+  执行 close/protection。
+- sleeve cooldown、active runtime 与 best price 已进入 versioned
+  `StrategyStateEnvelope`；动态 symbol entry/exit 仍经过 stable client ID、
+  persist-before-submit 和 tracked order。持仓期 active sleeve signal 继续写 ledger。
+- 策略模块通过 `inventory` 自注册 Driver/replay；legacy adapter 和中心
+  self-managed 分支均已删除。Runner workspace `152` 个 unit tests、`12` 个
+  integration tests、strict Clippy、六策略 smoke/replay 和配置校验通过。
+- 本次未部署、未重启、未采集新 runtime trade/fill，不替代 `371/371` parity；
+  `DryRunOnly / NO-GO / not promoted / not live-ready` 保持不变。
+
+## 2026-07-14 Driver 收尾验证（仅代码，未部署）
+
+- dispatcher 已按 Driver 声明的 symbol/timeframe 组合抓取行情；单 Driver 可声明
+  多 symbol 和多 timeframe，实例市场的 closed bar 仍是 decision clock。mark/
+  funding 缺失继续阻止 risk-increasing target。
+- symbol/side/allocation 变化只能显式 `Replace`，执行核用 persisted `AfterFlat`
+  close-confirm-open 并支持重启续做；不提供隐式仓内 resize。动态 symbol 的
+  target 必须属于已声明 `MarketRequirement`。
+- 历史 nested `ar_mae.sleeve_cooldown_until` 有定向迁移测试，保存后只保留
+  versioned `StrategyStateEnvelope`。本次没有部署或新增 runtime fill，
+  `DryRunOnly / NO-GO / not promoted / not live-ready` 不变。
+- 最终本地验证为 `162` 个 unit tests、`12` 个 integration tests、strict
+  Clippy、dry-run/live 配置校验和六策略 2500-bar Binance smoke replay 全通过。

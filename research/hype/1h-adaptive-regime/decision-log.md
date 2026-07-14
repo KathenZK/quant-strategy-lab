@@ -71,3 +71,7 @@
 - 压力优先搜索只改止损、最长持仓、trailing 和固定/风险封顶仓位：DI `223` 个、Stoch `589` 个、精确 ensemble `930` 个；`431` 个通过 prefit 三场景 gate，冻结前 `12` 名在后段完整回撤通过为 `0`，完整 target pass 为 `0`。
 - 后验机制诊断中，DI `3x -> 2.5x`、Stoch `SL 4 ATR -> 2 ATR`、Stoch `8h -> 6h` 可把 base/K+2/8bps current-full DD 分别压至 `-14.20% / -19.64% / -18.71%`，对应年化 `14.3901x / 7.9815x / 11.2061x`。它修复回撤但未修复 K+2 与后段收益边际，不登记 V5。
 - 决策：V4 继续 `NO-GO / not live-ready`；后续必须以精确联合状态机为唯一事实源。若继续研究，应优先重做延迟鲁棒入场机制，而不是继续放大杠杆或围绕旧近似指标调参。
+
+## 2026-07-13：VWAP 确认式第三腿严格搜索零命中
+
+- 决策：`2,400` 个 `1x` short-only VWAP `arm-confirm-expire` 候选中，`13` 个通过 standalone 高胜率门槛，但精确三腿 base/K+2/8bps 联合门槛通过数为 `0`；冻结失败对照在 reused holdout 也没有正边际，因此不接纳第三腿、不登记 V5。证据见 [`notes/hype-1h-ar-v4-vwap-third-leg-search-2026-07-13.md`](notes/hype-1h-ar-v4-vwap-third-leg-search-2026-07-13.md)。

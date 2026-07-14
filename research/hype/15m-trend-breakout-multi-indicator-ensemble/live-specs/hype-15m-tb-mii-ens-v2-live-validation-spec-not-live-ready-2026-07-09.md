@@ -538,3 +538,14 @@ HYPE-15M-TB-MII-ENS-V2: dry-run active / replay parity PASS / live disabled / no
 ```
 
 只有 runner 实现、replay 对拍、shadow/dry-run、订单时序审计和 kill-switch 验证全部完成后，才允许讨论小资金 live pilot。
+
+## Runner 实现绑定（2026-07-14，未部署）
+
+V2 runtime 已统一为 `StrategyDriver`。V39/MII 状态保存在 versioned
+`StrategyStateEnvelope`，preempt 通过 `StrategyDecision::Replace` 交给 execution
+kernel 执行 persisted close-confirm-open；进程在 close/open 之间退出时必须从
+`pending_replacement` 续做，不能重新计算或跳过目标。无法安全推断的历史
+`preempt_in_progress` 状态继续 fail-closed。fee/slippage 与保护口径继续按
+active leg 区分。
+策略模块通过 `inventory` 自注册 Driver/replay，不再存在 legacy adapter。该变更
+不替代既有 `291/291` parity，也不改变 `live disabled / not live-ready`。
