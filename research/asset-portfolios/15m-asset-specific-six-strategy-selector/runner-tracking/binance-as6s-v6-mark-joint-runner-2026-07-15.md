@@ -81,3 +81,19 @@ fixture 由冻结点以前的数据通过
 - 两条路线各自是单仓虚拟账户，不互相净额；公共平台 ledger 以实例名和策略 ID
   分账。基础名义金额各为 `10 USDT`，最大 allocation `2.25`。
 - 本次仅改变运行状态与 forward 证据收集，不修改冻结参数、路由或未来 OOS。
+
+## 线上 dry-run 部署
+
+- Runner commit：`b54d07fdaecb32e62cd8af55a7712ec8fc2fa894`。
+- 构建来源：GitHub Actions `Build Linux release` run
+  `29416727782`；governance、tests、strict Clippy 与 Linux x86-64 release build
+  全部通过。
+- Artifact SHA-256：
+  `11cccc4eb5ec231bf92f941c36a77346a4264cd645496bc9a4c9f9c7b568b17e`。
+- 部署目标：阿里云 `quant-runner-dryrun.service`；live 服务未重启。
+- 部署后 `strategy_health` 在 `2026-07-15T12:58:33Z` 显示两个 V6 实例均为
+  `status=ok / position_open=0`，最后消费的决策 K 为
+  `2026-07-15T12:30:00Z`；部署后 5 分钟 warning..alert 日志为空。
+- 平台 `strategy_instances` 确认两个实例均 `enabled=1`，state directory 分别为
+  `state/bin-15m-as6s-v6-mark-np-dry-run` 与
+  `state/bin-15m-as6s-v6-mark-preemptive-dry-run`。
