@@ -162,3 +162,30 @@
   `live / tiny-live-pilot / forward-test required`。
 - execution contract 已固定：新仓 target 只能 `NextOpen`；allocation/side/symbol
   变化必须显式 `Replace` 并使用 persisted `AfterFlat`，不提供隐式仓内 resize。
+
+## 2026-07-14 Driver 最终加固（仅代码，未部署）
+
+- Runner 工作树补齐 exact decision clock、可选 mark/funding 独立降级和
+  persisted Replace 重启续做；同 symbol/side/allocation 的 `Immediate` 非零
+  target 只允许更新保护，不会被当成新开仓。
+- PBTR 的 V6.2.1 signal、absolute ATR bracket、next-open、fee/slippage 与 live
+  tiny-pilot 配置均未改变。
+- 最终来源命令：`cargo test --workspace` 为 `170` 个 unit +
+  `12` 个 integration 全通过；strict Clippy、dry-run/live config 校验与六实例
+  smoke 均通过。`replay-dry-run --limit 2500` 当前 Binance rolling window 为
+  `0` signal / `0` trade，不构成 parity 样本。
+- 本次未部署、未重启、无新真实 order/fill；状态仍为
+  `live / tiny-live-pilot / forward-test required`，不得增加资金。
+
+## 2026-07-14 Driver 架构收口（仅代码，未部署）
+
+- PBTR replay report/handler 与默认配置构造已归策略模块；中心 replay 只保留公共
+  行情获取和 bracket smoke primitive，新增策略不再要求 bootstrap per-kind helper。
+- 保护执行方式从 `ProtectionPlan` 解析后写入 `PositionState`，补挂/reconcile
+  只读持久化事实；旧仓位 fallback 仅用于一次性迁移。
+- exact decision clock 降级维护不会写 signal timestamp 或伪装成 successful bar；
+  PBTR signal、absolute ATR bracket、next-open、fee/slippage 均未改变。
+- 最终验证：`179` 个 unit tests、`12` 个 integration tests、strict Clippy、
+  dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
+- 本次未部署、未重启、无新真实 order/fill；状态仍为
+  `live / tiny-live-pilot / forward-test required`，不得增加资金。

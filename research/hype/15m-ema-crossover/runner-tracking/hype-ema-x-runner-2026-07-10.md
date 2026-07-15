@@ -81,3 +81,33 @@
 - 最终验证为 `162` 个 unit tests、`12` 个 integration tests、strict Clippy、
   dry-run/live 配置校验和六策略 Binance smoke replay 全通过。本次未部署且无新
   trade/fill；`keep dry-run / do not enable live` 不变。
+
+## 2026-07-14 Driver 最终加固（仅代码，未部署）
+
+- EMA-X `last_exit_pnl` 明确恢复为旧 adapter/replay 使用的
+  `allocation * side * (exit / entry - 1)` 毛价格收益，避免把手续费后的 net
+  return 带入 late re-entry 门禁。
+- mark-price stop 订单类型与 dry-run bar 价格源已拆成显式 descriptor 能力；
+  EMA-X 保持 mark touch-only。Driver envelope、warning-confirm、MFE 与
+  normal/late entry 状态机不变。
+- 最终来源命令：`cargo test --workspace` 为 `170` 个 unit +
+  `12` 个 integration 全通过；strict Clippy、两份 config 与六实例 smoke
+  通过。`replay-dry-run --limit 2500` 当前 rolling window 为 `2` trades，
+  其中 `1` 笔 late entry。
+- 本次未部署、未重启、无新 runtime trade/fill；结论仍是
+  `keep dry-run / do not enable live`。
+
+## 2026-07-14 Driver state 与 mark 降级收口（仅代码，未部署）
+
+- `high_water/low_water/mfe_atr/hard_bad_bars/warning_*` 已从平台
+  `PositionState/PositionView` 移除，只保存在 EMA-X versioned envelope。
+  历史 `entry_atr14` 一次性迁为通用 `entry_risk_value`，legacy open-state fixture
+  覆盖 warning、MFE、水位、bad-bar counter 与 entry kind。
+- mark-price touch-only 策略若对应 mark K 线暂不可得，不再用 trade OHLC 伪造
+  stop；该 bar 不推进 decision clock，保留重试，同时仍允许策略软出场/timeout。
+- state schema 升级改为逐步 `migrate_state_step`；保护执行方式只信
+  `ProtectionPlan` 解析后持久化的 `PositionState.protection_execution`。
+- 最终验证：`179` 个 unit tests、`12` 个 integration tests、strict Clippy、
+  dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
+- 本次未部署、无新 runtime trade/fill；结论仍是
+  `keep dry-run / do not enable live`。

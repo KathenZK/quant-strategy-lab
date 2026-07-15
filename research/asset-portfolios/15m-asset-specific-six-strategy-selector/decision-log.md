@@ -1,0 +1,47 @@
+# Decision Log
+
+## 2026-07-14 — 建立资产特异六币策略组合家族
+
+决定保留旧六币组合的全局单仓与仲裁思想，但不再强制六币使用同一套机制。三条 HYPE 历史策略只作为趋势状态机、突破延续和短周期反转的机制先验；每个币必须独立完成参数缩放、walk-forward 与成本后诊断。
+
+## 2026-07-14 — 当前三个月降级为 reused holdout
+
+`[2026-04-14, 2026-07-14)` 已被多个相关家族揭示，只用于淘汰和风险诊断，不作为最终首次 OOS。家族冻结后以 `[2026-07-14, 2026-10-14)` 的未来新增三个月作为最终 OOS。
+
+## 2026-07-14 — 数据门禁通过并启动预拟合搜索
+
+六币 15m K 线与 funding 已补至 `2026-07-14`，连续性、重复、空值和 funding 间隔审计的 blocker 均为 0。预拟合搜索只读取 `<2026-04-14T09:00:00Z`，按币分别搜索趋势状态、突破延续和短周期反转三类机制；每个机制先冻结预拟合第一名，再揭示 reused holdout，禁止用当前三个月在同一机制内挑第二名替换失败者。
+
+## 2026-07-14 — 首轮 15m 结果因 MAE 回撤遗漏作废并重跑
+
+首轮组合脚本只在平仓权益点计算 drawdown，遗漏持仓内 MAE，导致账户回撤偏乐观。该首轮预拟合、reused reveal 和账户比较 artifact 不作为有效结论。引擎补入逐笔 `mae_return_1x`，单腿与账户指标均在每笔交易结束前先检查 MAE trough；随后按原随机种子和原搜索空间完整重跑。旧 1h 机制迁移使用原引擎的 `equity_mae`，不受此缺陷影响。
+
+## 2026-07-14 — 旧 1h 腿改为逐信号联合状态机
+
+旧 `BIN-1H-AR-MAE` 先在每个 sleeve 内跑完持仓和 cooldown，再删除被账户阻塞的交易，会产生反事实偏差。本家族迁移时改为逐信号无状态机会；只有账户真实执行某一 1h 腿后，才从真实退出时点写入该腿 cooldown。账户层严格要求下一笔 `entry_ts > previous exit_ts`，持仓期间信号不排队。
+
+## 2026-07-14 — 冻结九腿和双路线等待未来 OOS
+
+冻结九条资产专属腿。nonpreemptive 路线账户缩放 `0.75`；strong-breakout-preemptive 路线缩放 `0.50`，抢占阈值 `0.70`、margin `0.05`、最短持仓 `8h`。两条路线均通过当前 reused diagnostic 和 8bps/K+2 压力，但不登记版本、不 promotion；`[2026-07-14T09:00Z, 2026-10-14T09:00Z)` 期间禁止改参，等待一次性最终 OOS。
+
+## 2026-07-14 — 登记 BIN-15M-AS6S-V1
+
+按用户要求把九腿 nonpreemptive 路线登记为 `BIN-15M-AS6S-V1`；strong-breakout-preemptive 保留为对照 observation。V1 维持 `registered / not promoted / not live-ready`，未来最终 OOS 与冻结禁改边界不变；证据见[冻结规格](specs/binance-as6s-future-oos-freeze-2026-07-14.md)与[近期切片审计](diagnostics/binance-as6s-v1-recent-slices-2026-07-14.md)。
+
+## 2026-07-14 — 单腿取消 80% 胜率门槛，改为组合优先搜索
+
+按用户新口径，单腿只要求成本后正期望与风险可控，`80%` 胜率只在最终账户层执行。组合优先搜索得到六腿候选，包含两条全窗胜率低于 `80%` 的正期望腿；当前账户诊断通过且全窗风险收益优于 V1，但最近一个月为负、未来 OOS 未发生，因此只记录为未登记的 V2 candidate observation，证据见[组合优先诊断](diagnostics/binance-as6s-portfolio-first-v2-observation-2026-07-14.md)。
+
+## 2026-07-14 — V2 停止推进，改为单币前沿优先的 V3 observation
+
+用户指出组合优先流程仍未真正完成“先为每个币找高收益、高胜率、低回撤机制，再组合”的目标。本轮停止推进 V2，重新审计全部预拟合前沿，并按各币 ATR 分布搜索高频补充腿。结果找回被旧账户裁剪遗漏的 SOL 强突破腿；Clean-RSI 只有 HYPE 在实际 funding、8 bps 与 K+2 后保留正期望，其余币不强制套用。账户最终保留 15 条资产专属腿，nonpreemptive 与 strong-breakout-preemptive 均通过当前账户层诊断，但未来最终 OOS 未发生，因此只记录为未登记 V3 candidate observation；证据见[单币优先 V3 诊断](diagnostics/binance-as6s-asset-first-v3-diagnostic-2026-07-14.md)。
+
+## 2026-07-14 — 冻结 V3 observation 等待一次性未来 OOS
+
+V3 进一步通过合成执行语义审计与 funding 结算边界压力。全六币可交易区间两条路线频率分别为 `0.954` 和 `0.966` 笔/日，接近目标 `1` 笔/日；全区间较低频率主要来自 HYPE 上市前的不可交易时期。冻结 15 条腿、两套账户缩放和抢占参数，锁定 122 个依赖文件（含未来一次性揭示程序）与六币历史数据逻辑哈希；在 `2026-10-14T09:00Z` 前禁止调参或查看部分未来窗口。冻结不构成版本登记，状态保持 `not registered / not promoted / not live-ready`；证据见[V3 未来 OOS 冻结规格](specs/binance-as6s-v3-future-oos-freeze-2026-07-14.md)。
+
+## 2026-07-15 — V4 否决并建立 V5 joint-state observation
+
+V3 的 `exit_ts` 候选 tie-break 虽未在历史样本触发，但代码路径不可实盘，故 V4 删除所有入场期未来字段。继续翻译 runner 状态机时发现 V4 仍沿用了 `frontier15m / cleanrsi15m` 的单腿虚拟占仓候选流：即使某个信号被全局账户挡住，假想交易仍会压制同腿后续信号。联合状态审计确认历史逐笔账发生变化，因此 V4 live-executable gate 改判为 `FAIL`。
+
+V5 不重新选腿或调参，只取消未成交候选的虚拟状态；只有账户真实接受的交易才能创建持仓和退出后 cooldown。修正后 nonpreemptive 全区间 `553` 笔、胜率 `85.17%`、年化权益倍数 `5.82x`、最大回撤 `-12.86%`；最近三个月 `81` 笔、胜率 `83.95%`、收益 `+69.19%`、回撤 `-7.89%`。两条路线的 8 bps 与 K+2 账户硬门槛仍通过。V5 继续沿用原未来 OOS 时间边界，状态为未登记 observation，证据见[V5 联合状态观察](diagnostics/binance-as6s-v5-joint-state-observation-2026-07-14.md)。

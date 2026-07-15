@@ -200,3 +200,37 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   `DryRunOnly / NO-GO / not promoted / not live-ready` 不变。
 - 最终本地验证为 `162` 个 unit tests、`12` 个 integration tests、strict
   Clippy、dry-run/live 配置校验和六策略 2500-bar Binance smoke replay 全通过。
+
+## 2026-07-14 Driver 最终加固（仅代码，未部署）
+
+- dispatcher 保留成功取得的 closed candles，并把 mark/funding 失败作为独立
+  partial dependency；flat 时任何残缺都阻止入场，已有仓位则可用 active sleeve
+  candles 与可用 mark/close 继续 stop/target/timeout，funding 不完整时净 PnL
+  保持 unknown 而不是伪造为 0。
+- six-asset trail 的同仓 `Immediate` target 现按保护更新执行；exact decision
+  clock 固定为实例 `BTC/USDT:USDT 1h`，不得回退到其他 sleeve 推进 processed
+  timestamp。
+- 最终来源命令：`cargo test --workspace` 为 `170` 个 unit +
+  `12` 个 integration 全通过；strict Clippy、两份 config 与六实例 smoke
+  通过。strict replay 再次输出 full-window `371` selected trades，与冻结
+  `522/371/151/22` reference 一致。
+- 本次未部署、未重启、无新 runtime trade/fill；`DryRunOnly / NO-GO /
+  not promoted / not live-ready` 保持不变。
+
+## 2026-07-14 降级维护与多市场 reconcile 收口（仅代码，未部署）
+
+- `BTC 1h` decision clock 缺失时不再任取其他 sleeve/timeframe 作为 featured
+  frame。已有 active position 可使用同 timeframe active sleeve candles 维护；
+  candles 也缺失但 mark 可用时只允许 mark-only stop/trail/close，mark 也缺失则
+  Hold。以上路径只更新 heartbeat/degraded dedupe，不推进 processed bar 或 signal。
+- multi-market live reconcile 已补齐统一语义：先完整核对本地持仓 symbol，再扫描
+  其余声明市场的孤儿仓位/订单；本地 flat 时扫描全部市场。transient 只关闭
+  entry gate，confirmed orphan exposure 才 fail-closed。当前策略仍为 DryRunOnly，
+  该能力不构成 live 批准。
+- strategy-managed protection 现在只是统一 execution lifecycle 内的
+  `ProtectionOwnership::Strategy` capability；open/close/replace、订单状态和
+  reconcile 仍走同一执行核。保护 execution 由 plan 解析后持久化为单一事实。
+- 最终验证：`179` 个 unit tests、`12` 个 integration tests、strict Clippy、
+  dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
+- 本次未部署、无新 runtime trade/fill；`DryRunOnly / NO-GO / not promoted /
+  not live-ready` 保持不变。

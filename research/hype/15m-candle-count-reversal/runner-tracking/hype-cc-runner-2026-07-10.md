@@ -90,3 +90,31 @@
 - 最终验证为 `162` 个 unit tests、`12` 个 integration tests、strict Clippy、
   dry-run/live 配置校验和六策略 Binance smoke replay 全通过。本次未部署且无新
   trade/fill；`keep dry-run / do not enable live` 不变。
+
+## 2026-07-14 Driver 最终加固（仅代码，未部署）
+
+- Runner 将 mark/funding 可选依赖错误与成功取得的 closed candles 分开保存；
+  残缺依赖禁止 risk-increasing target，但已持仓的 early exit、保护维护和关账
+  仍可继续。
+- Candle-Count 保持 mark-price touch-only stop/take、risk multiplier、cooldown
+  与 legacy envelope 迁移口径；没有 TOML、state path 或 allocation 变更。
+- 最终来源命令：`cargo test --workspace` 为 `170` 个 unit +
+  `12` 个 integration 全通过；strict Clippy、两份 config 与六实例 smoke
+  通过。2500-bar strict replay 为 `16` entries / `15` exits，当前窗口
+  `mark_missing_bars=0`。
+- 本次未部署、未重启、无新 runtime fill；历史 underperformance blocker 与
+  `keep dry-run / do not enable live` 不变。
+
+## 2026-07-14 mark K 线降级与插件边界收口（仅代码，未部署）
+
+- Candle-Count 的 mark touch-only stop/take 在 mark K 线暂不可得时不再回退
+  trade OHLC；当前 bar 保持未处理并重试，避免永久漏判或伪造保护成交。
+  early exit、timeout、risk multiplier 与 cooldown 状态机仍可按可用输入维护。
+- replay report/handler 和严格 replay 包装已归策略模块；默认配置由本地 factory
+  构造，中心 bootstrap/replay 不再保存 Candle-Count 专属入口。
+- 保护 execution 从 plan 解析并持久化，schema 升级采用显式逐步 migration；
+  现有 risk/cooldown envelope 与策略参数未变。
+- 最终验证：`179` 个 unit tests、`12` 个 integration tests、strict Clippy、
+  dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
+- 本次未部署、无新 runtime fill；历史 underperformance blocker 与
+  `keep dry-run / do not enable live` 不变。

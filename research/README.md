@@ -70,7 +70,9 @@
 | --- | --- | --- |
 | `Binance-1D-Turtle-Breakout` | [asset-portfolios/1d-turtle-breakout/](asset-portfolios/1d-turtle-breakout/README.md) | explore |
 | `Binance-15M-Multi-Indicator-Intraday-Transfer` | [asset-portfolios/15m-multi-indicator-intraday/](asset-portfolios/15m-multi-indicator-intraday/README.md) | explore / not promoted |
+| `Binance-15M-Asset-Specific-Six-Strategy-Selector`（`BIN-15M-AS6S`） | [asset-portfolios/15m-asset-specific-six-strategy-selector/](asset-portfolios/15m-asset-specific-six-strategy-selector/README.md) | V1 registered / future OOS waiting / not promoted / not live-ready |
 | `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`） | [asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/](asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/README.md) | V1 registered / not promoted / not live-ready |
+| `Binance-1H-Multi-Leg-Six-Asset-Selector`（`BIN-1H-ML6AS`） | [asset-portfolios/1h-multi-leg-six-asset-selector/](asset-portfolios/1h-multi-leg-six-asset-selector/README.md) | explore / not promoted / not live-ready |
 | `Binance-MK7-Multi-Strategy-Account`（外部别名 `mk7`） | [asset-portfolios/mk7-multi-strategy-account/](asset-portfolios/mk7-multi-strategy-account/README.md) | `mk7-v8` external observation / explore / not promoted / not live-ready |
 | `HYPE-Cross-Strategy-Account` | [asset-portfolios/hype-cross-strategy-account/](asset-portfolios/hype-cross-strategy-account/README.md) | explore；HYPE 单资产多策略子账户诊断，不提升子策略状态 |
 | `MU-HYPE-Transfer`（`MU-HYPE-XFER`） | [mu/](mu/README.md)（扁平结构，grandfathered） | explore |

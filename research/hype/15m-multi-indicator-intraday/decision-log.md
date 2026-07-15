@@ -10,6 +10,7 @@
 
 ## 决策
 
+- `2026-07-14`：复查当前 `HYPE-15M-MII-V1.4A` dry-run 近期不开仓。标准数据湖至 `2026-07-14T03:00Z`：最近 `7d` RSI raw cross `99` 次，但过 `ATR96%>=0.75%` 为 `0`，最终信号 `0`；ATR96% 中位约 `0.50%`、最新约 `0.56%`。最近 `90d` 仍有 `45` 笔最终信号，最后一笔研究开仓约在 6 月底。结论：不是 runner 漏单，而是低波动 regime 被 ATR 门槛挡住；`min_rvol96=0.85` 解决不了。保持 V1.4A 规则不变，不直接下调 ATR。证据：[notes/hype-15m-mii-v1-4a-recent-signal-drought-2026-07-14.md](notes/hype-15m-mii-v1-4a-recent-signal-drought-2026-07-14.md)。
 - `2026-06-25`：创建独立家族 `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`），而不是挤入既有 `15m` EMA 或 candle-count 家族。
 - `2026-06-25`：首次广泛的 Binance HYPEUSDT `15m` multi-indicator intraday 搜索结果为负。最佳组合 candidate 达到 `+141.92%` 年收益、`-18.88%` 最大回撤、`76.90%` 胜率和 `0.94` 笔/天，但未达到 `>= 2000%` 年收益目标，并且在最近 `90d` 退化为年化 `-5.26%`。不提升。
 - `2026-06-26`：全参数消融和扩展时间切片回测确认了相同的负面边界。baseline 可以精确复现，但 `0/55` 个 baseline/variant 行满足完整 gate；唯一年化更高的行不是突破回撤，就是未通过近期稳定性，或降低了频率。对 `data/cache/hypeusdt_15m_fapi.csv` 的数据质量检查没有发现 gaps/duplicates/OHLC errors，但输入仍只是 cache-only，并缺少 `quote_volume/trade_count/vwap/source/is_closed`，因此不是可用于标准数据湖 promotion 的数据集。不提升。

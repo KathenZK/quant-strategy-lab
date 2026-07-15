@@ -162,3 +162,31 @@ Python K+1/K+2 对账，完成前不得形成 keep/adjust 决策。当前结论�
 smoke/replay 与 dry-run/live 配置校验通过；这仍是未部署的代码证据，不提升状态。
 执行契约已固定：新仓 target 只能 `NextOpen`，allocation/side/symbol 变化必须
 显式 `Replace` 并使用 persisted `AfterFlat`，不提供隐式仓内 resize。
+
+## 2026-07-14 Driver 最终加固（仅代码，未部署）
+
+- Runner 工作树补齐 exact decision clock：实例 `HYPE/USDT:USDT 15m` 缺失时
+  cycle 只降级，不再借其他 symbol/timeframe 推进 processed timestamp。
+- mark/funding 错误与 closed candles 分开记录；依赖残缺继续禁止新入场和
+  Replace，已有仓位维护/平仓不因可选依赖失败被短路。MII 的信号、bracket、
+  fee/slippage 与 timeout 未修改。
+- 最终来源命令：`cargo test --workspace` 为 `170` 个 unit +
+  `12` 个 integration 全通过；strict Clippy、dry-run/live config 校验与六实例
+  smoke 均通过。`replay-dry-run --limit 2500` 当前 Binance rolling window 为
+  `6` signals / `6` trades。
+- 本次未部署、未重启、无新 runtime open/close/fill；状态仍为
+  `dry-run validation / not live-ready`，rolling smoke 不替代标准 parity。
+
+## 2026-07-14 Driver 架构收口（仅代码，未部署）
+
+- replay report/handler 已完全归策略模块，策略默认配置由本地 factory 构造；
+  `bootstrap/config.rs` 与中心 replay 不再保存 MII 专属 helper。
+- `ProtectionPlan.execution -> PositionState.protection_execution` 成为保护执行方式的
+  单一事实；旧仓位 fallback 仅做一次性迁移。Driver state schema 升级改为显式
+  `N -> N+1` 步进迁移。
+- decision clock 缺失时 flat MII 继续禁止开仓；已有 pending replacement/持仓维护
+  不得借其他 symbol/timeframe 推进 processed bar。
+- 最终验证：`179` 个 unit tests、`12` 个 integration tests、strict Clippy、
+  dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
+- 本次未部署、未改 TOML/state path、无新 runtime fill；状态仍为
+  `dry-run validation / not live-ready`。

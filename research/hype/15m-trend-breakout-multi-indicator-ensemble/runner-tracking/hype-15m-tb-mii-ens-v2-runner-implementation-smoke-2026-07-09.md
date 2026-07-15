@@ -211,3 +211,32 @@ curve tolerance。
   `dry-run active / live disabled / not live-ready`。
 - 最终本地验证为 `162` 个 unit tests、`12` 个 integration tests、strict
   Clippy、dry-run/live 配置校验和六策略 2500-bar Binance smoke replay 全通过。
+
+## 2026-07-14 Driver 最终加固（仅代码，未部署）
+
+- TB-MII dry-run 恢复旧 runtime 的 MII current-open gap/timeout 判定；普通
+  intrabar bracket 继续使用 trade-candle OHLC，而 live 保护单仍是
+  mark-price-market。订单类型与 dry-run bar 价格源现为两个显式 capability。
+- `pending_replacement` 会在 legacy dry-run venue migration 前短路旧仓补建，
+  flat/position Replace 均 persist-before-submit；`risk-resume` 在 replacement
+  未完成时拒绝解除 pause。
+- 最终来源命令：`cargo test --workspace` 为 `170` 个 unit +
+  `12` 个 integration 全通过；strict Clippy、两份 config 与六实例 smoke
+  通过。`replay-dry-run --limit 2500` 的 handler 当前回放 `900` bars，
+  输出 `1` V39 trade / `0` MII trade / `0` preempt。
+- 本次未部署、未重启、无新 runtime trade/fill；既有 parity PASS、
+  live disabled 与 not live-ready 状态不变。
+
+## 2026-07-14 Driver state/replay 最终收口（仅代码，未部署）
+
+- Trend leg 的 `high_water/low_water/mfe_atr` 只保存在 TB-MII envelope；
+  历史 position 迁移按 `entry_kind=ema_tb_v39` 显式识别，并且不再把 EMA-X
+  `hard_bad_bars` 错当作 V39 `weak_bars`。定向 fixture 覆盖该兼容边界。
+- `StrategyStateEnvelope` 使用逐步 `N -> N+1` migration hook；缺迁移步骤时
+  fail-closed。`pending_replacement` 的 persisted close-confirm-open 恢复语义不变。
+- replay report/handler 已归 TB-MII 模块；中心 replay 不再包含策略命名函数，
+  bootstrap 也不再提供 per-kind config factory。
+- 最终验证：`179` 个 unit tests、`12` 个 integration tests、strict Clippy、
+  dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
+- 本次未部署、无新 runtime trade/fill；既有 parity PASS、live disabled 与
+  not live-ready 状态不变。
