@@ -31,10 +31,33 @@ REPORT = (
 )
 MODES = ("nonpreemptive", "strong_breakout_preemptive")
 TOP_ROWS = 25
+OAT_DOMAINS = {
+    "rsi_window": (5, 7, 9),
+    "rsi_low": (35.0, 40.0, 45.0),
+    "rsi_high": (55.0, 60.0, 65.0),
+    "min_atr_pct96": (0.0075, 0.00825, 0.009, 0.00975, 0.0105),
+    "take_profit_pct": (0.009, 0.0105, 0.012, 0.0135, 0.015),
+    "stop_pct": (0.036, 0.045, 0.054),
+    "max_hold_bars": (32, 40, 48, 56, 64),
+}
 
 
 def config_key(config: dict[str, Any]) -> str:
     return json.dumps(config, sort_keys=True, default=str)
+
+
+def oat_configs(config: dict[str, Any]) -> list[dict[str, Any]]:
+    rows = [config]
+    for field, values in OAT_DOMAINS.items():
+        for value in values:
+            if value == config[field]:
+                continue
+            rows.append({**config, field: value})
+    return rows
+
+
+def oat_distance(left: dict[str, Any], right: dict[str, Any]) -> int:
+    return sum(left[field] != right[field] for field in OAT_DOMAINS)
 
 
 def compact(result: dict[str, Any]) -> dict[str, Any]:
@@ -102,7 +125,10 @@ def main() -> None:
     baseline_config = clean.Config(**audit["config"])
     configs = [asdict(config) for config in clean_tune.candidates(baseline_config)]
     for mode in MODES:
-        configs.append(source["results"][mode]["selection"][clean_sleeve]["config"])
+        source_config = source["results"][mode]["selection"][clean_sleeve][
+            "config"
+        ]
+        configs.extend(oat_configs(source_config))
     unique_configs = list({config_key(config): config for config in configs}.values())
     clean_options: list[dict[str, Any]] = []
     for index, config in enumerate(unique_configs, start=1):
@@ -170,6 +196,12 @@ def main() -> None:
         )
         preferred_option = options[clean_sleeve][preferred_selection[clean_index]]
         source_row = next(row for row in rows if row["is_source"])
+        oat_rows = [
+            row
+            for row in rows
+            if oat_distance(row["config"], source_selection[clean_sleeve]["config"])
+            <= 1
+        ]
         results[mode] = {
             "tested_configs": len(rows),
             "hard_passes": sum(row["metrics"]["hard_pass"] for row in rows),
@@ -177,6 +209,16 @@ def main() -> None:
                 row["metrics"]["research_buffer_pass"] for row in rows
             ),
             "source": source_row,
+            "source_oat_neighborhood": {
+                "variants_including_source": len(oat_rows),
+                "hard_passes": sum(
+                    row["metrics"]["hard_pass"] for row in oat_rows
+                ),
+                "research_buffer_passes": sum(
+                    row["metrics"]["research_buffer_pass"] for row in oat_rows
+                ),
+                "rows": oat_rows,
+            },
             "preferred": {
                 "option_id": preferred_option["option_id"],
                 "config": preferred_option["config"],
@@ -222,15 +264,18 @@ def main() -> None:
         "",
         "把既有500个clean-RSI局部配置全部改用mark-price保护退出，并逐个替换回六币联合账户。未来OOS未读取。",
         "",
-        "| 路线 | 配置数 | 硬门槛通过 | 研究缓冲通过 | source年化 | preferred年化 | source最低胜率 | preferred最低胜率 | preferred当前频率 |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|",
+        "| 路线 | 配置数 | 硬门槛通过 | 研究缓冲通过 | source OAT硬通过 | source OAT缓冲通过 | source年化 | preferred年化 | source最低胜率 | preferred最低胜率 | preferred当前频率 |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|",
     ]
     for mode, row in results.items():
         source_metrics = row["source"]["metrics"]
         preferred_metrics = row["preferred"]["metrics"]
+        oat = row["source_oat_neighborhood"]
         lines.append(
             f"| `{mode}` | {row['tested_configs']} | {row['hard_passes']} | "
             f"{row['research_buffer_passes']} | "
+            f"{oat['hard_passes']}/{oat['variants_including_source']} | "
+            f"{oat['research_buffer_passes']}/{oat['variants_including_source']} | "
             f"{source_metrics['full_annual_multiple']:.3f}x | "
             f"{preferred_metrics['full_annual_multiple']:.3f}x | "
             f"{source_metrics['minimum_gate_win']:.2%} | "

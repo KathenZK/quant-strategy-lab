@@ -37,6 +37,7 @@ ROUTER_SETTINGS = (
     (0.75, 0.05, 4),
 )
 MIN_FREQUENCY_BUFFER = 1.01
+PREPARE_INPUTS = mark_micro.prepare_mark_account_inputs
 
 
 def minimum_gate_win(result: dict[str, Any]) -> float:
@@ -176,9 +177,7 @@ def summarize_pass_rate(rows: list[dict[str, Any]]) -> dict[str, float | int]:
 
 
 def main() -> None:
-    _trade_source, _manifest, frames, funding, sleeves, options = (
-        mark_micro.prepare_mark_account_inputs()
-    )
+    _input_source, _manifest, frames, funding, sleeves, options = PREPARE_INPUTS()
     source = json.loads(SOURCE.read_text(encoding="utf-8"))
     results: dict[str, Any] = {}
     for mode in MODES:

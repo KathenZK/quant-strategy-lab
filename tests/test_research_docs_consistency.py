@@ -217,7 +217,6 @@ def test_external_reproduction_specs_are_self_contained() -> None:
 _ALLOWED_MAIN_STATUS = (
   "explore",
   "registered",
-  "audit",
   "live spec",
   "dry-run",
   "live",
@@ -265,7 +264,7 @@ def test_routing_table_status_labels_use_glossary_vocabulary() -> None:
         problems.append(f"{rel}:L{lineno}: 状态含已废弃词 {hit_forbidden}: {cell}")
       hit_phrases = [p for p in _FORBIDDEN_STATUS_PHRASES if p in lowered]
       if hit_phrases:
-        problems.append(f"{rel}:L{lineno}: audit gate 失败后应回到 registered/explore: {hit_phrases}: {cell}")
+        problems.append(f"{rel}:L{lineno}: 已废弃状态短语 {hit_phrases}: {cell}")
       # "live-ready" 属于修饰词后缀，不算主状态 `live` 命中。
       cleaned = re.sub(r"live-ready", "", lowered)
       if not any(

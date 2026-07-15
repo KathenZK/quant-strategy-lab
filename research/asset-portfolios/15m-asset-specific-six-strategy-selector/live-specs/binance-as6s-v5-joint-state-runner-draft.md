@@ -5,15 +5,15 @@ family_id: BIN-15M-AS6S
 runner_kind: asset_specific_six_selector_v5_joint_state
 spec_status: draft
 peer_spec: crates/quant-runner/src/runner/strategies/asset_specific_six_selector_v5_joint_state/BIN-15M-AS6S-V5-JOINT-NP-SPEC.md
-manifest_instance_ids: []
+manifest_instance_ids: [bin-15m-as6s-v5-joint-np-dry-run]
 approval_level_max: disabled
 ---
 
 # 六币资产专属 V5 联合状态 Runner 草案
 
-状态：`frozen observation / not registered / not promoted / not live-ready`。
-本草案只授权独立 Runner 模块和离线逐笔对拍，不授权新增或启用 dry-run/live
-实例，不改变任何既有策略身份。
+状态：`frozen observation / registered disabled / not promoted / not live-ready`。
+本草案只授权独立 Runner 模块、离线逐笔对拍和 `enabled=false` 的验证配置；
+不授权持续 dry-run 或 live，不改变任何既有策略身份。
 
 ## 固定身份与边界
 
@@ -73,7 +73,12 @@ V5 固定 15 条资产专属腿，不要求每个币机械地凑齐趋势、突�
 截至 2026-07-15，45 个抽样信号、15 条腿各一笔完整退出和全 553 笔账户路由
 已通过对拍；交易所 mark 保护与多币种重启恢复定向测试也已通过。证据见
 [`binance_as6s_v5_joint_state_runner_parity_2026-07-15.json`](../artifacts/binance_as6s_v5_joint_state_runner_parity_2026-07-15.json)。
-批准上限仍为 `disabled`：尚未完成持续 dry-run、真实订单生命周期 smoke、
+Runner strict replay 还必须校验冻结 fixture 的 `45 / 1255 / 553` 数量与
+SHA-256 `5d50f05fbc939bee2676feb91021c078f1f989e0ad19d87dbb29ad1a5c42daaf`，
+不完整或替换后的 fixture 不得返回 PASS。该输入保存在
+[`as6s_v5_runner_signal_parity_fixture_2026-07-15.json`](../artifacts/as6s_v5_runner_signal_parity_fixture_2026-07-15.json)。
+批准上限仍为 `disabled`：manifest 与 TOML 中的实例必须保持 `enabled=false`。
+尚未完成持续 dry-run、真实订单生命周期 smoke、
 trailing 更新失败注入/测试网审计与未来 OOS。成功的 trailing 更新路径已固定为
 先挂新 stop、确认后撤旧 stop，TP 不变时保持原 TP。
 

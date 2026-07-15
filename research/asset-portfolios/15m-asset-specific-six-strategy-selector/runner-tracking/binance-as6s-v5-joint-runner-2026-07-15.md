@@ -4,8 +4,9 @@
 
 独立 Runner kind `asset_specific_six_selector_v5_joint_state` 已实现 V5
 `nonpreemptive` 路线的 15 条资产专属腿、闭合 K 候选、冻结 strength 排序、
-单仓联合状态、真实成交后 cooldown 和同时间戳禁止重入。没有新增或启用任何
-dry-run/live 配置。
+单仓联合状态、真实成交后 cooldown 和同时间戳禁止重入。现已增加
+`bin-15m-as6s-v5-joint-np-dry-run` 验证实例，但 TOML 与治理 manifest 均固定
+`enabled=false / approval_level=none`，不构成持续 dry-run 或 live 授权。
 
 ## 对拍结果
 
@@ -14,6 +15,9 @@ dry-run/live 配置。
 - 全候选池账户路由：Runner strict router 与 V5 冻结 nonpreemptive 逐笔账
   `553 / 553` 一致；对拍字段为 sleeve、symbol、side、entry_ts、exit_ts。
 - focused unit tests、完整 runner lib tests 与 `clippy -D warnings` 通过。
+- CLI strict replay 已改为读取 `AS6S_V5_PARITY_FIXTURE`，复用同一冻结 fixture
+  执行 45 个信号检查、15 条腿退出检查和 553 笔账户路由，不再使用无证据的
+  placeholder handler。
 
 ## 交易所保护与重启对账
 
@@ -28,11 +32,19 @@ dry-run/live 配置。
   `ETHUSDT`，不会误用实例默认的 `BTCUSDT`。
 - 定向模拟测试已覆盖：ETH 保护武装、mark 跌穿止损后的保护成交识别、BTC
   无孤儿仓位、进程重启后 ETH 缺失保护单的撤旧与重建。
-- 完整 Runner lib suite：`189 passed / 0 failed / 3 ignored`；3 个 ignored
+- 完整 Runner lib suite：`198 passed / 0 failed / 3 ignored`；3 个 ignored
   数据湖对拍以冻结 fixture 单独运行后全部 PASS；`clippy -D warnings` PASS。
+- CLI strict replay 复跑结果为 `45` signal checks、`15` exit sleeves、
+  `553` routed trades、fixture SHA-256
+  `5d50f05fbc939bee2676feb91021c078f1f989e0ad19d87dbb29ad1a5c42daaf`、
+  `parity=PASS`；禁用实例 smoke `ok=true`，dry-run/live config 和治理
+  lock/spec links 校验通过。
 
 机器可读证据见
 [`binance_as6s_v5_joint_state_runner_parity_2026-07-15.json`](../artifacts/binance_as6s_v5_joint_state_runner_parity_2026-07-15.json)。
+CLI strict replay 使用的 53 MiB 冻结输入保存在
+[`as6s_v5_runner_signal_parity_fixture_2026-07-15.json`](../artifacts/as6s_v5_runner_signal_parity_fixture_2026-07-15.json)，
+其原始字节 SHA-256 即上述 `5d50f05f...42daaf`。
 
 ## 实现中发现并修正的问题
 
@@ -51,7 +63,7 @@ cooldown 状态。
 - 历史收益账仍是 trade-OHLC strict replay；真实 Runner 的 mark-price 保护可能
   比研究 K 线退出更早，持续 dry-run 必须单独核对该执行差异。
 - 尚未完成持续 dry-run、真实 Binance testnet/小额订单生命周期 smoke、断网与
-  API outcome-unknown 故障注入；未加入 manifest/config。
+  API outcome-unknown 故障注入；manifest/config 只登记禁用验证实例。
 - trailing protection 已消除成功路径的先撤后挂窗口，但仍需在测试网验证新 stop
   提交失败、旧 stop 撤单 outcome-unknown 与双 stop 暂存时的 reconcile 兜底。
 - 最终未来 OOS 仍锁定为

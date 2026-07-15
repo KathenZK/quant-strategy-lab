@@ -70,7 +70,7 @@
 | --- | --- | --- |
 | `Binance-1D-Turtle-Breakout` | [asset-portfolios/1d-turtle-breakout/](asset-portfolios/1d-turtle-breakout/README.md) | explore |
 | `Binance-15M-Multi-Indicator-Intraday-Transfer` | [asset-portfolios/15m-multi-indicator-intraday/](asset-portfolios/15m-multi-indicator-intraday/README.md) | explore / not promoted |
-| `Binance-15M-Asset-Specific-Six-Strategy-Selector`（`BIN-15M-AS6S`） | [asset-portfolios/15m-asset-specific-six-strategy-selector/](asset-portfolios/15m-asset-specific-six-strategy-selector/README.md) | V1 registered / future OOS waiting / not promoted / not live-ready |
+| `Binance-15M-Asset-Specific-Six-Strategy-Selector`（`BIN-15M-AS6S`） | [asset-portfolios/15m-asset-specific-six-strategy-selector/](asset-portfolios/15m-asset-specific-six-strategy-selector/README.md) | V1/V6 registered / V6 future OOS locked / not promoted / not live-ready |
 | `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`（`BIN-1H-AR-MAE`） | [asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/](asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/README.md) | V1 registered / not promoted / not live-ready |
 | `Binance-1H-Multi-Leg-Six-Asset-Selector`（`BIN-1H-ML6AS`） | [asset-portfolios/1h-multi-leg-six-asset-selector/](asset-portfolios/1h-multi-leg-six-asset-selector/README.md) | explore / not promoted / not live-ready |
 | `Binance-MK7-Multi-Strategy-Account`（外部别名 `mk7`） | [asset-portfolios/mk7-multi-strategy-account/](asset-portfolios/mk7-multi-strategy-account/README.md) | `mk7-v8` external observation / explore / not promoted / not live-ready |

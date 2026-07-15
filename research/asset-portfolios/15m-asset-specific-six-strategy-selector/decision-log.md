@@ -45,3 +45,34 @@ V3 进一步通过合成执行语义审计与 funding 结算边界压力。全�
 V3 的 `exit_ts` 候选 tie-break 虽未在历史样本触发，但代码路径不可实盘，故 V4 删除所有入场期未来字段。继续翻译 runner 状态机时发现 V4 仍沿用了 `frontier15m / cleanrsi15m` 的单腿虚拟占仓候选流：即使某个信号被全局账户挡住，假想交易仍会压制同腿后续信号。联合状态审计确认历史逐笔账发生变化，因此 V4 live-executable gate 改判为 `FAIL`。
 
 V5 不重新选腿或调参，只取消未成交候选的虚拟状态；只有账户真实接受的交易才能创建持仓和退出后 cooldown。修正后 nonpreemptive 全区间 `553` 笔、胜率 `85.17%`、年化权益倍数 `5.82x`、最大回撤 `-12.86%`；最近三个月 `81` 笔、胜率 `83.95%`、收益 `+69.19%`、回撤 `-7.89%`。两条路线的 8 bps 与 K+2 账户硬门槛仍通过。V5 继续沿用原未来 OOS 时间边界，状态为未登记 observation，证据见[V5 联合状态观察](diagnostics/binance-as6s-v5-joint-state-observation-2026-07-14.md)。
+
+## 2026-07-15 — V5 Runner 离线对拍通过并接入禁用配置
+
+Runner 已完成 45 个冻结候选、15 条腿完整退出和 553 笔 nonpreemptive 账户路由
+对拍，并补齐多币种 mark 保护与重启恢复定向测试。为使统一 CLI 能重复验证，
+新增 `bin-15m-as6s-v5-joint-np-dry-run` manifest/TOML 实例及 fixture 驱动 strict
+replay，但实例固定 `enabled=false / approval_level=none`。本决定不授权持续
+dry-run、live 或查看锁定未来 OOS；批准上限继续为 `disabled`。
+
+## 2026-07-15 — V6 双路线 Runner 严格对拍通过但保持禁用
+
+冻结 V6 的两条路线已完成 Runner 翻译：不抢占 `634/634`、强突破抢占
+`568/568` 全账户路径一致，mark 保护、缺失数据 fail-closed、抢占重启恢复和
+执行故障注入通过；证据见 [Runner 对拍](runner-tracking/binance-as6s-v6-mark-joint-runner-2026-07-15.md)。
+两个实例继续固定 `enabled=false`；本决定不授权持续 dry-run、testnet、live，
+也不解除未来 OOS 禁改禁看边界。
+
+## 2026-07-15 — 补齐 V6 标准近期切片但不据此改参
+
+V6 的 1d/7d/1m/3m/6m/1y base-cost 切片已补齐；两条路线最近 7d 均为负，
+nonpreemptive 最近 1m 胜率为 `78.57%`，因此不能把长期高胜率解释为每周稳定
+盈利。该结果只作冻结时点诊断，不改变双路线、参数或未来 OOS 门禁；证据见
+[标准近期切片](diagnostics/binance-as6s-v6-recent-slices-2026-07-15.md)。
+
+## 2026-07-15 — 授权 V6 双路线持续 dry-run
+
+用户明确授权同时启用 V6 不抢占与强突破抢占两个持续 `dry-run` 实例。两条路线
+各自使用独立 state directory 和虚拟执行账户，公共平台账本按实例名与策略 ID
+分账，不互相净额；基础名义金额均为 `10 USDT`，最大 allocation `2.25`。
+本授权只用于 forward 观测，不构成 testnet、live 或 promotion 批准，也不改变
+`[2026-07-14T09:00:00Z, 2026-10-14T09:00:00Z)` 未来 OOS 禁改禁看边界。
