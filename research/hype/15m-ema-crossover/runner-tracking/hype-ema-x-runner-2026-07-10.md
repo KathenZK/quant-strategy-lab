@@ -111,3 +111,16 @@
   dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
 - 本次未部署、无新 runtime trade/fill；结论仍是
   `keep dry-run / do not enable live`。
+
+## 2026-07-15 平台架构收尾（仅代码，未部署）
+
+- Runtime 已彻底移除旧 `Strategy` factory/空壳对象依赖；EMA-X 继续只通过
+  `StrategyDriver`、versioned envelope 和统一 execution lifecycle 运行。
+- freshness 由对应 market-data group supervisor 独立隔离：stale 只关闭本组
+  新增风险并有限重建，实际处理新 15m decision-clock bar 后恢复；兄弟组和
+  systemd control-plane watchdog 不受连带影响。
+- 本次未修改 EMA-X 参数、TOML enabled、state path、promotion 或 parity，
+  未部署、无新 runtime trade/fill；结论仍是 `keep dry-run / do not enable live`。
+- 最终本地验证：`196` unit PASS + `3` ignored、`12` integration PASS、
+  strict Clippy、配置/治理校验、六个 enabled dry-run smoke 和 EMA-X 300-bar
+  replay 通过。

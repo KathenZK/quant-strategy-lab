@@ -4,17 +4,15 @@
 
 ## 状态机总览
 
-主状态只有下面这些；研究侧 2 个，dry-run 前 gate 1 个，promotion 侧 3 个，外加两个终态（`archived` 与 dry-run/live 后的 `NO-GO`）：
+主状态只有下面这些：研究侧 2 个、promotion 侧 3 个，外加两个终态（`archived` 与 dry-run/live 后的 `NO-GO`）：
 
 ```text
 explore（无版本号）
    │ 用户要求登记 Vx
    ▼
 registered
-   │ 准备推进 quant-runner / dry-run：用户明确要求，或 Agent 基于证据主动建议进入 promotion review，并核验验证门禁
-   ▼
-audit（短暂 gate，不是失败后的长期状态）
-   │ live-executable 审计通过 + 参数/状态机可被 runner 复现 + 写出交接规格
+   │ 准备推进 quant-runner / dry-run：完成全部验证门禁与 live-executable promotion review，
+   │ 参数/状态机可被 runner 复现，并写出交接规格
    ▼
 live spec
    │ quant-runner 实现完成 + 指标对拍/smoke test 通过 + 进入 dry-run 时立即建立 runner-tracking/
@@ -24,12 +22,12 @@ dry-run（模拟盘，runner-tracking 持续记录）
    ▼
 live（真实资金运行；资金边界由子账户、runner 配置或上线决策记录管理）
 
-dry-run 前任一阶段如果证据不足、回测失败、可执行性审计不通过，回到或停留在 `registered` / `explore`，并写 `not promoted / not live-ready`；
+dry-run 前如果证据不足、回测失败或 promotion review 不通过，停留在 `registered` / `explore`，并写 `not promoted / not live-ready`；
 只有 dry-run 或 live 已运行并给出负面 runner 观察/实盘证据后，才允许写 NO-GO。
 研究线不再推进且无意重开时，任一阶段可以封存为 archived（终态，重开视同新研究线）。
 ```
 
-`audit` 不是用户日常会主动触发的“随便审计一下”标签，也不是因为某个报告文件名含 audit 就自动进入的状态。它只在一个已登记版本准备推进 `quant-runner` / `dry-run` 时触发：用户明确要求评估能否 dry-run、交给 runner 或写 live spec；或 Agent 认为证据足够并明确提出进入 promotion review。审计失败后不要长期挂 `audit / not promoted`，应回到 `registered / not promoted / not live-ready`，并记录缺口。
+`audit` 不再是主状态。审计报告、脚本文件名和 promotion review 仍可使用 audit / 审计描述验证动作，但不得把版本状态写成 `audit`。登记 `registered` 时只固定身份并记录门禁缺口；准备推进 runner 或写 `live spec` 时，一次性完成验证门禁与 live-executable promotion review。失败则保持 `registered / not promoted / not live-ready`，通过才直接进入 `live spec`。
 
 promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是可叠加在其上的移交标签，不是独立状态。进入任何 promotion 状态前必须完成 live-executable 审计（见 [live-executable-strategy-research.mdc](../../.cursor/rules/live-executable-strategy-research.mdc) 与 [lab-runner-handoff.mdc](../../.cursor/rules/lab-runner-handoff.mdc)），并按 [strategy-validation-gates.md](strategy-validation-gates.md) 补齐对应门禁证据。本仓库不定义额外的模拟盘阶段；模拟盘/仿真运行统一称为 `dry-run`，真实下单归入 `live`。
 
@@ -39,8 +37,7 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 | --- | --- | --- |
 | `explore` | 搜索、诊断进行中，未登记版本 | 无；不可被引用为"策略" |
 | `registered` | 用户要求登记的冻结版本（基线或观察值），仅固定研究身份 | core ledger 已更新版本表、参数、证据链接；不代表策略可行 |
-| `audit` | dry-run 前的 live-executable promotion review：审计该 registered 版本是否可被真实订单时序和 runner 状态机复现 | 已登记版本具备推进意图；已核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的研究侧门禁（超额收益、消融、OOS/CPCV、统计显著性）；分片回测无执行不可能性；成本口径明确 |
-| `live spec` | 已写出 runner 交接规格，等待/正在 quant-runner 实现；未启用 | live-executable 审计通过；已核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的上线前门禁（MC、压力测试、启动时间、相位）；参数/状态机可被 runner 复现；满足 `lab-runner-handoff.mdc` 交接规格必备字段；core ledger 链接该规格 |
+| `live spec` | 已写出 runner 交接规格，等待/正在 quant-runner 实现；未启用 | 已完成 promotion review：核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的全部门禁（超额收益、消融、OOS/CPCV、MC、压力测试、相位）与 live-executable 审计；参数/状态机可被 runner 复现；满足 `lab-runner-handoff.mdc` 交接规格必备字段；core ledger 链接该规格 |
 | `dry-run` | 在 quant-runner 以 dry-run 模式运行（模拟盘，不下真实订单） | quant-runner 实现完成；指标对拍/smoke test 通过；进入 dry-run 的同一变更中建立 `runner-tracking/` |
 | `live` | 真实资金运行 | dry-run 的 runner 观察证据达标；资金费、盘口滑点、订单失败处理已审计；decision log 记录批准；资金边界由子账户资金、runner 配置或上线 decision log 管理，策略 spec 不强制写 live notional |
 | `NO-GO` | dry-run 或 live 后的最终否决状态 | 必须有 `runner-tracking/`、dry-run 对账或真实订单证据；记录否决原因，重开需新证据并写 decision log |
@@ -48,7 +45,7 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 
 `handoff` / "交接版本"：把规格与实现移交给人或其他系统维护的动作标签，可叠加在 `live spec` 及之后的主状态上；要求双向链接的 SPEC 齐备、参数一致性验证记录在案。`handoff` 不是独立主状态。
 
-`candidate` 不是主状态，也不是 promotion 状态。新文档可以把它作为研究角色词使用，例如参数候选、候选观察行、`registered candidate`；但不得写成独立状态，也不得用来暗示 live-ready、dry-run-ready 或可跳过 `audit` / `live spec` gate。若用户要求把候选登记为版本，主状态应写 `registered`，`candidate` 只作为角色修饰。
+`candidate` 不是主状态，也不是 promotion 状态。新文档可以把它作为研究角色词使用，例如参数候选、候选观察行、`registered candidate`；但不得写成独立状态，也不得用来暗示 live-ready、dry-run-ready 或可跳过 promotion review / `live spec` gate。若用户要求把候选登记为版本，主状态应写 `registered`，`candidate` 只作为角色修饰。
 
 ## 修饰词（不是主状态）
 
@@ -62,13 +59,13 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
   它不是 production sizing，也不能由散文单独授权。
 - `not promoted / not live-ready`：dry-run 前证据不足、回测失败、可执行性审计不通过、或暂不继续推进时使用的通用后缀；它不是最终否决，后续可以因新机制、新数据或新审计重开。
 
-历史文档中的 `diagnostic baseline`、`diagnostic observation`、`clean-equivalent observation`、`audit observation`、`audit candidate` 等旧标签按 `registered baseline/observation` 或 `registered / not promoted / not live-ready` 理解，不需要批量改写。历史文档中若在 dry-run 前使用了 `NO-GO`，按新口径理解为 `not promoted / not live-ready`，除非同一文档明确引用了 dry-run/live runner 观察证据。
+历史文档中的 `diagnostic baseline`、`diagnostic observation`、`clean-equivalent observation`、`audit observation`、`audit candidate` 或 `audit` 状态等旧标签，按验证动作或 `registered baseline/observation`、`registered / not promoted / not live-ready` 理解，不需要批量改写。历史文档中若在 dry-run 前使用了 `NO-GO`，按新口径理解为 `not promoted / not live-ready`，除非同一文档明确引用了 dry-run/live runner 观察证据。
 
 ## 使用规则
 
 - 状态词必须与完整 family name + 版本号一起出现，例如 `HYPE-15M-MII-V1.3：dry-run / forward-test required`。
 - 一个版本同一时刻只有一个主状态；可以叠加修饰词，不可同时挂两个主状态。
 - 状态迁移（升级或降级）必须写入家族 `decision-log.md`，并同步更新 core ledger 与 asset/顶层索引中的状态标签。
-- 回测再漂亮，跳过中间状态直接标记 promotion 状态属于违规；发现即降级并记录。
-- 不要把 `audit / not promoted` 当成长期状态；audit gate 失败后写 `registered / not promoted / not live-ready`，未登记研究线则写 `explore / not promoted / not live-ready`。
+- 回测再漂亮，未完成 promotion review 就标记 `live spec`，或跳过 `live spec` / `dry-run` 直接升级，均属于违规；发现即降级并记录。
+- promotion review 失败后写 `registered / not promoted / not live-ready`，未登记研究线则写 `explore / not promoted / not live-ready`。
 - dry-run 前不得给出 `NO-GO`；只能写 `not promoted / not live-ready`，并说明缺什么证据、什么新增证据可以重开。

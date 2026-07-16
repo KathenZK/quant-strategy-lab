@@ -26,6 +26,9 @@
 - `2026-07-08`（live-specs 缺口记录）：治理审计发现 V35 进入 runner 早于 `lab-runner-handoff` 契约成文，lab 侧没有 `live-specs/` 交接规格，runner 侧以 `HYPE-CANDLE-COUNT-V35-SPEC.md` + [specs/hype-v35-reproducible-params.md](specs/hype-v35-reproducible-params.md) 为实现事实源，属 grandfathered 例外。升级 `live` 前必须按 handoff 契约补写 `live-specs/` 交接规格并与 runner SPEC 互链；在此之前该缺口保持为 live-readiness blocker。
 - `2026-07-14`：[`diagnostics/hype-cc-v35-dual-ema-trend-filter-2026-07-14.md`](diagnostics/hype-cc-v35-dual-ema-trend-filter-2026-07-14.md) 对 V35 叠加 13 组双 EMA 顺趋势禁入进行滚动 OOS 与后段 holdout；相对最优 `EMA24/672` 虽改善 2026-06-01 后亏损，但训练段 OOS 收益、Sharpe 与最差回撤均弱于 V35，长期收益衰减明显。结论为候选失败，不登记 `HYPE-CC-V36`，不修改 V35 runner / dry-run。
 - `2026-07-14`：[`diagnostics/hype-cc-v35-adx-di-trend-block-2026-07-14.md`](diagnostics/hype-cc-v35-adx-di-trend-block-2026-07-14.md) 改用“仅在 ADX 强趋势中按 `+DI/-DI` 禁止逆向开仓”的较弱过滤；训练段相对最优 `ADX28 >= 25` 略有改善，但未形成参数高原，最终 holdout 从 V35 的 `-17.49%` 恶化至 `-19.93%`。结论仍为候选失败，不登记 `HYPE-CC-V36`，不修改 V35 runner / dry-run。
+- `2026-07-15`：[`diagnostics/hype-cc-v35-replace-24h-with-adx-di-2026-07-15.md`](diagnostics/hype-cc-v35-replace-24h-with-adx-di-2026-07-15.md) 删除原 `96` 根 / `5%` 趋势禁入并以 ADX/DI 替换；训练段相对最优 `ADX14 >= 35` 仍弱于原 V35且无参数高原，最终 holdout 为 `-40.00% / -54.37%`，显著差于原 V35 的 `-17.49% / -36.24%`。确认原 24h 位移过滤是关键风险层，保留原规则，不登记 `HYPE-CC-V36`。
+- `2026-07-15`：[`diagnostics/hype-cc-v35-1h-consensus-trend-filter-2026-07-15.md`](diagnostics/hype-cc-v35-1h-consensus-trend-filter-2026-07-15.md) 保留原趋势禁入并叠加无前视的 1h EMA24/72 或 EMA24/96、ADX14/DI 共识与迟滞；相对最优 `EMA24/72 + ADX30/25` 的训练段收益中位数从 `+42.43%` 降至 `+20.96%`，最终 holdout 没有拦截任何信号。其全窗口回撤改善约 3.66 个百分点但收益减少约 53%，风险收益交换不合格，不登记 `HYPE-CC-V36`。
+- `2026-07-16`：[`diagnostics/hype-cc-v35-tp-2-5-atr-check-2026-07-16.md`](diagnostics/hype-cc-v35-tp-2-5-atr-check-2026-07-16.md) 仅将 V35 `take_profit_atr_multiplier` 从 `5.5` 改为 `2.5`，保留 `2%–3.5%` 上下限；最近 30 天收益从 `-19.38%` 恶化至 `-46.70%`，回撤从 `-30.30%` 扩大至 `-49.40%`。胜率虽升至 `41.38%`，但亏损笔数未减少、平均 TP 降至 `2.09%`，拒绝该修改，不登记新版本。
 
 ## 证据政策
 

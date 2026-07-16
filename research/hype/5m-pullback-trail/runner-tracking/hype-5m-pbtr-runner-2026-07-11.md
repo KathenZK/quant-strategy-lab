@@ -189,3 +189,20 @@
   dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
 - 本次未部署、未重启、无新真实 order/fill；状态仍为
   `live / tiny-live-pilot / forward-test required`，不得增加资金。
+
+## 2026-07-15 live 平台硬风控收口（仅配置/代码，未部署）
+
+- `configs/live.toml` 的平台数值风控从 observe-only 改为硬闸：
+  `daily_loss_usdt=5`、`max_open_notional_usdt=50`、
+  `max_consecutive_cycle_errors=3`。任一命中只阻止新增风险，不阻止撤单、补保护
+  或平仓；manual halt 与 execution fail-closed 语义不变。
+- freshness 从进程级 watchdog 告警下沉到各 market-data group / Driver bundle：
+  stale 只写对应实例的独立隔离标记并有限重建本组，成功处理新 decision-clock bar
+  后自动恢复；systemd watchdog 继续只观察 control plane。
+- 这些上限低于“大资金生产”边界，目的是把既有 tiny-live-pilot 的未记录增资和
+  异常循环暴露限制为显式 fail-safe，不构成增资、promotion 或 live-readiness
+  升级。尚未部署、未重启，也没有新的真实 signal/order/fill。
+- 本地最终验证：`196` unit PASS + `3` ignored、`12` integration PASS、
+  strict Clippy、dry-run/live config、六个 enabled dry-run smoke 和 PBTR
+  300-bar replay 均通过；live smoke 因本机没有真实账户/state reconcile 条件不作
+  线上结论，未连接或修改生产账户。

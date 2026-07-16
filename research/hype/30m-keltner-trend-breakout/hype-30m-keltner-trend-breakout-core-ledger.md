@@ -13,8 +13,8 @@
 - Current version(s)：`HYPE-30M-Keltner-Trend-Breakout-V3`。
 - Current status：`V3 registered / not promoted / not live-ready`（状态词见 [strategy-status-glossary.md](../../../docs/research-governance/strategy-status-glossary.md)）。
 - Runner / dry-run / live status：无 runner handoff、无 dry-run、无 live。
-- Live-readiness blockers：数据质量前置已修复并通过；Gate 5 与 Gate 3 Monte Carlo 在 V3 上通过或改善通过；Gate 6 启动时间、Gate 7 30m 相位仍失败；Gate 4 与 live-executable runner 运维证据未完成；holdout 亏损样本不足。
-- Next decision gate：解释或消除 30m 原生边界依赖，并降低启动时间敏感性；Gate 6/7 通过后才可评估进入 `audit`。
+- Live-readiness blockers：数据质量前置已修复并通过；历史严格门禁下原 Gate 5（显著性）与 Gate 3 Monte Carlo 在 V3 上通过或改善；原 Gate 6 启动时间、原 Gate 7 / 现行门禁 5 的 30m 相位仍失败；Gate 4 与 live-executable runner 运维证据未完成；holdout 亏损样本不足。现行规范已删除统计显著性与启动时间硬门禁（见 [strategy-validation-gates.md](../../../docs/research-governance/strategy-validation-gates.md) 2026-07-15 修订）。
+- Next decision gate：解释或消除 30m 原生边界依赖（现行门禁 5）；门禁 0–5 与 live-executable promotion review 通过后才可进入 `live spec`。
 
 ## Version Rules
 

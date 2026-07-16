@@ -367,6 +367,7 @@ def run_next_open(
     fast_span: int | None = None,
     slow_span: int | None = None,
     direction_filter: Callable[[int, int], bool] | None = None,
+    apply_original_trend_filter: bool = True,
     trade_start: pd.Timestamp | str | None = None,
     trade_end: pd.Timestamp | str | None = None,
 ):
@@ -594,8 +595,11 @@ def run_next_open(
             entry_allowed = (
                 desired_direction != 0
                 and module._entry_allowed(signal, position, desired_direction, config)
-                and module._trend_filter_allows(
-                    trend_return, position, desired_direction, config
+                and (
+                    not apply_original_trend_filter
+                    or module._trend_filter_allows(
+                        trend_return, position, desired_direction, config
+                    )
                 )
             )
             if entry_allowed and fast is not None and slow is not None:

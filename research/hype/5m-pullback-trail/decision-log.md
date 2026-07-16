@@ -203,3 +203,15 @@
   `e6b4420df1e9e9cc7eea4d011e21c3cb3619c441131ec33c881b3c9e8f123b30`
   已校验。继续保持 tiny-live-pilot，不增资，不改变 promotion、parity 或
   2026-07-24 复核门禁。
+
+## 2026-07-15 tiny-live 平台硬风控决定
+
+- live 平台数值闸改为主动阻断新增风险：单策略北京时间自然日已实现净亏损达到
+  `5 USDT`、请求开仓名义超过 `50 USDT`，或连续 cycle error 达到 `3` 次时禁止
+  新开仓；撤单、保护恢复和平仓不受影响。
+- 该配置用于约束既有 dedicated subaccount tiny-live-pilot，防止未记录增资后
+  风险随余额自动扩大；不改变“禁止未记录追加资金”、promotion、parity 或
+  2026-07-24 复核期限。
+- freshness 隔离改为单 market-data group / Driver bundle 的本地故障域，兄弟
+  策略和 systemd control-plane watchdog 不再被单策略 stale 连带重启。
+- 当前仅完成本地配置/代码变更，尚未部署；线上事实仍以 2026-07-13 artifact 为准。

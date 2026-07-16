@@ -4,7 +4,7 @@
 
 这是 HYPE 趋势策略版本研究台账。当前按策略族编号：V1 是趋势回踩族，V2 是趋势突破族；同族变体使用字母后缀。
 
-> **当前状态：HYPE-EMA-TB-V35 live（独立 hype-trend live runner 真实资金运行，部署早于当前 handoff 约定）；V36-V39.1 registered / not promoted / not live-ready。** 线上表现结论与开平仓对齐统计回流见 [runner-tracking/README.md](runner-tracking/README.md)。
+> **当前状态：HYPE-EMA-TB-V35 live（独立 hype-trend live runner 真实资金运行，部署早于当前 handoff 约定）；V36-V39.1 registered / not promoted / not live-ready。** 最新线上对账见 [hype-ema-tb-v35-runner-2026-07-15.md](runner-tracking/hype-ema-tb-v35-runner-2026-07-15.md)：最新空单与研究方向/SL 结果基本一致；上一笔多单已确认是用户人工平仓，但 runner 将其错标为 TP，仍有退出原因归因 blocker。
 
 数据源：本地 Binance HYPE/USDT 永续数据湖；15m 主回测主要覆盖 2025-05-30 至 2026-05-26 UTC，V2Q/V2R/V2S/V2T/V2U/V2V/V2W/V2X/V2Y/V2Z/V29/V30/V31/V32/V33/V34/V35/V36/V37 补测覆盖至 2026-06-01 UTC；V2R/V2S/V2T/V2U/V2V/V2W/V2X/V2Y/V2Z/V29/V30/V31/V32/V33/V34/V35 已按 2026-05-19 HYPE 元数据修复后的完整口径重测；V36 为跨所执行版，统计窗口为 Binance/HL 共同区间 2025-07-27 至 2026-06-01 UTC；V37 为 V35 + early-long 卫星影子观察版，并额外用 2026-06-16 延长窗口复核；V38 与 `V37+V38` 使用 Binance public API 补充窗口 `2025-05-30 10:30 UTC` 至 `2026-07-07 08:00 UTC`；V39 使用更新后本地数据湖窗口 `2025-05-30 10:30 UTC` 至 `2026-07-08 05:30 UTC`；结果计入 8.5 bps 换手成本和 funding。
 
@@ -441,7 +441,7 @@ V39 基线：full `+9969.45% / -23.46% / Sharpe 4.81 / 107 笔 / 胜率 79.44%`�
 
 按用户要求，为同事验证导出 `HYPE-EMA-TB-V39` runner handoff 规格：`live-specs/hype-ema-tb-v39-live-spec-not-live-ready-2026-07-09.md`。该规格完整固定 V39 的身份、数据质量要求、成本/funding 口径、15m/1h 指标定义、K0/K1/K2 入场时序、sizing、TP/SL、indicator exit、timeout、禁用项、runner TOML 草案和同事验证清单。
 
-重要状态：这只是 `live spec draft / not implemented in quant-runner / not dry-run / not live-ready`。当前 `/Users/ZK/OpenCode/quant-runner` 还没有 `hype_ema_tb` kind、module 或 runner-side SPEC；文档中的 `kind = "hype_ema_tb"` 是建议实现值，不能直接粘贴到当前 runner 配置运行。V39 当前仍停留 `registered / not promoted / not dry-run / not live-ready`；只有 runner 实现、Python/runner 指标与交易路径对拍、验证门禁 3/4/6/7、live-executable 审计、runner-tracking 证据补齐后，才允许讨论 dry-run 或 live。
+重要状态：这只是 `live spec draft / not implemented in quant-runner / not dry-run / not live-ready`。当前 `/Users/ZK/OpenCode/quant-runner` 还没有 `hype_ema_tb` kind、module 或 runner-side SPEC；文档中的 `kind = "hype_ema_tb"` 是建议实现值，不能直接粘贴到当前 runner 配置运行。V39 当前仍停留 `registered / not promoted / not dry-run / not live-ready`；只有 runner 实现、Python/runner 指标与交易路径对拍、验证门禁 3/4/5（MC、压力测试、相位；现行口径见 [strategy-validation-gates.md](../../../docs/research-governance/strategy-validation-gates.md)）、live-executable 审计、runner-tracking 证据补齐后，才允许讨论 dry-run 或 live。
 
 ### 2026-07-09 V39 K+1 execution diagnostic
 

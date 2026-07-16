@@ -57,7 +57,7 @@ V39 = V35
 - 在 `quant-runner` 新增 `StrategyKindName::HypeEmaTb`，序列化值 `hype_ema_tb`。
 - 新增 runner module、replay、状态机、风险状态和 runner-side SPEC。
 - Python 研究脚本与 runner 对拍：特征、信号、入场、TP/SL、indicator exit、timeout、逐笔交易路径。
-- 验证门禁 3/4/6/7：Monte Carlo、压力测试、启动时间敏感性、相位/K 线切分边界。
+- 验证门禁 3/4/5：Monte Carlo（默认 `mc3`+`mc4`）、压力测试（执行完整性优先）、相位/K 线切分边界（见现行 [strategy-validation-gates.md](../../../../docs/research-governance/strategy-validation-gates.md)）。
 - live-executable 审计：真实下单时序、reduce-only TP/SL、重启恢复、missing-bar fail-closed、kill switch、订单冲突、交易所对账。
 - 跨所迁移或同窗执行审计（至少 Binance native 与目标执行所/账户口径对齐）。
 
@@ -530,7 +530,7 @@ V39 若进入 dry-run 或 live 前，必须补：
 
 ## 最终状态建议
 
-本文完成的是 `registered -> live spec draft` 的规格导出，不代表通过 `audit -> live spec` 门禁。
+本文完成的是 `registered -> live spec draft` 的规格导出，不代表已通过门禁 0–5 与 live-executable promotion review，也不改变当前 `registered` 状态。
 
 建议状态仍为：
 

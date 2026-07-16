@@ -234,3 +234,18 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
 - 本次未部署、无新 runtime trade/fill；`DryRunOnly / NO-GO / not promoted /
   not live-ready` 保持不变。
+
+## 2026-07-15 平台架构收尾（仅代码，未部署）
+
+- Runtime 已彻底移除旧 `Strategy` factory/空壳对象依赖；AR-MAE 继续只通过
+  multi-market `StrategyDriver`、账户单仓 envelope 和统一 execution lifecycle
+  运行。
+- freshness 由独立 Driver bundle supervisor 按实例 1h decision clock 判断，
+  不使用更快辅助依赖的周期；正常 1h 等待不会误判 stale。触发后只隔离/有限
+  重建该 bundle，成功处理新 1h bar 后恢复，兄弟组与 systemd watchdog 不受影响。
+- 本次未修改策略参数、TOML enabled、state path、promotion 或 parity，未部署、
+  无新 runtime trade/fill；`DryRunOnly / NO-GO / not promoted /
+  not live-ready` 保持不变。
+- 最终本地验证：`196` unit PASS + `3` ignored、`12` integration PASS、
+  strict Clippy、配置/治理校验、六个 enabled dry-run smoke 和 AR-MAE
+  2500-bar replay 通过。

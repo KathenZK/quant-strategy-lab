@@ -118,3 +118,17 @@
   dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
 - 本次未部署、无新 runtime fill；历史 underperformance blocker 与
   `keep dry-run / do not enable live` 不变。
+
+## 2026-07-15 平台架构收尾（仅代码，未部署）
+
+- Runtime 已彻底移除旧 `Strategy` factory/空壳对象依赖；Candle-Count 继续只
+  通过 `StrategyDriver`、versioned envelope 和统一 execution lifecycle 运行。
+- freshness 由对应 market-data group supervisor 独立隔离：stale 只关闭本组
+  新增风险并有限重建，实际处理新 15m decision-clock bar 后恢复；mark 缺失重试
+  与兄弟组不互相扩大故障域。
+- 本次未修改策略参数、TOML enabled、state path、promotion 或 parity，未部署、
+  无新 runtime fill；历史 underperformance blocker 与
+  `keep dry-run / do not enable live` 不变。
+- 最终本地验证：`196` unit PASS + `3` ignored、`12` integration PASS、
+  strict Clippy、配置/治理校验、六个 enabled dry-run smoke 和 Candle-Count
+  300-bar strict replay 通过。

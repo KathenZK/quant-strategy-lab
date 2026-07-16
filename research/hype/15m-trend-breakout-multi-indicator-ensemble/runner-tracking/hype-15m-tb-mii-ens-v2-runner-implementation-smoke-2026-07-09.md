@@ -240,3 +240,17 @@ curve tolerance。
   dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
 - 本次未部署、无新 runtime trade/fill；既有 parity PASS、live disabled 与
   not live-ready 状态不变。
+
+## 2026-07-15 平台架构收尾（仅代码，未部署）
+
+- Runtime 已彻底移除旧 `Strategy` factory/空壳对象依赖；TB-MII 继续只通过
+  `StrategyDriver`、persisted replacement 和统一 execution lifecycle 运行。
+- freshness 由对应 market-data group supervisor 独立隔离：stale 只关闭本组
+  新增风险并有限重建，实际处理新 15m decision-clock bar 后恢复；
+  `pending_replacement` 的减风险恢复不被 freshness 闸阻止。
+- 本次未修改策略参数、TOML enabled、state path、promotion 或 parity，未部署、
+  无新 runtime trade/fill；既有 parity PASS、live disabled 与 not live-ready
+  状态不变。
+- 最终本地验证：`196` unit PASS + `3` ignored、`12` integration PASS、
+  strict Clippy、配置/治理校验、六个 enabled dry-run smoke 和 TB-MII
+  2500-bar replay 通过。

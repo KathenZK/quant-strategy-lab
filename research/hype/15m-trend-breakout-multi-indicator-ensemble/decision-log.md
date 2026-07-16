@@ -1,5 +1,12 @@
 # Decision Log
 
+## 2026-07-15 V39 腿慢启动主动退出复测
+
+- 问题：用户提出对当前参与 V2 production dry-run 的 V39 趋势腿测试“持仓 6–8h 且历史 MFE<1.5ATR 后 next-open 主动退出”。
+- 结果：V39 单腿 base 为 `+8789.36% / -23.46% / Sharpe4.62`；6h 规则仅 `+5324.46% / -23.46% / 4.24`、资金保留 `61.02%`，8h 规则 `+6574.67% / -23.88% / 4.38`、保留 `75.09%`，分别误杀 5/2 笔最终 TP5；同向 episode reset 也未挽救。
+- 决定：不修改 `HYPE-15M-TB-MII-ENS-V2` dry-run 配置，不改变已通过 parity 的 V39 腿状态机，不启用 live。独立母版本 V39 仍是 registered；实际 dry-run 身份为包含 V39 趋势腿的组合 V2。
+- 证据：[V39 慢启动主动退出报告](../15m-ema-trend-breakout/diagnostics/hype-ema-tb-v39-slow-start-active-exit-2026-07-15.md)。
+
 ## 2026-07-14 V39 腿临近 TP 回吐与保护线复测
 
 - 运行证据：`hype-tb-mii-ens-dry-run` 的 `ema_tb_v39` 空单于 `2026-07-13T14:45Z` 以 `64.156` 入场，最大 MFE `4.8387ATR`，截至 `2026-07-14T07:45Z` 仍 open；runner signal/entry timestamp 与研究回放一致，entry price 仅差约 `0.47 bps`，close 对齐待实际平仓后补充。
