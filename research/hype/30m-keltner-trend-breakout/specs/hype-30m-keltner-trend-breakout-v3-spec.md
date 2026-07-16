@@ -155,5 +155,7 @@ notional     = equity_at_entry * leverage
 - [损失 Regime 过滤优化](../notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md)
 - [V2.1 规格](hype-30m-keltner-trend-breakout-v2-1-spec.md)
 - [研究脚本](../scripts/research_hype_30m_k2_v2_1_loss_regime_filters.py)
+- [交互式全部交易路径图](../artifacts/hype_30m_keltner_trend_breakout_v3_trade_paths_2026-07-13.html)
+- [路径图生成脚本](../scripts/render_hype_30m_keltner_trend_breakout_v3_trade_paths.py)
 - [汇总 JSON](../artifacts/hype_30m_k2_v2_1_loss_regime_filters_2026-07-13.json)
 - [V3 逐笔交易](../artifacts/hype_30m_k2_v2_1_loss_regime_filter_trades_2026-07-13.csv)
