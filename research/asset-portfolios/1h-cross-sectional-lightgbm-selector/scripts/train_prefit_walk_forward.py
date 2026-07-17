@@ -58,6 +58,7 @@ def parse_args() -> argparse.Namespace:
     parser.add_argument("--feature-set", default="compact")
     parser.add_argument("--folds", nargs="+", default=[fold[0] for fold in FOLDS])
     parser.add_argument("--seed", type=int, default=42)
+    parser.add_argument("--train-window-days", type=int)
     parser.add_argument("--overwrite", action="store_true")
     return parser.parse_args()
 
@@ -148,7 +149,7 @@ def load_slice(
 
 
 def clean_features(frame: pd.DataFrame, features: list[str]) -> pd.DataFrame:
-    result = frame[features].astype("float32", copy=True)
+    result = frame[features].astype("float32").copy()
     result.replace([np.inf, -np.inf], np.nan, inplace=True)
     sparse = [name for name in features if name.startswith(SPARSE_PREFIX)]
     if sparse:
@@ -379,11 +380,16 @@ def main() -> None:
             if validation_end > PREFIT_END:
                 raise RuntimeError(f"fold crosses sealed boundary: {fold_id}")
             train_end = validation_start - pd.Timedelta(hours=PURGE_HOURS)
+            train_start = (
+                train_end - pd.Timedelta(days=args.train_window_days)
+                if args.train_window_days is not None
+                else None
+            )
             train = load_slice(
                 connection,
                 features=features,
                 horizon=horizon,
-                start=None,
+                start=train_start,
                 end=train_end,
                 sampled=True,
             )
@@ -396,7 +402,15 @@ def main() -> None:
                 sampled=False,
             )
             for model_type in args.model_types:
-                identity = f"{model_type}_{args.feature_set}_{horizon}h_{fold_id}_s{args.seed}"
+                window_suffix = (
+                    f"_tw{args.train_window_days}d"
+                    if args.train_window_days is not None
+                    else ""
+                )
+                identity = (
+                    f"{model_type}_{args.feature_set}_{horizon}h_{fold_id}"
+                    f"{window_suffix}_s{args.seed}"
+                )
                 output_directory = OUTPUT_ROOT / identity
                 prediction_path = output_directory / "predictions.parquet"
                 diagnostic_path = output_directory / "diagnostics.json"
@@ -447,6 +461,10 @@ def main() -> None:
                     "validation_start": validation_start.isoformat(),
                     "validation_end_exclusive": validation_end.isoformat(),
                     "train_end_exclusive": train_end.isoformat(),
+                    "train_start_inclusive": (
+                        train_start.isoformat() if train_start is not None else None
+                    ),
+                    "train_window_days": args.train_window_days,
                     "purge_hours": PURGE_HOURS,
                     "train_sample_hours": TRAIN_SAMPLE_HOURS,
                     "seed": args.seed,
@@ -481,11 +499,13 @@ def main() -> None:
         "feature_set": args.feature_set,
         "folds": [fold[0] for fold in selected_folds],
         "seed": args.seed,
+        "train_window_days": args.train_window_days,
         "completed_models": [row["identity"] for row in run_rows],
     }
     OUTPUT_ROOT.mkdir(parents=True, exist_ok=True)
     run_path = OUTPUT_ROOT / (
         f"run_manifest_{args.feature_set}_s{args.seed}_"
+        f"{'tw' + str(args.train_window_days) + 'd_' if args.train_window_days else ''}"
         f"{pd.Timestamp.now('UTC').strftime('%Y%m%dT%H%M%SZ')}.json"
     )
     run_path.write_text(
