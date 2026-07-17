@@ -45,6 +45,7 @@
 | `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | [hype/5m-event-quality-scoring/](hype/5m-event-quality-scoring/README.md) | `5m` 事件质量打分 | V1 registered / not promoted（strict seed audit 未通过） |
 | `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | [hype/15m-trend-breakout-multi-indicator-ensemble/](hype/15m-trend-breakout-multi-indicator-ensemble/README.md) | `EMA-TB-V39` + `MII-V1.4` 单账户组合（V39 优先 + 强平让位） | V2 dry-run active / replay parity PASS / live disabled / not live-ready |
 | `HYPE-6H-RS4-Regime-Switch` | - | [hype/6h-rs4-regime-switch/](hype/6h-rs4-regime-switch/README.md) | `6h` regime-switch 趋势（压缩动量腿 + 扩张突破腿）复现 | V1 registered / not promoted / not live-ready |
+| `HYPE-15M-Factor-ML` | `HYPE-15M-FML` | [hype/15m-factor-ml/](hype/15m-factor-ml/README.md) | `15m` 可扩展因子库（Round 2 为 157 因子）+ LightGBM 集成交易研究 | explore / Round 2 OOS HARD-GATE-FAILED / not promoted / not live-ready |
 
 ## 单资产研究（非 HYPE）
 

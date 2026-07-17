@@ -38,6 +38,7 @@ HYPE 有多个互不相关但复用版本号的策略家族。不要按裸版本
 | `HYPE-5M-Event-Quality-Scoring` | `HYPE-5M-EQS` | [5m-event-quality-scoring/](5m-event-quality-scoring/README.md) | [hype-5m-event-quality-scoring-core-ledger.md](5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md) | `5m` 事件质量打分（候选事件 + seeded 信号） | seeded audit 行不是 micro-scalp 或 live 输入 | V1 registered / not promoted（strict seed audit 未通过） |
 | `HYPE-15M-Trend-Breakout-Multi-Indicator-Ensemble` | `HYPE-15M-TB-MII-ENS` | [15m-trend-breakout-multi-indicator-ensemble/](15m-trend-breakout-multi-indicator-ensemble/README.md) | [hype-15m-tb-mii-ens-core-ledger.md](15m-trend-breakout-multi-indicator-ensemble/hype-15m-tb-mii-ens-core-ledger.md) | `EMA-TB-V39` + `MII-V1.4` 单账户组合（V39 优先 + 强平让位） | 不重定义任一 parent 版本 | V2 dry-run active / replay parity PASS / live disabled / not live-ready |
 | `HYPE-6H-RS4-Regime-Switch` | - | [6h-rs4-regime-switch/](6h-rs4-regime-switch/README.md) | [hype-6h-rs4-regime-switch-core-ledger.md](6h-rs4-regime-switch/hype-6h-rs4-regime-switch-core-ledger.md) | `6h` regime-switch：v10 压缩动量腿 + melt 扩张突破腿 | 同事外部规格复现线，与其他 HYPE 家族无版本关系 | V1 registered / not promoted / not live-ready |
+| `HYPE-15M-Factor-ML` | `HYPE-15M-FML` | [15m-factor-ml/](15m-factor-ml/README.md) | [hype-15m-factor-ml-core-ledger.md](15m-factor-ml/hype-15m-factor-ml-core-ledger.md) | `15m` 可扩展因子库（Round 2 为 157 因子）+ LightGBM 集成交易研究 | 独立机器学习家族，不继承其他 HYPE 家族参数或结论 | explore / Round 2 OOS HARD-GATE-FAILED / not promoted / not live-ready |
 
 ## 组合与账户层诊断
 

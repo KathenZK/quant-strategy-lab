@@ -25,6 +25,8 @@ class FactorMetadata:
     description: str
     cross_sectional: bool = False
     neutralized: bool = False
+    formula: str = ""
+    direction: str = "context_dependent"
 
 
 class PandasFactor(ABC):

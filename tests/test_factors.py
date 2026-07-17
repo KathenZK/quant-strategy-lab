@@ -24,6 +24,7 @@ from strategy_lab.data.factors import (
     default_registry,
     list_registered_factor_providers,
 )
+from strategy_lab.data.factors.hype_15m import build_hype_15m_factors, hype_15m_registry
 
 
 def test_default_registry_contains_expected_factors() -> None:
@@ -237,6 +238,34 @@ def test_rsi_factor_handles_one_way_and_flat_markets() -> None:
 
     assert up.iloc[-1] == pytest.approx(100.0)
     assert flat.iloc[-1] == pytest.approx(50.0)
+
+
+def test_hype_15m_library_has_versioned_metadata_and_unique_names() -> None:
+    factors = build_hype_15m_factors()
+    names = [factor.metadata.name for factor in factors]
+
+    assert len(factors) >= 100
+    assert len(names) == len(set(names))
+    assert all(factor.metadata.frequency == "15m" for factor in factors)
+    assert all(factor.metadata.formula for factor in factors)
+    assert all(factor.metadata.direction for factor in factors)
+    assert all(factor.version() for factor in factors)
+
+
+def test_hype_15m_donchian_factor_uses_prior_channel() -> None:
+    factor = hype_15m_registry().get("donchian_position_20")
+    frame = pd.DataFrame(
+        {
+            "high": [10.0] * 20 + [20.0],
+            "low": [8.0] * 20 + [19.0],
+            "close": [9.0] * 20 + [19.5],
+        }
+    )
+
+    result = factor.compute(frame)
+
+    assert pd.isna(result.iloc[19])
+    assert result.iloc[20] == pytest.approx((19.5 - 8.0) / (10.0 - 8.0))
 
 
 def test_amihud_illiquidity_factor_is_positive() -> None:
