@@ -9,5 +9,5 @@
 
 ## 当前跟踪对象
 
-- `HYPE-EMA-TB-V35`：在独立 hype-trend live runner 上真实资金运行（部署早于 quant-runner 与当前 handoff 约定，属于 legacy 例外）。此前线上观察只散落在 decision log 与诊断报告中；后续线上表现结论、开平仓对齐统计应回流到本目录。V36-V39.1 均为 `registered / not promoted / not live-ready`，未进入任何 runner。
+- `HYPE-EMA-TB-V35`：在独立 hype-trend live runner 上真实资金运行（部署早于 quant-runner 与当前 handoff 约定，属于 legacy 例外）。此前线上观察只散落在 decision log 与诊断报告中；后续线上表现结论、开平仓对齐统计应回流到本目录。V36-V39.2 均为 `registered / not promoted / not live-ready`，未进入任何 runner。
 - 最新对账：[hype-ema-tb-v35-runner-2026-07-15.md](hype-ema-tb-v35-runner-2026-07-15.md)；最新空单与研究 SL 结果基本一致，上一笔多单已确认是人工平仓，但 runner 将其错标为 TP。

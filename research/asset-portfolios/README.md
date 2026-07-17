@@ -4,6 +4,7 @@
 
 ## 当前研究线
 
+- `Binance-1H-Cross-Sectional-LightGBM-Selector`（`BIN-1H-CSLGBM`）：[1h-cross-sectional-lightgbm-selector/](1h-cross-sectional-lightgbm-selector/README.md)。Binance USD-M 历史动态币池、横截面因子与 LightGBM regression/classification/ranking selector；`explore / not promoted / not live-ready`。
 - `Binance-1D-Turtle-Breakout`：[1d-turtle-breakout/](1d-turtle-breakout/README.md)。BTC/ETH/HYPE 日线 20/10 turtle breakout 诊断；`explore`。
 - `Binance-15M-Multi-Indicator-Intraday-Transfer`：[15m-multi-indicator-intraday/](15m-multi-indicator-intraday/README.md)。基于 `HYPE-15M-MII-V1.1` 机制的 BTC/ETH `15m` 受约束参数迁移诊断；`explore / not promoted`。
 - `Binance-15M-Asset-Specific-Six-Strategy-Selector`（`BIN-15M-AS6S`）：[15m-asset-specific-six-strategy-selector/](15m-asset-specific-six-strategy-selector/README.md)。V1为九腿历史基线；V6为15腿、真实mark保护退出的双路线注册观察版本，未来三个月OOS已锁定，`registered / not promoted / not live-ready`。主账：[binance-15m-as6s-core-ledger.md](15m-asset-specific-six-strategy-selector/binance-15m-as6s-core-ledger.md)。

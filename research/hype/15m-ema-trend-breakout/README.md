@@ -3,7 +3,7 @@
 - Full family name：`HYPE-EMA-Trend-Breakout`（历史别名：`HYPE-EMA-TB`）
 - 市场/周期：HYPE `15m`
 - 机制：EMA96/EMA384 趋势突破 / 追多追空，带 ADX、成交量、1h 确认、live-realistic 执行检查与跨所执行变体。
-- 当前状态：active 研究线。`HYPE-EMA-TB-V35` 为 `live`（独立 hype-trend live runner 运行，部署早于当前 handoff 约定，`runner-tracking/` 回流待补）；V36-V39.1 为 `registered / not promoted / not live-ready` 观察版本。
+- 当前状态：active 研究线。`HYPE-EMA-TB-V35` 为 `live`（独立 hype-trend live runner 运行，部署早于当前 handoff 约定，`runner-tracking/` 回流待补）；V36-V39.2 为 `registered / not promoted / not live-ready` 观察版本。
 
 ## 边界
 

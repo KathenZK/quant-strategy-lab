@@ -28,7 +28,7 @@
 | --- | --- | --- | --- | --- |
 | `HYPE-Candle-Count-Reversal` | `HYPE-CC` | [hype/15m-candle-count-reversal/](hype/15m-candle-count-reversal/README.md) | 10-of-8 K 线颜色反转 + ATR 风控 | V35 dry-run / forward-test required |
 | `HYPE-EMA-Crossover` | `HYPE-EMA-X` | [hype/15m-ema-crossover/](hype/15m-ema-crossover/README.md) | EMA 金叉/死叉家族（V14 时代演化） | V18 dry-run / forward-test required |
-| `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | [hype/15m-ema-trend-breakout/](hype/15m-ema-trend-breakout/README.md) | EMA96/384 趋势突破 / 追多追空 | V35 live（外部 hype-trend runner）；V36-V39.1 registered / not promoted |
+| `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | [hype/15m-ema-trend-breakout/](hype/15m-ema-trend-breakout/README.md) | EMA96/384 趋势突破 / 追多追空 | V35 live（外部 hype-trend runner）；V36-V39.2 registered / not promoted |
 | `HYPE-15M-Multi-Horizon-EMA-Forecast` | `HYPE-15M-MHEF` | [hype/15m-multi-horizon-ema-forecast/](hype/15m-multi-horizon-ema-forecast/README.md) | `15m` 四组 EMA 波动率归一化 forecast 加权连续仓位 | explore / not promoted / not live-ready |
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | [hype/1m-ema-crossover/](hype/1m-ema-crossover/README.md) | `1m` EMA 金叉/死叉，可执行时序 | explore / not promoted / not live-ready |
 | `HYPE-1M-MA-Pullback-Scalp` | - | [hype/1m-ma-pullback-scalp/](hype/1m-ma-pullback-scalp/README.md) | `1m` 双 MA 回踩 scalp | explore / not promoted / not live-ready |
@@ -69,6 +69,7 @@
 
 | Family / Topic | Directory | 状态 |
 | --- | --- | --- |
+| `Binance-1H-Cross-Sectional-LightGBM-Selector`（`BIN-1H-CSLGBM`） | [asset-portfolios/1h-cross-sectional-lightgbm-selector/](asset-portfolios/1h-cross-sectional-lightgbm-selector/README.md) | explore / not promoted / not live-ready |
 | `Binance-1D-Turtle-Breakout` | [asset-portfolios/1d-turtle-breakout/](asset-portfolios/1d-turtle-breakout/README.md) | explore |
 | `Binance-15M-Multi-Indicator-Intraday-Transfer` | [asset-portfolios/15m-multi-indicator-intraday/](asset-portfolios/15m-multi-indicator-intraday/README.md) | explore / not promoted |
 | `Binance-15M-Asset-Specific-Six-Strategy-Selector`（`BIN-15M-AS6S`） | [asset-portfolios/15m-asset-specific-six-strategy-selector/](asset-portfolios/15m-asset-specific-six-strategy-selector/README.md) | V1/V6 registered / V6 future OOS locked / not promoted / not live-ready |
