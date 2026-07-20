@@ -59,3 +59,9 @@
 结论：按用户决定，将损失-regime 过滤候选正式登记为 `HYPE-30M-Keltner-Trend-Breakout-V3：registered / not promoted / not live-ready`。V3 = V2.1 + 入场 ATR cap `1.25%` + 方向化 close-location `>=65%`；因过滤语义变化升主版本。Gate 6/7 仍失败，不进入 `audit` / runner。
 
 证据：[specs/hype-30m-keltner-trend-breakout-v3-spec.md](specs/hype-30m-keltner-trend-breakout-v3-spec.md)，[notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md](notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md)。
+
+## 2026-07-17：V3 全参数消融与多周期稳健性
+
+结论：V3 的 73 个单参数邻域和交易 bootstrap 均保持正收益，但 Keltner/TP/hold 存在明显局部峰值，close-location 风险贡献未证明，空头腿偏弱；15m/1h/2h 迁移失败，30m 非原生相位收益比 `13.97%`、CV `1.167`、MDD 比 `2.10x`，现行门禁 5 失败。V3 参数不变，继续 `registered / not promoted / not live-ready`。
+
+证据：[ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md](ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md)。

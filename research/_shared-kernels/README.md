@@ -15,5 +15,6 @@
 
 | Kernel | 最新冻结版本 | 机制 | 消费方 |
 | --- | --- | --- | --- |
-| `1h-adaptive-regime-search/` | `v2` | Binance USD-M `1h` 多指标自适应 regime 广搜/回测引擎 | HYPE、BTC、ETH、SOL、BNB、TRX、asset-portfolios ensemble 的 `1h-adaptive-regime` 脚本 |
+| [1h-adaptive-regime-search/](1h-adaptive-regime-search/README.md) | `v2` | Binance USD-M `1h` 多指标自适应 regime 广搜/回测引擎 | HYPE、BTC、ETH、SOL、BNB、TRX、asset-portfolios ensemble 的 `1h-adaptive-regime` 脚本 |
 | [multi-horizon-ema-forecast/](multi-horizon-ema-forecast/README.md) | `v1` | 多参数 EMA 波动率归一化 forecast、连续仓位、成本与 funding 回测 | HYPE `15m` / `1h` multi-horizon EMA forecast 家族 |
+| [ema-trend-breakout/](ema-trend-breakout/README.md) | `v2` | EMA96/384 + ADX/量能/1h 确认的 K0/K1/K2 单仓位趋势突破内核；支持 ATR risk / 固定 allocation 与显式成本压力倍数 | HYPE V39.2/V40 已完成 legacy parity；BTC 等跨标的消费方待接入 |

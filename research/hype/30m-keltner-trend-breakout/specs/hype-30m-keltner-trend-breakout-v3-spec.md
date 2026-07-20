@@ -142,17 +142,20 @@ notional     = equity_at_entry * leverage
 
 ## 门禁状态
 
-- 数据质量、Gate 0/1/2、Gate 5、Gate 3 Monte Carlo：通过或改善通过。
-- Gate 6 启动时间：失败；CAGR CV `0.585`。
-- Gate 7 30m 相位：失败；非原生/原生中位 CAGR 比约 `13.80%`。
-- Gate 4 与 live-executable runner 运维部分：未完成。
-- Holdout：仅 2 笔亏损交易，不足以支撑 live-ready。
+- 数据质量：通过。
+- 现行门禁 1：核心 Keltner、regime、ATR cap 与退出组件有贡献；close-location 仅提高胜率，风险贡献未证明。
+- 现行门禁 2：历史滚动窗口 11/12 正收益，但冻结参数已使用历史选择，不是真正未来 OOS。
+- 现行门禁 3：交易 bootstrap 与参数邻域保持正收益，但多个冻结值处于局部绩效峰值。
+- 现行门禁 4 与 live-executable runner 运维部分：未完成。
+- 现行门禁 5：失败；30m 非原生/原生收益中位比 `13.97%`、MDD 比 `2.10x`、收益 CV `1.167`。
+- 多周期迁移：15m 亏损，1h 极少或零交易，2h 零交易。
 
 因此 V3 只登记研究身份，不进入 `audit`、`live spec`、`dry-run` 或 `live`。
 
 ## 证据
 
 - [损失 Regime 过滤优化](../notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md)
+- [全参数消融与多周期稳健性](../ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md)
 - [V2.1 规格](hype-30m-keltner-trend-breakout-v2-1-spec.md)
 - [研究脚本](../scripts/research_hype_30m_k2_v2_1_loss_regime_filters.py)
 - [交互式全部交易路径图](../artifacts/hype_30m_keltner_trend_breakout_v3_trade_paths_2026-07-13.html)

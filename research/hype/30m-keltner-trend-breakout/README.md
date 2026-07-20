@@ -18,20 +18,11 @@
 - [decision-log.md](decision-log.md)
 - [specs/hype-30m-keltner-trend-breakout-v3-spec.md](specs/hype-30m-keltner-trend-breakout-v3-spec.md)
 - [specs/hype-30m-keltner-trend-breakout-v2-1-spec.md](specs/hype-30m-keltner-trend-breakout-v2-1-spec.md)
+- [ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md](ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md)
 - [notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md](notes/hype-30m-k2-v2-1-loss-regime-filter-optimization-2026-07-13.md)
-- [notes/hype-30m-k2-v2-1-rsi-macd-filter-study-2026-07-13.md](notes/hype-30m-k2-v2-1-rsi-macd-filter-study-2026-07-13.md)
-- [notes/hype-30m-k2-v2-1-dynamic-atr-bracket-2026-07-10.md](notes/hype-30m-k2-v2-1-dynamic-atr-bracket-2026-07-10.md)
 - [notes/hype-30m-k2-v2-full-ablation-pruned-tune-2026-07-10.md](notes/hype-30m-k2-v2-full-ablation-pruned-tune-2026-07-10.md)
 - [notes/hype-30m-k2-strict-validation-gates-2026-07-10.md](notes/hype-30m-k2-strict-validation-gates-2026-07-10.md)
-- [notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md](notes/hype-30m-k2-fq-v2-atrvt-off-backtest-2026-07-08.md)
-- [scripts/research_hype_30m_k2_strict_validation_gates.py](scripts/research_hype_30m_k2_strict_validation_gates.py)
-- [scripts/research_hype_30m_k2_v2_full_ablation_and_tune.py](scripts/research_hype_30m_k2_v2_full_ablation_and_tune.py)
-- [scripts/research_hype_30m_k2_v2_1_dynamic_atr_bracket.py](scripts/research_hype_30m_k2_v2_1_dynamic_atr_bracket.py)
-- [scripts/research_hype_30m_k2_v2_1_rsi_macd_filters.py](scripts/research_hype_30m_k2_v2_1_rsi_macd_filters.py)
-- [scripts/research_hype_30m_k2_v2_1_loss_regime_filters.py](scripts/research_hype_30m_k2_v2_1_loss_regime_filters.py)
-- [scripts/repair_hype_1m_standard_data_lake.py](scripts/repair_hype_1m_standard_data_lake.py)
-- [scripts/research_hype_30m_k2_fq_v2_atrvt_off_backtest.py](scripts/research_hype_30m_k2_fq_v2_atrvt_off_backtest.py)
 
 ## 当前结论
 
-`HYPE-30M-Keltner-Trend-Breakout-V3` 已登记，状态为 `registered / not promoted / not live-ready`。V3 = V2.1 + `ATR84/entry <= 1.25%` + 方向化 close location `>=65%`；刷新样本 `+6328.98% / MDD -22.68% / 胜率 67.95% / 78 笔`。start-time 与 30m phase 仍失败，不 promotion。
+`HYPE-30M-Keltner-Trend-Breakout-V3` 已登记，状态为 `registered / not promoted / not live-ready`。全参数邻域和交易 bootstrap 为正，但多周期迁移失败；30m 非原生相位现行门禁 5 明确失败，不 promotion。版本级指标与完整证据以主账为准。

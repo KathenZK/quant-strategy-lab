@@ -28,7 +28,7 @@
 | --- | --- | --- | --- | --- |
 | `HYPE-Candle-Count-Reversal` | `HYPE-CC` | [hype/15m-candle-count-reversal/](hype/15m-candle-count-reversal/README.md) | 10-of-8 K 线颜色反转 + ATR 风控 | V35 dry-run / forward-test required |
 | `HYPE-EMA-Crossover` | `HYPE-EMA-X` | [hype/15m-ema-crossover/](hype/15m-ema-crossover/README.md) | EMA 金叉/死叉家族（V14 时代演化） | V18 dry-run / forward-test required |
-| `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | [hype/15m-ema-trend-breakout/](hype/15m-ema-trend-breakout/README.md) | EMA96/384 趋势突破 / 追多追空 | V35 live（外部 hype-trend runner）；V36-V39.2 registered / not promoted |
+| `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | [hype/15m-ema-trend-breakout/](hype/15m-ema-trend-breakout/README.md) · [主账](hype/15m-ema-trend-breakout/hype-ema-tb-core-ledger.md) | EMA96/384 趋势突破 / 追多追空 | V35 live（外部 hype-trend runner）；V36-V40 registered / not promoted |
 | `HYPE-15M-Multi-Horizon-EMA-Forecast` | `HYPE-15M-MHEF` | [hype/15m-multi-horizon-ema-forecast/](hype/15m-multi-horizon-ema-forecast/README.md) | `15m` 四组 EMA 波动率归一化 forecast 加权连续仓位 | explore / not promoted / not live-ready |
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | [hype/1m-ema-crossover/](hype/1m-ema-crossover/README.md) | `1m` EMA 金叉/死叉，可执行时序 | explore / not promoted / not live-ready |
 | `HYPE-1M-MA-Pullback-Scalp` | - | [hype/1m-ma-pullback-scalp/](hype/1m-ma-pullback-scalp/README.md) | `1m` 双 MA 回踩 scalp | explore / not promoted / not live-ready |
@@ -38,6 +38,7 @@
 | `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | [hype/15m-multi-indicator-intraday/](hype/15m-multi-indicator-intraday/README.md) | `15m` 多指标日内广搜 | V1.3 dry-run / forward-test required |
 | `HYPE-15M-Riptide` | - | [hype/15m-riptide/](hype/15m-riptide/README.md) | `15m` EMA 趋势背景 RSI 回踩 + RV regime | explore / not promoted（复现对账未完成） |
 | `HYPE-30M-Keltner-Trend-Breakout` | `K2-FQ-V2-ATRVT-OFF` | [hype/30m-keltner-trend-breakout/](hype/30m-keltner-trend-breakout/README.md) | `30m` Keltner 突破 + `1h` EMA regime + ATRVT 动态杠杆 | V3 registered / not promoted / not live-ready |
+| `HYPE-30M-Keltner-Breakout-Retest` | - | [hype/30m-keltner-breakout-retest/](hype/30m-keltner-breakout-retest/README.md) | `30m` Keltner 突破后等待回踩并 reclaim 的趋势状态机 | explore / not promoted / not live-ready |
 | `HYPE-15M-Pullback-Trail` | - | [hype/15m-pullback-trail/](hype/15m-pullback-trail/README.md) | `15m` 回踩事件源 + bracket 搜索 | explore / not promoted / not live-ready |
 | `HYPE-5M-Pullback-Trail` | `HYPE-5M-PBTR` | [hype/5m-pullback-trail/](hype/5m-pullback-trail/README.md) | `5m` 回踩/恢复入场 + ATR trailing stop | V6.2.1 dry-run / forward-test required |
 | `HYPE-5M-MA-Pullback-Scalp` | - | [hype/5m-ma-pullback-scalp/](hype/5m-ma-pullback-scalp/README.md) | `5m` 双 MA 回踩 scalp | explore / not promoted / not live-ready |
@@ -52,6 +53,7 @@
 | Family | Alias | Directory | 状态 |
 | --- | --- | --- | --- |
 | `BTC-1H-Adaptive-Regime` | `BTC-1H-AR` | [btc/1h-adaptive-regime/](btc/1h-adaptive-regime/README.md) | V1-V4 registered / not promoted / not live-ready（V4 为 V3 clean-equivalent） |
+| `BTC-15M-EMA-Trend-Breakout` | `BTC-15M-EMA-TB` | [btc/15m-ema-trend-breakout/](btc/15m-ema-trend-breakout/README.md) · [主账](btc/15m-ema-trend-breakout/btc-15m-ema-tb-core-ledger.md)；`15m` 快慢 EMA 趋势背景 + 价格突破 | V40 模板迁移无门禁通过项、停止扩搜 / explore / not promoted / not live-ready |
 | `ETH-1H-Adaptive-Regime` | `ETH-1H-AR` | [eth/1h-adaptive-regime/](eth/1h-adaptive-regime/README.md) | V1-V4 registered / not promoted / not live-ready |
 | `SOL-1H-Adaptive-Regime` | `SOL-1H-AR` | [sol/1h-adaptive-regime/](sol/1h-adaptive-regime/README.md) | V1-V3 registered；V3 Donchian core + VWAP arm-confirm satellite；not promoted / not live-ready |
 | `SOL-1H-Volatility-Compression-Breakout` | `SOL-1H-VCB` | [sol/1h-volatility-compression-breakout/](sol/1h-volatility-compression-breakout/README.md) | 首轮扩展搜索 NO-GO / explore / not promoted / not live-ready |
@@ -69,7 +71,8 @@
 
 | Family / Topic | Directory | 状态 |
 | --- | --- | --- |
-| `Binance-1H-Cross-Sectional-LightGBM-Selector`（`BIN-1H-CSLGBM`） | [asset-portfolios/1h-cross-sectional-lightgbm-selector/](asset-portfolios/1h-cross-sectional-lightgbm-selector/README.md) | explore / not promoted / not live-ready |
+| `Binance-1H-Cross-Sectional-LightGBM-Selector`（`BIN-1H-CSLGBM`） | [asset-portfolios/1h-cross-sectional-lightgbm-selector/](asset-portfolios/1h-cross-sectional-lightgbm-selector/README.md) | formula-invalidated / HARD-GATE-FAILED / registered / not promoted / not live-ready |
+| `Binance-1H-Multi-Horizon-Cross-Sectional-ML-Allocator`（`BIN-1H-MHCSML`） | [asset-portfolios/1h-multi-horizon-cross-sectional-ml-allocator/](asset-portfolios/1h-multi-horizon-cross-sectional-ml-allocator/README.md) · [主账](asset-portfolios/1h-multi-horizon-cross-sectional-ml-allocator/binance-1h-mhcsml-core-ledger.md) | V1 registered / prospective OOS active / not promoted / not live-ready |
 | `Binance-1D-Turtle-Breakout` | [asset-portfolios/1d-turtle-breakout/](asset-portfolios/1d-turtle-breakout/README.md) | explore |
 | `Binance-15M-Multi-Indicator-Intraday-Transfer` | [asset-portfolios/15m-multi-indicator-intraday/](asset-portfolios/15m-multi-indicator-intraday/README.md) | explore / not promoted |
 | `Binance-15M-Asset-Specific-Six-Strategy-Selector`（`BIN-15M-AS6S`） | [asset-portfolios/15m-asset-specific-six-strategy-selector/](asset-portfolios/15m-asset-specific-six-strategy-selector/README.md) | V1/V6 registered / V6 future OOS locked / not promoted / not live-ready |

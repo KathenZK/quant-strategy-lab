@@ -10,11 +10,11 @@
 
 ## Current State
 
-- Current version(s)：无；`V1` 保留给首个冻结且通过研究门槛的候选。
-- Current status：`explore / not promoted / not live-ready`
+- Current version(s)：`BIN-1H-CSLGBM-V1`。
+- Current status：`registered / not promoted / not live-ready`；研究 gate 为 `HARD-GATE-FAILED`。
 - Runner / dry-run / live status：无 runner 实现；未 dry-run；未 live。
-- Live-readiness blockers：全市场历史数据尚未补齐；动态币池、因子、模型、walk-forward、锁定 OOS、压力测试和 live-executable 审计均未完成。
-- Next decision gate：先完成 Binance Vision / API 数据清单、补洞和 raw/normalized 质量审计；数据有 blocker 时不得训练。
+- Live-readiness blockers：原始 prefit/OOS 组合收益使用了错误的倒数空头收益公式，全部旧绩效作废；按正确线性 USD-M 公式重算的冻结 OOS 为负收益且回撤、Sharpe、PF、正收益月和成本压力均失败；另无 runner、订单状态机、重启恢复、dry-run 或 live-executable 审计。
+- Next decision gate：V1 不进入 promotion；`2026Q2` 已使用且只能作为 reused holdout / 诊断窗口。新机制进入独立家族并等待未来 prospective OOS。
 
 ## Version Rules
 
@@ -27,7 +27,7 @@
 
 | Version | Status | Role / Core Idea | Key Frozen Metrics | Evidence | Decision / Live Readiness |
 | --- | --- | --- | --- | --- | --- |
-| - | `explore / not promoted / not live-ready` | 数据与研究契约初始化；尚无候选 | 未回测 | [研究契约](specs/binance-1h-cslgbm-research-contract-2026-07-17.md) | 数据质量和锁定 OOS 前置门禁未完成 |
+| V1 | `registered / not promoted / not live-ready` | 165 个高覆盖因子、730d rolling、四种子 LightGBM regression 均值；UTC 00:00、24h、Top7/Bottom7、0.45x gross；研究记录因公式错误失效 | 原始 prefit/OOS 绩效全部作废；固定原模型分数和选币、按正确空头公式重算 OOS：总收益 `-37.04%`、DD `37.04%`、组合胜率 `56.67%`、Sharpe `-3.26`、PF `0.60`、`90` 周期/`1,260` 腿 | [公式纠错审计](diagnostics/binance-1h-cslgbm-v1-oos-2026-07-17.md)；原冻结 SHA `9f5743...02a1`；纠错脚本 `scripts/audit_v1_short_return_correction.py` | `HARD-GATE-FAILED`：收益、DD、Sharpe、PF、正收益月和成本压力失败；不 promotion，无 runner、未 dry-run、未 live-executable |
 
 ## Shared Assumptions
 
@@ -39,8 +39,8 @@
 
 ## Evidence Map
 
-- Specs：[冻结研究契约](specs/binance-1h-cslgbm-research-contract-2026-07-17.md)
-- Diagnostics / ablations：[历史数据清单与补齐诊断](diagnostics/binance-usdm-history-inventory-2026-07-17.md)。
+- Specs：[冻结研究契约](specs/binance-1h-cslgbm-research-contract-2026-07-17.md)、[已撤销的 V1 外部复现规格](specs/binance-1h-cslgbm-v1-reproduction-spec.md)
+- Diagnostics / ablations：[历史数据清单与补齐诊断](diagnostics/binance-usdm-history-inventory-2026-07-17.md)、[V1 OOS 公式纠错审计](diagnostics/binance-1h-cslgbm-v1-oos-2026-07-17.md)。
 - Live specs：无。
 - Runner tracking：无。
-- Scripts / artifacts：[历史归档清单脚本](scripts/inventory_binance_usdm_history.py)；产物待生成。
+- Scripts / artifacts：[历史归档清单脚本](scripts/inventory_binance_usdm_history.py)、[因子面板脚本](scripts/build_cross_sectional_factor_panel.py)、[walk-forward 训练](scripts/train_prefit_walk_forward.py)、[候选冻结脚本](scripts/freeze_prefit_candidate_v1.py)、[V1 artifact 撤销清单](artifacts/v1_oos_2026q2/README.md)。原始错误 artifact 只保留作事故证据，不作为有效绩效或 promotion 证据。

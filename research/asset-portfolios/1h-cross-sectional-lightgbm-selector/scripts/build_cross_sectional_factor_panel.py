@@ -13,6 +13,7 @@ import numpy as np
 import pandas as pd
 
 from strategy_lab.data.factors.multi_asset_1h import multi_asset_1h_registry
+from strategy_lab.data.linear_contract_returns import long_net_return, short_net_return
 
 
 ROOT = Path(__file__).resolve().parents[4]
@@ -269,20 +270,21 @@ def add_labels(frame: pd.DataFrame) -> pd.DataFrame:
         exit_open = result["open"].shift(-(horizon + 1))
         funding_sum = funding_cumulative.shift(-(horizon + 1)) - funding_cumulative.shift(-1)
         result[f"label_funding_sum_{horizon}h"] = funding_sum
-        result[f"label_long_net_{horizon}h"] = (
-            exit_open / entry_open.replace(0.0, np.nan)
-            - 1.0
-            - ROUND_TRIP_COST
-            - funding_sum
+        valid_entry_open = entry_open.replace(0.0, np.nan)
+        result[f"label_long_net_{horizon}h"] = long_net_return(
+            valid_entry_open,
+            exit_open,
+            round_trip_cost=ROUND_TRIP_COST,
+            funding_sum=funding_sum,
         )
-        result[f"label_short_net_{horizon}h"] = (
-            entry_open / exit_open.replace(0.0, np.nan)
-            - 1.0
-            - ROUND_TRIP_COST
-            + funding_sum
+        result[f"label_short_net_{horizon}h"] = short_net_return(
+            valid_entry_open,
+            exit_open,
+            round_trip_cost=ROUND_TRIP_COST,
+            funding_sum=funding_sum,
         )
         result[f"label_gross_return_{horizon}h"] = (
-            exit_open / entry_open.replace(0.0, np.nan) - 1.0
+            exit_open / valid_entry_open - 1.0
         )
     return result
 
