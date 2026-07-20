@@ -1,7 +1,9 @@
 ---
+schema_version: "1.0"
 spec_role: lab_handoff
 strategy_id: BIN-1H-AR-MAE-V1
 family_id: BIN-1H-AR-MAE
+main_status: dry-run
 runner_kind: six_asset_ensemble
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/six_asset_ensemble/BIN-1H-AR-MAE-V1-SPEC.md
@@ -12,7 +14,7 @@ approval_level_max: dry_run
 
 # BIN-1H-AR-MAE-V1 Runner Handoff
 
-状态：`dry-run only / NO-GO / not live-ready`。
+状态：`dry-run / not live-ready`；manifest 已启用，live disabled。
 
 - Exchange / market：Binance USD-M Futures。
 - Assets / timeframe：六资产组合 / `1h`。
@@ -49,7 +51,7 @@ approval_level_max: dry_run
   `371/371` 零误差结果应保持不变。
 - 统一 execution 已于 `2026-07-13T04:25Z` 部署，原 HYPE long 持仓完成
   symbol-explicit venue 迁移并保持 health=`ok`。V1 的组合定义、promotion、
-  parity、`NO-GO` 与 live-readiness 均不变。实现补记见
+  parity 与 live-readiness 均不变。实现补记见
   [runner tracking](../runner-tracking/binance-1h-ar-mae-v1-runner-status.md)。
 - 稳定性补充契约（Runner `e69589f`，已于 `2026-07-13 21:02 CST`
   部署 dry-run）：任一资产 transient 数据缺失时，
@@ -74,6 +76,6 @@ dispatcher 构建 candles/mark/funding 完整快照；任一依赖缺失时禁�
 sleeve/active-position/cooldown 私有状态保存到 versioned
 `StrategyStateEnvelope`，动态 symbol 订单仍走统一 execution kernel。策略通过
 `inventory` 自注册，不再存在 self-managed runtime 分支。该变更不替代
-`371/371` parity，也不改变 `DryRunOnly / NO-GO / not live-ready`。
+`371/371` parity，也不改变 `dry-run / not live-ready`。
 symbol/side/allocation 变化必须显式 `Replace` 并按 persisted `AfterFlat`
 close-confirm-open；重启时从 `pending_replacement` 续做，不提供隐式仓内 resize。

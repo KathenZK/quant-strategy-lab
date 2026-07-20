@@ -12,7 +12,7 @@
 
 ## 当前状态
 
-`BIN-15M-AS6S-V1` 保持 `registered / not promoted / not live-ready`；`BIN-15M-AS6S-V6` 为 `dry-run / not promoted / not live-ready`。V1 是九腿 nonpreemptive 历史基线；V6 固定 15 条资产专属腿、真实 15m mark 保护退出和双路线，nonpreemptive 为主观察、强突破抢占为对照。V6 两个实例独立记账并同时运行持续 dry-run；`[2026-07-14T09:00Z, 2026-10-14T09:00Z)`仍为锁定未来 OOS。
+`BIN-15M-AS6S-V1` 保持 `registered / not promoted / not live-ready`；`BIN-15M-AS6S-V6-NP` 与 `BIN-15M-AS6S-V6-SBP` 均为 `dry-run / not live-ready`。V1 是九腿 nonpreemptive 历史基线；V6 固定 15 条资产专属腿、真实 15m mark 保护退出和双路线。V6 两个实例独立记账并同时运行持续 dry-run；`[2026-07-14T09:00Z, 2026-10-14T09:00Z)` 仍为锁定未来 OOS，live disabled。
 
 ## 入口
 

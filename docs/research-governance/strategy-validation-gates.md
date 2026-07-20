@@ -14,6 +14,7 @@
 
 ## 适用原则
 
+- “登记 / 冻结 Vx”只完成 `explore -> registered` 的身份固定，不是 promotion；“promote”必须明确目标状态，不得与登记混用。
 - 门禁用于状态迁移：回测结果再好，也不能绕过 `registered -> live spec -> dry-run -> live` 的 promotion review 与交接要求。
 - 阈值是默认口径：默认按本文执行；若因策略频率、样本长度、市场结构或数据可得性需要偏离，报告必须说明原因、替代口径和影响，并在家族 `decision-log.md` 记录。
 - 缺数据不是通过：例如相位检验缺少足够细的 K 线数据时，只能记录为未完成 blocker。
@@ -28,7 +29,7 @@
 | `explore -> registered` | 不新增门禁；只固定版本身份、参数和证据链接 | core ledger |
 | `registered -> live spec` | 一次性核验门禁 0–5 + live-executable 审计：超额收益、消融、OOS/CPCV、MC、压力测试、相位、真实下单时序；失败则保持 `registered / not promoted / not live-ready` | ablations / diagnostics / live-specs / decision log |
 | `live spec -> dry-run` | runner 实现、指标/信号对拍、smoke test、创建 `runner-tracking/` | live-specs / runner-tracking |
-| `dry-run -> live` | runner 观察证据、线上开平仓/成交统计与回测对齐、运维风控、重启恢复、missing-bar fail-closed、kill switch | runner-tracking / artifacts / decision log |
+| `dry-run -> live` | runner 观察证据、已完成的线上开平仓逐笔对账（无未解决重大偏差）、运维风控、重启恢复、missing-bar fail-closed、kill switch；离线 replay/parity 不可替代线上对账 | runner-tracking / artifacts / decision log |
 
 ## 门禁 0：超额收益基准
 

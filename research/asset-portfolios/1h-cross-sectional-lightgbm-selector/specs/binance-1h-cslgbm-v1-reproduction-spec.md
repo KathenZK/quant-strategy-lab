@@ -1,3 +1,8 @@
+---
+document_type: external_reproduction_spec
+intended_audience: 外部研究员或 AI；用于识别已撤销规格及错误公式，不得据此宣传策略绩效
+---
+
 # BIN-1H-CSLGBM-V1 外部复现规格（已撤销）
 
 ## 撤销声明

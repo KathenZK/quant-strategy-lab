@@ -31,6 +31,7 @@
 
 ## 研究批次记录
 
+- `2026-07-20`：按用户决定，将 `HYPE-EMA-X-V18` 的 parity grandfather 延至 `2026-09-24T00:00:00Z`，仅维持现有 dry-run 以补齐标准逐笔对拍；live 实例继续禁用且不获得 live 授权。机器状态见 [`active-strategy-manifest.json`](../../../docs/research-governance/machine/active-strategy-manifest.json)，待补证据见 [`HYPE-EMA-X-V18_parity_pending_2026-07-11.json`](artifacts/HYPE-EMA-X-V18_parity_pending_2026-07-11.json)。
 - `research_hype_v15_effective_cross.py`：effective-cross quality probe；仅作为证据，不是已提升的 `HYPE-EMA-X-V15`。
 - `research_hype_v16_indicator_expansion.py`：indicator-expansion probe。Early indicator entries 增加了交易数，但稀释了 V14 quality；OKX 没有确认足够稳定性。
 - `research_hype_v17_trend_state_search.py`：覆盖 common indicator families 的 broad trend-state search。没有 candidate 同时满足 `50x return`、`<20% max drawdown` 和 `>80% win rate`。其中最佳低回撤行和高收益行现在已提升为 `HYPE-EMA-X-V15` 和 `HYPE-EMA-X-V16`。

@@ -1,17 +1,19 @@
 ---
+schema_version: "1.0"
 spec_role: lab_handoff
 strategy_id: BIN-15M-AS6S-V5-JOINT-NP
 family_id: BIN-15M-AS6S
+main_status: explore
 runner_kind: asset_specific_six_selector_v5_joint_state
 spec_status: draft
 peer_spec: crates/quant-runner/src/runner/strategies/asset_specific_six_selector_v5_joint_state/BIN-15M-AS6S-V5-JOINT-NP-SPEC.md
 manifest_instance_ids: [bin-15m-as6s-v5-joint-np-dry-run]
-approval_level_max: disabled
+approval_level_max: none
 ---
 
 # 六币资产专属 V5 联合状态 Runner 草案
 
-状态：`frozen observation / registered disabled / not promoted / not live-ready`。
+状态：`explore / not promoted / not live-ready`；仅保留 disabled 验证配置，不授权持续 dry-run 或 live。
 本草案只授权独立 Runner 模块、离线逐笔对拍和 `enabled=false` 的验证配置；
 不授权持续 dry-run 或 live，不改变任何既有策略身份。
 

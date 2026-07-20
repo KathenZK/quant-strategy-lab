@@ -1,11 +1,7 @@
 # HYPE-15M-MII Core Ledger
-
-Family：`HYPE-15M-Multi-Indicator-Intraday`
-
-Alias：`HYPE-15M-MII`
-
-Created：2026-06-30
-
+- Family：`HYPE-15M-Multi-Indicator-Intraday`
+- Alias：`HYPE-15M-MII`
+- Created：2026-06-30
 ## 边界
 
 `HYPE-15M-MII` 是 Binance HYPEUSDT 永续 `15m` broad multi-indicator intraday 研究线，独立于 `HYPE-EMA-Crossover`、`HYPE-EMA-Trend-Breakout` 和 `HYPE-Candle-Count-Reversal`。
@@ -14,12 +10,12 @@ Created：2026-06-30
 
 ## 当前状态
 
-- 当前登记观察版本：`HYPE-15M-MII-V1.4`（`V1.3 + min_rvol96=0.85`）。
-- 当前 dry-run 实现版本：`HYPE-15M-MII-V1.4A`，于 `2026-07-10T07:13:16Z` 替代同一 `hype-mii-dry-run` 实例上的 V1.3。
-- 当前状态：`HYPE-15M-MII-V1.4A` 为 `dry-run validation running / not live-ready`；V1.3 dry-run 已停止但历史事件保留；`HYPE-15M-MII-V1.4` 为 `registered / not promoted / not live-ready`；V1、V1base、V1.1、V1.2 为 `not promoted / not live-ready`。
+- 当前版本：`HYPE-15M-MII-V1.4A`，于 `2026-07-10T07:13:16Z` 替代同一 `hype-mii-dry-run` 实例上的 V1.3。
+- 当前状态：`dry-run / not live-ready`。
+- 版本关系：V1.3 是 superseded dry-run history；V1.4 是 V1.4A 的 parent registered observation。
 - 当前 runner 观察与后续未部署 execution 迁移见 [2026-07-10 runner tracking](runner-tracking/hype-15m-mii-runner-2026-07-10.md)。
 - live 前 blockers：资金费核算、盘口级 stop-market 证据、真实成交滑点、重启恢复、交易所对账、missing-bar fail-closed、kill switch 审计，以及 `runner-tracking/` 下达标的 runner 观察证据。
-- 是否 `live` 或 `NO-GO` 只能在 runner 观察证据出来后判定。
+- 当前 manifest 只授权 dry-run；是否进入 `live` 或形成 dry-run/live 后终态，必须由 runner 观察证据与新决策判定。
 
 ## 数据与成本口径
 
@@ -43,6 +39,7 @@ Created：2026-06-30
 | `HYPE-15M-MII-V1.2` | 沿用 `V1.1` 信号与过滤，把固定 `TP/SL` 改为入场时按 `ATR96%` 设定的一次性 bracket；仍是 diagnostic observation，不是 promotion。 |
 | `HYPE-15M-MII-V1.3` | 沿用 `V1.2` 的信号、过滤和 ATR bracket，只把权益暴露从固定 `2x` 调整为固定 `2.5x`；用于 runner 实现和后续审计，不是 promotion。 |
 | `HYPE-15M-MII-V1.4` | 沿用 `V1.3` 的全部信号、ATR bracket、成本和 `2.5x` 暴露，只把 `min_rvol96` 从 `1.0` 下调到 `0.85`；进取观察版本，尚未实现为 runner dry-run。 |
+| `HYPE-15M-MII-V1.4A` | V1.4 的近期防守出场变体：`TP=1.40*ATR96`、`SL=3.0*ATR96`；当前 active dry-run 版本。 |
 
 ## 版本台账
 
@@ -54,9 +51,11 @@ Created：2026-06-30
 | `HYPE-15M-MII-V1.2` | ATR bracket diagnostic observation / not live-ready | 沿用 `V1.1` 入场过滤；下一根 open 入场时按信号 K 已知 `ATR96%` 设置 `TP = 1.25 * ATR96%`、`SL = 5.0 * ATR96%`、`hold=24` | `specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`；`notes/hype-15m-mii-v1-2-atr-bracket-exit-2026-06-30.md`；`notes/hype-15m-mii-v1-2-window-slice-backtest-2026-06-30.md`；`notes/hype-15m-mii-v1-2-atr-rvol-filter-ablation-2026-06-30.md` | K+1 年化 `311.35%`、回撤 `-17.74%`、胜率 `84.78%`；K+2 年化 `154.96%`、回撤 `-34.81%`、胜率 `82.01%`；去掉 `ATR96 >= 0.75%` 后收益/回撤明显恶化，两个过滤都去掉转负；仍为 `not promoted / not live-ready` |
 | `HYPE-15M-MII-V1.3` | superseded dry-run history | 沿用 `V1.2` 信号、过滤、ATR bracket 和 `hold=24`；固定 `2.5x` 权益暴露 | `notes/hype-15m-mii-v1-2-atr-dynamic-leverage-2026-07-01.md`；`live-specs/hype-15m-mii-v1-3-live-parameter-spec-not-live-ready-2026-07-01.md`；`notes/hype-15m-mii-v1-3-signal-drought-2026-07-06.md`；runner 观察报告见 `runner-tracking/` | K+1 总收益 `549.30%`、年化 `472.15%`、回撤 `-22.01%`；K+2 总收益 `239.38%`、年化 `212.47%`、回撤 `-41.89%`；曾在 quant-runner dry-run，2026-07-10 被 V1.4A 替代；历史事件保留。 |
 | `HYPE-15M-MII-V1.4` | registered / not promoted / not live-ready（进取观察，未实现为 runner dry-run） | 沿用 `V1.3`，仅把 `min_rvol96` 从 `1.0` 下调为 `0.85` | `specs/hype-15m-mii-v1-4-parameter-spec-not-live-ready-2026-07-08.md`；`live-specs/hype-15m-mii-v1-4-live-validation-spec-not-live-ready-2026-07-09.md`；`notes/hype-15m-mii-v1-3-rvol-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-3-rvol-fine-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-4-tp-sl-grid-2026-07-08.md`；`notes/hype-15m-mii-v1-4-loss-regime-filters-2026-07-08.md`；`notes/hype-15m-mii-v1-4-dynamic-stop-2026-07-09.md` | 标准数据湖 K+1 `232` 笔、总收益 `978.36%`、回撤 `-24.70%`、胜率 `84.91%`；K+2 总收益 `535.54%`、回撤 `-38.30%`；亏损环境过滤中 `ATR14/ATR96 <= 1.75` 是唯一 strict DD gate 观察候选；动态止损 strict/defensive gate `0/12`。尚未 runner dry-run，不进入 promotion 状态 |
-| `HYPE-15M-MII-V1.4A` | dry-run validation running / not live-ready | 沿用 `V1.4` 入场与过滤，仅把出场改为 `TP=1.40*ATR96`、`SL=3.0*ATR96`；quant-runner `hype_mii` 默认值已切换，TOML 实例名称和 state path 不带版本；旧实例从未开仓，故沿用原 state；`2026-07-10T07:13:16Z` 已部署 | `specs/hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md`；`live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md`；`runner-tracking/hype-15m-mii-runner-2026-07-10.md`；`notes/hype-15m-mii-v1-4-tp-sl-neighborhood-2026-07-09.md`；`notes/hype-15m-mii-v1-4a-recent-signal-drought-2026-07-14.md` | Recent API K+1 最近 `90d/30d` 总收益 `78.82%/27.09%`，优于 `V1.4 baseline` 的 `51.61%/16.65%`，最差单笔更浅；但全样本 K+1 总收益仅 `584.90%`、回撤 `-32.85%`、胜率 `78.72%`，明显弱于 `V1.4 baseline`。`2026-07-14` 复查：最近 `7d` RSI raw `99`、过 ATR `0`、最终信号 `0`（ATR96% 中位约 `0.50%`，门槛 `0.75%`）；研究最后一笔开仓 `2026-06-29T22:30Z`。不是 runner 漏单；保持规则不变，不 live-ready |
+| `HYPE-15M-MII-V1.4A` | dry-run / not live-ready | 沿用 `V1.4` 入场与过滤，仅把出场改为 `TP=1.40*ATR96`、`SL=3.0*ATR96`；quant-runner `hype_mii` 默认值已切换，TOML 实例名称和 state path 不带版本；旧实例从未开仓，故沿用原 state；`2026-07-10T07:13:16Z` 已部署 | [参数规格](specs/hype-15m-mii-v1-4a-parameter-spec-not-live-ready-2026-07-09.md)；[dry-run spec](live-specs/hype-15m-mii-v1-4a-dry-run-validation-spec-not-live-ready-2026-07-10.md)；[runner tracking](runner-tracking/hype-15m-mii-runner-2026-07-10.md)；[近期信号诊断](notes/hype-15m-mii-v1-4a-recent-signal-drought-2026-07-14.md) | Recent API K+1 最近 `90d/30d` 总收益 `78.82%/27.09%`；全样本 K+1 `584.90% / -32.85% DD / 78.72%`。最近无信号不是 runner 漏单；保持 dry-run，不 live-ready。 |
 
-## HYPE-15M-MII-V1base 规格
+## 历史研究明细（证据保留）
+以下长表保留旧版本参数、消融和窗口证据；当前身份只以上方“当前状态”和“版本台账”为准。
+### HYPE-15M-MII-V1base 规格
 
 - Signal：`RSI(7)` 上穿 `40` 做多，下穿 `60` 做空。
 - Filters：`MACD(12,26,9)` 方向过滤；`ATR96 pct >= 0.75%`；`min_rvol96=1.0`；无 `1h confirm`；无 `RSI14 band`。
@@ -340,7 +339,7 @@ K+2 延迟压力：
 
 滚动窗口：K+1 rolling `30d` 中位收益 `rvol1.0/0.9/0.85/0.8` 分别为 `9.84%/7.45%/8.99%/8.32%`，最差回撤分别为 `-19.30%/-22.88%/-24.70%/-28.67%`；K+2 rolling `90d` 正收益切片分别为 `39/45`、`41/45`、`44/45`、`43/45`。recent API 最近 `7d/72h/24h` 四个阈值仍均为 `0` 笔。
 
-结论：`rvol0.85` 比 `rvol0.9` 更进取，收益、K+2 和 recent 90d 更强，但 K+1 全样本最大回撤比 baseline 深约 `2.70pp`，只登记为进取观察候选；`rvol0.9` 仍是更保守的观察候选。`rvol0.8` 新增交易有限，K+1 回撤和胜率退化更明显，不建议替换 baseline。三者都不改变 `NO-GO / not live-ready` 状态。
+历史结论：`rvol0.85` 比 `rvol0.9` 更进取，收益、K+2 和 recent 90d 更强，但 K+1 全样本最大回撤比 baseline 深约 `2.70pp`；`rvol0.9` 是更保守观察点，`rvol0.8` 不建议替换 baseline。这是 V1.4A 进入 dry-run 前的 historical pre-dry-run finding，不代表当前终态。
 
 ### V1.3 RVOL 0.85-0.90 细网格
 

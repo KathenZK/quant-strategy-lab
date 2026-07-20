@@ -38,13 +38,41 @@ def test_daily_aggregation_keeps_only_complete_utc_days() -> None:
             "volume": 1.0,
             "quote_volume": close,
             "trade_count": 1,
+            "is_closed": True,
         }
     )
     daily, quality = MODULE.aggregate_complete_daily(hourly)
-    assert daily["ts"].tolist() == [pd.Timestamp("2025-01-02", tz="UTC")]
-    assert quality["rows"] == 1
-    assert quality["dropped_incomplete_daily_bins"] == 3
+    assert daily["ts"].tolist() == [
+        pd.Timestamp("2025-01-02", tz="UTC"),
+        pd.Timestamp("2025-01-03", tz="UTC"),
+    ]
+    assert quality["rows"] == 2
+    assert quality["dropped_incomplete_daily_bins"] == 2
     assert quality["blocker_count"] == 0
+
+
+def test_daily_aggregation_does_not_need_a_future_bar() -> None:
+    ts = pd.date_range("2025-01-01", periods=24, freq="1h", tz="UTC")
+    close = pd.Series(np.linspace(100.0, 101.0, len(ts)))
+    hourly = pd.DataFrame(
+        {
+            "ts": ts,
+            "open": close,
+            "high": close + 1.0,
+            "low": close - 1.0,
+            "close": close,
+            "volume": 1.0,
+            "quote_volume": close,
+            "trade_count": 1,
+            "is_closed": True,
+        }
+    )
+
+    daily, quality = MODULE.aggregate_complete_daily(hourly)
+
+    assert daily["ts"].tolist() == [pd.Timestamp("2025-01-01", tz="UTC")]
+    assert daily["is_closed"].tolist() == [True]
+    assert quality["dropped_incomplete_daily_bins"] == 0
 
 
 def test_classic_ewmac_forecast_is_bounded_and_causal() -> None:

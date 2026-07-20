@@ -12,7 +12,8 @@
 
 ## 入口
 
-- 主账（milestone comparison ledger）：[hype-cc-15m-milestone-comparison.md](hype-cc-15m-milestone-comparison.md)
+- 正式主账：[hype-cc-core-ledger.md](hype-cc-core-ledger.md)
+- 历史里程碑明细：[hype-cc-15m-milestone-comparison.md](hype-cc-15m-milestone-comparison.md)
 - 决策记录：[decision-log.md](decision-log.md)
 - 版本规格：[specs/](specs/)（V13、V18 ATR672、V21 双向 early-exit、V35 复现参数等）
 - V35 过拟合再诊断：[hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md](diagnostics/hype-cc-v35-parameter-overfit-rediagnosis-2026-06-29.md)

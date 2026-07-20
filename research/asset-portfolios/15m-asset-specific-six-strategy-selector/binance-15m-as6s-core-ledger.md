@@ -12,7 +12,7 @@
 
 ## Current State
 
-- Status：`dry-run / not promoted / not live-ready`。
+- Status：`BIN-15M-AS6S-V6-NP` 与 `BIN-15M-AS6S-V6-SBP` 均为 `dry-run / not live-ready`；live disabled。
 - Registered versions：`BIN-15M-AS6S-V1` 与 `BIN-15M-AS6S-V6`。
 - Canonical routes：V1 是九腿 nonpreemptive 历史基线；V6 是当前 15 腿、真实 mark
   保护退出的双路线注册观察，nonpreemptive 为主观察、强突破抢占为对照。
@@ -36,8 +36,8 @@
 | Version | Status | Role / Core Idea | Key Frozen Metrics | Evidence | Decision / Live Readiness |
 | --- | --- | --- | --- | --- | --- |
 | `BIN-15M-AS6S-V1` | `registered / not promoted / not live-ready` | 九条资产专属 `15m/1h` 腿，全局单仓，持仓期间绝不抢占，账户缩放 `0.75` | full：`3.611x annual / +1012.61% / -12.37% DD / 90.55% / 307`；reused 3m：`+42.32% / -6.25% DD / 92.50% / 40` | [冻结规格](specs/binance-as6s-future-oos-freeze-2026-07-14.md)；[近期切片](diagnostics/binance-as6s-v1-recent-slices-2026-07-14.md) | 当前诊断通过；未来三个月最终 OOS 未完成，禁止 promotion |
-| `BIN-15M-AS6S-V6` | `dry-run / not promoted / not live-ready` | 15 条资产专属腿、真实 15m mark 保护退出、全局单仓双路线，scale `0.75` | NP full：`31.078x annual / -17.99% DD / 85.65% / 634`，当前 3m：`+132.15% / 83.50% / 103`；SBP full：`30.817x / -17.04% DD / 85.21% / 568`，当前 3m：`+190.22% / 86.02% / 93` | [冻结规格](specs/binance-as6s-v6-mark-joint-future-oos-freeze-2026-07-15.md)；[账户审计](diagnostics/binance-as6s-v6-mark-clean-rsi-joint-candidate-audit-2026-07-15.md)；[Runner 对拍](runner-tracking/binance-as6s-v6-mark-joint-runner-2026-07-15.md)；[handoff](live-specs/binance-as6s-v6-mark-joint-runner-draft.md) | 两条独立 dry-run 路线已获授权；45 信号、15 退出、`634/568` 全路由 PASS；未来 OOS 未完成，live 禁止 |
-| `V5 joint-state observation` | `explore / not registered / not promoted / not live-ready` | 15 条资产专属腿、真实成交驱动 cooldown、nonpreemptive 联合单仓，账户缩放 `0.40` | full：`5.8156x annual / +3280.13% / -12.86% DD / 85.17% / 553` | [Runner 对拍](runner-tracking/binance-as6s-v5-joint-runner-2026-07-15.md)；[handoff](live-specs/binance-as6s-v5-joint-state-runner-draft.md) | Runner 已实现并禁用；45 信号、15 退出、553 路由 PASS；不构成 V5 注册或 promotion |
+| `BIN-15M-AS6S-V6-NP` / `BIN-15M-AS6S-V6-SBP` | `dry-run / not live-ready` | 15 条资产专属腿、真实 15m mark 保护退出、全局单仓双路线，scale `0.75` | NP full：`31.078x annual / -17.99% DD / 85.65% / 634`；SBP full：`30.817x / -17.04% DD / 85.21% / 568` | [冻结规格](specs/binance-as6s-v6-mark-joint-future-oos-freeze-2026-07-15.md)；[账户审计](diagnostics/binance-as6s-v6-mark-clean-rsi-joint-candidate-audit-2026-07-15.md)；[Runner 对拍](runner-tracking/binance-as6s-v6-mark-joint-runner-2026-07-15.md)；[handoff](live-specs/binance-as6s-v6-mark-joint-runner-draft.md) | 两条独立 dry-run 路线已获授权；45 信号、15 退出、`634/568` 全路由 PASS；未来 OOS 未完成，live 禁止 |
+| `BIN-15M-AS6S-V5-JOINT-NP`（V5 joint-state observation） | `explore / not registered / not promoted / not live-ready` | 15 条资产专属腿、真实成交驱动 cooldown、nonpreemptive 联合单仓，账户缩放 `0.40` | full：`5.8156x annual / +3280.13% / -12.86% DD / 85.17% / 553` | [Runner 对拍](runner-tracking/binance-as6s-v5-joint-runner-2026-07-15.md)；[handoff](live-specs/binance-as6s-v5-joint-state-runner-draft.md) | Runner 已实现且配置 disabled；45 信号、15 退出、553 路由 PASS；不构成 V5 注册或 promotion |
 | `portfolio-first-v2-observation` | `explore / not registered / not promoted / not live-ready` | 单腿不限胜率、账户胜率硬门槛；六腿、账户缩放 `0.50`；nonpreemptive 主候选与强突破抢占对照 | nonpreemptive full：`6.525x annual / +4154.96% / -8.93% DD / 89.07% / 247`；当前 3m：`+28.46% / -7.49% DD / 81.08% / 37` | [组合优先诊断](diagnostics/binance-as6s-portfolio-first-v2-observation-2026-07-14.md) | 当前诊断通过；最近 1m 为负且未来 OOS 未完成，不登记 V2 |
 
 ## Shared Assumptions

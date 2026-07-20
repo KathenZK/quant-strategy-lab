@@ -45,7 +45,7 @@ def main() -> None:
         FAMILY_DIR / "scripts/as6s_engine.py",
         FAMILY_DIR / "scripts/audit_legacy_asset_specific_1h_sleeves.py",
         FAMILY_DIR / "scripts/combine_hybrid_asset_specific_account.py",
-        ROOT / "research/hype/1h-adaptive-regime/scripts/research_hype_1h_adaptive_regime_search.py",
+        ROOT / "research/_shared-kernels/1h-adaptive-regime-search/v1/engine.py",
         ROOT / "research/bnb/1h-adaptive-regime/artifacts/bnb_1h_ar_v2_micro_tune_2026-07-07.json",
     ]
     payload = {

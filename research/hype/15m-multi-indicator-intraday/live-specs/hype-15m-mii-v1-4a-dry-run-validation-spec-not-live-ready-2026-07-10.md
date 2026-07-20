@@ -1,7 +1,9 @@
 ---
+schema_version: "1.0"
 spec_role: lab_handoff
 strategy_id: HYPE-15M-MII-V1.4A
 family_id: HYPE-15M-MII
+main_status: dry-run
 runner_kind: hype_mii
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_mii/HYPE-15M-MII-V1.4A-DRY-RUN-SPEC.md
@@ -19,7 +21,7 @@ Version：`HYPE-15M-MII-V1.4A`
 
 Parent version：`HYPE-15M-MII-V1.4`
 
-Status：`user-requested dry-run validation spec / not live-ready`
+Status：`dry-run / not live-ready`
 
 ## 先读结论
 

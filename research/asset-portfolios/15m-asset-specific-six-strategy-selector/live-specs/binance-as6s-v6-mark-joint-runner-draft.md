@@ -1,25 +1,27 @@
 ---
+schema_version: "1.0"
 spec_role: lab_handoff
-strategy_id: BIN-15M-AS6S-V6
 family_id: BIN-15M-AS6S
-runner_kind: asset_specific_six_selector_v6_mark_joint_np
-peer_runner_kind: asset_specific_six_selector_v6_mark_joint_preemptive
+main_status: dry-run
 spec_status: active
-peer_specs:
-  - crates/quant-runner/src/runner/strategies/asset_specific_six_selector_v6_mark_joint_state/BIN-15M-AS6S-V6-NP-SPEC.md
-  - crates/quant-runner/src/runner/strategies/asset_specific_six_selector_v6_mark_joint_state/BIN-15M-AS6S-V6-SBP-SPEC.md
+implementations:
+  - strategy_id: BIN-15M-AS6S-V6-NP
+    runner_kind: asset_specific_six_selector_v6_mark_joint_np
+    peer_spec: crates/quant-runner/src/runner/strategies/asset_specific_six_selector_v6_mark_joint_state/BIN-15M-AS6S-V6-NP-SPEC.md
+  - strategy_id: BIN-15M-AS6S-V6-SBP
+    runner_kind: asset_specific_six_selector_v6_mark_joint_preemptive
+    peer_spec: crates/quant-runner/src/runner/strategies/asset_specific_six_selector_v6_mark_joint_state/BIN-15M-AS6S-V6-SBP-SPEC.md
 manifest_instance_ids:
   - bin-15m-as6s-v6-mark-np-dry-run
   - bin-15m-as6s-v6-mark-preemptive-dry-run
-config_instance_ids:
-  - bin-15m-as6s-v6-mark-np-dry-run
-  - bin-15m-as6s-v6-mark-preemptive-dry-run
 approval_level_max: dry_run
+overlays:
+  - handoff
 ---
 
 # 六币资产专属 V6 Mark 联合状态 Runner 草案
 
-策略状态：`dry-run only / not promoted / not live-ready`。2026-07-15 经用户明确
+策略状态：`dry-run / not live-ready`。2026-07-15 经用户明确
 授权，两条冻结路线均写入 active governance manifest 并启用持续 `dry-run`。
 本规格不授权 testnet 或 `live`，也不改变未来 OOS 的禁改禁看边界。
 

@@ -5,13 +5,31 @@ from typing import Iterable
 import pandas as pd
 
 from strategy_lab.data.models import DatasetKind, dataset_specs
+from strategy_lab.data.quality import (
+    DuplicatePolicy,
+    OHLCVDerivationPolicy,
+    derive_ohlcv_columns,
+    resolve_duplicates,
+    validate_frame,
+)
 
 
 def _coerce_timestamp(frame: pd.DataFrame) -> pd.DataFrame:
     if "ts" not in frame.columns:
         return frame
     normalized = frame.copy()
-    normalized["ts"] = pd.to_datetime(normalized["ts"], utc=True)
+    parsed = []
+    for row_number, value in normalized["ts"].items():
+        try:
+            timestamp = pd.Timestamp(value)
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"invalid ts at row {row_number}: {value!r}") from exc
+        if timestamp.tzinfo is None:
+            raise ValueError(
+                f"ts must include an explicit timezone at row {row_number}: {value!r}"
+            )
+        parsed.append(timestamp.tz_convert("UTC"))
+    normalized["ts"] = pd.DatetimeIndex(parsed)
     normalized["date"] = normalized["ts"].dt.date.astype("string")
     return normalized
 
@@ -40,31 +58,13 @@ def _sort_columns(kind: DatasetKind, frame: pd.DataFrame) -> pd.DataFrame:
     return frame[priority + remaining]
 
 
-def _ensure_ohlcv_columns(frame: pd.DataFrame) -> pd.DataFrame:
-    if "close" not in frame.columns or "volume" not in frame.columns:
-        return frame
-    enriched = frame.copy()
-    if "quote_volume" not in enriched.columns:
-        enriched["quote_volume"] = enriched["close"] * enriched["volume"]
-    if "trade_count" not in enriched.columns:
-        enriched["trade_count"] = 0
-    if "vwap" not in enriched.columns:
-        volume = enriched["volume"].replace(0.0, pd.NA)
-        enriched["vwap"] = enriched["quote_volume"] / volume
-        if {"high", "low", "close"}.issubset(enriched.columns):
-            fallback = (enriched["high"] + enriched["low"] + enriched["close"]) / 3.0
-            enriched["vwap"] = enriched["vwap"].fillna(fallback)
-    else:
-        enriched["vwap"] = enriched["vwap"].fillna(enriched["close"])
-    if "is_closed" not in enriched.columns:
-        enriched["is_closed"] = True
-    return enriched
-
-
-def normalize_dataset(kind: DatasetKind, frame: pd.DataFrame) -> pd.DataFrame:
-    if frame.empty:
-        return frame.copy()
-
+def normalize_dataset(
+    kind: DatasetKind,
+    frame: pd.DataFrame,
+    *,
+    ohlcv_derivation: OHLCVDerivationPolicy | None = None,
+    duplicate_policy: DuplicatePolicy = DuplicatePolicy.ERROR,
+) -> pd.DataFrame:
     normalized = _coerce_timestamp(frame)
     normalized = _normalize_strings(
         normalized,
@@ -99,16 +99,22 @@ def normalize_dataset(kind: DatasetKind, frame: pd.DataFrame) -> pd.DataFrame:
         "value",
     }
     for column in numeric_candidates.intersection(normalized.columns):
-        normalized[column] = pd.to_numeric(normalized[column], errors="coerce")
+        try:
+            normalized[column] = pd.to_numeric(normalized[column], errors="raise")
+        except (TypeError, ValueError) as exc:
+            raise ValueError(f"invalid numeric value in column {column}") from exc
     if kind == DatasetKind.OHLCV:
-        normalized = _ensure_ohlcv_columns(normalized)
+        normalized = derive_ohlcv_columns(normalized, ohlcv_derivation)
 
-    subset = [column for column in ("ts", "exchange", "symbol", "market_type", "timeframe") if column in normalized.columns]
-    if subset:
-        normalized = normalized.drop_duplicates(subset=subset, keep="last")
+    normalized, duplicate_stats = resolve_duplicates(
+        kind,
+        normalized,
+        policy=duplicate_policy,
+    )
     if "ts" in normalized.columns:
         sort_by = [column for column in ("exchange", "symbol", "ts") if column in normalized.columns]
         normalized = normalized.sort_values(sort_by).reset_index(drop=True)
-    if "is_closed" in normalized.columns:
-        normalized["is_closed"] = normalized["is_closed"].astype(bool)
-    return _sort_columns(kind, normalized)
+    validate_frame(kind, normalized)
+    normalized = _sort_columns(kind, normalized)
+    normalized.attrs["duplicate_stats"] = duplicate_stats.to_dict()
+    return normalized

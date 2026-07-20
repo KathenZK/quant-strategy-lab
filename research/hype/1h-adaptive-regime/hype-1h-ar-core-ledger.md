@@ -15,8 +15,8 @@ Created：2026-07-02
 ## 当前状态
 
 - 当前登记版本：`HYPE-1H-Adaptive-Regime-V4`。
-- 当前状态：`diagnostic pruned tuned baseline / NO-GO / not live-ready / not promoted`。
-- 家族实盘判断：`NO-GO`。
+- 当前状态：`registered / not promoted / not live-ready`。
+- 家族判断：当前没有 promotion 版本；旧失败结论统一作为 historical pre-dry-run finding。
 - 原因：2026-07-10 精确联合状态机审计推翻了旧的“两腿独立模拟后合并”近似指标；V4 精确 base reused holdout 已降至 `9.0210x`，K+2 为 `7.8530x / -25.04%`，8 bps/fill 为 `14.1032x / -22.46%`。2026-07-13 的 `2,400` 个 VWAP 确认式第三腿严格搜索中，精确三腿联合门槛通过数为 `0`。此外仍没有生产 runner、重启恢复、交易所订单/仓位对账、missing-bar fail-closed、kill switch 和真实 stop-market 滑点证据。
 - 下一决策门：若继续增加第三腿，应转向与 VWAP/Stoch 不同的信息源或事件机制，并继续使用精确联合增量门槛；不得围绕已揭示失败对照追参。
 
@@ -47,10 +47,10 @@ Created：2026-07-02
 
 | Version | Status | Core idea | Evidence | Decision |
 | --- | --- | --- | --- | --- |
-| `HYPE-1H-Adaptive-Regime-V1` | diagnostic baseline / NO-GO / not live-ready | `DI-cross` 趋势腿 + `Stoch-reversal` 反转腿，闭合 K 信号、K+1 open 入场；DI fixed ATR bracket，Stoch ATR trailing；固定权益名义仓位，DI 优先合并单仓。 | `specs/hype-1h-ar-v1-baseline-spec.md`；`ablations/hype-1h-ar-v1-full-parameter-ablation-2026-07-02.md`；`diagnostics/hype-1h-adaptive-regime-boundary-audit-2026-07-01.md` | Current full `9.6838x`、`-19.64%` 最大回撤、`78.26%` 胜率、`69` 笔；reused holdout `5.1305x`。未达 `10.0x` 硬门槛，压力测试缺缓冲，维持 `NO-GO`。 |
-| `HYPE-1H-Adaptive-Regime-V2` | clean equivalent diagnostic baseline / NO-GO / not live-ready | 保留 V1 两条腿真实生效参数，删除 `40` 个 dormant 或固定状态机字段槽；策略行为与 V1 完全相同。 | `specs/hype-1h-ar-v2-clean-baseline-spec.md`；`ablations/hype-1h-ar-v2-full-parameter-ablation-2026-07-02.md`；`notes/hype-1h-ar-v2-active-parameter-tune-2026-07-02.md`；`diagnostics/hype-1h-ar-v2-tune-frontier-live-audit-2026-07-02.md`；`notes/hype-1h-ar-v2-live-robust-prefit-tune-2026-07-02.md`；`notes/hype-1h-ar-v2-window-backtest-2026-07-02.md` | 与 V1 逐笔等价，current full 仍为 `9.6838x / -19.64% / 78.26% / 69 trades`。V2 clean `34` 字段槽全参数消融中，完整 current full + reused holdout target-like 通过 `0` 行；普通微调 `19,600` 组与扩大稳健预拟合 `640,000` 组均未形成更优实盘版本，维持 `NO-GO`。 |
-| `HYPE-1H-Adaptive-Regime-V3` | diagnostic baseline / NO-GO / not live-ready | V2 消融引导组合：DI 关闭方向化 ROC 下限过滤（`min_dir_roc_bps=-10000`），Stoch 将 `threshold_high` 从 `60` 收紧到 `55`。 | `specs/hype-1h-ar-v3-baseline-spec.md`；`notes/hype-1h-ar-v2-ablation-combo-retest-2026-07-06.md`；`ablations/hype-1h-ar-v3-full-parameter-ablation-2026-07-06.md` | Current full `15.0530x / -19.11% / 79.73% / 74 trades`；reused holdout `9.0300x / -19.11% / 76.47% / 17 trades`，仍低于 `10x` 硬门槛；K+2 current full `3.0574x / -31.93%`，8bps current full `9.4070x / -28.40%`，维持 `NO-GO`。 |
-| `HYPE-1H-Adaptive-Regime-V4` | diagnostic pruned tuned baseline / NO-GO / not live-ready | V3 剪枝后 `25` 参数槽微调：DI `min_adx=10`、`require_body_dir=false`、`sl_atr=4.5`；Stoch `min_adx=0`、`max_atr_bps=500`、`macd_slow=55`、`cooldown_bars=36`，并保留 `threshold_high=55`。 | [`specs/hype-1h-ar-v4-pruned-tuned-baseline-spec.md`](specs/hype-1h-ar-v4-pruned-tuned-baseline-spec.md)；[`notes/hype-1h-ar-v3-prune-and-tune-2026-07-07.md`](notes/hype-1h-ar-v3-prune-and-tune-2026-07-07.md)；[`diagnostics/hype-1h-ar-v4-execution-pressure-optimization-2026-07-10.md`](diagnostics/hype-1h-ar-v4-execution-pressure-optimization-2026-07-10.md)；[`notes/hype-1h-ar-v4-vwap-third-leg-search-2026-07-13.md`](notes/hype-1h-ar-v4-vwap-third-leg-search-2026-07-13.md) | 精确联合回放 current full `20.9748x / -19.11% / 80.00% / 75 trades`；reused holdout `9.0210x / -19.11%`。K+2 `7.8530x / -25.04%`，8bps `14.1032x / -22.46%`；VWAP 确认式第三腿联合门槛 `0/2,400`，不登记 V5，维持 `NO-GO`。 |
+| `HYPE-1H-Adaptive-Regime-V1` | historical pre-dry-run finding / not live-ready | `DI-cross` 趋势腿 + `Stoch-reversal` 反转腿，闭合 K 信号、K+1 open 入场。 | [V1 规格](specs/hype-1h-ar-v1-baseline-spec.md)；[边界审计](diagnostics/hype-1h-adaptive-regime-boundary-audit-2026-07-01.md) | Current full `9.6838x / -19.64% DD / 78.26% / 69 trades`；未达硬门槛。 |
+| `HYPE-1H-Adaptive-Regime-V2` | historical pre-dry-run finding / not live-ready | V1 clean-equivalent，删除 dormant 字段。 | [V2 规格](specs/hype-1h-ar-v2-clean-baseline-spec.md)；[全参数消融](ablations/hype-1h-ar-v2-full-parameter-ablation-2026-07-02.md) | 与 V1 逐笔等价；微调未形成更优版本。 |
+| `HYPE-1H-Adaptive-Regime-V3` | historical pre-dry-run finding / not live-ready | DI 关闭方向化 ROC 下限；Stoch `threshold_high=55`。 | [V3 规格](specs/hype-1h-ar-v3-baseline-spec.md)；[V3 消融](ablations/hype-1h-ar-v3-full-parameter-ablation-2026-07-06.md) | Current full `15.0530x / -19.11% DD`，K+2/8bps 压力失败。 |
+| `HYPE-1H-Adaptive-Regime-V4` | registered / not promoted / not live-ready | V3 剪枝后的 25 参数微调基线。 | [V4 规格](specs/hype-1h-ar-v4-pruned-tuned-baseline-spec.md)；[执行压力](diagnostics/hype-1h-ar-v4-execution-pressure-optimization-2026-07-10.md)；[第三腿搜索](notes/hype-1h-ar-v4-vwap-third-leg-search-2026-07-13.md) | 精确 full `20.9748x / -19.11% DD`；K+2/8bps 回撤超门槛，第三腿 `0/2,400`，不登记 V5。 |
 
 ## V1 / V2 / V3 / V4 冻结指标
 

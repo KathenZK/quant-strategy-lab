@@ -42,6 +42,8 @@
 
 机器可读证据见
 [`binance_as6s_v5_joint_state_runner_parity_2026-07-15.json`](../artifacts/binance_as6s_v5_joint_state_runner_parity_2026-07-15.json)。
+供 manifest parity gate 使用的标准 schema 投影见
+[`BIN-15M-AS6S-V5-JOINT-NP_parity_2026-07-15.json`](../artifacts/BIN-15M-AS6S-V5-JOINT-NP_parity_2026-07-15.json)。
 CLI strict replay 使用的 53 MiB 冻结输入保存在
 [`as6s_v5_runner_signal_parity_fixture_2026-07-15.json`](../artifacts/as6s_v5_runner_signal_parity_fixture_2026-07-15.json)，
 其原始字节 SHA-256 即上述 `5d50f05f...42daaf`。

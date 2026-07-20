@@ -16,6 +16,14 @@ Created：2026-06-23
 
 本文中的 V1/V2 只在 `HYPE-5M-PBTR` 主账内有效。
 
+## Current State
+
+- 当前版本：`HYPE-5M-PBTR-V6.2.1`。
+- 状态：`live / tiny-live-pilot`，并行保留独立 `dry-run` 实例；两者均由当前 manifest 授权。
+- tiny-live-pilot 授权截至 `2026-09-24T00:00:00Z` 复核，资金边界为专用子账户余额且不得未记录增资。
+- 当前已通过研究/runtime 信号 parity；真实成交生命周期、保护单、重启恢复与滑点证据仍是生产 sizing blocker。
+- 下一决策门：结合最新 [runner tracking](runner-tracking/hype-5m-pbtr-runner-2026-07-11.md) 复核 tiny-live-pilot，决定保持、停止或调整；不得把并行 dry-run 写成降级。
+
 ## Strategy Idea
 
 一句话：在 HYPE 的 `5m` 局部趋势中，等待价格回踩或反抽 EMA21 后重新恢复趋势方向，下一根 K 开仓，然后至少持有 6 根 K，用 `0.75 ATR` 追踪止损锁住趋势恢复后的利润。
@@ -51,7 +59,7 @@ Created：2026-06-23
 | V2.1 | 基于 V2 实盘成本消融后的参数简化和候选分支；不改变 `HYPE-5M-PBTR` 核心机制。       |
 | V3 | 独立高频候选：来自 `V2.1A`，移除 final `dir_htf` 过滤；不直接替代 V2.1A。       |
 | V4 | 来自 V3.3 样本内增强组合；严格 live-realistic trailing 口径下不再作为实盘交接版本。 |
-| V3.3.1 | V3.3 的实盘 stop-arm retry overlay 记录版；修复订单可审计性，但回测仍为 no-go。 |
+| V3.3.1 | V3.3 的实盘 stop-arm retry overlay 记录版；修复订单可审计性，但历史 pre-dry-run 诊断未通过。 |
 | V5 | executable-first 修复批次；V5/V5.1/V5.2 均未形成可交接生产版本。 |
 | V6 | 当前可实盘表达的 paper 候选：强动量多头回踩恢复 + 入场即固定 bracket + 时间退出。 |
 | V6.1 | V6 的 sizing/exit 变体：`TP=2.5ATR` + fixed `3x`，不改变核心入场机制。 |
@@ -66,7 +74,7 @@ Created：2026-06-23
 
 | 版本                | 核心变化                                                                                                | 状态                              | 全样本交易  | 年化        | 胜率       | payoff | 最大回撤     | 最差切片胜率   | 结论                                |
 | ----------------- | --------------------------------------------------------------------------------------------------- | ------------------------------- | ------ | --------- | -------- | ------ | -------- | -------- | --------------------------------- |
-| `HYPE-5M-PBTR-V1` | R05732 基线：`pullback_buffer=0.0025`，`tp_atr=1.875`，`stop_atr=0.75`，`dir_htf>=0.688442`               | archived / strict no-go          | `1358` | `14.91x`  | `54.20%` | `2.37` | `-7.77%` | 见诊断 | 旧 stop-price fill 口径仍赚钱；strict live-realistic PF `0.637`、总收益 `-87.29%`，不能作为回退上线版本。            |
+| `HYPE-5M-PBTR-V1` | R05732 基线：`pullback_buffer=0.0025`，`tp_atr=1.875`，`stop_atr=0.75`，`dir_htf>=0.688442`               | historical pre-dry-run finding / not live-ready | `1358` | `14.91x`  | `54.20%` | `2.37` | `-7.77%` | 见诊断 | 旧 stop-price fill 口径仍赚钱；strict live-realistic PF `0.637`、总收益 `-87.29%`，不能作为回退上线版本。            |
 | `HYPE-5M-PBTR-V2` | 同步微调：`pullback_buffer=0.01`，删除固定止盈，`stop_atr=0.5`，`roc_window=96`，`min_efficiency=0`，`dir_htf>=0.5` | research live-dry-run candidate | `2519` | `181.87x` | `52.44%` | `2.77` | `-7.01%` | `50.49%` | 实盘成本下仍明显优于 V1，频率和收益提高但胜率下降。 |
 | `HYPE-5M-PBTR-V2.1-clean` | V2 实盘成本口径简化：固定/移除不生效参数，保留核心入场与 ATR trailing exit。                                      | preferred simplified V2 expression | `2521` | `181.96x` | `52.44%` | `2.77` | `-7.01%` | 见报告 | 与 V2 实盘成本表现几乎一致，适合作为新解释/实现基线。 |
 | `HYPE-5M-PBTR-V2.1A` | 在 V2.1-clean 上放开 RSI 上下界。                                                                      | live monitor only                | `3146` | `352.15x` | `51.40%` | `2.64` | `-6.62%` | 见报告 | 严格 live-realistic 口径 PF 降至 `0.54`；本地 dry-run ledger 与即时 1ATR 止盈审计均未修复旧 stop 价入账问题，不应扩仓。 |
@@ -77,7 +85,7 @@ Created：2026-06-23
 | `HYPE-5M-PBTR-V3.1` | V3 上将 `min_hold_bars` 从 `6` 提高到 `9`。                                                        | high-frequency research candidate | `7263` | `212733795.80x` | `55.43%` | `3.38` | `-10.03%` | 见诊断 | 样本内显著增强胜率/PF，但回撤扩大；必须先小资金或 paper 验证。 |
 | `HYPE-5M-PBTR-V3.2` | V3.1 上删除剩余无贡献/负贡献入场过滤器，仅保留方向、pullback、min-hold 和 trailing。                             | preferred clean V3 expression | `8025` | `1324019761.54x` | `55.66%` | `3.31` | `-8.69%` | 见诊断 | 参数更简洁，收益和回撤均优于 V3.1；先作为 paper/dry-run 首选表达验证。 |
 | `HYPE-5M-PBTR-V3.3` | V3.2 的最小复现表达：删除所有兼容/关闭/保护/基本不触发参数，退出仅保留 `min_hold + ATR trailing`。 | archived research candidate | `8027` | `1327928815.51x` | `55.66%` | `3.31` | `-8.69%` | 见诊断 | 严格 live-realistic PF 降至 `0.58`；即时 TP 网格最佳 `2.5ATR` PF 仅 `0.615`，不再作为交接版本。 |
-| `HYPE-5M-PBTR-V3.3.1` | V3.3 + 实盘 stop-arm retry overlay：第 7 根尝试挂 stop，穿越时重试，第 10 根兜底市价。 | live monitor / no-go research | `8426` | `0.00x` | `40.17%` | `0.86` | `-100.00%` | 见诊断 | 1m 乐观口径 PF `0.580`；修复进程崩溃和审计问题，但保守/乐观 PF 均低于 `1`，上一单平仓价、五类入场过滤、退出 overlay、轻量 ML 事件质量筛选和 armed 后加仓均无效。 |
+| `HYPE-5M-PBTR-V3.3.1` | V3.3 + 实盘 stop-arm retry overlay：第 7 根尝试挂 stop，穿越时重试，第 10 根兜底市价。 | historical pre-dry-run finding / not live-ready | `8426` | `0.00x` | `40.17%` | `0.86` | `-100.00%` | 见诊断 | 1m 乐观口径 PF `0.580`；修复进程崩溃和审计问题，但保守/乐观 PF 均低于 `1`，上一单平仓价、五类入场过滤、退出 overlay、轻量 ML 事件质量筛选和 armed 后加仓均无效。 |
 | `HYPE-5M-PBTR-V4` | V3.3 有效单因子增强项组合：`EMA9/96 + stop_atr=0.25 + trail_atr=0.5 + min_hold_bars=18`。 | registered / not promoted | `5053` | `28884173450807.53x` | `72.95%` | `7.39` | `-11.27%` | 见审计 | 样本内显著强于 V3.3，但高度依赖锁仓期和 stop 成交质量；不得直接进入 dry-run 或 live。 |
 | `HYPE-5M-PBTR-V6` | 可执行修复版：`EMA21/55` 多头回踩恢复 + `dir_ret192_bps>=788.123` + 入场即 `TP=3ATR/SL=7ATR` + `36` 根 K 超时。 | registered / not promoted | `147` | `1.70x` | `59.86%` | `1.15` | `-11.28%` | OOS PF `1.45` | 放弃旧 `min_hold + trailing` 成交假设；未进入 dry-run，不是生产 sizing 版本。 |
 | `HYPE-5M-PBTR-V6.1` | V6 sizing/exit 变体：`TP=2.5ATR/SL=7ATR/timeout=36`，fixed `3x`。 | registered sizing observation / not promoted | `157` | 见诊断 | `63.69%` | `1.01` | `-25.63%` | 见诊断 | 回测总收益 `+408.95%`、PF `1.773`；收益漂亮但 sizing 风险高，不是生产版本。 |
@@ -1036,25 +1044,10 @@ trail_stop = min(initial_stop, previous_trough + trail_atr * ATR14(current_bar))
 
 ## Current Decision
 
-当前建议：
-
-1. `HYPE-5M-PBTR-V1` 仅作为历史旧口径胜率体验基线；strict live audit 已证明 live-realistic PF `0.637`，不再作为 dry-run 或回退上线候选。
-2. `HYPE-5M-PBTR-V2.1-clean` 作为 V2 的首选简化表达，用于后续解释、实现和 dry-run 对照。
-3. `HYPE-5M-PBTR-V2.1A` 已进入实盘/实盘 dry-run，但严格 live-realistic 口径失效；不应扩仓，只能极小资金监控并用真实成交日志重新验收。
-4. `HYPE-5M-PBTR-V3` 作为独立高频候选 dry-run，不替代 V2.1A；先用小资金或 paper 跑 `300-500` 笔。
-5. `HYPE-5M-PBTR-V3.1` 作为 V3 的 `min_hold_bars=9` 高收益研究候选，不替代 V3；先用小资金或 paper 跑 `300-500` 笔，重点观察回撤是否扩张。
-6. `HYPE-5M-PBTR-V3.2` 作为 V3.1 的 clean 表达保留历史记录。
-7. `HYPE-5M-PBTR-V3.3` 作为 V3.2 的最小复现表达保留历史记录；严格 live-realistic 口径已证明不适合作为交接版本。
-8. `HYPE-5M-PBTR-V3.3.1` 记录当前 V3.3 retry-arm 实盘 overlay；它可作为小额实盘风控/审计机制，但保守/乐观回测、上一单平仓价过滤、五类入场过滤方向、退出 overlay、ML event quality 和 armed 后加仓测试均低于 PF `1`，不提升为 paper/live 候选。
-9. `HYPE-5M-PBTR-V4` 记录自原 V3.4-candidate；样本内显著强于 V3.3，但严格 live-realistic 口径已失效，不应进入直接 paper-live 交接。
-10. `HYPE-5M-PBTR-V6` 正式记录为 registered / not promoted 的可执行修复观察行。它放弃旧 `min_hold_bars + trailing`，使用强动量多头回踩恢复、入场即固定 bracket、36 根 K 时间退出；下一步若要推进，应先触发 live-executable promotion review，再写 runner 规格。
-11. `HYPE-5M-PBTR-V6.1` 记录为 V6 的 `TP=2.5ATR + fixed 3x` sizing/exit 变体；回测收益高但回撤和单笔风险已明显放大，只能 audit，不能直接生产 sizing。
-12. `HYPE-5M-PBTR-V6.2` 记录为 short-only 组合后的 paper/live-dry-run 候选：`combo_short_rank2` 在严格单仓组合下把 V6.1 fixed `3x` 从 `+408.95%/-25.63% DD` 改善到 `+833.71%/-22.38% DD`，但 short OOS 只有 `5` 笔；小额实盘应从 `1x` 或极小 notional 验证订单偏差，不直接生产。
-13. `HYPE-5M-PBTR-V6.2.1` 记录为 V6.2 的默认 dry-run 表达：long `htf_spread>=0` 在 2026-06-29 专项全参数消融中仍优于收紧回 `0.5` 和完全删除 HTF 过滤；fixed `3x` 只是横向比较口径，真实观察仍从 `1x` 或极小 notional 开始。2026-07-09 runtime/research 对拍：June baseline `16/16 MATCH`（见 `runner-tracking/hype-5m-pbtr-runner-2026-07-09.md`）；这只证明信号引擎口径，不替代真实 fill forward-test。
-14. `V3-lite = V2.1A + dir_htf >= 0` 作为 V3 的低风险对照，验证“至少高周期同向”是否能保留大部分收益。
-15. `HYPE-5M-PBTR-V2.1B` 作为 clean-plus 候选，可用于验证去掉 ROC 后是否保持行为稳定。
-16. `HYPE-5M-PBTR-V2.1C-ADX14` 作为更温和的稳定体验候选；`V2.1C-HTF` 作为更严格但收益牺牲更大的对照。
-17. V2/V2.1/V3/V3.1/V3.2/V3.3/V3.3.1/V4/V6/V6.1/V6.2/V6.2.1 系列都不应直接大资金上线；V6/V6.1/V6.2/V6.2.1 的下一步不是直接真钱生产，而是 paper runner、极小资金 live-dry-run 和 walk-forward 阈值固化。
+1. `HYPE-5M-PBTR-V6.2.1` 是唯一当前 promotion 版本：`live / tiny-live-pilot`，并行 `dry-run`；不得把 fixed `3x` 回测口径解释为获批生产 sizing。
+2. V1-V4 是旧 delayed-trailing / stale-stop 历史证据；V6/V6.1/V6.2 是当前机制的研究演化，均不覆盖 V6.2.1 的 manifest 身份。
+3. June baseline runtime/research parity 为 `16/16 MATCH`；真实 fill、bracket 生命周期、重启恢复和滑点仍决定 tiny-live-pilot 后续去留。
+4. 版本级历史参数、验收线与失败证据保留在上文及链接的 diagnostics/ablations，不再在 Current Decision 重复叙述。
 
 V2 实盘验收线：
 

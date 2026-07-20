@@ -49,11 +49,7 @@ RECENT_WINDOWS: tuple[tuple[str, pd.Timedelta | pd.DateOffset], ...] = (
 
 
 def load_engine() -> Any:
-    path = (
-        ROOT
-        / "research/hype/1h-adaptive-regime/scripts"
-        / "research_hype_1h_adaptive_regime_search.py"
-    )
+    path = ROOT / "research/_shared-kernels/1h-adaptive-regime-search/v1/engine.py"
     spec = importlib.util.spec_from_file_location("mk7_ar_engine", path)
     if spec is None or spec.loader is None:
         raise RuntimeError(f"cannot load engine: {path}")

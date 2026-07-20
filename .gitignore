@@ -17,12 +17,15 @@ web/.next/
 *.egg-info/
 /data/
 /reports/
-# Research artifacts: only Markdown is tracked; regenerate other outputs from scripts/
+# Research artifacts: track Markdown plus explicit governance-evidence exceptions below.
 **/artifacts/**
 !**/artifacts/**/
 !**/artifacts/**/*.md
 !research/hype/15m-multi-indicator-intraday/artifacts/HYPE-15M-MII-V1.4A_parity_pending_2026-07-11.json
 !research/hype/15m-ema-crossover/artifacts/HYPE-EMA-X-V18_parity_pending_2026-07-11.json
 !research/hype/15m-candle-count-reversal/artifacts/HYPE-CANDLE-COUNT-V35_parity_pending_2026-07-11.json
+!research/asset-portfolios/15m-asset-specific-six-strategy-selector/artifacts/BIN-15M-AS6S-V5-JOINT-NP_parity_2026-07-15.json
+!research/asset-portfolios/15m-asset-specific-six-strategy-selector/artifacts/BIN-15M-AS6S-V6-NP_parity_2026-07-15.json
+!research/asset-portfolios/15m-asset-specific-six-strategy-selector/artifacts/BIN-15M-AS6S-V6-SBP_parity_2026-07-15.json
 .coverage
 htmlcov/

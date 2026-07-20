@@ -33,6 +33,12 @@ class InstrumentId:
 
 @dataclass(frozen=True, slots=True)
 class OHLCVRecord:
+    """One candle keyed by its UTC open timestamp.
+
+    ``is_closed`` is the sole authority for whether the candle may be used as a
+    completed bar; timestamp position must never be used to guess closure.
+    """
+
     ts: datetime
     instrument: InstrumentId
     open: float
@@ -40,6 +46,10 @@ class OHLCVRecord:
     low: float
     close: float
     volume: float
+    quote_volume: float
+    trade_count: int
+    vwap: float
+    is_closed: bool
     source: str
 
 

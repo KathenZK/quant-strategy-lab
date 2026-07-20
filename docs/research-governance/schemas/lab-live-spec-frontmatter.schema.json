@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quant-strategy-lab.local/schemas/lab-live-spec-frontmatter.schema.json",
+  "title": "Lab live-spec front matter",
+  "type": "object",
+  "required": [
+    "schema_version",
+    "spec_role",
+    "family_id",
+    "main_status",
+    "spec_status",
+    "manifest_instance_ids",
+    "approval_level_max"
+  ],
+  "properties": {
+    "schema_version": {"const": "1.0"},
+    "spec_role": {"const": "lab_handoff"},
+    "family_id": {"type": "string", "minLength": 1},
+    "main_status": {
+      "enum": ["explore", "registered", "live spec", "dry-run", "live", "NO-GO", "archived"]
+    },
+    "spec_status": {"enum": ["draft", "active", "superseded"]},
+    "approval_level_max": {
+      "enum": ["none", "dry_run", "tiny_live_pilot", "live"]
+    },
+    "manifest_instance_ids": {
+      "type": "array",
+      "items": {"type": "string", "minLength": 1},
+      "uniqueItems": true
+    },
+    "overlays": {
+      "type": "array",
+      "items": {"enum": ["handoff"]},
+      "uniqueItems": true
+    },
+    "strategy_id": {"type": "string", "minLength": 1},
+    "runner_kind": {"type": "string", "minLength": 1},
+    "peer_spec": {"type": "string", "minLength": 1},
+    "implementations": {
+      "type": "array",
+      "minItems": 2,
+      "items": {
+        "type": "object",
+        "required": ["strategy_id", "runner_kind", "peer_spec"],
+        "properties": {
+          "strategy_id": {"type": "string", "minLength": 1},
+          "runner_kind": {"type": "string", "minLength": 1},
+          "peer_spec": {"type": "string", "minLength": 1}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "oneOf": [
+    {
+      "required": ["strategy_id", "runner_kind", "peer_spec"],
+      "not": {"required": ["implementations"]}
+    },
+    {
+      "required": ["implementations"],
+      "not": {
+        "anyOf": [
+          {"required": ["strategy_id"]},
+          {"required": ["runner_kind"]},
+          {"required": ["peer_spec"]}
+        ]
+      }
+    }
+  ],
+  "allOf": [
+    {
+      "if": {"properties": {"spec_status": {"const": "active"}}},
+      "then": {"properties": {"manifest_instance_ids": {"minItems": 1}}}
+    },
+    {
+      "if": {
+        "required": ["main_status"],
+        "properties": {
+          "main_status": {"enum": ["explore", "registered", "archived", "NO-GO"]}
+        }
+      },
+      "then": {"properties": {"approval_level_max": {"const": "none"}}}
+    }
+  ],
+  "additionalProperties": false
+}

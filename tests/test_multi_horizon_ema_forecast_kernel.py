@@ -162,6 +162,7 @@ def test_daily_aggregation_keeps_only_complete_utc_days() -> None:
             "volume": 1.0,
             "quote_volume": 100.0,
             "trade_count": 10,
+            "is_closed": True,
         }
     )
     daily, quality = DAILY.aggregate_complete_daily(hourly)

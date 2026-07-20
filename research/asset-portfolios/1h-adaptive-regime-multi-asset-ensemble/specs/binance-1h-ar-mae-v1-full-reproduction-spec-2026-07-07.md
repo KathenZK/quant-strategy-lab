@@ -2,7 +2,7 @@
 
 ## 给同事 / AI 的使用说明
 
-这份文件是 `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` 的完整复现规格。目标是：同事把本文件交给他的 AI 后，可以在本仓库内复现同一条 V1 交易路径、同一组近期分片指标和同一个 `NO-GO` 判断。
+这份文件是 `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` 的完整复现规格。目标是：同事把本文件交给他的 AI 后，可以仅凭本文复现同一条 V1 交易路径、同一组近期分片指标和历史风险判断。
 
 重要：本文件必须视为 standalone spec。文中出现的仓库路径只用于你在本仓库内快速校验，不是复现依赖；如果同事没有这些脚本或主账，也应该能仅凭本文的“数据 schema + 特征计算 + 信号逻辑 + 过滤器 + 出入场状态机 + 参数 JSON + 组合阻塞规则”重写实现。
 
@@ -26,9 +26,9 @@ uv run python research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/
 - Market：Binance USD-M Futures perpetual
 - Symbols：`TRXUSDT`、`SOLUSDT`、`HYPEUSDT`、`ETHUSDT`、`BTCUSDT`、`BNBUSDT`
 - Timeframe：`1h`
-- Status：`registered single-position version / NO-GO / not promoted / not live-ready`
+- Status：`dry-run / not live-ready`（当前 manifest 已启用 dry-run，live disabled）
 
-`V1` 是一个账户级组合策略：六个已登记的单资产 `1h adaptive-regime` 策略同时生成候选交易，但全账户同一时间只允许一笔持仓。它不是实盘候选，也不是 paper-live / dry-run / handoff 版本。
+`V1` 是一个账户级组合策略：六个已登记的单资产 `1h adaptive-regime` 策略同时生成候选交易，但全账户同一时间只允许一笔持仓。当前只授权 dry-run，不授权 live。
 
 ## 复现环境与数据边界
 
@@ -900,6 +900,6 @@ Wick reject leg：
 1. V1 能复现高全期收益，但 full、`last_6m`、`last_1y` 最大回撤均为 `-21.43%`，穿破 `<20%` 硬门槛。
 2. reused holdout 为正，但最大回撤 `-19.79%` 几乎贴线，且不是 fresh OOS。
 3. V1 是冻结 sleeve 交易路径上的账户级阻塞筛选，不是完整联合状态机；promotion 前必须逐 K 重演跨资产阻塞后的 cooldown / 状态机。
-4. 成分策略全部仍是 diagnostic NO-GO；组合登记不改变任何成分家族的 live-readiness。
+4. 成分策略的历史研究失败与 live-readiness 缺口不会因组合或 dry-run 授权而消失。
 
-因此，正确复现的最终判断应是：`registered / NO-GO / not promoted / not live-ready`。
+因此，正确复现的当前判断应是：`dry-run / not live-ready`；历史回撤和执行缺口继续阻塞 live。

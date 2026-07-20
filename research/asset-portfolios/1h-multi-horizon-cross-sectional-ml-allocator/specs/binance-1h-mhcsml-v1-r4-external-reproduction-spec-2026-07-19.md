@@ -1,3 +1,8 @@
+---
+document_type: external_reproduction_spec
+intended_audience: 没有仓库、脚本或 artifacts 的外部研究员或 AI
+---
+
 # BIN-1H-MHCSML-V1 freeze R4 外部独立复现规格
 
 ## 读者、用途与当前状态

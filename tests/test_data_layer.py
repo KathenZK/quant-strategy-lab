@@ -8,8 +8,11 @@ from strategy_lab.data import (
     DataLakeLayout,
     DatasetKind,
     DuckDBWarehouse,
+    DuplicatePolicy,
     MarketType,
+    OHLCVDerivationPolicy,
     normalize_dataset,
+    validate_frame,
     write_dataframe,
 )
 from strategy_lab.data.features import FeatureBuilder, FeatureStore
@@ -24,6 +27,15 @@ def _layout(tmp_path: Path) -> DataLakeLayout:
         features_dir=tmp_path / "data" / "features",
         cache_dir=tmp_path / "cache",
     )
+
+
+def _complete_ohlcv(frame: pd.DataFrame) -> pd.DataFrame:
+    completed = frame.copy()
+    completed["quote_volume"] = completed["close"] * completed["volume"]
+    completed["trade_count"] = 1
+    completed["vwap"] = completed["close"]
+    completed["is_closed"] = True
+    return completed
 
 
 def test_normalize_dataset_adds_date_and_sorts() -> None:
@@ -41,6 +53,7 @@ def test_normalize_dataset_adds_date_and_sorts() -> None:
             "source": ["CCXT", "CCXT"],
         }
     )
+    frame = _complete_ohlcv(frame)
     normalized = normalize_dataset(DatasetKind.OHLCV, frame)
     assert normalized["exchange"].tolist() == ["binance", "binance"]
     assert normalized["symbol"].tolist() == ["BTC/USDT", "BTC/USDT"]
@@ -65,6 +78,7 @@ def test_warehouse_loads_written_dataset(tmp_path: Path) -> None:
             "source": ["test"] * 3,
         }
     )
+    frame = _complete_ohlcv(frame)
     write_dataframe(
         frame,
         layout=layout,
@@ -104,7 +118,15 @@ def test_warehouse_keeps_ohlcv_timeframes_separate(tmp_path: Path) -> None:
             "source": ["test"] * 2,
         }
     )
-    daily = base.assign(close=[10.0, 20.0])
+    base = _complete_ohlcv(base)
+    daily = base.assign(
+        open=[10.0, 20.0],
+        high=[10.1, 20.1],
+        low=[9.9, 19.9],
+        close=[10.0, 20.0],
+        quote_volume=[1000.0, 2000.0],
+        vwap=[10.0, 20.0],
+    )
     write_dataframe(
         base,
         layout=layout,
@@ -178,6 +200,7 @@ def test_data_authenticity_auditor_quarantines_non_real_sources(tmp_path: Path) 
             "source": ["ccxt", "proxy_vendor", "unknown_vendor"],
         }
     )
+    frame = _complete_ohlcv(frame)
     write_dataframe(
         frame,
         layout=layout,
@@ -312,6 +335,7 @@ def test_warehouse_merged_market_frame_includes_basis_data(tmp_path: Path) -> No
             "source": ["test", "test"],
         }
     )
+    ohlcv = _complete_ohlcv(ohlcv)
     basis = pd.DataFrame(
         {
             "ts": pd.date_range("2024-01-01", periods=2, freq="h", tz="UTC"),
@@ -379,6 +403,7 @@ def test_feature_builder_forward_fills_perp_fields(tmp_path: Path) -> None:
             "source": ["test"] * 4,
         }
     )
+    ohlcv = _complete_ohlcv(ohlcv)
     funding = pd.DataFrame(
         {
             "ts": pd.to_datetime(["2024-01-01T00:00:00Z", "2024-01-01T02:00:00Z"]),
@@ -444,6 +469,7 @@ def test_warehouse_load_liquidation_features(tmp_path: Path) -> None:
             "source": ["test"] * 3,
         }
     )
+    ohlcv = _complete_ohlcv(ohlcv)
     liqs = pd.DataFrame(
         {
             "ts": pd.to_datetime(
@@ -496,3 +522,268 @@ def test_warehouse_load_liquidation_features(tmp_path: Path) -> None:
     assert len(features) == 3
     assert "event_cooldown_flag" in features.columns
     assert features["liquidation_total_notional"].sum() == pytest.approx(1294.0)
+
+
+def test_ohlcv_missing_quality_fields_are_rejected_by_default() -> None:
+    frame = pd.DataFrame(
+        {
+            "ts": [pd.Timestamp("2024-01-01T00:00:00Z")],
+            "exchange": ["binance"],
+            "symbol": ["BTC/USDT"],
+            "market_type": ["spot"],
+            "open": [100.0],
+            "high": [101.0],
+            "low": [99.0],
+            "close": [100.0],
+            "volume": [2.0],
+            "source": ["ccxt"],
+        }
+    )
+
+    with pytest.raises(ValueError, match="missing required columns"):
+        normalize_dataset(DatasetKind.OHLCV, frame)
+
+
+def test_explicit_ohlcv_derivation_persists_provenance() -> None:
+    frame = pd.DataFrame(
+        {
+            "ts": [pd.Timestamp("2024-01-01T00:00:00Z")],
+            "exchange": ["binance"],
+            "symbol": ["BTC/USDT"],
+            "market_type": ["spot"],
+            "open": [100.0],
+            "high": [101.0],
+            "low": [99.0],
+            "close": [100.0],
+            "volume": [2.0],
+            "trade_count": [7],
+            "is_closed": [True],
+            "source": ["ccxt"],
+        }
+    )
+    policy = OHLCVDerivationPolicy(
+        derive_quote_volume=True,
+        derive_vwap=True,
+        reason="vendor export omitted quote aggregates",
+    )
+
+    normalized = normalize_dataset(
+        DatasetKind.OHLCV,
+        frame,
+        ohlcv_derivation=policy,
+    )
+
+    assert normalized.loc[0, "quote_volume"] == 200.0
+    assert normalized.loc[0, "vwap"] == 100.0
+    assert "close * volume" in normalized.loc[0, "derivation_provenance"]
+    assert normalized.loc[0, "quality_flags"] == (
+        "derived_quote_volume_proxy|derived_vwap_proxy"
+    )
+
+
+def test_trade_count_and_is_closed_cannot_be_derived() -> None:
+    frame = pd.DataFrame(
+        {
+            "ts": [pd.Timestamp("2024-01-01T00:00:00Z")],
+            "exchange": ["binance"],
+            "symbol": ["BTC/USDT"],
+            "market_type": ["spot"],
+            "open": [100.0],
+            "high": [101.0],
+            "low": [99.0],
+            "close": [100.0],
+            "volume": [2.0],
+            "quote_volume": [200.0],
+            "vwap": [100.0],
+            "source": ["ccxt"],
+        }
+    )
+
+    with pytest.raises(ValueError, match="trade_count.*is_closed"):
+        normalize_dataset(
+            DatasetKind.OHLCV,
+            frame,
+            ohlcv_derivation=OHLCVDerivationPolicy(
+                derive_quote_volume=True,
+                derive_vwap=True,
+                reason="explicit proxy test",
+            ),
+        )
+
+
+def test_invalid_numeric_value_is_not_silently_coerced() -> None:
+    frame = _complete_ohlcv(
+        pd.DataFrame(
+            {
+                "ts": [pd.Timestamp("2024-01-01T00:00:00Z")],
+                "exchange": ["binance"],
+                "symbol": ["BTC/USDT"],
+                "market_type": ["spot"],
+                "open": ["not-a-number"],
+                "high": [101.0],
+                "low": [99.0],
+                "close": [100.0],
+                "volume": [2.0],
+                "source": ["ccxt"],
+            }
+        )
+    )
+
+    with pytest.raises(ValueError, match="invalid numeric value in column open"):
+        normalize_dataset(DatasetKind.OHLCV, frame)
+
+
+def test_unknown_closed_state_is_rejected() -> None:
+    frame = _complete_ohlcv(
+        pd.DataFrame(
+            {
+                "ts": [pd.Timestamp("2024-01-01T00:00:00Z")],
+                "exchange": ["binance"],
+                "symbol": ["BTC/USDT"],
+                "market_type": ["spot"],
+                "open": [100.0],
+                "high": [101.0],
+                "low": [99.0],
+                "close": [100.0],
+                "volume": [2.0],
+                "source": ["ccxt"],
+            }
+        )
+    )
+    frame["is_closed"] = pd.Series([pd.NA], dtype="boolean")
+
+    with pytest.raises(ValueError, match="critical nulls"):
+        normalize_dataset(DatasetKind.OHLCV, frame)
+
+
+def test_duplicate_business_keys_require_explicit_policy() -> None:
+    frame = _complete_ohlcv(
+        pd.DataFrame(
+            {
+                "ts": [pd.Timestamp("2024-01-01T00:00:00Z")] * 2,
+                "exchange": ["binance"] * 2,
+                "symbol": ["BTC/USDT"] * 2,
+                "market_type": ["spot"] * 2,
+                "timeframe": ["1h"] * 2,
+                "open": [100.0, 101.0],
+                "high": [101.0, 102.0],
+                "low": [99.0, 100.0],
+                "close": [100.0, 101.0],
+                "volume": [2.0, 3.0],
+                "source": ["ccxt"] * 2,
+            }
+        )
+    )
+
+    with pytest.raises(ValueError, match="duplicate business keys"):
+        normalize_dataset(DatasetKind.OHLCV, frame)
+
+    normalized = normalize_dataset(
+        DatasetKind.OHLCV,
+        frame,
+        duplicate_policy=DuplicatePolicy.KEEP_LAST,
+    )
+    stats = normalized.attrs["duplicate_stats"]
+    assert normalized["close"].tolist() == [101.0]
+    assert stats["duplicate_rows"] == 2
+    assert stats["duplicate_key_groups"] == 1
+    assert stats["dropped_rows"] == 1
+
+
+def test_warehouse_keep_latest_returns_duplicate_stats(tmp_path: Path) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+    first = _complete_ohlcv(
+        pd.DataFrame(
+            {
+                "ts": [pd.Timestamp("2024-01-01T00:00:00Z")],
+                "exchange": ["binance"],
+                "symbol": ["BTC/USDT"],
+                "market_type": ["spot"],
+                "open": [100.0],
+                "high": [101.0],
+                "low": [99.0],
+                "close": [100.0],
+                "volume": [2.0],
+                "source": ["ccxt"],
+            }
+        )
+    )
+    latest = _complete_ohlcv(first.assign(open=102.0, high=103.0, low=101.0, close=102.0))
+    write_dataframe(
+        first,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        timeframe="1h",
+        partition_date=pd.Timestamp("2024-01-01").date(),
+    )
+    write_dataframe(
+        latest,
+        layout=layout,
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        timeframe="1h",
+        partition_date=pd.Timestamp("2024-01-02").date(),
+    )
+    warehouse = DuckDBWarehouse(layout)
+
+    with pytest.raises(ValueError, match="duplicate business keys"):
+        warehouse.load_dataset(
+            layer="normalized",
+            kind=DatasetKind.OHLCV,
+            exchange="binance",
+            market_type=MarketType.SPOT,
+            symbol="BTC/USDT",
+            timeframe="1h",
+        )
+
+    loaded, stats = warehouse.load_dataset(
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.SPOT,
+        symbol="BTC/USDT",
+        timeframe="1h",
+        duplicate_policy=DuplicatePolicy.KEEP_LAST,
+        return_duplicate_stats=True,
+    )
+    assert loaded["close"].tolist() == [102.0]
+    assert stats.duplicate_rows == 2
+    assert stats.dropped_rows == 1
+
+
+def test_validate_frame_checks_utc_source_and_ohlc() -> None:
+    frame = _complete_ohlcv(
+        pd.DataFrame(
+            {
+                "ts": [pd.Timestamp("2024-01-01T00:00:00")],
+                "exchange": ["binance"],
+                "symbol": ["BTC/USDT"],
+                "market_type": ["spot"],
+                "open": [100.0],
+                "high": [99.0],
+                "low": [98.0],
+                "close": [100.0],
+                "volume": [2.0],
+                "source": ["unknown"],
+            }
+        )
+    )
+
+    with pytest.raises(ValueError, match="timezone-aware"):
+        validate_frame(DatasetKind.OHLCV, frame)
+
+    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
+    with pytest.raises(ValueError, match="source contains"):
+        validate_frame(DatasetKind.OHLCV, frame)
+
+    frame["source"] = "ccxt"
+    with pytest.raises(ValueError, match="invalid OHLC"):
+        validate_frame(DatasetKind.OHLCV, frame)

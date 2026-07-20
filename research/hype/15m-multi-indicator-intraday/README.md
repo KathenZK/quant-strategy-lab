@@ -3,7 +3,7 @@
 - Full family name：`HYPE-15M-Multi-Indicator-Intraday`（历史别名：`HYPE-15M-MII`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `15m`
 - 机制：多指标日内广搜（RSI/MACD/EMA/ADX/ATR/Donchian/Bollinger/成交量/结构），强制可执行时序：闭合 K 信号、下一根 open 入场、显式成本、单仓不重叠、stop-first 同 K 冲突处理。
-- 当前状态：`HYPE-15M-MII-V1.4A`（`V1.4 + TP=1.4*ATR96 / SL=3.0*ATR96`）已替代 V1.3，当前 quant-runner `hype-mii-dry-run` 实例运行 V1.4A；状态为 `dry-run validation / not live-ready`。V1.3 已停止并标记 superseded，历史事件保留；runner 证据见 `runner-tracking/`。
+- 当前状态：`HYPE-15M-MII-V1.4A`（`V1.4 + TP=1.4*ATR96 / SL=3.0*ATR96`）已替代 V1.3，当前 quant-runner `hype-mii-dry-run` 实例运行 V1.4A；状态为 `dry-run / not live-ready`。V1.3 已停止并标记 superseded，历史事件保留；runner 证据见 [runner-tracking/](runner-tracking/)。
 
 ## 边界
 
@@ -11,8 +11,8 @@
 
 ## 入口
 
-- 主账（V1/V1base/V1.1/V1.2/V1.3/V1.4 版本表与证据索引）：`hype-15m-mii-core-ledger.md`
-- 决策记录（全部日期批次结论）：`decision-log.md`
+- 主账（V1-V1.4A 版本表与证据索引）：[hype-15m-mii-core-ledger.md](hype-15m-mii-core-ledger.md)
+- 决策记录（全部日期批次结论）：[decision-log.md](decision-log.md)
 - V1 冻结基线规格：[`specs/hype-15m-mii-v1-baseline-spec.md`](specs/hype-15m-mii-v1-baseline-spec.md)
 - V1 实盘可行性审计（not-promoted）：[`diagnostics/hype-15m-mii-v1-live-feasibility-2026-06-29.md`](diagnostics/hype-15m-mii-v1-live-feasibility-2026-06-29.md)
 - V1.2 完整复现规格：[`specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md`](specs/hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md)

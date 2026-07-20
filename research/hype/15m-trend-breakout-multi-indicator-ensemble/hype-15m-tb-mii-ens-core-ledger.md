@@ -12,10 +12,10 @@ Created：2026-07-07
 
 ## 当前状态
 
-- 当前状态：`V2 runner replay parity PASS (trade path) / production dry-run deployed and healthy / disabled live pilot code path implemented / live not enabled / not promoted`。
+- 当前状态：`HYPE-15M-TB-MII-ENS-V2 dry-run / not live-ready`；runner replay parity PASS，live disabled。
 - 当前登记版本：`V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4`，单账户 `single_v39_priority_k1` 主口径（V39 优先 + V1.4 强平让位）。
 - `V2` 是用户于 2026-07-09 指定登记的组合版本号；此前 V35+V1.3 与 V39+V1.3 仍为 diagnostic evidence，不反推登记为 V1。
-- 2026-07-09 已导出 V2 live validation spec，并完成 live-executable 审计；早间审计结论为 `FAILED / NO-GO`。同日 `quant-runner` 已新增 `hype_tb_mii_ensemble` replay validation kind、全样本 replay parity、continuous dry-run runtime，以及 disabled live pilot 执行链。
+- 2026-07-09 已导出 V2 validation spec，并完成 live-executable 审计；早间失败结论保留为 historical pre-dry-run finding。同日 `quant-runner` 已新增 `hype_tb_mii_ensemble` replay validation kind、全样本 replay parity、continuous dry-run runtime，以及 disabled live pilot 执行链。
 - 2026-07-09 晚间完成全样本 replay 对拍：runner replay 与研究引擎 `single_v39_priority_k1` 逐笔路径完全一致（`291` 笔 / V39 `107` + V1.4 `184` / preempt `3` / 出场原因、价格、allocation 全一致），权益差异完全由 runner smoke 未计 V39 funding 解释（`+69593%` vs `+68193%`，回撤 `-27.85%` vs `-28.01%`）；6m/3m 近期窗口指标同样一致。见 [replay parity 报告](runner-tracking/hype-15m-tb-mii-ens-v2-runner-replay-parity-2026-07-09.md)。
 - 2026-07-09 本轮完成 runtime/live pilot 代码路径并部署线上 dry-run：`hype-tb-mii-ens-dry-run` 已随 `quant-runner-dryrun` 在 `47.80.57.36` 运行，首次健康检查 `ok`、`position_open=0`、无 warning/error；`hype-tb-mii-ens-live` live config 仍 disabled。实现 V39 K+2、MII K+1、preempt close-confirm-open、保护单、重启状态、交易所核对和 fail-closed 门禁。见 [runtime/live-pilot tracking](runner-tracking/hype-15m-tb-mii-ens-v2-runtime-live-pilot-2026-07-09.md)。尚未完成/未批准：真实 live 启用、subaccount env/余额确认、持续 dry-run 运行窗口、V39 funding 统一记账、实盘 fill 对拍。
 - 2026-07-14 首笔 V39 趋势腿 dry-run 持仓完成 entry/MFE 对齐：signal/entry timestamp 与研究回放一致，entry price 仅差约 `0.47 bps`；该空单最高 `4.8387ATR` 后未触发 `5ATR` TP，截至快照仍 open。V35/V39 保护线复测否决固定 `4.75ATR` TP、全局 `4.75 -> 4.25` / `4.90 -> 4.40` floor 和固定 16 根冷却；V2 保持当前规则，close reconciliation 待实际平仓。见 [near-TP runtime 对齐](runner-tracking/hype-15m-tb-mii-ens-v2-near-tp-runtime-reconciliation-2026-07-14.md)。
@@ -33,14 +33,14 @@ Created：2026-07-07
 
 - 本家族版本号只登记组合层定义，不改写任一母家族版本。
 - 可登记版本必须写明：趋势腿版本、MII 腿版本、账户结构、冲突仲裁、入场延迟口径、成本口径、门禁结果、证据链接与 live-readiness 结论。
-- `registered` 只代表研究主账留名；若未完成 live-executable 审计、walk-forward、runner dry-run、资金费统一口径和重启/kill-switch 设计，不得标记为 candidate、paper-live、dry-run、handoff 或 live。
+- `registered` 只代表研究主账留名；V2 已由 manifest 授权 dry-run。若申请 live，必须完成 walk-forward、资金费统一、重启/kill-switch 与 online open/close reconciliation。
 - `V2` 的主口径固定为 `single_v39_priority_k1`；双子账户 50/50 与 no-preempt 只作为对照，不属于 V2 实盘/单账户定义。
 
 ## 版本表
 
 | Version | 组合定义 | 主口径指标 | 周度审计 | 状态 | 证据 |
 | --- | --- | --- | --- | --- | --- |
-| `V2` | `HYPE-EMA-TB-V39` + `HYPE-15M-MII-V1.4`；单账户 `single_v39_priority_k1`；V39 优先，V1.4 持仓遇 V39 信号强平让位；MII K+1 open | `+68192.54%` 总收益 / `-28.01%` 最大回撤 / Sharpe `5.79` / `291` 笔 / 胜率 `82.82%`；让位 `3` 次 | 过去一年 `274` 笔，`228` 胜 / `46` 负，胜率 `83.21%`；V39 `104` 笔，V1.4 `170` 笔；零交易周 `5` | `production dry-run deployed and healthy / disabled live pilot code path implemented / live not enabled / not promoted` | [组合回测报告](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)、[runner smoke](runner-tracking/hype-15m-tb-mii-ens-v2-runner-implementation-smoke-2026-07-09.md)、[runner parity](runner-tracking/hype-15m-tb-mii-ens-v2-runner-replay-parity-2026-07-09.md)、[runtime/live-pilot tracking](runner-tracking/hype-15m-tb-mii-ens-v2-runtime-live-pilot-2026-07-09.md)、[周度审计](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)、[live validation spec](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)、[live-executable 审计](diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md)、[周度 CSV](artifacts/hype_15m_tb_mii_ens_v2_single_v39_priority_k1_weekly_trades_1y_2026-07-09.csv) |
+| `HYPE-15M-TB-MII-ENS-V2` | `HYPE-EMA-TB-V39` + `HYPE-15M-MII-V1.4`；单账户 `single_v39_priority_k1`；V39 优先，V1.4 持仓遇 V39 信号强平让位；MII K+1 open | `+68192.54%` 总收益 / `-28.01%` 最大回撤 / Sharpe `5.79` / `291` 笔 / 胜率 `82.82%`；让位 `3` 次 | 过去一年 `274` 笔，`228` 胜 / `46` 负，胜率 `83.21%`；V39 `104` 笔，V1.4 `170` 笔；零交易周 `5` | `dry-run / not live-ready` | [组合回测报告](notes/hype-15m-tb-mii-ensemble-v39-v14-combination-backtest-2026-07-09.md)、[runner smoke](runner-tracking/hype-15m-tb-mii-ens-v2-runner-implementation-smoke-2026-07-09.md)、[runner parity](runner-tracking/hype-15m-tb-mii-ens-v2-runner-replay-parity-2026-07-09.md)、[runtime tracking](runner-tracking/hype-15m-tb-mii-ens-v2-runtime-live-pilot-2026-07-09.md)、[周度审计](notes/hype-15m-tb-mii-ens-v2-weekly-trade-audit-2026-07-09.md)、[validation spec](live-specs/hype-15m-tb-mii-ens-v2-live-validation-spec-not-live-ready-2026-07-09.md)、[live-executable 审计](diagnostics/hype-15m-tb-mii-ens-v2-live-executable-audit-2026-07-09.md) |
 
 ## 组合结构台账
 

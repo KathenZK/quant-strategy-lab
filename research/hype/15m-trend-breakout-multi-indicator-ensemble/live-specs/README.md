@@ -11,4 +11,4 @@
 
 ## 状态边界
 
-进入任何 promotion 状态（`dry-run`、`paper-live`、`live`）前，必须完成 runner 实现、replay 对拍、shadow/dry-run、preempt 换仓审计、missing-bar fail-closed、交易所对账、重启恢复、kill switch 和小资金 pilot 审批。
+进入任何 promotion 状态（`live spec`、`dry-run`、`live`）前，必须完成对应门禁；从 dry-run 申请 live 还需完成 replay 对拍、preempt 换仓审计、missing-bar fail-closed、交易所对账、重启恢复、kill switch、online open/close reconciliation 和 tiny-live-pilot 审批。

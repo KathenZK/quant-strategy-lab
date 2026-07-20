@@ -19,4 +19,4 @@
 - 最新研究侧版本规格：[hype-trend-strategy-v40-spec.md](specs/hype-trend-strategy-v40-spec.md)
 - Runner handoff / live spec：[live-specs/](live-specs/)
 
-脚本在 [scripts/](scripts/)，被报告引用的产物在 [artifacts/](artifacts/)，[legacy-canvas/](legacy-canvas/) 为冻结迁移历史，[experiments/](experiments/) 为历史实验材料。
+脚本在 [scripts/](scripts/)，被报告引用的产物在 [artifacts/](artifacts/)，[legacy-canvas/](legacy-canvas/) 为冻结迁移历史；旧实验结论已归入主账、diagnostics、notes 与 artifacts，不再保留不存在的 `experiments/` 路由。

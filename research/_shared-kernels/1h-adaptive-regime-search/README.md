@@ -6,14 +6,14 @@
 
 | Version | 文件 | SHA256 | 说明 |
 | --- | --- | --- | --- |
-| `v1` | `v1/engine.py` | `0420ea44854201e17d4bf5b9142fb8335d143e78772656473a1dcf4594a5f04c` | 与 `research/hype/1h-adaptive-regime/scripts/research_hype_1h_adaptive_regime_search.py` 当前内容逐字节一致；后者是 grandfathered 原始位置，保留作为 HYPE 家族历史证据。 |
+| `v1` | `v1/engine.py` | `0420ea44854201e17d4bf5b9142fb8335d143e78772656473a1dcf4594a5f04c` | 原始 HYPE 搜索实现的冻结快照；HYPE 家族入口现已改为显式路径 + SHA256 pin 的兼容 wrapper，不再保留整文件副本。 |
 | `v2` | `v2/engine.py` | `70c22ea97a7c1c678f677e4c87ac5468d2bb233144e3e2545f02b26c7e959c38` | 仅更新状态文案：移除已废弃的 `paper-live` 状态表述，统一使用 `dry-run` 与 `live`。回测逻辑与 `v1` 不变。 |
 
 `v1` 已被消费方以 SHA256 pin 引用，**内容永久冻结**。`v2` 是新的默认引用版本；任何修改（含 bug 修复或文案修正）必须继续新建 `v(N+1)/` 并在本表登记新 SHA。
 
 ## 消费方清单
 
-以下脚本通过 `ENGINE_PATH` + `ENGINE_SHA256` 引用本引擎（`v1` 内容）。历史脚本的 `ENGINE_PATH` 指向 HYPE 目录原始位置，属 grandfathered，不强制改路径：
+以下脚本通过 `ENGINE_PATH` + `ENGINE_SHA256` 引用本引擎。HYPE 原始入口也已改为同样的显式 pin wrapper：
 
 - `research/trx/1h-adaptive-regime/scripts/`：search / refine / clean tune / ablation 系列。
 - `research/sol/1h-adaptive-regime/scripts/`：search / high-win target search / clean tune / ablation 系列。

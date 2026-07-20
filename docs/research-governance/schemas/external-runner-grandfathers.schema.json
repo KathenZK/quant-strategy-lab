@@ -1,0 +1,40 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quant-strategy-lab.local/schemas/external-runner-grandfathers.schema.json",
+  "title": "Closed external runner grandfather registry",
+  "type": "object",
+  "required": ["schema_version", "closed", "entries"],
+  "properties": {
+    "$schema": {"type": "string"},
+    "schema_version": {"const": "1.0"},
+    "closed": {"const": true},
+    "entries": {
+      "type": "array",
+      "minItems": 1,
+      "maxItems": 1,
+      "items": {
+        "type": "object",
+        "required": [
+          "strategy_id",
+          "family_id",
+          "runner_surface",
+          "main_status",
+          "scope",
+          "ledger_ref",
+          "decision_log_ref"
+        ],
+        "properties": {
+          "strategy_id": {"const": "HYPE-EMA-TB-V35"},
+          "family_id": {"const": "HYPE-EMA-TB"},
+          "runner_surface": {"const": "external:hype-trend"},
+          "main_status": {"const": "live"},
+          "scope": {"const": "existing-deployed-instance-only"},
+          "ledger_ref": {"type": "string", "pattern": "^research/.+core-ledger\\.md$"},
+          "decision_log_ref": {"type": "string", "pattern": "^research/.+decision-log\\.md(?:#.+)?$"}
+        },
+        "additionalProperties": false
+      }
+    }
+  },
+  "additionalProperties": false
+}

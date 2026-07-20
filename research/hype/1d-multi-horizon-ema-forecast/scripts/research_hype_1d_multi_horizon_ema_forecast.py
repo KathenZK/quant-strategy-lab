@@ -75,8 +75,46 @@ def load_engine() -> object:
 
 def aggregate_complete_daily(hourly: pd.DataFrame) -> tuple[pd.DataFrame, dict[str, Any]]:
     source = hourly.copy()
+    required = {
+        "ts",
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "is_closed",
+    }
+    missing_columns = sorted(required.difference(source.columns))
+    if missing_columns:
+        raise ValueError(f"hourly data missing required columns: {missing_columns}")
     source["ts"] = pd.to_datetime(source["ts"], utc=True)
-    source = source.sort_values("ts").set_index("ts")
+    if not pd.api.types.is_bool_dtype(source["is_closed"].dtype):
+        raise ValueError("hourly is_closed must have boolean dtype")
+    if source[list(required)].isna().any(axis=None):
+        raise ValueError("hourly data contains critical nulls")
+    duplicate_hourly = int(source["ts"].duplicated(keep=False).sum())
+    if duplicate_hourly:
+        raise ValueError(f"hourly data has {duplicate_hourly} duplicate ts rows")
+
+    source = source.sort_values("ts").reset_index(drop=True)
+    source["utc_day"] = source["ts"].dt.floor("1D")
+    complete_days: list[pd.Timestamp] = []
+    for utc_day, group in source.groupby("utc_day", sort=True):
+        expected_hours = pd.date_range(utc_day, periods=24, freq="1h")
+        actual_hours = pd.DatetimeIndex(group["ts"])
+        if (
+            len(group) == 24
+            and actual_hours.equals(expected_hours)
+            and bool(group["is_closed"].all())
+        ):
+            complete_days.append(pd.Timestamp(utc_day))
+
+    total_bins = int(source["utc_day"].nunique())
+    source = source.loc[source["utc_day"].isin(complete_days)].set_index("ts")
+    if source.empty:
+        raise RuntimeError("HYPE 1d aggregation found no complete closed UTC day")
     grouped = source.resample("1D", label="left", closed="left")
     daily = grouped.agg(
         open=("open", "first"),
@@ -88,9 +126,9 @@ def aggregate_complete_daily(hourly: pd.DataFrame) -> tuple[pd.DataFrame, dict[s
         trade_count=("trade_count", "sum"),
         source_hours=("open", "count"),
     )
-    total_bins = int(len(daily))
-    daily = daily.loc[daily["source_hours"].eq(24)].copy()
     daily = daily.dropna(subset=["open", "high", "low", "close"])
+    daily["vwap"] = daily["quote_volume"] / daily["volume"].replace(0.0, np.nan)
+    daily["is_closed"] = True
     daily["ts"] = daily.index
     daily = daily.reset_index(drop=True)
 
@@ -124,7 +162,8 @@ def aggregate_complete_daily(hourly: pd.DataFrame) -> tuple[pd.DataFrame, dict[s
     blocker_count = len(missing) + duplicate + null_rows + invalid_ohlc
     quality = {
         "source_timeframe": "1h",
-        "aggregation": "UTC 1D, label=left, closed=left; retain only 24-hour bins",
+        "ts_semantics": "candle open timestamp",
+        "aggregation": "UTC 1D, label=left, closed=left; retain exactly 24 explicit closed hourly bars",
         "rows": int(len(daily)),
         "first_ts": pd.Timestamp(daily["ts"].iloc[0]).isoformat(),
         "last_ts": pd.Timestamp(daily["ts"].iloc[-1]).isoformat(),

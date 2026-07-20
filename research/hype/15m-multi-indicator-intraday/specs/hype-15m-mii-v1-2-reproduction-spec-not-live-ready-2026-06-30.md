@@ -1,3 +1,8 @@
+---
+document_type: external_reproduction_spec
+intended_audience: 没有仓库、脚本或 artifacts 的外部研究员或 AI
+---
+
 # HYPE-15M-MII-V1.2 完整复现规格（非实盘批准）2026-06-30
 
 Family：`HYPE-15M-Multi-Indicator-Intraday`（alias：`HYPE-15M-MII`）

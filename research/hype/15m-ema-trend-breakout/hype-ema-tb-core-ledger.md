@@ -2,11 +2,30 @@
 
 > 迁移说明：本文由 legacy Cursor Canvas `hype-trend-strategy-research.canvas.tsx` 转换为 Markdown；原 Canvas 未删除，仅作为历史来源。
 
-这是 HYPE 趋势策略版本研究台账。当前按策略族编号：V1 是趋势回踩族，V2 是趋势突破族；同族变体使用字母后缀。
+## Current State
 
-> **当前状态：HYPE-EMA-TB-V35 live（独立 hype-trend live runner 真实资金运行，部署早于当前 handoff 约定）；V36-V40 registered / not promoted / not live-ready。** 最新线上对账见 [hype-ema-tb-v35-runner-2026-07-15.md](runner-tracking/hype-ema-tb-v35-runner-2026-07-15.md)：最新空单与研究方向/SL 结果基本一致；上一笔多单已确认是用户人工平仓，但 runner 将其错标为 TP，仍有退出原因归因 blocker。
+- 当前 live 版本：`HYPE-EMA-TB-V35`，由独立外部 `hype-trend` runner 真实资金运行；这是部署早于当前 handoff 契约的 grandfathered external live，不属于 quant-runner manifest 投影。
+- 当前研究观察：V36-V40 均为 `registered / not promoted / not live-ready`；V40 与 V39.2 参数/交易路径等价，不构成独立验证。
+- 最新线上对账：[hype-ema-tb-v35-runner-2026-07-15.md](runner-tracking/hype-ema-tb-v35-runner-2026-07-15.md)。最新空单与研究方向/SL 基本一致；上一笔人工平仓被 runner 错标 TP，退出原因归因仍是 blocker。
+- 当前 handoff：[V39 proposal](live-specs/hype-ema-tb-v39-live-spec-not-live-ready-2026-07-09.md) 仅为未实现方案，不是 `live spec` promotion 状态。
+- 下一决策门：先关闭 V35 退出归因与线上开平仓对账缺口；V36-V40 若申请 promotion，必须另做完整 promotion review 与 runner 实现。
 
-数据源：本地 Binance HYPE/USDT 永续数据湖；15m 主回测主要覆盖 2025-05-30 至 2026-05-26 UTC，V2Q/V2R/V2S/V2T/V2U/V2V/V2W/V2X/V2Y/V2Z/V29/V30/V31/V32/V33/V34/V35/V36/V37 补测覆盖至 2026-06-01 UTC；V2R/V2S/V2T/V2U/V2V/V2W/V2X/V2Y/V2Z/V29/V30/V31/V32/V33/V34/V35 已按 2026-05-19 HYPE 元数据修复后的完整口径重测；V36 为跨所执行版，统计窗口为 Binance/HL 共同区间 2025-07-27 至 2026-06-01 UTC；V37 为 V35 + early-long 卫星影子观察版，并额外用 2026-06-16 延长窗口复核；V38 与 `V37+V38` 使用 Binance public API 补充窗口 `2025-05-30 10:30 UTC` 至 `2026-07-07 08:00 UTC`；V39/V39.1 使用更新后本地数据湖窗口至 `2026-07-08 05:30 UTC`，V39.2 冻结窗口延长至 `2026-07-16 15:30 UTC`，V39.3/V39.4/V40 冻结窗口延长至 `2026-07-17 08:45 UTC`；结果计入 8.5 bps 换手成本和 funding。
+## Shared Assumptions
+
+- 市场/周期：Binance HYPEUSDT perpetual `15m`；闭合 K 计算信号，K0/K1/K2 执行口径按版本规格冻结。
+- 成本：历史主线结果计入 `8.5 bps` 换手成本和 funding；各版本数据窗口不同，比较时必须使用对应证据。
+- 共享内核：[ema-trend-breakout v2](../../_shared-kernels/ema-trend-breakout/README.md) 已完成 V39.2/V40 legacy parity；HYPE 历史脚本尚未迁移为 SHA-pin 消费方，当前保留为迁移 blocker。
+
+## Version Table
+
+| Version | Status | Role / Core Idea | Key Frozen Metrics | Evidence | Decision |
+| --- | --- | --- | --- | --- | --- |
+| `HYPE-EMA-TB-V35` | live / grandfathered external runner | EMA96/384 趋势突破，TP5/SL7、ADX22 delayed3、384-bar timeout | 基准窗口 `+6474.19% / -23.49% DD / 101 trades` | [V35 runner tracking](runner-tracking/hype-ema-tb-v35-runner-2026-07-15.md) | 保持外部 live；退出归因与 handoff gap 待关闭 |
+| `HYPE-EMA-TB-V39` | registered / not promoted / not live-ready | V35 + long volume 0.35、short target 0.022、移除冗余 short 1h EMA confirm | `+9969.45% / -23.46% DD / 107 trades` | [V39 handoff proposal](live-specs/hype-ema-tb-v39-live-spec-not-live-ready-2026-07-09.md) | 未实现 runner，不进入 promotion |
+| `HYPE-EMA-TB-V39.2` | registered / not promoted / not live-ready | long volume 回到 0.25 + cooldown1 | `+8922.26% / -24.61% DD / 108 trades` | [V39.2 spec](specs/hype-trend-strategy-v39-2-spec.md) | 冻结观察 |
+| `HYPE-EMA-TB-V39.3` | registered / not promoted / not live-ready | V39.2 + `TP4.8/SL6.75` | `+7680.24% / -22.88% DD / 114 trades` | [V39.3 spec](specs/hype-trend-strategy-v39-3-spec.md) | 防守观察，不修改 runner |
+| `HYPE-EMA-TB-V39.4` | registered / not promoted / not live-ready | V39.2 short MFE4.4ATR 时减仓 75% | `+11682.28% / -23.46% DD / 109 trades` | [V39.4 spec](specs/hype-trend-strategy-v39-4-spec.md) | 空单样本小，等待 OOS |
+| `HYPE-EMA-TB-V40` | registered / not promoted / not live-ready | V35 三项结构精简；等价 V39.2 | `+9729.16% / -24.61% DD / 109 trades` | [V40 spec](specs/hype-trend-strategy-v40-spec.md) | 重编号不算新增验证 |
 
 ## 版本规则
 
@@ -29,7 +48,9 @@
 | V2 怎么止盈 | V2 按各版本的 ATR 风控参数退出，例如 V2A 是 5ATR 止损、14ATR 止盈、10ATR trailing；V2K/V2M 则是更偏 15m 信号的风控组合。 |
 | 适用性 | V1 更像买强势币回调，样本和胜率更稳定；V2 更像追强趋势突破，信号质量高但容易交易少，15m 下沉后频率增加但噪音也增加。 |
 
-## 版本定义
+## 历史版本定义（证据保留）
+
+以下长表保存 V1-V40 研究演化与旧窗口结果；当前身份与状态只以上方 Current State 和 Version Table 为准。
 
 | 版本 | 核心假设 | 主周期 | 入场逻辑 | 仓位/风控 | 当前结论 |
 | --- | --- | --- | --- | --- | --- |
@@ -145,35 +166,7 @@
 | 4 | V37 V35+early-long卫星版 | 74.64% | 103 / 138 | 114 / 24 | V35 主仓 + 小仓 early-long 卫星；收益提高但整体胜率被卫星低胜率拉低，定位影子观察 |
 | 5 | V39.1 V39+V37 early-long卫星版 | 73.15% | 109 / 149 | 125 / 24 | V39 主仓 + V37 标准卫星；收益和 Sharpe 最高，但组合胜率被卫星拉低 |
 | 8 | V35B V35指标退出链式反手版 | 71.03% | 103 / 145 | 未拆分 | 每次 indicator_exit 后下一根 open 链式反手；收益高但交易数和 ping-pong 风险明显上升 |
-| 1 | V2A Keltner-ADX 趋势突破 | 83.33% | 10 / 12 | 12 / 0 | 样本少，但逐笔质量最高 |
-| 1 | V2D Keltner-ADX 3x进攻版 | 83.33% | 10 / 12 | 12 / 0 | 与 V2A 同信号，杠杆只改变收益幅度 |
-| 3 | V2V V2U提高ADX退出版 | 79.75% | 63 / 79 | 60 / 20 | ADX exit 20 -> 22，收益和胜率继续提高 |
-| 3 | V2W V2V去EMA斜率精简版 | 79.75% | 63 / 79 | 60 / 20 | 结果几乎等同 V2V，但入场条件更少 |
-| 5 | V31 V30延迟K2开盘实盘版 | 79.73% | 59 / 74 | 54 / 21 | K2 open 入场 + 5ATR 止盈，收益高但回撤放大到 -28.60% |
-| 5 | V2X V2W固定Entry ATR 4.30止盈版 | 78.48% | 62 / 79 | 60 / 20 | 固定 entry ATR 实盘挂单版，收益最高但回撤略升 |
-| 5 | V2Y V2X去Trailing精简版 | 78.48% | 62 / 79 | 60 / 20 | 结果同 V2X，去掉 0 次触发的 trailing |
-| 5 | V2Z V2Y硬止损9ATR版 | 78.48% | 62 / 79 | 60 / 20 | 硬止损 12ATR -> 9ATR，收益更高且回撤更低 |
-| 7 | V29 V2Z去DI入场和回撤降仓版 | 77.78% | 63 / 81 | 61 / 21 | 收益几乎同 V2Z，但多 2 笔交易、回撤略大 |
-| 5 | V2T V2S盈利后关闭指标退出版 | 78.48% | 62 / 79 | 60 / 20 | 浮盈达到 2ATR 后关闭指标退出，止盈次数明显增加 |
-| 5 | V2U V2T去EMA退出精简版 | 78.48% | 62 / 79 | 60 / 20 | 结果与 V2T 一致，但指标退出更简洁 |
-| 7 | V1A 只做多趋势回踩 | 72.34% | 34 / 47 | 47 / 0 | 样本较充足，胜率和收益都稳 |
-| 8 | V2S V2R-A延迟退出版 | 69.62% | 55 / 79 | 60 / 20 | V2R 入场不变，延迟指标退出后多拿到止盈 |
-| 9 | V2R 消融组合趋势版 | 65.82% | 52 / 79 | 60 / 20 | 收益显著高于 V2P，胜率略高，但参数敏感性需要继续验证 |
-| 10 | V2C 双向 Keltner-ADX | 64.52% | 40 / 62 | 58 / 4 | 胜率高主要来自多头，空头 4 笔未盈利 |
-| 11 | V2P V2O参数重扫高收益候选 | 64.47% | 49 / 76 | 58 / 18 | 收益最高候选，胜率略低于 V2C 但高于 V2M/V2O |
-| 12 | V2Q V2P参数精简版 | 63.75% | 51 / 81 | 59 / 22 | 精简空头独立参数后交易略增，收益高但回撤扩大 |
-| 13 | V2M V2K空头仓位风控对称版 | 63.38% | 45 / 71 | 54 / 17 | 收益最高候选之一，空头胜率提升到 47.06% |
-| 13 | V2O V2M降回撤版 | 63.38% | 45 / 71 | 54 / 17 | 与 V2M 同信号，收益相近但回撤明显降低 |
-| 10 | V2K V2I参数微调均衡版 | 61.97% | 44 / 71 | 54 / 17 | 交易更少、更挑剔，收益回撤比最好 |
-| 11 | V2B SuperTrend 通道突破 | 61.11% | 22 / 36 | 36 / 0 | 只做多，样本中等 |
-| 12 | V1B 双向趋势回踩 | 60.92% | 53 / 87 | 45 / 42 | 多头胜率 71.11%，空头胜率 50.00% |
-| 13 | V2N V2M去成交量过滤版 | 55.91% | 52 / 93 | 66 / 27 | 交易变多但质量下降 |
-| 14 | V2F 激进双向趋势突破 | 53.16% | 42 / 79 | 66 / 13 | 收益高但空头胜率偏低 |
-| 15 | V2G 15m信号只做多 | 52.38% | 33 / 63 | 63 / 0 | 15m 信号提高频率后胜率下降 |
-| 16 | V2H 15m信号双向 | 46.21% | 67 / 145 | 94 / 51 | 交易噪音明显增加 |
-| 16 | V2I 15m双向3x进攻版 | 46.21% | 67 / 145 | 94 / 51 | 与 V2H 同信号，杠杆不改变胜率 |
-| 18 | V2L V2I参数微调高收益版 | 42.86% | 63 / 147 | 86 / 61 | 靠盈亏比和仓位拉高收益，不靠高胜率 |
-| 19 | V2J V2I的5m执行测试 | 39.19% | 58 / 148 | 94 / 54 | 5m high/low 更容易触发盘中止损 |
+早期 V1/V2 系列完整胜率排名已从主账压缩；对应数字仍保留在上方回测结果、历史版本定义及各版本 diagnostics/specs 中。
 
 ## 参数矩阵
 

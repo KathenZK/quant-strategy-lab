@@ -1,11 +1,14 @@
 ---
 description: Self-containment standard for reproduction specs handed to people outside this repository
-alwaysApply: true
+globs:
+  - "research/**/specs/**/*.md"
+  - "research/**/live-specs/**/*.md"
+alwaysApply: false
 ---
 
 # External Reproduction Spec
 
-- An external reproduction spec is any Markdown document meant to be handed to a person or AI outside this repository (同事复现规格). Name it with `reproduction-spec` in the filename and state the intended audience in the opening section.
+- An external reproduction spec is any Markdown document meant to be handed to a person or AI outside this repository (同事复现规格). It must declare YAML front matter `document_type: external_reproduction_spec` and a non-empty `intended_audience`, and should use `reproduction-spec` in the filename. Classification is by declared purpose or filename: either one activates the self-containment checks, so renaming a file cannot evade them. A filename that contains `reproduction-spec` without the required front matter is invalid.
 - Audience assumption is absolute: the reader has ONLY this one Markdown file. No repository checkout, no scripts, no artifacts, no core ledger, no other research documents. If removing everything except this file breaks reproduction, the spec is incomplete.
 - Normative sections must therefore contain, in full and inline:
   - version identity, status label, and the frozen parameter tables with literal values (never "see the JSON under artifacts/");

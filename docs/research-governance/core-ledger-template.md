@@ -1,6 +1,6 @@
 # <Family Full Name> Core Ledger
 
-> 本模板定义主账应写什么。复制到家族目录后，把文件名改为 `<family-id>-core-ledger.md`，并把模板内指向本目录的相对链接改为从家族目录出发的路径（如 `strategy-status-glossary.md` 改为 `../../../docs/research-governance/strategy-status-glossary.md`）。主账是版本身份与状态的事实表，不是实验报告、日志或参数说明书。
+> 本模板定义主账应写什么。复制到家族目录后，把文件名改为 `<family-id>-core-ledger.md`，并把模板内指向本目录的相对链接改为从家族目录出发的路径（如 `strategy-status-glossary.md` 改为 `../../../docs/research-governance/strategy-status-glossary.md`）。主账是家族/版本身份与状态的叙事真源，不是实验报告、日志、参数说明书或 runner 实例授权文件。manifest 只授权实例；与本主账、术语表或 active SPEC 冲突时必须 fail closed。
 
 ## Family Identity
 
@@ -20,6 +20,8 @@
 
 ## Version Rules
 
+- Registration / freeze：只固定版本身份并更新本表，默认状态 `registered`，不表示 promotion。
+- Promotion：必须明确目标 `live spec` / `dry-run` / `live` 并链接门禁证据；不得由“登记 Vx”推断。
 - `V1`：
 - `Vx.y`：
 - Observation / diagnostic rows：

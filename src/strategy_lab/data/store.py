@@ -6,29 +6,16 @@ from pathlib import Path
 import pandas as pd
 
 from strategy_lab.data.lake import DataLakeLayout
-from strategy_lab.data.models import DatasetKind, MarketType, dataset_specs
+from strategy_lab.data.models import DatasetKind, MarketType
 from strategy_lab.data.normalize import normalize_dataset
 from strategy_lab.data.fs import atomic_write_path
-
-
-def _ensure_ohlcv_columns(frame: pd.DataFrame) -> pd.DataFrame:
-    if "close" not in frame.columns or "volume" not in frame.columns:
-        return frame
-    enriched = frame.copy()
-    if "quote_volume" not in enriched.columns:
-        enriched["quote_volume"] = enriched["close"].astype(float) * enriched["volume"].astype(float)
-    if "trade_count" not in enriched.columns:
-        enriched["trade_count"] = 0
-    if "vwap" not in enriched.columns:
-        enriched["vwap"] = enriched["quote_volume"] / enriched["volume"].replace(0.0, pd.NA)
-        if {"high", "low", "close"}.issubset(enriched.columns):
-            fallback = (enriched["high"].astype(float) + enriched["low"].astype(float) + enriched["close"].astype(float)) / 3.0
-            enriched["vwap"] = enriched["vwap"].fillna(fallback)
-    else:
-        enriched["vwap"] = enriched["vwap"].fillna(enriched["close"])
-    if "is_closed" not in enriched.columns:
-        enriched["is_closed"] = True
-    return enriched
+from strategy_lab.data.quality import (
+    DuplicatePolicy,
+    OHLCVDerivationPolicy,
+    derive_ohlcv_columns,
+    resolve_duplicates,
+    validate_frame,
+)
 
 
 def _infer_timeframe(frame: pd.DataFrame, timeframe: str | None) -> str | None:
@@ -38,13 +25,6 @@ def _infer_timeframe(frame: pd.DataFrame, timeframe: str | None) -> str | None:
         return None
     values = frame["timeframe"].dropna().astype(str).str.lower().unique()
     return str(values[0]) if len(values) == 1 else None
-
-
-def validate_frame(kind: DatasetKind, frame: pd.DataFrame) -> None:
-    spec = dataset_specs()[kind]
-    missing = [column for column in spec.required_columns if column not in frame.columns]
-    if missing:
-        raise ValueError(f"missing required columns for {kind.value}: {missing}")
 
 
 def write_dataframe(
@@ -59,14 +39,22 @@ def write_dataframe(
     partition_date: date,
     timeframe: str | None = None,
     file_stem: str | None = None,
+    ohlcv_derivation: OHLCVDerivationPolicy | None = None,
+    duplicate_policy: DuplicatePolicy = DuplicatePolicy.ERROR,
 ) -> Path:
-    if kind == DatasetKind.OHLCV:
-        frame = _ensure_ohlcv_columns(frame)
+    prepared = frame.copy()
     if timeframe:
-        frame = frame.copy()
-        frame["timeframe"] = timeframe.lower()
-    validate_frame(kind, frame)
-    effective_timeframe = _infer_timeframe(frame, timeframe)
+        prepared["timeframe"] = timeframe.lower()
+    if kind == DatasetKind.OHLCV:
+        prepared = derive_ohlcv_columns(prepared, ohlcv_derivation)
+    prepared, duplicate_stats = resolve_duplicates(
+        kind,
+        prepared,
+        policy=duplicate_policy,
+    )
+    validate_frame(kind, prepared)
+    prepared.attrs["duplicate_stats"] = duplicate_stats.to_dict()
+    effective_timeframe = _infer_timeframe(prepared, timeframe)
     path = layout.dataset_path(
         layer=layer,
         kind=kind,
@@ -77,7 +65,10 @@ def write_dataframe(
         partition_date=partition_date,
         file_stem=file_stem,
     )
-    return atomic_write_path(path, lambda temp_path: frame.to_parquet(temp_path, index=False))
+    return atomic_write_path(
+        path,
+        lambda temp_path: prepared.to_parquet(temp_path, index=False),
+    )
 
 
 def write_normalized_dataframe(
@@ -91,8 +82,15 @@ def write_normalized_dataframe(
     partition_date: date | None = None,
     timeframe: str | None = None,
     file_stem: str | None = None,
+    ohlcv_derivation: OHLCVDerivationPolicy | None = None,
+    duplicate_policy: DuplicatePolicy = DuplicatePolicy.ERROR,
 ) -> Path:
-    normalized = normalize_dataset(kind, frame)
+    normalized = normalize_dataset(
+        kind,
+        frame,
+        ohlcv_derivation=ohlcv_derivation,
+        duplicate_policy=duplicate_policy,
+    )
     derived_partition = partition_date or normalized["ts"].max().date()
     return write_dataframe(
         normalized,
@@ -105,4 +103,5 @@ def write_normalized_dataframe(
         partition_date=derived_partition,
         timeframe=timeframe,
         file_stem=file_stem,
+        duplicate_policy=DuplicatePolicy.ERROR,
     )

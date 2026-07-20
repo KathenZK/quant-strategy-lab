@@ -1,7 +1,9 @@
 ---
+schema_version: "1.0"
 spec_role: lab_handoff
 strategy_id: HYPE-5M-PBTR-V6.2.1
 family_id: HYPE-5M-PBTR
+main_status: live
 runner_kind: hype_pullback
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_pullback/HYPE-5M-PBTR-V6.2.1-SPEC.md
@@ -17,7 +19,7 @@ approval_level_max: tiny_live_pilot
 
 Family id：`HYPE-5M-PBTR`
 
-状态：`dry-run / forward-test required`。本文档用于同事或另一个 AI 完整复现策略、跑 dry-run、核对订单行为；不是生产 sizing 批准。
+状态：`live / tiny-live-pilot`，并行保留独立 `dry-run` 实例。tiny-live-pilot 授权截至 `2026-09-24T00:00:00Z` 复核；本文档用于完整复现策略与核对订单行为，不是生产 sizing 或扩资批准。
 
 创建时间：2026-06-30
 

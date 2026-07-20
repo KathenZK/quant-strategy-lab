@@ -62,7 +62,11 @@ data/normalized/ohlcv/
      symbol=btc_usdt.parquet
 ```
 
-查询唯一键是 `exchange + market_type + timeframe + symbol + ts`。`ts` 使用 UTC，`is_closed = true` 的 K 线是研究默认安全口径，`source` 必须标识数据来源。
+查询唯一键是 `exchange + market_type + timeframe + symbol + ts`。OHLCV 的 `ts` 明确定义为 candle open timestamp，必须带 UTC 时区；不能根据 `ts` 或当前时间猜测 K 线是否完成，closed-bar 研究只能选择显式 `is_closed = true` 的记录。
+
+标准 OHLCV 必填字段为 `ts/exchange/symbol/market_type/open/high/low/close/volume/quote_volume/trade_count/vwap/is_closed/source`。缺字段、critical null、非法数值、无效 OHLC、未知 `source`、非布尔 `is_closed` 或重复业务键默认拒绝。归一化和写入不会补 `trade_count = 0`，也不会补 `is_closed = true`。
+
+只有调用方显式传入 `OHLCVDerivationPolicy` 时，数据层才可用 `close × volume` 派生 `quote_volume`，或用 `quote_volume ÷ volume` 派生 `vwap`。调用方必须提供审计原因，输出会持久化 `derivation_provenance` 与 `quality_flags`；`trade_count` 和 `is_closed` 没有派生模式。跨刷新分区读取遇到重复键默认报错；确需保留最新文件时必须显式选择 `DuplicatePolicy.KEEP_LAST`，重复统计可从返回值或 `DataFrame.attrs["duplicate_stats"]` 获取。
 
 本仓库不提供通用数据同步 CLI。研究数据维护使用对应 `research/.../scripts/` 下的明确脚本，并在研究文档或 decision log 中记录数据来源、覆盖范围和质量检查结果。
 

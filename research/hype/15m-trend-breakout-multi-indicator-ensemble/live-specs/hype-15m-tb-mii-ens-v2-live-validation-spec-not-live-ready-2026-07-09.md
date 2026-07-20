@@ -1,7 +1,9 @@
 ---
+schema_version: "1.0"
 spec_role: lab_handoff
 strategy_id: HYPE-15M-TB-MII-ENS-V2
 family_id: HYPE-15M-TB-MII-ENS
+main_status: dry-run
 runner_kind: hype_tb_mii_ensemble
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_tb_mii_ensemble/HYPE-15M-TB-MII-ENS-V2-SPEC.md

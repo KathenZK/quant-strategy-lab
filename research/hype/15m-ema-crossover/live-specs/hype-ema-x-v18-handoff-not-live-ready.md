@@ -1,7 +1,9 @@
 ---
+schema_version: "1.0"
 spec_role: lab_handoff
 strategy_id: HYPE-EMA-X-V18
 family_id: HYPE-EMA-X
+main_status: dry-run
 runner_kind: hype_ema_x
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_ema_x/HYPE-EMA-X-V18-SPEC.md

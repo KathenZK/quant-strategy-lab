@@ -10,6 +10,7 @@ import pandas as pd
 from strategy_lab.data.lake import DataLakeLayout
 from strategy_lab.data.liquidations import aggregate_liquidation_events, enrich_liquidation_features
 from strategy_lab.data.models import DatasetKind, MarketType
+from strategy_lab.data.quality import DuplicatePolicy, DuplicateStats, resolve_duplicates
 
 
 def _symbol_file_stem(symbol: str) -> str:
@@ -67,7 +68,9 @@ class DuckDBWarehouse:
         symbol: str | None = None,
         timeframe: str | None = None,
         columns: list[str] | None = None,
-    ) -> pd.DataFrame:
+        duplicate_policy: DuplicatePolicy = DuplicatePolicy.ERROR,
+        return_duplicate_stats: bool = False,
+    ) -> pd.DataFrame | tuple[pd.DataFrame, DuplicateStats]:
         files = self._filtered_dataset_files(
             layer=layer,
             kind=kind,
@@ -80,11 +83,12 @@ class DuckDBWarehouse:
             # Fall back to scanning the dataset root so pre-canonical legacy files remain readable.
             files = self.dataset_files(layer=layer, kind=kind)
         if not files:
-            return pd.DataFrame(columns=columns or [])
+            empty = pd.DataFrame(columns=columns or [])
+            stats = DuplicateStats(duplicate_policy, (), 0, 0, 0)
+            return (empty, stats) if return_duplicate_stats else empty
 
         return_columns = list(columns) if columns else None
-        projected_columns = None if timeframe and columns else return_columns
-        projection = ", ".join(projected_columns) if projected_columns else "*"
+        projection = "*"
         filters: list[str] = []
         params: list[Any] = [files]
         if exchange:
@@ -98,10 +102,12 @@ class DuckDBWarehouse:
             params.append(symbol.upper())
 
         where_clause = f"WHERE {' AND '.join(filters)}" if filters else ""
-        order_columns = [column for column in ("ts", "symbol") if column in (projected_columns or ())]
-        if not order_columns:
-            order_columns = ["ts", "symbol"] if kind != DatasetKind.ASSET_METADATA else ["symbol"]
-        sql = f"SELECT {projection} FROM read_parquet(?, hive_partitioning = false, union_by_name = true) {where_clause} ORDER BY {', '.join(order_columns)}"
+        order_columns = ["ts", "symbol"] if kind != DatasetKind.ASSET_METADATA else ["symbol"]
+        sql = (
+            f"SELECT {projection}, filename AS __source_file "
+            "FROM read_parquet(?, hive_partitioning = false, union_by_name = true, filename = true) "
+            f"{where_clause} ORDER BY {', '.join(order_columns)}"
+        )
         with self.connect() as connection:
             frame = connection.execute(sql, params).fetch_df()
 
@@ -114,25 +120,17 @@ class DuckDBWarehouse:
                 # Legacy parquet files may not have a timeframe column. Keep them readable
                 # until data has been refreshed into timeframe-partitioned paths.
                 frame = frame[frame["timeframe"].isna()].reset_index(drop=True)
+        frame, duplicate_stats = resolve_duplicates(
+            kind,
+            frame,
+            policy=duplicate_policy,
+            order_columns=("__source_file",),
+        )
+        frame = frame.drop(columns=["filename", "__source_file"], errors="ignore")
         if return_columns is not None:
             frame = frame[[column for column in return_columns if column in frame.columns]]
-
-        # 同一 symbol 在不同 refresh 日期分区中可能产生重叠时间戳，
-        # 除原始流水型的 liquidation 事件外，一律按业务键去重，保留最新刷新。
-        if (
-            not frame.empty
-            and kind != DatasetKind.LIQUIDATIONS
-            and kind != DatasetKind.ASSET_METADATA
-            and "ts" in frame.columns
-        ):
-            dedup_keys = [
-                col
-                for col in ("ts", "exchange", "symbol", "market_type", "timeframe")
-                if col in frame.columns
-            ]
-            if dedup_keys:
-                frame = frame.drop_duplicates(subset=dedup_keys, keep="last").reset_index(drop=True)
-        return frame
+        frame.attrs["duplicate_stats"] = duplicate_stats.to_dict()
+        return (frame, duplicate_stats) if return_duplicate_stats else frame
 
     def query(self, sql: str, parameters: list[Any] | None = None) -> pd.DataFrame:
         with self.connect() as connection:

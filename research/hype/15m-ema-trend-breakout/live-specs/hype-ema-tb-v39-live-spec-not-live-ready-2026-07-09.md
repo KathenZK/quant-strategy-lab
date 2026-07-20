@@ -6,7 +6,7 @@ Family：`HYPE-EMA-Trend-Breakout`（alias：`HYPE-EMA-TB`）
 
 Version：`HYPE-EMA-TB-V39`
 
-Status：`live spec draft / not implemented in quant-runner / not dry-run / not live-ready`
+Status：`registered / not promoted / not live-ready`；本文是未实现的 runner handoff proposal，不代表 promotion 状态。
 
 ## 先读结论
 

@@ -9,6 +9,7 @@ import pandas as pd
 from strategy_lab.data.lake import DataLakeLayout
 from strategy_lab.data.features.manifest import FactorArtifactManifest
 from strategy_lab.data.fs import atomic_write_path
+from strategy_lab.data.quality import DuplicatePolicy, DuplicateStats
 
 
 @dataclass(slots=True)
@@ -79,6 +80,7 @@ class FeatureStore:
         symbol: str | None = None,
         timeframe: str | None = None,
         factor_version: str | None = None,
+        duplicate_policy: DuplicatePolicy = DuplicatePolicy.ERROR,
     ) -> pd.DataFrame:
         root = self.feature_root(factor_name, factor_version=factor_version)
         direct_root = self._direct_feature_root(
@@ -118,13 +120,43 @@ class FeatureStore:
             ]
         if not files:
             return pd.DataFrame()
-        frame = pd.concat((pd.read_parquet(path) for path in files), ignore_index=True)
+        parts = []
+        for file_order, path in enumerate(files):
+            part = pd.read_parquet(path)
+            part["__source_file_order"] = file_order
+            parts.append(part)
+        frame = pd.concat(parts, ignore_index=True)
         if "ts" in frame.columns:
             frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
             dedup = [column for column in ("ts", "exchange", "symbol", "market_type", "timeframe") if column in frame.columns]
-            if dedup:
+            duplicate_mask = frame.duplicated(subset=dedup, keep=False) if dedup else pd.Series(False, index=frame.index)
+            duplicate_rows = int(duplicate_mask.sum())
+            duplicate_groups = (
+                int(frame.loc[duplicate_mask].groupby(dedup, dropna=False).ngroups)
+                if duplicate_rows
+                else 0
+            )
+            if duplicate_rows and duplicate_policy == DuplicatePolicy.ERROR:
+                raise ValueError(
+                    f"duplicate feature business keys: {duplicate_rows} rows "
+                    f"across {duplicate_groups} key groups; keys={dedup}"
+                )
+            before = len(frame)
+            if duplicate_rows:
+                frame = frame.sort_values(
+                    [*dedup, "__source_file_order"],
+                    kind="stable",
+                )
                 frame = frame.drop_duplicates(subset=dedup, keep="last")
             frame = frame.sort_values([column for column in ("ts", "symbol") if column in frame.columns]).reset_index(drop=True)
+            frame.attrs["duplicate_stats"] = DuplicateStats(
+                policy=duplicate_policy,
+                key_columns=tuple(dedup),
+                duplicate_rows=duplicate_rows,
+                duplicate_key_groups=duplicate_groups,
+                dropped_rows=before - len(frame),
+            ).to_dict()
+        frame = frame.drop(columns="__source_file_order", errors="ignore")
         return frame
 
     def _direct_feature_root(

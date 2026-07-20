@@ -7,7 +7,7 @@
 - Family：`Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`
 - Market：Binance USD-M Futures perpetual，`TRXUSDT / SOLUSDT / HYPEUSDT / ETHUSDT / BTCUSDT / BNBUSDT`
 - Timeframe：`1h`
-- Status：`registered single-position version / NO-GO / not promoted / not live-ready`
+- Status：`dry-run / not live-ready`（当前 manifest 已启用 dry-run，live disabled）
 
 `V1` 是按用户指令登记的全账户单仓、先到先得组合版本。登记只冻结研究身份和复现口径，不代表 candidate、paper-live、dry-run、handoff 或 live。
 
@@ -65,13 +65,13 @@
 
 ## 决策
 
-`V1` 登记为 diagnostic single-position version，但 `NO-GO / not live-ready`。理由：
+`V1` 当前为 `dry-run / not live-ready`。以下是继续阻塞 live 的 historical pre-dry-run findings：
 
 - full、`last_6m`、`last_1y` 最大回撤均为 `-21.43%`，穿破仓库 `<20%` 硬门槛。
 - reused holdout 虽然收益为正，但最大回撤 `-19.79%` 几乎贴线，且该区间对成分家族和组合研究均不是 fresh OOS。
 - 全期高年化来自样本内强势成分在全账户高杠杆下的复利放大，不能作为 promotion 依据。
 - 阻塞后未做逐 K 联合状态机重演，存在 cooldown 反事实近似。
-- 成分版本全部是 diagnostic NO-GO；组合层未完成 K+2、8 bps、double-cost 压力和生产 runner 审计。
+- 成分版本均有未关闭的研究门禁；组合层未完成 K+2、8 bps、double-cost 压力和 live 审计。
 
 ## 证据
 

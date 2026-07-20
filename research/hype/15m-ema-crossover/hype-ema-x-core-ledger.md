@@ -2,28 +2,21 @@
 
 > 迁移说明：本文由 legacy Cursor Canvas `hype-ema-crossover-evolution.canvas.tsx` 转换为 Markdown；原 Canvas 未删除，仅作为历史来源。
 
-这条策略线的目标是：用 EMA96/EMA384 交叉定义趋势方向，减少趋势中反复开平仓，并尽量吃到交叉后的趋势段。
+## Current State
 
-数据源：Binance HYPEUSDT perp 15m；normalized OHLCV data lake；V15/V16/V17/V17.1 使用最新 365-day HYPE-EMA-X research slice。
+- 当前版本：`HYPE-EMA-X-V18`。
+- 状态：`dry-run / forward-test required / not live-ready`；manifest 实例 `hype-ema-x-dry-run` 已启用，live disabled。
+- 身份：V18 是 V17.1 的干净参数规格，成交逻辑与指标不变；1Y 冻结指标 `+3861.48% / -19.44% DD / 33 trades / 90.91% win`。
+- 当前证据：[V18 参数规格](specs/hype-ema-x-v18-baseline-spec.md)；[runner tracking](runner-tracking/hype-ema-x-runner-2026-07-10.md)。
+- 下一决策门：完成 parity、真实成交/保护单、重启恢复和 online open/close reconciliation；此前不得启用 live，也不得给出 dry-run/live 后终态。
 
-> **当前状态：HYPE-EMA-X-V18 dry-run / forward-test required**
-> V17 是信号层平衡版：1Y +2910.74%，最大回撤 -17.79%。V17.1 信号不变，HQ 仓位 1.1：1Y +3861.48%，最大回撤 -19.44%。**V18** 是 V17.1 经全参数消融后的干净参数规格，成交逻辑与指标与 V17.1 相同；当前已在 quant-runner 以 `hype_ema_x` dry-run 配置运行。当前 runner 观察与未部署 execution 迁移见 [2026-07-10 runner tracking](runner-tracking/hype-ema-x-runner-2026-07-10.md)；不得据此升级 `live` 或给出 `NO-GO`。
+## Shared Assumptions
 
-## 关键指标
+- 数据：Binance HYPEUSDT perp `15m` normalized OHLCV data lake；V15-V18 使用最新 365-day research slice。
+- 机制：EMA96/384 regime + 趋势质量过滤 + late re-entry + 结构/预警退出。
+- V17 消融 `144` 项；V17.1 专项消融 `146` 项。V17.1/V18 是 sizing/规格清理演化，不是新的信号质量突破。
 
-| 指标 | 数值 |
-| --- | --- |
-| HYPE-EMA-X-V17 1Y收益 | +2910.74% |
-| HYPE-EMA-X-V17 最大回撤 | -17.79% |
-| HYPE-EMA-X-V17.1 1Y收益 | +3861.48% |
-| HYPE-EMA-X-V17.1 最大回撤 | -19.44% |
-| HYPE-EMA-X-V18 1Y收益 | +3861.48% |
-| HYPE-EMA-X-V18 最大回撤 | -19.44% |
-
-> **目标边界**
-> V17 消融共测试 144 个单参数/单模块候选；V17.1 专项消融以 HQ=1.1 / LQ=1.0 为 baseline，测试 146 个候选。V17.1 仍应读作仓位增强版，不是信号质量突破。
-
-## V15 / V16 / V17 / V17.1 主台账
+## Version Table
 
 | 版本 | 定位 | 搜索候选名 | 1Y收益 | Final Equity | 最大回撤 | 胜率 | 交易数 | Late 交易 | 判断 |
 | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
@@ -33,7 +26,9 @@
 | HYPE-EMA-X-V17.1 | V17 仓位增强版 | HYPE_EMA_X_V17__hq_scale=1p1 | +3861.48% | 39.61x | -19.44% | 90.91% | 33 | 7 | 收益最高且仍低于 20% 回撤；HQ×1.1 sizing 版本 |
 | HYPE-EMA-X-V18 | V17.1 干净参数规格 / dry-run | V17_1_pruned_spec | +3861.48% | 39.61x | -19.44% | 90.91% | 33 | 7 | 逻辑同 V17.1；146 项消融后剔除 noop/关闭模块；当前 quant-runner dry-run / forward-test required |
 
-## 版本演化
+## 历史版本演化（证据保留）
+
+以下长表保存 V1-V18 研究演进；当前身份只以上方 Current State 与 Version Table 为准。
 
 | 版本 | 入场/方向 | 退出/风控 | 结论 |
 | --- | --- | --- | --- |

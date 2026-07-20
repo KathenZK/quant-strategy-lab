@@ -27,8 +27,8 @@
 
 ## 消费方与接入状态
 
-- `HYPE-EMA-Trend-Breakout-V39.2/V40`：已由 [parity 测试](../../../tests/test_ema_trend_breakout_kernel.py) 动态加载当前 HYPE 脚本，在同一配置与本地 HYPE 数据上验证 `v2` 默认 `atr_risk + legacy_cost + legacy_exact` 的信号、交易签名和逐根 equity 差异均为 `0`。现有 HYPE 历史脚本仍保留原路径，尚未改为 SHA pin 消费本内核。
-- BTC 等跨标的消费方：使用 symbol-neutral API 与 `explicit` 成本模式；在各自家族脚本接入并完成数据质量和 parity/acceptance 验证前，不视为已消费。
+- `HYPE-EMA-Trend-Breakout-V39.2/V40`：已由 [parity 测试](../../../tests/test_ema_trend_breakout_kernel.py) 动态加载当前 HYPE 脚本，在同一配置与本地 HYPE 数据上验证 `v2` 默认 `atr_risk + legacy_cost + legacy_exact` 的信号、交易签名和逐根 equity 差异均为 `0`。HYPE 目录现有脚本包含大量在家族原始实现上直接复制后修改的专项诊断；一次性改为 shared import 会同时影响历史复现和用户当前未提交脚本，因此本轮不改引擎或消费者。迁移 blocker 是：逐脚本建立 acceptance fixture、确认哪些变体只改配置/overlay、再将可等价部分改为显式 `v2` 路径 + SHA256 pin；完成前不得把 HYPE 标记为正式 kernel consumer。
+- `BTC-15M-EMA-Trend-Breakout`：已通过 [`_btc_15m_v40_common.py`](../../btc/15m-ema-trend-breakout/scripts/_btc_15m_v40_common.py) 显式加载 `v2`，并 pin SHA256 `36e5d10c0d281701c46446344dd50af7a7589ec03285be3289e82362e1c2917a`；使用 symbol-neutral API、`fixed` allocation 与 `explicit` 成本模式。消费说明见 [BTC scripts README](../../btc/15m-ema-trend-breakout/scripts/README.md)。
 
 ## 公共接口
 

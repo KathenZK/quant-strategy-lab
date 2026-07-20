@@ -14,7 +14,7 @@ approval_level_max: none
 
 Family id: `HYPE-5M-PBTR`
 
-状态：研究性 live-dry-run 候选。本文档是小资金 / paper-live 复现规格，不代表大资金生产批准。
+状态：`superseded / historical pre-dry-run research spec / not live-ready`。本文档只保留历史复现，不代表当前 promotion 或 sizing 批准。
 
 创建时间：2026-06-23
 

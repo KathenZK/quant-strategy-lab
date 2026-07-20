@@ -18,11 +18,7 @@ ROOT = Path(__file__).resolve().parents[4]
 FAMILY_DIR = ROOT / "research/bnb/1h-adaptive-regime"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
 DIAGNOSTIC_DIR = FAMILY_DIR / "diagnostics"
-ENGINE_PATH = (
-    ROOT
-    / "research/hype/1h-adaptive-regime/scripts"
-    / "research_hype_1h_adaptive_regime_search.py"
-)
+ENGINE_PATH = ROOT / "research/_shared-kernels/1h-adaptive-regime-search/v1/engine.py"
 ENGINE_SHA256 = "0420ea44854201e17d4bf5b9142fb8335d143e78772656473a1dcf4594a5f04c"
 DATA_PATH = ARTIFACT_DIR / "bnb_binance_1h_closed_klines_2y.parquet"
 QUALITY_PATH = ARTIFACT_DIR / "bnb_binance_1h_data_quality_2y.json"

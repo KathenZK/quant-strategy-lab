@@ -10,6 +10,7 @@
 
 ## 决策
 
+- `2026-07-20`：按用户决定，将 `HYPE-15M-MII-V1.4A` 的 parity grandfather 延至 `2026-09-24T00:00:00Z`，仅维持现有 dry-run 以补齐标准逐笔对拍；live 实例继续禁用且不获得 live 授权。机器状态见 [`active-strategy-manifest.json`](../../../docs/research-governance/machine/active-strategy-manifest.json)，待补证据见 [`HYPE-15M-MII-V1.4A_parity_pending_2026-07-11.json`](artifacts/HYPE-15M-MII-V1.4A_parity_pending_2026-07-11.json)。
 - `2026-07-14`：复查当前 `HYPE-15M-MII-V1.4A` dry-run 近期不开仓。标准数据湖至 `2026-07-14T03:00Z`：最近 `7d` RSI raw cross `99` 次，但过 `ATR96%>=0.75%` 为 `0`，最终信号 `0`；ATR96% 中位约 `0.50%`、最新约 `0.56%`。最近 `90d` 仍有 `45` 笔最终信号，最后一笔研究开仓约在 6 月底。结论：不是 runner 漏单，而是低波动 regime 被 ATR 门槛挡住；`min_rvol96=0.85` 解决不了。保持 V1.4A 规则不变，不直接下调 ATR。证据：[notes/hype-15m-mii-v1-4a-recent-signal-drought-2026-07-14.md](notes/hype-15m-mii-v1-4a-recent-signal-drought-2026-07-14.md)。
 - `2026-06-25`：创建独立家族 `HYPE-15M-Multi-Indicator-Intraday`（`HYPE-15M-MII`），而不是挤入既有 `15m` EMA 或 candle-count 家族。
 - `2026-06-25`：首次广泛的 Binance HYPEUSDT `15m` multi-indicator intraday 搜索结果为负。最佳组合 candidate 达到 `+141.92%` 年收益、`-18.88%` 最大回撤、`76.90%` 胜率和 `0.94` 笔/天，但未达到 `>= 2000%` 年收益目标，并且在最近 `90d` 退化为年化 `-5.26%`。不提升。

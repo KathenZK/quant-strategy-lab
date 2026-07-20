@@ -3,7 +3,7 @@
 - Full family name：`HYPE-1H-Adaptive-Regime`（历史别名：`HYPE-1H-AR`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `1h`
 - 机制：自适应市场状态策略——只在闭合 K 可确认的 regime 中启用对应入场腿（趋势/突破/均值回归），入场即挂保护性 bracket；多指标广搜 + ensemble。
-- 当前状态：V1-V4 已登记（V4 为 25 参数剪枝微调基线）；2026-07-10 精确联合状态机审计已 supersede 旧 V4 近似指标，2026-07-13 严格 VWAP 确认式第三腿搜索 `0/2,400` 通过精确联合门槛；`NO-GO / not promoted / not live-ready`。
+- 当前状态：V1-V4 已登记（V4 为 25 参数剪枝微调基线）；2026-07-10 精确联合状态机审计已 supersede 旧 V4 近似指标，2026-07-13 严格 VWAP 确认式第三腿搜索 `0/2,400` 通过精确联合门槛；`registered / not promoted / not live-ready`。
 
 ## 边界
 
@@ -15,7 +15,7 @@
 - 硬门槛：年化权益倍率 `>=10x`、胜率 `>=50%`、最大回撤 `<20%`；须通过 train/validation/locked holdout、成本压力、延迟、邻域和 live-executable 审计才可讨论 promotion。
 - 执行：闭合 K 信号、下一根 open 市价成交、入场即挂 stop/TP、同 K stop-first、跳空按 open 成交。
 - 成本：fee `0.001`/fill、slippage `4 bps`/fill、真实资金费。
-- 搜索引擎：本家族是 `research/_shared-kernels/1h-adaptive-regime-search/` 的原始出处（grandfathered 原位引用）。
+- 搜索引擎：本家族是 [1h-adaptive-regime-search](../../_shared-kernels/1h-adaptive-regime-search/README.md) 的原始出处；当前家族入口已改为显式路径 + SHA256 pin wrapper。
 
 ## 入口
 

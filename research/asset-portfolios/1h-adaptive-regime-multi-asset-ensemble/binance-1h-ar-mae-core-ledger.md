@@ -12,19 +12,12 @@
 
 ## 当前状态
 
-`Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1 registered single-position version / NO-GO / not promoted / not live-ready`。
-
-2026-07-07 应用户要求，将 `TRX-1H-Adaptive-Regime-V3`、`SOL-1H-Adaptive-Regime-V2`、`HYPE-1H-Adaptive-Regime-V4`、`ETH-1H-Adaptive-Regime-V3`、`BTC-1H-Adaptive-Regime-V4`、`BNB-1H-Adaptive-Regime-V3` 组合为等权多资产组合并完成首次回测。全期（小时再平衡口径）年化 `4.07x`、最大回撤 `-4.43%`、胜率 `89.66%`（`522` 笔）；但成分策略全部是 diagnostic NO-GO 版本，最近三个月 reused holdout 组合年化降至 `1.62x`，且无任何生产执行证据，因此本组合不是 candidate、paper-live、dry-run、handoff 或 live 版本。
-
-同日按用户要求补测了“全账户单仓、先到先得”结构，并在用户后续指令下正式登记为 `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1`（短 id：`BIN-1H-AR-MAE-V1`）：全期年化 `287.01x` 但最大回撤 `-21.43%` 穿破 `<20%` 硬门槛，且阻塞反事实未做逐 K 联合状态机重演，因此 `V1` 只是 diagnostic registered version，不是 candidate、paper-live、dry-run、handoff 或 live。
-
-2026-07-09 对 V1 做风险覆盖层与 TRX MACD 消融诊断：全局 `3x` cap 虽可把最差回撤压到 `-19.99%`，但额外 `4 bps/fill` 滑点即失败到 `-20.18%`；全局 `2.5x` cap 在基准成本下为 `122.81x / -18.68% DD`，额外 `4 bps/fill` 下为 `88.47x / -19.19% DD`，是下一轮冻结候选中相对更稳的方向。但该结果仍是账户层 overlay，不是逐 K 联合状态机重演，不登记为新版本。
-
-2026-07-10 进一步把目标收窄为 TRX MACD 定向尾部治理。prefit-only 选中的账户层规则为：TRX MACD 计划初始止损账户风险 `<=10%`；入场前账户 DD 达 `2%/6%` 时，仅将 TRX MACD 暴露上限降至 `3x/2x`，其他 sleeve 暴露不变。冻结后 full `231.59x / -19.99% DD`，reused holdout `6.31x / +57.37% / -17.38% DD`；TRX MACD 最差单笔 MAE `-17.17% -> -9.71%`，账户状态叠加 MAE 尾部 `-23.10% -> -18.80%`。该规则比全局 `1% ATR` overlay 大幅保留收益，但额外 `4 bps/fill` 仍为 `-20.18% DD`；剩余 close-DD 下限来自 BNB 连续亏损，剩余 account-tail 来自 HYPE/SOL，故不登记新版本。
-
-同日 `quant-runner` 接入 `kind = six_asset_ensemble` dry-run（六资产联合状态机近似，live 禁止）。这只是 runtime 观察接线，不改变 `NO-GO / not promoted / not live-ready`；后续 strict replay 已对拍，最新运行状态与未部署 execution 迁移见 [runner tracking](runner-tracking/binance-1h-ar-mae-v1-runner-status.md)。
-
-同日晚些完成 runner `replay-dry-run` 与 V1 冻结路径的严格对拍：选择统计 `522/371/151/22` 与逐笔 `371/371`（含 equity_ret <1e-9）零误差；对拍中修复了 runner 公共指标层 `rolling_mean` 的 NaN 污染 bug（修复前 TRX/HYPE Stoch 腿永不出信号），并修正 lab/runner 两份 V1 spec 中三处与冻结路径不符的字段记载（ETH BB `side_mode=long`/`max_atr_bps=250`、ETH RSI `max_atr_bps=600`/`require_body_dir=true`/`max_aligned_funding_bps=2.0`、TRX Stoch `max_dist_ema_bps=1500`/`max_aligned_funding_bps=4.0`）。冻结交易路径与判定不变。证据：`artifacts/binance_1h_ar_mae_v1_runner_replay_parity_2026-07-09.json`。
+- 当前版本：`BIN-1H-AR-MAE-V1`。
+- 当前状态：`dry-run / not live-ready`；manifest 实例 `six-asset-ensemble-dry-run` 已启用，live disabled。
+- Runner：strict replay 选择统计 `522/371/151/22`、逐笔 `371/371` parity PASS；最新状态见 [runner tracking](runner-tracking/binance-1h-ar-mae-v1-runner-status.md)。
+- 历史 pre-dry-run 风险：原始 V1 full DD `-21.43%`，账户 overlay 在额外成本下仍越过 `<20%` 门槛；这些 finding 继续约束 live，但不构成当前 `NO-GO`、`not promoted` 或禁止 dry-run 声明。
+- Live blockers：持续 dry-run 与 strict replay 语义差异、真实订单/成交、online open/close reconciliation、重启恢复、missing-data fail-closed 与成本/滑点证据。
+- 下一决策门：补齐 runner-tracking 与线上开平仓对账后再决定是否申请 live；当前不得启用 live。
 
 ## 成分版本冻结表
 
@@ -41,7 +34,7 @@
 
 ## 版本规则
 
-- `V1`：全账户单仓、先到先得的六资产组合版本；六个成分 sleeve 固定为 TRX V3、SOL V2、HYPE V4、ETH V3、BTC V4、BNB V3；候选交易来自各家族冻结路径；同一时间只允许一笔账户级持仓；持仓期间忽略其他所有信号；同小时平手按成分家族冻结 current-full 年化降序裁决；中选交易占用全额权益并按 sleeve 冻结杠杆执行。`V1` 是 diagnostic registered version，`NO-GO / not live-ready`。
+- `V1`：全账户单仓、先到先得的六资产组合版本；六个成分 sleeve 固定为 TRX V3、SOL V2、HYPE V4、ETH V3、BTC V4、BNB V3；候选交易来自各家族冻结路径；同一时间只允许一笔账户级持仓；持仓期间忽略其他所有信号；同小时平手按成分家族冻结 current-full 年化降序裁决；中选交易占用全额权益并按 sleeve 冻结杠杆执行。当前状态为 `dry-run / not live-ready`。
 - `BIN-1H-AR-MAE-FIRST-2026-07-07` 是 V1 登记前的等权 `1/6` 组合 diagnostic observation，不是正式版本，不改变 `V1` 身份。
 - 后续若用户要求登记 `V2` 或更高版本，必须冻结：成分版本清单、账户级持仓/资金规则、冲突/平手优先级、组合窗口与证据链接，并更新本主账。
 - 任何成分家族升级版本（例如 TRX V4）不自动进入本组合；组合成分变更必须作为新 observation 或新版本重新回测并记录。
@@ -51,14 +44,14 @@
 
 | Version / Observation | Status | 结构 | 关键指标 | Evidence | Live readiness |
 | --- | --- | --- | --- | --- | --- |
-| `BIN-1H-AR-MAE-FIRST-2026-07-07` | first combination diagnostic / not promoted | 六 sleeve 等权 `1/6`，小时再平衡主口径 + 不再平衡对照 | full `4.069x / +1284.22% / -4.43% DD / 89.66% win / 522 trades / PF 6.627`；六 sleeve 齐备段 `3.821x / -4.43%`；reused holdout `1.625x / +12.72% / 75.38% win`；`last_7d -1.71%`；日收益相关性最大 `0.185`；平均毛暴露 `0.247x`、最大 `1.83x` | `notes/binance-1h-ar-mae-first-combination-backtest-2026-07-07.md`；`artifacts/binance_1h_ar_mae_first_backtest_2026-07-07.json`；`scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py` | `NO-GO / not live-ready`：成分全 NO-GO、reused holdout 走弱、组合层压力与 runner 审计缺失 |
-| `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` (`BIN-1H-AR-MAE-V1`) | registered single-position version / not promoted | 全账户单仓槽位、先到先得；持仓期间忽略所有其他信号；同小时平手按家族 current-full 年化降序；中选交易占用全额权益并按 sleeve 冻结杠杆（最高 `5x`）执行 | full `287.01x / -21.43% DD / 90.30% win / 371 trades / PF 6.862`（候选 `522` 笔、阻塞跳过 `151` 笔）；reused holdout `7.67x / +65.31% / -19.79% DD / 78.57% win / 42 trades`；`last_7d +0.46% / -15.92% DD`；`last_1m +58.18% / -15.92% DD`；`last_3m +66.01% / -19.79% DD`；`last_6m +1089.35% / -21.43% DD`；`last_1y +13315.39% / -21.43% DD` | `specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md`；`specs/binance-1h-ar-mae-v1-single-position-spec-2026-07-07.md`；`notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md`；`artifacts/binance_1h_ar_mae_single_position_2026-07-07.json`；`scripts/research_binance_1h_ar_mae_single_position_backtest.py` | `NO-GO / not live-ready`：full 与 `last_6m/1y` DD `-21.43%` 穿破 `<20%` 硬门槛；阻塞后未做逐 K 联合状态机重演（cooldown 反事实近似）；成分全 NO-GO；无压力与 runner 审计 |
-| `BIN-1H-AR-MAE-V1-RISK-OVERLAY-2026-07-09` | diagnostic observation / not registered | 复用 V1 中选规则，测试全局 `3x`/`2.5x` cap、TRX `macd_flip` cap/剔除、`>3x` 候选过滤和成本压力；均为账户层 overlay | `cap3x` full `192.49x / -19.99% DD`，但 extra `4 bps/fill` 后 `134.46x / -20.18% DD` 失败；`cap2.5x` full `122.81x / -18.68% DD`，extra `4 bps/fill` 后 `88.47x / -19.19% DD`；double fee+slippage 下 `3x/2.5x` 均约 `-25.5% DD` 失败 | `notes/binance-1h-ar-mae-v1-risk-overlay-diagnostics-2026-07-09.md`；`artifacts/binance_1h_ar_mae_v1_risk_overlay_diagnostics_2026-07-09.json`；`artifacts/binance_1h_ar_mae_v1_risk_overlay_matrix_2026-07-09.csv`；`scripts/research_binance_1h_ar_mae_v1_risk_overlay_diagnostics.py` | `NO-GO / not live-ready`：overlay 未重演逐 K 联合状态机；成本压力是交易后近似；成分全 NO-GO；若冻结下一版需优先审计 `cap2.5x` |
-| `BIN-1H-AR-MAE-V1-TRX-TARGETED-TAIL-2026-07-10` | diagnostic observation / not registered | 只缩放中选 TRX `macd_flip`：计划止损风险 `<=10%`；入场前 DD `2%/6%` 时 cap `3x/2x`；非 TRX 暴露与 V1 选择/路径不变 | full `231.59x / -19.99% DD / 90.30% win`；reused holdout `6.31x / +57.37% / -17.38% DD`；TRX MACD avg exposure `5.00x -> 3.03x`，worst MAE `-17.17% -> -9.71%`，account-tail `-23.10% -> -18.80%`；extra `4 bps/fill` full DD `-20.18%`，double-cost `-27.53%` | `notes/binance-1h-ar-mae-v1-trx-targeted-tail-overlay-2026-07-10.md`；`artifacts/binance_1h_ar_mae_v1_trx_targeted_tail_2026-07-10.json`；`artifacts/binance_1h_ar_mae_v1_trx_targeted_tail_matrix_2026-07-10.csv`；`scripts/research_binance_1h_ar_mae_v1_trx_targeted_tail_overlay.py` | `NO-GO / not live-ready`：TRX 尾部已非主导，但非 TRX close-DD/account-tail 与成本压力仍失败；账户层 overlay 尚未进入 runner 联合状态机 |
+| `BIN-1H-AR-MAE-FIRST-2026-07-07` | historical pre-dry-run finding | 六 sleeve 等权 `1/6`，小时再平衡主口径 + 不再平衡对照 | full `4.069x / +1284.22% / -4.43% DD / 89.66% win / 522 trades / PF 6.627`；reused holdout `1.625x / +12.72% / 75.38% win` | [首次组合回测](notes/binance-1h-ar-mae-first-combination-backtest-2026-07-07.md) | 登记前历史观察；不代表当前状态 |
+| `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` (`BIN-1H-AR-MAE-V1`) | dry-run / not live-ready | 全账户单仓槽位、先到先得；持仓期间忽略其他信号；中选交易按 sleeve 冻结杠杆执行 | full `287.01x / -21.43% DD / 90.30% win / 371 trades`；strict replay `371/371` parity PASS | [完整规格](specs/binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md)；[单仓回测](notes/binance-1h-ar-mae-single-position-backtest-2026-07-07.md)；[runner tracking](runner-tracking/binance-1h-ar-mae-v1-runner-status.md) | manifest 已启用 dry-run；历史 DD 与执行缺口继续阻塞 live |
+| `BIN-1H-AR-MAE-V1-RISK-OVERLAY-2026-07-09` | historical pre-dry-run finding / not registered | 全局 cap、TRX cap/剔除与成本压力账户 overlay | `cap2.5x` full `122.81x / -18.68% DD`；extra `4 bps/fill` 为 `-19.19% DD`；double-cost 约 `-25.5% DD` | [风险覆盖层诊断](notes/binance-1h-ar-mae-v1-risk-overlay-diagnostics-2026-07-09.md) | 历史风险证据；不覆盖 active dry-run 身份 |
+| `BIN-1H-AR-MAE-V1-TRX-TARGETED-TAIL-2026-07-10` | historical pre-dry-run finding / not registered | 只缩放中选 TRX `macd_flip`，非 TRX 暴露不变 | full `231.59x / -19.99% DD`；extra `4 bps/fill` 为 `-20.18% DD` | [TRX 定向尾部诊断](notes/binance-1h-ar-mae-v1-trx-targeted-tail-overlay-2026-07-10.md) | 历史风险证据；不覆盖 active dry-run 身份 |
 
 ## Promotion 边界
 
 - 成分家族的 promotion 门槛与失败边界全部继承；组合不清洗 reused holdout 失败、K+2/8bps 压力失败与执行审计缺失。
 - 最近三个月对全部六个家族都是已揭盲区间，组合层同样不得当作 fresh OOS 使用。
 - 小时再平衡的资金划转摩擦未计入；促升前必须给出实盘可执行的再平衡（或不再平衡）资金结构。
-- 在完成组合层 live-executable 审计并取得新增 runner 观察证据前，禁止标记为 candidate、paper-live、dry-run、handoff 或 live。
+- 本节其余条目是进入 dry-run 前的历史门禁记录。当前 dry-run 已由 manifest 明确授权；在完成 live-executable 审计、runner 观察与 online open/close reconciliation 前，仍禁止启用 live。

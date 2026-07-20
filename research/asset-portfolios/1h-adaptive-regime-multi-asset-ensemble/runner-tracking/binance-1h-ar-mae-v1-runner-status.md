@@ -46,9 +46,9 @@
 
 ## Decision gate
 
-保持 lab 结论：`registered diagnostic / NO-GO / not promoted / not live-ready`。
+当前 lab 状态：`dry-run / not live-ready`。
 dry-run 仅用于观察 runtime 信号与持仓生命周期，不改变 promotion 状态。
-replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但不改变 V1 的 NO-GO 判定（回撤穿破 `<20%` 硬门槛、成分均为 diagnostic NO-GO）。
+replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致；回撤穿破 `<20%` 等 historical pre-dry-run findings 继续阻塞 live，但不否定当前已授权 dry-run。
 
 ## 2026-07-10 Runner architecture governance
 
@@ -65,7 +65,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
 - Fix（quant-runner，未部署）：`six_asset_ensemble` 开仓补 `emit_ledger_trade_open`；holding 周期 upsert 对账；平仓前先 upsert open，避免历史孤儿持仓关单丢记录。公共 ledger upsert 同时增加终态保护，重复 `TradeOpen` 不得把 `closed` 交易重新改回 `open`。
 - Backfill（线上 DB，已做）：从 `state/six-asset-ensemble-dry-run/engine_state.json` 回填当前 open 行 `armae-bnb-1783699210359`（BNB long，entry `2026-07-10T16:00Z` @ `574.369656`）。
 - Source validation：`cargo fmt --check`、`cargo clippy --all-targets -- -D warnings`、`cargo test` 通过；新增 `open -> close -> duplicate open` 仍保持 closed 的回归测试。
-- Decision gate：不变，仍为 `NO-GO / not promoted / not live-ready`。此修复只补观测完整性。
+- Decision gate：保持 `dry-run / not live-ready`。此修复只补观测完整性。
 - 部署前：新开仓/对账逻辑需发布二进制后才生效；当前 open 行已可在 `trades` 查询。
 
 ## 2026-07-11 SPEC alignment re-audit
@@ -75,8 +75,8 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
 - 已修复差异 1：空仓时任一 sleeve funding 获取失败或返回空集都会阻止新入场；已有持仓退出不受 funding API 故障阻断，但 active sleeve funding 不可得时 net PnL 保持 `null`，不再静默按零 funding。
 - 已修复差异 2：runtime 按 strict replay 的 `[entry_ts, exit_ts)` 半开区间累计 `-side × funding_rate`，纳入 `trades.net_pnl_usdt` / `net_ret_1x`，并把 `funding_ret_1x`、`funding_pnl_usdt` 写入 close payload。
 - 新确认差异 3：runtime 用六个 sleeve 最新闭合时间的最小值推进 cycle，但选仓仍按各 sleeve 自身最后一根 K 计算；若某个 symbol 数据滞后，候选信号可能不在同一执行小时。
-- 文档漂移已修复：Runner SPEC 现明确研究身份仍为 diagnostic NO-GO，Runner 只获准 `dry_run` 观察，并直接列出 strict replay 与持续 runtime 的边界。
-- 结论：策略参数/信号引擎及 strict replay 对齐；funding 获取和 PnL 缺口已关闭。持续 dry-run 的三项既有观测差异和跨 symbol 时钟风险仍不改变 `NO-GO / not live-ready`，任何 promotion 前必须统一实现或建立新的正式规格。
+- 文档漂移已修复：Runner 只获准 `dry_run` 观察，并直接列出 strict replay 与持续 runtime 的边界。
+- 结论：策略参数/信号引擎及 strict replay 对齐；funding 获取和 PnL 缺口已关闭。持续 dry-run 的三项既有观测差异和跨 symbol 时钟风险继续阻塞 live，当前状态保持 `dry-run / not live-ready`。
 
 ## 2026-07-12 dry-run deployment
 
@@ -94,7 +94,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
 - Live：`quant-runner-live.service` 没有 open trade 且持续 active，但因本次只影响
   dry-run、平台仍有未平 dry-run 交易，未主动重启 live 进程；共享磁盘二进制已更新，
   live 下次受控重启会加载该版本。
-- Decision gate：保持 `NO-GO / not promoted / not live-ready`。
+- Decision gate：保持 `dry-run / not live-ready`。
 
 ## 2026-07-12 统一执行架构迁移（后续代码，未部署）
 
@@ -120,7 +120,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   `risk-resume` 清除。schema 切换禁止 binary-only rollback。
 - 本节记录的是 00:19 CST 部署之后的后续代码迁移，**尚未部署、未重启线上**；
   2026-07-12 已部署二进制和服务状态仍是当前线上事实，没有新增成交统计。
-- 结论保持 `DryRunOnly / NO-GO / not promoted / not live-ready`。交接约束见
+- 结论保持 `dry-run / not live-ready`。交接约束见
   [V1 active handoff](../live-specs/binance-1h-ar-mae-v1-handoff-not-live-ready.md)。
 
 ## 2026-07-13 统一 execution symbol-explicit venue 切换
@@ -138,7 +138,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   venue TP/SL。完整生命周期快照见
   [迁移 artifact](../artifacts/binance_1h_ar_mae_v1_unified_execution_migration_2026-07-13.json)。
 - 该 runtime 迁移不改变 strict replay 的 `522/371/151/22` 与 `371/371`
-  parity PASS，也不改变 `DryRunOnly / NO-GO / not live-ready`。
+  parity PASS，也不改变 `dry-run / not live-ready`。
 
 ## 2026-07-13 shutdown 通知去重已部署
 
@@ -167,7 +167,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   `e6b4420df1e9e9cc7eea4d011e21c3cb3619c441131ec33c881b3c9e8f123b30`；
   发布前后本实例 flat，切换后 health=`ok`，无 warning/error。
 - strict backtest-vs-runtime 对拍未在本事件中独立重算，因此 match 仍 pending；
-  本事件不改变 `DryRunOnly / NO-GO / not promoted / not live-ready` 或既有 parity。
+  本事件不改变 `dry-run / not live-ready` 或既有 parity。
 
 ## 2026-07-14 Multi-market StrategyDriver 迁移（仅代码，未部署）
 
@@ -185,7 +185,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   self-managed 分支均已删除。Runner workspace `152` 个 unit tests、`12` 个
   integration tests、strict Clippy、六策略 smoke/replay 和配置校验通过。
 - 本次未部署、未重启、未采集新 runtime trade/fill，不替代 `371/371` parity；
-  `DryRunOnly / NO-GO / not promoted / not live-ready` 保持不变。
+  `dry-run / not live-ready` 保持不变。
 
 ## 2026-07-14 Driver 收尾验证（仅代码，未部署）
 
@@ -197,7 +197,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   target 必须属于已声明 `MarketRequirement`。
 - 历史 nested `ar_mae.sleeve_cooldown_until` 有定向迁移测试，保存后只保留
   versioned `StrategyStateEnvelope`。本次没有部署或新增 runtime fill，
-  `DryRunOnly / NO-GO / not promoted / not live-ready` 不变。
+  `dry-run / not live-ready` 不变。
 - 最终本地验证为 `162` 个 unit tests、`12` 个 integration tests、strict
   Clippy、dry-run/live 配置校验和六策略 2500-bar Binance smoke replay 全通过。
 
@@ -214,8 +214,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   `12` 个 integration 全通过；strict Clippy、两份 config 与六实例 smoke
   通过。strict replay 再次输出 full-window `371` selected trades，与冻结
   `522/371/151/22` reference 一致。
-- 本次未部署、未重启、无新 runtime trade/fill；`DryRunOnly / NO-GO /
-  not promoted / not live-ready` 保持不变。
+- 本次未部署、未重启、无新 runtime trade/fill；`dry-run / not live-ready` 保持不变。
 
 ## 2026-07-14 降级维护与多市场 reconcile 收口（仅代码，未部署）
 
@@ -232,8 +231,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   reconcile 仍走同一执行核。保护 execution 由 plan 解析后持久化为单一事实。
 - 最终验证：`179` 个 unit tests、`12` 个 integration tests、strict Clippy、
   dry-run/live config、六实例 smoke 与六策略 2500-bar replay 全通过。
-- 本次未部署、无新 runtime trade/fill；`DryRunOnly / NO-GO / not promoted /
-  not live-ready` 保持不变。
+- 本次未部署、无新 runtime trade/fill；`dry-run / not live-ready` 保持不变。
 
 ## 2026-07-15 平台架构收尾（仅代码，未部署）
 
@@ -244,8 +242,7 @@ replay 对拍零误差证明 runner 引擎实现与 V1 冻结路径一致，但�
   不使用更快辅助依赖的周期；正常 1h 等待不会误判 stale。触发后只隔离/有限
   重建该 bundle，成功处理新 1h bar 后恢复，兄弟组与 systemd watchdog 不受影响。
 - 本次未修改策略参数、TOML enabled、state path、promotion 或 parity，未部署、
-  无新 runtime trade/fill；`DryRunOnly / NO-GO / not promoted /
-  not live-ready` 保持不变。
+  无新 runtime trade/fill；`dry-run / not live-ready` 保持不变。
 - 最终本地验证：`196` unit PASS + `3` ignored、`12` integration PASS、
   strict Clippy、配置/治理校验、六个 enabled dry-run smoke 和 AR-MAE
   2500-bar replay 通过。

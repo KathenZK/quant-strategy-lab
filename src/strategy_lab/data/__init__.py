@@ -8,6 +8,7 @@ from .liquidations import (
     normalize_binance_force_order_events,
 )
 from .normalize import normalize_dataset
+from .quality import DuplicatePolicy, DuplicateStats, OHLCVDerivationPolicy
 from .store import validate_frame, write_dataframe, write_normalized_dataframe
 from .warehouse import DuckDBWarehouse
 
@@ -19,10 +20,13 @@ __all__ = [
     "DataAuthenticitySummary",
     "DataLakeLayout",
     "DatasetKind",
+    "DuplicatePolicy",
+    "DuplicateStats",
     "DuckDBWarehouse",
     "InstrumentId",
     "LiquidationRecord",
     "MarketType",
+    "OHLCVDerivationPolicy",
     "aggregate_liquidation_events",
     "dataset_specs",
     "enrich_liquidation_features",

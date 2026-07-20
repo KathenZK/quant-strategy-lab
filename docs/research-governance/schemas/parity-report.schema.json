@@ -1,5 +1,6 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quant-strategy-lab.local/schemas/parity-report.schema.json",
   "title": "Runner parity report",
   "type": "object",
   "required": [
@@ -9,19 +10,19 @@
   ],
   "properties": {
     "schema_version": {"const": "1.0"},
-    "strategy_id": {"type": "string"},
-    "runner_kind": {"type": "string"},
-    "runner_commit": {"type": "string"},
-    "lab_commit": {"type": "string"},
-    "snapshot_id": {"type": "string"},
+    "strategy_id": {"type": "string", "minLength": 1},
+    "runner_kind": {"type": "string", "minLength": 1},
+    "runner_commit": {"type": "string", "minLength": 1},
+    "lab_commit": {"type": "string", "minLength": 1},
+    "snapshot_id": {"type": "string", "minLength": 1},
     "gate_level": {"enum": ["smoke", "parity"]},
-    "command": {"type": "string"},
+    "command": {"type": "string", "minLength": 1},
     "window": {
       "type": "object",
       "required": ["start", "end", "bars"],
       "properties": {
-        "start": {"type": "string"},
-        "end": {"type": "string"},
+        "start": {"type": "string", "minLength": 1},
+        "end": {"type": "string", "minLength": 1},
         "bars": {"type": "integer", "minimum": 0}
       },
       "additionalProperties": false
@@ -33,12 +34,32 @@
         "reference_trades": {"type": "integer", "minimum": 0},
         "runtime_trades": {"type": "integer", "minimum": 0},
         "path_mismatches": {"type": "integer", "minimum": 0},
-        "fields_compared": {"type": "array", "items": {"type": "string"}}
+        "fields_compared": {
+          "type": "array",
+          "items": {"type": "string", "minLength": 1},
+          "uniqueItems": true
+        }
       },
       "additionalProperties": false
     },
     "conclusion": {"enum": ["PASS", "FAIL"]},
-    "blockers": {"type": "array", "items": {"type": "string"}}
+    "blockers": {"type": "array", "items": {"type": "string", "minLength": 1}}
   },
-  "additionalProperties": true
+  "allOf": [
+    {
+      "if": {"properties": {"conclusion": {"const": "PASS"}}},
+      "then": {
+        "properties": {
+          "gate_level": {"const": "parity"},
+          "trade_path": {
+            "properties": {
+              "path_mismatches": {"const": 0},
+              "fields_compared": {"minItems": 1}
+            }
+          }
+        }
+      }
+    }
+  ],
+  "additionalProperties": false
 }

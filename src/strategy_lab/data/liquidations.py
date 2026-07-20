@@ -90,10 +90,12 @@ def aggregate_liquidation_events(events: pd.DataFrame, *, frequency: str = "1h")
 
     working = events.copy()
     working["ts"] = pd.to_datetime(working["ts"], utc=True)
-    working["notional"] = pd.to_numeric(working["notional"], errors="coerce").fillna(
-        pd.to_numeric(working.get("price", 0.0), errors="coerce").fillna(0.0)
-        * pd.to_numeric(working.get("size", 0.0), errors="coerce").fillna(0.0)
-    )
+    try:
+        working["notional"] = pd.to_numeric(working["notional"], errors="raise")
+    except (TypeError, ValueError) as exc:
+        raise ValueError("invalid numeric value in liquidation notional") from exc
+    if working["notional"].isna().any():
+        raise ValueError("liquidation notional contains null values")
     working["liquidation_long_notional"] = np.where(working["side"].str.lower() == "sell", working["notional"], 0.0)
     working["liquidation_short_notional"] = np.where(working["side"].str.lower() == "buy", working["notional"], 0.0)
     working["bucket_ts"] = working["ts"].dt.floor(frequency)

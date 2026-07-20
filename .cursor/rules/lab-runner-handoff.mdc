@@ -1,27 +1,29 @@
 ---
 description: Contract for handing strategies to quant-runner and feeding runner observations back
-alwaysApply: true
+globs:
+  - "research/**/live-specs/**/*.md"
+  - "research/**/runner-tracking/**/*.md"
+  - "docs/research-governance/**"
+  - "scripts/governance/**"
+alwaysApply: false
 ---
 
 # Lab / Runner Handoff Contract
 
-- Machine-readable promotion authority is
-  `docs/research-governance/machine/active-strategy-manifest.json`. Narrative
-  documents explain decisions but cannot authorize an enabled runner instance
-  without a matching manifest entry. Runner consumes the committed
-  `configs/active-strategy.lock.json` projection pinned to a Lab commit/hash.
+- Machine authority and narrative authority have separate scopes. `docs/research-governance/machine/active-strategy-manifest.json` is the only Lab authority that may authorize a particular quant-runner instance. `docs/research-governance/strategy-status-glossary.md` alone defines statuses, while the family core ledger is the narrative source of truth for family/version identity and current state. A manifest entry cannot invent a status or override the ledger; any disagreement among manifest, glossary, ledger, indexes, or active SPEC fails closed (`enabled_allowed=false`) until reconciled.
+- The generated lock is owned by the sibling `quant-runner` repository at `/Users/ZK/OpenCode/quant-runner/configs/active-strategy.lock.json`; there is no authoritative Lab-side lock file. Runner consumes that committed projection pinned to a Lab commit and manifest hash.
 - The sibling repository `/Users/ZK/OpenCode/quant-runner` is the only production execution surface. Research backtest scripts in this repository must never be promoted into runners.
 - A strategy may only be handed to `quant-runner` through a runner handoff spec: a Markdown file under the family's `live-specs/` directory whose status line explicitly states the promotion state (for example `live spec / not live-ready`).
-- Grandfathered exception: strategies that entered a runner before this contract existed (for example EMA-X V18, CC V35, and the legacy hype-trend live runner) may temporarily lack a lab-side `live-specs/` spec. Record the gap in the family decision log, treat it as a live-readiness blocker, and backfill the handoff spec before any promotion to `live`. Do not use this exception for new handoffs.
+- `handoff` is an overlay label only. It may annotate `live spec`, `dry-run`, or `live`, but never acts as a main status, skips a gate, or authorizes an instance.
+- The external-runner grandfather list is closed and machine-checked in `docs/research-governance/machine/external-runner-grandfathers.json`. Its sole member is `HYPE-EMA-TB-V35` on the pre-contract external `hype-trend` live runner. This exception preserves only that already-running external instance; it authorizes no new instance, kind, version, mode, parameter change, migration, or promotion and cannot be copied to quant-runner. Any material change requires the normal manifest + Lab/Runner SPEC + gate path. No new grandfather entries are allowed.
 - Every runner handoff spec must contain at minimum: full family name and version, runner strategy `kind` (matching the actual `quant-runner` config value), exchange/market/symbol/timeframe, a complete parameter table with the exact runner config field names, data-quality requirements and warmup needs, fee/slippage/funding assumptions, closed-bar-only requirement, a runner TOML example, the remaining audit gaps, and links to the core ledger and the supporting research evidence.
 - Live notional is not a required field in strategy specs. If live sizing is controlled by a funded subaccount rather than by strategy parameters, record the funding/risk boundary in runner operations or the launch decision log instead of forcing it into the spec.
 - Runner-side identity must stay in sync: the handoff spec's `kind`, module path, and TOML example must match the current `quant-runner` code and configs. When `quant-runner` renames a kind or moves a module, update the lab-side handoff spec in the same change set.
 - The `quant-runner` strategy directory keeps its own `<STRATEGY_ID>-SPEC.md`; the lab handoff spec and the runner SPEC must link to each other. Parameter changes must be applied to both or explicitly recorded as divergence in the family decision log.
-- Active Lab/Runner SPECs must carry front matter with `strategy_id`,
-  `runner_kind`, `spec_status`, `peer_spec` and `approval_level_max`.
-  A runner kind may have only one active implementation SPEC; historical
-  specifications remain readable but must be marked `superseded`.
+- Lab live SPEC front matter must validate against `docs/research-governance/schemas/lab-live-spec-frontmatter.schema.json`; new specs should start from `docs/research-governance/lab-live-spec-template.md`. A single implementation uses `strategy_id`, `runner_kind`, and `peer_spec`. A genuine joint SPEC uses an `implementations` array containing one explicit `strategy_id`/`runner_kind`/`peer_spec` mapping per route; parallel scalar lists or implicit peer kinds are forbidden. All active SPECs also declare `schema_version`, `spec_role`, `family_id`, `main_status`, `spec_status`, `manifest_instance_ids`, and `approval_level_max`.
+- A `(strategy_id, runner_kind)` mapping may have only one active Lab SPEC and one active runner implementation SPEC. Historical specifications remain readable but must be marked `superseded`.
 - Runner observations must flow back: the `runner-tracking/` subdirectory must be created in the same change that marks a version `dry-run`, and it holds dated Markdown reports (`<family-id>-runner-<YYYY-MM-DD>.md`). Each report states the runner config used, the observation window, trade count, realized fees/slippage versus backtest assumptions, signal/indicator parity mismatches, incidents (restarts, missing bars, order rejections), and a keep/stop/adjust conclusion. This repository does not use an additional simulated-live state; simulation is `dry-run`, and real-order small-notional execution is `live`.
 - Online open/close reconciliation is a mandatory runner-tracking trigger: when live or dry-run open/close/fill statistics are extracted to compare runtime behavior with research backtests, write a dated `runner-tracking/` report and retain any durable CSV/JSON evidence under the same family's `artifacts/`. The report must include the source command/log/DB snapshot, observation window, runner config, signal/bar timestamps, expected backtest entry/exit, actual open/close timestamps, side, quantity/notional, fill/mark/reference prices, fees, slippage estimate, order IDs or stable event IDs when available, and a match/mismatch conclusion.
+- `dry-run -> live` admission requires a completed online open/close reconciliation report with no unresolved material mismatch. A smoke test, offline replay parity, or narrative statement alone cannot satisfy this gate.
 - Statements like `forward-test required` in a core ledger are only satisfied by reports under `runner-tracking/`; verbal claims about dry-run performance do not count as evidence.
 - The family core ledger must reference the latest runner-tracking report whenever the version's status depends on runner evidence, and any promotion or demotion driven by runner observations must be recorded in the family `decision-log.md`.

@@ -16,13 +16,13 @@
 
 - 不要根据 `V13`、`V21`、`V35`、`V36` 这类裸版本号判断策略身份；版本号只在具体资产、市场、周期和策略家族里有意义。
 - 标准 family name 使用展开写法，优先包含资产、周期和机制；短 id 只作为历史别名。家族清单与别名以 `research/README.md` 和各资产 README 的路由表为准，不在本文件重复维护。
-- 当用户要求"登记为 Vx / 记录为 Vx / 冻结为 Vx / promote 为 Vx"时，必须更新对应家族 core ledger / 主账（细则见 [.cursor/rules/research-report-storage.mdc](.cursor/rules/research-report-storage.mdc)；新建/重构主账用 [docs/research-governance/core-ledger-template.md](docs/research-governance/core-ledger-template.md)）。只更新 `specs/`、research note、diagnostic 或 decision log 不算完成版本登记。
+- “登记 / 记录 / 冻结 / 命名为 Vx”只固定版本身份：必须更新对应家族 core ledger / 主账，默认主状态为 `registered`，不自动触发 promotion（细则见 [.cursor/rules/research-report-storage.mdc](.cursor/rules/research-report-storage.mdc)；新建/重构主账用 [docs/research-governance/core-ledger-template.md](docs/research-governance/core-ledger-template.md)）。只更新 `specs/`、research note、diagnostic 或 decision log 不算完成版本登记。
+- “promote / 晋升 / 上线 / 进入 dry-run”是状态迁移请求，不是登记同义词；必须有明确目标状态并满足 [strategy-validation-gates.md](docs/research-governance/strategy-validation-gates.md) 与 runner handoff 门禁。目标不明确时先确认，不得把“登记 Vx”解释为晋升。
 - 所有新增或更新的长期研究文档默认使用中文，除非用户明确要求其他语言；策略名、版本号、参数、路径、指标名和状态术语可以保留英文原文。
 
 ## 术语口径
 
-- 策略状态词（`explore`、`registered`、`live spec`、`dry-run`、`live`、`NO-GO` 等）的定义与状态机以 `docs/research-governance/strategy-status-glossary.md` 为唯一来源；`audit` 只描述审计动作，不是主状态；dry-run 前不得写 `NO-GO`，只能写 `not promoted / not live-ready`。
-- promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是叠加其上的移交标签。`candidate` 可以作为研究角色词使用，例如参数候选、候选观察行、`registered candidate`，但不是主状态，也不得暗示 live-ready 或可跳过 promotion gate。进入任何 promotion 状态前必须完成 live-executable 审计。本仓库不定义额外的模拟盘阶段；模拟盘/仿真运行统一称为 `dry-run`，真实下单归入 `live`；实盘资金边界由子账户资金、runner 配置或上线 decision log 管理，策略 spec 不强制写 live notional。
+- 状态定义、合法组合和权威优先级只以 [strategy-status-glossary.md](docs/research-governance/strategy-status-glossary.md) 为准；AGENTS 不重复维护状态细则。`handoff` 只是 overlay 标签，不是主状态或 promotion 许可。
 - `active research line` 指当前仍在 `research/` 下维护、会继续复现或更新结论的研究方向；不再维护的一次性历史脚本应归入 `archive/scripts/research/`。
 - `current one-off research script` 指只服务某个研究问题的复现、搜索、审计、导出脚本；它可以保留在对应研究目录，但不应提升为 active package code。
 
@@ -43,5 +43,6 @@
 - `backtest-standards.mdc`：回测默认包含最近 `1d/7d/1m/3m/6m/1y` 分片；Binance 默认手续费 `0.001`、滑点 `4 bps`，其他市场需明确成本口径。
 - `research-report-storage.mdc`：研究目录、core ledger、索引更新义务、共享内核、artifacts 存放和 Canvas 边界。
 - `lab-runner-handoff.mdc`：向 `quant-runner` 交接的规格契约、双向同步和 `runner-tracking/` 回流要求。
+- `strategy-validation-gates.mdc`：从 `registered` 推进 promotion 的证据门禁及线上开平仓对账要求。
 - `external-reproduction-spec.mdc`：对外（同事/外部 AI）复现规格必须自包含；仓库内部引用只能放在标记为"非复现依赖"的附录里，交付前做 no-repo 自检。
 - `clickable-file-references.mdc`：对话回复和研究文档中的文件引用必须可点击——文档内跨文件引用用相对路径 Markdown 链接，对话中给用户的文件指引用 Markdown 链接或代码引用格式，不要只给纯文本路径。

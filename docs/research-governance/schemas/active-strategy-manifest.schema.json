@@ -1,54 +1,225 @@
 {
   "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://quant-strategy-lab.local/schemas/active-strategy-manifest.schema.json",
   "title": "Active strategy manifest",
   "type": "object",
   "required": ["schema_version", "updated_at", "entries"],
   "properties": {
+    "$schema": {"type": "string"},
     "schema_version": {"const": "1.0"},
     "updated_at": {"type": "string", "format": "date-time"},
     "entries": {
       "type": "array",
-      "items": {
-        "type": "object",
-        "required": [
-          "instance_id", "family_id", "family_path", "strategy_id",
-          "runner_kind", "mode", "main_status", "approval_level",
-          "enabled_allowed", "lab_live_spec", "runner_spec",
-          "ledger_identity", "decision_log_ref", "parity_gate"
-        ],
-        "properties": {
-          "instance_id": {"type": "string", "minLength": 1},
-          "family_id": {"type": "string", "minLength": 1},
-          "family_path": {"type": "string", "minLength": 1},
-          "strategy_id": {"type": "string", "minLength": 1},
-          "runner_kind": {"type": "string", "minLength": 1},
-          "mode": {"enum": ["dry_run", "live"]},
-          "main_status": {"type": "string"},
-          "approval_level": {
-            "enum": ["none", "dry_run", "tiny_live_pilot", "live"]
-          },
-          "approval_expires_at": {"type": "string", "format": "date-time"},
-          "enabled_allowed": {"type": "boolean"},
-          "lab_live_spec": {"type": "string"},
-          "runner_spec": {"type": "string"},
-          "ledger_identity": {"type": "string"},
-          "funding_boundary": {"type": "string"},
-          "decision_log_ref": {"type": "string"},
-          "parity_gate": {
-            "type": "object",
-            "required": ["required", "status"],
-            "properties": {
-              "required": {"type": "boolean"},
-              "status": {"enum": ["PASS", "FAIL", "PENDING"]},
-              "last_pass_report": {"type": "string"},
-              "pending_report": {"type": "string"},
-              "grandfather_until": {"type": "string", "format": "date-time"}
-            },
-            "additionalProperties": false
+      "items": {"$ref": "#/$defs/entry"}
+    }
+  },
+  "$defs": {
+    "parity_gate": {
+      "type": "object",
+      "required": ["required", "status"],
+      "properties": {
+        "required": {"type": "boolean"},
+        "status": {"enum": ["PASS", "FAIL", "PENDING"]},
+        "last_pass_artifact": {
+          "type": "string",
+          "pattern": "^research/.+/artifacts/.+\\.json$"
+        },
+        "narrative_report": {
+          "type": "string",
+          "pattern": "^research/.+/(?:runner-tracking|diagnostics)/.+\\.md$"
+        },
+        "pending_artifact": {
+          "type": "string",
+          "pattern": "^research/.+/artifacts/.+\\.json$"
+        },
+        "grandfather_until": {"type": "string", "format": "date-time"},
+        "grandfather_reason": {"type": "string", "minLength": 1}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"status": {"const": "PASS"}}},
+          "then": {
+            "required": ["last_pass_artifact"],
+            "not": {"required": ["pending_artifact"]}
           }
         },
-        "additionalProperties": false
-      }
+        {
+          "if": {
+            "properties": {
+              "required": {"const": true},
+              "status": {"const": "PENDING"}
+            },
+            "required": ["required", "status"]
+          },
+          "then": {"required": ["pending_artifact"]}
+        },
+        {
+          "if": {"required": ["grandfather_until"]},
+          "then": {"required": ["grandfather_reason"]}
+        }
+      ],
+      "additionalProperties": false
+    },
+    "entry": {
+      "type": "object",
+      "required": [
+        "instance_id",
+        "family_id",
+        "family_path",
+        "strategy_id",
+        "runner_kind",
+        "mode",
+        "main_status",
+        "approval_level",
+        "enabled_allowed",
+        "lab_live_spec",
+        "runner_spec",
+        "ledger_identity",
+        "decision_log_ref",
+        "parity_gate"
+      ],
+      "properties": {
+        "instance_id": {"type": "string", "minLength": 1},
+        "family_id": {"type": "string", "minLength": 1},
+        "family_path": {"type": "string", "pattern": "^research/[^/]+/[^/]+$"},
+        "strategy_id": {"type": "string", "minLength": 1},
+        "runner_kind": {"type": "string", "minLength": 1},
+        "mode": {"enum": ["dry_run", "live"]},
+        "main_status": {
+          "enum": ["explore", "registered", "live spec", "dry-run", "live", "NO-GO", "archived"]
+        },
+        "approval_level": {
+          "enum": ["none", "dry_run", "tiny_live_pilot", "live"]
+        },
+        "approval_expires_at": {"type": "string", "format": "date-time"},
+        "enabled_allowed": {"type": "boolean"},
+        "lab_live_spec": {
+          "type": "string",
+          "pattern": "^research/.+/live-specs/.+\\.md$"
+        },
+        "runner_spec": {"type": "string", "pattern": "^crates/quant-runner/.+\\.md$"},
+        "ledger_identity": {"type": "string", "minLength": 1},
+        "funding_boundary": {"type": "string", "minLength": 1},
+        "decision_log_ref": {
+          "type": "string",
+          "pattern": "^research/.+/decision-log\\.md(?:#.+)?$"
+        },
+        "parity_gate": {"$ref": "#/$defs/parity_gate"}
+      },
+      "allOf": [
+        {
+          "if": {"properties": {"enabled_allowed": {"const": true}}},
+          "then": {
+            "properties": {
+              "main_status": {"enum": ["dry-run", "live"]},
+              "parity_gate": {
+                "anyOf": [
+                  {"properties": {"status": {"const": "PASS"}}},
+                  {
+                    "properties": {"status": {"const": "PENDING"}},
+                    "required": ["grandfather_until", "grandfather_reason"]
+                  }
+                ]
+              }
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "enabled_allowed": {"const": true},
+              "mode": {"const": "dry_run"}
+            },
+            "required": ["enabled_allowed", "mode"]
+          },
+          "then": {
+            "properties": {
+              "main_status": {"enum": ["dry-run", "live"]},
+              "approval_level": {"const": "dry_run"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "enabled_allowed": {"const": true},
+              "mode": {"const": "live"}
+            },
+            "required": ["enabled_allowed", "mode"]
+          },
+          "then": {
+            "required": ["funding_boundary"],
+            "properties": {
+              "main_status": {"const": "live"},
+              "approval_level": {"enum": ["tiny_live_pilot", "live"]}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"approval_level": {"const": "none"}}},
+          "then": {"properties": {"enabled_allowed": {"const": false}}}
+        },
+        {
+          "if": {"properties": {"enabled_allowed": {"const": false}}},
+          "then": {"properties": {"approval_level": {"const": "none"}}}
+        },
+        {
+          "if": {"properties": {"approval_level": {"const": "dry_run"}}},
+          "then": {
+            "properties": {
+              "mode": {"const": "dry_run"},
+              "main_status": {"enum": ["dry-run", "live"]},
+              "enabled_allowed": {"const": true}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"approval_level": {"const": "tiny_live_pilot"}}},
+          "then": {
+            "required": ["approval_expires_at", "funding_boundary"],
+            "properties": {
+              "mode": {"const": "live"},
+              "main_status": {"const": "live"},
+              "enabled_allowed": {"const": true}
+            }
+          }
+        },
+        {
+          "if": {"properties": {"approval_level": {"const": "live"}}},
+          "then": {
+            "required": ["funding_boundary"],
+            "properties": {
+              "mode": {"const": "live"},
+              "main_status": {"const": "live"},
+              "enabled_allowed": {"const": true}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "main_status": {
+                "enum": ["explore", "registered", "live spec", "NO-GO", "archived"]
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "enabled_allowed": {"const": false},
+              "approval_level": {"const": "none"}
+            }
+          }
+        },
+        {
+          "if": {
+            "properties": {
+              "parity_gate": {"properties": {"status": {"const": "FAIL"}}}
+            }
+          },
+          "then": {"properties": {"enabled_allowed": {"const": false}}}
+        }
+      ],
+      "additionalProperties": false
     }
   },
   "additionalProperties": false

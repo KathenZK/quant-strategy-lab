@@ -1,7 +1,9 @@
 ---
+schema_version: "1.0"
 spec_role: lab_handoff
 strategy_id: HYPE-CANDLE-COUNT-V35
 family_id: HYPE-CC
+main_status: dry-run
 runner_kind: hype_candle_count
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_candle_count/HYPE-CANDLE-COUNT-V35-SPEC.md
