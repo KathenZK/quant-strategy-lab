@@ -1,0 +1,1437 @@
+{
+  "strategy_family": "HYPE-15M-Keltner-Trend-Breakout",
+  "research_id": "HYPE-15M-KTB frozen mechanism hypotheses",
+  "status": "explore / not promoted / not live-ready",
+  "generated_at_utc": "2026-07-21T08:27:49.590748+00:00",
+  "data_quality": {
+    "market": "Binance USD-M Futures",
+    "symbol": "HYPE/USDT:USDT",
+    "timeframe": "15m",
+    "rows": 40023,
+    "start": "2025-05-30T10:30:00+00:00",
+    "end": "2026-07-21T08:00:00+00:00",
+    "duplicate_rows": 0,
+    "missing_bars": 0,
+    "critical_nulls": {
+      "open": 0,
+      "high": 0,
+      "low": 0,
+      "close": 0,
+      "volume": 0,
+      "quote_volume": 0,
+      "trade_count": 0,
+      "vwap": 0,
+      "is_closed": 0,
+      "source": 0,
+      "timeframe": 0
+    },
+    "invalid_ohlcv_rows": 0,
+    "non_closed_rows": 0,
+    "source_values": [
+      "binance_futures_kline_api"
+    ],
+    "timeframe_values": [
+      "15m"
+    ],
+    "normalized_duplicate_stats": {
+      "policy": "error",
+      "key_columns": [
+        "ts",
+        "exchange",
+        "symbol",
+        "market_type",
+        "timeframe"
+      ],
+      "duplicate_rows": 0,
+      "duplicate_key_groups": 0,
+      "dropped_rows": 0
+    },
+    "upstream_raw_normalized_audit": {
+      "path": "research/hype/15m-ema-trend-breakout/artifacts/hype_binance_15m_data_quality.json",
+      "sha256": "86d998f7b6d4feceb546a4b797c04ae83b0e8d5e250e655d1863aa7da3eab62a",
+      "generated_at_utc": "2026-07-21T08:25:49.816977+00:00",
+      "raw_normalized_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "blocker_count": 0
+    },
+    "blocker_count": 0,
+    "funding": {
+      "rows": 2501,
+      "start": "2025-05-30T12:00:00+00:00",
+      "end": "2026-07-21T08:00:00+00:00",
+      "non_zero_aligned_rows": 2501,
+      "aligned_sum_rate": 0.09892656,
+      "duplicate_stats": {
+        "policy": "error",
+        "key_columns": [
+          "ts",
+          "exchange",
+          "symbol",
+          "market_type"
+        ],
+        "duplicate_rows": 0,
+        "duplicate_key_groups": 0,
+        "dropped_rows": 0
+      }
+    }
+  },
+  "selection_policy": "Three mechanisms and all parameters were frozen before execution. K1 is primary and K2 is phase sensitivity only. No grid search; time splits and recent slices were not used to tune parameters.",
+  "shared_execution": {
+    "signal": "closed K0 only",
+    "entry": "K1 open primary; K2 open phase audit",
+    "sizing": "fixed 1x",
+    "emergency_stop": "4 x entry ATR672, gap-open worse fill",
+    "normal_exit": "closed-bar midline cross, next open",
+    "timeout": "192 bars, next open",
+    "cooldown": "4 complete 15m bars",
+    "cost": "0.001 fee + 0.0004 adverse slippage per fill",
+    "funding": "actual Binance funding included"
+  },
+  "keltner": {
+    "center": "EMA96 adjust=False min_periods=96",
+    "channel_atr": "arithmetic rolling mean true range, 144 bars",
+    "multiplier": 2.4,
+    "sizing_atr": "arithmetic rolling mean true range, 672 bars"
+  },
+  "config": {
+    "center_ema_window": 96,
+    "channel_atr_window": 144,
+    "channel_multiplier": 2.4,
+    "sizing_atr_window": 672,
+    "long_target_atr_pct": 0.014,
+    "short_target_atr_pct": 0.012,
+    "max_allocation": 3.0,
+    "take_profit_atr": 4.0,
+    "hard_stop_atr": 4.0,
+    "max_hold_bars": 192,
+    "cooldown_bars": 4,
+    "warmup_bars": 1600,
+    "fee_per_fill": 0.001,
+    "adverse_slippage_per_fill": 0.0004
+  },
+  "hypotheses": {
+    "outer_break_mid_exit": "外轨首次穿越入场；收盘回到中轨另一侧后下一根 open 退出。",
+    "compression_expansion_break": "过去16根出现通道宽度192根25分位压缩，宽度重新扩张时外轨穿越入场；中轨退出。",
+    "trend_pullback_mid_reclaim": "过去32根触及同向外轨，中轨32根斜率同向；价格回踩中轨后 reclaim 入场；再失守中轨退出。"
+  },
+  "viability_gate": "full return > 0; MaxDD >= -35%; >=30 trades; development, validation, test, recent 3m and recent 6m returns all > 0",
+  "runs": [
+    {
+      "spec": {
+        "name": "outer_break_mid_exit_k1",
+        "mechanism": "outer_break_mid_exit",
+        "description": "外轨首次穿越入场；收盘回到中轨另一侧后下一根 open 退出。",
+        "entry_delay_bars": 1
+      },
+      "metrics": {
+        "return_pct": -97.55459504243824,
+        "max_drawdown_pct": -97.85011812360457,
+        "sharpe": -3.5051694928033044,
+        "trades": 539,
+        "win_rate_pct": 22.634508348794064,
+        "profit_factor": 0.5996622726396638,
+        "direction_counts": {
+          "long": 268,
+          "short": 271
+        },
+        "exit_counts": {
+          "midline_exit_next_open": 478,
+          "stop_loss": 47,
+          "timeout_next_open": 14
+        },
+        "average_allocation": 1.0,
+        "max_allocation": 1.0,
+        "trading_cost_rate_total": 1.078999999999992,
+        "funding_rate_total": -0.002554260000000006
+      },
+      "slices": [
+        {
+          "window": "1d",
+          "start": "2026-07-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 0.26910098804493465,
+          "max_drawdown_pct": -1.6072754698097547,
+          "sharpe": 2.426050212653159,
+          "trades": 1,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "7d",
+          "start": "2026-07-14T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 8.122178844668726,
+          "max_drawdown_pct": -6.375378394453957,
+          "sharpe": 6.65625687413626,
+          "trades": 7,
+          "win_rate_pct": 42.857142857142854
+        },
+        {
+          "window": "1m",
+          "start": "2026-06-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -19.359154907360164,
+          "max_drawdown_pct": -30.128009200857843,
+          "sharpe": -3.5397107603308076,
+          "trades": 40,
+          "win_rate_pct": 17.5
+        },
+        {
+          "window": "3m",
+          "start": "2026-04-22T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -1.978373490247587,
+          "max_drawdown_pct": -44.08464128940596,
+          "sharpe": 0.3084178190306284,
+          "trades": 109,
+          "win_rate_pct": 30.275229357798167
+        },
+        {
+          "window": "6m",
+          "start": "2026-01-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -57.19814174207867,
+          "max_drawdown_pct": -74.43401124707039,
+          "sharpe": -1.633064326754735,
+          "trades": 237,
+          "win_rate_pct": 24.894514767932492
+        },
+        {
+          "window": "1y",
+          "start": "2025-07-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -96.35300041735813,
+          "max_drawdown_pct": -96.83070317042771,
+          "sharpe": -3.4046793155544934,
+          "trades": 496,
+          "win_rate_pct": 22.379032258064516
+        }
+      ],
+      "time_splits": [
+        {
+          "split": "development",
+          "start": "2025-06-16T02:30:00+00:00",
+          "end": "2026-01-02T05:00:00+00:00",
+          "return_pct": -93.96007030488826,
+          "max_drawdown_pct": -94.10475277458991,
+          "sharpe": -5.219383170060169,
+          "trades": 280,
+          "win_rate_pct": 20.0
+        },
+        {
+          "split": "validation",
+          "start": "2026-01-02T05:15:00+00:00",
+          "end": "2026-04-12T06:30:00+00:00",
+          "return_pct": -54.862822877204145,
+          "max_drawdown_pct": -68.83079031311435,
+          "sharpe": -3.0525569561666828,
+          "trades": 136,
+          "win_rate_pct": 22.794117647058822
+        },
+        {
+          "split": "test",
+          "start": "2026-04-12T06:45:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -10.301638485107889,
+          "max_drawdown_pct": -44.08464128940596,
+          "sharpe": -0.1038225747750861,
+          "trades": 123,
+          "win_rate_pct": 28.455284552845526
+        }
+      ],
+      "viability_gate": {
+        "checks": {
+          "full_return_positive": false,
+          "full_maxdd_not_worse_than_35pct": false,
+          "minimum_30_closed_trades": true,
+          "development_positive": false,
+          "validation_positive": false,
+          "test_positive": false,
+          "recent_3m_positive": false,
+          "recent_6m_positive": false
+        },
+        "passed": false,
+        "passed_count": 1,
+        "total_count": 8
+      },
+      "open_position": {
+        "direction": 1,
+        "entry_ts": "2026-07-20T15:45:00+00:00",
+        "entry_price": 61.609634,
+        "entry_atr": 0.3303437500000001,
+        "allocation": 1.0,
+        "hold_bars": 65,
+        "pending_exit": null,
+        "unrealized_trade_return_pct": 1.907028
+      }
+    },
+    {
+      "spec": {
+        "name": "outer_break_mid_exit_k2",
+        "mechanism": "outer_break_mid_exit",
+        "description": "外轨首次穿越入场；收盘回到中轨另一侧后下一根 open 退出。",
+        "entry_delay_bars": 2
+      },
+      "metrics": {
+        "return_pct": -97.85339805739895,
+        "max_drawdown_pct": -98.1312150501666,
+        "sharpe": -3.7056556632266378,
+        "trades": 546,
+        "win_rate_pct": 22.52747252747253,
+        "profit_factor": 0.5827630939072911,
+        "direction_counts": {
+          "long": 269,
+          "short": 277
+        },
+        "exit_counts": {
+          "midline_exit_next_open": 482,
+          "stop_loss": 50,
+          "timeout_next_open": 14
+        },
+        "average_allocation": 1.0,
+        "max_allocation": 1.0,
+        "trading_cost_rate_total": 1.0929999999999904,
+        "funding_rate_total": -0.002992940000000002
+      },
+      "slices": [
+        {
+          "window": "1d",
+          "start": "2026-07-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -0.07378015916523761,
+          "max_drawdown_pct": -2.1367718246991574,
+          "sharpe": -0.5094328148195209,
+          "trades": 1,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "7d",
+          "start": "2026-07-14T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 9.267232842852003,
+          "max_drawdown_pct": -5.833963069824721,
+          "sharpe": 7.613447437637829,
+          "trades": 7,
+          "win_rate_pct": 57.14285714285714
+        },
+        {
+          "window": "1m",
+          "start": "2026-06-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -17.873331757258647,
+          "max_drawdown_pct": -30.101948400537605,
+          "sharpe": -3.3241884935883093,
+          "trades": 40,
+          "win_rate_pct": 20.0
+        },
+        {
+          "window": "3m",
+          "start": "2026-04-22T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -6.456740692499352,
+          "max_drawdown_pct": -44.14127261059667,
+          "sharpe": 0.06825841111941765,
+          "trades": 109,
+          "win_rate_pct": 31.19266055045872
+        },
+        {
+          "window": "6m",
+          "start": "2026-01-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -57.9037961009348,
+          "max_drawdown_pct": -75.10576877330092,
+          "sharpe": -1.6953257180705077,
+          "trades": 238,
+          "win_rate_pct": 25.210084033613445
+        },
+        {
+          "window": "1y",
+          "start": "2025-07-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -96.71271923757408,
+          "max_drawdown_pct": -97.17878609177518,
+          "sharpe": -3.5874763096744307,
+          "trades": 502,
+          "win_rate_pct": 22.111553784860558
+        }
+      ],
+      "time_splits": [
+        {
+          "split": "development",
+          "start": "2025-06-16T02:30:00+00:00",
+          "end": "2026-01-02T05:00:00+00:00",
+          "return_pct": -94.50571714340168,
+          "max_drawdown_pct": -94.62339501802892,
+          "sharpe": -5.520961594358446,
+          "trades": 285,
+          "win_rate_pct": 20.350877192982455
+        },
+        {
+          "split": "validation",
+          "start": "2026-01-02T05:15:00+00:00",
+          "end": "2026-04-12T06:30:00+00:00",
+          "return_pct": -54.23148351904432,
+          "max_drawdown_pct": -68.18536388477867,
+          "sharpe": -3.0237746222892654,
+          "trades": 138,
+          "win_rate_pct": 20.28985507246377
+        },
+        {
+          "split": "test",
+          "start": "2026-04-12T06:45:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -14.636213998173142,
+          "max_drawdown_pct": -44.14127261059667,
+          "sharpe": -0.34346900855221835,
+          "trades": 123,
+          "win_rate_pct": 30.081300813008134
+        }
+      ],
+      "viability_gate": {
+        "checks": {
+          "full_return_positive": false,
+          "full_maxdd_not_worse_than_35pct": false,
+          "minimum_30_closed_trades": true,
+          "development_positive": false,
+          "validation_positive": false,
+          "test_positive": false,
+          "recent_3m_positive": false,
+          "recent_6m_positive": false
+        },
+        "passed": false,
+        "passed_count": 1,
+        "total_count": 8
+      },
+      "open_position": {
+        "direction": 1,
+        "entry_ts": "2026-07-20T16:00:00+00:00",
+        "entry_price": 62.2178772,
+        "entry_atr": 0.3310059523809525,
+        "allocation": 1.0,
+        "hold_bars": 64,
+        "pending_exit": null,
+        "unrealized_trade_return_pct": 0.913141
+      }
+    },
+    {
+      "spec": {
+        "name": "compression_expansion_break_k1",
+        "mechanism": "compression_expansion_break",
+        "description": "过去16根出现通道宽度192根25分位压缩，宽度重新扩张时外轨穿越入场；中轨退出。",
+        "entry_delay_bars": 1
+      },
+      "metrics": {
+        "return_pct": -68.54443433260904,
+        "max_drawdown_pct": -74.4078785830741,
+        "sharpe": -1.6506697894751612,
+        "trades": 253,
+        "win_rate_pct": 23.715415019762844,
+        "profit_factor": 0.7122556086180216,
+        "direction_counts": {
+          "long": 124,
+          "short": 129
+        },
+        "exit_counts": {
+          "midline_exit_next_open": 235,
+          "stop_loss": 11,
+          "timeout_next_open": 7
+        },
+        "average_allocation": 1.0,
+        "max_allocation": 1.0,
+        "trading_cost_rate_total": 0.5060000000000003,
+        "funding_rate_total": -0.006543209999999979
+      },
+      "slices": [
+        {
+          "window": "1d",
+          "start": "2026-07-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -1.607275469809788,
+          "max_drawdown_pct": -1.607275469809788,
+          "sharpe": -26.656695203201966,
+          "trades": 1,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "7d",
+          "start": "2026-07-14T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 5.502065722726646,
+          "max_drawdown_pct": -5.596839906584339,
+          "sharpe": 5.596224130535982,
+          "trades": 4,
+          "win_rate_pct": 25.0
+        },
+        {
+          "window": "1m",
+          "start": "2026-06-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -11.830999012043975,
+          "max_drawdown_pct": -18.16718219729324,
+          "sharpe": -3.2966572226388804,
+          "trades": 20,
+          "win_rate_pct": 10.0
+        },
+        {
+          "window": "3m",
+          "start": "2026-04-22T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 8.318465815890264,
+          "max_drawdown_pct": -22.48539618284844,
+          "sharpe": 0.8751165957700665,
+          "trades": 52,
+          "win_rate_pct": 26.923076923076923
+        },
+        {
+          "window": "6m",
+          "start": "2026-01-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -17.20407939401104,
+          "max_drawdown_pct": -35.393098508116104,
+          "sharpe": -0.40418558778690694,
+          "trades": 114,
+          "win_rate_pct": 23.684210526315788
+        },
+        {
+          "window": "1y",
+          "start": "2025-07-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -69.12669696084586,
+          "max_drawdown_pct": -73.84058451739367,
+          "sharpe": -1.8744422603789535,
+          "trades": 235,
+          "win_rate_pct": 22.127659574468083
+        }
+      ],
+      "time_splits": [
+        {
+          "split": "development",
+          "start": "2025-06-16T02:30:00+00:00",
+          "end": "2026-01-02T05:00:00+00:00",
+          "return_pct": -63.151496472810045,
+          "max_drawdown_pct": -66.52141753353605,
+          "sharpe": -3.0395293245667188,
+          "trades": 129,
+          "win_rate_pct": 22.48062015503876
+        },
+        {
+          "split": "validation",
+          "start": "2026-01-02T05:15:00+00:00",
+          "end": "2026-04-12T06:30:00+00:00",
+          "return_pct": -18.670954952866758,
+          "max_drawdown_pct": -33.35978358591216,
+          "sharpe": -1.0367419504085529,
+          "trades": 65,
+          "win_rate_pct": 24.615384615384617
+        },
+        {
+          "split": "test",
+          "start": "2026-04-12T06:45:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 4.961969556802859,
+          "max_drawdown_pct": -22.48539618284844,
+          "sharpe": 0.5993893884475301,
+          "trades": 59,
+          "win_rate_pct": 25.423728813559322
+        }
+      ],
+      "viability_gate": {
+        "checks": {
+          "full_return_positive": false,
+          "full_maxdd_not_worse_than_35pct": false,
+          "minimum_30_closed_trades": true,
+          "development_positive": false,
+          "validation_positive": false,
+          "test_positive": true,
+          "recent_3m_positive": true,
+          "recent_6m_positive": false
+        },
+        "passed": false,
+        "passed_count": 3,
+        "total_count": 8
+      },
+      "open_position": null
+    },
+    {
+      "spec": {
+        "name": "compression_expansion_break_k2",
+        "mechanism": "compression_expansion_break",
+        "description": "过去16根出现通道宽度192根25分位压缩，宽度重新扩张时外轨穿越入场；中轨退出。",
+        "entry_delay_bars": 2
+      },
+      "metrics": {
+        "return_pct": -68.70891996073935,
+        "max_drawdown_pct": -73.81441677467271,
+        "sharpe": -1.6944281531238639,
+        "trades": 253,
+        "win_rate_pct": 25.691699604743086,
+        "profit_factor": 0.7030176415269616,
+        "direction_counts": {
+          "long": 124,
+          "short": 129
+        },
+        "exit_counts": {
+          "midline_exit_next_open": 236,
+          "stop_loss": 10,
+          "timeout_next_open": 7
+        },
+        "average_allocation": 1.0,
+        "max_allocation": 1.0,
+        "trading_cost_rate_total": 0.5060000000000003,
+        "funding_rate_total": -0.006447349999999978
+      },
+      "slices": [
+        {
+          "window": "1d",
+          "start": "2026-07-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -0.9779905919538701,
+          "max_drawdown_pct": -1.4067317449861227,
+          "sharpe": -21.600168640486494,
+          "trades": 1,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "7d",
+          "start": "2026-07-14T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 6.91024298992855,
+          "max_drawdown_pct": -4.63201461108399,
+          "sharpe": 6.987426196085401,
+          "trades": 4,
+          "win_rate_pct": 25.0
+        },
+        {
+          "window": "1m",
+          "start": "2026-06-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -10.43033460669136,
+          "max_drawdown_pct": -17.591713438238067,
+          "sharpe": -3.0941263857199472,
+          "trades": 20,
+          "win_rate_pct": 10.0
+        },
+        {
+          "window": "3m",
+          "start": "2026-04-22T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 3.728454683333826,
+          "max_drawdown_pct": -22.370755089411766,
+          "sharpe": 0.5457153390878348,
+          "trades": 52,
+          "win_rate_pct": 26.923076923076923
+        },
+        {
+          "window": "6m",
+          "start": "2026-01-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -21.390890592837874,
+          "max_drawdown_pct": -35.31628521954683,
+          "sharpe": -0.6085921198052233,
+          "trades": 114,
+          "win_rate_pct": 27.192982456140353
+        },
+        {
+          "window": "1y",
+          "start": "2025-07-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -70.32914406442433,
+          "max_drawdown_pct": -73.81441677467271,
+          "sharpe": -1.9894704853824154,
+          "trades": 235,
+          "win_rate_pct": 24.25531914893617
+        }
+      ],
+      "time_splits": [
+        {
+          "split": "development",
+          "start": "2025-06-16T02:30:00+00:00",
+          "end": "2026-01-02T05:00:00+00:00",
+          "return_pct": -61.86033936465268,
+          "max_drawdown_pct": -65.87480963043761,
+          "sharpe": -2.9828240936466117,
+          "trades": 129,
+          "win_rate_pct": 22.48062015503876
+        },
+        {
+          "split": "validation",
+          "start": "2026-01-02T05:15:00+00:00",
+          "end": "2026-04-12T06:30:00+00:00",
+          "return_pct": -17.77386767946877,
+          "max_drawdown_pct": -35.02932635824947,
+          "sharpe": -0.9806392340954797,
+          "trades": 65,
+          "win_rate_pct": 29.230769230769234
+        },
+        {
+          "split": "test",
+          "start": "2026-04-12T06:45:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -0.22221324988022095,
+          "max_drawdown_pct": -22.370755089411766,
+          "sharpe": 0.23939947542979215,
+          "trades": 59,
+          "win_rate_pct": 28.8135593220339
+        }
+      ],
+      "viability_gate": {
+        "checks": {
+          "full_return_positive": false,
+          "full_maxdd_not_worse_than_35pct": false,
+          "minimum_30_closed_trades": true,
+          "development_positive": false,
+          "validation_positive": false,
+          "test_positive": false,
+          "recent_3m_positive": true,
+          "recent_6m_positive": false
+        },
+        "passed": false,
+        "passed_count": 2,
+        "total_count": 8
+      },
+      "open_position": null
+    },
+    {
+      "spec": {
+        "name": "trend_pullback_mid_reclaim_k1",
+        "mechanism": "trend_pullback_mid_reclaim",
+        "description": "过去32根触及同向外轨，中轨32根斜率同向；价格回踩中轨后 reclaim 入场；再失守中轨退出。",
+        "entry_delay_bars": 1
+      },
+      "metrics": {
+        "return_pct": -77.17624907892579,
+        "max_drawdown_pct": -80.36750044377808,
+        "sharpe": -2.644899826541338,
+        "trades": 467,
+        "win_rate_pct": 13.704496788008566,
+        "profit_factor": 0.5763202950072327,
+        "direction_counts": {
+          "long": 232,
+          "short": 235
+        },
+        "exit_counts": {
+          "midline_exit_next_open": 461,
+          "timeout_next_open": 4,
+          "stop_loss": 2
+        },
+        "average_allocation": 1.0,
+        "max_allocation": 1.0,
+        "trading_cost_rate_total": 0.9350000000000007,
+        "funding_rate_total": 0.003639880000000002
+      },
+      "slices": [
+        {
+          "window": "1d",
+          "start": "2026-07-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 3.0718897919503663,
+          "max_drawdown_pct": -0.9088577565479428,
+          "sharpe": 26.247661338218425,
+          "trades": 0,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "7d",
+          "start": "2026-07-14T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -1.0571781539075897,
+          "max_drawdown_pct": -4.334384294699389,
+          "sharpe": -2.207481023146355,
+          "trades": 5,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "1m",
+          "start": "2026-06-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -22.04236970646145,
+          "max_drawdown_pct": -24.52460719333014,
+          "sharpe": -12.349452541669924,
+          "trades": 34,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "3m",
+          "start": "2026-04-22T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -33.1327726295939,
+          "max_drawdown_pct": -35.213237329604794,
+          "sharpe": -4.583955925052339,
+          "trades": 96,
+          "win_rate_pct": 8.333333333333332
+        },
+        {
+          "window": "6m",
+          "start": "2026-01-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -49.49478812800221,
+          "max_drawdown_pct": -52.54908248035154,
+          "sharpe": -3.101952967777539,
+          "trades": 201,
+          "win_rate_pct": 12.437810945273633
+        },
+        {
+          "window": "1y",
+          "start": "2025-07-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -75.59457089748362,
+          "max_drawdown_pct": -76.67118346893427,
+          "sharpe": -2.8714830703658714,
+          "trades": 425,
+          "win_rate_pct": 13.411764705882353
+        }
+      ],
+      "time_splits": [
+        {
+          "split": "development",
+          "start": "2025-06-16T02:30:00+00:00",
+          "end": "2026-01-02T05:00:00+00:00",
+          "return_pct": -54.72547711727047,
+          "max_drawdown_pct": -59.805234815365814,
+          "sharpe": -2.530858607487122,
+          "trades": 246,
+          "win_rate_pct": 13.821138211382115
+        },
+        {
+          "split": "validation",
+          "start": "2026-01-02T05:15:00+00:00",
+          "end": "2026-04-12T06:30:00+00:00",
+          "return_pct": -28.973540931361708,
+          "max_drawdown_pct": -36.399675169766724,
+          "sharpe": -2.4698361711329015,
+          "trades": 112,
+          "win_rate_pct": 16.071428571428573
+        },
+        {
+          "split": "test",
+          "start": "2026-04-12T06:45:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -29.023762584410452,
+          "max_drawdown_pct": -37.3785465112622,
+          "sharpe": -3.3484832211468096,
+          "trades": 109,
+          "win_rate_pct": 11.009174311926607
+        }
+      ],
+      "viability_gate": {
+        "checks": {
+          "full_return_positive": false,
+          "full_maxdd_not_worse_than_35pct": false,
+          "minimum_30_closed_trades": true,
+          "development_positive": false,
+          "validation_positive": false,
+          "test_positive": false,
+          "recent_3m_positive": false,
+          "recent_6m_positive": false
+        },
+        "passed": false,
+        "passed_count": 1,
+        "total_count": 8
+      },
+      "open_position": {
+        "direction": 1,
+        "entry_ts": "2026-07-20T14:30:00+00:00",
+        "entry_price": 60.9133556,
+        "entry_atr": 0.3300223214285715,
+        "allocation": 1.0,
+        "hold_bars": 70,
+        "pending_exit": null,
+        "unrealized_trade_return_pct": 3.07189
+      }
+    },
+    {
+      "spec": {
+        "name": "trend_pullback_mid_reclaim_k2",
+        "mechanism": "trend_pullback_mid_reclaim",
+        "description": "过去32根触及同向外轨，中轨32根斜率同向；价格回踩中轨后 reclaim 入场；再失守中轨退出。",
+        "entry_delay_bars": 2
+      },
+      "metrics": {
+        "return_pct": -83.09939759620306,
+        "max_drawdown_pct": -85.20429152438744,
+        "sharpe": -3.29388185170118,
+        "trades": 471,
+        "win_rate_pct": 14.64968152866242,
+        "profit_factor": 0.5124738802727613,
+        "direction_counts": {
+          "long": 235,
+          "short": 236
+        },
+        "exit_counts": {
+          "midline_exit_next_open": 462,
+          "stop_loss": 5,
+          "timeout_next_open": 4
+        },
+        "average_allocation": 1.0,
+        "max_allocation": 1.0,
+        "trading_cost_rate_total": 0.9430000000000007,
+        "funding_rate_total": 0.003479489999999999
+      },
+      "slices": [
+        {
+          "window": "1d",
+          "start": "2026-07-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": 3.0177491758517583,
+          "max_drawdown_pct": -0.908857756547965,
+          "sharpe": 25.722058005943055,
+          "trades": 0,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "7d",
+          "start": "2026-07-14T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -0.9852195300336208,
+          "max_drawdown_pct": -4.0848294243945205,
+          "sharpe": -2.1622159508540295,
+          "trades": 5,
+          "win_rate_pct": 0.0
+        },
+        {
+          "window": "1m",
+          "start": "2026-06-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -22.60224474484983,
+          "max_drawdown_pct": -25.01034964168435,
+          "sharpe": -12.633617516219847,
+          "trades": 35,
+          "win_rate_pct": 5.714285714285714
+        },
+        {
+          "window": "3m",
+          "start": "2026-04-22T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -33.57924581069535,
+          "max_drawdown_pct": -35.64581922600203,
+          "sharpe": -4.742906205810395,
+          "trades": 96,
+          "win_rate_pct": 10.416666666666668
+        },
+        {
+          "window": "6m",
+          "start": "2026-01-20T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -54.9383482848224,
+          "max_drawdown_pct": -57.789368325855406,
+          "sharpe": -3.770065682932873,
+          "trades": 203,
+          "win_rate_pct": 14.285714285714285
+        },
+        {
+          "window": "1y",
+          "start": "2025-07-21T08:00:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -80.23020782314968,
+          "max_drawdown_pct": -81.10232552708996,
+          "sharpe": -3.359660361733542,
+          "trades": 428,
+          "win_rate_pct": 14.953271028037381
+        }
+      ],
+      "time_splits": [
+        {
+          "split": "development",
+          "start": "2025-06-16T02:30:00+00:00",
+          "end": "2026-01-02T05:00:00+00:00",
+          "return_pct": -63.42087626862831,
+          "max_drawdown_pct": -66.94829142277969,
+          "sharpe": -3.357460086824447,
+          "trades": 247,
+          "win_rate_pct": 13.765182186234817
+        },
+        {
+          "split": "validation",
+          "start": "2026-01-02T05:15:00+00:00",
+          "end": "2026-04-12T06:30:00+00:00",
+          "return_pct": -31.977327153028256,
+          "max_drawdown_pct": -40.97887784020485,
+          "sharpe": -2.8492910465144563,
+          "trades": 114,
+          "win_rate_pct": 18.421052631578945
+        },
+        {
+          "split": "test",
+          "start": "2026-04-12T06:45:00+00:00",
+          "end": "2026-07-21T08:00:00+00:00",
+          "return_pct": -32.077260403827005,
+          "max_drawdown_pct": -37.7886716379583,
+          "sharpe": -3.8622065811482464,
+          "trades": 110,
+          "win_rate_pct": 12.727272727272727
+        }
+      ],
+      "viability_gate": {
+        "checks": {
+          "full_return_positive": false,
+          "full_maxdd_not_worse_than_35pct": false,
+          "minimum_30_closed_trades": true,
+          "development_positive": false,
+          "validation_positive": false,
+          "test_positive": false,
+          "recent_3m_positive": false,
+          "recent_6m_positive": false
+        },
+        "passed": false,
+        "passed_count": 1,
+        "total_count": 8
+      },
+      "open_position": {
+        "direction": 1,
+        "entry_ts": "2026-07-20T14:45:00+00:00",
+        "entry_price": 60.9453684,
+        "entry_atr": 0.32988541666666676,
+        "allocation": 1.0,
+        "hold_bars": 69,
+        "pending_exit": null,
+        "unrealized_trade_return_pct": 3.017749
+      }
+    }
+  ],
+  "gross_cost_ablation": {
+    "purpose": "Diagnostic only: K1 paths with fee and slippage set to zero; actual funding retained. Not eligible for selection.",
+    "runs": [
+      {
+        "spec": {
+          "name": "outer_break_mid_exit_k1_gross_cost_ablation",
+          "mechanism": "outer_break_mid_exit",
+          "description": "外轨首次穿越入场；收盘回到中轨另一侧后下一根 open 退出。",
+          "entry_delay_bars": 1
+        },
+        "metrics": {
+          "return_pct": -88.96088139658424,
+          "max_drawdown_pct": -92.17020001531372,
+          "sharpe": -1.9130523059342708,
+          "trades": 539,
+          "win_rate_pct": 24.860853432282003,
+          "profit_factor": 0.7435408811887492,
+          "direction_counts": {
+            "long": 268,
+            "short": 271
+          },
+          "exit_counts": {
+            "midline_exit_next_open": 482,
+            "stop_loss": 43,
+            "timeout_next_open": 14
+          },
+          "average_allocation": 1.0,
+          "max_allocation": 1.0,
+          "trading_cost_rate_total": 0.0,
+          "funding_rate_total": -0.002554260000000006
+        },
+        "slices": [
+          {
+            "window": "1d",
+            "start": "2026-07-20T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 0.6912599137872899,
+            "max_drawdown_pct": -1.3312910427088376,
+            "sharpe": 5.851261745629105,
+            "trades": 1,
+            "win_rate_pct": 0.0
+          },
+          {
+            "window": "7d",
+            "start": "2026-07-14T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 10.263743920931434,
+            "max_drawdown_pct": -5.187476872921182,
+            "sharpe": 8.277827470941773,
+            "trades": 7,
+            "win_rate_pct": 57.14285714285714
+          },
+          {
+            "window": "1m",
+            "start": "2026-06-21T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -9.871236300563591,
+            "max_drawdown_pct": -24.27756367146998,
+            "sharpe": -1.5408095906081136,
+            "trades": 40,
+            "win_rate_pct": 20.0
+          },
+          {
+            "window": "3m",
+            "start": "2026-04-22T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 33.69236846804953,
+            "max_drawdown_pct": -36.98408877701805,
+            "sharpe": 1.853784320162292,
+            "trades": 109,
+            "win_rate_pct": 32.11009174311927
+          },
+          {
+            "window": "6m",
+            "start": "2026-01-20T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -16.775078963012213,
+            "max_drawdown_pct": -60.73059045930871,
+            "sharpe": -0.029919746124531067,
+            "trades": 237,
+            "win_rate_pct": 27.004219409282697
+          },
+          {
+            "window": "1y",
+            "start": "2025-07-21T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -85.41326714301275,
+            "max_drawdown_pct": -89.70584905534358,
+            "sharpe": -1.804835780114397,
+            "trades": 496,
+            "win_rate_pct": 24.596774193548388
+          }
+        ],
+        "time_splits": [
+          {
+            "split": "development",
+            "start": "2025-06-16T02:30:00+00:00",
+            "end": "2026-01-02T05:00:00+00:00",
+            "return_pct": -86.79935181001464,
+            "max_drawdown_pct": -87.21779898492069,
+            "sharpe": -3.649385438167346,
+            "trades": 280,
+            "win_rate_pct": 22.5
+          },
+          {
+            "split": "validation",
+            "start": "2026-01-02T05:15:00+00:00",
+            "end": "2026-04-12T06:30:00+00:00",
+            "return_pct": -34.247726646209955,
+            "max_drawdown_pct": -59.024502782291535,
+            "sharpe": -1.4177047641856488,
+            "trades": 136,
+            "win_rate_pct": 25.0
+          },
+          {
+            "split": "test",
+            "start": "2026-04-12T06:45:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 27.182796372989905,
+            "max_drawdown_pct": -36.98408877701805,
+            "sharpe": 1.5042275922591652,
+            "trades": 123,
+            "win_rate_pct": 30.081300813008134
+          }
+        ],
+        "viability_gate": {
+          "checks": {
+            "full_return_positive": false,
+            "full_maxdd_not_worse_than_35pct": false,
+            "minimum_30_closed_trades": true,
+            "development_positive": false,
+            "validation_positive": false,
+            "test_positive": true,
+            "recent_3m_positive": true,
+            "recent_6m_positive": false
+          },
+          "passed": false,
+          "passed_count": 3,
+          "total_count": 8
+        },
+        "open_position": {
+          "direction": 1,
+          "entry_ts": "2026-07-20T15:45:00+00:00",
+          "entry_price": 61.585,
+          "entry_atr": 0.3303437500000001,
+          "allocation": 1.0,
+          "hold_bars": 65,
+          "pending_exit": null,
+          "unrealized_trade_return_pct": 2.04984
+        }
+      },
+      {
+        "spec": {
+          "name": "compression_expansion_break_k1_gross_cost_ablation",
+          "mechanism": "compression_expansion_break",
+          "description": "过去16根出现通道宽度192根25分位压缩，宽度重新扩张时外轨穿越入场；中轨退出。",
+          "entry_delay_bars": 1
+        },
+        "metrics": {
+          "return_pct": -36.14969744972376,
+          "max_drawdown_pct": -61.24417538976121,
+          "sharpe": -0.4741746287813557,
+          "trades": 253,
+          "win_rate_pct": 27.66798418972332,
+          "profit_factor": 0.898503757160623,
+          "direction_counts": {
+            "long": 124,
+            "short": 129
+          },
+          "exit_counts": {
+            "midline_exit_next_open": 236,
+            "stop_loss": 10,
+            "timeout_next_open": 7
+          },
+          "average_allocation": 1.0,
+          "max_allocation": 1.0,
+          "trading_cost_rate_total": 0.0,
+          "funding_rate_total": -0.006543209999999979
+        },
+        "slices": [
+          {
+            "window": "1d",
+            "start": "2026-07-20T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -1.3312910427088487,
+            "max_drawdown_pct": -1.3312910427088487,
+            "sharpe": -23.97732889949837,
+            "trades": 1,
+            "win_rate_pct": 0.0
+          },
+          {
+            "window": "7d",
+            "start": "2026-07-14T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 6.691057649604892,
+            "max_drawdown_pct": -4.66679803730573,
+            "sharpe": 6.745748654965497,
+            "trades": 4,
+            "win_rate_pct": 25.0
+          },
+          {
+            "window": "1m",
+            "start": "2026-06-21T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -6.882757163105513,
+            "max_drawdown_pct": -14.4176817659746,
+            "sharpe": -1.7750619341647782,
+            "trades": 20,
+            "win_rate_pct": 10.0
+          },
+          {
+            "window": "3m",
+            "start": "2026-04-22T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 25.719595185826694,
+            "max_drawdown_pct": -18.47886614355845,
+            "sharpe": 2.0111263717774333,
+            "trades": 52,
+            "win_rate_pct": 30.76923076923077
+          },
+          {
+            "window": "6m",
+            "start": "2026-01-20T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 14.073104885811038,
+            "max_drawdown_pct": -29.549972150128657,
+            "sharpe": 0.7534893000645424,
+            "trades": 114,
+            "win_rate_pct": 28.947368421052634
+          },
+          {
+            "window": "1y",
+            "start": "2025-07-21T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -40.41419371397603,
+            "max_drawdown_pct": -61.24417538976121,
+            "sharpe": -0.6745880088829909,
+            "trades": 235,
+            "win_rate_pct": 25.957446808510635
+          }
+        ],
+        "time_splits": [
+          {
+            "split": "development",
+            "start": "2025-06-16T02:30:00+00:00",
+            "end": "2026-01-02T05:00:00+00:00",
+            "return_pct": -47.19027674045837,
+            "max_drawdown_pct": -55.33940265040085,
+            "sharpe": -1.850051536419845,
+            "trades": 129,
+            "win_rate_pct": 24.8062015503876
+          },
+          {
+            "split": "validation",
+            "start": "2026-01-02T05:15:00+00:00",
+            "end": "2026-04-12T06:30:00+00:00",
+            "return_pct": -2.543149146703616,
+            "max_drawdown_pct": -29.549972150128657,
+            "sharpe": 0.11966576010871884,
+            "trades": 65,
+            "win_rate_pct": 32.30769230769231
+          },
+          {
+            "split": "test",
+            "start": "2026-04-12T06:45:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 24.06140464688773,
+            "max_drawdown_pct": -18.47886614355845,
+            "sharpe": 1.7683314806014772,
+            "trades": 59,
+            "win_rate_pct": 28.8135593220339
+          }
+        ],
+        "viability_gate": {
+          "checks": {
+            "full_return_positive": false,
+            "full_maxdd_not_worse_than_35pct": false,
+            "minimum_30_closed_trades": true,
+            "development_positive": false,
+            "validation_positive": false,
+            "test_positive": true,
+            "recent_3m_positive": true,
+            "recent_6m_positive": true
+          },
+          "passed": false,
+          "passed_count": 4,
+          "total_count": 8
+        },
+        "open_position": null
+      },
+      {
+        "spec": {
+          "name": "trend_pullback_mid_reclaim_k1_gross_cost_ablation",
+          "mechanism": "trend_pullback_mid_reclaim",
+          "description": "过去32根触及同向外轨，中轨32根斜率同向；价格回踩中轨后 reclaim 入场；再失守中轨退出。",
+          "entry_delay_bars": 1
+        },
+        "metrics": {
+          "return_pct": -15.520142879293441,
+          "max_drawdown_pct": -31.601669696654433,
+          "sharpe": -0.09608728410300492,
+          "trades": 467,
+          "win_rate_pct": 18.41541755888651,
+          "profit_factor": 0.9491076477931295,
+          "direction_counts": {
+            "long": 232,
+            "short": 235
+          },
+          "exit_counts": {
+            "midline_exit_next_open": 461,
+            "timeout_next_open": 4,
+            "stop_loss": 2
+          },
+          "average_allocation": 1.0,
+          "max_allocation": 1.0,
+          "trading_cost_rate_total": 0.0,
+          "funding_rate_total": 0.003639880000000002
+        },
+        "slices": [
+          {
+            "window": "1d",
+            "start": "2026-07-20T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 3.2163348827498606,
+            "max_drawdown_pct": -0.9088577565479539,
+            "sharpe": 27.490102868304653,
+            "trades": 0,
+            "win_rate_pct": 0.0
+          },
+          {
+            "window": "7d",
+            "start": "2026-07-14T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": 0.4785497496145874,
+            "max_drawdown_pct": -2.9917468223503163,
+            "sharpe": 1.1770593234166418,
+            "trades": 5,
+            "win_rate_pct": 0.0
+          },
+          {
+            "window": "1m",
+            "start": "2026-06-21T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -14.130908670852227,
+            "max_drawdown_pct": -17.45093837534605,
+            "sharpe": -7.593567071933088,
+            "trades": 34,
+            "win_rate_pct": 0.0
+          },
+          {
+            "window": "3m",
+            "start": "2026-04-22T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -12.412730122205195,
+            "max_drawdown_pct": -24.67900301883964,
+            "sharpe": -1.405835333538342,
+            "trades": 96,
+            "win_rate_pct": 10.416666666666668
+          },
+          {
+            "window": "6m",
+            "start": "2026-01-20T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -11.225885534874902,
+            "max_drawdown_pct": -24.67900301883964,
+            "sharpe": -0.37215419318662435,
+            "trades": 201,
+            "win_rate_pct": 17.412935323383085
+          },
+          {
+            "window": "1y",
+            "start": "2025-07-21T08:00:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -19.805990441853215,
+            "max_drawdown_pct": -31.601669696654433,
+            "sharpe": -0.25928406774509244,
+            "trades": 425,
+            "win_rate_pct": 18.58823529411765
+          }
+        ],
+        "time_splits": [
+          {
+            "split": "development",
+            "start": "2025-06-16T02:30:00+00:00",
+            "end": "2026-01-02T05:00:00+00:00",
+            "return_pct": -9.85463366831637,
+            "max_drawdown_pct": -25.105544740818498,
+            "sharpe": -0.10773048464681817,
+            "trades": 246,
+            "win_rate_pct": 18.69918699186992
+          },
+          {
+            "split": "validation",
+            "start": "2026-01-02T05:15:00+00:00",
+            "end": "2026-04-12T06:30:00+00:00",
+            "return_pct": -2.802334090993075,
+            "max_drawdown_pct": -18.154337578109647,
+            "sharpe": 0.006026494592992998,
+            "trades": 112,
+            "win_rate_pct": 22.321428571428573
+          },
+          {
+            "split": "test",
+            "start": "2026-04-12T06:45:00+00:00",
+            "end": "2026-07-21T08:00:00+00:00",
+            "return_pct": -3.5829306424452034,
+            "max_drawdown_pct": -24.67900301883964,
+            "sharpe": -0.200731542567915,
+            "trades": 109,
+            "win_rate_pct": 13.761467889908257
+          }
+        ],
+        "viability_gate": {
+          "checks": {
+            "full_return_positive": false,
+            "full_maxdd_not_worse_than_35pct": true,
+            "minimum_30_closed_trades": true,
+            "development_positive": false,
+            "validation_positive": false,
+            "test_positive": false,
+            "recent_3m_positive": false,
+            "recent_6m_positive": false
+          },
+          "passed": false,
+          "passed_count": 2,
+          "total_count": 8
+        },
+        "open_position": {
+          "direction": 1,
+          "entry_ts": "2026-07-20T14:30:00+00:00",
+          "entry_price": 60.889,
+          "entry_atr": 0.3300223214285715,
+          "allocation": 1.0,
+          "hold_bars": 70,
+          "pending_exit": null,
+          "unrealized_trade_return_pct": 3.216335
+        }
+      }
+    ]
+  }
+}

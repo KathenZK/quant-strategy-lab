@@ -1,0 +1,15 @@
+# BTC-30M-Trend-Continuation 机器产物
+
+- [原生 30m 数据质量报告](btc_binance_30m_long_data_quality_latest.json)
+- [低频压缩搜索摘要](btc_30m_tc_summary_2026-07-21.json)
+- [低频压缩候选表](btc_30m_tc_candidates_2026-07-21.csv)
+- [低频观察逐笔交易](btc_30m_tc_selected_trades_2026-07-21.csv)
+- [低频观察滚动窗口](btc_30m_tc_rolling_windows_2026-07-21.csv)
+- [通道趋势搜索摘要](btc_30m_channel_trends_summary_2026-07-21.json)
+- [通道趋势候选表](btc_30m_channel_trends_candidates_2026-07-21.csv)
+- [通道趋势选中项逐笔交易](btc_30m_channel_trends_selected_trades_2026-07-21.csv)
+- [通道趋势滚动窗口](btc_30m_channel_trends_rolling_2026-07-21.csv)
+- [扩展压缩搜索摘要](btc_30m_expanded_compression_summary_2026-07-21.json)
+- [扩展压缩候选表](btc_30m_expanded_compression_candidates_2026-07-21.csv)
+- [扩展压缩选中项逐笔交易](btc_30m_expanded_compression_selected_trades_2026-07-21.csv)
+- [扩展压缩滚动窗口](btc_30m_expanded_compression_rolling_2026-07-21.csv)

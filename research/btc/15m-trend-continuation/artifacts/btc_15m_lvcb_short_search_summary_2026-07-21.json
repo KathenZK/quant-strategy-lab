@@ -1,0 +1,552 @@
+{
+  "artifacts": {
+    "candidates": "research/btc/15m-trend-continuation/artifacts/btc_15m_lvcb_short_search_candidates_2026-07-21.csv",
+    "rolling_windows": "research/btc/15m-trend-continuation/artifacts/btc_15m_lvcb_short_search_rolling_2026-07-21.csv",
+    "trades": "research/btc/15m-trend-continuation/artifacts/btc_15m_lvcb_short_search_trades_2026-07-21.csv"
+  },
+  "contamination_disclosure": "The short mechanism is a direction-specific extension of an existing full-history-designed LVCB family. No historical segment is claimed as untouched OOS; only data after short_prospective_oos_start is fresh.",
+  "data": {
+    "audit_path": "research/btc/15m-trend-continuation/artifacts/btc_binance_15m_long_data_quality_latest.json",
+    "audit_sha256": "a1733842782cc77497e34c365aa15b0bf592ba98d64632e3e27a01e3391e478f",
+    "checks": {
+      "funding_duplicates": true,
+      "funding_gap": true,
+      "funding_nonempty": true,
+      "funding_nulls": true,
+      "market_closed": true,
+      "market_continuity": true,
+      "market_duplicates": true,
+      "market_identity": true,
+      "market_nulls": true,
+      "market_rows": true
+    },
+    "end_exclusive": "2026-07-21T07:15:00+00:00",
+    "funding_rows": 7180,
+    "market_rows": 229757,
+    "start": "2020-01-01T00:00:00+00:00"
+  },
+  "direction_ablation": {
+    "both_same_signal": {
+      "annual_return_pct": -14.716573056418458,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 153,
+      "max_drawdown_pct": -38.16238428957025,
+      "profit_factor": 0.7847566517512993,
+      "return_pct": -33.409717509075755,
+      "sharpe": -1.0417739437601936,
+      "short_trades": 105,
+      "start": "2024-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.11588196822497174,
+      "top_trade_positive_pnl_share": 0.0451427907468791,
+      "trades": 258,
+      "win_rate": 0.40310077519379844
+    },
+    "long_only_same_signal": {
+      "annual_return_pct": -10.714482065612685,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 153,
+      "max_drawdown_pct": -33.0903545667995,
+      "profit_factor": 0.7460446742753143,
+      "return_pct": -25.1343992763165,
+      "sharpe": -1.0163694343404237,
+      "short_trades": 0,
+      "start": "2024-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.1734023866124895,
+      "top_trade_positive_pnl_share": 0.06457978575408796,
+      "trades": 153,
+      "win_rate": 0.38562091503267976
+    },
+    "short_only": {
+      "annual_return_pct": -4.482351766998526,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -18.411002803540523,
+      "profit_factor": 0.8453884207423281,
+      "return_pct": -11.053565526445341,
+      "sharpe": -0.4297177894604984,
+      "short_trades": 105,
+      "start": "2024-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.2237016161311336,
+      "top_trade_positive_pnl_share": 0.10753808343269629,
+      "trades": 105,
+      "win_rate": 0.42857142857142855
+    }
+  },
+  "execution": {
+    "adverse_slippage_per_fill": 0.0004,
+    "allocation": 1.0,
+    "entry": "closed 15m short signal, next 15m open",
+    "fee_per_fill": 0.001,
+    "funding": "official audited historical events",
+    "side_mode": "short",
+    "stop": "entry-bar active, gap-aware, adverse slippage",
+    "time_exit": "max_hold reached at 15m bar open"
+  },
+  "family": "BTC-15M-Trend-Continuation",
+  "payload_sha256": "b36c8c9469e71e6a9122bd4625b9322e3062877931323e0b0d5db66bf19ed01c",
+  "positive_year_count": 3,
+  "provenance": {
+    "code_path": "research/btc/15m-trend-continuation/scripts/research_btc_15m_lvcb_short_search.py",
+    "code_sha256": "cf62bde2edf160ecc018edfb4704e784e1baa6afa1af5a773c0b2a83594212e8",
+    "engine_path": "research/btc/15m-trend-continuation/scripts/research_btc_15m_low_vol_compression_breakout.py",
+    "engine_sha256": "581326b35f376a4e5d397bd8255dad0425eab763939f707f5ed1eaf7b1c3c026",
+    "fill_policy": "none",
+    "formula_version": "btc-15m-lvcb-short-v1-search",
+    "generation_time_utc": "2026-07-21T08:38:32.330091+00:00",
+    "null_policy": "rolling warmup nulls suppress signals",
+    "source_columns": [
+      "ts",
+      "open",
+      "high",
+      "low",
+      "close",
+      "funding_rate"
+    ]
+  },
+  "recent_slices": {
+    "1d": {
+      "annual_return_pct": 0.0,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": 0.0,
+      "profit_factor": 0.0,
+      "return_pct": 0.0,
+      "sharpe": 0.0,
+      "short_trades": 0,
+      "start": "2026-07-20T07:15:00+00:00",
+      "top3_trade_positive_pnl_share": 1.0,
+      "top_trade_positive_pnl_share": 1.0,
+      "trades": 0,
+      "win_rate": 0.0
+    },
+    "1m": {
+      "annual_return_pct": -5.018303727932283,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -2.2097614355644946,
+      "profit_factor": 0.7837133997627876,
+      "return_pct": -0.422278356317074,
+      "sharpe": -0.9552165394317942,
+      "short_trades": 2,
+      "start": "2026-06-21T07:15:00+00:00",
+      "top3_trade_positive_pnl_share": 1.0,
+      "top_trade_positive_pnl_share": 1.0,
+      "trades": 2,
+      "win_rate": 0.5
+    },
+    "1y": {
+      "annual_return_pct": 3.2031965849657285,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -9.390500631060627,
+      "profit_factor": 1.2014041590368842,
+      "return_pct": 3.2031965849657285,
+      "sharpe": 0.4497198742034835,
+      "short_trades": 36,
+      "start": "2025-07-21T07:15:00+00:00",
+      "top3_trade_positive_pnl_share": 0.3075189264019842,
+      "top_trade_positive_pnl_share": 0.11288210340289066,
+      "trades": 36,
+      "win_rate": 0.5
+    },
+    "3m": {
+      "annual_return_pct": -8.942005975814936,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -6.073031924441641,
+      "profit_factor": 0.7531576539033218,
+      "return_pct": -2.2832888894505965,
+      "sharpe": -1.0487504017583442,
+      "short_trades": 16,
+      "start": "2026-04-22T07:15:00+00:00",
+      "top3_trade_positive_pnl_share": 0.6962235169449669,
+      "top_trade_positive_pnl_share": 0.2936627930170935,
+      "trades": 16,
+      "win_rate": 0.375
+    },
+    "6m": {
+      "annual_return_pct": -2.061416614910949,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -9.390500631060583,
+      "profit_factor": 0.9210887168185579,
+      "return_pct": -1.0219555265369884,
+      "sharpe": -0.2061687810742792,
+      "short_trades": 22,
+      "start": "2026-01-22T07:15:00+00:00",
+      "top3_trade_positive_pnl_share": 0.5259898937226668,
+      "top_trade_positive_pnl_share": 0.19291602521011966,
+      "trades": 22,
+      "win_rate": 0.45454545454545453
+    },
+    "7d": {
+      "annual_return_pct": 0.0,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": 0.0,
+      "profit_factor": 0.0,
+      "return_pct": 0.0,
+      "sharpe": 0.0,
+      "short_trades": 0,
+      "start": "2026-07-14T07:15:00+00:00",
+      "top3_trade_positive_pnl_share": 1.0,
+      "top_trade_positive_pnl_share": 1.0,
+      "trades": 0,
+      "win_rate": 0.0
+    }
+  },
+  "remaining_blockers": [
+    "no untouched historical OOS; short prospective begins at frozen end",
+    "BTC 1m data absent, so 15m phase gate is incomplete",
+    "CPCV, bar-path Monte Carlo, and runner audit not completed"
+  ],
+  "research_candidate": false,
+  "research_identity": "BTC-15M-LVCB-SHORT-SEARCH-2026-07-21",
+  "research_role": "failed short-only diagnostic",
+  "reused_diagnostic": {
+    "annual_return_pct": -4.482351766998526,
+    "end_exclusive": "2026-07-21T07:15:00+00:00",
+    "long_trades": 0,
+    "max_drawdown_pct": -18.411002803540523,
+    "profit_factor": 0.8453884207423281,
+    "return_pct": -11.053565526445341,
+    "sharpe": -0.4297177894604984,
+    "short_trades": 105,
+    "start": "2024-01-01T00:00:00+00:00",
+    "top3_trade_positive_pnl_share": 0.2237016161311336,
+    "top_trade_positive_pnl_share": 0.10753808343269629,
+    "trades": 105,
+    "win_rate": 0.42857142857142855
+  },
+  "reused_diagnostic_2x_cost": {
+    "annual_return_pct": -15.51073124655834,
+    "end_exclusive": "2026-07-21T07:15:00+00:00",
+    "long_trades": 0,
+    "max_drawdown_pct": -37.73456457471431,
+    "profit_factor": 0.5238639005214701,
+    "return_pct": -34.982136346333924,
+    "sharpe": -1.6526003713512425,
+    "short_trades": 105,
+    "start": "2024-01-01T00:00:00+00:00",
+    "top3_trade_positive_pnl_share": 0.2635984130153316,
+    "top_trade_positive_pnl_share": 0.12940711033133664,
+    "trades": 105,
+    "win_rate": 0.38095238095238093
+  },
+  "rolling_180d": {
+    "count": 13,
+    "positive_count": 4,
+    "positive_ratio": 0.3076923076923077
+  },
+  "selected": {
+    "complete_gate": false,
+    "config": {
+      "fee_per_fill": 0.001,
+      "max_hold_bars": 48,
+      "side_mode": "short",
+      "signal": {
+        "atr_cap": 0.004,
+        "breakout_window": 192,
+        "compression_lookback": 8,
+        "compression_quantile": 0.3,
+        "ema_fast": 48,
+        "ema_slow": 192,
+        "slope_lag": 8
+      },
+      "slippage_per_fill": 0.0004,
+      "stop_atr": 6.0
+    },
+    "data_end": "2026-07-21T07:15:00+00:00",
+    "development_gate": false,
+    "gate_failures": [
+      "train_sample",
+      "validation_pf",
+      "train_top_trade_concentration"
+    ],
+    "stage": "exit",
+    "strategy_id": "lvcb-d7353834bbe0",
+    "stress_2x_train": {},
+    "stress_2x_validation": {},
+    "stress_gate": false,
+    "train": {
+      "annual_return_pct": 0.533124843736088,
+      "end_exclusive": "2022-01-01T00:00:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -11.437099856005794,
+      "profit_factor": 1.1072700787869811,
+      "return_pct": 1.070564229376214,
+      "sharpe": 0.11727910284978049,
+      "short_trades": 17,
+      "start": "2020-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.653411793542308,
+      "top_trade_positive_pnl_share": 0.4231316900960124,
+      "trades": 17,
+      "win_rate": 0.47058823529411764
+    },
+    "validation": {
+      "annual_return_pct": 0.2684051364951534,
+      "end_exclusive": "2024-01-01T00:00:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -20.995930676819096,
+      "profit_factor": 1.0360562278708256,
+      "return_pct": 0.5375306861632678,
+      "sharpe": 0.07608194749778496,
+      "short_trades": 75,
+      "start": "2022-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.3306876400959279,
+      "top_trade_positive_pnl_share": 0.1355909383038482,
+      "trades": 75,
+      "win_rate": 0.4
+    }
+  },
+  "selection_protocol": "Short signal and exit parameters were ranked only on train/validation after development and 2x-cost gates. Reused diagnostic and recent slices were revealed once for the selected configuration.",
+  "splits": {
+    "reused_diagnostic": [
+      "2024-01-01T00:00:00+00:00",
+      "2026-07-21T07:15:00+00:00"
+    ],
+    "short_prospective_oos_start": "2026-07-21T07:15:00+00:00",
+    "train": [
+      "2020-01-01T00:00:00+00:00",
+      "2022-01-01T00:00:00+00:00"
+    ],
+    "validation": [
+      "2022-01-01T00:00:00+00:00",
+      "2024-01-01T00:00:00+00:00"
+    ]
+  },
+  "status": "explore / not promoted / not live-ready",
+  "universe": {
+    "atr_caps": [
+      0.003,
+      0.0035,
+      0.004,
+      0.005
+    ],
+    "breakout_windows": [
+      48,
+      96,
+      192
+    ],
+    "complete_gate_count": 0,
+    "compression_lookbacks": [
+      8,
+      16,
+      32
+    ],
+    "compression_quantiles": [
+      0.2,
+      0.3,
+      0.4,
+      0.5
+    ],
+    "ema_pairs": [
+      [
+        48,
+        192
+      ],
+      [
+        96,
+        384
+      ]
+    ],
+    "exit_parent_count": 12,
+    "exit_profiles": [
+      [
+        2.0,
+        48
+      ],
+      [
+        2.0,
+        96
+      ],
+      [
+        2.0,
+        192
+      ],
+      [
+        2.0,
+        384
+      ],
+      [
+        3.0,
+        48
+      ],
+      [
+        3.0,
+        96
+      ],
+      [
+        3.0,
+        192
+      ],
+      [
+        3.0,
+        384
+      ],
+      [
+        4.0,
+        48
+      ],
+      [
+        4.0,
+        96
+      ],
+      [
+        4.0,
+        192
+      ],
+      [
+        4.0,
+        384
+      ],
+      [
+        5.0,
+        48
+      ],
+      [
+        5.0,
+        96
+      ],
+      [
+        5.0,
+        192
+      ],
+      [
+        5.0,
+        384
+      ],
+      [
+        6.0,
+        48
+      ],
+      [
+        6.0,
+        96
+      ],
+      [
+        6.0,
+        192
+      ],
+      [
+        6.0,
+        384
+      ]
+    ],
+    "signal_complete_gate_count": 0,
+    "signal_count": 576,
+    "signal_development_gate_count": 0,
+    "slope_lags": [
+      8,
+      16
+    ],
+    "total_evaluated": 804
+  },
+  "year_metrics": {
+    "2020": {
+      "annual_return_pct": 4.427506117070323,
+      "end_exclusive": "2021-01-01T00:00:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -9.766718111373685,
+      "profit_factor": 1.4547809891799393,
+      "return_pct": 4.439901660466372,
+      "sharpe": 0.5535979753133706,
+      "short_trades": 15,
+      "start": "2020-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.653411793542308,
+      "top_trade_positive_pnl_share": 0.4231316900960124,
+      "trades": 15,
+      "win_rate": 0.5333333333333333
+    },
+    "2021": {
+      "annual_return_pct": -3.2261016886475757,
+      "end_exclusive": "2022-01-01T00:00:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -3.5608175966886035,
+      "profit_factor": 0.0,
+      "return_pct": -3.2261016886475757,
+      "sharpe": -1.8071653181615395,
+      "short_trades": 2,
+      "start": "2021-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 1.0,
+      "top_trade_positive_pnl_share": 1.0,
+      "trades": 2,
+      "win_rate": 0.0
+    },
+    "2022": {
+      "annual_return_pct": 4.786906234301558,
+      "end_exclusive": "2023-01-01T00:00:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -15.87886710163211,
+      "profit_factor": 1.1743603167181136,
+      "return_pct": 4.786906234301558,
+      "sharpe": 0.4613417126837877,
+      "short_trades": 45,
+      "start": "2022-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.4430537847689091,
+      "top_trade_positive_pnl_share": 0.18166411777126273,
+      "trades": 45,
+      "win_rate": 0.37777777777777777
+    },
+    "2023": {
+      "annual_return_pct": -4.055254325990665,
+      "end_exclusive": "2024-01-01T00:00:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -9.643779449723777,
+      "profit_factor": 0.7693924373387264,
+      "return_pct": -4.055254325990665,
+      "sharpe": -0.5131077667606776,
+      "short_trades": 30,
+      "start": "2023-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.5196733087474912,
+      "top_trade_positive_pnl_share": 0.1880358178134188,
+      "trades": 30,
+      "win_rate": 0.43333333333333335
+    },
+    "2024": {
+      "annual_return_pct": -16.404438093692498,
+      "end_exclusive": "2025-01-01T00:00:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -18.15689380979747,
+      "profit_factor": 0.451836661200761,
+      "return_pct": -16.445465371321234,
+      "sharpe": -1.7645364955808323,
+      "short_trades": 38,
+      "start": "2024-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.4614675364438617,
+      "top_trade_positive_pnl_share": 0.17316409221388787,
+      "trades": 38,
+      "win_rate": 0.34210526315789475
+    },
+    "2025": {
+      "annual_return_pct": 6.611443111682225,
+      "end_exclusive": "2026-01-01T00:00:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -10.09118402188378,
+      "profit_factor": 1.2876306850521333,
+      "return_pct": 6.611443111682225,
+      "sharpe": 0.6983613375225542,
+      "short_trades": 42,
+      "start": "2025-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.4065061975892039,
+      "top_trade_positive_pnl_share": 0.19868710574357767,
+      "trades": 42,
+      "win_rate": 0.47619047619047616
+    },
+    "2026": {
+      "annual_return_pct": -0.2690538493075767,
+      "end_exclusive": "2026-07-21T07:15:00+00:00",
+      "long_trades": 0,
+      "max_drawdown_pct": -9.390500631060627,
+      "profit_factor": 1.0012819543731908,
+      "return_pct": -0.14847621993454574,
+      "sharpe": 0.011134695553652763,
+      "short_trades": 25,
+      "start": "2026-01-01T00:00:00+00:00",
+      "top3_trade_positive_pnl_share": 0.44656919212697005,
+      "top_trade_positive_pnl_share": 0.1637870889813197,
+      "trades": 25,
+      "win_rate": 0.48
+    }
+  }
+}

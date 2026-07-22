@@ -1,0 +1,708 @@
+{
+  "family": "HYPE-30M-Keltner-Trend-Breakout",
+  "version": "HYPE-30M-Keltner-Trend-Breakout-V3",
+  "status": "registered / not promoted / not live-ready",
+  "run_date": "2026-07-21",
+  "generated_at_utc": "2026-07-21T09:12:00.522806+00:00",
+  "purpose": "Frozen-parameter latest validity and prospective extension audit; no parameter search and no status promotion.",
+  "frozen_until": "2026-07-13 06:07:00+00:00",
+  "prospective_first_30m_bar_label": "2026-07-13 06:00:00+00:00",
+  "data": {
+    "source_timeframe": "15m",
+    "source_note": "Audited standard 15m bars aggregated losslessly to complete 30m/1h bars; frozen 1m-input metrics must pass exact parity.",
+    "start": "2025-05-30 10:30:00+00:00",
+    "end": "2026-07-21 08:45:00+00:00",
+    "rows": 40026,
+    "audit": {
+      "market": "Binance USD-M Futures",
+      "symbol": "HYPE/USDT:USDT",
+      "timeframe": "15m",
+      "rows": 40023,
+      "start": "2025-05-30T10:30:00+00:00",
+      "end": "2026-07-21T08:00:00+00:00",
+      "duplicate_rows": 0,
+      "missing_bars": 0,
+      "critical_nulls": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0,
+        "vwap": 0,
+        "is_closed": 0,
+        "source": 0,
+        "timeframe": 0
+      },
+      "invalid_ohlcv_rows": 0,
+      "non_closed_rows": 0,
+      "source_values": [
+        "binance_futures_kline_api"
+      ],
+      "timeframe_values": [
+        "15m"
+      ],
+      "normalized_duplicate_stats": {
+        "policy": "error",
+        "key_columns": [
+          "ts",
+          "exchange",
+          "symbol",
+          "market_type",
+          "timeframe"
+        ],
+        "duplicate_rows": 0,
+        "duplicate_key_groups": 0,
+        "dropped_rows": 0
+      },
+      "upstream_raw_normalized_audit": {
+        "path": "research/hype/15m-ema-trend-breakout/artifacts/hype_binance_15m_data_quality.json",
+        "sha256": "86d998f7b6d4feceb546a4b797c04ae83b0e8d5e250e655d1863aa7da3eab62a",
+        "generated_at_utc": "2026-07-21T08:25:49.816977+00:00",
+        "raw_normalized_mismatch": {
+          "open": 0,
+          "high": 0,
+          "low": 0,
+          "close": 0,
+          "volume": 0,
+          "quote_volume": 0,
+          "trade_count": 0
+        },
+        "blocker_count": 0
+      },
+      "blocker_count": 0,
+      "funding": {
+        "rows": 2501,
+        "start": "2025-05-30T12:00:00+00:00",
+        "end": "2026-07-21T08:00:00+00:00",
+        "non_zero_aligned_rows": 2501,
+        "aligned_sum_rate": 0.09892656,
+        "duplicate_stats": {
+          "policy": "error",
+          "key_columns": [
+            "ts",
+            "exchange",
+            "symbol",
+            "market_type"
+          ],
+          "duplicate_rows": 0,
+          "duplicate_key_groups": 0,
+          "dropped_rows": 0
+        }
+      }
+    },
+    "tail_refresh": {
+      "source": "binance_futures_kline_api",
+      "server_time": "2026-07-21 09:11:53.291000+00:00",
+      "standard_end": "2026-07-21 08:00:00+00:00",
+      "latest_closed_bar": "2026-07-21 08:45:00+00:00",
+      "expected_latest_closed_bar": "2026-07-21 08:45:00+00:00",
+      "overlap_rows": 5,
+      "overlap_mismatch_cells": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "added_rows": 3,
+      "missing_bars_after_extension": 0
+    },
+    "aggregation": {
+      "30m": {
+        "freq": "30min",
+        "phase_min": 0,
+        "total_bins": 20013,
+        "complete_bins": 20013,
+        "dropped_incomplete_bins": 0,
+        "start": "2025-05-30 10:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00"
+      },
+      "1h": {
+        "freq": "60min",
+        "phase_min": 0,
+        "total_bins": 10007,
+        "complete_bins": 10006,
+        "dropped_incomplete_bins": 1,
+        "start": "2025-05-30 11:00:00+00:00",
+        "end": "2026-07-21 08:00:00+00:00"
+      }
+    }
+  },
+  "frozen_1m_reference": {
+    "quality": {
+      "exchange": "binance",
+      "market_type": "perp",
+      "symbol": "HYPE/USDT:USDT",
+      "timeframe": "1m",
+      "source": [
+        "binance_futures_kline_api"
+      ],
+      "start": "2025-05-30 10:30:00+00:00",
+      "end": "2026-07-13 06:06:00+00:00",
+      "rows": 588697,
+      "expected_rows": 588697,
+      "missing_1m_bars": 0,
+      "first_missing_1m_bars": [],
+      "duplicate_ts_rows": 0,
+      "invalid_ohlc_rows": 0,
+      "critical_null_rows": 0
+    },
+    "aggregation": {
+      "30m": {
+        "freq": "30min",
+        "phase_min": 0,
+        "total_bins": 19624,
+        "complete_bins": 19623,
+        "dropped_incomplete_bins": 1,
+        "start": "2025-05-30 10:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00"
+      },
+      "1h": {
+        "freq": "60min",
+        "phase_min": 0,
+        "total_bins": 9813,
+        "complete_bins": 9811,
+        "dropped_incomplete_bins": 2,
+        "start": "2025-05-30 11:00:00+00:00",
+        "end": "2026-07-13 05:00:00+00:00"
+      }
+    }
+  },
+  "funding": {
+    "rows": 2501,
+    "start": "2025-05-30 12:00:00.006000+00:00",
+    "end": "2026-07-21 08:00:00+00:00",
+    "null_rates": 0
+  },
+  "strategy_config": {
+    "keltner_ema": 10,
+    "keltner_atr": 10,
+    "keltner_mult": 2.0,
+    "h1_ema_fast": 16,
+    "h1_ema_slow": 44,
+    "h1_slope_lag": 5,
+    "leverage_atr": 84,
+    "atr_target_pct": 0.027,
+    "min_leverage": 0.0,
+    "max_leverage": 3.0,
+    "take_profit_pct": 0.1,
+    "stop_loss_pct": 0.025,
+    "max_hold_bars": 30
+  },
+  "execution_config": {
+    "fee_rate": 0.001,
+    "slippage_rate": 0.0004,
+    "extra_stop_slippage_rate": 0.0,
+    "entry_delay_bars": 0,
+    "bracket_delay_bars": 0,
+    "include_funding": true,
+    "signal_mode": "full",
+    "bracket_atr_column": "atr96",
+    "dynamic_tp_atr_mult": null,
+    "dynamic_sl_atr_mult": null,
+    "dynamic_tp_floor_pct": 0.0,
+    "dynamic_tp_cap_pct": 10.0,
+    "dynamic_sl_floor_pct": 0.0,
+    "dynamic_sl_cap_pct": 10.0
+  },
+  "frozen_reference_parity": {
+    "metrics": {
+      "return_pct": 6328.984548925989,
+      "max_drawdown_pct": -22.67774230986097,
+      "sharpe": 5.049636858716653,
+      "trades": 78,
+      "win_rate_pct": 67.94871794871796,
+      "avg_leverage": 2.7226114525878984,
+      "worst_trade_pct": -8.459137606805722,
+      "exit_counts": {
+        "stop_market": 16,
+        "target": 8,
+        "time_close": 53,
+        "window_end": 1
+      },
+      "profit_factor": 4.311287009555644,
+      "avg_trade_pct": 5.973864815705669,
+      "funding_pnl_pct": -11.400121998159365,
+      "gap_stop_count": 0,
+      "both_hit_count": 0
+    },
+    "slices": [
+      {
+        "label": "1d",
+        "start": "2026-07-12 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": -2.447750713109087,
+        "max_drawdown_pct": -2.447750713109087,
+        "closed_trades": 1,
+        "win_rate_pct": 0.0
+      },
+      {
+        "label": "7d",
+        "start": "2026-07-06 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": -5.990650332017,
+        "max_drawdown_pct": -7.520598648726773,
+        "closed_trades": 2,
+        "win_rate_pct": 0.0
+      },
+      {
+        "label": "1m",
+        "start": "2026-06-13 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": 29.524435069006504,
+        "max_drawdown_pct": -13.580190445736562,
+        "closed_trades": 7,
+        "win_rate_pct": 42.857142857142854
+      },
+      {
+        "label": "3m",
+        "start": "2026-04-14 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": 198.93480906945885,
+        "max_drawdown_pct": -13.580190445736562,
+        "closed_trades": 21,
+        "win_rate_pct": 61.904761904761905
+      },
+      {
+        "label": "6m",
+        "start": "2026-01-14 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": 1301.9494465673956,
+        "max_drawdown_pct": -13.580190445736562,
+        "closed_trades": 39,
+        "win_rate_pct": 69.23076923076923
+      },
+      {
+        "label": "1y",
+        "start": "2025-07-13 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": 4255.968154869486,
+        "max_drawdown_pct": -20.382124457191132,
+        "closed_trades": 71,
+        "win_rate_pct": 67.6056338028169
+      }
+    ],
+    "side_metrics": {
+      "long": {
+        "trades": 47,
+        "win_rate_pct": 74.46808510638297,
+        "sum_trade_return_pct": 399.74404370757804,
+        "profit_factor": 7.634750814909369
+      },
+      "short": {
+        "trades": 31,
+        "win_rate_pct": 58.06451612903226,
+        "sum_trade_return_pct": 66.2174119174641,
+        "profit_factor": 1.822892492249556
+      }
+    },
+    "diagnostics": {
+      "start": "2025-06-01 04:00:00+00:00",
+      "end": "2026-07-13 06:07:00+00:00",
+      "rejected_warmup_entries": 0,
+      "skipped_signals_in_position": 95,
+      "same_bar_conflicts": 0,
+      "force_close": true,
+      "execution": {
+        "fee_rate": 0.001,
+        "slippage_rate": 0.0004,
+        "extra_stop_slippage_rate": 0.0,
+        "entry_delay_bars": 0,
+        "bracket_delay_bars": 0,
+        "include_funding": true,
+        "signal_mode": "full",
+        "bracket_atr_column": "atr96",
+        "dynamic_tp_atr_mult": null,
+        "dynamic_sl_atr_mult": null,
+        "dynamic_tp_floor_pct": 0.0,
+        "dynamic_tp_cap_pct": 10.0,
+        "dynamic_sl_floor_pct": 0.0,
+        "dynamic_sl_cap_pct": 10.0
+      }
+    }
+  },
+  "frozen_cross_input": {
+    "metrics": {
+      "return_pct": 6328.984548925989,
+      "max_drawdown_pct": -22.67774230986097,
+      "sharpe": 5.049636858716653,
+      "trades": 78,
+      "win_rate_pct": 67.94871794871796,
+      "avg_leverage": 2.7226114525878984,
+      "worst_trade_pct": -8.459137606805722,
+      "exit_counts": {
+        "stop_market": 16,
+        "target": 8,
+        "time_close": 53,
+        "window_end": 1
+      },
+      "profit_factor": 4.311287009555644,
+      "avg_trade_pct": 5.973864815705669,
+      "funding_pnl_pct": -11.400121998159365,
+      "gap_stop_count": 0,
+      "both_hit_count": 0
+    },
+    "slices": [
+      {
+        "label": "1d",
+        "start": "2026-07-12 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": -2.447750713109087,
+        "max_drawdown_pct": -2.447750713109087,
+        "closed_trades": 1,
+        "win_rate_pct": 0.0
+      },
+      {
+        "label": "7d",
+        "start": "2026-07-06 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": -5.990650332017,
+        "max_drawdown_pct": -7.520598648726773,
+        "closed_trades": 2,
+        "win_rate_pct": 0.0
+      },
+      {
+        "label": "1m",
+        "start": "2026-06-13 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": 29.524435069006504,
+        "max_drawdown_pct": -13.580190445736562,
+        "closed_trades": 7,
+        "win_rate_pct": 42.857142857142854
+      },
+      {
+        "label": "3m",
+        "start": "2026-04-14 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": 198.93480906945885,
+        "max_drawdown_pct": -13.580190445736562,
+        "closed_trades": 21,
+        "win_rate_pct": 61.904761904761905
+      },
+      {
+        "label": "6m",
+        "start": "2026-01-14 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": 1301.9494465673956,
+        "max_drawdown_pct": -13.580190445736562,
+        "closed_trades": 39,
+        "win_rate_pct": 69.23076923076923
+      },
+      {
+        "label": "1y",
+        "start": "2025-07-13 05:30:00+00:00",
+        "end": "2026-07-13 05:30:00+00:00",
+        "return_pct": 4255.968154869486,
+        "max_drawdown_pct": -20.382124457191132,
+        "closed_trades": 71,
+        "win_rate_pct": 67.6056338028169
+      }
+    ],
+    "side_metrics": {
+      "long": {
+        "trades": 47,
+        "win_rate_pct": 74.46808510638297,
+        "sum_trade_return_pct": 399.74404370757804,
+        "profit_factor": 7.634750814909369
+      },
+      "short": {
+        "trades": 31,
+        "win_rate_pct": 58.06451612903226,
+        "sum_trade_return_pct": 66.2174119174641,
+        "profit_factor": 1.822892492249556
+      }
+    },
+    "diagnostics": {
+      "start": "2025-06-01 04:00:00+00:00",
+      "end": "2026-07-13 06:00:00+00:00",
+      "rejected_warmup_entries": 0,
+      "skipped_signals_in_position": 95,
+      "same_bar_conflicts": 0,
+      "force_close": true,
+      "execution": {
+        "fee_rate": 0.001,
+        "slippage_rate": 0.0004,
+        "extra_stop_slippage_rate": 0.0,
+        "entry_delay_bars": 0,
+        "bracket_delay_bars": 0,
+        "include_funding": true,
+        "signal_mode": "full",
+        "bracket_atr_column": "atr96",
+        "dynamic_tp_atr_mult": null,
+        "dynamic_sl_atr_mult": null,
+        "dynamic_tp_floor_pct": 0.0,
+        "dynamic_tp_cap_pct": 10.0,
+        "dynamic_sl_floor_pct": 0.0,
+        "dynamic_sl_cap_pct": 10.0
+      }
+    },
+    "parity": {
+      "common_30m_bars": 19623,
+      "ohlc_mismatch_cells": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0
+      },
+      "ohlc_max_abs_diff": {
+        "open": 0.0,
+        "high": 0.0,
+        "low": 0.0,
+        "close": 0.0
+      },
+      "trade_paths_equal": true,
+      "reference_trades": 78,
+      "candidate_trades": 78,
+      "first_trade_path_differences": []
+    },
+    "return_difference_pp": 0.0
+  },
+  "latest_full": {
+    "metrics": {
+      "return_pct": 8186.915787988943,
+      "max_drawdown_pct": -22.67774230986097,
+      "sharpe": 5.184264685557284,
+      "trades": 80,
+      "win_rate_pct": 68.75,
+      "avg_leverage": 2.729546166273201,
+      "worst_trade_pct": -8.459137606805722,
+      "exit_counts": {
+        "stop_market": 16,
+        "target": 8,
+        "time_close": 56
+      },
+      "profit_factor": 4.525868065580108,
+      "avg_trade_pct": 6.166399943276403,
+      "funding_pnl_pct": -22.280408325746752,
+      "gap_stop_count": 0,
+      "both_hit_count": 0
+    },
+    "slices": [
+      {
+        "label": "1d",
+        "start": "2026-07-20 08:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 0.0,
+        "max_drawdown_pct": 0.0,
+        "closed_trades": 0,
+        "win_rate_pct": 0.0
+      },
+      {
+        "label": "7d",
+        "start": "2026-07-14 08:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 18.10742749185714,
+        "max_drawdown_pct": -7.25934553344314,
+        "closed_trades": 2,
+        "win_rate_pct": 50.0
+      },
+      {
+        "label": "1m",
+        "start": "2026-06-21 08:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 21.542891656925377,
+        "max_drawdown_pct": -12.730457658565575,
+        "closed_trades": 6,
+        "win_rate_pct": 50.0
+      },
+      {
+        "label": "3m",
+        "start": "2026-04-22 08:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 247.87662530239473,
+        "max_drawdown_pct": -13.580190445736562,
+        "closed_trades": 22,
+        "win_rate_pct": 63.63636363636363
+      },
+      {
+        "label": "6m",
+        "start": "2026-01-22 08:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 1381.7031492960098,
+        "max_drawdown_pct": -13.580190445736562,
+        "closed_trades": 38,
+        "win_rate_pct": 68.42105263157895
+      },
+      {
+        "label": "1y",
+        "start": "2025-07-21 08:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 6017.964892214043,
+        "max_drawdown_pct": -17.843200737791697,
+        "closed_trades": 72,
+        "win_rate_pct": 69.44444444444444
+      }
+    ],
+    "side_metrics": {
+      "long": {
+        "trades": 48,
+        "win_rate_pct": 72.91666666666666,
+        "sum_trade_return_pct": 398.1032209544921,
+        "profit_factor": 7.432341751256854
+      },
+      "short": {
+        "trades": 32,
+        "win_rate_pct": 62.5,
+        "sum_trade_return_pct": 95.20877450762015,
+        "profit_factor": 2.2202914300467156
+      }
+    },
+    "diagnostics": {
+      "start": "2025-06-01 04:00:00+00:00",
+      "end": "2026-07-21 09:00:00+00:00",
+      "rejected_warmup_entries": 0,
+      "skipped_signals_in_position": 97,
+      "same_bar_conflicts": 0,
+      "force_close": false,
+      "execution": {
+        "fee_rate": 0.001,
+        "slippage_rate": 0.0004,
+        "extra_stop_slippage_rate": 0.0,
+        "entry_delay_bars": 0,
+        "bracket_delay_bars": 0,
+        "include_funding": true,
+        "signal_mode": "full",
+        "bracket_atr_column": "atr96",
+        "dynamic_tp_atr_mult": null,
+        "dynamic_sl_atr_mult": null,
+        "dynamic_tp_floor_pct": 0.0,
+        "dynamic_tp_cap_pct": 10.0,
+        "dynamic_sl_floor_pct": 0.0,
+        "dynamic_sl_cap_pct": 10.0
+      }
+    }
+  },
+  "frozen_continuation": {
+    "label": "frozen_continuation",
+    "start": "2026-07-13 06:00:00+00:00",
+    "end": "2026-07-21 08:30:00+00:00",
+    "return_pct": 28.3433912793428,
+    "max_drawdown_pct": -7.25934553344314,
+    "closed_trades": 3,
+    "win_rate_pct": 66.66666666666666
+  },
+  "clean_prospective": {
+    "metrics": {
+      "return_pct": 18.107427491857187,
+      "max_drawdown_pct": -7.259345533443151,
+      "sharpe": 7.235977115390348,
+      "trades": 2,
+      "win_rate_pct": 50.0,
+      "avg_leverage": 3.0,
+      "worst_trade_pct": -1.6408227530859576,
+      "exit_counts": {
+        "time_close": 2
+      },
+      "profit_factor": 12.236354905185276,
+      "avg_trade_pct": 9.218433395088505,
+      "funding_pnl_pct": -0.13242660500283962,
+      "gap_stop_count": 0,
+      "both_hit_count": 0
+    },
+    "slices": [
+      {
+        "label": "1d",
+        "start": "2026-07-20 08:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 0.0,
+        "max_drawdown_pct": 0.0,
+        "closed_trades": 0,
+        "win_rate_pct": 0.0
+      },
+      {
+        "label": "7d",
+        "start": "2026-07-14 08:30:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 18.107427491857187,
+        "max_drawdown_pct": -7.259345533443151,
+        "closed_trades": 2,
+        "win_rate_pct": 50.0
+      },
+      {
+        "label": "1m",
+        "start": "2026-07-13 06:00:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 18.107427491857187,
+        "max_drawdown_pct": -7.259345533443151,
+        "closed_trades": 2,
+        "win_rate_pct": 50.0
+      },
+      {
+        "label": "3m",
+        "start": "2026-07-13 06:00:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 18.107427491857187,
+        "max_drawdown_pct": -7.259345533443151,
+        "closed_trades": 2,
+        "win_rate_pct": 50.0
+      },
+      {
+        "label": "6m",
+        "start": "2026-07-13 06:00:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 18.107427491857187,
+        "max_drawdown_pct": -7.259345533443151,
+        "closed_trades": 2,
+        "win_rate_pct": 50.0
+      },
+      {
+        "label": "1y",
+        "start": "2026-07-13 06:00:00+00:00",
+        "end": "2026-07-21 08:30:00+00:00",
+        "return_pct": 18.107427491857187,
+        "max_drawdown_pct": -7.259345533443151,
+        "closed_trades": 2,
+        "win_rate_pct": 50.0
+      }
+    ],
+    "side_metrics": {
+      "long": {
+        "trades": 1,
+        "win_rate_pct": 0.0,
+        "sum_trade_return_pct": -1.6408227530859576,
+        "profit_factor": 0.0
+      },
+      "short": {
+        "trades": 1,
+        "win_rate_pct": 100.0,
+        "sum_trade_return_pct": 20.077689543262967,
+        "profit_factor": null
+      }
+    },
+    "diagnostics": {
+      "start": "2026-07-13 06:00:00+00:00",
+      "end": "2026-07-21 09:00:00+00:00",
+      "rejected_warmup_entries": 0,
+      "skipped_signals_in_position": 2,
+      "same_bar_conflicts": 0,
+      "force_close": false,
+      "execution": {
+        "fee_rate": 0.001,
+        "slippage_rate": 0.0004,
+        "extra_stop_slippage_rate": 0.0,
+        "entry_delay_bars": 0,
+        "bracket_delay_bars": 0,
+        "include_funding": true,
+        "signal_mode": "full",
+        "bracket_atr_column": "atr96",
+        "dynamic_tp_atr_mult": null,
+        "dynamic_sl_atr_mult": null,
+        "dynamic_tp_floor_pct": 0.0,
+        "dynamic_tp_cap_pct": 10.0,
+        "dynamic_sl_floor_pct": 0.0,
+        "dynamic_sl_cap_pct": 10.0
+      }
+    }
+  },
+  "new_closed_trades_after_freeze": 2,
+  "known_unchanged_blockers": [
+    "30m non-native phase gate failed",
+    "15m/1h/2h timeframe transfer failed",
+    "close-location risk contribution not proven",
+    "live-executable runner parity not completed"
+  ]
+}

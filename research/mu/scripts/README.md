@@ -1,11 +1,15 @@
-# MU-HYPE-XFER Research Scripts
+# MU-HYPE-XFER 研究脚本
 
-This directory contains one-off reproduction, alignment, transfer, and report-generation scripts for `MU-HYPE-XFER`.
+本目录保存只服务于 `MU-HYPE-XFER` 的复现、对齐、迁移和报告生成脚本。
 
-Rules:
+当前入口：
 
-- Keep scripts here when they only serve MU transfer research.
-- Write durable Markdown conclusions back to `research/mu/`.
-- Write retained JSON, CSV, and HTML outputs to `../artifacts/`.
-- Promote code to `src/strategy_lab/` only if it becomes reusable data infrastructure or a narrow dataset exporter.
-- `mu_hype_xfer_kernel.py` is a frozen local snapshot of the HYPE EMA transfer kernel used by MU scripts. Do not import evolving `research/hype/.../scripts/` modules directly from MU scripts.
+- [`refresh_and_audit_mu_binance_15m.py`](refresh_and_audit_mu_binance_15m.py)：刷新并审计 Binance MUUSDT 15m OHLCV 与 funding。
+- [`audit_mu_v14_latest.py`](audit_mu_v14_latest.py)：按严格执行口径重跑 V14 最新分片与自然前向段。
+- [`research_mu_v35_session_aware.py`](research_mu_v35_session_aware.py)：历史 V1-V14 时段研究与 legacy 台账生成器。
+- [`research_mu_polygon_hype_v35_transfer.py`](research_mu_polygon_hype_v35_transfer.py)：Polygon 真股交叉验证。
+- [`compare_mu_binance_polygon_alignment.py`](compare_mu_binance_polygon_alignment.py)：Binance / Polygon 对齐检查。
+- [`compare_mu_binance_yahoo_alignment.py`](compare_mu_binance_yahoo_alignment.py)：Binance / Yahoo 对齐检查。
+- [`mu_hype_xfer_kernel.py`](mu_hype_xfer_kernel.py)：冻结的本地 HYPE EMA 迁移内核。
+
+脚本只服务 MU 研究时保留在本目录；长期结论写回上级 Markdown，保留的 JSON/CSV/HTML 写入 [`../artifacts/`](../artifacts/README.md)。只有成为可复用数据基础设施后才可提升到 `src/strategy_lab/`。不得从持续变化的 HYPE 家族研究脚本直接导入实现。

@@ -1,0 +1,384 @@
+{
+  "all_since_train_start": {
+    "bars": 9533,
+    "closed_trades": 59,
+    "end_exclusive": "2026-07-20T07:15:00+00:00",
+    "exit_reasons": {
+      "stop": 56,
+      "stop_gap": 3
+    },
+    "exit_stop_conflicts": 0,
+    "exposure": 0.07353403965173608,
+    "gap_stops": 3,
+    "max_drawdown": -0.1187948691259485,
+    "minimum_equity": 0.976641468720142,
+    "open_position_at_end": false,
+    "profit_factor": 1.3180095916310988,
+    "return": 0.09511876795017793,
+    "start": "2026-04-12T00:00:00+00:00",
+    "win_rate": 0.4406779661016949
+  },
+  "causality_audit": {
+    "checkpoints": [
+      "2026-06-03T14:45:00+00:00",
+      "2026-06-24T08:45:00+00:00",
+      "2026-07-09T22:15:00+00:00"
+    ],
+    "columns": [
+      "ema96",
+      "ema384",
+      "ema384_slope16",
+      "atr96",
+      "donchian_high_96",
+      "donchian_low_48"
+    ],
+    "mismatch_count": 0,
+    "mismatches": [],
+    "pass": true
+  },
+  "config_reconstructed": {
+    "allocation": 1.0,
+    "entry_window": 192,
+    "fee_per_fill": 0.001,
+    "slippage_per_fill": 0.0004,
+    "stop_atr": 3.0,
+    "use_ema_regime": true
+  },
+  "data": {
+    "end": "2026-07-20T07:00:00+00:00",
+    "end_exclusive_requested": null,
+    "funding_bars": 315,
+    "market_fingerprint": "8b2a6a7e7aa07410d1d56aef5d81b331127bc8e2fe53eaa32171a99d05fea7cf",
+    "market_rows": 9959,
+    "quality": {
+      "checks": {
+        "contract_trading": true,
+        "contract_type": true,
+        "funding_blockers": true,
+        "ohlcv_blockers": true,
+        "underlying": true
+      },
+      "path": "research/mu/artifacts/mu_binance_15m_data_quality_latest.json",
+      "sha256": "8b9a3b837f4e8426a95e01449e61709ed639b32cffb09d41af0f6800f1a0f753"
+    },
+    "start": "2026-04-07T13:30:00+00:00"
+  },
+  "family": "MU-15M-Donchian-Trend-Breakout",
+  "final_audit": {
+    "bars": 2429,
+    "benchmark": {
+      "max_drawdown": -0.35872540449213675,
+      "return": -0.3031391886586349
+    },
+    "closed_trades": 2,
+    "double_cost_return": -0.04665196098085922,
+    "end_exclusive": "2026-07-20T07:15:00+00:00",
+    "excess_return_vs_buy_hold": 0.2618467148993576,
+    "exit_reasons": {
+      "stop": 2
+    },
+    "exit_stop_conflicts": 0,
+    "exposure": 0.026759983532317826,
+    "gap_stops": 0,
+    "gate_pass": false,
+    "max_drawdown": -0.04930313344609216,
+    "minimum_equity": 0.9587075262407228,
+    "open_position_at_end": false,
+    "profit_factor": 0.0,
+    "return": -0.04129247375927725,
+    "start": "2026-06-25T00:00:00+00:00",
+    "win_rate": 0.0
+  },
+  "fixed_turtle_final_audit": {
+    "config": {
+      "allocation": 1.0,
+      "entry_window": 96,
+      "fee_per_fill": 0.001,
+      "slippage_per_fill": 0.0004,
+      "stop_atr": 4.0,
+      "use_ema_regime": false
+    },
+    "metrics": {
+      "bars": 2429,
+      "closed_trades": 14,
+      "end_exclusive": "2026-07-20T07:15:00+00:00",
+      "exit_reasons": {
+        "stop": 13,
+        "stop_gap": 1
+      },
+      "exit_stop_conflicts": 1,
+      "exposure": 0.11445039110745163,
+      "gap_stops": 1,
+      "max_drawdown": -0.15682760769956183,
+      "minimum_equity": 0.8502770408268603,
+      "open_position_at_end": false,
+      "profit_factor": 0.14386035383885892,
+      "return": -0.1497229591731397,
+      "start": "2026-06-25T00:00:00+00:00",
+      "win_rate": 0.14285714285714285
+    }
+  },
+  "generated_at_utc": "2026-07-20T08:23:56.915281+00:00",
+  "limitations": [
+    "Final audit is a one-time retrospective holdout, not future prospective evidence.",
+    "Binance MUUSDT history is shorter than 6 months.",
+    "Passing this audit cannot satisfy repository CPCV/MC/phase/promotion gates."
+  ],
+  "payload_sha256": "97b57a486893794837541359c6a201abf5a21758d6fb1af4edc0ed291b233435",
+  "recent_slices": {
+    "1D": {
+      "bars": 96,
+      "buy_hold": {
+        "max_drawdown": -0.031998817805664936,
+        "return": 0.011355422393119152
+      },
+      "closed_trades": 0,
+      "coverage_complete": true,
+      "end_exclusive": "2026-07-20T07:15:00+00:00",
+      "excess_return_vs_buy_hold": -0.011355422393119152,
+      "exit_reasons": {},
+      "exit_stop_conflicts": 0,
+      "exposure": 0.0,
+      "gap_stops": 0,
+      "max_drawdown": 0.0,
+      "minimum_equity": 1.0,
+      "open_position_at_end": false,
+      "profit_factor": 0.0,
+      "return": 0.0,
+      "start": "2026-07-19T07:15:00+00:00",
+      "win_rate": 0.0
+    },
+    "1M": {
+      "bars": 2880,
+      "buy_hold": {
+        "max_drawdown": -0.3591865232327133,
+        "return": -0.2634970913099227
+      },
+      "closed_trades": 5,
+      "coverage_complete": true,
+      "end_exclusive": "2026-07-20T07:15:00+00:00",
+      "excess_return_vs_buy_hold": 0.23699252778635038,
+      "exit_reasons": {
+        "stop": 5
+      },
+      "exit_stop_conflicts": 0,
+      "exposure": 0.03333333333333333,
+      "gap_stops": 0,
+      "max_drawdown": -0.060889807288572184,
+      "minimum_equity": 0.9734954364764277,
+      "open_position_at_end": false,
+      "profit_factor": 0.36784433508080283,
+      "return": -0.026504563523572333,
+      "start": "2026-06-20T07:15:00+00:00",
+      "win_rate": 0.6
+    },
+    "1Y": {
+      "bars": 9533,
+      "buy_hold": {
+        "max_drawdown": -0.3591865232327123,
+        "return": 0.9014737675428446
+      },
+      "closed_trades": 59,
+      "coverage_complete": false,
+      "end_exclusive": "2026-07-20T07:15:00+00:00",
+      "excess_return_vs_buy_hold": -0.8063549995926667,
+      "exit_reasons": {
+        "stop": 56,
+        "stop_gap": 3
+      },
+      "exit_stop_conflicts": 0,
+      "exposure": 0.07353403965173608,
+      "gap_stops": 3,
+      "max_drawdown": -0.1187948691259485,
+      "minimum_equity": 0.976641468720142,
+      "open_position_at_end": false,
+      "profit_factor": 1.3180095916310988,
+      "return": 0.09511876795017793,
+      "start": "2026-04-12T00:00:00+00:00",
+      "win_rate": 0.4406779661016949
+    },
+    "3M": {
+      "bars": 8640,
+      "buy_hold": {
+        "max_drawdown": -0.35918652323271283,
+        "return": 0.7384222061258126
+      },
+      "closed_trades": 55,
+      "coverage_complete": true,
+      "end_exclusive": "2026-07-20T07:15:00+00:00",
+      "excess_return_vs_buy_hold": -0.7172589399353919,
+      "exit_reasons": {
+        "stop": 52,
+        "stop_gap": 3
+      },
+      "exit_stop_conflicts": 0,
+      "exposure": 0.0707175925925926,
+      "gap_stops": 3,
+      "max_drawdown": -0.11879486912594861,
+      "minimum_equity": 0.9106869695622308,
+      "open_position_at_end": false,
+      "profit_factor": 1.095513190947933,
+      "return": 0.021163266190420638,
+      "start": "2026-04-21T07:15:00+00:00",
+      "win_rate": 0.41818181818181815
+    },
+    "6M": {
+      "bars": 9533,
+      "buy_hold": {
+        "max_drawdown": -0.3591865232327123,
+        "return": 0.9014737675428446
+      },
+      "closed_trades": 59,
+      "coverage_complete": false,
+      "end_exclusive": "2026-07-20T07:15:00+00:00",
+      "excess_return_vs_buy_hold": -0.8063549995926667,
+      "exit_reasons": {
+        "stop": 56,
+        "stop_gap": 3
+      },
+      "exit_stop_conflicts": 0,
+      "exposure": 0.07353403965173608,
+      "gap_stops": 3,
+      "max_drawdown": -0.1187948691259485,
+      "minimum_equity": 0.976641468720142,
+      "open_position_at_end": false,
+      "profit_factor": 1.3180095916310988,
+      "return": 0.09511876795017793,
+      "start": "2026-04-12T00:00:00+00:00",
+      "win_rate": 0.4406779661016949
+    },
+    "7D": {
+      "bars": 672,
+      "buy_hold": {
+        "max_drawdown": -0.19637946019202668,
+        "return": -0.07391796795884409
+      },
+      "closed_trades": 1,
+      "coverage_complete": true,
+      "end_exclusive": "2026-07-20T07:15:00+00:00",
+      "excess_return_vs_buy_hold": 0.05445094334914902,
+      "exit_reasons": {
+        "stop": 1
+      },
+      "exit_stop_conflicts": 0,
+      "exposure": 0.044642857142857144,
+      "gap_stops": 0,
+      "max_drawdown": -0.01946702460969507,
+      "minimum_equity": 0.9805329753903049,
+      "open_position_at_end": false,
+      "profit_factor": 0.0,
+      "return": -0.01946702460969507,
+      "start": "2026-07-13T07:15:00+00:00",
+      "win_rate": 0.0
+    },
+    "ALL": {
+      "bars": 9533,
+      "buy_hold": {
+        "max_drawdown": -0.3591865232327123,
+        "return": 0.9014737675428446
+      },
+      "closed_trades": 59,
+      "coverage_complete": true,
+      "end_exclusive": "2026-07-20T07:15:00+00:00",
+      "excess_return_vs_buy_hold": -0.8063549995926667,
+      "exit_reasons": {
+        "stop": 56,
+        "stop_gap": 3
+      },
+      "exit_stop_conflicts": 0,
+      "exposure": 0.07353403965173608,
+      "gap_stops": 3,
+      "max_drawdown": -0.1187948691259485,
+      "minimum_equity": 0.976641468720142,
+      "open_position_at_end": false,
+      "profit_factor": 1.3180095916310988,
+      "return": 0.09511876795017793,
+      "start": "2026-04-12T00:00:00+00:00",
+      "win_rate": 0.4406779661016949
+    }
+  },
+  "search_freeze": {
+    "path": "research/mu/15m-donchian-trend-breakout/artifacts/mu_15m_dtb_search_freeze_2026-07-20.json",
+    "payload_sha256": "27d4b3e793bb6c80bc4ae614e803e40e75889dcc9977f6c38027d58fd0fb420d",
+    "sha256": "1f6fe92e12ee1eb316d245f6ea4254918817961d0c912ae45601cd543984d872"
+  },
+  "selected": {
+    "allocation": 1.0,
+    "base_gate": true,
+    "candidate_gate": true,
+    "conservative_score": 0.03756578442920233,
+    "entry_window": 192,
+    "exit_window": 96,
+    "fee_per_fill": 0.001,
+    "neighborhood_joint_positive": 2,
+    "neighborhood_positive_ratio": 0.6666666666666666,
+    "neighborhood_size": 3,
+    "slippage_per_fill": 0.0004,
+    "stop_atr": 3.0,
+    "strategy_id": "dtb-5e79abef48cf",
+    "stress_train_return": 0.06887022366108941,
+    "stress_validation_return": 0.008886581346640332,
+    "train_max_drawdown": -0.10280826575617874,
+    "train_profit_factor": 2.0214186121607716,
+    "train_return": 0.19416031600973382,
+    "train_trades": 40,
+    "train_win_rate": 0.45,
+    "use_ema_regime": true,
+    "validation_max_drawdown": -0.029918632752584107,
+    "validation_profit_factor": 3.777058154613211,
+    "validation_return": 0.03756578442920233,
+    "validation_trades": 10,
+    "validation_win_rate": 0.8
+  },
+  "status": "explore / not promoted / not live-ready",
+  "v14_strict_comparison": {
+    "all": {
+      "buy_hold_max_drawdown_pct": -35.2791,
+      "buy_hold_return_pct": 77.7993,
+      "closed_trades": 20,
+      "coverage_complete": true,
+      "end": "2026-07-20 07:00:00+00:00",
+      "excess_return_vs_buy_hold_pct": 120.7311,
+      "exit_reasons": {
+        "stop_loss": 5,
+        "take_profit": 15
+      },
+      "fee_drag_equity": 0.23164086,
+      "funding_drag_equity": 0.0962694,
+      "gap_stops": 0,
+      "gap_takes": 0,
+      "intrabar_conflicts": 0,
+      "max_drawdown_pct": -29.463,
+      "minimum_equity": 0.91299141,
+      "open_position_at_end": false,
+      "requested_start": "2026-04-24 05:30:00+00:00",
+      "return_pct": 198.5304,
+      "sharpe": 4.5608,
+      "start": "2026-04-24 05:30:00+00:00",
+      "win_rate_pct": 75.0
+    },
+    "new_data_forward_extension": {
+      "buy_hold_max_drawdown_pct": -35.2791,
+      "buy_hold_return_pct": -19.8199,
+      "closed_trades": 2,
+      "end": "2026-07-20 07:00:00+00:00",
+      "exit_reasons": {
+        "stop_loss": 1,
+        "take_profit": 1
+      },
+      "fee_drag_equity": 0.01285148,
+      "funding_drag_equity": 3.435e-05,
+      "gap_stops": 0,
+      "gap_takes": 0,
+      "intrabar_conflicts": 0,
+      "max_drawdown_pct": -18.1607,
+      "minimum_equity": 0.94064423,
+      "open_position_at_end": false,
+      "return_pct": -4.8303,
+      "sharpe": -0.3841,
+      "start": "2026-06-17 06:00:00+00:00",
+      "win_rate_pct": 50.0
+    }
+  },
+  "verdict": "sample_insufficient"
+}

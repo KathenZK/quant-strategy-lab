@@ -1,15 +1,12 @@
 # HYPE-EMA-TB 趋势策略研究台账
-
 > 迁移说明：本文由 legacy Cursor Canvas `hype-trend-strategy-research.canvas.tsx` 转换为 Markdown；原 Canvas 未删除，仅作为历史来源。
 
 ## Current State
 
-- 当前 live 版本：`HYPE-EMA-TB-V35`，由独立外部 `hype-trend` runner 真实资金运行；这是部署早于当前 handoff 契约的 grandfathered external live，不属于 quant-runner manifest 投影。
-- 当前研究观察：V36-V40 均为 `registered / not promoted / not live-ready`；V40 与 V39.2 参数/交易路径等价，不构成独立验证。
-- 最新线上对账：[hype-ema-tb-v35-runner-2026-07-15.md](runner-tracking/hype-ema-tb-v35-runner-2026-07-15.md)。最新空单与研究方向/SL 基本一致；上一笔人工平仓被 runner 错标 TP，退出原因归因仍是 blocker。
-- 当前 handoff：[V39 proposal](live-specs/hype-ema-tb-v39-live-spec-not-live-ready-2026-07-09.md) 仅为未实现方案，不是 `live spec` promotion 状态。
-- 下一决策门：先关闭 V35 退出归因与线上开平仓对账缺口；V36-V40 若申请 promotion，必须另做完整 promotion review 与 runner 实现。
-
+- 当前外部 runner 事实：独立 `hype-trend` 先后运行 V35、V35.1，并于 `2026-07-22 04:09 UTC` 观测为 `HYPE-EMA-TB-V35.3` live mode；该实例是部署早于当前 handoff 契约的 legacy 外部系统，不属于 quant-runner manifest 投影。
+- 当前研究状态：V35 是 grandfathered `live`；V35.1-V35.3、V36-V41 仍为 `registered / not promoted / not live-ready`。V35.1 已完成 quant-runner `DryRunOnly` 与 `111/111` parity 但保持 disabled；V35.3 已在外部 Python runner 实现，外部启用事实不能替代 promotion，因此形成必须 fail-closed 处理的状态/授权冲突。
+- 最新线上对账：[V35 定稿后全量实盘对账](runner-tracking/hype-ema-tb-v35-post-freeze-live-parity-2026-07-22.md)。11 笔实盘 entry 全匹配、9 笔非人工退出原因全一致；主要偏差来自两次人工平仓、账本漏记与最终 K 数据 blocker。
+- 当前 handoff：[V35.1 runner draft](live-specs/hype-ema-tb-v35-1-runner-draft.md) 仍不授权 quant-runner 实例。下一决策门先确认外部 V35.3 切换授权，修复 Binance fill/income 对账和最终 K 校验，再处理 Gate 3、OOS/CPCV、压力、相位与 live-executable review。
 ## Shared Assumptions
 
 - 市场/周期：Binance HYPEUSDT perpetual `15m`；闭合 K 计算信号，K0/K1/K2 执行口径按版本规格冻结。
@@ -20,13 +17,16 @@
 
 | Version | Status | Role / Core Idea | Key Frozen Metrics | Evidence | Decision |
 | --- | --- | --- | --- | --- | --- |
-| `HYPE-EMA-TB-V35` | live / grandfathered external runner | EMA96/384 趋势突破，TP5/SL7、ADX22 delayed3、384-bar timeout | 基准窗口 `+6474.19% / -23.49% DD / 101 trades` | [V35 runner tracking](runner-tracking/hype-ema-tb-v35-runner-2026-07-15.md) | 保持外部 live；退出归因与 handoff gap 待关闭 |
+| `HYPE-EMA-TB-V35` | live / grandfathered external runner | EMA96/384 趋势突破，TP5/SL7、ADX22 delayed3、384-bar timeout | 基准窗口 `+6474.19% / -23.49% DD / 101 trades` | [定稿后全量实盘对账](runner-tracking/hype-ema-tb-v35-post-freeze-live-parity-2026-07-22.md) | 冻结后研究 `+5.73% / 12笔`；自动执行一致，人工路径与账本 blocker 待关闭 |
+| `HYPE-EMA-TB-V35.1` | registered / not promoted / not live-ready | V35 移除冗余 short 1h EMA confirm | `+7708.65% / -27.26% DD / 111 trades` | [V35.1 spec](specs/hype-trend-strategy-v35-1-spec.md) · [promotion review](diagnostics/hype-ema-tb-v35-1-dry-run-promotion-review-2026-07-20.md) | `111/111` parity PASS；Gate 3 参数尖峰阻止 dry-run 授权 |
+| `HYPE-EMA-TB-V35.2` | registered / not promoted / not live-ready | V35.1 空头 MFE4.4ATR 时减仓 75%，剩余 25% 跑 TP5/SL7 | `+9409.39% / -23.46% DD / 112 trades` | [V35.2 spec](specs/hype-trend-strategy-v35-2-spec.md) · [diagnostic](diagnostics/hype-ema-tb-v35-1-short-partial-4-4atr-2026-07-20.md) | 23 次分批且阈值峰值敏感；等待 OOS，不修改 runner |
+| `HYPE-EMA-TB-V35.3` | registered / not promoted / not live-ready | V35.2 + long SL6.75 / short SL5.7 非对称硬止损 | `+10017.59% / -22.88% DD / 113 trades` | [V35.3 spec](specs/hype-trend-strategy-v35-3-spec.md) · [外部 runner 观测](runner-tracking/hype-ema-tb-v35-post-freeze-live-parity-2026-07-22.md) | 外部 Python 已实现且生产观测启用，但未获 promotion；确认授权并先关闭执行 blocker |
 | `HYPE-EMA-TB-V39` | registered / not promoted / not live-ready | V35 + long volume 0.35、short target 0.022、移除冗余 short 1h EMA confirm | `+9969.45% / -23.46% DD / 107 trades` | [V39 handoff proposal](live-specs/hype-ema-tb-v39-live-spec-not-live-ready-2026-07-09.md) | 未实现 runner，不进入 promotion |
 | `HYPE-EMA-TB-V39.2` | registered / not promoted / not live-ready | long volume 回到 0.25 + cooldown1 | `+8922.26% / -24.61% DD / 108 trades` | [V39.2 spec](specs/hype-trend-strategy-v39-2-spec.md) | 冻结观察 |
 | `HYPE-EMA-TB-V39.3` | registered / not promoted / not live-ready | V39.2 + `TP4.8/SL6.75` | `+7680.24% / -22.88% DD / 114 trades` | [V39.3 spec](specs/hype-trend-strategy-v39-3-spec.md) | 防守观察，不修改 runner |
 | `HYPE-EMA-TB-V39.4` | registered / not promoted / not live-ready | V39.2 short MFE4.4ATR 时减仓 75% | `+11682.28% / -23.46% DD / 109 trades` | [V39.4 spec](specs/hype-trend-strategy-v39-4-spec.md) | 空单样本小，等待 OOS |
 | `HYPE-EMA-TB-V40` | registered / not promoted / not live-ready | V35 三项结构精简；等价 V39.2 | `+9729.16% / -24.61% DD / 109 trades` | [V40 spec](specs/hype-trend-strategy-v40-spec.md) | 重编号不算新增验证 |
-
+| `HYPE-EMA-TB-V41` | registered / not promoted / not live-ready | V40 空头 target 回退 `0.022→0.018` | `+8321.65% / -24.61% DD / 109 trades` | [V41 spec](specs/hype-trend-strategy-v41-spec.md) | 撤销额外空头风险；不修改 live runner |
 ## 版本规则
 
 | 层级 | 定义 | 说明 |

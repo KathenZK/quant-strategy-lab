@@ -1,0 +1,16 @@
+# Artifacts
+
+- [长历史数据质量报告](btc_binance_15m_long_data_quality_latest.json)
+- [趋势事件结构摘要](btc_15m_trend_structure_summary_2026-07-20.json)
+- [LVCB 搜索摘要](btc_15m_lvcb_summary_2026-07-20.json)
+- [LVCB 候选表](btc_15m_lvcb_candidates_2026-07-20.csv)
+- [LVCB 冻结候选逐笔交易](btc_15m_lvcb_selected_trades_2026-07-20.csv)
+- [LVCB 180d 滚动窗口](btc_15m_lvcb_rolling_windows_2026-07-20.csv)
+- [LVCB trade-block bootstrap 审计](btc_15m_lvcb_candidate_audit_2026-07-20.json)
+- [LVCB 六轮迭代摘要](btc_15m_lvcb_iterations_summary_2026-07-20.json)
+- [LVCB 六轮迭代全部变体](btc_15m_lvcb_iterations_candidates_2026-07-20.csv)
+- [LVCB 六轮父子比较](btc_15m_lvcb_iterations_comparison_2026-07-20.csv)
+- [LVCB 空头搜索摘要](btc_15m_lvcb_short_search_summary_2026-07-21.json)
+- [LVCB 空头搜索全部配置](btc_15m_lvcb_short_search_candidates_2026-07-21.csv)
+- [LVCB 空头近失项逐笔交易](btc_15m_lvcb_short_search_trades_2026-07-21.csv)
+- [LVCB 空头近失项 180d 滚动窗口](btc_15m_lvcb_short_search_rolling_2026-07-21.csv)

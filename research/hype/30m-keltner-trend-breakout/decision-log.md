@@ -65,3 +65,7 @@
 结论：V3 的 73 个单参数邻域和交易 bootstrap 均保持正收益，但 Keltner/TP/hold 存在明显局部峰值，close-location 风险贡献未证明，空头腿偏弱；15m/1h/2h 迁移失败，30m 非原生相位收益比 `13.97%`、CV `1.167`、MDD 比 `2.10x`，现行门禁 5 失败。V3 参数不变，继续 `registered / not promoted / not live-ready`。
 
 证据：[ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md](ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md)。
+
+## 2026-07-21：V3 最新有效性
+
+结论：V3 冻结点后的 clean prospective 为 `+18.11% / -7.26% MaxDD / 2 笔`，结果正向但样本不足；不新增版本、不改变 `registered / not promoted / not live-ready`，继续等待真实未来 OOS，且不能覆盖既有 30m 相位门禁失败。证据见[最新有效性审计](diagnostics/hype-30m-keltner-v3-latest-validity-2026-07-21.md)。

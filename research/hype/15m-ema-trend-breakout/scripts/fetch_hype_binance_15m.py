@@ -31,7 +31,7 @@ USER_AGENT = "quant-strategy-lab-hype-15m/0.1"
 
 RAW_ROOT = ROOT / "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
 NORMALIZED_ROOT = ROOT / "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
-FUNDING_ROOT = ROOT / "data/normalized/funding_rates/exchange=binance/market_type=perp/symbol=hype_usdt_usdt"
+FUNDING_ROOT = ROOT / "data/normalized/funding_rates/exchange=binance/market_type=perp"
 FILE_NAME = "symbol=hype_usdt_usdt.parquet"
 
 

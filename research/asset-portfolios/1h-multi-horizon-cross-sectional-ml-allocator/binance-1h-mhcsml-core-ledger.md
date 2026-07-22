@@ -13,8 +13,8 @@
 - Current version(s)：`BIN-1H-MHCSML-V1`，最终开发冻结为 `freeze R4`。
 - Current status：`registered / not promoted / not live-ready`。
 - Runner / dry-run / live status：无 runner；未 dry-run；未 live。
-- Live-readiness blockers：未来三个月 prospective OOS 已启动但未完成；首个 `00:00 UTC` 节点按契约记为 `MISSED`；历史胜率 `53.67%` 低于最终 `55%` 门槛；订单、保证金、强平、断线恢复和重启状态机未审计。当前登记不代表 promotion。
-- Next decision gate：继续每 4 小时只按 R4 记录盲信号；主采集在入场小时后第 `3` 分钟运行，signal-only watchdog 在第 `18` 分钟核对，仍受 `entry+25min` 截止与逾期 `MISSED` 约束。信号窗口在 `2026-10-19 00:00 UTC` 结束，最后 48h 腿成熟后最早于 `2026-10-20 21:05 UTC` 一次性揭示并执行全部硬门槛，期间不得改参数。
+- Live-readiness blockers：未来三个月 prospective OOS 已启动但未完成；`2026-07-19 08:00` 至 `2026-07-22 00:00 UTC` 期间自动任务因目标 `usageLimited` 停止，连同首个节点共 `18` 个逾期节点已按冻结合同不可逆登记为 `MISSED`，不得回填；恢复后的 `2026-07-22 04:00 UTC` 节点已按时冻结，当前链为 `20/20`、`FROZEN_ON_TIME=2`、`MISSED=18`；历史胜率 `53.67%` 低于最终 `55%` 门槛；订单、保证金、强平、断线恢复和重启状态机未审计。当前登记不代表 promotion。
+- Next decision gate：主采集与 signal-only watchdog 已于 `2026-07-22 03:54 UTC` 恢复为 `ACTIVE`；`04:30 UTC` 的恢复预检已确认当前 `530/530` 个合约数据与 feature-only 面板均为 `PASS`、无 outcome 读取。两条任务已使用不改变冻结同步脚本的运行层 `IncompleteRead` 重试启动器，并以整轮互斥锁防止主任务与 watchdog 并发写盘；原脚本与 master SHA 不变。继续每 4 小时只按 R4 记录盲信号，分别在入场小时后第 `3`、`18` 分钟运行，仍受 `entry+25min` 截止与逾期 `MISSED` 约束。信号窗口在 `2026-10-19 00:00 UTC` 结束，最后 48h 腿成熟后最早于 `2026-10-20 21:05 UTC` 一次性揭示并执行全部硬门槛，期间不得改参数。
 
 ## Version Rules
 

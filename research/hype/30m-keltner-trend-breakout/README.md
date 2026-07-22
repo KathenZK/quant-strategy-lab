@@ -16,6 +16,7 @@
 
 - [hype-30m-keltner-trend-breakout-core-ledger.md](hype-30m-keltner-trend-breakout-core-ledger.md)
 - [decision-log.md](decision-log.md)
+- [V3 最新有效性审计](diagnostics/hype-30m-keltner-v3-latest-validity-2026-07-21.md)
 - [specs/hype-30m-keltner-trend-breakout-v3-spec.md](specs/hype-30m-keltner-trend-breakout-v3-spec.md)
 - [specs/hype-30m-keltner-trend-breakout-v2-1-spec.md](specs/hype-30m-keltner-trend-breakout-v2-1-spec.md)
 - [ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md](ablations/hype-30m-k2-v3-full-parameter-ablation-timeframe-robustness-2026-07-17.md)
@@ -25,4 +26,4 @@
 
 ## 当前结论
 
-`HYPE-30M-Keltner-Trend-Breakout-V3` 已登记，状态为 `registered / not promoted / not live-ready`。全参数邻域和交易 bootstrap 为正，但多周期迁移失败；30m 非原生相位现行门禁 5 明确失败，不 promotion。版本级指标与完整证据以主账为准。
+`HYPE-30M-Keltner-Trend-Breakout-V3` 已登记；最新 clean prospective 为正但只有 2 笔。多周期迁移与 30m 非原生相位门禁仍失败，保持 `registered / not promoted / not live-ready`；完整证据以主账为准。

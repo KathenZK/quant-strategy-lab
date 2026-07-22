@@ -2,7 +2,7 @@
 
 本台账记录 MUUSDT 在 Binance TRADIFI_PERPETUAL 上迁移 HYPE V35/V6 追趋势内核后的候选版本。所有版本均为 long-only、TP10/SL9，区别在入场时段和 2x/3x 仓位。
 
-数据范围：2026-04-07 13:30:00+00:00 → 2026-06-17 05:45:00+00:00；warmup bars：1600。
+历史 legacy 台账数据范围：2026-04-07 13:30:00+00:00 → 2026-06-17 05:45:00+00:00；warmup bars：1600。以下 V1-V14 表格保留当时的 legacy 回测口径，不作为当前有效性主证据。
 
 ## 版本定义
 
@@ -97,8 +97,9 @@
 
 ## 当前结论
 
-- 主 shadow 候选：V1 regular+overnight 2x，ALL 为 +115.81% / -15.84%，1W/1M/3M 也用于持续观察。
-
-- 激进观察：V2 regular+overnight 3x，ALL 为 +205.79% / -22.99%，回撤压力明显高于 V1。
-
-- 盘前或 24/5 全放开会提高收益，但会把 MDD 拉回 -20% 以上；当前主线先只保留时段过滤版本。
+- 家族状态仍为 `explore / not promoted / not live-ready`；V1-V14 是实验编号，尚未正式登记。
+- V1 regular+overnight 2x 继续作为历史低杠杆研究候选，但尚无 runner shadow / dry-run 证据。
+- “V6 long-only”是历史别名：V14 实际为 `v2_regime` 入场、EMA 趋势状态退出和固定 3x，没有复现完整 V6 dynamic sizing / ADX exit。
+- V14 全时段 3x 已补齐至 2026-07-20，并采用实际 funding、每次成交手续费 `0.001`、`4 bps` 滑点、同 K 冲突止损优先及跳空止损 open 成交的严格口径。
+- V14 严格 ALL 为 `+198.53% / -29.46%`；原截止点后的自然前向段为 `-4.83% / -18.16%`，仅 2 笔，未确认 OOS 有效性。
+- 最新有效性诊断与复现入口见 [`mu-hype-xfer-v14-latest-validity-2026-07-20.md`](diagnostics/mu-hype-xfer-v14-latest-validity-2026-07-20.md)。

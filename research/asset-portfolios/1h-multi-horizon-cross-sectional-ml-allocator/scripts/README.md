@@ -21,6 +21,8 @@
 - `freeze_comparison_baselines.py`：冻结 compact Ridge 与 carry-momentum 规则的受控比较基线；只用无标签 freeze-gap 密度校准信号数量。
 - `frozen_r4_inference.py`：R4 与受控基线共用的只读评分内核；批内腿按 `3.125% / N` 等权。
 - `sync_binance_usdm_prospective_features.py`：每轮从 FAPI 补 OHLCV、mark、funding 并写入标准数据湖；只做特征输入，不生成标签。
+- `run_prospective_feature_sync.py`：启动前核验 master 与受保护同步脚本 SHA，不修改冻结文件，只在运行层对 HTTP `IncompleteRead` 截断重发同一请求；其余异常继续 fail closed，供 prospective 定时任务使用。
+- `run_blind_prospective_cycle.py`：为整轮“链审计 → 同步 → feature-only 面板 → blind collector → 链复审”加互斥进程锁；链已完整则直接退出，只有唯一 `missing_due_chain_nodes` blocker 才允许补跑，防止主任务与 watchdog 并发写盘。
 - `build_blind_prospective_panel.py`：重建最近 8 小时的 feature-only PIT 横截面，禁止 outcome 列。
 - `collect_blind_prospective_signals.py`：每个 K0 闭合后 25 分钟内写不可变信号快照和 SHA 链；迟到节点只能记 `MISSED`。
 - `audit_blind_chain_health.py`：只读核验当前应有节点、时间序列、链链接、master SHA、按时/MISSED 语义、快照 SHA 和无 outcome schema；只输出健康计数与 blocker。

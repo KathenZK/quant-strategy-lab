@@ -1,0 +1,58 @@
+{
+  "audit_pass": true,
+  "block_bootstrap": {
+    "block_length_trades": 5,
+    "limitations": "resamples trade returns rather than bar paths; it preserves local trade clustering only through fixed five-trade circular blocks and does not model changing trade frequency",
+    "max_drawdown": {
+      "p01": -0.36738827662524126,
+      "p05": -0.29993943453822947,
+      "p50": -0.17955673308564607,
+      "p95": -0.11671866001986624,
+      "p99": -0.10008944013308108
+    },
+    "probability_drawdown_below_minus_25pct": 0.1422,
+    "probability_positive_terminal": 0.9894,
+    "seed": 20260720,
+    "simulations": 10000,
+    "terminal_return": {
+      "p01": -0.007727930294900403,
+      "p05": 0.30956849859534613,
+      "p50": 1.5998583865452751,
+      "p95": 4.427313192572439,
+      "p99": 6.617064947328893
+    }
+  },
+  "family": "BTC-15M-Trend-Continuation",
+  "inputs": {
+    "first_entry": "2020-03-05T02:45:00+00:00",
+    "last_entry": "2026-07-18T18:00:00+00:00",
+    "summary_path": "research/btc/15m-trend-continuation/artifacts/btc_15m_lvcb_summary_2026-07-20.json",
+    "summary_sha256": "8867aa5cefa342fad471de8e5242ddfc2c9cd63915b1888be4c2d32467412360",
+    "trade_count": 223,
+    "trades_path": "research/btc/15m-trend-continuation/artifacts/btc_15m_lvcb_selected_trades_2026-07-20.csv",
+    "trades_sha256": "4cedb176da794d6ae69fc86f24d9cdae8775b44ce155898bac2e8af92d3b7108"
+  },
+  "observed": {
+    "compounded_return_pct": 161.71152876260857,
+    "current_nonpositive_streak": 6,
+    "longest_nonpositive_streak": 8,
+    "top3_trade_positive_pnl_share": 0.16650144023457272,
+    "top_trade_positive_pnl_share": 0.05850078054944277,
+    "trade_sequence_max_drawdown_pct": -14.006262779776701,
+    "win_rate": 0.3004484304932735
+  },
+  "payload_sha256": "30fb86e0b9bc90dbb38df2d8024e41bb491710d46a5179e64093aac334fef58c",
+  "provenance": {
+    "code_path": "research/btc/15m-trend-continuation/scripts/audit_btc_15m_lvcb_candidate.py",
+    "code_sha256": "0d89c548ea5294008a2faeda3713032ef94de4778f32b367cef4bd34dd29d52f",
+    "generated_at_utc": "2026-07-20T08:15:21.097804+00:00"
+  },
+  "remaining_blockers": [
+    "no untouched historical OOS; prospective evidence begins at frozen end",
+    "BTC 1m data absent, so 15m phase gate is incomplete",
+    "absolute ATR cap requires forward stability monitoring",
+    "CPCV and live-executable runner audit not completed"
+  ],
+  "status": "bootstrap pass / prospective OOS still required",
+  "strategy_id": "lvcb-913f4ff89386"
+}

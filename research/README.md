@@ -28,15 +28,17 @@
 | --- | --- | --- | --- | --- |
 | `HYPE-Candle-Count-Reversal` | `HYPE-CC` | [hype/15m-candle-count-reversal/](hype/15m-candle-count-reversal/README.md) · [主账](hype/15m-candle-count-reversal/hype-cc-core-ledger.md) | 10-of-8 K 线颜色反转 + ATR 风控 | V35 dry-run / forward-test required |
 | `HYPE-EMA-Crossover` | `HYPE-EMA-X` | [hype/15m-ema-crossover/](hype/15m-ema-crossover/README.md) · [主账](hype/15m-ema-crossover/hype-ema-x-core-ledger.md) | EMA 金叉/死叉家族（V14 时代演化） | V18 dry-run / forward-test required |
-| `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | [hype/15m-ema-trend-breakout/](hype/15m-ema-trend-breakout/README.md) · [主账](hype/15m-ema-trend-breakout/hype-ema-tb-core-ledger.md) | EMA96/384 趋势突破 / 追多追空 | V35 live（外部 hype-trend runner）；V36-V40 registered / not promoted |
+| `HYPE-EMA-Trend-Breakout` | `HYPE-EMA-TB` | [hype/15m-ema-trend-breakout/](hype/15m-ema-trend-breakout/README.md) · [主账](hype/15m-ema-trend-breakout/hype-ema-tb-core-ledger.md) | EMA96/384 趋势突破 / 追多追空 | V35 live（外部 hype-trend runner）；V35.1-V35.3、V36-V41 registered / not promoted |
 | `HYPE-15M-Multi-Horizon-EMA-Forecast` | `HYPE-15M-MHEF` | [hype/15m-multi-horizon-ema-forecast/](hype/15m-multi-horizon-ema-forecast/README.md) · [主账](hype/15m-multi-horizon-ema-forecast/hype-15m-mhef-core-ledger.md) | `15m` 四组 EMA 波动率归一化 forecast 加权连续仓位 | explore / not promoted / not live-ready |
 | `HYPE-1M-EMA-Crossover` | `HYPE-1M-EMA-X` | [hype/1m-ema-crossover/](hype/1m-ema-crossover/README.md) | `1m` EMA 金叉/死叉，可执行时序 | explore / not promoted / not live-ready |
 | `HYPE-1M-MA-Pullback-Scalp` | - | [hype/1m-ma-pullback-scalp/](hype/1m-ma-pullback-scalp/README.md) | `1m` 双 MA 回踩 scalp | explore / not promoted / not live-ready |
 | `HYPE-1H-Adaptive-Regime` | `HYPE-1H-AR` | [hype/1h-adaptive-regime/](hype/1h-adaptive-regime/README.md) · [主账](hype/1h-adaptive-regime/hype-1h-ar-core-ledger.md) | `1h` DI 趋势 + 随机指标反转自适应 ensemble | V1-V4 registered / not promoted / not live-ready |
 | `HYPE-1H-Multi-Horizon-EMA-Forecast` | `HYPE-1H-MHEF` | [hype/1h-multi-horizon-ema-forecast/](hype/1h-multi-horizon-ema-forecast/README.md) · [主账](hype/1h-multi-horizon-ema-forecast/hype-1h-mhef-core-ledger.md) | `1h` 四组 EMA 波动率归一化 forecast 加权连续仓位 | explore / not promoted / not live-ready |
 | `HYPE-1D-Multi-Horizon-EMA-Forecast` | `HYPE-1D-MHEF` | [hype/1d-multi-horizon-ema-forecast/](hype/1d-multi-horizon-ema-forecast/README.md) · [主账](hype/1d-multi-horizon-ema-forecast/hype-1d-mhef-core-ledger.md) | `1d` 四组经典 EWMAC forecast 加权连续仓位 | explore / not promoted / not live-ready |
+| `HYPE-1D-Pyramiding-Trend` | `HYPE-1D-PT` | [hype/1d-pyramiding-trend/](hype/1d-pyramiding-trend/README.md) · [主账](hype/1d-pyramiding-trend/hype-1d-pt-core-ledger.md) | `1d` 趋势突破/动量 campaign + 最多 `3x` 浮盈加仓 | explore / not promoted / not live-ready |
 | `HYPE-15M-Multi-Indicator-Intraday` | `HYPE-15M-MII` | [hype/15m-multi-indicator-intraday/](hype/15m-multi-indicator-intraday/README.md) · [主账](hype/15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md) | `15m` 多指标日内广搜 | V1.4A dry-run / not live-ready |
 | `HYPE-15M-Riptide` | - | [hype/15m-riptide/](hype/15m-riptide/README.md) | `15m` EMA 趋势背景 RSI 回踩 + RV regime | explore / not promoted（复现对账未完成） |
+| `HYPE-15M-Keltner-Trend-Breakout` | `HYPE-15M-KTB` | [hype/15m-keltner-trend-breakout/](hype/15m-keltner-trend-breakout/README.md) · [主账](hype/15m-keltner-trend-breakout/hype-15m-keltner-trend-breakout-core-ledger.md) | `15m` Keltner 外轨突破、压缩扩张与中轨回踩 | 三条新机制均失败 / explore / not promoted / not live-ready |
 | `HYPE-30M-Keltner-Trend-Breakout` | `K2-FQ-V2-ATRVT-OFF` | [hype/30m-keltner-trend-breakout/](hype/30m-keltner-trend-breakout/README.md) · [主账](hype/30m-keltner-trend-breakout/hype-30m-keltner-trend-breakout-core-ledger.md) | `30m` Keltner 突破 + `1h` EMA regime + ATRVT 动态杠杆 | V3 registered / not promoted / not live-ready |
 | `HYPE-30M-Keltner-Breakout-Retest` | - | [hype/30m-keltner-breakout-retest/](hype/30m-keltner-breakout-retest/README.md) · [主账](hype/30m-keltner-breakout-retest/hype-30m-keltner-breakout-retest-core-ledger.md) | `30m` Keltner 突破后等待回踩并 reclaim 的趋势状态机 | explore / not promoted / not live-ready |
 | `HYPE-15M-Pullback-Trail` | - | [hype/15m-pullback-trail/](hype/15m-pullback-trail/README.md) | `15m` 回踩事件源 + bracket 搜索 | explore / not promoted / not live-ready |
@@ -54,6 +56,9 @@
 | --- | --- | --- | --- |
 | `BTC-1H-Adaptive-Regime` | `BTC-1H-AR` | [btc/1h-adaptive-regime/](btc/1h-adaptive-regime/README.md) · [主账](btc/1h-adaptive-regime/btc-1h-ar-core-ledger.md) | V1-V4 registered / not promoted / not live-ready（V4 为 V3 clean-equivalent） |
 | `BTC-15M-EMA-Trend-Breakout` | `BTC-15M-EMA-TB` | [btc/15m-ema-trend-breakout/](btc/15m-ema-trend-breakout/README.md) · [主账](btc/15m-ema-trend-breakout/btc-15m-ema-tb-core-ledger.md)；`15m` 快慢 EMA 趋势背景 + 价格突破 | V40 模板迁移无门禁通过项、停止扩搜 / explore / not promoted / not live-ready |
+| `BTC-15M-Keltner-Trend-Breakout` | `BTC-15M-KTB` | [btc/15m-keltner-trend-breakout/](btc/15m-keltner-trend-breakout/README.md) · [主账](btc/15m-keltner-trend-breakout/btc-15m-keltner-trend-breakout-core-ledger.md)；`15m` Keltner 收盘突破 + 可选 `1h` EMA trend regime | 首轮 630 组 validation 正收益 0、停止本轮机制扩搜 / explore / not promoted / not live-ready |
+| `BTC-15M-Trend-Continuation` | `BTC-15M-TC` | [btc/15m-trend-continuation/](btc/15m-trend-continuation/README.md) · [主账](btc/15m-trend-continuation/btc-15m-trend-continuation-core-ledger.md)；低波动压缩 + EMA 趋势 + Donchian 突破延续 | 多头六轮无采纳、空头 804 配置无门禁通过项、仅保留 long-only prospective 观察 / explore / not promoted / not live-ready |
+| `BTC-30M-Trend-Continuation` | `BTC-30M-TC` | [btc/30m-trend-continuation/](btc/30m-trend-continuation/README.md) · [主账](btc/30m-trend-continuation/btc-30m-trend-continuation-core-ledger.md)；`30m` EMA 趋势 + 压缩/Donchian/Keltner 突破 | 低频观察样本门禁失败、高频路线近期与相位失败、停止本轮扩搜 / explore / not promoted / not live-ready |
 | `ETH-1H-Adaptive-Regime` | `ETH-1H-AR` | [eth/1h-adaptive-regime/](eth/1h-adaptive-regime/README.md) · [主账](eth/1h-adaptive-regime/eth-1h-ar-core-ledger.md) | V1-V4 registered / not promoted / not live-ready |
 | `SOL-1H-Adaptive-Regime` | `SOL-1H-AR` | [sol/1h-adaptive-regime/](sol/1h-adaptive-regime/README.md) · [主账](sol/1h-adaptive-regime/sol-1h-ar-core-ledger.md) | V1-V3 registered；V3 Donchian core + VWAP arm-confirm satellite；not promoted / not live-ready |
 | `SOL-1H-Volatility-Compression-Breakout` | `SOL-1H-VCB` | [sol/1h-volatility-compression-breakout/](sol/1h-volatility-compression-breakout/README.md) · [主账](sol/1h-volatility-compression-breakout/sol-1h-vcb-core-ledger.md) | 首轮扩展搜索未通过 / explore / not promoted / not live-ready |
@@ -62,8 +67,9 @@
 | `TRX-1H-Adaptive-Regime` | `TRX-1H-AR` | [trx/1h-adaptive-regime/](trx/1h-adaptive-regime/README.md) · [主账](trx/1h-adaptive-regime/trx-1h-ar-core-ledger.md) | V1-V3 registered / not promoted / not live-ready |
 | `BNB-1H-Adaptive-Regime` | `BNB-1H-AR` | [bnb/1h-adaptive-regime/](bnb/1h-adaptive-regime/README.md) · [主账](bnb/1h-adaptive-regime/bnb-1h-ar-core-ledger.md) | V1-V3 registered / not promoted / not live-ready |
 | `BNB-15M-Adaptive-Regime` | `BNB-15M-AR` | [bnb/15m-adaptive-regime/](bnb/15m-adaptive-regime/README.md) · [主账](bnb/15m-adaptive-regime/bnb-15m-ar-core-ledger.md) | explore / not promoted |
+| `MU-15M-Donchian-Trend-Breakout` | `MU-15M-DTB` | [mu/15m-donchian-trend-breakout/](mu/15m-donchian-trend-breakout/README.md) · [主账](mu/15m-donchian-trend-breakout/mu-15m-dtb-core-ledger.md)；`15m` EMA regime + Donchian 收盘突破 + ATR/trailing exit | final audit 未通过、停止扩搜 / explore / not promoted / not live-ready |
 
-各资产入口：[btc/README.md](btc/README.md)、[eth/README.md](eth/README.md)、[sol/README.md](sol/README.md)、[trx/README.md](trx/README.md)、[bnb/README.md](bnb/README.md)。
+各资产入口：[btc/README.md](btc/README.md)、[eth/README.md](eth/README.md)、[sol/README.md](sol/README.md)、[trx/README.md](trx/README.md)、[bnb/README.md](bnb/README.md)、[mu/README.md](mu/README.md)。
 
 ## 组合与跨资产研究
 

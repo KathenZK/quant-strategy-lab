@@ -4,6 +4,7 @@ import argparse
 import json
 import time
 from dataclasses import asdict, dataclass
+from http.client import IncompleteRead
 from pathlib import Path
 from typing import Any
 from urllib.error import HTTPError, URLError
@@ -108,7 +109,13 @@ def request_json(
             request = Request(url, headers={"User-Agent": USER_AGENT})
             with urlopen(request, timeout=timeout) as response:  # noqa: S310
                 return json.loads(response.read().decode("utf-8"))
-        except (HTTPError, URLError, TimeoutError, json.JSONDecodeError) as exc:
+        except (
+            HTTPError,
+            URLError,
+            TimeoutError,
+            IncompleteRead,
+            json.JSONDecodeError,
+        ) as exc:
             last_error = exc
             if attempt + 1 < attempts:
                 time.sleep(min(8.0, 0.75 * 2**attempt))
