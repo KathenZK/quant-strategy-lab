@@ -2,8 +2,8 @@
 
 - Alias：`HYPE-15M-MHEF`
 - 市场/周期：Binance USD-M `HYPEUSDT` perpetual，`15m`
-- 机制：EMA `8/32`、`16/64`、`32/128`、`64/256` 分别形成波动率归一化 forecast，按 `0.2/0.3/0.3/0.2` 融合并映射为最大 `1x` 连续仓位。
-- 当前状态：`explore / not promoted / not live-ready`
+- 机制：多速度 EMA 波动率归一化 forecast 融合为连续目标仓位；V2 observation 另加入跨周期 coherence、dead zone、波动率目标、成本感知目标带、最小调仓量与单 K 仓位限速。
+- 当前状态：`explore / NO-GO / not promoted / not live-ready`
 
 ## 边界
 
@@ -14,5 +14,7 @@
 - 主账：[hype-15m-mhef-core-ledger.md](hype-15m-mhef-core-ledger.md)
 - 决策记录：[decision-log.md](decision-log.md)
 - 基线回测：[hype-15m-mhef-baseline-backtest-2026-07-14.md](notes/hype-15m-mhef-baseline-backtest-2026-07-14.md)
+- V2 连续目标仓位全参数研究：[hype-15m-mhef-v2-continuous-target-research-2026-07-28.md](notes/hype-15m-mhef-v2-continuous-target-research-2026-07-28.md)
+- V2 冻结候选中心消融：[hype-15m-mhef-v2-candidate-centered-ablation-2026-07-28.md](notes/hype-15m-mhef-v2-candidate-centered-ablation-2026-07-28.md)
 - 脚本：[scripts/README.md](scripts/README.md)
 - 产物：[artifacts/README.md](artifacts/README.md)
