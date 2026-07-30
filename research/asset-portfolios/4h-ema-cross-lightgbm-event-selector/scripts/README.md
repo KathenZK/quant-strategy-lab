@@ -7,3 +7,5 @@
 - [`build_v2_dataset.py`](build_v2_dataset.py)：V2 特征数据集（复用 15m 特征模块 [`emax_features.py`](../../15m-ema-cross-lightgbm-event-selector/scripts/emax_features.py)）。
 - [`train_v2_scoring.py`](train_v2_scoring.py)：V2 LightGBM 打分层（扩窗逐年 purged CV）。
 - [`backtest_portfolio_v2.py`](backtest_portfolio_v2.py)：V2 叠加组合与同窗 A1 对照。
+- [`research_local_trend_selector.py`](research_local_trend_selector.py)：15m 局部+趋势选择器移植（a2 特征集，"换特征域"重启诊断）。
+- [`research_k_candle_supplement.py`](research_k_candle_supplement.py)：K 族蜡烛形态增补（结果：轻微稀释，不纳入）。

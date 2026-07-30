@@ -19,3 +19,8 @@
 
 - 决策：装载 glob 漏读 1h 湖 `date=*` 旧版按日分区（BTC/ETH/SOL/BNB/TRX/HYPE 的主存储），基线与 2026H1 审计全量重跑：基线结论方向全部不变（b4_2 池内净 −0.057、空头全体 +0.024）；2026H1 空头净 −0.062 → −0.030，2026-04 逼空月 −1.05 与"裸做不成立"结论不变。首版产物留档 `*_v1_missing_majors.*`；根因与修复详见 4h 家族同日修复条目。
 - 证据：[P1 修正记录](diagnostics/bin-1h-emax-lgbm-p1-baseline-2026-07-24.md)、[审计修正记录](diagnostics/bin-1h-emax-lgbm-2026h1-reused-audit-2026-07-24.md)
+
+## 2026-07-29 局部+趋势选择器移植：顶桶净首次转正但 2/4 年为正，Gate B 未过
+
+- 决策：按预注册契约把 15m 家族的局部+多日趋势 LightGBM 选择器（a2 特征集）移植到 1h 冻结事件。顶桶净 +0.030（毛 +0.219 vs 成本 0.186）、Spearman 0.964，但逐年 2/4 为正，Gate B 未过。判定：1h 单事件选择器不可变现，维持 `archived`；但可识别毛优势首次追平成本墙，标度关系（优势随周期升、成本随周期降）成立，指向 4h。
+- 证据：[移植契约](specs/bin-1h-emax-local-trend-selector-contract-2026-07-29.md)、[移植诊断](diagnostics/bin-1h-emax-local-trend-selector-2026-07-29.md)、[local_trend_selector_report.json](artifacts/local_trend_selector/local_trend_selector_report.json)

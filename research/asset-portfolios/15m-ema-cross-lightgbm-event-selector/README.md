@@ -15,6 +15,7 @@
 ## 入口
 
 - 裁决报告：[P5 锁定 OOS 揭示诊断](diagnostics/bin-15m-emax-lgbm-p5-locked-oos-reveal-2026-07-24.md)
+- 死因复核（2026-07-29）：[特征/标签双消融诊断](diagnostics/bin-15m-emax-feature-ablation-2026-07-29.md)——局部形态信息真实（毛 +0.13 ATR）但仅为成本一半，"特征构造有问题"假设按预注册判据不成立
 - 冻结研究契约：[bin-15m-emax-lgbm-research-contract-2026-07-23.md](specs/bin-15m-emax-lgbm-research-contract-2026-07-23.md)
 - 决策日志：[decision-log.md](decision-log.md)
 - 脚本：[scripts/README.md](scripts/README.md)；产物：[artifacts/README.md](artifacts/README.md)
