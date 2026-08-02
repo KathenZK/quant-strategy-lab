@@ -12,3 +12,6 @@
   `dry-run / forward-test required`。首份治理报告见
   [`hype-ema-x-runner-2026-07-10.md`](hype-ema-x-runner-2026-07-10.md)；
   full-window parity 和真实 runtime lifecycle 仍缺失，不得升级 live。
+- 2026-07-21 起共享 HYPE 15m 行情组 group halt（本实例 cycle_error 为根因，
+  停摆含一个未维护模拟持仓），事件落档与待办见
+  [`hype-ema-x-runner-2026-07-30-group-halt.md`](hype-ema-x-runner-2026-07-30-group-halt.md)。

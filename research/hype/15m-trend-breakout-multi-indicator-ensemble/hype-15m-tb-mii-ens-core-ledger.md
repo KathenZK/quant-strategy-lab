@@ -12,7 +12,7 @@ Created：2026-07-07
 
 ## 当前状态
 
-- 当前状态：`HYPE-15M-TB-MII-ENS-V2 dry-run / not live-ready`；runner replay parity PASS，live disabled。
+- 当前状态：`HYPE-15M-TB-MII-ENS-V2 dry-run / not live-ready`；runner replay parity PASS，live disabled；共享 15m 行情组曾于 2026-07-21→07-30 [group halt](../15m-ema-crossover/runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)，`d514e65` 部署后已恢复；停摆区间观察作废。
 - 当前登记版本：`V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4`，单账户 `single_v39_priority_k1` 主口径（V39 优先 + V1.4 强平让位）。
 - `V2` 是用户于 2026-07-09 指定登记的组合版本号；此前 V35+V1.3 与 V39+V1.3 仍为 diagnostic evidence，不反推登记为 V1。
 - 2026-07-09 已导出 V2 validation spec，并完成 live-executable 审计；早间失败结论保留为 historical pre-dry-run finding。同日 `quant-runner` 已新增 `hype_tb_mii_ensemble` replay validation kind、全样本 replay parity、continuous dry-run runtime，以及 disabled live pilot 执行链。

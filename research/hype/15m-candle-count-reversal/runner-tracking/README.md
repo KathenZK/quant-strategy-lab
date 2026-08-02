@@ -13,3 +13,5 @@
   [`hype-cc-runner-2026-07-10.md`](hype-cc-runner-2026-07-10.md)。
   历史 live underperformance、full-window parity 和真实 runtime lifecycle
   仍是 blocker；当前 dry-run 不等于 live 批准。
+- 2026-07-21 起共享 HYPE 15m 行情组 group halt，本实例停摆待复位；事件落档见
+  [group halt 报告](../../15m-ema-crossover/runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)。

@@ -34,3 +34,8 @@
 
 - 决策：按预注册契约在 local+trend 上加 18 个蜡烛形态特征（4h/日/周三尺度实体影线）。顶桶净 +0.367 → +0.287、2023 年翻负，判定为特征稀释（62 特征对 1.5 万事件）；K 族不纳入后续 4h 特征集。
 - 证据：[4h K 族契约](specs/bin-4h-emax-k-candle-supplement-contract-2026-07-29.md)、[移植诊断增补节](diagnostics/bin-4h-emax-local-trend-selector-2026-07-29.md)、[k_supplement_report.json](artifacts/k_candle_supplement/k_supplement_report.json)
+
+## 2026-07-30 V3 正式立项组合级判决：回撤压回安全区（G1/G3/G4 过）但年度稳健性未过（G2），V3 不登记
+
+- 决策：按用户指令基于 local+trend 新证据重开家族（`archived` → `explore`），冻结 V3 组合级契约后回测三变体。主变体 S2（滚动 365 天 90 分位因果阈值）总收益 +62.5%、MaxDD −19.4%（红线 −40%）、单位回撤收益 3.22 vs 对照 B0 的 2.47——打分层增值在组合级首次成立；但四年中仅 2 年为正且 2022 占总 PnL 83%，触发 G2。裁决：**V3 不登记**，家族写 `explore / not promoted / not live-ready`；可货币化优势仍是熊市空头，多头侧四年净贡献 +2.3k（白干）。重启条件（补 2020–2021 OOF 锚点年 / crisis-alpha 卫星定位并入资产配置层 / 显式 regime 层）写入诊断第 5 节。
+- 证据：[V3 立项契约](specs/bin-4h-emax-v3-lean-selector-portfolio-contract-2026-07-30.md)、[V3 组合级判决](diagnostics/bin-4h-emax-v3-portfolio-2026-07-30.md)、[v3_portfolio_report.json](artifacts/v3_portfolio/v3_portfolio_report.json)

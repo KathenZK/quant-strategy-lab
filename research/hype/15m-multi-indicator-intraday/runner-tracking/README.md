@@ -10,3 +10,5 @@
 
 - `HYPE-15M-MII-V1.3`：已于 `2026-07-10T07:13:16Z` 被同一实例上的 V1.4A dry-run 替代；历史事件仍按 V1.3 identity 保留。
 - `HYPE-15M-MII-V1.4A`：quant-runner `hype_mii` 当前 dry-run（实例仍名为 `hype-mii-dry-run`，内部 ledger identity 为 `HYPE-15M-MII-V1.4A`，`dry_run_notional_usdt = 10`，固定 `2.5x` 暴露）；旧实例从未开仓，因此沿用既有 state 目录。状态 `dry-run validation running / not live-ready`。首个 cycle 健康且无信号，后续逐笔证据见 `hype-15m-mii-runner-2026-07-10.md`。
+- 2026-07-21 起共享 HYPE 15m 行情组 group halt，本实例停摆待复位；事件落档见
+  [group halt 报告](../../15m-ema-crossover/runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)。

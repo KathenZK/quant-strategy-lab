@@ -9,3 +9,4 @@
 - [`backtest_portfolio_v2.py`](backtest_portfolio_v2.py)：V2 叠加组合与同窗 A1 对照。
 - [`research_local_trend_selector.py`](research_local_trend_selector.py)：15m 局部+趋势选择器移植（a2 特征集，"换特征域"重启诊断）。
 - [`research_k_candle_supplement.py`](research_k_candle_supplement.py)：K 族蜡烛形态增补（结果：轻微稀释，不纳入）。
+- [`backtest_portfolio_v3_selector.py`](backtest_portfolio_v3_selector.py)：V3 精简选择器组合回测（B0 对照 / S1 绝对阈值 / S2 滚动分位主变体；结果：G2 未过，V3 不登记）。

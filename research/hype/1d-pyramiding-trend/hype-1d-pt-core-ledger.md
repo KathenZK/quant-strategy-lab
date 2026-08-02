@@ -13,8 +13,8 @@
 - Current version(s)：无；当前为未编号广搜。
 - Current status：`explore / not promoted / not live-ready`
 - Runner / dry-run / live status：无。
-- Live-readiness blockers：`398,456` 个配置无三项硬目标同时命中；冻结 shortlist 最佳生存 observation 仅 `2.4818x / 76.47% / -19.62%`，且 `K+2` 回撤 `-32.08%`；无 registered version 或 runner 实现。
-- Next decision gate：等待新增日线历史后重验，或由用户明确修改目标/时间周期；当前不登记版本、不推进 runner。
+- Live-readiness blockers：2026-07-22 的 `398,456` 个广义趋势配置无三项目标同时命中；2026-07-30 固定 `MA7/MA30` 的 `496,050` 个配置也无 `>20x / <=20% MDD` 命中，证据完整的 prefit 回撤安全冠军仅 `2.0340x / -18.14%`，holdout 回撤扩大至 `-24.44%`；无 registered version 或 runner 实现。
+- Next decision gate：等待新增 prospective 日线历史，或由用户明确改为新机制/周期/多资产组合；不得继续调已揭示 holdout，当前不登记版本、不推进 runner。
 
 ## Version Rules
 
@@ -40,6 +40,7 @@
 
 - Specs：[搜索契约](specs/hype-1d-pt-search-contract-2026-07-22.md)
 - Diagnostics / ablations：[2026-07-22 硬目标广搜](diagnostics/hype-1d-pt-hard-target-search-2026-07-22.md)
+- MA7/MA30：[冻结契约](specs/hype-1d-pt-ma7-ma30-search-contract-2026-07-30.md) · [2026-07-30 硬目标广搜](diagnostics/hype-1d-pt-ma7-ma30-hard-target-search-2026-07-30.md)
 - Live specs：无。
 - Runner tracking：无。
 - Scripts / artifacts：[scripts/README.md](scripts/README.md) · [artifacts/README.md](artifacts/README.md)

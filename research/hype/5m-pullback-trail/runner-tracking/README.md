@@ -15,3 +15,5 @@
   的 16/16 replay parity；它不替代真实成交生命周期验收，也不允许 production sizing。
 - 2026-07-11 执行安全收尾与 v2 待部署状态见
   [`hype-5m-pbtr-runner-2026-07-11.md`](hype-5m-pbtr-runner-2026-07-11.md)。
+- 2026-07-30 零开单审计（runner 健康、独立信号重算确认零信号合法，keep）见
+  [`hype-5m-pbtr-runner-2026-07-30.md`](hype-5m-pbtr-runner-2026-07-30.md)。

@@ -12,7 +12,7 @@
 ## Current State
 
 - 当前版本：`HYPE-CC-V35`（runner strategy id：`HYPE-CANDLE-COUNT-V35`）。
-- 状态：`dry-run / forward-test required / not live-ready`。
+- 状态：`dry-run / forward-test required / not live-ready`；共享 15m 行情组曾于 2026-07-21→07-30 [group halt](../15m-ema-crossover/runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)，`d514e65` 部署后已恢复；停摆区间观察作废。
 - Runner：quant-runner `kind = "hype_candle_count"`，manifest 实例 `hype-candle-count-v35-dry-run` 已启用。
 - 历史 live underperformance 是 execution-risk 证据，不等于当前新终态；当前不得升级 live，也不得在 dry-run 观察前重新写 `NO-GO`。
 - 当前 blocker：标准 parity、保护单与重启恢复、费用/滑点/funding 对账、历史 underperformance 复核、dated runner tracking 与 online open/close reconciliation。

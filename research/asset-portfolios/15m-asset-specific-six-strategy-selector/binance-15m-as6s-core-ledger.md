@@ -18,7 +18,7 @@
   保护退出的双路线注册观察，nonpreemptive 为主观察、强突破抢占为对照。
 - Runner：V6 两条路线均已实现，严格离线 parity、失败注入、配置与 CLI smoke
   通过；两个独立实例已获准持续 dry-run，live 仍未获授权。
-- Current gate：等待 `2026-10-14T09:00Z` 后执行一次性未来最终 OOS；此前不得调参或 promotion。
+- Current gate：等待 `2026-10-14T09:00Z` 后执行一次性未来最终 OOS；此前不得调参或 promotion。中期账本观察（audit-only，不作选择依据）：[2026-07-30 interim](runner-tracking/binance-as6s-v6-dry-run-interim-2026-07-30.md)。
 - Final OOS：`[2026-07-14, 2026-10-14)` 的未来新增数据；冻结后不得调参。
 
 ## Version Rules

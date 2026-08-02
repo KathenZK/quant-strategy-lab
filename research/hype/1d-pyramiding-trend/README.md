@@ -15,5 +15,7 @@
 - 决策记录：[decision-log.md](decision-log.md)
 - 冻结搜索契约：[hype-1d-pt-search-contract-2026-07-22.md](specs/hype-1d-pt-search-contract-2026-07-22.md)
 - 广搜结论：[hype-1d-pt-hard-target-search-2026-07-22.md](diagnostics/hype-1d-pt-hard-target-search-2026-07-22.md)
+- MA7/MA30 冻结契约：[hype-1d-pt-ma7-ma30-search-contract-2026-07-30.md](specs/hype-1d-pt-ma7-ma30-search-contract-2026-07-30.md)
+- MA7/MA30 广搜结论：[hype-1d-pt-ma7-ma30-hard-target-search-2026-07-30.md](diagnostics/hype-1d-pt-ma7-ma30-hard-target-search-2026-07-30.md)
 - 研究脚本：[scripts/README.md](scripts/README.md)
 - 产物说明：[artifacts/README.md](artifacts/README.md)

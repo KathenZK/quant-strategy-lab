@@ -22,7 +22,7 @@ Created：2026-06-23
 - 状态：`live / tiny-live-pilot`，并行保留独立 `dry-run` 实例；两者均由当前 manifest 授权。
 - tiny-live-pilot 授权截至 `2026-09-24T00:00:00Z` 复核，资金边界为专用子账户余额且不得未记录增资。
 - 当前已通过研究/runtime 信号 parity；真实成交生命周期、保护单、重启恢复与滑点证据仍是生产 sizing blocker。
-- 下一决策门：结合最新 [runner tracking](runner-tracking/hype-5m-pbtr-runner-2026-07-11.md) 复核 tiny-live-pilot，决定保持、停止或调整；不得把并行 dry-run 写成降级。
+- 下一决策门：结合最新 [runner tracking](runner-tracking/hype-5m-pbtr-runner-2026-07-30.md)（零开单审计：runner 健康、零信号经独立重算确认合法，keep）复核 tiny-live-pilot，决定保持、停止或调整；不得把并行 dry-run 写成降级。
 
 ## Strategy Idea
 
