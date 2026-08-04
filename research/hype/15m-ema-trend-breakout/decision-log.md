@@ -14,7 +14,7 @@
 - `HYPE-EMA-TB-V30`：baseline aligned trend-family checkpoint。
 - `HYPE-EMA-TB-V34`：high-return low-drawdown candidate。
 - `HYPE-EMA-TB-V35`：timeout-relaxed candidate。
-- `HYPE-EMA-TB-V35.1`：V35 移除样本内冗余的空头 1h EMA 确认；计划中的 quant-runner 迁移目标，`registered / not promoted / not live-ready`。
+- `HYPE-EMA-TB-V35.1`：V35 移除样本内冗余的空头 1h EMA 确认；quant-runner dry-run 观察中，`dry-run / not live-ready`。
 - `HYPE-EMA-TB-V35.2`：V35.1 空头 `MFE4.4ATR` 时减仓 75%，剩余 25% 继续 `TP5/SL7`；`registered / not promoted / not live-ready`。
 - `HYPE-EMA-TB-V35.3`：V35.2 多头 `SL6.75ATR`、空头 `SL5.7ATR` 非对称止损版；`registered / not promoted / not live-ready`。
 - `HYPE-EMA-TB-V36`：Binance signal、Hyperliquid execution variant。
@@ -29,6 +29,8 @@
 - `HYPE-EMA-TB-V41`：V40 将空头 `short_target_atr_pct` 回退到 V35 的 `0.018`；保留 cooldown1 与移除空头 1h EMA 确认，`registered / not promoted / not live-ready`。
 
 ## 研究批次记录
+
+- 2026-08-04（V35.1 按用户决定进入 dry-run）：用户明确指令启用 quant-runner `hype-ema-tb-v35-1-dry-run` 实例（`hype_ema_tb`，`DryRunOnly`，`dry_run_notional_usdt=10`，模拟撮合，无资金风险）。manifest 从 `registered` 升为 `dry-run`、`approval_level=dry_run`、`enabled_allowed=true`，parity 沿用 [2026-07-20 评审](../diagnostics/hype-ema-tb-v35-1-dry-run-promotion-review-2026-07-20.md)的逐笔零偏差 PASS 结论。已知缺口与约束：① 规范 parity JSON（`HYPE-EMA-TB-V35.1_parity_2026-07-20.json`）不在干净 Git checkout 中，后续任何状态变更前必须把对拍证据重新提交为 Git 跟踪文件；② 2026-07-20 评审的研究门禁（0 超额收益、2 OOS/CPCV、3 MC 参数尖峰、4 压力测试、5 相位扫描）全部保持未完成，继续封锁 live；③ manifest 无 live 条目，runner 注册为 `LiveCapability::DryRunOnly`，live 在代码与治理双层不可达；④ 同批次 runner 侧删除 `asset_specific_six_selector_v5_joint_state`（V6 引擎迁移到 V6 模块内），manifest 移除 `bin-15m-as6s-v5-joint-np-dry-run` 条目。运行证据见 [dry-run 启用记录](../runner-tracking/hype-ema-tb-v35-1-dry-run-enable-2026-08-04.md)。
 
 - 2026-08-01（V35.3 空头侧关闭指标退出）：数据更新至 `2026-08-01 15:15 UTC` 后，全历史空头 `indicator_exit` 共 3 笔且 3/3 为负价值（`12/5 -0.39%` 本可 TP `+7.98%`；`7/28 -6.00%` 本可分批+TP `+6.16%`；`8/1 -3.75%` 未决）。只对空头关闭指标退出：full `+9053.21% -> +11147.93%`、MaxDD 不变 `-22.88%`、Sharpe `4.63 -> 4.78`，全部标准分片改善；多空全关参照则 MaxDD 恶化至 `-27.06%`，确认多头指标退出为净正贡献、价值高度不对称。但样本仅 3 笔、post-hoc 启发，且 7/28 持有路径 MAE `5.01ATR` 距 SL5.7 仅 `0.69ATR`。决定：不修改 V35.3、不登记版本、不改 runner；冻结为 shadow candidate，此后每笔空头指标退出须记录「若不退」影子路径，累计时间前推样本后再议。证据见 [V35.3 空头侧关闭指标退出诊断](diagnostics/hype-ema-tb-v35-3-short-indicator-exit-off-2026-08-01.md)。
 - 2026-07-29（V35.3 giveaway 分批回放 + 弱多 ema_spread 扫描）：孤立回放确认 `2026-07-13` 空单全进全出 `-11.72%`，V35.3 `4.4ATR/75%` 分批后为 `+2.36%`（Δ `+14.08pp`）；`2026-07-17` 研究路径本可 TP `+6.18%~+6.61%`，实盘 manual `-4.13%` 才是主伤。多头 `ema_spread>=0.008` 可同时挡住 7/15 与 7/21 弱多，但 full 从 `+9434.54%` 降至 `+6726.73%`，不是免费过滤。决定：保持 V35.3 空头分批；不热改弱多 spread 门槛；下一研究优先多头对称分批；实盘可临时降 `max_allocation` 并少 manual。证据见 [giveaway 分批回放](diagnostics/hype-ema-tb-v35-3-giveaway-partial-replay-2026-07-29.md) 与 [ema_spread 扫描](diagnostics/hype-ema-tb-v35-3-long-ema-spread-threshold-scan-2026-07-29.md)。
