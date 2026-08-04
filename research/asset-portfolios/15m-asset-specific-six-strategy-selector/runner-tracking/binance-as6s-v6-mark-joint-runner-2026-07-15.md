@@ -27,7 +27,7 @@
 
 对拍覆盖 `sleeve / symbol / side / entry_ts / entry_price / raw_strength /
 strength / exit_ts / exit_reason`，并按冻结 Python 路由重建完整账户路径。
-fixture 原始字节哈希为：
+fixture 原始字节哈希为（2026-08-02 已重新冻结，见文末「Fixture 重新冻结」）：
 
 - nonpreemptive：`25fc54595a3e941bc5c95d50601f2fe5284f581f1797b0d78afde6b9ea7f2f22`；
 - preemptive：`f725da54c1a66ad65e4190469ff0f35d7ffcfe223c48e45fb5b2dd49757fc1fe`。
@@ -100,3 +100,24 @@ fixture 由冻结点以前的数据通过
 - 平台 `strategy_instances` 确认两个实例均 `enabled=1`，state directory 分别为
   `state/bin-15m-as6s-v6-mark-np-dry-run` 与
   `state/bin-15m-as6s-v6-mark-preemptive-dry-run`。
+
+## Fixture 重新冻结（2026-08-02）
+
+- 原始 V6 fixture 在 2026-07-15 导出后只保留在 `/tmp`，已被系统清理，Runner
+  parity 测试所需的冻结字节一度不可复现。
+- 使用既有冻结脚本重新导出（Lab venv）：
+  `scripts/export_binance_as6s_v6_runner_parity_fixtures.py --output-dir <dir>`。
+  重新导出字节与原始 fixture 不同（导出管道非字节级确定），但信号检查
+  `45/45`、逐腿退出 `15/15`、全候选 `1486/1298`、冻结路由 `634/568` 及逐行
+  路由对拍全部一致，parity 内容结论不变。
+- 新 fixture 改为持久证据保存，不再依赖系统临时目录：
+  - [`as6s_v6_mark_np_runner_parity_2026-08-02.json`](../artifacts/as6s_v6_mark_np_runner_parity_2026-08-02.json)，
+    SHA-256 `21d48602e922191ef331408efe93b7f99f07d0db1ff1d1da3850bb80d7313249`；
+  - [`as6s_v6_mark_preemptive_runner_parity_2026-08-02.json`](../artifacts/as6s_v6_mark_preemptive_runner_parity_2026-08-02.json)，
+    SHA-256 `667ec9819536ef290b4f69f1e929baf5c637ca0d59f253da40166fbf99e1bd87`。
+- Runner 代码常量 `NP_PARITY_FIXTURE_SHA256` / `PREEMPT_PARITY_FIXTURE_SHA256`
+  已更新为上述新哈希；parity 测试新增 Lab checkout 默认路径回退（env 变量
+  仍可覆盖），`cargo test -p quant-runner --lib -- --ignored` 本地 5 个
+  parity 测试全部 PASS（含 V5 三个既有 fixture 测试）。
+- 本记录不改变策略状态：仍为 `implementation parity PASS / dry-run authorized`，
+  不涉及冻结参数、路由或未来 OOS。

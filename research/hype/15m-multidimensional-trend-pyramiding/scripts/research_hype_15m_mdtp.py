@@ -523,11 +523,13 @@ def raw_normalized_check(
             columns=columns,
         )
     except Exception as exc:
-        return {
-            "available": False,
-            "accepted": False,
-            "reason": f"raw loader/schema unavailable: {type(exc).__name__}: {exc}",
-        }
+        raw = load_legacy_raw_ohlcv_for_parity(warehouse, symbol)
+        if raw.empty:
+            return {
+                "available": False,
+                "accepted": False,
+                "reason": f"raw loader/schema unavailable: {type(exc).__name__}: {exc}",
+            }
     if raw.empty:
         return {
             "available": False,
@@ -566,6 +568,53 @@ def raw_normalized_check(
         "common_rows": int(len(common)),
         "max_abs_diff": max_diff,
     }
+
+
+def load_legacy_raw_ohlcv_for_parity(
+    warehouse: DuckDBWarehouse,
+    symbol: str,
+) -> pd.DataFrame:
+    """Load path-partitioned legacy Binance raw klines for parity only.
+
+    Older raw files intentionally retain the exchange payload schema and keep
+    exchange/market/symbol/timeframe in the directory path.  The generic
+    warehouse loader cannot filter those files because the payload itself has
+    no such columns.  This narrow fallback scopes files by the canonical path
+    first and derives only the normalized ``ts`` and ``vwap`` fields needed by
+    the parity check.
+    """
+
+    symbol_stem = symbol.replace("/", "_").replace(":", "_").lower()
+    root = (
+        warehouse.layout.raw_dir
+        / DatasetKind.OHLCV.value
+        / f"exchange={EXCHANGE}"
+        / f"market_type={MarketType.PERP.value}"
+        / f"timeframe={TIMEFRAME}"
+    )
+    files = sorted(root.glob(f"**/symbol={symbol_stem}.parquet"))
+    if not files:
+        return pd.DataFrame()
+    sql = """
+        SELECT
+            open_time AS ts,
+            open,
+            high,
+            low,
+            close,
+            volume,
+            quote_volume,
+            trade_count,
+            CASE
+                WHEN volume = 0 THEN close
+                ELSE quote_volume / volume
+            END AS vwap,
+            is_closed
+        FROM read_parquet(?, hive_partitioning = false, union_by_name = true)
+        ORDER BY open_time
+    """
+    with warehouse.connect() as connection:
+        return connection.execute(sql, [[str(path) for path in files]]).fetch_df()
 
 
 def resample_ohlcv(frame: pd.DataFrame, rule: str) -> pd.DataFrame:
@@ -962,6 +1011,7 @@ def simulate(
     fee_per_fill: float,
     slippage_per_fill: float,
     include_funding: bool,
+    allow_adds: bool = True,
     active_start: pd.Timestamp | None = None,
     active_end: pd.Timestamp | None = None,
 ) -> RunResult:
@@ -1188,7 +1238,7 @@ def simulate(
                     > 0.0
                 )
                 blocked = bool(state["block_add"].iloc[signal_bar])
-                if not is_add or (profitable and not blocked):
+                if not is_add or (allow_adds and profitable and not blocked):
                     fee_cost = fee_per_fill * abs(delta)
                     slippage_cost = slippage_per_fill * abs(delta)
                     equity *= max(1e-9, 1.0 - fee_cost - slippage_cost)

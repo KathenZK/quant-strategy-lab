@@ -12,10 +12,12 @@
 ## Current State
 
 - 当前版本：`HYPE-15M-MDTP-V1`
-- 状态：`explore / NO-GO / not promoted / not live-ready`
-- 主结论：标准 Binance 成本下 full 版本净亏 `-64.39%`，滚动历史伪 OOS 五个 fold 全亏；参数网格没有正收益稳定区，趋势分数未来收益/MFE/MAE 不单调。
-- 主要失败来源：gross edge 仅 `+12.76% / Sharpe 0.53`，年化换手约 `786.67`，手续费与滑点完全吞噬弱优势。
-- 下一门：不得在已揭示 HYPE 历史上继续阈值救援；只有 materially new 的低换手机制和新的 prospective OOS 才能重开 promotion 讨论。
+- 状态：`explore / not promoted / not live-ready`
+- 主结论：初始标准成本净亏 `-64.39%`；`2026-08-02` 复审更新窗口后为 `-65.64%`，成本盈亏平衡仅 `1–2 bps/fill`，六币固定参数标准成本全部亏损。
+- 主要失败来源：方向/强度分数跨六币均不单调，平均持仓约 `5.10h`、年化换手约 `788.12`；加仓不是唯一主因，禁止入场后增仓仍亏 `-52.21%`。
+- live-executable blocker：当前模拟器不是显式 quantity/equity ledger，无法审计隐含再平衡、有效杠杆漂移、净盈利加仓与 open risk。
+- successor 观察：未登记 campaign successor 已补显式 quantity/equity ledger；Long Validation `+1.96%` 但选中行 Train `-0.52%`，Short Validation `-3.87%`，两边均未通过研究可信度门槛。
+- 下一门：不得重新使用已揭示 Validation；prospective OOS 已锁定为 `2026-08-02` 至 `2026-11-02 UTC`，本轮不揭示。
 
 ## Version Rules
 
@@ -27,7 +29,7 @@
 
 | Version | Status | Role / mechanism | Frozen result | Evidence | Decision |
 | --- | --- | --- | --- | --- | --- |
-| `HYPE-15M-MDTP-V1` | explore / NO-GO / not promoted / not live-ready | 4h 多维分数定方向，1h 阶段/恢复，15m next-open 波动率目标调仓；盈利后才加仓；jump/extension gate；ATR trail/Donchian/score decay | HYPE standard-cost full `-64.39% / -65.14% DD / Sharpe -2.98 / 748 trades`；gross `+12.76% / Sharpe 0.53`；滚动 fold `0/5` 正收益 | [规格](specs/hype-15m-mdtp-v1-spec.md) · [初始研究](diagnostics/hype-15m-mdtp-v1-initial-research-2026-07-31.md) · [结果 JSON](artifacts/hype_15m_mdtp_v1_research_2026-07-31.json) | 不进入纸面交易；停止阈值优化 |
+| `HYPE-15M-MDTP-V1` | explore / not promoted / not live-ready | 4h 多维分数定方向，1h 阶段/恢复，15m next-open 波动率目标调仓；盈利后才加仓；jump/extension gate；ATR trail/Donchian/score decay | 初始 HYPE standard-cost `-64.39% / -65.14% DD / Sharpe -2.98`；复审更新窗口 `-65.64% / -66.23% DD / Sharpe -3.07`；六币净收益全负 | [规格](specs/hype-15m-mdtp-v1-spec.md) · [初始研究](diagnostics/hype-15m-mdtp-v1-initial-research-2026-07-31.md) · [失败复审](diagnostics/hype-15m-mdtp-v1-failure-audit-2026-08-02.md) | 不进入纸面交易；停止阈值优化 |
 
 ## Shared Assumptions
 
@@ -42,6 +44,8 @@
 - [decision-log.md](decision-log.md)
 - [V1 规格](specs/hype-15m-mdtp-v1-spec.md)
 - [初始研究报告](diagnostics/hype-15m-mdtp-v1-initial-research-2026-07-31.md)
+- [失败复审](diagnostics/hype-15m-mdtp-v1-failure-audit-2026-08-02.md)
+- [Campaign successor 冻结合同](specs/hype-15m-mdtp-campaign-successor-contract-2026-08-02.md)
+- [Campaign successor 初始研究](diagnostics/hype-15m-mdtp-campaign-successor-initial-research-2026-08-02.md)
 - [artifacts/README.md](artifacts/README.md)
 - [scripts/README.md](scripts/README.md)
-

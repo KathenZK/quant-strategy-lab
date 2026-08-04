@@ -216,3 +216,23 @@
 - freshness 隔离改为单 market-data group / Driver bundle 的本地故障域，兄弟
   策略和 systemd control-plane watchdog 不再被单策略 stale 连带重启。
 - 当前仅完成本地配置/代码变更，尚未部署；线上事实仍以 2026-07-13 artifact 为准。
+
+## 2026-08-03 runner 执行安全加固（未部署）
+
+- 全仓库风险审计（2026-08-02）的 P1 执行安全项全部修复并本地验证：
+  CLI live 授权强制、protection deadline 先平仓再暂停、REST 对账识别保护单
+  部分成交（幂等）、入场等待终态成交、marginType 严格校验与回读确认、
+  `engine_state.json` fsync 耐久性与 schema version、密钥隔离（dry-run 不再
+  加载 live.env、密钥 0600、disabled 实例不读凭据进内存）。同步落地低风险
+  P2 运维硬化：validate-config 完整校验、disabled 实例 ledger 写回
+  enabled=0、release workflow 限 main、Actions 固定 SHA、cargo audit 门禁。
+- 两个架构性 P2（V6/V5 Driver 耦合、多市场统一限流）按稳定性优先原则继续
+  冻结，后续单独立项。
+- 全部为平台执行语义加固，策略信号/出场/参数口径不变，V6.2.1 live spec 无需
+  修订；不改变 promotion、parity、资金边界或 2026-09-24 授权复核门禁。
+- 部署前置：`.secrets/dryrun.env` 由部署脚本从 live.env 自动派生（仅通知
+  变量），服务器只维护 live.env；live 首次以新二进制启动时保证金模式校验
+  属预期 fail-fast。
+- 详细改动与测试证据见
+  [`hype-5m-pbtr-runner-2026-08-03.md`](runner-tracking/hype-5m-pbtr-runner-2026-08-03.md)；
+  当前仅完成本地变更（234 测试全绿），尚未提交与部署。
