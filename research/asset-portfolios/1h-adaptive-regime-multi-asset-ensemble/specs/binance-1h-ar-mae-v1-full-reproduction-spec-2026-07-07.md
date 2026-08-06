@@ -1,22 +1,15 @@
+---
+document_type: external_reproduction_spec
+intended_audience: 没有本仓库、脚本或 artifacts 的外部研究员或 AI
+---
+
 # Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1 完整复现规格 - 2026-07-07
 
 ## 给同事 / AI 的使用说明
 
 这份文件是 `Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble-V1` 的完整复现规格。目标是：同事把本文件交给他的 AI 后，可以仅凭本文复现同一条 V1 交易路径、同一组近期分片指标和历史风险判断。
 
-重要：本文件必须视为 standalone spec。文中出现的仓库路径只用于你在本仓库内快速校验，不是复现依赖；如果同事没有这些脚本或主账，也应该能仅凭本文的“数据 schema + 特征计算 + 信号逻辑 + 过滤器 + 出入场状态机 + 参数 JSON + 组合阻塞规则”重写实现。
-
-最短复现命令：
-
-```bash
-uv run python research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_mae_single_position_backtest.py
-```
-
-复现脚本会输出并落盘：
-
-- 汇总 JSON：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/artifacts/binance_1h_ar_mae_single_position_2026-07-07.json`
-- 小时权益曲线：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/artifacts/binance_1h_ar_mae_single_position_equity_2026-07-07.csv`
-- 中选交易：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/artifacts/binance_1h_ar_mae_single_position_trades_2026-07-07.csv`
+重要：本文件必须视为 standalone spec。外部读者不需要仓库、脚本、主账或既有产物；仅凭本文的“数据 schema + 特征计算 + 信号逻辑 + 过滤器 + 出入场状态机 + 参数 JSON + 组合阻塞规则”即可重写实现。仓库内快捷校验入口统一放在末尾“非复现依赖”附录。
 
 ## 版本身份
 
@@ -30,12 +23,8 @@ uv run python research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/
 
 `V1` 是一个账户级组合策略：六个已登记的单资产 `1h adaptive-regime` 策略同时生成候选交易，但全账户同一时间只允许一笔持仓。当前只授权 dry-run，不授权 live。
 
-## 复现环境与数据边界
+## 数据边界
 
-- 仓库根目录：`/Users/ZK/OpenCode/quant-strategy-lab`
-- Python 入口：使用 `uv run python ...`
-- 组合脚本：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_mae_single_position_backtest.py`
-- 成分 loader 脚本：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py`
 - 组合窗口：`2024-08-17T06:00:00Z -> 2026-07-02T03:00:00Z`
 - HYPE sleeve 起点：`2025-07-14T10:00:00Z`，此前 HYPE 不参与候选交易。
 - 费用：`0.001` fee/fill
@@ -378,10 +367,6 @@ for trade, priority in tagged:
 
 ### TRX-1H-Adaptive-Regime-V3
 
-仓库内出处备注（非 standalone 依赖）：
-
-- Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_trx`
-- 成分脚本：`research/trx/1h-adaptive-regime/scripts/trx_1h_ar_v3_clean.py`
 - 成分版本：`TRX-1H-Adaptive-Regime-V3`
 
 MACD flip leg：
@@ -436,9 +421,6 @@ Stochastic reversal leg：
 
 ### SOL-1H-Adaptive-Regime-V2
 
-仓库内出处备注（非 standalone 依赖）：
-
-- Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_sol`
 - 成分版本：`SOL-1H-Adaptive-Regime-V2`
 - Ensemble 优先级：使用高胜率搜索覆写后的 `engine.prefit_score(train, validation, prefit)` 动态计算。
 
@@ -536,9 +518,6 @@ VWAP revert leg：
 
 ### HYPE-1H-Adaptive-Regime-V4
 
-仓库内出处备注（非 standalone 依赖）：
-
-- Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_hype`
 - 成分版本：`HYPE-1H-Adaptive-Regime-V4`
 - 单资产内部 merge：`DI` 优先级 `1.0`，`Stoch` 优先级 `0.0`；同一时段冲突时 DI 优先。
 
@@ -636,10 +615,6 @@ Stoch engine config：
 
 ### ETH-1H-Adaptive-Regime-V3
 
-仓库内出处备注（非 standalone 依赖）：
-
-- Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_eth`
-- 成分脚本：`research/eth/1h-adaptive-regime/scripts/eth_1h_ar_v2_1_clean.py`
 - 成分版本：`ETH-1H-Adaptive-Regime-V3`
 
 BB break clean config（含硬编码字段）：
@@ -687,10 +662,6 @@ RSI reversal clean config：
 
 ### BTC-1H-Adaptive-Regime-V4
 
-仓库内出处备注（非 standalone 依赖）：
-
-- Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_btc`
-- 成分脚本：`research/btc/1h-adaptive-regime/scripts/btc_1h_ar_v4.py`
 - 成分版本：`BTC-1H-Adaptive-Regime-V4`
 
 Keltner engine config（含中和值固定字段）：
@@ -736,10 +707,6 @@ CCI engine config（含中和值固定字段）：
 
 ### BNB-1H-Adaptive-Regime-V3
 
-仓库内出处备注（非 standalone 依赖）：
-
-- Loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py::load_bnb`
-- 成分参数源：`research/bnb/1h-adaptive-regime/artifacts/bnb_1h_ar_v2_micro_tune_2026-07-07.json`
 - 成分版本：`BNB-1H-Adaptive-Regime-V3`
 - 单资产内部 merge priorities：`[2.445774012147314, 1.6307399812929821]`
 
@@ -837,7 +804,7 @@ Wick reject leg：
 
 ## 期望复现结果
 
-完整复现后，`artifacts/binance_1h_ar_mae_single_position_2026-07-07.json` 中关键字段应匹配：
+完整复现后，输出结果中的关键字段应匹配：
 
 ```json
 {
@@ -903,3 +870,17 @@ Wick reject leg：
 4. 成分策略的历史研究失败与 live-readiness 缺口不会因组合或 dry-run 授权而消失。
 
 因此，正确复现的当前判断应是：`dry-run / not live-ready`；历史回撤和执行缺口继续阻塞 live。
+
+## 附录：仓库内校验（非复现依赖）
+
+本附录只方便仓库维护者核对既有实现；正文不依赖以下命令、路径或产物。
+
+- 运行命令：`uv run python research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_mae_single_position_backtest.py`
+- 组合 loader：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/scripts/research_binance_1h_ar_multi_asset_ensemble_backtest.py`
+- 汇总产物：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/artifacts/binance_1h_ar_mae_single_position_2026-07-07.json`
+- 权益产物：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/artifacts/binance_1h_ar_mae_single_position_equity_2026-07-07.csv`
+- 交易产物：`research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/artifacts/binance_1h_ar_mae_single_position_trades_2026-07-07.csv`
+- TRX 成分：`research/trx/1h-adaptive-regime/scripts/trx_1h_ar_v3_clean.py`
+- ETH 成分：`research/eth/1h-adaptive-regime/scripts/eth_1h_ar_v2_1_clean.py`
+- BTC 成分：`research/btc/1h-adaptive-regime/scripts/btc_1h_ar_v4.py`
+- BNB 参数源：`research/bnb/1h-adaptive-regime/artifacts/bnb_1h_ar_v2_micro_tune_2026-07-07.json`

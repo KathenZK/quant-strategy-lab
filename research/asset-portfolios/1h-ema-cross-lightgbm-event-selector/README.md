@@ -11,10 +11,11 @@
 ## 当前状态
 
 - 状态：`archived`
-- 尚未注册版本；本 README 兼任临时主账。周期梯度终点 1d 组合级 kill gate 未过后，EMA 交叉机制家族四周期整体关账（见 [1d P2 诊断](../1d-ema-cross-lightgbm-event-selector/diagnostics/bin-1d-emax-lgbm-p2-portfolio-control-a-2026-07-27.md)第 4 节）；本线基线结论（成本减半、空头残差存在但逼空月脆弱）保留为档案证据。
+- 尚未注册版本；身份与终局裁决见 [binance-1h-emax-lgbm-core-ledger.md](binance-1h-emax-lgbm-core-ledger.md)。周期梯度终点 1d 组合级 kill gate 未过后，EMA 交叉机制家族四周期整体关账（见 [1d P2 诊断](../1d-ema-cross-lightgbm-event-selector/diagnostics/bin-1d-emax-lgbm-p2-portfolio-control-a-2026-07-27.md)第 4 节）；本线基线结论（成本减半、空头残差存在但逼空月脆弱）保留为档案证据。
 
 ## 入口
 
+- 主账：[binance-1h-emax-lgbm-core-ledger.md](binance-1h-emax-lgbm-core-ledger.md)
 - 决策日志：[decision-log.md](decision-log.md)
 - P1 基线诊断：[bin-1h-emax-lgbm-p1-baseline-2026-07-24.md](diagnostics/bin-1h-emax-lgbm-p1-baseline-2026-07-24.md)
 - 2026H1 复用窗口审计（非干净 OOS）：[bin-1h-emax-lgbm-2026h1-reused-audit-2026-07-24.md](diagnostics/bin-1h-emax-lgbm-2026h1-reused-audit-2026-07-24.md)

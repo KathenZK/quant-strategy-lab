@@ -10,10 +10,11 @@
 ## 当前状态
 
 - 状态：`explore / not promoted / not live-ready`
-- 尚未注册版本；本 README 兼任临时主账。2026-08-05 合同冻结后跑数结论：9 标的 8 个净收益为正、换手成本可养（3.5–11×/年）、单资产 Sharpe 0.25–0.49 与文献一致，但预注册门禁未过——BTC 0.493/ETH 0.432 卡 G2（≥0.5），TradFi 仅 QQQ/SPY 全过（2/6）。单资产通用主张按合同判死；合法下一步是组合级聚合契约（另立预注册）。
+- 尚未注册版本；身份与裁决见 [binance-1d-ewmac-ut-core-ledger.md](binance-1d-ewmac-ut-core-ledger.md)。2026-08-05 合同冻结后跑数结论：9 标的 8 个净收益为正、换手成本可养（3.5–11×/年）、单资产 Sharpe 0.25–0.49 与文献一致，但预注册门禁未过——BTC 0.493/ETH 0.432 卡 G2（≥0.5），TradFi 仅 QQQ/SPY 全过（2/6）。单资产通用主张按合同判死；合法下一步是组合级聚合契约（另立预注册）。
 
 ## 入口
 
+- 主账：[binance-1d-ewmac-ut-core-ledger.md](binance-1d-ewmac-ut-core-ledger.md)
 - 决策日志：[decision-log.md](decision-log.md)
 - 冻结合同：[xa-1d-ewmac-ut-universal-trend-contract-2026-08-05.md](specs/xa-1d-ewmac-ut-universal-trend-contract-2026-08-05.md)
 - 诊断：[xa-1d-ewmac-ut-universal-trend-2026-08-05.md](diagnostics/xa-1d-ewmac-ut-universal-trend-2026-08-05.md)

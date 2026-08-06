@@ -11,8 +11,9 @@
 
 ## 入口
 
-- 决策记录（兼任 interim ledger，本家族尚无登记版本）：`decision-log.md`
-- 首轮可执行搜索：`diagnostics/hype-5m-ma-pullback-scalp-search-2026-06-26.md`
-- 邻域稳健性：`diagnostics/hype-5m-ma-pullback-scalp-robustness-2026-06-26.md`
+- 主账：[hype-5m-ma-pbs-core-ledger.md](hype-5m-ma-pbs-core-ledger.md)
+- 决策记录：[decision-log.md](decision-log.md)
+- 首轮可执行搜索：[hype-5m-ma-pullback-scalp-search-2026-06-26.md](diagnostics/hype-5m-ma-pullback-scalp-search-2026-06-26.md)
+- 邻域稳健性：[hype-5m-ma-pullback-scalp-robustness-2026-06-26.md](diagnostics/hype-5m-ma-pullback-scalp-robustness-2026-06-26.md)
 
 脚本在 `scripts/`，被报告引用的 JSON/CSV 在 `artifacts/`。候选行指标与 live 边界清单以上述报告和 decision-log 为准。

@@ -10,10 +10,11 @@
 ## 当前状态
 
 - 状态：`archived`（P2 组合级 kill gate 未过）
-- 尚未注册版本；本 README 兼任临时主账。事件级空头优势真实（净 +0.733 ATR、逐年全正）但集中在成簇崩盘波，预注册资金框架下容量逆向选择使其不可收割（2022 利润占比 383%）。1d 为周期梯度最后候选，EMA 交叉机制家族四周期关账；重启条件见 P2 诊断第 4 节。
+- 尚未注册版本；身份与终局裁决见 [binance-1d-emax-lgbm-core-ledger.md](binance-1d-emax-lgbm-core-ledger.md)。事件级空头优势真实（净 +0.733 ATR、逐年全正）但集中在成簇崩盘波，预注册资金框架下容量逆向选择使其不可收割（2022 利润占比 383%）。1d 为周期梯度最后候选，EMA 交叉机制家族四周期关账；重启条件见 P2 诊断第 4 节。
 
 ## 入口
 
+- 主账：[binance-1d-emax-lgbm-core-ledger.md](binance-1d-emax-lgbm-core-ledger.md)
 - 决策日志：[decision-log.md](decision-log.md)
 - P1 基线诊断：[bin-1d-emax-lgbm-p1-baseline-2026-07-24.md](diagnostics/bin-1d-emax-lgbm-p1-baseline-2026-07-24.md)
 - P2 组合级诊断（kill-gate 判定）：[bin-1d-emax-lgbm-p2-portfolio-control-a-2026-07-27.md](diagnostics/bin-1d-emax-lgbm-p2-portfolio-control-a-2026-07-27.md)

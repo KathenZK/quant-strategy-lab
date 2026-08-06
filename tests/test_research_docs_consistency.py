@@ -11,7 +11,6 @@ import hashlib
 import json
 import re
 import sys
-import warnings
 from pathlib import Path
 
 import yaml
@@ -51,28 +50,7 @@ def _schema_problems(instance: object, schema_path: Path) -> list[str]:
     for error in sorted(validator.iter_errors(instance), key=lambda item: list(item.path))
   ]
 
-# 尚无 <family-id>-core-ledger.md 的家族（grandfathered 债务清单）。
-# 只允许收缩：给家族补建 core ledger 后从这里删除对应条目。
-# 有版本登记的家族新增到此清单属于违规（见 research-report-storage.mdc）。
-GRANDFATHERED_NO_CORE_LEDGER = {
-  # 未登记版本、由 README 临时承载路由与诊断结论的 portfolio 研究线。
-  "asset-portfolios/15m-ema-cross-lightgbm-event-selector",
-  "asset-portfolios/15m-multi-asset-trend-state-machine",
-  "asset-portfolios/15m-multi-indicator-intraday",
-  "asset-portfolios/1d-turtle-breakout",
-  "asset-portfolios/1d-ema-cross-lightgbm-event-selector",
-  "asset-portfolios/1d-ewmac-universal-trend",
-  "asset-portfolios/1d-multi-asset-tsmom-vol-target",
-  "asset-portfolios/1h-ema-cross-lightgbm-event-selector",
-  "asset-portfolios/4h-ema-cross-lightgbm-event-selector",
-  "hype/15m-pullback-trail",
-  "hype/15m-riptide",
-  "hype/1m-ema-crossover",
-  "hype/1m-ma-pullback-scalp",
-  "hype/5m-ma-pullback-scalp",
-  # 诊断主题目录，非策略家族。
-  "asset-portfolios/hype-cross-strategy-account",
-}
+_ALLOWED_RESEARCH_CLASSIFICATIONS = {"strategy_family", "diagnostic_topic"}
 
 
 def iter_family_dirs() -> list[tuple[str, Path]]:
@@ -106,16 +84,27 @@ def test_family_dirs_have_readme_and_decision_log() -> None:
   assert not problems, "家族目录骨架不完整:\n" + "\n".join(problems)
 
 
-def test_family_dirs_have_core_ledger_unless_grandfathered() -> None:
+def test_strategy_families_have_core_ledger_and_topics_are_explicit() -> None:
   problems = []
   for key, family_dir in iter_family_dirs():
-    has_ledger = any(family_dir.glob("*core-ledger*.md"))
-    if has_ledger and key in GRANDFATHERED_NO_CORE_LEDGER:
-      problems.append(f"{key}: 已有 core ledger，请从 grandfathered 清单移除")
-    if not has_ledger and key not in GRANDFATHERED_NO_CORE_LEDGER:
+    readme = family_dir / "README.md"
+    classification = _frontmatter(readme).get(
+      "research_classification", "strategy_family"
+    )
+    if classification not in _ALLOWED_RESEARCH_CLASSIFICATIONS:
       problems.append(
-        f"{key}: 缺少 <family-id>-core-ledger.md（若确属无版本登记的诊断线，"
-        "在测试的 grandfathered 清单登记并说明）"
+        f"{key}: research_classification={classification!r} 非法，"
+        f"只允许 {sorted(_ALLOWED_RESEARCH_CLASSIFICATIONS)}"
+      )
+      continue
+    has_ledger = any(family_dir.glob("*core-ledger*.md"))
+    if classification == "diagnostic_topic" and has_ledger:
+      problems.append(f"{key}: diagnostic_topic 不得伪造策略 core ledger")
+    if classification == "strategy_family" and not has_ledger:
+      problems.append(
+        f"{key}: strategy_family 缺少 <family-id>-core-ledger.md；"
+        "若确属非策略诊断主题，请在 README front matter 显式声明 "
+        "research_classification: diagnostic_topic"
       )
   assert not problems, "core-ledger 覆盖检查失败:\n" + "\n".join(problems)
 
@@ -196,14 +185,7 @@ def test_no_links_to_retired_reports_dir() -> None:
   assert not offenders, "以下文档仍链接已退役的 reports/:\n" + "\n".join(offenders)
 
 
-# 对外复现规格的存量整改清单：这两份写于 external-reproduction-spec 规则之前。
-# 只允许收缩：把仓库内部引用移入"非复现依赖"附录后，从这里删除对应条目。
-GRANDFATHERED_REPRO_SPECS = {
-    "asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/specs/"
-    "binance-1h-ar-mae-v1-full-reproduction-spec-2026-07-07.md",
-    "hype/15m-multi-indicator-intraday/live-specs/"
-    "hype-15m-mii-v1-2-reproduction-spec-not-live-ready-2026-06-30.md",
-}
+GRANDFATHERED_REPRO_SPECS: set[str] = set()
 
 # 附录标题必须含此标记，其后的仓库内部引用才被允许。
 _REPRO_APPENDIX_MARKER = "非复现依赖"
@@ -356,40 +338,13 @@ def test_shared_kernel_versions_are_frozen() -> None:
   assert not problems, "共享内核冻结检查失败:\n" + "\n".join(problems)
 
 
-OVERLONG_CORE_LEDGER_CAPS = {
-  "hype/15m-multi-indicator-intraday/hype-15m-mii-core-ledger.md": 509,
-  "hype/15m-ema-crossover/hype-ema-x-core-ledger.md": 457,
-  "hype/5m-pullback-trail/hype-5m-pullback-trail-core-ledger.md": 1181,
-  "hype/15m-ema-trend-breakout/hype-ema-tb-core-ledger.md": 481,
-  "btc/1h-adaptive-regime/btc-1h-ar-core-ledger.md": 205,
-  "hype/1h-adaptive-regime/hype-1h-ar-core-ledger.md": 176,
-  "hype/5m-event-quality-scoring/hype-5m-event-quality-scoring-core-ledger.md": 153,
-}
-
-
-def test_core_ledgers_respect_length_budget_or_shrink_only_cap() -> None:
+def test_core_ledgers_respect_length_budget() -> None:
   problems = []
-  seen_allowlisted = set()
   for ledger in sorted(RESEARCH.rglob("*core-ledger*.md")):
     rel = str(ledger.relative_to(RESEARCH))
     line_count = len(ledger.read_text(encoding="utf-8").splitlines())
-    cap = OVERLONG_CORE_LEDGER_CAPS.get(rel)
-    if line_count > 150 and cap is None:
+    if line_count > 150:
       problems.append(f"{rel}: {line_count} 行，超过新主账 150 行阈值")
-    if cap is not None:
-      seen_allowlisted.add(rel)
-      if line_count > cap:
-        problems.append(f"{rel}: {line_count} 行，超过历史 shrink-only cap {cap}")
-      elif line_count <= 150:
-        problems.append(f"{rel}: 已缩至 {line_count} 行，请从超长 allowlist 移除")
-      else:
-        warnings.warn(
-          f"历史超长 core ledger 待压缩: {rel} ({line_count}/{cap})",
-          UserWarning,
-          stacklevel=1,
-        )
-  stale = set(OVERLONG_CORE_LEDGER_CAPS) - seen_allowlisted
-  problems.extend(f"{rel}: allowlist 文件不存在，请移除" for rel in sorted(stale))
   assert not problems, "core ledger 长度检查失败:\n" + "\n".join(problems)
 
 

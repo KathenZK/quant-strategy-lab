@@ -1,6 +1,10 @@
+---
+research_classification: diagnostic_topic
+---
+
 # HYPE Cross-Strategy Account
 
-本目录记录 HYPE 单资产多策略共享子账户、全局仓位约束、跨策略优先级和账户级风控相关的组合诊断。它放在 `asset-portfolios/` 下，因为研究对象是账户/portfolio layer，而不是新的 HYPE alpha family。
+本目录显式分类为 `diagnostic_topic`，记录 HYPE 单资产多策略共享子账户、全局仓位约束、跨策略优先级和账户级风控相关的组合诊断。它放在 `asset-portfolios/` 下，因为研究对象是账户/portfolio layer，而不是新的 HYPE alpha family，因此不创建策略 core ledger。
 
 它不是一个新的 alpha family，也不改变各策略原本的 promotion 状态。被组合的策略仍必须回到各自 family 文档判断：
 

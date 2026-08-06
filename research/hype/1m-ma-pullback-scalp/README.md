@@ -11,7 +11,8 @@
 
 ## 入口
 
-- 决策记录（兼任 interim ledger，本家族无登记版本）：`decision-log.md`
-- 首轮可执行搜索（not-promoted 证据）：`diagnostics/hype-1m-ma-pullback-scalp-search-2026-06-26.md`
+- 主账：[hype-1m-ma-pbs-core-ledger.md](hype-1m-ma-pbs-core-ledger.md)
+- 决策记录：[decision-log.md](decision-log.md)
+- 首轮可执行搜索（not-promoted 证据）：[hype-1m-ma-pullback-scalp-search-2026-06-26.md](diagnostics/hype-1m-ma-pullback-scalp-search-2026-06-26.md)
 
 脚本在 `scripts/`，被报告引用的 JSON/CSV 在 `artifacts/`。数据质量与 live 边界清单以上述报告为准。

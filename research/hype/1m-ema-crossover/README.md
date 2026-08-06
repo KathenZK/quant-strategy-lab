@@ -12,10 +12,11 @@
 
 ## 入口
 
-- 决策记录（兼任 interim ledger）：`decision-log.md`
-- 首轮 live-executable 搜索：`diagnostics/hype-1m-ema-crossover-live-search-2026-06-25.md`
-- 偏离止盈状态机诊断：`diagnostics/hype-1m-ema-deviation-take-profit-2026-06-27.md`
-- V35 过滤器迁移诊断：`diagnostics/hype-1m-ema-v35-filter-overlay-2026-06-27.md`
+- 主账：[hype-1m-ema-x-core-ledger.md](hype-1m-ema-x-core-ledger.md)
+- 决策记录：[decision-log.md](decision-log.md)
+- 首轮 live-executable 搜索：[hype-1m-ema-crossover-live-search-2026-06-25.md](diagnostics/hype-1m-ema-crossover-live-search-2026-06-25.md)
+- 偏离止盈状态机诊断：[hype-1m-ema-deviation-take-profit-2026-06-27.md](diagnostics/hype-1m-ema-deviation-take-profit-2026-06-27.md)
+- V35 过滤器迁移诊断：[hype-1m-ema-v35-filter-overlay-2026-06-27.md](diagnostics/hype-1m-ema-v35-filter-overlay-2026-06-27.md)
 
 ## 数据口径
 
