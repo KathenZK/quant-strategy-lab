@@ -84,3 +84,21 @@ nonpreemptive 最近 1m 胜率为 `78.57%`，因此不能把长期高胜率解�
 分账，不互相净额；基础名义金额均为 `10 USDT`，最大 allocation `2.25`。
 本授权只用于 forward 观测，不构成 testnet、live 或 promotion 批准，也不改变
 `[2026-07-14T09:00:00Z, 2026-10-14T09:00:00Z)` 未来 OOS 禁改禁看边界。
+
+## 2026-08-04 — V5 退役，引擎代码内聚进 V6 模块
+
+用户决定 AS6S 家族只保留 V6 双路线，V5 整体退役：
+
+- runner manifest 移除 `bin-15m-as6s-v5-joint-np-dry-run` 条目，`dryrun.toml`
+  同步移除该 disabled 实例，lock 重新生成。
+- runner 删除 `strategies/asset_specific_six_selector_v5_joint_state/` 目录；
+  V6 原先依赖的 V5 引擎代码（config/signals/router/mod 四文件）原样迁入
+  `strategies/asset_specific_six_selector_v6_mark_joint_state/`，作为
+  `engine_*.rs` 内部模块，行为逐位不变（diff 审计 + 全量测试通过）。
+- V5 专属 strict replay、parity fixture 环境变量与测试一并移除；V6 双路线
+  parity 审计维持不变（fixture 仍需 Lab 侧重新落盘后执行，见跟踪文档）。
+- V5 历史对拍证据保留在本家族 ledger 与
+  [V5 Runner 对拍](runner-tracking/binance-as6s-v5-joint-runner-2026-07-15.md)，
+  不构成注册或 promotion。
+
+执行细节见 [V5 退役记录](runner-tracking/binance-as6s-v5-retire-engine-inhouse-2026-08-04.md)。
