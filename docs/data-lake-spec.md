@@ -103,6 +103,13 @@ source
 缺字段、critical null、非法 OHLC、重复业务键、未知来源、不可靠闭合状态或
 错误时区均是 data-quality blocker。
 
+股票 intraday normalized 数据还必须保留可机审的 session/closure provenance：
+`session`、`session_type`、`session_calendar`、`session_policy`、
+`session_open`、`session_close`、`bar_close_ts`、`session_provenance` 与
+`closure_provenance`。其中 `is_closed` 可由交易所日历中的 bar 结束时间与固定
+`audit_as_of` 判定，但必须记录日历、日历依赖版本、公式与审计时点；仅凭 `ts`
+或脚本运行时“看起来已过去”不能生成可信闭合状态。
+
 ## 5. Raw 数据与接受状态
 
 提供方原生 raw 快照可以暂时缺少标准字段，但必须：
@@ -119,9 +126,16 @@ source
 
 ## 6. 连续性与市场日历
 
-- 加密货币连续市场按对应 timeframe 的 24/7 时间网格检查缺 K 和异常间隔。
-- 股票必须使用交易所日历、时区、节假日、常规/盘前/盘后 session 检查连续性；
-  不得把休市时段误报为缺 K，也不得把非预期 session 当成正常连续数据。
+- `continuous_24_7` policy 保持加密货币既有行为：按对应 timeframe 的全天候
+  时间网格检查缺 K 和异常间隔。
+- 股票 trusted load 必须显式指定 session policy，不能回落到 24/7。NASDAQ
+  regular-session 数据使用 `xnas_regular`，其权威网格由 `exchange-calendars`
+  的 `XNAS` calendar 提供，包含 `America/New_York` 时区、DST、节假日和提前
+  收市。
+- `xnas_regular` 只接受交易所常规时段中的 bar open；盘前、盘后、周末及休市日
+  行不属于连续网格，normalized 中出现这些行必须报 `out_of_session_rows`。
+- session-aware 审计必须报告 expected bars、session 数、缺 K、session 外行、
+  closure mismatch 与固定 `closure_as_of`；不得把休市时段误报为缺 K。
 - 日 K 必须明确 session 与 timestamp 语义，不能仅凭相邻自然日推断缺失。
 - 缺口或可疑行应优先通过交易所 API、官方数据、Binance Vision 或保留的 raw
   证据核验；无法核验时记录 blocker，不得继续参数搜索。
@@ -161,8 +175,11 @@ source
 - 审计原因。
 
 输出必须带 `derivation_provenance` 与 `quality_flags`。`trade_count` 和
-`is_closed` 没有派生模式；不得填 `trade_count = 0` 或猜测 `is_closed = true`。
-raw 层禁止写入代理字段。
+`is_closed` 没有通用代理派生模式；不得填 `trade_count = 0` 或猜测
+`is_closed = true`。提供方原生非标准字段可以在来源固定且逐行无损时映射，例如
+Polygon `transactions -> trade_count`，但必须保留原字段与映射 provenance。
+缺少原生计数的 Yahoo 数据不能使用该映射，也不能放宽 schema。raw 层禁止写入
+代理字段。
 
 ## 9. 写入、分区与重复处理
 
@@ -180,10 +197,12 @@ raw 层禁止写入代理字段。
 
 研究消费应优先使用 `DuckDBWarehouse.load_trusted_ohlcv()`。它在普通读取之上
 检查 schema、UTC、闭合 K、连续性、timeframe 和真实来源，并把结构化结果写入
-`DataFrame.attrs["ohlcv_audit"]`。
+`DataFrame.attrs["ohlcv_audit"]`。crypto 未传 policy 时继续使用
+`continuous_24_7`；equity 必须显式传入 session policy，NASDAQ regular 数据传
+`xnas_regular`，必要时同时固定 `closure_as_of` 以便复现。
 
 `load_dataset()` 只提供读取与过滤能力，不表示数据已获信任。读取 raw equity
-等 session-aware 审计尚未实现的数据时，不得把普通加载成功解释为质量通过。
+或其他未接受数据时，不得把普通加载成功解释为质量通过。
 
 raw/normalized 对齐使用 `audit_raw_normalized_ohlcv()`。任何研究脚本若绕过可信
 加载器，必须在对应报告中给出等价的数据质量审计和明确理由。
@@ -207,6 +226,8 @@ raw/normalized 对齐使用 `audit_raw_normalized_ohlcv()`。任何研究脚本�
 - [`models.py`](../src/strategy_lab/data/models.py)：市场类型与数据集 schema；
 - [`lake.py`](../src/strategy_lab/data/lake.py)：分层与分区路径；
 - [`store.py`](../src/strategy_lab/data/store.py)：身份校验、按日和原子写入；
+- [`sessions.py`](../src/strategy_lab/data/sessions.py)：session policy 与 XNAS
+  regular-session 权威 bar 网格；
 - [`quality.py`](../src/strategy_lab/data/quality.py)：schema、重复、连续性与对齐审计；
 - [`warehouse.py`](../src/strategy_lab/data/warehouse.py)：过滤读取与 trusted loader；
 - [`authenticity.py`](../src/strategy_lab/data/authenticity.py)：真实来源审计。

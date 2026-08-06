@@ -3,7 +3,6 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 import json
-import re
 from typing import Iterable
 
 import numpy as np
@@ -11,6 +10,12 @@ import pandas as pd
 from pandas.api.types import is_bool_dtype, is_numeric_dtype
 
 from strategy_lab.data.models import DatasetKind, dataset_specs
+from strategy_lab.data.sessions import (
+    OHLCVSessionPolicy,
+    expected_ohlcv_session_bars,
+    session_policy_metadata,
+    timeframe_delta,
+)
 
 
 class DuplicatePolicy(StrEnum):
@@ -48,6 +53,13 @@ class OHLCVAuditReport:
     open_rows: int
     timeframe_mismatches: int
     schema_errors: tuple[str, ...] = ()
+    session_policy: str = OHLCVSessionPolicy.CONTINUOUS_24_7.value
+    calendar_name: str | None = None
+    expected_bars: int = 0
+    session_count: int = 0
+    out_of_session_rows: int = 0
+    closure_mismatches: int = 0
+    closure_as_of: str | None = None
 
     @property
     def trusted(self) -> bool:
@@ -58,6 +70,8 @@ class OHLCVAuditReport:
                 self.unexpected_intervals,
                 self.open_rows,
                 self.timeframe_mismatches,
+                self.out_of_session_rows,
+                self.closure_mismatches,
                 len(self.schema_errors),
             )
         )
@@ -74,6 +88,13 @@ class OHLCVAuditReport:
             "open_rows": self.open_rows,
             "timeframe_mismatches": self.timeframe_mismatches,
             "schema_errors": list(self.schema_errors),
+            "session_policy": self.session_policy,
+            "calendar_name": self.calendar_name,
+            "expected_bars": self.expected_bars,
+            "session_count": self.session_count,
+            "out_of_session_rows": self.out_of_session_rows,
+            "closure_mismatches": self.closure_mismatches,
+            "closure_as_of": self.closure_as_of,
             "trusted": self.trusted,
         }
 
@@ -320,21 +341,16 @@ def validate_frame(kind: DatasetKind, frame: pd.DataFrame) -> None:
         raise ValueError(f"duplicate business keys for {kind.value}; keys={list(keys)}")
 
 
-def timeframe_delta(value: str) -> pd.Timedelta:
-    match = re.fullmatch(r"([1-9]\d*)([mhdw])", str(value).strip().lower())
-    if not match:
-        raise ValueError(f"unsupported timeframe: {value!r}")
-    amount, unit = match.groups()
-    unit_map = {"m": "min", "h": "h", "d": "d", "w": "w"}
-    return pd.Timedelta(int(amount), unit=unit_map[unit])
-
-
 def audit_ohlcv_frame(
     frame: pd.DataFrame,
     *,
     expected_timeframe: str | None = None,
     require_closed: bool = True,
+    session_policy: OHLCVSessionPolicy | str = OHLCVSessionPolicy.CONTINUOUS_24_7,
+    closure_as_of: pd.Timestamp | str | None = None,
 ) -> OHLCVAuditReport:
+    resolved_policy = OHLCVSessionPolicy(session_policy)
+    policy_metadata = session_policy_metadata(resolved_policy)
     schema_errors: list[str] = []
     try:
         validate_frame(DatasetKind.OHLCV, frame)
@@ -360,6 +376,8 @@ def audit_ohlcv_frame(
             open_rows=0,
             timeframe_mismatches=0,
             schema_errors=tuple(schema_errors),
+            session_policy=resolved_policy.value,
+            calendar_name=policy_metadata["calendar"],
         )
 
     identity = ("ts", "exchange", "symbol", "market_type", "timeframe")
@@ -375,6 +393,22 @@ def audit_ohlcv_frame(
 
     missing_bars = 0
     unexpected_intervals = 0
+    expected_bars = 0
+    session_count = 0
+    out_of_session_rows = 0
+    closure_mismatches = 0
+    resolved_closure_as_of: pd.Timestamp | None = None
+    if resolved_policy == OHLCVSessionPolicy.XNAS_REGULAR:
+        resolved_closure_as_of = (
+            pd.Timestamp.now(tz="UTC")
+            if closure_as_of is None
+            else pd.Timestamp(closure_as_of)
+        )
+        resolved_closure_as_of = (
+            resolved_closure_as_of.tz_localize("UTC")
+            if resolved_closure_as_of.tzinfo is None
+            else resolved_closure_as_of.tz_convert("UTC")
+        )
     group_columns = ["exchange", "symbol", "market_type", "timeframe"]
     groups = 0
     for key, group in frame.groupby(group_columns, dropna=False, sort=False):
@@ -392,14 +426,48 @@ def audit_ohlcv_frame(
             .sort_values()
         )
         if len(timestamps) < 2:
-            continue
-        for delta in timestamps.diff().dropna():
-            if delta == interval:
+            if resolved_policy == OHLCVSessionPolicy.CONTINUOUS_24_7:
                 continue
-            if delta > interval and delta % interval == pd.Timedelta(0):
-                missing_bars += int(delta / interval) - 1
-            else:
-                unexpected_intervals += 1
+        if resolved_policy == OHLCVSessionPolicy.CONTINUOUS_24_7:
+            for delta in timestamps.diff().dropna():
+                if delta == interval:
+                    continue
+                if delta > interval and delta % interval == pd.Timedelta(0):
+                    missing_bars += int(delta / interval) - 1
+                else:
+                    unexpected_intervals += 1
+            continue
+
+        if timestamps.empty:
+            continue
+        schedule = expected_ohlcv_session_bars(
+            start=timestamps.min(),
+            end=timestamps.max(),
+            timeframe=group_timeframe,
+            session_policy=resolved_policy,
+        )
+        expected_index = pd.DatetimeIndex(schedule["ts"])
+        actual_index = pd.DatetimeIndex(timestamps)
+        missing_bars += len(expected_index.difference(actual_index))
+        expected_bars += len(expected_index)
+        session_count += int(schedule["session"].nunique())
+
+        parsed_group_ts = pd.to_datetime(group["ts"], utc=True, errors="coerce")
+        in_session = parsed_group_ts.isin(expected_index)
+        out_of_session_rows += int((~in_session).sum())
+        if "is_closed" in group.columns and resolved_closure_as_of is not None:
+            closure = pd.DataFrame(
+                {
+                    "ts": parsed_group_ts.loc[in_session],
+                    "actual_closed": group.loc[in_session, "is_closed"]
+                    .fillna(False)
+                    .astype(bool),
+                }
+            ).merge(schedule[["ts", "bar_close_ts"]], on="ts", how="left")
+            expected_closed = closure["bar_close_ts"].le(resolved_closure_as_of)
+            closure_mismatches += int(
+                closure["actual_closed"].ne(expected_closed).sum()
+            )
 
     timestamps = pd.to_datetime(frame["ts"], utc=True, errors="coerce").dropna()
     return OHLCVAuditReport(
@@ -413,6 +481,17 @@ def audit_ohlcv_frame(
         open_rows=open_rows,
         timeframe_mismatches=timeframe_mismatches,
         schema_errors=tuple(dict.fromkeys(schema_errors)),
+        session_policy=resolved_policy.value,
+        calendar_name=policy_metadata["calendar"],
+        expected_bars=expected_bars,
+        session_count=session_count,
+        out_of_session_rows=out_of_session_rows,
+        closure_mismatches=closure_mismatches,
+        closure_as_of=(
+            resolved_closure_as_of.isoformat()
+            if resolved_closure_as_of is not None
+            else None
+        ),
     )
 
 

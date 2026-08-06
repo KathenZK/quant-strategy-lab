@@ -11,8 +11,10 @@ from strategy_lab.data import (
     DuplicatePolicy,
     MarketType,
     OHLCVDerivationPolicy,
+    OHLCVSessionPolicy,
     audit_ohlcv_frame,
     audit_raw_normalized_ohlcv,
+    expected_ohlcv_session_bars,
     normalize_dataset,
     validate_frame,
     write_dataframe,
@@ -903,6 +905,101 @@ def test_ohlcv_audit_reports_gaps_and_open_rows() -> None:
     assert not report.trusted
 
 
+def test_xnas_regular_session_audit_skips_closures_and_honors_early_close() -> None:
+    schedule = expected_ohlcv_session_bars(
+        start="2025-07-02T00:00:00Z",
+        end="2025-07-07T23:59:59Z",
+        timeframe="15m",
+        session_policy=OHLCVSessionPolicy.XNAS_REGULAR,
+    )
+    assert schedule.groupby("session").size().to_dict() == {
+        "2025-07-02": 26,
+        "2025-07-03": 14,
+        "2025-07-07": 26,
+    }
+
+    rows = len(schedule)
+    frame = _complete_ohlcv(
+        pd.DataFrame(
+            {
+                "ts": schedule["ts"],
+                "exchange": ["nasdaq"] * rows,
+                "symbol": ["MU"] * rows,
+                "market_type": ["equity"] * rows,
+                "open": [100.0] * rows,
+                "high": [101.0] * rows,
+                "low": [99.0] * rows,
+                "close": [100.0] * rows,
+                "volume": [1_000.0] * rows,
+                "source": ["polygon_api"] * rows,
+            }
+        ),
+        timeframe="15m",
+    )
+    report = audit_ohlcv_frame(
+        frame,
+        expected_timeframe="15m",
+        session_policy=OHLCVSessionPolicy.XNAS_REGULAR,
+        closure_as_of="2025-07-08T00:00:00Z",
+    )
+
+    assert report.trusted
+    assert report.expected_bars == 66
+    assert report.session_count == 3
+    assert report.missing_bars == 0
+    assert report.out_of_session_rows == 0
+    assert report.closure_mismatches == 0
+
+    broken = frame.drop(index=30).reset_index(drop=True)
+    broken.loc[len(broken)] = broken.iloc[-1]
+    broken.loc[len(broken) - 1, "ts"] = pd.Timestamp("2025-07-04T14:00:00Z")
+    broken_report = audit_ohlcv_frame(
+        broken,
+        expected_timeframe="15m",
+        session_policy=OHLCVSessionPolicy.XNAS_REGULAR,
+        closure_as_of="2025-07-08T00:00:00Z",
+    )
+    assert broken_report.missing_bars == 1
+    assert broken_report.out_of_session_rows == 1
+    assert not broken_report.trusted
+
+
+def test_xnas_regular_session_audit_detects_premature_closed_flag() -> None:
+    schedule = expected_ohlcv_session_bars(
+        start="2025-07-02T13:30:00Z",
+        end="2025-07-02T13:30:00Z",
+        timeframe="15m",
+        session_policy=OHLCVSessionPolicy.XNAS_REGULAR,
+    )
+    frame = _complete_ohlcv(
+        pd.DataFrame(
+            {
+                "ts": schedule["ts"],
+                "exchange": ["nasdaq"],
+                "symbol": ["MU"],
+                "market_type": ["equity"],
+                "open": [100.0],
+                "high": [101.0],
+                "low": [99.0],
+                "close": [100.0],
+                "volume": [1_000.0],
+                "source": ["polygon_api"],
+            }
+        ),
+        timeframe="15m",
+    )
+
+    report = audit_ohlcv_frame(
+        frame,
+        expected_timeframe="15m",
+        session_policy=OHLCVSessionPolicy.XNAS_REGULAR,
+        closure_as_of="2025-07-02T13:40:00Z",
+    )
+
+    assert report.closure_mismatches == 1
+    assert not report.trusted
+
+
 def test_raw_normalized_ohlcv_audit_detects_value_drift() -> None:
     raw = _complete_ohlcv(
         pd.DataFrame(
@@ -969,6 +1066,10 @@ def test_trusted_ohlcv_loader_enforces_continuity_and_source(tmp_path: Path) -> 
     )
 
     assert trusted.attrs["ohlcv_audit"]["trusted"] is True
+    assert (
+        trusted.attrs["ohlcv_audit"]["session_policy"]
+        == OHLCVSessionPolicy.CONTINUOUS_24_7.value
+    )
     with pytest.raises(ValueError, match="not trusted"):
         warehouse.load_trusted_ohlcv(
             exchange="binance",
@@ -977,6 +1078,67 @@ def test_trusted_ohlcv_loader_enforces_continuity_and_source(tmp_path: Path) -> 
             timeframe="1h",
             allowed_sources=("ccxt",),
         )
+
+
+def test_equity_trusted_loader_requires_and_applies_session_policy(
+    tmp_path: Path,
+) -> None:
+    layout = _layout(tmp_path)
+    layout.ensure_directories()
+    schedule = expected_ohlcv_session_bars(
+        start="2025-07-03T00:00:00Z",
+        end="2025-07-03T23:59:59Z",
+        timeframe="15m",
+        session_policy=OHLCVSessionPolicy.XNAS_REGULAR,
+    )
+    rows = len(schedule)
+    frame = _complete_ohlcv(
+        pd.DataFrame(
+            {
+                "ts": schedule["ts"],
+                "exchange": ["nasdaq"] * rows,
+                "symbol": ["MU"] * rows,
+                "market_type": ["equity"] * rows,
+                "open": [100.0] * rows,
+                "high": [101.0] * rows,
+                "low": [99.0] * rows,
+                "close": [100.0] * rows,
+                "volume": [1_000.0] * rows,
+                "source": ["polygon_api"] * rows,
+            }
+        ),
+        timeframe="15m",
+    )
+    write_normalized_dataframe(
+        frame,
+        layout=layout,
+        kind=DatasetKind.OHLCV,
+        exchange="nasdaq",
+        market_type=MarketType.EQUITY,
+        symbol="MU",
+        timeframe="15m",
+    )
+    warehouse = DuckDBWarehouse(layout)
+
+    with pytest.raises(ValueError, match="explicit session_policy"):
+        warehouse.load_trusted_ohlcv(
+            exchange="nasdaq",
+            market_type=MarketType.EQUITY,
+            symbol="MU",
+            timeframe="15m",
+        )
+
+    trusted = warehouse.load_trusted_ohlcv(
+        exchange="nasdaq",
+        market_type=MarketType.EQUITY,
+        symbol="MU",
+        timeframe="15m",
+        session_policy=OHLCVSessionPolicy.XNAS_REGULAR,
+        closure_as_of="2025-07-04T00:00:00Z",
+    )
+    assert len(trusted) == 14
+    assert trusted.attrs["ohlcv_audit"]["calendar_name"] == "XNAS"
+    assert trusted.attrs["ohlcv_audit"]["session_count"] == 1
 
 
 def test_normalized_writer_splits_multiple_utc_dates(tmp_path: Path) -> None:

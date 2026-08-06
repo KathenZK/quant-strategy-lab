@@ -14,6 +14,20 @@
   `data/external/us_equities` 原始文件按来源和 UTC 日期迁入统一 raw OHLCV，
   生成 SHA256/行数/round-trip 迁移清单；默认只审计，实际迁移需显式
   `--apply --remove-source`，迁移后可用 `--verify-existing` 重验全部目标 hash。
+- [`accept_mu_polygon_ohlcv.py`](accept_mu_polygon_ohlcv.py)：使用 XNAS calendar
+  过滤 Polygon 15m regular session，保留原生 `vwap`、映射
+  `transactions -> trade_count`、显式派生 `quote_volume`，在缺口、闭合和
+  raw/normalized 对齐通过后原子写入 canonical normalized。默认 dry-run；
+  隔离 worktree 使用实际数据时运行：
+
+  ```bash
+  uv run python research/mu/scripts/accept_mu_polygon_ohlcv.py \
+    --data-root /Users/ZK/OpenCode/quant-strategy-lab/data \
+    --apply
+  ```
+
+  该脚本只接受 `source=polygon_api`；Yahoo 仍为 `raw_unaccepted`，不会填充
+  缺失的 `trade_count`。
 - [`mu_hype_xfer_kernel.py`](mu_hype_xfer_kernel.py)：冻结的本地 HYPE EMA 迁移内核。
 
 脚本只服务 MU 研究时保留在本目录；长期结论写回上级 Markdown，保留的 JSON/CSV/HTML 写入 [`../artifacts/`](../artifacts/README.md)。只有成为可复用数据基础设施后才可提升到 `src/strategy_lab/`。不得从持续变化的 HYPE 家族研究脚本直接导入实现。

@@ -24,6 +24,7 @@ from strategy_lab.data.quality import (
     audit_ohlcv_frame,
     resolve_duplicates,
 )
+from strategy_lab.data.sessions import OHLCVSessionPolicy
 
 
 def _symbol_file_stem(symbol: str) -> str:
@@ -174,9 +175,25 @@ class DuckDBWarehouse:
         end: pd.Timestamp | None = None,
         require_contiguous: bool = True,
         require_closed: bool = True,
+        session_policy: OHLCVSessionPolicy | str | None = None,
+        closure_as_of: pd.Timestamp | str | None = None,
         allowed_sources: tuple[str, ...] = DEFAULT_REAL_SOURCE_ALLOWLIST,
         blocked_source_patterns: tuple[str, ...] = DEFAULT_BLOCKED_SOURCE_PATTERNS,
     ) -> pd.DataFrame:
+        if session_policy is None:
+            if market_type == MarketType.EQUITY:
+                raise ValueError(
+                    "equity trusted OHLCV loads require an explicit session_policy"
+                )
+            resolved_session_policy = OHLCVSessionPolicy.CONTINUOUS_24_7
+        else:
+            resolved_session_policy = OHLCVSessionPolicy(session_policy)
+        if (
+            resolved_session_policy == OHLCVSessionPolicy.XNAS_REGULAR
+            and market_type != MarketType.EQUITY
+        ):
+            raise ValueError("xnas_regular session policy is only valid for equity data")
+
         frame = self.load_dataset(
             layer=layer,
             kind=DatasetKind.OHLCV,
@@ -206,12 +223,16 @@ class DuckDBWarehouse:
             frame,
             expected_timeframe=timeframe,
             require_closed=require_closed,
+            session_policy=resolved_session_policy,
+            closure_as_of=closure_as_of,
         )
         blockers: dict[str, object] = {
             "duplicate_rows": report.duplicate_rows,
             "unexpected_intervals": report.unexpected_intervals,
             "open_rows": report.open_rows,
             "timeframe_mismatches": report.timeframe_mismatches,
+            "out_of_session_rows": report.out_of_session_rows,
+            "closure_mismatches": report.closure_mismatches,
             "schema_errors": list(report.schema_errors),
         }
         if require_contiguous:

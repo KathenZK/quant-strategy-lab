@@ -12,6 +12,11 @@ SHA256、行数和 round-trip 校验全部通过后删除。
 复现脚本见
 [`migrate_mu_equity_ohlcv.py`](../scripts/migrate_mu_equity_ohlcv.py)。
 
+后续状态：Polygon 15m 已于 2026-08-06 通过 XNAS regular-session 接受审计并
+进入 canonical normalized，见
+[`mu-polygon-15m-acceptance-2026-08-06.md`](mu-polygon-15m-acceptance-2026-08-06.md)；
+Yahoo 两组数据仍保持本报告记录的 `raw_unaccepted` 状态。
+
 ## 迁移结果
 
 | 来源 | 周期 | UTC 范围 | 行数 | 日分区 |
