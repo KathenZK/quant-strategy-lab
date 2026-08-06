@@ -5,6 +5,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import os
 from pathlib import Path
 
 
@@ -13,6 +14,37 @@ DEFAULT_INVENTORY = (
     ROOT / "research" / "_artifact-inventory" / "artifact-inventory.json"
 )
 MAX_FILE_DETAIL_WARNINGS = 20
+SKIP_DIR_NAMES = {
+    ".git",
+    ".mypy_cache",
+    ".pytest_cache",
+    ".ruff_cache",
+    ".tox",
+    ".venv",
+    "__pycache__",
+    "node_modules",
+}
+
+
+def current_artifact_totals(root: Path) -> tuple[int, int]:
+    file_count = 0
+    total_bytes = 0
+    for current, directory_names, file_names in os.walk(root, followlinks=False):
+        directory_names[:] = [
+            name
+            for name in directory_names
+            if name not in SKIP_DIR_NAMES
+            and not (Path(current) / name).is_symlink()
+        ]
+        if "artifacts" not in Path(current).relative_to(root).parts:
+            continue
+        for name in file_names:
+            path = Path(current) / name
+            if path.is_symlink():
+                continue
+            file_count += 1
+            total_bytes += path.stat().st_size
+    return file_count, total_bytes
 
 
 def evaluate_inventory(
@@ -89,7 +121,31 @@ def main() -> int:
         help="Return exit code 1 when warnings exist; default always exits 0.",
     )
     args = parser.parse_args()
+    if not args.inventory.is_file():
+        if args.inventory.resolve() != DEFAULT_INVENTORY.resolve():
+            print(f"ERROR: artifact inventory does not exist: {args.inventory}")
+            return 1
+        current_files, current_bytes = current_artifact_totals(ROOT)
+        print(
+            "Live artifact scan: "
+            f"{current_files} files/{current_bytes} bytes. "
+            "No persistent inventory snapshot is configured."
+        )
+        return 0
     inventory = json.loads(args.inventory.read_text(encoding="utf-8"))
+    if args.inventory.resolve() == DEFAULT_INVENTORY.resolve():
+        current_files, current_bytes = current_artifact_totals(ROOT)
+        summary = inventory.get("summary", {})
+        recorded_files = int(summary.get("file_count", 0))
+        recorded_bytes = int(summary.get("total_bytes", 0))
+        if (current_files, current_bytes) != (recorded_files, recorded_bytes):
+            print(
+                "WARNING: artifact inventory is stale; "
+                f"recorded={recorded_files} files/{recorded_bytes} bytes, "
+                f"current={current_files} files/{current_bytes} bytes. "
+                "Regenerate the inventory before using its budget findings."
+            )
+            return 1 if args.strict else 0
     warnings = evaluate_inventory(inventory)
     if warnings:
         print("\n".join(f"WARNING: {warning}" for warning in warnings))

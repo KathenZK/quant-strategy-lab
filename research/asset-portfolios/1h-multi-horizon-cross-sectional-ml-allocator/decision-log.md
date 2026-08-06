@@ -1,5 +1,6 @@
 # BIN-1H-MHCSML 决策日志
 
+- 2026-08-05：用户决定本家族只保留研究流程记录，不再重建已删除的模型、freeze 合同、盲链或 prospective 数据；状态迁移为 `archived`，原 prospective OOS 正式放弃且不得补采或揭盲。删除边界见 [artifacts/README.md](artifacts/README.md)。
 - 2026-07-18：建立独立家族 `Binance-1H-Multi-Horizon-Cross-Sectional-ML-Allocator`。采用分离 long/short/tail-risk 模型、允许空仓的 allocator 和 nested rolling walk-forward；已揭示 `2026Q2` 仅作 reused holdout，锁定 `2026-07-19 00:00 <= ts < 2026-10-19 00:00 UTC` 为 prospective OOS，最终只揭示一次。详见[研究契约](specs/binance-1h-mhcsml-research-contract-2026-07-18.md)。
 - 2026-07-18：完成 2020-01 至 2026-06 全市场数据复审与补洞；月归档内部 OHLCV/mark 缺口由 daily/FAPI 分层修复，funding 重复副本按 SHA 隔离。最终关键 blocker 为 0；交易所与 API 均无 bar 的 12 个停牌/迁移区间固化为 nontradable，并要求 entry-to-exit 相交样本 fail closed。详见[数据质量报告](diagnostics/binance-1h-mhcsml-data-quality-2026-07-18.md)。
 - 2026-07-18：从修复后的数据湖重建 654 合约、696 万行的多期限面板；形成 241 个候选特征，并为 `4/8/12/24/48h` 分别生成 long/short/tail 标签。未来扰动、公式恒等式、停牌路径和 MAE/MFE 语义审计全部通过，prospective OOS 行数为 0。详见[因子面板审计](diagnostics/binance-1h-mhcsml-factor-panel-2026-07-18.md)。

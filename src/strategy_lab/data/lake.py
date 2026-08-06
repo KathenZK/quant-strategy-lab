@@ -29,7 +29,13 @@ class DataLakeLayout:
         )
 
     def ensure_directories(self) -> None:
-        for path in (self.root_dir, self.raw_dir, self.normalized_dir, self.features_dir, self.cache_dir):
+        for path in (
+            self.root_dir,
+            self.raw_dir,
+            self.normalized_dir,
+            self.features_dir,
+            self.cache_dir,
+        ):
             path.mkdir(parents=True, exist_ok=True)
 
     def dataset_root(self, layer: str, kind: DatasetKind) -> Path:
@@ -50,6 +56,7 @@ class DataLakeLayout:
         market_type: MarketType | None = None,
         symbol: str | None = None,
         timeframe: str | None = None,
+        source: str | None = None,
         partition_date: date | None = None,
         file_stem: str | None = None,
     ) -> Path:
@@ -60,6 +67,8 @@ class DataLakeLayout:
             path = path / f"market_type={market_type.value}"
         if timeframe:
             path = path / f"timeframe={timeframe.lower()}"
+        if source:
+            path = path / f"source={source.lower()}"
         if partition_date:
             path = path / f"date={partition_date.isoformat()}"
         if file_stem is None:

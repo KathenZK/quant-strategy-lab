@@ -37,7 +37,7 @@ fixture 由冻结点以前的数据通过
 重建，保留在系统临时目录而不作为新的研究输入；长期证据只保存生成脚本、
 哈希、计数和 strict replay 结果。机器可读摘要见
 [`binance_as6s_v6_mark_joint_runner_parity_2026-07-15.json`](../artifacts/binance_as6s_v6_mark_joint_runner_parity_2026-07-15.json)。
-供 manifest parity gate 使用的两条标准 schema 投影分别见
+供研究 parity gate 使用的两条标准 schema 投影分别见
 [`BIN-15M-AS6S-V6-NP_parity_2026-07-15.json`](../artifacts/BIN-15M-AS6S-V6-NP_parity_2026-07-15.json)
 与 [`BIN-15M-AS6S-V6-SBP_parity_2026-07-15.json`](../artifacts/BIN-15M-AS6S-V6-SBP_parity_2026-07-15.json)。
 

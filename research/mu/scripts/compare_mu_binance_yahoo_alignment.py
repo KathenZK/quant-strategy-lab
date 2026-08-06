@@ -11,13 +11,15 @@ import pandas as pd
 BINANCE_ROOT = Path(
     "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
 )
-YAHOO_PATH = Path(
-    "data/external/us_equities/yahoo/symbol=mu/timeframe=15m/"
-    "mu_15m_60d_include_prepost.parquet"
+YAHOO_ROOT = Path(
+    "data/raw/ohlcv/exchange=nasdaq/market_type=equity/"
+    "timeframe=15m/source=yahoo_finance"
 )
 SUMMARY_PATH = Path("research/mu/artifacts/mu_binance_yahoo_15m_alignment.json")
 ALIGNED_PATH = Path("research/mu/artifacts/mu_binance_yahoo_15m_aligned.csv")
-BUCKET_PATH = Path("research/mu/artifacts/mu_binance_yahoo_15m_alignment_by_session.csv")
+BUCKET_PATH = Path(
+    "research/mu/artifacts/mu_binance_yahoo_15m_alignment_by_session.csv"
+)
 
 
 def pct(value: float) -> float:
@@ -50,9 +52,10 @@ def load_binance() -> pd.DataFrame:
 
 
 def load_yahoo() -> pd.DataFrame:
-    if not YAHOO_PATH.exists():
-        raise FileNotFoundError(f"missing Yahoo 15m parquet: {YAHOO_PATH}")
-    frame = pd.read_parquet(YAHOO_PATH)
+    files = sorted(YAHOO_ROOT.rglob("symbol=mu.parquet"))
+    if not files:
+        raise FileNotFoundError(f"no Yahoo MU 15m parquet under {YAHOO_ROOT}")
+    frame = pd.concat([pd.read_parquet(path) for path in files], ignore_index=True)
     frame["ts"] = pd.to_datetime(frame["ts"], utc=True).dt.floor("15min")
     frame = frame.drop_duplicates("ts").sort_values("ts").reset_index(drop=True)
     for column in ["open", "high", "low", "close", "volume"]:
@@ -92,8 +95,10 @@ def summarize_returns(frame: pd.DataFrame) -> dict[str, Any]:
     corr = np.corrcoef(binance_ret, yahoo_ret)[0, 1]
     nonzero = (binance_ret != 0.0) | (yahoo_ret != 0.0)
     direction_agreement = (
-        np.sign(binance_ret[nonzero]) == np.sign(yahoo_ret[nonzero])
-    ).mean() if nonzero.any() else 0.0
+        (np.sign(binance_ret[nonzero]) == np.sign(yahoo_ret[nonzero])).mean()
+        if nonzero.any()
+        else 0.0
+    )
     abs_diff = np.abs(binance_ret - yahoo_ret)
     return {
         "bars": int(len(working)),
@@ -106,9 +111,9 @@ def summarize_returns(frame: pd.DataFrame) -> dict[str, Any]:
 
 def summarize_prices(frame: pd.DataFrame) -> dict[str, Any]:
     ratio = frame.binance_close / frame.yahoo_close.replace(0.0, np.nan)
-    normalized_spread = (
-        frame.binance_close / float(frame.binance_close.iloc[0])
-    ) / (frame.yahoo_close / float(frame.yahoo_close.iloc[0])) - 1.0
+    normalized_spread = (frame.binance_close / float(frame.binance_close.iloc[0])) / (
+        frame.yahoo_close / float(frame.yahoo_close.iloc[0])
+    ) - 1.0
     close_diff_pct = frame.binance_close / frame.yahoo_close.replace(0.0, np.nan) - 1.0
     return {
         "close_ratio_median": round(float(ratio.median()), 6),
@@ -144,22 +149,30 @@ def daily_summary(aligned: pd.DataFrame) -> dict[str, Any]:
     working["ny_date"] = local.date.astype(str)
     daily = (
         working.groupby("ny_date", as_index=False)
-        .agg(binance_close=("binance_close", "last"), yahoo_close=("yahoo_close", "last"))
+        .agg(
+            binance_close=("binance_close", "last"), yahoo_close=("yahoo_close", "last")
+        )
         .sort_values("ny_date")
     )
     daily["binance_ret"] = daily.binance_close.pct_change()
     daily["yahoo_ret"] = daily.yahoo_close.pct_change()
     ret = daily.dropna(subset=["binance_ret", "yahoo_ret"])
     corr = (
-        np.corrcoef(ret.binance_ret.to_numpy("float64"), ret.yahoo_ret.to_numpy("float64"))[0, 1]
+        np.corrcoef(
+            ret.binance_ret.to_numpy("float64"), ret.yahoo_ret.to_numpy("float64")
+        )[0, 1]
         if len(ret) >= 2
         else np.nan
     )
     return {
         "days": int(len(daily)),
         "daily_return_corr": round(float(corr), 4) if np.isfinite(corr) else 0.0,
-        "binance_period_return_pct": pct(float(daily.binance_close.iloc[-1] / daily.binance_close.iloc[0] - 1.0)),
-        "yahoo_period_return_pct": pct(float(daily.yahoo_close.iloc[-1] / daily.yahoo_close.iloc[0] - 1.0)),
+        "binance_period_return_pct": pct(
+            float(daily.binance_close.iloc[-1] / daily.binance_close.iloc[0] - 1.0)
+        ),
+        "yahoo_period_return_pct": pct(
+            float(daily.yahoo_close.iloc[-1] / daily.yahoo_close.iloc[0] - 1.0)
+        ),
     }
 
 
@@ -168,7 +181,9 @@ def main() -> None:
     yahoo = load_yahoo()
     yahoo_start = pd.Timestamp(yahoo.ts.iloc[0])
     yahoo_end = pd.Timestamp(yahoo.ts.iloc[-1])
-    binance_in_yahoo_span = binance[(binance.ts >= yahoo_start) & (binance.ts <= yahoo_end)]
+    binance_in_yahoo_span = binance[
+        (binance.ts >= yahoo_start) & (binance.ts <= yahoo_end)
+    ]
 
     aligned = binance.merge(
         yahoo,
@@ -193,16 +208,20 @@ def main() -> None:
     aligned["ny_session"] = ny_session_bucket(aligned.ts)
     aligned["binance_ret"] = aligned.binance_close.pct_change()
     aligned["yahoo_ret"] = aligned.yahoo_close.pct_change()
-    aligned["close_ratio"] = aligned.binance_close / aligned.yahoo_close.replace(0.0, np.nan)
+    aligned["close_ratio"] = aligned.binance_close / aligned.yahoo_close.replace(
+        0.0, np.nan
+    )
     aligned["close_diff_pct"] = aligned.close_ratio - 1.0
-    aligned["abs_return_diff_bps"] = (aligned.binance_ret - aligned.yahoo_ret).abs() * 10000.0
+    aligned["abs_return_diff_bps"] = (
+        aligned.binance_ret - aligned.yahoo_ret
+    ).abs() * 10000.0
 
     bucket = bucket_summary(aligned)
     summary = {
         "symbol": "MU",
         "sources": {
             "binance": str(BINANCE_ROOT / "date=*/symbol=mu_usdt_usdt.parquet"),
-            "yahoo": str(YAHOO_PATH),
+            "yahoo": str(YAHOO_ROOT),
         },
         "coverage": {
             "binance_rows_total": int(len(binance)),
@@ -214,7 +233,9 @@ def main() -> None:
             "yahoo_span_start": str(yahoo_start),
             "yahoo_span_end": str(yahoo_end),
             "aligned_vs_yahoo_rows_pct": pct(len(aligned) / len(yahoo)),
-            "aligned_vs_binance_span_pct": pct(len(aligned) / len(binance_in_yahoo_span)),
+            "aligned_vs_binance_span_pct": pct(
+                len(aligned) / len(binance_in_yahoo_span)
+            ),
         },
         "price_alignment": summarize_prices(aligned),
         "return_alignment": summarize_returns(aligned),

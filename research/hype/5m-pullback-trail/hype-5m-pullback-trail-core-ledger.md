@@ -19,7 +19,7 @@ Created：2026-06-23
 ## Current State
 
 - 当前版本：`HYPE-5M-PBTR-V6.2.1`。
-- 状态：`live / tiny-live-pilot`，并行保留独立 `dry-run` 实例；两者均由当前 manifest 授权。
+- 状态：`live / tiny-live-pilot`，并行保留独立 `dry-run` 实例；2026-08-04 规范 parity JSON 缺失后只将证据健康度标为 `MISSING_EVIDENCE`，既有用户授权保持不变。实际运行状态须以 quant-runner 配置、服务和运行账本核对，文档缺失不构成停用决定。
 - tiny-live-pilot 授权截至 `2026-09-24T00:00:00Z` 复核，资金边界为专用子账户余额且不得未记录增资。
 - 当前已通过研究/runtime 信号 parity；真实成交生命周期、保护单、重启恢复与滑点证据仍是生产 sizing blocker。
 - 下一决策门：结合最新 [runner tracking](runner-tracking/hype-5m-pbtr-runner-2026-07-30.md)（零开单审计：runner 健康、零信号经独立重算确认合法，keep）复核 tiny-live-pilot，决定保持、停止或调整；不得把并行 dry-run 写成降级。
@@ -1045,7 +1045,7 @@ trail_stop = min(initial_stop, previous_trough + trail_atr * ATR14(current_bar))
 ## Current Decision
 
 1. `HYPE-5M-PBTR-V6.2.1` 是唯一当前 promotion 版本：`live / tiny-live-pilot`，并行 `dry-run`；不得把 fixed `3x` 回测口径解释为获批生产 sizing。
-2. V1-V4 是旧 delayed-trailing / stale-stop 历史证据；V6/V6.1/V6.2 是当前机制的研究演化，均不覆盖 V6.2.1 的 manifest 身份。
+2. V1-V4 是旧 delayed-trailing / stale-stop 历史证据；V6/V6.1/V6.2 是当前机制的研究演化，均不覆盖 V6.2.1 的 runner 身份。
 3. June baseline runtime/research parity 为 `16/16 MATCH`；真实 fill、bracket 生命周期、重启恢复和滑点仍决定 tiny-live-pilot 后续去留。
 4. 版本级历史参数、验收线与失败证据保留在上文及链接的 diagnostics/ablations，不再在 Current Decision 重复叙述。
 

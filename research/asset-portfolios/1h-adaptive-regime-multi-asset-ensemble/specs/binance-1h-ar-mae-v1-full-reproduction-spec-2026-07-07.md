@@ -26,7 +26,7 @@ uv run python research/asset-portfolios/1h-adaptive-regime-multi-asset-ensemble/
 - Market：Binance USD-M Futures perpetual
 - Symbols：`TRXUSDT`、`SOLUSDT`、`HYPEUSDT`、`ETHUSDT`、`BTCUSDT`、`BNBUSDT`
 - Timeframe：`1h`
-- Status：`dry-run / not live-ready`（当前 manifest 已启用 dry-run，live disabled）
+- Status：`dry-run / not live-ready`（实际启用与 live/dry-run 模式以 quant-runner 为准）
 
 `V1` 是一个账户级组合策略：六个已登记的单资产 `1h adaptive-regime` 策略同时生成候选交易，但全账户同一时间只允许一笔持仓。当前只授权 dry-run，不授权 live。
 

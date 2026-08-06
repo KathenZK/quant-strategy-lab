@@ -14,7 +14,8 @@
 
 ## 研究批次记录
 
-- `2026-07-20`：按用户决定，将 `HYPE-5M-PBTR-V6.2.1` 的 `tiny-live-pilot` 到期时间延至 `2026-09-24T00:00:00Z`；资金边界与策略参数不变，dry-run 并行保留，真实成交生命周期未完成前不得扩大资金。机器授权见 [`active-strategy-manifest.json`](../../../docs/research-governance/machine/active-strategy-manifest.json)，当前 runner 证据见 [`hype-5m-pbtr-runner-2026-07-11.md`](runner-tracking/hype-5m-pbtr-runner-2026-07-11.md)。
+- `2026-08-04`：规范 parity JSON 已不在干净 checkout 中，将 `HYPE-5M-PBTR-V6.2.1` 的证据健康度标为 `MISSING_EVIDENCE`；是否停止或调整实例必须由用户另行决定，实际授权与运行配置只以 quant-runner 为准。既有叙事证据见 [`hype-5m-pbtr-runner-2026-07-09.md`](runner-tracking/hype-5m-pbtr-runner-2026-07-09.md)。
+- `2026-07-20`：按用户决定，将 `HYPE-5M-PBTR-V6.2.1` 的 `tiny-live-pilot` 到期时间延至 `2026-09-24T00:00:00Z`；资金边界与策略参数不变，dry-run 并行保留，真实成交生命周期未完成前不得扩大资金。当前 runner 证据见 [`hype-5m-pbtr-runner-2026-07-11.md`](runner-tracking/hype-5m-pbtr-runner-2026-07-11.md)，实际授权以 quant-runner 为准。
 - `notes/hype-5m-indicator-ensemble-search.md`：在 `2025-06-01` 到 `2026-06-01` 的 Binance HYPE 永续 `5m` 数据上进行指标组合搜索。单条原始或精炼策略均未达到 `20x 年化 / >=80% 胜率 / >-20% 回撤`；一个由高胜率 EMA/Bollinger 回归腿组成的单仓 ensemble 达到全样本目标。该批次只作为研究前身，存在明显过拟合风险，不是已提升的 live 版本。
 - `live-specs/ensemble-specs/README.md`：记录最初 `7` 个 `target_pass=True` 的 HYPE Binance `5m` 单仓 ensemble 组合作为 live-code 交接规格。它们共享相同精炼腿，只是腿数和杠杆不同；当前仅保留为历史支撑材料，不是现行提升路线。
 - `notes/hype-5m-ensemble-forward-oos-2026-06-23.md`：加入 `2026-06-01` 到 `2026-06-23 04:00 UTC` 的 Binance HYPE `5m` 数据后，早期 7 个 ensemble 配置无法保持 `>=80%` 胜率和 `<20%` 回撤。这否定了高胜率小利润路径作为 live-ready 方向。

@@ -42,6 +42,9 @@ class Config:
     max_hold_days: int = 0
     fee_rate: float = FEE_RATE
     slippage: float = BASE_SLIPPAGE
+    include_funding: bool = True
+    decision_delay_bars: int = 0
+    side_filter: int = 0
     max_leverage: float = 3.0
 
 
@@ -351,6 +354,7 @@ def run_backtest(
     lots: list[Lot] = []
     pending_plan: dict[str, Any] | None = None
     pending_entry: dict[str, Any] | None = None
+    pending_campaign_exit: dict[str, Any] | None = None
     campaign_rows: list[dict[str, Any]] = []
     lot_rows: list[dict[str, Any]] = []
     action_rows: list[dict[str, Any]] = []
@@ -408,7 +412,7 @@ def run_backtest(
         record_action(ts, "lot_exit", lot_id=lot.lot_id, layer=lot.layer, reason=reason, fill=fill)
 
     def end_campaign(ts: pd.Timestamp, raw_price: float, reason: str) -> None:
-        nonlocal campaign, pending_plan, pending_entry
+        nonlocal campaign, pending_plan, pending_entry, pending_campaign_exit
         if campaign is None:
             return
         current = campaign
@@ -432,6 +436,29 @@ def run_backtest(
         campaign = None
         pending_plan = None
         pending_entry = None
+        pending_campaign_exit = None
+
+    def request_campaign_end(ts: pd.Timestamp, raw_price: float, reason: str) -> None:
+        nonlocal pending_campaign_exit, pending_plan, pending_entry
+        if campaign is None:
+            return
+        if config.decision_delay_bars <= 0:
+            end_campaign(ts, raw_price, reason)
+            return
+        if pending_campaign_exit is None:
+            pending_campaign_exit = {
+                "execute_ts": ts
+                + pd.Timedelta(minutes=15 * config.decision_delay_bars),
+                "reason": reason,
+            }
+            pending_plan = None
+            pending_entry = None
+            record_action(
+                ts,
+                "campaign_exit_signal",
+                reason=reason,
+                execute_ts=pending_campaign_exit["execute_ts"],
+            )
 
     first_processed = True
     last_ts: pd.Timestamp | None = None
@@ -450,12 +477,22 @@ def run_backtest(
 
         # Funding belongs to positions carried into this timestamp. New fills at
         # the same open do not receive or pay an already-settled funding event.
-        rate = float(data.funding15.reindex([ts]).fillna(0.0).iloc[0])
+        rate = (
+            float(data.funding15.reindex([ts]).fillna(0.0).iloc[0])
+            if config.include_funding
+            else 0.0
+        )
         if abs(rate) > EPSILON:
             for lot in active_lots():
                 funding_pnl = -lot.side * lot.quantity * raw_open * rate
                 balance += funding_pnl
                 lot.funding_pnl += funding_pnl
+
+        if (
+            pending_campaign_exit is not None
+            and ts >= pending_campaign_exit["execute_ts"]
+        ):
+            end_campaign(ts, raw_open, str(pending_campaign_exit["reason"]))
 
         if campaign is not None:
             if bool(row["d_event"]):
@@ -470,9 +507,9 @@ def run_backtest(
                 )
             held_days = (ts - campaign.start_ts).total_seconds() / 86400.0
             if _campaign_invalid(campaign, row, config):
-                end_campaign(ts, raw_open, "campaign_invalidation")
+                request_campaign_end(ts, raw_open, "campaign_invalidation")
             elif config.max_hold_days > 0 and held_days >= config.max_hold_days:
-                end_campaign(ts, raw_open, "campaign_timeout")
+                request_campaign_end(ts, raw_open, "campaign_timeout")
 
         # A completed 1h bar becomes visible exactly at this 15m open. MFE
         # protection therefore executes here, before this new 15m bar's range
@@ -496,20 +533,24 @@ def run_backtest(
                 and hourly_progress < 0.5 * campaign.best_hourly_progress
             ):
                 if config.mfe_mode == "mfe50_all":
-                    end_campaign(ts, raw_open, "mfe50_all")
+                    request_campaign_end(ts, raw_open, "mfe50_all")
                 elif config.mfe_mode == "mfe50_adds":
                     for lot in list(active_lots()):
                         if lot.layer > 0:
                             close_lot(lot, ts, raw_open, "mfe50_add")
 
-        if campaign is None and bool(row["h4_event"]):
+        if campaign is None and pending_campaign_exit is None and bool(row["h4_event"]):
             side = int(float(row["d_candidate_side"])) if np.isfinite(float(row["d_candidate_side"])) else 0
-            if side != 0 and side == int(float(row["h4_direction"])):
+            if (
+                side != 0
+                and side == int(float(row["h4_direction"]))
+                and (config.side_filter == 0 or side == config.side_filter)
+            ):
                 campaign_id += 1
                 campaign = Campaign(campaign_id, side, ts, balance)
                 record_action(ts, "campaign_start", campaign_id=campaign_id, side=side)
 
-        if pending_plan is not None and campaign is not None:
+        if pending_plan is not None and campaign is not None and pending_campaign_exit is None:
             if ts > pending_plan["expires"]:
                 record_action(ts, "entry_plan_expired", layer=pending_plan["layer"])
                 pending_plan = None
@@ -517,14 +558,22 @@ def run_backtest(
                 lookback = int(config.entry_style.removeprefix("restart"))
                 if restart_qualified(panel, location, campaign.side, lookback):
                     pending_entry = {
-                        "execute_ts": ts + pd.Timedelta(minutes=15),
+                        "execute_ts": ts
+                        + pd.Timedelta(
+                            minutes=15 * (1 + config.decision_delay_bars)
+                        ),
                         "layer": pending_plan["layer"],
                         "signal_ts": ts,
                     }
                     record_action(ts, "restart_signal", layer=pending_plan["layer"], lookback=lookback)
                     pending_plan = None
 
-        if pending_entry is not None and campaign is not None and ts >= pending_entry["execute_ts"]:
+        if (
+            pending_entry is not None
+            and campaign is not None
+            and pending_campaign_exit is None
+            and ts >= pending_entry["execute_ts"]
+        ):
             layer = int(pending_entry["layer"])
             entry_fill = adverse_fill(raw_open, campaign.side, config.slippage)
             stop = structure_stop(row, campaign.side, entry_fill, config)
@@ -595,16 +644,39 @@ def run_backtest(
                     )
             pending_entry = None
 
-        if campaign is not None and pending_plan is None and pending_entry is None and bool(row["h1_event"]):
+        if (
+            campaign is not None
+            and pending_campaign_exit is None
+            and pending_plan is None
+            and pending_entry is None
+            and bool(row["h1_event"])
+        ):
             layer = _next_layer(campaign, lots, config)
             if layer is not None and pullback_qualified(row, campaign.side, config):
                 if config.entry_style == "immediate_probe":
-                    pending_entry = {"execute_ts": ts, "layer": layer, "signal_ts": ts}
+                    pending_entry = {
+                        "execute_ts": ts
+                        + pd.Timedelta(
+                            minutes=15 * config.decision_delay_bars
+                        ),
+                        "layer": layer,
+                        "signal_ts": ts,
+                    }
+                    if config.decision_delay_bars > 0:
+                        record_action(
+                            ts,
+                            "immediate_entry_signal",
+                            layer=layer,
+                            execute_ts=pending_entry["execute_ts"],
+                        )
+                        continue_immediate = False
+                    else:
+                        continue_immediate = True
                     # The just-completed 1h bar is visible at this 15m open. Execute
                     # immediately through the same guarded order path on next loop body.
                     entry_fill = adverse_fill(raw_open, campaign.side, config.slippage)
                     stop = structure_stop(row, campaign.side, entry_fill, config)
-                    if stop is not None:
+                    if continue_immediate and stop is not None:
                         current_equity = _marked_equity(balance, lots, raw_open)
                         quantity, planned_risk = requested_quantity(
                             current_equity, entry_fill, stop, campaign.side, config
@@ -647,7 +719,8 @@ def run_backtest(
                                 campaign.episode_mfe_r = 0.0
                             max_effective_leverage = max(max_effective_leverage, projected_leverage)
                             record_action(ts, "lot_entry", lot_id=lot_id, layer=layer, attempt=attempt, fill=entry_fill, stop=stop, quantity=quantity)
-                    pending_entry = None
+                    if continue_immediate:
+                        pending_entry = None
                 else:
                     pending_plan = {
                         "layer": layer,

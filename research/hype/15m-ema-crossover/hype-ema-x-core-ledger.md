@@ -5,7 +5,7 @@
 ## Current State
 
 - 当前版本：`HYPE-EMA-X-V18`。
-- 状态：`dry-run / forward-test required / not live-ready`；manifest 实例 `hype-ema-x-dry-run` 已启用，live disabled；共享 15m 行情组曾于 2026-07-21→07-30 [group halt](runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)，`d514e65` 部署后已恢复；停摆区间观察作废。
+- 状态：`dry-run / forward-test required / not live-ready`；实际实例启用、模式与 live 边界只以 quant-runner 为准。共享 15m 行情组曾于 2026-07-21→07-30 [group halt](runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)，`d514e65` 部署后已恢复；停摆区间观察作废。
 - 身份：V18 是 V17.1 的干净参数规格，成交逻辑与指标不变；1Y 冻结指标 `+3861.48% / -19.44% DD / 33 trades / 90.91% win`。
 - 当前证据：[V18 参数规格](specs/hype-ema-x-v18-baseline-spec.md)；[runner tracking](runner-tracking/hype-ema-x-runner-2026-07-10.md)。
 - 下一决策门：完成 parity、真实成交/保护单、重启恢复和 online open/close reconciliation；此前不得启用 live，也不得给出 dry-run/live 后终态。

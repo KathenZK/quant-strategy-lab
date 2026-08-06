@@ -88,7 +88,7 @@ Python K+1/K+2 对账，完成前不得形成 keep/adjust 决策。当前结论�
 - 已删除 `platform.execution.enabled` 和 live V1 fallback；`hype_mii` 仍为代码级
   dry-run only，不能因为统一状态机存在而启用 live。
 - strict replay/parity 路径保持隔离，本次迁移不应改变既有 2500-bar `10/10`
-  对比；该证据仍不是标准全窗口 parity gate，manifest parity 继续为 `PENDING`。
+  对比；该证据仍不是标准全窗口 parity gate，研究侧 parity 结论继续为 `PENDING`。
 - 当前 runner workspace `134` 个 unit tests 与 `12` 个 integration tests 全部通过；
   `cargo clippy --workspace --all-targets -- -D warnings` 通过；本 family 未产生新的
   strict parity 结论。

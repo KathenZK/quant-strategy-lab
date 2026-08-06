@@ -8,7 +8,7 @@
 
 ## 当前状态
 
-- 状态：`archived / HARD-GATE-FAILED / not promoted / not live-ready`
+- 状态：`archived / HARD-GATE-FAILED`
 - 未注册任何版本；本 README 兼任临时主账（家族已归档，无后续版本计划）。
 - 全链路（2026-07-28 完成）：P1 原核 `EMA96/384` 身份 gate 失败 → 用户批准修约改核 `EMA336/1536`（段净期望 `+2.50 ATR`，双 gate 通过）→ P2 四项 kill gate 全过（净 +111.3%、MaxDD −28.3%）→ 锁定 OOS 揭示四过一败（段级 PF `1.162 < 1.2`）判 **HARD-GATE-FAILED** 归档。已揭示窗口 `2026H1` 对任何后继线永久失效。
 - 保留的有效测量：4h 等效核（`EMA336/1536`）段级期望远优于 1d/4d 核且参数平面平坦；OOS 内多空换位（空头 `+4.11` / 多头 `−1.83 ATR`）推翻"多头主导"先验。

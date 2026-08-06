@@ -20,7 +20,6 @@ from jsonschema import Draft202012Validator, FormatChecker
 ROOT = Path(__file__).resolve().parents[1]
 RESEARCH = ROOT / "research"
 GOVERNANCE_DOCS = ROOT / "docs" / "research-governance"
-MANIFEST = GOVERNANCE_DOCS / "machine" / "active-strategy-manifest.json"
 
 # 资产/主题目录：其下一级子目录被视为策略家族目录。
 ASSET_DIRS = ["hype", "btc", "eth", "sol", "trx", "bnb", "asset-portfolios"]
@@ -56,8 +55,16 @@ def _schema_problems(instance: object, schema_path: Path) -> list[str]:
 # 只允许收缩：给家族补建 core ledger 后从这里删除对应条目。
 # 有版本登记的家族新增到此清单属于违规（见 research-report-storage.mdc）。
 GRANDFATHERED_NO_CORE_LEDGER = {
+  # 未登记版本、由 README 临时承载路由与诊断结论的 portfolio 研究线。
+  "asset-portfolios/15m-ema-cross-lightgbm-event-selector",
+  "asset-portfolios/15m-multi-asset-trend-state-machine",
   "asset-portfolios/15m-multi-indicator-intraday",
   "asset-portfolios/1d-turtle-breakout",
+  "asset-portfolios/1d-ema-cross-lightgbm-event-selector",
+  "asset-portfolios/1d-ewmac-universal-trend",
+  "asset-portfolios/1d-multi-asset-tsmom-vol-target",
+  "asset-portfolios/1h-ema-cross-lightgbm-event-selector",
+  "asset-portfolios/4h-ema-cross-lightgbm-event-selector",
   "hype/15m-pullback-trail",
   "hype/15m-riptide",
   "hype/1m-ema-crossover",
@@ -403,8 +410,9 @@ def test_status_combinations_are_not_self_contradictory() -> None:
   problems = []
   status_docs = [RESEARCH / "README.md"]
   status_docs.extend(RESEARCH / asset / "README.md" for asset in ASSET_DIRS)
+  status_docs.extend(family_dir / "README.md" for _, family_dir in iter_family_dirs())
   status_docs.extend(RESEARCH.rglob("*core-ledger*.md"))
-  for md in status_docs:
+  for md in dict.fromkeys(status_docs):
     status_lines = {
       lineno: cell for lineno, cell in _iter_status_cells(md)
     }
@@ -418,203 +426,41 @@ def test_status_combinations_are_not_self_contradictory() -> None:
       )
       if lineno not in status_lines and not is_current_status:
         continue
-      lowered = status_lines.get(lineno, line).lower()
-      if "dry-run" in lowered and "not promoted" in lowered:
-        problems.append(f"{md.relative_to(ROOT)}:L{lineno}: dry-run 与 not promoted 并存")
-      if "dry-run" in lowered and "no-go" in lowered:
-        problems.append(f"{md.relative_to(ROOT)}:L{lineno}: dry-run 与 NO-GO 并存")
+      status_text = status_lines.get(lineno, line)
+      code_spans = re.findall(r"`([^`]+)`", status_text)
+      for fragment in code_spans or [status_text]:
+        lowered = fragment.lower()
+        if "dry-run" in lowered and "not promoted" in lowered:
+          problems.append(f"{md.relative_to(ROOT)}:L{lineno}: dry-run 与 not promoted 并存")
+        if "dry-run" in lowered and "no-go" in lowered:
+          problems.append(f"{md.relative_to(ROOT)}:L{lineno}: dry-run 与 NO-GO 并存")
+        if "no-go" in lowered and "not promoted" in lowered:
+          problems.append(f"{md.relative_to(ROOT)}:L{lineno}: NO-GO 与 not promoted 并存")
+        if "no-go" in lowered and "not live-ready" in lowered:
+          problems.append(f"{md.relative_to(ROOT)}:L{lineno}: NO-GO 与 not live-ready 并存")
+        if "archived" in lowered and "not promoted" in lowered:
+          problems.append(f"{md.relative_to(ROOT)}:L{lineno}: archived 与 not promoted 并存")
+        if "archived" in lowered and "not live-ready" in lowered:
+          problems.append(f"{md.relative_to(ROOT)}:L{lineno}: archived 与 not live-ready 并存")
   assert not problems, "发现非法状态组合:\n" + "\n".join(problems)
 
 
-def test_active_manifest_validates_against_json_schema() -> None:
-  manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-  schema = GOVERNANCE_DOCS / "schemas" / "active-strategy-manifest.schema.json"
-  problems = _schema_problems(manifest, schema)
-  instance_ids = [entry.get("instance_id") for entry in manifest.get("entries", [])]
-  if len(instance_ids) != len(set(instance_ids)):
-    problems.append("instance_id 必须唯一")
-  assert not problems, "active manifest schema 校验失败:\n" + "\n".join(problems)
-
-
-def test_external_runner_grandfather_registry_is_closed() -> None:
-  registry_path = (
-    GOVERNANCE_DOCS / "machine" / "external-runner-grandfathers.json"
+def test_lab_does_not_define_runtime_authority() -> None:
+  forbidden = [
+    GOVERNANCE_DOCS / "machine" / "active-strategy-manifest.json",
+    GOVERNANCE_DOCS / "schemas" / "active-strategy-manifest.schema.json",
+    GOVERNANCE_DOCS / "machine" / "external-runner-grandfathers.json",
+    GOVERNANCE_DOCS / "schemas" / "external-runner-grandfathers.schema.json",
+    ROOT / "scripts" / "governance" / "validate_manifest.py",
+  ]
+  existing = [path.relative_to(ROOT) for path in forbidden if path.exists()]
+  assert not existing, (
+    "运行与授权真源只允许存在于 quant-runner，Lab 不得恢复 active manifest: "
+    f"{existing}"
   )
-  registry = json.loads(registry_path.read_text(encoding="utf-8"))
-  schema = GOVERNANCE_DOCS / "schemas" / "external-runner-grandfathers.schema.json"
-  problems = _schema_problems(registry, schema)
-  actual = {entry.get("strategy_id") for entry in registry.get("entries", [])}
-  if actual != {"HYPE-EMA-TB-V35"}:
-    problems.append(f"external grandfather 已封闭，只允许 HYPE-EMA-TB-V35，实际 {actual}")
-  assert not problems, "external runner grandfather 校验失败:\n" + "\n".join(problems)
-
-
-GRANDFATHERED_PARITY_INSTANCE_IDS = {
-  "hype-mii-dry-run",
-  "hype-ema-x-dry-run",
-  "hype-candle-count-v35-dry-run",
-}
-
-
-def test_manifest_does_not_add_parity_grandfathers() -> None:
-  manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-  actual = {
-    entry["instance_id"]
-    for entry in manifest.get("entries", [])
-    if "grandfather_until" in entry.get("parity_gate", {})
-  }
-  added = actual - GRANDFATHERED_PARITY_INSTANCE_IDS
-  stale = GRANDFATHERED_PARITY_INSTANCE_IDS - actual
-  assert not added and not stale, (
-    f"parity grandfather 只允许收缩；新增={sorted(added)}，"
-    f"已清偿但未从 allowlist 删除={sorted(stale)}"
-  )
-
-
-def _live_spec_pairs(frontmatter: dict) -> set[tuple[str, str]]:
-  if "implementations" in frontmatter:
-    return {
-      (item.get("strategy_id", ""), item.get("runner_kind", ""))
-      for item in frontmatter.get("implementations", [])
-      if isinstance(item, dict)
-    }
-  return {(frontmatter.get("strategy_id", ""), frontmatter.get("runner_kind", ""))}
-
-
-def _contains_main_status(text: str, status: str) -> bool:
-  cleaned = re.sub(r"live-ready", "", text.lower())
-  return bool(re.search(rf"(?<![\w-]){re.escape(status.lower())}(?![\w-])", cleaned))
-
-
-def test_manifest_matches_indexes_ledgers_and_active_specs() -> None:
-  manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
-  top_index = (RESEARCH / "README.md").read_text(encoding="utf-8")
-  spec_schema = GOVERNANCE_DOCS / "schemas" / "lab-live-spec-frontmatter.schema.json"
-  problems = []
-  frontmatter_cache: dict[Path, dict] = {}
-  active_pairs: dict[tuple[str, str], Path] = {}
-  statuses_by_strategy: dict[str, set[str]] = {}
-  for entry in manifest.get("entries", []):
-    statuses_by_strategy.setdefault(entry.get("strategy_id", ""), set()).add(
-      entry.get("main_status", "")
-    )
-  for strategy_id, statuses in statuses_by_strategy.items():
-    if len(statuses) != 1:
-      problems.append(f"{strategy_id}: manifest 同一版本出现多个主状态 {sorted(statuses)}")
-  for entry in manifest.get("entries", []):
-    instance_id = entry.get("instance_id", "<unknown>")
-    family_path = entry.get("family_path", "")
-    family_dir = ROOT / family_path
-    if f"{family_path.removeprefix('research/')}/" not in top_index:
-      problems.append(f"{instance_id}: family_path 未登记在 research/README.md")
-    asset = family_path.split("/")[1] if len(family_path.split("/")) > 2 else ""
-    asset_index = RESEARCH / asset / "README.md"
-    family_name = Path(family_path).name
-    if not asset_index.is_file() or family_name not in asset_index.read_text(encoding="utf-8"):
-      problems.append(f"{instance_id}: family_path 未登记在资产 README")
-    if entry.get("enabled_allowed"):
-      relative_family = family_path.removeprefix("research/")
-      top_rows = [line for line in top_index.splitlines() if relative_family in line]
-      asset_rows = (
-        [
-          line
-          for line in asset_index.read_text(encoding="utf-8").splitlines()
-          if family_name in line
-        ]
-        if asset_index.is_file()
-        else []
-      )
-      if not any(
-        _contains_main_status(line, entry.get("main_status", ""))
-        for line in top_rows + asset_rows
-      ):
-        problems.append(f"{instance_id}: 索引状态未投影 manifest main_status")
-    ledgers = sorted(family_dir.glob("*core-ledger*.md"))
-    if not ledgers:
-      problems.append(f"{instance_id}: manifest 家族缺少 core ledger")
-    elif not any(
-      entry.get("ledger_identity", "") in ledger.read_text(encoding="utf-8")
-      for ledger in ledgers
-    ):
-      problems.append(f"{instance_id}: ledger_identity 未出现在 core ledger")
-    elif not any(
-      any(
-        entry.get("ledger_identity", "") in line
-        and _contains_main_status(line, entry.get("main_status", ""))
-        for line in ledger.read_text(encoding="utf-8").splitlines()
-      )
-      for ledger in ledgers
-    ):
-      problems.append(f"{instance_id}: core ledger 版本行状态与 manifest 不一致")
-
-    spec = ROOT / entry.get("lab_live_spec", "")
-    if not spec.is_file():
-      problems.append(f"{instance_id}: Lab live spec 不存在")
-      continue
-    is_new_spec = spec not in frontmatter_cache
-    frontmatter = frontmatter_cache.setdefault(spec, _frontmatter(spec))
-    if not frontmatter:
-      problems.append(f"{instance_id}: Lab live spec 缺少 YAML front matter")
-      continue
-    if is_new_spec:
-      for error in _schema_problems(frontmatter, spec_schema):
-        problems.append(f"{spec.relative_to(ROOT)}: {error}")
-    pair = (entry.get("strategy_id"), entry.get("runner_kind"))
-    pairs = _live_spec_pairs(frontmatter)
-    if pair not in pairs:
-      problems.append(f"{instance_id}: active spec 未显式映射 {pair}")
-    if instance_id not in frontmatter.get("manifest_instance_ids", []):
-      problems.append(f"{instance_id}: active spec 未列出 manifest instance")
-    if entry.get("enabled_allowed") and frontmatter.get("spec_status") != "active":
-      problems.append(f"{instance_id}: 已授权实例必须引用 active spec")
-    if frontmatter.get("family_id") != entry.get("family_id"):
-      problems.append(f"{instance_id}: spec family_id 与 manifest 不一致")
-    if frontmatter.get("main_status") != entry.get("main_status"):
-      problems.append(f"{instance_id}: spec main_status 与 manifest 不一致")
-    if frontmatter.get("spec_status") == "active":
-      for mapped_pair in pairs:
-        previous = active_pairs.get(mapped_pair)
-        if previous and previous != spec:
-          problems.append(
-            f"{spec.relative_to(ROOT)}: active mapping {mapped_pair} "
-            f"与 {previous.relative_to(ROOT)} 重复"
-          )
-        active_pairs[mapped_pair] = spec
-  assert not problems, "manifest↔索引/主账/active spec 一致性失败:\n" + "\n".join(problems)
 
 
 def test_governance_schemas_accept_canonical_contracts(tmp_path: Path) -> None:
-  manifest_schema = GOVERNANCE_DOCS / "schemas" / "active-strategy-manifest.schema.json"
-  entry = {
-    "instance_id": "example-dry-run",
-    "family_id": "EXAMPLE",
-    "family_path": "research/hype/example",
-    "strategy_id": "EXAMPLE-V1",
-    "runner_kind": "example",
-    "mode": "dry_run",
-    "main_status": "dry-run",
-    "approval_level": "dry_run",
-    "enabled_allowed": True,
-    "lab_live_spec": "research/hype/example/live-specs/example-v1.md",
-    "runner_spec": "crates/quant-runner/src/runner/strategies/example/EXAMPLE-V1-SPEC.md",
-    "ledger_identity": "EXAMPLE-V1",
-    "decision_log_ref": "research/hype/example/decision-log.md",
-    "parity_gate": {
-      "required": True,
-      "status": "PASS",
-      "last_pass_artifact": "research/hype/example/artifacts/parity.json",
-    },
-  }
-  valid_manifest = {
-    "schema_version": "1.0",
-    "updated_at": "2026-07-20T00:00:00Z",
-    "entries": [entry],
-  }
-  assert not _schema_problems(valid_manifest, manifest_schema)
-  invalid_manifest = json.loads(json.dumps(valid_manifest))
-  invalid_manifest["entries"][0]["main_status"] = "disabled"
-  assert _schema_problems(invalid_manifest, manifest_schema)
-
   live_spec_schema = (
     GOVERNANCE_DOCS / "schemas" / "lab-live-spec-frontmatter.schema.json"
   )
@@ -624,7 +470,6 @@ def test_governance_schemas_accept_canonical_contracts(tmp_path: Path) -> None:
     "family_id": "EXAMPLE",
     "main_status": "dry-run",
     "spec_status": "active",
-    "manifest_instance_ids": ["example-a", "example-b"],
     "approval_level_max": "dry_run",
     "overlays": ["handoff"],
     "implementations": [
@@ -647,7 +492,7 @@ def test_governance_schemas_accept_canonical_contracts(tmp_path: Path) -> None:
   sys.path.insert(0, str(ROOT))
   try:
     from scripts.governance.check_parity_report import _validate_report
-    from scripts.governance.validate_manifest import validate
+    from scripts.governance.validate_live_specs import validate as validate_live_specs
   finally:
     sys.path.pop(0)
 
@@ -656,11 +501,9 @@ def test_governance_schemas_accept_canonical_contracts(tmp_path: Path) -> None:
     json.dumps({"type": "object", "required": ["schema_was_loaded"]}),
     encoding="utf-8",
   )
-  minimal_manifest = tmp_path / "manifest.json"
-  minimal_manifest.write_text(json.dumps({"entries": []}), encoding="utf-8")
   assert any(
     "schema_was_loaded" in error
-    for error in validate(minimal_manifest, None, sentinel_schema)
+    for error in validate_live_specs(sentinel_schema)
   )
   parity_artifact = tmp_path / "parity.json"
   parity_artifact.write_text("{}", encoding="utf-8")

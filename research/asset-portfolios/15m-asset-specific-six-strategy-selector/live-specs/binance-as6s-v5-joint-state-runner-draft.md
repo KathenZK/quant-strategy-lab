@@ -5,17 +5,15 @@ strategy_id: BIN-15M-AS6S-V5-JOINT-NP
 family_id: BIN-15M-AS6S
 main_status: explore
 runner_kind: asset_specific_six_selector_v5_joint_state
-spec_status: draft
+spec_status: superseded
 peer_spec: crates/quant-runner/src/runner/strategies/asset_specific_six_selector_v5_joint_state/BIN-15M-AS6S-V5-JOINT-NP-SPEC.md
-manifest_instance_ids: [bin-15m-as6s-v5-joint-np-dry-run]
 approval_level_max: none
 ---
 
 # 六币资产专属 V5 联合状态 Runner 草案
 
-状态：`explore / not promoted / not live-ready`；仅保留 disabled 验证配置，不授权持续 dry-run 或 live。
-本草案只授权独立 Runner 模块、离线逐笔对拍和 `enabled=false` 的验证配置；
-不授权持续 dry-run 或 live，不改变任何既有策略身份。
+本草案已随 Lab 家族于 2026-08-05 归档并标记 `superseded`，只保留历史实现
+记录，不再作为新验证、对拍或 promotion 输入。实际配置只以 quant-runner 为准。
 
 ## 固定身份与边界
 
@@ -79,7 +77,7 @@ Runner strict replay 还必须校验冻结 fixture 的 `45 / 1255 / 553` 数量�
 SHA-256 `5d50f05fbc939bee2676feb91021c078f1f989e0ad19d87dbb29ad1a5c42daaf`，
 不完整或替换后的 fixture 不得返回 PASS。该输入保存在
 [`as6s_v5_runner_signal_parity_fixture_2026-07-15.json`](../artifacts/as6s_v5_runner_signal_parity_fixture_2026-07-15.json)。
-批准上限仍为 `disabled`：manifest 与 TOML 中的实例必须保持 `enabled=false`。
+研究结论仍是不支持持续运行；实际 TOML 与实例启用状态只以 quant-runner 为准。
 尚未完成持续 dry-run、真实订单生命周期 smoke、
 trailing 更新失败注入/测试网审计与未来 OOS。成功的 trailing 更新路径已固定为
 先挂新 stop、确认后撤旧 stop，TP 不变时保持原 TP。

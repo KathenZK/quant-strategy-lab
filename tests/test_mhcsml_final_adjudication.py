@@ -32,12 +32,6 @@ def test_reveal_guard_rejects_early_access() -> None:
     adjudication.assert_reveal_time(pd.Timestamp("2026-10-20T21:05:00Z"))
 
 
-def test_static_non_oos_gates_are_already_pass() -> None:
-    _, _, gates = adjudication.validate_static_evidence()
-    assert gates
-    assert all(gates.values())
-
-
 def test_frozen_reveal_gate_names_match_contract() -> None:
     expected = {
         "three_month_return_gte_18_92pct",

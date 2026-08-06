@@ -44,17 +44,15 @@
 
 ## 清单和检查
 
-- 生成器：[`inventory_artifacts.py`](../../scripts/governance/inventory_artifacts.py)
-- 告警检查：[`check_artifact_inventory.py`](../../scripts/governance/check_artifact_inventory.py)
-- 当前人类可读清单：[`artifact-inventory.md`](../../research/_artifact-inventory/artifact-inventory.md)
-- 当前机器明细：[`artifact-inventory.json`](../../research/_artifact-inventory/artifact-inventory.json)
+- 实时检查：[`check_artifact_inventory.py`](../../scripts/governance/check_artifact_inventory.py)。默认直接扫描当前文件系统的文件数和总大小，不读取或持久化历史快照。
+- 可选快照生成器：[`inventory_artifacts.py`](../../scripts/governance/inventory_artifacts.py)。默认输出到系统临时目录，仅用于一次性人工复核，不进入 `research/` 或 Git。
 
 ```bash
-uv run python scripts/governance/inventory_artifacts.py
 uv run python scripts/governance/check_artifact_inventory.py
+uv run python scripts/governance/inventory_artifacts.py
 ```
 
-清单按 artifacts 根目录的父路径汇总为“家族/主题路径”，包含文件数、总大小、最大文件和 Markdown 精确引用覆盖率。Markdown 只保存汇总；逐文件路径、大小、引用来源、预算级别和保留提示写入 JSON。为控制 4 万级明细本身的大小，JSON 的 `file_defaults` 声明逐文件记录省略字段时的默认值。
+可选快照按 artifacts 根目录的父路径汇总为“家族/主题路径”，包含文件数、总大小、最大文件和 Markdown 精确引用覆盖率；逐文件路径、大小、引用来源、预算级别和保留提示写入临时 JSON。快照不得作为当前磁盘状态的长期事实来源，使用后可直接删除。
 
 ## 新产物准入
 

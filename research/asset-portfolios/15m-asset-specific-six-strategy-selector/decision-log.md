@@ -1,5 +1,13 @@
 # Decision Log
 
+## 2026-08-05 — 封存家族并放弃最终 OOS
+
+用户决定本家族只保留研究复盘记录，不再重建已删除的行情、funding、冻结与 parity 产物；全家族进入 `archived`，原定最终 OOS 不再揭示。研究封存不修改 quant-runner，实际实例状态仍只以其配置与运行账本为准，删除边界见 [artifacts/README.md](artifacts/README.md)。
+
+## 2026-08-04 — V5/V6 parity 证据健康度降级
+
+V5 JOINT NP 与 V6 NP/SBP 的规范 parity JSON 已不在干净 checkout 中，证据健康度记为 `MISSING_EVIDENCE`；缺失证据阻止新 promotion，不能自动决定 runner 启停。V5/V6 的实际启用与模式只以 quant-runner 为准，既有叙事报告见 [`binance-as6s-v6-mark-joint-runner-2026-07-15.md`](runner-tracking/binance-as6s-v6-mark-joint-runner-2026-07-15.md)。
+
 ## 2026-07-14 — 建立资产特异六币策略组合家族
 
 决定保留旧六币组合的全局单仓与仲裁思想，但不再强制六币使用同一套机制。三条 HYPE 历史策略只作为趋势状态机、突破延续和短周期反转的机制先验；每个币必须独立完成参数缩放、walk-forward 与成本后诊断。

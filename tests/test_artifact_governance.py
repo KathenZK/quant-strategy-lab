@@ -109,6 +109,32 @@ def test_markdown_summary_omits_full_file_listing(tmp_path: Path) -> None:
     assert "## 逐文件" not in markdown
 
 
+def test_current_artifact_totals_reads_live_filesystem(tmp_path: Path) -> None:
+    first = tmp_path / "research" / "demo" / "artifacts" / "first.json"
+    second = tmp_path / "archive" / "demo" / "artifacts" / "second.csv"
+    first.parent.mkdir(parents=True)
+    second.parent.mkdir(parents=True)
+    first.write_bytes(b"123")
+    second.write_bytes(b"4567")
+
+    assert check_artifact_inventory.current_artifact_totals(tmp_path) == (2, 7)
+
+
+def test_checker_uses_live_scan_when_snapshot_is_absent(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    artifact = tmp_path / "research" / "demo" / "artifacts" / "result.json"
+    artifact.parent.mkdir(parents=True)
+    artifact.write_bytes(b"123")
+    missing = tmp_path / "missing-inventory.json"
+    monkeypatch.setattr(check_artifact_inventory, "ROOT", tmp_path)
+    monkeypatch.setattr(check_artifact_inventory, "DEFAULT_INVENTORY", missing)
+    monkeypatch.setattr(sys, "argv", ["check_artifact_inventory.py"])
+
+    assert check_artifact_inventory.main() == 0
+    assert "Live artifact scan: 1 files/3 bytes" in capsys.readouterr().out
+
+
 def test_checker_is_advisory_unless_strict(
     tmp_path: Path, monkeypatch, capsys
 ) -> None:

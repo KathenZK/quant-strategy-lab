@@ -6,7 +6,7 @@
 
 ## 结论
 
-`HYPE-EMA-TB-V35.1` 的 quant-runner 实现与离线逐笔对拍已经完成，但研究 promotion review 不满足现行准入条件。本次不创建 `dry-run` 状态、不建立 `runner-tracking/`，runner 配置与 manifest 都保持 fail-closed：`enabled=false`、`enabled_allowed=false`、`approval_level=none`。
+`HYPE-EMA-TB-V35.1` 的 quant-runner 实现与离线逐笔对拍已经完成，但研究 promotion review 不满足现行准入条件。本次不创建 `dry-run` 状态、不建立 `runner-tracking/`；当时 runner 配置保持 `enabled=false`。当前实际授权只以 quant-runner 为准。
 
 直接 blocker 是 Gate 3：既有 V35 全参数消融已将 `adx_window=28`、`long_adx_min=28`、`adx_exit=22`、`hard_stop_atr=7`、`atr_window=672`、`disable_after_mfe_atr=1.5` 等多数核心参数判为尖峰。V35.1 与 V35 逐笔等价，删除的空头 1h EMA 条件是死条件，不能把等价精简解释为新增稳健性证据。
 
@@ -82,7 +82,7 @@ Rust replay 未计 funding，因此 Rust cumulative return `78.751157` 与 Pytho
 2. 以预先声明的邻域完成 `mc3 + mc4`，并解决“多数核心参数尖峰”的判定；
 3. 完成执行完整性压力测试和真实 1m 相位扫描；
 4. 完成 live-executable review，并明确 `MARK_PRICE` 与 trade-price 保护口径；
-5. 全部门禁通过后，将 handoff draft 升为 active `live spec`，再授权 manifest 与配置进入 dry-run。
+5. 全部门禁通过后，将 handoff draft 升为 active `live spec`，再由用户在 quant-runner 中决定是否授权进入 dry-run。
 
 ## 证据
 

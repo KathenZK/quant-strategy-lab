@@ -11,10 +11,12 @@
 ## Current State
 
 - Current version(s)：`BIN-1H-CSLGBM-V1`。
-- Current status：`registered / not promoted / not live-ready`；研究 gate 为 `HARD-GATE-FAILED`。
+- Current status：`archived / formula-invalidated / HARD-GATE-FAILED`。
 - Runner / dry-run / live status：无 runner 实现；未 dry-run；未 live。
-- Live-readiness blockers：原始 prefit/OOS 组合收益使用了错误的倒数空头收益公式，全部旧绩效作废；按正确线性 USD-M 公式重算的冻结 OOS 为负收益且回撤、Sharpe、PF、正收益月和成本压力均失败；另无 runner、订单状态机、重启恢复、dry-run 或 live-executable 审计。
-- Next decision gate：V1 不进入 promotion；`2026Q2` 已使用且只能作为 reused holdout / 诊断窗口。新机制进入独立家族并等待未来 prospective OOS。
+- Archive boundary：原始 prefit/OOS 组合收益使用了错误的倒数空头收益公式，
+  全部旧绩效作废；按正确线性 USD-M 公式重算后研究门禁失败。本地数据与
+  非 Markdown 产物已删除，不再重建、复现或 promotion。
+- Next decision gate：无；重开视同新研究线。
 
 ## Version Rules
 
@@ -27,7 +29,7 @@
 
 | Version | Status | Role / Core Idea | Key Frozen Metrics | Evidence | Decision / Live Readiness |
 | --- | --- | --- | --- | --- | --- |
-| V1 | `registered / not promoted / not live-ready` | 165 个高覆盖因子、730d rolling、四种子 LightGBM regression 均值；UTC 00:00、24h、Top7/Bottom7、0.45x gross；研究记录因公式错误失效 | 原始 prefit/OOS 绩效全部作废；固定原模型分数和选币、按正确空头公式重算 OOS：总收益 `-37.04%`、DD `37.04%`、组合胜率 `56.67%`、Sharpe `-3.26`、PF `0.60`、`90` 周期/`1,260` 腿 | [公式纠错审计](diagnostics/binance-1h-cslgbm-v1-oos-2026-07-17.md)；原冻结 SHA `9f5743...02a1`；纠错脚本 `scripts/audit_v1_short_return_correction.py` | `HARD-GATE-FAILED`：收益、DD、Sharpe、PF、正收益月和成本压力失败；不 promotion，无 runner、未 dry-run、未 live-executable |
+| V1 | `archived` | 165 个高覆盖因子、730d rolling、四种子 LightGBM regression 均值；UTC 00:00、24h、Top7/Bottom7、0.45x gross；研究记录因公式错误失效 | 原始 prefit/OOS 绩效全部作废；固定原模型分数和选币、按正确空头公式重算 OOS：总收益 `-37.04%`、DD `37.04%`、组合胜率 `56.67%`、Sharpe `-3.26`、PF `0.60`、`90` 周期/`1,260` 腿 | [公式纠错审计](diagnostics/binance-1h-cslgbm-v1-oos-2026-07-17.md)；原冻结 SHA `9f5743...02a1`；纠错脚本 `scripts/audit_v1_short_return_correction.py` | `HARD-GATE-FAILED`；仅保留事故复盘与纠错记录 |
 
 ## Shared Assumptions
 

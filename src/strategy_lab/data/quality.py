@@ -3,6 +3,7 @@ from __future__ import annotations
 from dataclasses import dataclass
 from enum import StrEnum
 import json
+import re
 from typing import Iterable
 
 import numpy as np
@@ -36,16 +37,101 @@ class DuplicateStats:
 
 
 @dataclass(frozen=True, slots=True)
+class OHLCVAuditReport:
+    rows: int
+    groups: int
+    start: str | None
+    end: str | None
+    duplicate_rows: int
+    missing_bars: int
+    unexpected_intervals: int
+    open_rows: int
+    timeframe_mismatches: int
+    schema_errors: tuple[str, ...] = ()
+
+    @property
+    def trusted(self) -> bool:
+        return not any(
+            (
+                self.duplicate_rows,
+                self.missing_bars,
+                self.unexpected_intervals,
+                self.open_rows,
+                self.timeframe_mismatches,
+                len(self.schema_errors),
+            )
+        )
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "rows": self.rows,
+            "groups": self.groups,
+            "start": self.start,
+            "end": self.end,
+            "duplicate_rows": self.duplicate_rows,
+            "missing_bars": self.missing_bars,
+            "unexpected_intervals": self.unexpected_intervals,
+            "open_rows": self.open_rows,
+            "timeframe_mismatches": self.timeframe_mismatches,
+            "schema_errors": list(self.schema_errors),
+            "trusted": self.trusted,
+        }
+
+
+@dataclass(frozen=True, slots=True)
+class RawNormalizedOHLCVAuditReport:
+    raw_rows: int
+    normalized_rows: int
+    missing_in_raw: int
+    missing_in_normalized: int
+    field_mismatches: dict[str, int]
+
+    @property
+    def trusted(self) -> bool:
+        return (
+            self.missing_in_raw == 0
+            and self.missing_in_normalized == 0
+            and not any(self.field_mismatches.values())
+        )
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "raw_rows": self.raw_rows,
+            "normalized_rows": self.normalized_rows,
+            "missing_in_raw": self.missing_in_raw,
+            "missing_in_normalized": self.missing_in_normalized,
+            "field_mismatches": self.field_mismatches,
+            "trusted": self.trusted,
+        }
+
+
+@dataclass(frozen=True, slots=True)
 class OHLCVDerivationPolicy:
     """Explicit permission to create proxy fields that are absent upstream."""
 
     derive_quote_volume: bool = False
     derive_vwap: bool = False
     reason: str = ""
+    source_dataset_id: str = ""
+    generated_at: str = ""
+    code_hash: str = ""
+    formula_version: str = "1.0"
+    null_policy: str = "error"
 
     def __post_init__(self) -> None:
-        if (self.derive_quote_volume or self.derive_vwap) and not self.reason.strip():
-            raise ValueError("OHLCV derivation requires a non-empty audit reason")
+        if not (self.derive_quote_volume or self.derive_vwap):
+            return
+        required = {
+            "reason": self.reason,
+            "source_dataset_id": self.source_dataset_id,
+            "generated_at": self.generated_at,
+            "code_hash": self.code_hash,
+            "formula_version": self.formula_version,
+            "null_policy": self.null_policy,
+        }
+        missing = [name for name, value in required.items() if not value.strip()]
+        if missing:
+            raise ValueError(f"OHLCV derivation provenance is incomplete: {missing}")
 
 
 def business_key_columns(kind: DatasetKind, frame: pd.DataFrame) -> tuple[str, ...]:
@@ -116,6 +202,7 @@ def derive_ohlcv_columns(
         derived["quote_volume"] = derived["close"] * derived["volume"]
         provenance["quote_volume"] = {
             "formula": "close * volume",
+            "source_columns": "close,volume",
             "quality": "derived_proxy",
             "reason": policy.reason,
         }
@@ -129,6 +216,7 @@ def derive_ohlcv_columns(
         derived["vwap"] = derived["quote_volume"] / derived["volume"]
         provenance["vwap"] = {
             "formula": "quote_volume / volume",
+            "source_columns": "quote_volume,volume",
             "quality": "derived_proxy",
             "reason": policy.reason,
         }
@@ -136,7 +224,15 @@ def derive_ohlcv_columns(
 
     if provenance:
         payload = json.dumps(
-            {"mode": "explicit_opt_in", "fields": provenance},
+            {
+                "mode": "explicit_opt_in",
+                "formula_version": policy.formula_version,
+                "source_dataset_id": policy.source_dataset_id,
+                "generated_at": policy.generated_at,
+                "null_policy": policy.null_policy,
+                "code_hash": policy.code_hash,
+                "fields": provenance,
+            },
             ensure_ascii=False,
             sort_keys=True,
         )
@@ -222,3 +318,149 @@ def validate_frame(kind: DatasetKind, frame: pd.DataFrame) -> None:
     keys = business_key_columns(kind, frame)
     if keys and frame.duplicated(subset=list(keys), keep=False).any():
         raise ValueError(f"duplicate business keys for {kind.value}; keys={list(keys)}")
+
+
+def timeframe_delta(value: str) -> pd.Timedelta:
+    match = re.fullmatch(r"([1-9]\d*)([mhdw])", str(value).strip().lower())
+    if not match:
+        raise ValueError(f"unsupported timeframe: {value!r}")
+    amount, unit = match.groups()
+    unit_map = {"m": "min", "h": "h", "d": "d", "w": "w"}
+    return pd.Timedelta(int(amount), unit=unit_map[unit])
+
+
+def audit_ohlcv_frame(
+    frame: pd.DataFrame,
+    *,
+    expected_timeframe: str | None = None,
+    require_closed: bool = True,
+) -> OHLCVAuditReport:
+    schema_errors: list[str] = []
+    try:
+        validate_frame(DatasetKind.OHLCV, frame)
+    except (TypeError, ValueError) as exc:
+        schema_errors.append(str(exc))
+
+    required_for_audit = {
+        "ts",
+        "exchange",
+        "symbol",
+        "market_type",
+        "timeframe",
+    }
+    if not required_for_audit.issubset(frame.columns):
+        return OHLCVAuditReport(
+            rows=len(frame),
+            groups=0,
+            start=None,
+            end=None,
+            duplicate_rows=0,
+            missing_bars=0,
+            unexpected_intervals=0,
+            open_rows=0,
+            timeframe_mismatches=0,
+            schema_errors=tuple(schema_errors),
+        )
+
+    identity = ("ts", "exchange", "symbol", "market_type", "timeframe")
+    duplicate_rows = int(frame.duplicated(subset=list(identity), keep=False).sum())
+    open_rows = (
+        int((~frame["is_closed"].fillna(False).astype(bool)).sum())
+        if require_closed and "is_closed" in frame.columns
+        else 0
+    )
+    expected = str(expected_timeframe).strip().lower() if expected_timeframe else None
+    actual_timeframes = frame["timeframe"].astype("string").str.strip().str.lower()
+    timeframe_mismatches = int(actual_timeframes.ne(expected).sum()) if expected else 0
+
+    missing_bars = 0
+    unexpected_intervals = 0
+    group_columns = ["exchange", "symbol", "market_type", "timeframe"]
+    groups = 0
+    for key, group in frame.groupby(group_columns, dropna=False, sort=False):
+        groups += 1
+        group_timeframe = expected or str(key[-1]).strip().lower()
+        try:
+            interval = timeframe_delta(group_timeframe)
+        except ValueError as exc:
+            schema_errors.append(str(exc))
+            continue
+        timestamps = (
+            pd.to_datetime(group["ts"], utc=True, errors="coerce")
+            .dropna()
+            .drop_duplicates()
+            .sort_values()
+        )
+        if len(timestamps) < 2:
+            continue
+        for delta in timestamps.diff().dropna():
+            if delta == interval:
+                continue
+            if delta > interval and delta % interval == pd.Timedelta(0):
+                missing_bars += int(delta / interval) - 1
+            else:
+                unexpected_intervals += 1
+
+    timestamps = pd.to_datetime(frame["ts"], utc=True, errors="coerce").dropna()
+    return OHLCVAuditReport(
+        rows=len(frame),
+        groups=groups,
+        start=timestamps.min().isoformat() if not timestamps.empty else None,
+        end=timestamps.max().isoformat() if not timestamps.empty else None,
+        duplicate_rows=duplicate_rows,
+        missing_bars=missing_bars,
+        unexpected_intervals=unexpected_intervals,
+        open_rows=open_rows,
+        timeframe_mismatches=timeframe_mismatches,
+        schema_errors=tuple(dict.fromkeys(schema_errors)),
+    )
+
+
+def audit_raw_normalized_ohlcv(
+    raw: pd.DataFrame,
+    normalized: pd.DataFrame,
+) -> RawNormalizedOHLCVAuditReport:
+    identity = ["ts", "exchange", "symbol", "market_type", "timeframe"]
+    compared_fields = [
+        "open",
+        "high",
+        "low",
+        "close",
+        "volume",
+        "quote_volume",
+        "trade_count",
+        "vwap",
+        "is_closed",
+    ]
+    for label, frame in (("raw", raw), ("normalized", normalized)):
+        missing = [column for column in [*identity, *compared_fields] if column not in frame]
+        if missing:
+            raise ValueError(f"{label} OHLCV frame missing comparison columns: {missing}")
+        if frame.duplicated(subset=identity, keep=False).any():
+            raise ValueError(f"{label} OHLCV frame contains duplicate identity rows")
+
+    merged = raw[[*identity, *compared_fields]].merge(
+        normalized[[*identity, *compared_fields]],
+        on=identity,
+        how="outer",
+        suffixes=("_raw", "_normalized"),
+        indicator=True,
+    )
+    both = merged["_merge"].eq("both")
+    mismatches: dict[str, int] = {}
+    for field in compared_fields:
+        left = merged.loc[both, f"{field}_raw"]
+        right = merged.loc[both, f"{field}_normalized"]
+        if field == "is_closed":
+            mismatches[field] = int(left.astype(bool).ne(right.astype(bool)).sum())
+        else:
+            mismatches[field] = int(
+                (~np.isclose(left.astype(float), right.astype(float), rtol=0.0, atol=0.0)).sum()
+            )
+    return RawNormalizedOHLCVAuditReport(
+        raw_rows=len(raw),
+        normalized_rows=len(normalized),
+        missing_in_raw=int(merged["_merge"].eq("right_only").sum()),
+        missing_in_normalized=int(merged["_merge"].eq("left_only").sum()),
+        field_mismatches=mismatches,
+    )

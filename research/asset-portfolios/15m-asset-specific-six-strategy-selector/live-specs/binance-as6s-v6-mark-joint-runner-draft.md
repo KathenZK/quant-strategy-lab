@@ -3,7 +3,7 @@ schema_version: "1.0"
 spec_role: lab_handoff
 family_id: BIN-15M-AS6S
 main_status: dry-run
-spec_status: active
+spec_status: superseded
 implementations:
   - strategy_id: BIN-15M-AS6S-V6-NP
     runner_kind: asset_specific_six_selector_v6_mark_joint_np
@@ -11,9 +11,6 @@ implementations:
   - strategy_id: BIN-15M-AS6S-V6-SBP
     runner_kind: asset_specific_six_selector_v6_mark_joint_preemptive
     peer_spec: crates/quant-runner/src/runner/strategies/asset_specific_six_selector_v6_mark_joint_state/BIN-15M-AS6S-V6-SBP-SPEC.md
-manifest_instance_ids:
-  - bin-15m-as6s-v6-mark-np-dry-run
-  - bin-15m-as6s-v6-mark-preemptive-dry-run
 approval_level_max: dry_run
 overlays:
   - handoff
@@ -21,9 +18,9 @@ overlays:
 
 # 六币资产专属 V6 Mark 联合状态 Runner 草案
 
-策略状态：`dry-run / not live-ready`。2026-07-15 经用户明确
-授权，两条冻结路线均写入 active governance manifest 并启用持续 `dry-run`。
-本规格不授权 testnet 或 `live`，也不改变未来 OOS 的禁改禁看边界。
+本规格是历史 handoff 记录，已随 Lab 家族于 2026-08-05 归档并标记
+`superseded`。它不再作为新实现、对拍或 promotion 输入；实际启用状态与配置
+仍只以 quant-runner 为准，本次归档不自动停止或修改实例。
 
 ## 固定身份
 

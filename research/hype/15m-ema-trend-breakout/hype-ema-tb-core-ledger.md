@@ -3,8 +3,8 @@
 
 ## Current State
 
-- 当前外部 runner 事实：独立 `hype-trend` 先后运行 V35、V35.1，并于 `2026-07-22 04:09 UTC` 观测为 `HYPE-EMA-TB-V35.3` live mode；该实例是部署早于当前 handoff 契约的 legacy 外部系统，不属于 quant-runner manifest 投影。
-- 当前研究状态：V35 是 grandfathered `live`；V35.1-V35.3、V36-V41 仍为 `registered / not promoted / not live-ready`。V35.1 已完成 quant-runner `DryRunOnly` 与 `111/111` parity 但保持 disabled；V35.3 已在外部 Python runner 实现，外部启用事实不能替代 promotion，因此形成必须 fail-closed 处理的状态/授权冲突。
+- 当前外部 runner 历史事实：独立 `hype-trend` 先后运行 V35、V35.1，并于 `2026-07-22 04:09 UTC` 观测为 `HYPE-EMA-TB-V35.3` live mode；该实例是部署早于当前 handoff 契约的 legacy 外部系统。当前是否仍运行必须从对应运行环境核对，Lab 不作授权判断。
+- 当前研究状态：V35 是 grandfathered `live` 历史状态；V35.1-V35.3、V36-V41 仍为 `registered / not promoted / not live-ready`。V35.1 的叙事报告记录 quant-runner `DryRunOnly` 与 `111/111` parity，但规范 JSON 已缺失，证据健康度为 `MISSING_EVIDENCE`；V35.3 的外部实现事实不能替代研究 promotion。
 - 最新线上对账：[V35 定稿后全量实盘对账](runner-tracking/hype-ema-tb-v35-post-freeze-live-parity-2026-07-22.md)。11 笔实盘 entry 全匹配、9 笔非人工退出原因全一致；主要偏差来自两次人工平仓、账本漏记与最终 K 数据 blocker。
 - 当前 handoff：[V35.1 runner draft](live-specs/hype-ema-tb-v35-1-runner-draft.md) 仍不授权 quant-runner 实例。下一决策门先确认外部 V35.3 切换授权，修复 Binance fill/income 对账和最终 K 校验，再处理 Gate 3、OOS/CPCV、压力、相位与 live-executable review。
 ## Shared Assumptions

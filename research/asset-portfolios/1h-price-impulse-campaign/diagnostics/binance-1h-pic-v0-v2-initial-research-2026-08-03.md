@@ -114,7 +114,7 @@ HYPE 波动大并没有自动变成更稳定的趋势延续。当前证据支持
 
 ## 7. 当前线上决定
 
-- 不写 live spec，不修改 active-strategy manifest，不接 quant-runner，不启动 dry-run/live。
+- 不写 live spec，不接入或修改 quant-runner，不启动 dry-run/live。
 - 原因不是“策略完全没用”，而是最近 6m 冻结门禁失败、V2 形成于 V1 全历史揭示之后，没有新的 prospective OOS；同时 runner 的同方向 partial resize、funding 后 risk trim 和 lot/stop parity 尚未完成。
 - 禁止在当前已揭示历史上选择 long-only、改 6m 门禁、调 impulse threshold、减少 risk trim 或把 risk 提到 3%/10% 来救结果。
 - 若继续推进，正确顺序是：用户明确登记冻结身份 → 锁定 2026-08-03 之后的新 prospective OOS → 到期一次性揭示 → 全部门禁通过后才写 live spec → runner 实现 resize/parity → dry-run。

@@ -11,11 +11,11 @@
 ## 当前状态
 
 - 当前版本：`HYPE-15M-MII-V1.4A`，于 `2026-07-10T07:13:16Z` 替代同一 `hype-mii-dry-run` 实例上的 V1.3。
-- 当前状态：`dry-run / not live-ready`；共享 15m 行情组曾于 2026-07-21→07-30 [group halt](../15m-ema-crossover/runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)，`d514e65` 部署后已恢复；停摆区间观察作废。
+- 当前状态：`dry-run / not live-ready`；2026-08-04 因 pending parity JSON 缺失，证据健康度标为 `MISSING_EVIDENCE`，既有用户授权不变。共享 15m 行情组曾于 2026-07-21→07-30 [group halt](../15m-ema-crossover/runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)，`d514e65` 部署后已恢复；停摆区间观察作废。
 - 版本关系：V1.3 是 superseded dry-run history；V1.4 是 V1.4A 的 parent registered observation。
 - 当前 runner 观察与后续未部署 execution 迁移见 [2026-07-10 runner tracking](runner-tracking/hype-15m-mii-runner-2026-07-10.md)。
 - live 前 blockers：资金费核算、盘口级 stop-market 证据、真实成交滑点、重启恢复、交易所对账、missing-bar fail-closed、kill switch 审计，以及 `runner-tracking/` 下达标的 runner 观察证据。
-- 当前 manifest 只授权 dry-run；是否进入 `live` 或形成 dry-run/live 后终态，必须由 runner 观察证据与新决策判定。
+- 规范 parity 证据缺失会阻止新 promotion，但不会自动启停 runner。dry-run/live 的实际授权、模式与运行状态只以 quant-runner 为准；状态迁移必须由实际运行证据与用户新决策判定。
 
 ## 数据与成本口径
 

@@ -8,13 +8,14 @@ import datetime as dt
 import json
 import os
 import re
+import tempfile
 from collections import defaultdict
 from pathlib import Path
 from urllib.parse import unquote, urlsplit
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_OUTPUT_DIR = ROOT / "research" / "_artifact-inventory"
+DEFAULT_OUTPUT_DIR = Path(tempfile.gettempdir()) / "quant-strategy-lab-artifact-inventory"
 MIB = 1024 * 1024
 FILE_REVIEW_BYTES = 10 * MIB
 FILE_EXTERNALIZE_BYTES = 50 * MIB

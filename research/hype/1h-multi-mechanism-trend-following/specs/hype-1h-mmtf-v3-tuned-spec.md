@@ -1,6 +1,6 @@
 # HYPE-1H-Multi-Mechanism-Trend-Following-V3 调优冻结规格
 
-- 状态：`registered / HARD-GATE-FAILED / NO-GO / not promoted / not live-ready`。
+- 状态：`registered / HARD-GATE-FAILED / not promoted / not live-ready`。
 - 冻结时点：locked OOS 揭示前；揭示后禁止修改或据其追参。
 - clean config SHA256：`9f3c9ae1...89e0b`；engine config SHA256：`fe21b8fc...3b777`。
 

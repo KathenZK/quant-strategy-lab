@@ -10,6 +10,10 @@
 - [`research_mu_polygon_hype_v35_transfer.py`](research_mu_polygon_hype_v35_transfer.py)：Polygon 真股交叉验证。
 - [`compare_mu_binance_polygon_alignment.py`](compare_mu_binance_polygon_alignment.py)：Binance / Polygon 对齐检查。
 - [`compare_mu_binance_yahoo_alignment.py`](compare_mu_binance_yahoo_alignment.py)：Binance / Yahoo 对齐检查。
+- [`migrate_mu_equity_ohlcv.py`](migrate_mu_equity_ohlcv.py)：将旧
+  `data/external/us_equities` 原始文件按来源和 UTC 日期迁入统一 raw OHLCV，
+  生成 SHA256/行数/round-trip 迁移清单；默认只审计，实际迁移需显式
+  `--apply --remove-source`，迁移后可用 `--verify-existing` 重验全部目标 hash。
 - [`mu_hype_xfer_kernel.py`](mu_hype_xfer_kernel.py)：冻结的本地 HYPE EMA 迁移内核。
 
 脚本只服务 MU 研究时保留在本目录；长期结论写回上级 Markdown，保留的 JSON/CSV/HTML 写入 [`../artifacts/`](../artifacts/README.md)。只有成为可复用数据基础设施后才可提升到 `src/strategy_lab/`。不得从持续变化的 HYPE 家族研究脚本直接导入实现。

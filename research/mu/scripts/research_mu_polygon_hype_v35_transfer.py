@@ -28,23 +28,27 @@ from research_mu_v35_session_aware import (
 )
 
 
-POLYGON_PATH = Path(
-    "data/external/us_equities/polygon/symbol=mu/timeframe=15m/"
-    "mu_15m_2025-06-17_2026-06-17_adjusted.parquet"
+POLYGON_ROOT = Path(
+    "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api"
 )
 SUMMARY_PATH = Path("research/mu/artifacts/mu_polygon_hype_v35_transfer_summary.json")
 TRADES_PATH = Path("research/mu/artifacts/mu_polygon_hype_v35_transfer_trades.csv")
 EQUITY_PATH = Path("research/mu/artifacts/mu_polygon_hype_v35_transfer_equity.csv")
-LEDGER_JSON_PATH = Path("research/mu/artifacts/mu_polygon_hype_v35_transfer_ledger.json")
+LEDGER_JSON_PATH = Path(
+    "research/mu/artifacts/mu_polygon_hype_v35_transfer_ledger.json"
+)
 LEDGER_CSV_PATH = Path("research/mu/artifacts/mu_polygon_hype_v35_transfer_ledger.csv")
 ORIGINAL_PATH = Path("research/mu/artifacts/mu_polygon_hype_v35_original_summary.json")
-ORIGINAL_TRADES_PATH = Path("research/mu/artifacts/mu_polygon_hype_v35_original_trades.csv")
+ORIGINAL_TRADES_PATH = Path(
+    "research/mu/artifacts/mu_polygon_hype_v35_original_trades.csv"
+)
 
 
 def load_polygon() -> pd.DataFrame:
-    if not POLYGON_PATH.exists():
-        raise FileNotFoundError(f"missing Polygon MU 15m parquet: {POLYGON_PATH}")
-    frame = pd.read_parquet(POLYGON_PATH)
+    files = sorted(POLYGON_ROOT.rglob("symbol=mu.parquet"))
+    if not files:
+        raise FileNotFoundError(f"no Polygon MU 15m parquet under {POLYGON_ROOT}")
+    frame = pd.concat([pd.read_parquet(path) for path in files], ignore_index=True)
     frame["ts"] = pd.to_datetime(frame["ts"], utc=True).dt.floor("15min")
     frame = frame.drop_duplicates("ts").sort_values("ts").reset_index(drop=True)
     for column in ["open", "high", "low", "close", "volume"]:
@@ -122,8 +126,12 @@ def session_counts(frame: pd.DataFrame, start_i: int) -> dict[str, int]:
         "premarket_regular_overnight_session_bars_after_warmup": int(
             suffix.premarket_regular_overnight_session.sum()
         ),
-        "tradifi_24h5_session_bars_after_warmup": int(suffix.tradifi_24h5_session.sum()),
-        "overnight_session_bars_after_warmup": int(suffix.tradifi_overnight_session.sum()),
+        "tradifi_24h5_session_bars_after_warmup": int(
+            suffix.tradifi_24h5_session.sum()
+        ),
+        "overnight_session_bars_after_warmup": int(
+            suffix.tradifi_overnight_session.sum()
+        ),
     }
 
 
@@ -225,11 +233,7 @@ def main() -> None:
     equity_frame.to_csv(EQUITY_PATH, index=False)
     pd.DataFrame(ledger_rows).to_csv(LEDGER_CSV_PATH, index=False)
     pd.DataFrame(
-        [
-            trade
-            for result in original_results
-            for trade in result["trades_detail"]
-        ]
+        [trade for result in original_results for trade in result["trades_detail"]]
     ).to_csv(ORIGINAL_TRADES_PATH, index=False)
     ORIGINAL_PATH.write_text(
         json.dumps(
@@ -287,7 +291,7 @@ def main() -> None:
                 "symbol": "MU",
                 "source": "polygon",
                 "data": {
-                    "path": str(POLYGON_PATH),
+                    "path": str(POLYGON_ROOT),
                     "rows": int(len(frame)),
                     "start": str(pd.Timestamp(frame.ts.iloc[0])),
                     "end": str(pd.Timestamp(frame.ts.iloc[-1])),
@@ -315,11 +319,7 @@ def main() -> None:
                     "results": original_compact,
                 },
                 "version_catalog": [
-                    {
-                        key: value
-                        for key, value in item.items()
-                        if key != "spec"
-                    }
+                    {key: value for key, value in item.items() if key != "spec"}
                     for item in version_catalog
                 ],
                 "variants": compact,

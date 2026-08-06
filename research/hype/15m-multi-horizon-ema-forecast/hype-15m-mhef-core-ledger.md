@@ -11,7 +11,7 @@
 ## Current State
 
 - Current version(s)：无；当前仅有未编号 baseline observation。
-- Current status：`explore / NO-GO / not promoted / not live-ready`
+- Current status：`explore / not promoted / not live-ready`（研究验证失败；尚未进入 runner，故不使用 runner 后终态 `NO-GO`）
 - Runner / dry-run / live：无。
 - Live-readiness blockers：V1 基线全区间毛净收益为负；V2 冻结候选虽在 train/tune 为正，但未参与选择的三个月验证毛收益 `-9.20%`、净收益 `-11.47%`，零成本亦为负；尚无 fresh prospective OOS，且未审计最小订单、数量步长、拒单、重启恢复与保护性风控。
 - Next decision gate：本单资产 `15m` 机制已判 NO-GO，不再使用已揭示验证调参。后继必须是 materially new mechanism 或多市场组合契约，并使用 `2026-07-28 08:00 UTC` 之后的 fresh outcome-blind prospective OOS。

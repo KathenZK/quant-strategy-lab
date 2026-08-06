@@ -6,7 +6,7 @@ globs:
   - "research/**/live-specs/**/*.md"
   - "research/**/*core-ledger*.md"
   - "docs/research-governance/**"
-alwaysApply: false
+alwaysApply: true
 ---
 
 # Strategy Validation Gates

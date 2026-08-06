@@ -7,10 +7,23 @@ from typing import Any
 import duckdb
 import pandas as pd
 
+from strategy_lab.data.authenticity import (
+    DEFAULT_BLOCKED_SOURCE_PATTERNS,
+    DEFAULT_REAL_SOURCE_ALLOWLIST,
+    unverified_source_mask,
+)
 from strategy_lab.data.lake import DataLakeLayout
-from strategy_lab.data.liquidations import aggregate_liquidation_events, enrich_liquidation_features
+from strategy_lab.data.liquidations import (
+    aggregate_liquidation_events,
+    enrich_liquidation_features,
+)
 from strategy_lab.data.models import DatasetKind, MarketType
-from strategy_lab.data.quality import DuplicatePolicy, DuplicateStats, resolve_duplicates
+from strategy_lab.data.quality import (
+    DuplicatePolicy,
+    DuplicateStats,
+    audit_ohlcv_frame,
+    resolve_duplicates,
+)
 
 
 def _symbol_file_stem(symbol: str) -> str:
@@ -43,6 +56,7 @@ class DuckDBWarehouse:
         market_type: MarketType | None = None,
         symbol: str | None = None,
         timeframe: str | None = None,
+        source: str | None = None,
     ) -> list[str]:
         root = self.layout.dataset_root(layer, kind)
         path = root
@@ -52,7 +66,9 @@ class DuckDBWarehouse:
             path = path / f"market_type={market_type.value}"
         if timeframe:
             path = path / f"timeframe={timeframe.lower()}"
-        if symbol and any((exchange, market_type, timeframe)):
+        if source:
+            path = path / f"source={source.lower()}"
+        if symbol and any((exchange, market_type, timeframe, source)):
             files = sorted(path.glob(f"**/{_symbol_file_stem(symbol)}"))
         else:
             files = sorted(path.glob("**/*.parquet"))
@@ -67,6 +83,7 @@ class DuckDBWarehouse:
         market_type: MarketType | None = None,
         symbol: str | None = None,
         timeframe: str | None = None,
+        source: str | None = None,
         columns: list[str] | None = None,
         duplicate_policy: DuplicatePolicy = DuplicatePolicy.ERROR,
         return_duplicate_stats: bool = False,
@@ -78,8 +95,9 @@ class DuckDBWarehouse:
             market_type=market_type,
             symbol=symbol,
             timeframe=timeframe,
+            source=source,
         )
-        if not files and any((exchange, market_type, symbol, timeframe)):
+        if not files and any((exchange, market_type, symbol, timeframe, source)):
             # Fall back to scanning the dataset root so pre-canonical legacy files remain readable.
             files = self.dataset_files(layer=layer, kind=kind)
         if not files:
@@ -100,9 +118,14 @@ class DuckDBWarehouse:
         if symbol:
             filters.append("replace(upper(symbol), '_', '/') = ?")
             params.append(symbol.upper())
+        if source:
+            filters.append("source = ?")
+            params.append(source.lower())
 
         where_clause = f"WHERE {' AND '.join(filters)}" if filters else ""
-        order_columns = ["ts", "symbol"] if kind != DatasetKind.ASSET_METADATA else ["symbol"]
+        order_columns = (
+            ["ts", "symbol"] if kind != DatasetKind.ASSET_METADATA else ["symbol"]
+        )
         sql = (
             f"SELECT {projection}, filename AS __source_file "
             "FROM read_parquet(?, hive_partitioning = false, union_by_name = true, filename = true) "
@@ -113,7 +136,9 @@ class DuckDBWarehouse:
 
         if timeframe and "timeframe" in frame.columns:
             normalized_timeframe = timeframe.lower()
-            exact = frame[frame["timeframe"].astype("string").str.lower() == normalized_timeframe].reset_index(drop=True)
+            exact = frame[
+                frame["timeframe"].astype("string").str.lower() == normalized_timeframe
+            ].reset_index(drop=True)
             if not exact.empty:
                 frame = exact
             else:
@@ -127,10 +152,85 @@ class DuckDBWarehouse:
             order_columns=("__source_file",),
         )
         frame = frame.drop(columns=["filename", "__source_file"], errors="ignore")
+        if "ts" in frame.columns:
+            frame["ts"] = pd.to_datetime(frame["ts"], utc=True, errors="raise")
         if return_columns is not None:
-            frame = frame[[column for column in return_columns if column in frame.columns]]
+            frame = frame[
+                [column for column in return_columns if column in frame.columns]
+            ]
         frame.attrs["duplicate_stats"] = duplicate_stats.to_dict()
         return (frame, duplicate_stats) if return_duplicate_stats else frame
+
+    def load_trusted_ohlcv(
+        self,
+        *,
+        exchange: str,
+        market_type: MarketType,
+        symbol: str,
+        timeframe: str,
+        source: str | None = None,
+        layer: str = "normalized",
+        start: pd.Timestamp | None = None,
+        end: pd.Timestamp | None = None,
+        require_contiguous: bool = True,
+        require_closed: bool = True,
+        allowed_sources: tuple[str, ...] = DEFAULT_REAL_SOURCE_ALLOWLIST,
+        blocked_source_patterns: tuple[str, ...] = DEFAULT_BLOCKED_SOURCE_PATTERNS,
+    ) -> pd.DataFrame:
+        frame = self.load_dataset(
+            layer=layer,
+            kind=DatasetKind.OHLCV,
+            exchange=exchange,
+            market_type=market_type,
+            symbol=symbol,
+            timeframe=timeframe,
+            source=source,
+        )
+        if start is not None and "ts" in frame.columns:
+            start_ts = pd.Timestamp(start)
+            start_ts = (
+                start_ts.tz_localize("UTC")
+                if start_ts.tzinfo is None
+                else start_ts.tz_convert("UTC")
+            )
+            frame = frame.loc[frame["ts"].ge(start_ts)].reset_index(drop=True)
+        if end is not None and "ts" in frame.columns:
+            end_ts = pd.Timestamp(end)
+            end_ts = (
+                end_ts.tz_localize("UTC")
+                if end_ts.tzinfo is None
+                else end_ts.tz_convert("UTC")
+            )
+            frame = frame.loc[frame["ts"].lt(end_ts)].reset_index(drop=True)
+        report = audit_ohlcv_frame(
+            frame,
+            expected_timeframe=timeframe,
+            require_closed=require_closed,
+        )
+        blockers: dict[str, object] = {
+            "duplicate_rows": report.duplicate_rows,
+            "unexpected_intervals": report.unexpected_intervals,
+            "open_rows": report.open_rows,
+            "timeframe_mismatches": report.timeframe_mismatches,
+            "schema_errors": list(report.schema_errors),
+        }
+        if require_contiguous:
+            blockers["missing_bars"] = report.missing_bars
+        source_mask = unverified_source_mask(
+            frame,
+            allowed_sources=allowed_sources,
+            blocked_patterns=blocked_source_patterns,
+        )
+        blockers["unverified_source_rows"] = int(source_mask.sum())
+        if any(bool(value) for value in blockers.values()):
+            raise ValueError(f"OHLCV dataset is not trusted: {blockers}")
+        trusted = frame.copy()
+        trusted.attrs["ohlcv_audit"] = report.to_dict()
+        trusted.attrs["source_counts"] = {
+            str(source): int(count)
+            for source, count in frame["source"].value_counts(dropna=False).items()
+        }
+        return trusted
 
     def query(self, sql: str, parameters: list[Any] | None = None) -> pd.DataFrame:
         with self.connect() as connection:
@@ -159,12 +259,28 @@ class DuckDBWarehouse:
         merged = ohlcv.copy()
         if market_type == MarketType.PERP:
             for kind, suffix, core_columns in (
-                (DatasetKind.FUNDING_RATES, "funding", {"funding_rate", "next_funding_ts"}),
-                (DatasetKind.OPEN_INTEREST, "oi", {"open_interest", "open_interest_value"}),
+                (
+                    DatasetKind.FUNDING_RATES,
+                    "funding",
+                    {"funding_rate", "next_funding_ts"},
+                ),
+                (
+                    DatasetKind.OPEN_INTEREST,
+                    "oi",
+                    {"open_interest", "open_interest_value"},
+                ),
                 (
                     DatasetKind.BASIS,
                     "basis",
-                    {"basis", "basis_rate", "annualized_basis", "futures_price", "index_price", "mark_price", "premium_index"},
+                    {
+                        "basis",
+                        "basis_rate",
+                        "annualized_basis",
+                        "futures_price",
+                        "index_price",
+                        "mark_price",
+                        "premium_index",
+                    },
                 ),
             ):
                 data = self.load_dataset(
@@ -177,7 +293,21 @@ class DuckDBWarehouse:
                 )
                 if data.empty:
                     continue
-                extra_columns = [column for column in data.columns if column not in {"exchange", "symbol", "market_type", "timeframe", "base_asset", "quote_asset", "source", "date"}]
+                extra_columns = [
+                    column
+                    for column in data.columns
+                    if column
+                    not in {
+                        "exchange",
+                        "symbol",
+                        "market_type",
+                        "timeframe",
+                        "base_asset",
+                        "quote_asset",
+                        "source",
+                        "date",
+                    }
+                ]
                 rename_map = {
                     column: f"{column}_{suffix}"
                     for column in extra_columns
@@ -186,7 +316,14 @@ class DuckDBWarehouse:
                 prepared = data.rename(columns=rename_map)
                 merged = merged.merge(
                     prepared,
-                    on=["ts", "exchange", "symbol", "market_type", "base_asset", "quote_asset"],
+                    on=[
+                        "ts",
+                        "exchange",
+                        "symbol",
+                        "market_type",
+                        "base_asset",
+                        "quote_asset",
+                    ],
                     how="left",
                     suffixes=("", f"_{suffix}"),
                 )
@@ -220,7 +357,11 @@ class DuckDBWarehouse:
         # 未显式指定时，从 ohlcv ts 间隔自动推断频率，保证聚合后与主表可 merge。
         if frequency is None:
             inferred_freq = "1h"
-            ts_series = pd.to_datetime(ohlcv["ts"], utc=True).sort_values().reset_index(drop=True)
+            ts_series = (
+                pd.to_datetime(ohlcv["ts"], utc=True)
+                .sort_values()
+                .reset_index(drop=True)
+            )
             if len(ts_series) >= 2:
                 diffs = ts_series.diff().dropna()
                 if not diffs.empty:
@@ -237,7 +378,16 @@ class DuckDBWarehouse:
             frequency = inferred_freq
 
         base = ohlcv[
-            ["ts", "exchange", "symbol", "market_type", "base_asset", "quote_asset", "close", "volume"]
+            [
+                "ts",
+                "exchange",
+                "symbol",
+                "market_type",
+                "base_asset",
+                "quote_asset",
+                "close",
+                "volume",
+            ]
         ].copy()
 
         raw_events = self.load_dataset(

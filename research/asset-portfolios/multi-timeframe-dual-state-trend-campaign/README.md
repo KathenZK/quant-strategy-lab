@@ -4,7 +4,7 @@
 - 市场/资产：Binance USD-M perpetual；HYPEUSDT primary，BTCUSDT、ETHUSDT 独立 control。
 - 周期：完整 UTC `1d` 定义 Campaign，`4h` 结构、`1h` 回调、`15m` restart/next-open 执行。
 - 机制：把长期 Campaign 失效与当前 position/lot stop 分成两个状态；小 Probe 试错，只有真实浮盈和新回调重启共同出现才分层加仓，并独立比较慢速结构退出与半 MFE 保护。
-- 当前状态：`explore / not promoted / not live-ready`；Goal active，尚无 registered version 或 runner。
+- 当前状态：`HARD-GATE-FAILED / explore / not promoted / not live-ready`；Goal complete，family closed；尚无 registered version 或 runner。
 
 ## 边界
 
@@ -20,5 +20,6 @@
 - [Goal 合同](specs/binance-mtf-dstc-goal-contract-2026-08-04.md)
 - [数据与评估合同](specs/binance-mtf-dstc-data-evaluation-contract-2026-08-04.md)
 - [实验注册表](specs/binance-mtf-dstc-experiment-registry-2026-08-04.md)
+- [Goal 最终报告](final/binance-mtf-dstc-goal-final-2026-08-04.md)
 - [脚本说明](scripts/README.md)
 - [产物说明](artifacts/README.md)

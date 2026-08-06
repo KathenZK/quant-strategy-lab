@@ -11,12 +11,13 @@
 ## Current State
 
 - Current version：无；Goal 搜索候选均为 unregistered diagnostic。
-- Current status：`explore / not promoted / not live-ready`；Goal active。
+- Current status：`HARD-GATE-FAILED / explore / not promoted / not live-ready`；Goal complete，family closed。
 - Target：最低候选净年化资本因子 `>=2x`、MDD `<=20%`、PF `>=1.3`、effective leverage `<=3x`；`5x` 为 Tier S、`20x` 为 Stretch。
 - Runner：无 live spec、无 quant-runner implementation、无 dry-run/live instance。
 - Evidence boundary：BTC/ETH cutoff 固定在 `2026-08-03 11:45 UTC`；HYPE 查询层 cutoff 固定在 `2026-08-01 15:15 UTC`，不得读取 `HYPE-15M-MTPP` 已锁定的 `2026-08-02` 后 prospective；HYPE 2026-03 后可用历史只能作 exposed audit；本家族 fresh prospective 从 `2026-08-05 00:00 UTC` 起 outcome-blind。
-- Blockers：尚未完成新家族数据审计、账户级双状态引擎、消融、搜索与 OOS；不得引用旧家族收益作为本家族基线绩效。
-- Next gate：完成数据/时序审计和固定 baseline parity；只有基线真实账户账本、stop gap、funding、3x effective leverage 与 next-open 测试通过后才允许宽搜索。
+- Result：432 个账户级回测完成；`BTC-BAL` 是最干净微弱优势，1% 风险 `1.028x annual / -12.2% MDD / PF1.65`，但所有风险档均远低于 `2x annual`；HYPE 无 E02 资格配置；historical final audit 未揭示。
+- Blockers：收益强度不足；提高风险先突破 20% MDD；空头无独立优势；多个增长路径 remove-top-3 失败。无数据/时序/成本/延迟 blocker。
+- Next gate：停止同机制调参。任何 successor 必须 materially new，并重新冻结 prospective/OOS；本家族不得创建版本、live spec 或 runner handoff。
 
 ## Version Rules
 
@@ -41,6 +42,8 @@
 - [Goal 合同](specs/binance-mtf-dstc-goal-contract-2026-08-04.md)
 - [数据与评估合同](specs/binance-mtf-dstc-data-evaluation-contract-2026-08-04.md)
 - [实验注册表](specs/binance-mtf-dstc-experiment-registry-2026-08-04.md)
+- [E05 稳定性候选冻结](specs/binance-mtf-dstc-stability-candidate-freeze-2026-08-04.md)
+- [Goal 最终报告](final/binance-mtf-dstc-goal-final-2026-08-04.md)
 - [决策记录](decision-log.md)
 - [脚本说明](scripts/README.md)
 - [产物说明](artifacts/README.md)

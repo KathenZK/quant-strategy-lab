@@ -1,5 +1,9 @@
 # Decision Log
 
+## 2026-08-04 — 缺失 parity 证据但保留用户授权
+
+- 决定：规范 parity JSON 已不在干净 checkout 中，`HYPE-15M-TB-MII-ENS-V2` 证据健康度标记为 `MISSING_EVIDENCE`。文件缺失阻止新 promotion，不能自动决定实例启停；实际授权与模式只以 quant-runner 为准，历史叙事报告见 [`hype-15m-tb-mii-ens-v2-runner-replay-parity-2026-07-09.md`](runner-tracking/hype-15m-tb-mii-ens-v2-runner-replay-parity-2026-07-09.md)。
+
 ## 2026-07-15 V39 腿慢启动主动退出复测
 
 - 问题：用户提出对当前参与 V2 production dry-run 的 V39 趋势腿测试“持仓 6–8h 且历史 MFE<1.5ATR 后 next-open 主动退出”。

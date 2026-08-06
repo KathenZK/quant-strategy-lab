@@ -53,4 +53,4 @@ Stage 1 搜索了 `216` 个 long-only 变体及 `72` 个 bidirectional 扩展，
 
 本次没有找到通过门禁的类似盈利策略。V40 只是从 HYPE 家族借用的搜索模板身份，不是 BTC 家族版本；该机制迁移到 BTC `15m` 后，基线、扩展搜索、成本压力、邻域稳健性、walk-forward 和一次性 holdout 均不足以支持推进。
 
-因此本研究保持 `explore / not promoted / not live-ready`，停止围绕 V40 模板继续扩搜；不得登记 `BTC-15M-EMA-Trend-Breakout-V1`，不得创建 `live spec`，不得进入 runner 或修改 active strategy manifest。若未来重开，必须基于新的机制级假设和新冻结实验，而不是继续放宽本轮门禁或围绕 near-miss 调参。
+因此本研究保持 `explore / not promoted / not live-ready`，停止围绕 V40 模板继续扩搜；不得登记 `BTC-15M-EMA-Trend-Breakout-V1`，不得创建 `live spec`，不得接入或修改 quant-runner 配置。若未来重开，必须基于新的机制级假设和新冻结实验，而不是继续放宽本轮门禁或围绕 near-miss 调参。

@@ -1,3 +1,8 @@
+---
+document_type: external_reproduction_spec
+intended_audience: 独立研究复现人员与外部 AI
+---
+
 # BTC 多周期趋势 Campaign 历史前沿复现规格
 
 ## 0. 身份与状态

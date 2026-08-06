@@ -11,10 +11,12 @@
 ## Current State
 
 - Current version(s)：`BIN-1H-MHCSML-V1`，最终开发冻结为 `freeze R4`。
-- Current status：`registered / not promoted / not live-ready`。
+- Current status：`archived`。
 - Runner / dry-run / live status：无 runner；未 dry-run；未 live。
-- Live-readiness blockers：未来三个月 prospective OOS 已启动但未完成；`2026-07-19 08:00` 至 `2026-07-22 00:00 UTC` 期间自动任务因目标 `usageLimited` 停止，连同首个节点共 `18` 个逾期节点已按冻结合同不可逆登记为 `MISSED`，不得回填；恢复后的 `2026-07-22 04:00 UTC` 节点已按时冻结，当前链为 `20/20`、`FROZEN_ON_TIME=2`、`MISSED=18`；历史胜率 `53.67%` 低于最终 `55%` 门槛；订单、保证金、强平、断线恢复和重启状态机未审计。当前登记不代表 promotion。
-- Next decision gate：主采集与 signal-only watchdog 已于 `2026-07-22 03:54 UTC` 恢复为 `ACTIVE`；`04:30 UTC` 的恢复预检已确认当前 `530/530` 个合约数据与 feature-only 面板均为 `PASS`、无 outcome 读取。两条任务已使用不改变冻结同步脚本的运行层 `IncompleteRead` 重试启动器，并以整轮互斥锁防止主任务与 watchdog 并发写盘；原脚本与 master SHA 不变。继续每 4 小时只按 R4 记录盲信号，分别在入场小时后第 `3`、`18` 分钟运行，仍受 `entry+25min` 截止与逾期 `MISSED` 约束。信号窗口在 `2026-10-19 00:00 UTC` 结束，最后 48h 腿成熟后最早于 `2026-10-20 21:05 UTC` 一次性揭示并执行全部硬门槛，期间不得改参数。
+- Archive boundary：2026-08-04 磁盘清理删除了模型、freeze 合同、盲链快照和
+  prospective 数据；2026-08-05 决定不再重建。原 prospective OOS 因链和冻结
+  证据中断而正式放弃，不得在未来补采、揭盲或声称完成。
+- Next decision gate：无；本家族只作历史方法与流程复盘，重开视同新研究线。
 
 ## Version Rules
 
@@ -27,7 +29,7 @@
 
 | Version | Status | Role / Core Idea | Key Frozen Metrics | Evidence | Decision / Live Readiness |
 | --- | --- | --- | --- | --- | --- |
-| BIN-1H-MHCSML-V1 freeze R4 | `registered / not promoted / not live-ready` | 四种子 short-return + MAE + squeeze + confirmation；横截面校准 utility allocator | 历史 OOF：年化 `59.30%`、DD `17.77%`、胜率 `53.67%`、Sharpe `4.49`、PF `1.546`、`7/7` folds 盈利；非 OOS | [历史 OOF 审计](diagnostics/binance-1h-mhcsml-oof-model-allocator-2026-07-18.md)、[R4 candidate lock](artifacts/freeze/bin-1h-mhcsml-v1-prefit-lock-r4.json)、[R4 model freeze](artifacts/freeze/bin-1h-mhcsml-v1-model-freeze-r4.json) | 仅登记研究候选；等待 prospective OOS；未 promotion |
+| BIN-1H-MHCSML-V1 freeze R4 | `archived` | 四种子 short-return + MAE + squeeze + confirmation；横截面校准 utility allocator | 历史 OOF：年化 `59.30%`、DD `17.77%`、胜率 `53.67%`、Sharpe `4.49`、PF `1.546`、`7/7` folds 盈利；非 OOS | [历史 OOF 审计](diagnostics/binance-1h-mhcsml-oof-model-allocator-2026-07-18.md)、[产物清理说明](artifacts/README.md) | prospective OOS 放弃；仅保留历史流程与方法复盘 |
 
 ## Shared Assumptions
 
@@ -39,8 +41,8 @@
 
 ## Evidence Map
 
-- Specs：[冻结研究契约](specs/binance-1h-mhcsml-research-contract-2026-07-18.md)、[V1 R4 外部独立复现规格](specs/binance-1h-mhcsml-v1-r4-external-reproduction-spec-2026-07-19.md)、[R4 master freeze](artifacts/freeze/bin-1h-mhcsml-v1-freeze-r4.json)、[最终裁决合同](artifacts/freeze/bin-1h-mhcsml-v1-final-adjudication-contract-r4.json)、[条件式 3x 风险规格](specs/binance-1h-mhcsml-v1-r4-3x-tail-risk-audit-spec-2026-07-19.md)、[条件式 3x 风险合同](artifacts/freeze/bin-1h-mhcsml-v1-three-x-risk-contract-r4.json)
+- Specs：[冻结研究契约](specs/binance-1h-mhcsml-research-contract-2026-07-18.md)、[V1 R4 外部独立复现规格](specs/binance-1h-mhcsml-v1-r4-external-reproduction-spec-2026-07-19.md)、[条件式 3x 风险规格](specs/binance-1h-mhcsml-v1-r4-3x-tail-risk-audit-spec-2026-07-19.md)。机器 freeze 与裁决合同已删除，见[产物清理说明](artifacts/README.md)。
 - Diagnostics / ablations：[数据质量与补洞报告](diagnostics/binance-1h-mhcsml-data-quality-2026-07-18.md)、[因子与标签面板审计](diagnostics/binance-1h-mhcsml-factor-panel-2026-07-18.md)、[历史开发矩阵隔离审计](diagnostics/binance-1h-mhcsml-development-matrix-2026-07-18.md)、[历史 OOF、模型与 allocator 审计](diagnostics/binance-1h-mhcsml-oof-model-allocator-2026-07-18.md)、[因子组消融与 tail IC 审计](ablations/binance-1h-mhcsml-factor-group-ablation-2026-07-19.md)、[目标完成度矩阵](diagnostics/binance-1h-mhcsml-goal-completion-matrix-2026-07-19.md)。
 - Live specs：无。
 - Runner tracking：无。
-- Scripts / artifacts：[脚本入口](scripts/README.md)；artifact 位于 `artifacts/`，仅作可复现证据。
+- Scripts / artifacts：[脚本入口](scripts/README.md)、[产物清理说明](artifacts/README.md)；脚本只作历史实现记录，不再承诺可复现。

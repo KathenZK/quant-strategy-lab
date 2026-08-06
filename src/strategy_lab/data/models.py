@@ -8,6 +8,7 @@ from enum import StrEnum
 class MarketType(StrEnum):
     SPOT = "spot"
     PERP = "perp"
+    EQUITY = "equity"
 
 
 class DatasetKind(StrEnum):
@@ -41,6 +42,7 @@ class OHLCVRecord:
 
     ts: datetime
     instrument: InstrumentId
+    timeframe: str
     open: float
     high: float
     low: float
@@ -113,6 +115,7 @@ def dataset_specs() -> dict[DatasetKind, DatasetSpec]:
                 "exchange",
                 "symbol",
                 "market_type",
+                "timeframe",
                 "open",
                 "high",
                 "low",
@@ -124,36 +127,100 @@ def dataset_specs() -> dict[DatasetKind, DatasetSpec]:
                 "is_closed",
                 "source",
             ),
-            partition_columns=("exchange", "market_type", "symbol", "timeframe", "date"),
+            partition_columns=(
+                "exchange",
+                "market_type",
+                "symbol",
+                "timeframe",
+                "date",
+            ),
         ),
         DatasetKind.FUNDING_RATES: DatasetSpec(
             kind=DatasetKind.FUNDING_RATES,
-            required_columns=("ts", "exchange", "symbol", "market_type", "funding_rate", "source"),
+            required_columns=(
+                "ts",
+                "exchange",
+                "symbol",
+                "market_type",
+                "funding_rate",
+                "source",
+            ),
             partition_columns=("exchange", "market_type", "symbol", "date"),
         ),
         DatasetKind.OPEN_INTEREST: DatasetSpec(
             kind=DatasetKind.OPEN_INTEREST,
-            required_columns=("ts", "exchange", "symbol", "market_type", "open_interest", "source"),
-            partition_columns=("exchange", "market_type", "symbol", "timeframe", "date"),
+            required_columns=(
+                "ts",
+                "exchange",
+                "symbol",
+                "market_type",
+                "open_interest",
+                "source",
+            ),
+            partition_columns=(
+                "exchange",
+                "market_type",
+                "symbol",
+                "timeframe",
+                "date",
+            ),
         ),
         DatasetKind.BASIS: DatasetSpec(
             kind=DatasetKind.BASIS,
-            required_columns=("ts", "exchange", "symbol", "market_type", "basis", "source"),
-            partition_columns=("exchange", "market_type", "symbol", "timeframe", "date"),
+            required_columns=(
+                "ts",
+                "exchange",
+                "symbol",
+                "market_type",
+                "basis",
+                "source",
+            ),
+            partition_columns=(
+                "exchange",
+                "market_type",
+                "symbol",
+                "timeframe",
+                "date",
+            ),
         ),
         DatasetKind.LIQUIDATIONS: DatasetSpec(
             kind=DatasetKind.LIQUIDATIONS,
-            required_columns=("ts", "exchange", "symbol", "market_type", "side", "size", "price", "source"),
+            required_columns=(
+                "ts",
+                "exchange",
+                "symbol",
+                "market_type",
+                "side",
+                "size",
+                "price",
+                "source",
+            ),
             partition_columns=("exchange", "market_type", "symbol", "date"),
         ),
         DatasetKind.TICKER: DatasetSpec(
             kind=DatasetKind.TICKER,
-            required_columns=("ts", "exchange", "symbol", "market_type", "bid", "ask", "source"),
+            required_columns=(
+                "ts",
+                "exchange",
+                "symbol",
+                "market_type",
+                "bid",
+                "ask",
+                "source",
+            ),
             partition_columns=("exchange", "market_type", "symbol", "date"),
         ),
         DatasetKind.ASSET_METADATA: DatasetSpec(
             kind=DatasetKind.ASSET_METADATA,
-            required_columns=("exchange", "symbol", "market_type", "base_asset", "quote_asset", "status", "source"),
+            required_columns=(
+                "exchange",
+                "symbol",
+                "market_type",
+                "base_asset",
+                "quote_asset",
+                "status",
+                "source",
+            ),
             partition_columns=("exchange", "market_type"),
         ),
         DatasetKind.ONCHAIN: DatasetSpec(

@@ -4,7 +4,7 @@
 
 - Family：`HYPE-1H-Multi-Mechanism-Trend-Following`
 - Version：`HYPE-1H-Multi-Mechanism-Trend-Following-V1`
-- Status：`registered diagnostic baseline / NO-GO / not promoted / not live-ready`
+- Status：`registered diagnostic baseline / not promoted / not live-ready`
 - Role：广搜后冻结的原始可执行边界；locked OOS 未揭示。
 
 ## 数据与执行合同
