@@ -13,7 +13,7 @@ from research_hype_ema_cross_strategy import (
     SYMBOL,
     TRADE_COST,
     build_features,
-    fetch_klines,
+    load_trusted_klines,
 )
 
 
@@ -285,7 +285,7 @@ def run_variant(
 
 
 def main() -> None:
-    raw = fetch_klines(cache_path=Path("data/cache/hypeusdt_15m_fapi.csv"), refresh=False)
+    raw = load_trusted_klines()
     frame = build_features(raw)
     end_ts = pd.to_datetime(frame.ts, utc=True).max()
     variants = [
@@ -408,7 +408,7 @@ def main() -> None:
         "metadata": {
             "symbol": SYMBOL,
             "end": str(end_ts),
-            "note": "Same data/cache as V4 search; V2 is recreated from canvas V2 rules.",
+            "note": "Same trusted normalized data as V4 search; V2 is recreated from canvas V2 rules.",
         },
         "full": [run_variant(frame, variant) for variant in variants],
         "windows": {

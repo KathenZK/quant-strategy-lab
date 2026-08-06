@@ -10,6 +10,8 @@ import duckdb
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 ROOT = Path(__file__).resolve().parents[4]
 DATA_ROOT = ROOT / "data"
@@ -113,6 +115,23 @@ def prepare_ohlcv(frame: pd.DataFrame) -> tuple[pd.DataFrame, int]:
 def load_cutoff_ohlcv(asset: str, layer: str) -> tuple[pd.DataFrame, int, int]:
     symbol = SYMBOLS[asset]
     cutoff = CUTOFFS[asset]
+    if layer == "normalized":
+        warehouse = DuckDBWarehouse(
+            DataLakeLayout.from_settings(load_settings(None))
+        )
+        frame = warehouse.load_trusted_ohlcv(
+            exchange=EXCHANGE,
+            market_type=MarketType.PERP,
+            symbol=symbol,
+            timeframe=TIMEFRAME,
+            end=cutoff + pd.Timedelta(nanoseconds=1),
+        )
+        prepared, duplicates = prepare_ohlcv(frame)
+        files = cutoff_scoped_files(
+            _layer_root(layer, "ohlcv", timeframe=TIMEFRAME), symbol, cutoff
+        )
+        return prepared, duplicates, len(files)
+
     files = cutoff_scoped_files(
         _layer_root(layer, "ohlcv", timeframe=TIMEFRAME), symbol, cutoff
     )

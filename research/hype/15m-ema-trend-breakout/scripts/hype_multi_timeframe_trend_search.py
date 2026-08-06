@@ -8,8 +8,8 @@ from pathlib import Path
 import numpy as np
 import pandas as pd
 
-from strategy_lab.data import DataLakeLayout, DatasetKind, DuckDBWarehouse, MarketType
-from strategy_lab.settings import load_settings
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 
 SYMBOL = "HYPE/USDT:USDT"
@@ -68,14 +68,11 @@ def _load_data() -> tuple[pd.DataFrame, pd.DataFrame, pd.DataFrame]:
     warehouse = DuckDBWarehouse(layout)
 
     def load(timeframe: str) -> pd.DataFrame:
-        frame = warehouse.load_dataset(
-            layer="normalized",
-            kind=DatasetKind.OHLCV,
+        frame = warehouse.load_trusted_ohlcv(
             exchange="binance",
             market_type=MarketType.PERP,
             symbol=SYMBOL,
             timeframe=timeframe,
-            columns=["ts", "open", "high", "low", "close", "volume", "timeframe"],
         )
         if frame.empty:
             return frame

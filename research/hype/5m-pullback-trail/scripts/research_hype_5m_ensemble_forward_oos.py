@@ -8,13 +8,14 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
+
 from research_hype_5m_ensemble_combo import IS_END_TS, START_TS, choose_one_position, metric_from_rows
 from research_hype_5m_filter_refinement import feature_values, row_to_config
 from research_hype_5m_indicator_search import add_features, build_signal, simulate_trades
 
 
-DATA_ROOT = Path("data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=5m")
-SYMBOL_FILE = "symbol=hype_usdt_usdt.parquet"
 LEGS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_combo_legs.csv")
 REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos.json")
 SUMMARY_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_ensemble_forward_oos_summary.csv")
@@ -41,18 +42,16 @@ UNIQUE_PATHS: tuple[tuple[str, int], ...] = (
 
 
 def load_hype_5m() -> pd.DataFrame:
-    files = sorted(DATA_ROOT.glob(f"date=*/{SYMBOL_FILE}"))
-    if not files:
-        raise FileNotFoundError(f"no local HYPE 5m parquet files under {DATA_ROOT}")
-    frame = pd.concat([pd.read_parquet(path) for path in files], ignore_index=True)
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    frame = frame.drop_duplicates("ts", keep="last").sort_values("ts").reset_index(drop=True)
-    frame = frame.loc[frame["ts"] >= START_TS].reset_index(drop=True)
-    expected = pd.date_range(frame["ts"].iloc[0], frame["ts"].iloc[-1], freq="5min")
-    missing = expected.difference(frame["ts"])
-    if len(missing):
-        raise RuntimeError(f"HYPE 5m data has {len(missing)} missing bars, first={missing[0]}")
-    return frame
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    return warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="5m",
+        start=START_TS,
+    ).reset_index(drop=True)
 
 
 def parse_filter_part(part: str) -> tuple[str, str, float]:

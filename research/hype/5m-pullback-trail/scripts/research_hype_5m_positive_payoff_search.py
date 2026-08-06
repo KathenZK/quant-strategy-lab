@@ -10,10 +10,11 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
+
 from research_hype_5m_filter_refinement import feature_values
 from research_hype_5m_indicator_search import (
-    DATA_ROOT,
-    SYMBOL_FILE,
     SearchConfig,
     Trade,
     add_features,
@@ -47,17 +48,15 @@ def parse_args() -> argparse.Namespace:
 
 
 def load_all_hype_5m() -> pd.DataFrame:
-    files = sorted(DATA_ROOT.glob(f"date=*/{SYMBOL_FILE}"))
-    if not files:
-        raise FileNotFoundError(f"no local HYPE 5m parquet files under {DATA_ROOT}")
-    frame = pd.concat([pd.read_parquet(path) for path in files], ignore_index=True)
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    frame = frame.drop_duplicates("ts", keep="last").sort_values("ts").reset_index(drop=True)
-    expected = pd.date_range(frame["ts"].iloc[0], frame["ts"].iloc[-1], freq="5min")
-    missing = expected.difference(frame["ts"])
-    if len(missing):
-        raise RuntimeError(f"HYPE 5m data has {len(missing)} missing bars, first={missing[0]}")
-    return frame
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    return warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="5m",
+    ).reset_index(drop=True)
 
 
 def validation_slices(frame: pd.DataFrame, args: argparse.Namespace) -> list[dict[str, Any]]:

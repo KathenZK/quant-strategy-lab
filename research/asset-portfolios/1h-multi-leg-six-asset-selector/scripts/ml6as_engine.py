@@ -9,11 +9,10 @@ from typing import Any, Iterable, Literal
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 ROOT = Path(__file__).resolve().parents[4]
-DATA_ROOT = (
-    ROOT / "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1h"
-)
 FUNDING_ROOT = (
     ROOT / "data/normalized/funding/exchange=binance/market_type=perp"
 )
@@ -126,27 +125,17 @@ class RouteConfig:
 
 
 def load_symbol_frame(symbol: str, *, end: pd.Timestamp) -> pd.DataFrame:
-    slug = SLUGS[symbol]
-    files = sorted(DATA_ROOT.glob(f"date=*/symbol={slug}.parquet"))
-    if not files:
-        raise FileNotFoundError(f"no normalized 1h files for {symbol}")
-    pieces: list[pd.DataFrame] = []
-    for path in files:
-        date_token = path.parent.name.removeprefix("date=")
-        if pd.Timestamp(date_token, tz="UTC") > end.normalize():
-            continue
-        pieces.append(pd.read_parquet(path))
-    frame = pd.concat(pieces, ignore_index=True, sort=False)
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    frame = (
-        frame.loc[
-            (frame["ts"] >= RESEARCH_START)
-            & (frame["ts"] < end)
-            & frame["is_closed"].astype(bool)
-        ]
-        .drop_duplicates("ts", keep="last")
-        .sort_values("ts")
-        .reset_index(drop=True)
+    base_asset = symbol.removesuffix("USDT")
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    frame = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol=f"{base_asset}/USDT:USDT",
+        timeframe="1h",
+        start=RESEARCH_START,
+        end=end,
     )
     expected = pd.date_range(RESEARCH_START, end - pd.Timedelta(hours=1), freq="1h")
     missing = expected.difference(pd.DatetimeIndex(frame["ts"]))

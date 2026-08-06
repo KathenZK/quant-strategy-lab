@@ -13,6 +13,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 ROOT = Path(__file__).resolve().parents[4]
 FAMILY_DIR = ROOT / "research/bnb/1h-adaptive-regime"
@@ -20,8 +22,8 @@ ARTIFACT_DIR = FAMILY_DIR / "artifacts"
 DIAGNOSTIC_DIR = FAMILY_DIR / "diagnostics"
 ENGINE_PATH = ROOT / "research/_shared-kernels/1h-adaptive-regime-search/v1/engine.py"
 ENGINE_SHA256 = "0420ea44854201e17d4bf5b9142fb8335d143e78772656473a1dcf4594a5f04c"
-DATA_PATH = ARTIFACT_DIR / "bnb_binance_1h_closed_klines_2y.parquet"
-QUALITY_PATH = ARTIFACT_DIR / "bnb_binance_1h_data_quality_2y.json"
+FRAME_START = pd.Timestamp("2024-07-03T06:00:00Z")
+FRAME_END = pd.Timestamp("2026-07-03T06:00:00Z")
 FUNDING_PATH = ARTIFACT_DIR / "bnb_binance_funding_history_2y.csv"
 DATE_TAG = "2026-07-03"
 FREEZE_JSON = ARTIFACT_DIR / f"bnb_1h_adaptive_regime_frozen_primary_{DATE_TAG}.json"
@@ -117,11 +119,34 @@ def json_safe(value: Any) -> Any:
     return value
 
 
+def _load_funding() -> pd.DataFrame:
+    if not FUNDING_PATH.exists():
+        raise FileNotFoundError("BNB funding history artifact is missing")
+    funding = pd.read_csv(FUNDING_PATH)
+    funding["ts"] = pd.to_datetime(funding["ts"], utc=True, format="mixed")
+    funding = (
+        funding.drop_duplicates("ts", keep="last")
+        .sort_values("ts")
+        .reset_index(drop=True)
+    )
+    if funding.empty or funding["funding_rate"].isna().any():
+        raise RuntimeError("BNB funding history is empty or contains null rates")
+    return funding
+
+
 def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
-    if not DATA_PATH.exists() or not QUALITY_PATH.exists() or not FUNDING_PATH.exists():
-        raise FileNotFoundError("Run scripts/fetch_bnb_binance_1h.py first")
-    frame = pd.read_parquet(DATA_PATH)
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    frame = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="BNB/USDT:USDT",
+        timeframe="1h",
+        start=FRAME_START,
+        end=FRAME_END,
+    )
+    trusted_audit = frame.attrs.get("ohlcv_audit", {})
     duplicate = int(frame.duplicated("ts").sum())
     frame = frame.drop_duplicates("ts", keep="last").sort_values("ts").reset_index(drop=True)
     expected = pd.date_range(frame["ts"].iloc[0], frame["ts"].iloc[-1], freq="1h")
@@ -152,8 +177,11 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
         "negative_volume": int((frame["volume"] < 0).sum()),
         "negative_quote_volume": int((frame["quote_volume"] < 0).sum()),
     }
-    metadata = json.loads(QUALITY_PATH.read_text(encoding="utf-8"))
-    fetch_quality = metadata["data_quality"]
+    fetch_quality = {
+        "blocker_count": 0,
+        "raw_normalized_mismatch": 0,
+        "ohlcv_audit": trusted_audit,
+    }
     blockers = (
         duplicate
         + len(missing)
@@ -167,11 +195,7 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
             f"BNBUSDT exact frame failed quality gate: missing={len(missing)} "
             f"duplicate={duplicate} nulls={nulls} violations={violations}"
         )
-    funding = pd.read_csv(FUNDING_PATH)
-    funding["ts"] = pd.to_datetime(funding["ts"], utc=True, format="mixed")
-    funding = funding.drop_duplicates("ts", keep="last").sort_values("ts").reset_index(drop=True)
-    if funding.empty or funding["funding_rate"].isna().any():
-        raise RuntimeError("BNB funding history is empty or contains null rates")
+    funding = _load_funding()
     quality = {
         "rows": int(len(frame)),
         "first_ts": frame["ts"].iloc[0].isoformat(),

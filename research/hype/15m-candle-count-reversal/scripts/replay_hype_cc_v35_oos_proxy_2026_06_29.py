@@ -7,9 +7,10 @@ import types
 from pathlib import Path
 from typing import Any
 
-import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 ROOT = Path(__file__).resolve().parents[4]
 INTRABAR_PATH = (
@@ -57,25 +58,7 @@ def _load_archive_replay_module():
     return module
 
 
-def _load_ohlcv_proxy_frame() -> pd.DataFrame:
-    root = (
-        ROOT
-        / "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
-    )
-    files = sorted(root.glob("date=*/symbol=hype_usdt_usdt.parquet"))
-    if not files:
-        raise FileNotFoundError(f"no HYPEUSDT 15m OHLCV files under {root}")
-
-    trade = pd.concat((pd.read_parquet(path) for path in files), ignore_index=True)
-    trade["ts"] = pd.to_datetime(trade["ts"], utc=True)
-    if "is_closed" in trade.columns:
-        trade = trade.loc[trade["is_closed"].fillna(True)]
-    trade = trade.sort_values("ts").drop_duplicates("ts", keep="last").set_index("ts")
-
-    frame = trade[["open", "high", "low", "close", "volume"]].copy()
-    frame["mark_high"] = frame["high"]
-    frame["mark_low"] = frame["low"]
-
+def _load_funding_rate() -> pd.Series | None:
     funding_root = (
         ROOT / "data/normalized/funding_rates/exchange=binance/market_type=perp"
     )
@@ -90,9 +73,30 @@ def _load_ohlcv_proxy_frame() -> pd.DataFrame:
             .drop_duplicates("ts", keep="last")
             .set_index("ts")["funding_rate"]
         )
-        frame["funding_rate"] = funding_rate.reindex(frame.index).fillna(0.0)
-    else:
-        frame["funding_rate"] = 0.0
+        return funding_rate
+    return None
+
+
+def _load_ohlcv_proxy_frame() -> pd.DataFrame:
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    trade = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="15m",
+    ).set_index("ts")
+
+    frame = trade[["open", "high", "low", "close", "volume"]].copy()
+    frame["mark_high"] = frame["high"]
+    frame["mark_low"] = frame["low"]
+    funding_rate = _load_funding_rate()
+    frame["funding_rate"] = (
+        funding_rate.reindex(frame.index).fillna(0.0)
+        if funding_rate is not None
+        else 0.0
+    )
     return frame.sort_index()
 
 

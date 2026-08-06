@@ -11,9 +11,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
-DATA_ROOT = Path("data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=5m")
-SYMBOL_FILE = "symbol=hype_usdt_usdt.parquet"
 REPORT_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_indicator_search.json")
 RANKING_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_indicator_search_ranking.csv")
 TARGET_HITS_PATH = Path("research/hype/5m-pullback-trail/artifacts/hype_5m_indicator_search_target_hits.csv")
@@ -93,18 +93,17 @@ def parse_args() -> argparse.Namespace:
 
 
 def load_hype_5m() -> pd.DataFrame:
-    files = sorted(DATA_ROOT.glob(f"date=*/{SYMBOL_FILE}"))
-    if not files:
-        raise FileNotFoundError(f"no local HYPE 5m parquet files under {DATA_ROOT}")
-    frame = pd.concat([pd.read_parquet(path) for path in files], ignore_index=True)
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    frame = frame.drop_duplicates("ts", keep="last").sort_values("ts").reset_index(drop=True)
-    frame = frame.loc[(frame["ts"] >= START_TS) & (frame["ts"] < END_TS)].reset_index(drop=True)
-    expected = pd.date_range(START_TS, END_TS - pd.Timedelta(minutes=5), freq="5min")
-    missing = expected.difference(frame["ts"])
-    if len(missing):
-        raise RuntimeError(f"HYPE 5m data has {len(missing)} missing bars, first={missing[0]}")
-    return frame
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    return warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="5m",
+        start=START_TS,
+        end=END_TS,
+    ).reset_index(drop=True)
 
 
 def rolling_zscore(series: pd.Series, window: int) -> pd.Series:
