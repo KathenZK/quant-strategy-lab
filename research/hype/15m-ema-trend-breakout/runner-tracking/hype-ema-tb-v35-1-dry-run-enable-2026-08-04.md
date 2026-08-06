@@ -34,3 +34,18 @@
 1. 重新生成并 Git 提交 V35.1 规范 parity 证据（runner replay + Python 冻结 + `check_hype_ema_tb_v35_1_runner_parity.py`）。
 2. 部署到阿里云并重启 `quant-runner-dryrun` 后实例才实际开始运行；部署按 `deploy-artifact` 规则走 GitHub Actions 产物。
 3. dry-run 运行满一周后与 V35 研究路径做开平仓对账，结果回写本目录。
+
+## 2026-08-06 部署记录
+
+runner `08384af`（main）构建 artifact `quant-runner-linux-x86_64-08384af8...`
+经 GitHub Actions 构建、SHA-256 双端校验后部署到交易服务器，
+`quant-runner-dryrun` 服务重启为 `active`：
+
+- `strategy_health` 中 `hype-ema-tb-v35-1-dry-run` 首次出现且 `status=ok`；
+- 首个 15m cycle 日志 `cycle complete ... event=no_signal`，决策循环按
+  V35.1 规格运行，无 warning/error 级日志；
+- 同批部署包含 runner-owned lock（schema v2，`authority=quant-runner`）：
+  授权机器真源自此为 runner 本地 lock，Lab manifest 不再作为门禁
+  （Lab 文档继续作为研究证据记录）。
+- V5 实例已不在 TOML/lock，健康表中无残留；V6 双路线实例继续按既有
+  授权运行（家族研究分支 2026-08-05 归档不影响 dry-run 观测）。
