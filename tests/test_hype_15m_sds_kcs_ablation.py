@@ -4,6 +4,8 @@ import importlib.util
 from pathlib import Path
 import sys
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 SCRIPT_DIR = ROOT / "research/hype/15m-sequential-drift-state/scripts"
@@ -33,6 +35,8 @@ def test_every_effective_backtest_parameter_has_ablation_values() -> None:
 
 
 def test_frozen_reference_value_is_present_for_each_parameter() -> None:
+    if not ABLATION.kcs.SUMMARY_PATH.is_file():
+        pytest.skip("local SDS frozen reference evidence is unavailable")
     signal, risk = ABLATION._reference_configs()
     for parameter, values in ABLATION.SIGNAL_VALUES.items():
         assert getattr(signal, parameter) in values

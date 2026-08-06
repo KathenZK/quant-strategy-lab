@@ -3,22 +3,18 @@ from __future__ import annotations
 import argparse
 import json
 import time
-from dataclasses import asdict, dataclass
-from datetime import datetime, timezone
+from dataclasses import dataclass
 from itertools import product
 from pathlib import Path
-from typing import Callable
 
 import numpy as np
 import pandas as pd
-import requests
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 SYMBOL = "HYPEUSDT"
 INTERVAL = "15m"
-PANDAS_INTERVAL = "15min"
-INTERVAL_MS = 15 * 60 * 1000
-SINCE = datetime(2025, 5, 1, tzinfo=timezone.utc)
 SLIPPAGE = 0.0005
 TRADE_COST = 0.00085
 PERIODS_PER_YEAR = 365 * 24 * 4
@@ -50,12 +46,16 @@ def parse_args() -> argparse.Namespace:
     parser = argparse.ArgumentParser(
         description="Research HYPE EMA96/384 cross-trigger trend strategies."
     )
-    parser.add_argument("--refresh", action="store_true", help="Refresh Binance data cache.")
+    parser.add_argument(
+        "--refresh",
+        action="store_true",
+        help="Legacy compatibility option; trusted research loads ignore it.",
+    )
     parser.add_argument(
         "--cache",
         type=Path,
         default=Path("data/cache/hypeusdt_15m_fapi.csv"),
-        help="CSV cache path for Binance fapi klines.",
+        help="Legacy compatibility path; trusted research loads ignore it.",
     )
     parser.add_argument(
         "--output",
@@ -72,69 +72,26 @@ def parse_args() -> argparse.Namespace:
     return parser.parse_args()
 
 
+def load_trusted_klines() -> pd.DataFrame:
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    frame = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe=INTERVAL,
+    )
+    return frame[
+        ["ts", "open", "high", "low", "close", "volume"]
+    ].reset_index(drop=True)
+
+
 def fetch_klines(*, cache_path: Path, refresh: bool) -> pd.DataFrame:
-    if cache_path.exists() and not refresh:
-        frame = pd.read_csv(cache_path)
-        frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-        return frame
-
-    cache_path.parent.mkdir(parents=True, exist_ok=True)
-    start = int(SINCE.timestamp() * 1000)
-    end = int(pd.Timestamp.now(tz="UTC").floor(PANDAS_INTERVAL).timestamp() * 1000)
-    rows: list[list[object]] = []
-    session = requests.Session()
-
-    while start < end:
-        response = session.get(
-            "https://fapi.binance.com/fapi/v1/klines",
-            params={
-                "symbol": SYMBOL,
-                "interval": INTERVAL,
-                "startTime": start,
-                "endTime": end,
-                "limit": 1500,
-            },
-            timeout=30,
-        )
-        response.raise_for_status()
-        batch = response.json()
-        if not batch:
-            break
-        rows.extend(batch)
-        next_start = int(batch[-1][0]) + INTERVAL_MS
-        if next_start <= start:
-            break
-        start = next_start
-        time.sleep(0.05)
-
-    frame = pd.DataFrame(
-        rows,
-        columns=[
-            "ts",
-            "open",
-            "high",
-            "low",
-            "close",
-            "volume",
-            "close_time",
-            "quote_volume",
-            "trade_count",
-            "taker_base",
-            "taker_quote",
-            "ignore",
-        ],
-    )
-    frame = (
-        frame[["ts", "open", "high", "low", "close", "volume"]]
-        .drop_duplicates("ts")
-        .sort_values("ts")
-        .reset_index(drop=True)
-    )
-    frame["ts"] = pd.to_datetime(frame["ts"], unit="ms", utc=True)
-    for column in ["open", "high", "low", "close", "volume"]:
-        frame[column] = frame[column].astype("float64")
-    frame.to_csv(cache_path, index=False)
-    return frame
+    # Signature retained for historical callers; trusted research input no
+    # longer depends on the cache path or an in-process network refresh.
+    del cache_path, refresh
+    return load_trusted_klines()
 
 
 def true_range(high: pd.Series, low: pd.Series, close: pd.Series) -> pd.Series:
@@ -604,7 +561,7 @@ def rounded_result(result: dict[str, object]) -> dict[str, object]:
 
 def main() -> None:
     args = parse_args()
-    raw = fetch_klines(cache_path=args.cache, refresh=args.refresh)
+    raw = load_trusted_klines()
     frame = build_features(raw)
     masks = build_filter_masks(frame)
     entries = build_entry_specs()

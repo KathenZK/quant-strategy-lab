@@ -9,6 +9,9 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
+
 from compare_hype_ema_v2_v4 import entry_signal
 from research_hype_ema_cross_strategy import build_features
 from research_hype_ema_oscillator_top_exit_v10 import add_oscillator_features
@@ -25,9 +28,6 @@ REPORT_PATH = Path("research/hype/15m-ema-crossover/artifacts/hype_v16_indicator
 RANKING_PATH = Path("research/hype/15m-ema-crossover/artifacts/hype_v16_indicator_expansion_ranking.csv")
 TRADES_PATH = Path("research/hype/15m-ema-crossover/artifacts/hype_v16_indicator_expansion_trades.csv")
 SIGNAL_PATH = Path("research/hype/15m-ema-crossover/artifacts/hype_v16_indicator_expansion_signal_counts.csv")
-
-DATA_LAKE = Path("data/normalized/ohlcv")
-
 
 @dataclass(frozen=True, slots=True)
 class SignalSpec:
@@ -91,19 +91,27 @@ def load_ohlcv(
     if exchange == "binance" and market_type == "perp" and timeframe == "15m":
         return load_hype_data_lake()
 
-    root = DATA_LAKE / f"exchange={exchange}" / f"market_type={market_type}" / f"timeframe={timeframe}"
-    files = sorted(root.rglob(symbol_file))
-    if not files:
-        raise FileNotFoundError(f"no {symbol_file} files under {root}")
-    frame = pd.concat(
-        [pd.read_parquet(path, columns=["ts", "open", "high", "low", "close", "volume"]) for path in files],
-        ignore_index=True,
+    symbol_parts = (
+        symbol_file.removeprefix("symbol=")
+        .removesuffix(".parquet")
+        .upper()
+        .split("_")
     )
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    frame = frame.drop_duplicates("ts").sort_values("ts").reset_index(drop=True)
+    if len(symbol_parts) != 3:
+        raise ValueError(f"cannot derive perpetual symbol from {symbol_file}")
+    symbol = f"{symbol_parts[0]}/{symbol_parts[1]}:{symbol_parts[2]}"
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    frame = warehouse.load_trusted_ohlcv(
+        exchange=exchange,
+        market_type=MarketType(market_type),
+        symbol=symbol,
+        timeframe=timeframe,
+    )[["ts", "open", "high", "low", "close", "volume"]].copy()
     for column in ["open", "high", "low", "close", "volume"]:
         frame[column] = frame[column].astype("float64")
-    return frame
+    return frame.reset_index(drop=True)
 
 
 def add_v16_features(frame: pd.DataFrame) -> pd.DataFrame:

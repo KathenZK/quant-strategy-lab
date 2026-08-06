@@ -7,9 +7,6 @@ main_status: dry-run
 runner_kind: hype_mii
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_mii/HYPE-15M-MII-V1.4A-DRY-RUN-SPEC.md
-manifest_instance_ids:
-  - hype-mii-dry-run
-  - hype-mii-live
 approval_level_max: dry_run
 ---
 

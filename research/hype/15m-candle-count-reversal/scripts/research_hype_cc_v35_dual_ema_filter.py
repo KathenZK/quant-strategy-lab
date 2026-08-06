@@ -12,6 +12,8 @@ from typing import Any, Callable
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 ROOT = Path(__file__).resolve().parents[4]
 FAMILY_DIR = ROOT / "research/hype/15m-candle-count-reversal"
@@ -22,9 +24,6 @@ INTRABAR_PATH = (
 )
 ARCHIVE_REPLAY_PATH = (
     ROOT / "archive/scripts/research/research_hype_v35_dry_run_recovery.py"
-)
-OHLCV_ROOT = (
-    ROOT / "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
 )
 RAW_OHLCV_ROOT = ROOT / "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
 MARK_ROOT = (
@@ -146,7 +145,15 @@ def _coerce_utc_ts(frame: pd.DataFrame, label: str) -> None:
 
 
 def load_and_audit_frame() -> tuple[pd.DataFrame, dict[str, Any]]:
-    trade = _read_partitions(OHLCV_ROOT)
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    trade = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="15m",
+    )
     raw_trade = _read_partitions(RAW_OHLCV_ROOT)
     mark = _read_partitions(MARK_ROOT)
     raw_mark = _read_partitions(RAW_MARK_ROOT)

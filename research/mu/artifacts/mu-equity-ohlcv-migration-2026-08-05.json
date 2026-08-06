@@ -1,0 +1,3029 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-05T03:04:19.150413+00:00",
+  "migration": "legacy data/external/us_equities -> unified data/raw/ohlcv",
+  "market_identity": {
+    "exchange": "nasdaq",
+    "market_type": "equity",
+    "symbol": "MU"
+  },
+  "quality_status": "raw_unaccepted",
+  "accepted_for_strategy_evidence": false,
+  "datasets": [
+    {
+      "source_file": "data/external/us_equities/polygon/symbol=mu/timeframe=15m/mu_15m_2025-06-17_2026-06-17_adjusted.parquet",
+      "source_sha256": "e488c11b5339dc113b970d1beef849042760079fdda895caf407311a9a63fb86",
+      "source": "polygon_api",
+      "source_dataset_id": "polygon-mu-15m-adjusted-2025-06-17-2026-06-17",
+      "timeframe": "15m",
+      "rows": 15951,
+      "start": "2025-06-17T08:00:00+00:00",
+      "end": "2026-06-16T23:45:00+00:00",
+      "duplicate_rows": 0,
+      "core_nulls": {},
+      "invalid_ohlc_rows": 0,
+      "off_grid_rows": 0,
+      "missing_standard_columns": [
+        "exchange",
+        "is_closed",
+        "market_type",
+        "quote_volume",
+        "source",
+        "symbol",
+        "timeframe",
+        "trade_count"
+      ],
+      "quality_status": "raw_unaccepted",
+      "accepted_for_strategy_evidence": false,
+      "destination_root": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api",
+      "destination_files": [
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-17/symbol=mu.parquet",
+          "sha256": "5c06e389596f07c0967b6c55311b44a302663bc98c65d2aa70257fe945d7cbc9",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-18/symbol=mu.parquet",
+          "sha256": "26b78f76d9d216389d96a484c69f7317c1d6c4b7defe257354f3da51b525299f",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-20/symbol=mu.parquet",
+          "sha256": "2dcb05fc0ceb49fae78ca920acc8ffe6c50f134cb92944b7c5dc033795587834",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-23/symbol=mu.parquet",
+          "sha256": "2d9401bb6010e52664084d6d8453d9027a4de659413fecb67ceea96de7c30740",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-24/symbol=mu.parquet",
+          "sha256": "516a1c698da6bb2b2f52a155a2baa9b2005854f27e093943dc0d35461cfc7c0b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-25/symbol=mu.parquet",
+          "sha256": "ac929a1d3f7e08b5bff0a24e7f888520306ad4196dcd1a95ea40632d5dd54d71",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-26/symbol=mu.parquet",
+          "sha256": "ab3d3639ebaa522e0818309edda776a9ec8726601e5565452fc8b933c590aa8b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-27/symbol=mu.parquet",
+          "sha256": "bd90ff01fde813c888e3b6e730176e94bfa7db025a2ef211a486a9518910023f",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-06-30/symbol=mu.parquet",
+          "sha256": "d8dd0753040dfbd4c241af4cb16cc80c3b70a7fc0b5de38d9d1737d22635dc24",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-01/symbol=mu.parquet",
+          "sha256": "53e8240d04fe2a376e600eb8668c76cc20f411be7480729416cafcb3a8b1f8dc",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-02/symbol=mu.parquet",
+          "sha256": "a24a7937956d566278780e061535845567dd604615c93227737183767d700368",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-03/symbol=mu.parquet",
+          "sha256": "eab7530dbb3a42165e98b84814fa7b12da0b6eb1f3e20a09cf45922ad0f39a7a",
+          "rows": 39
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-07/symbol=mu.parquet",
+          "sha256": "16cb61c7fe40d912f4bfb8e5b524b640de0528690cc2f762247df5e786a36c40",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-08/symbol=mu.parquet",
+          "sha256": "735f9ceb0bf9e9183f6dce1960d9810907d1657562ea9e90bd4de1ad740836b2",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-09/symbol=mu.parquet",
+          "sha256": "24a6f8c2ae35c13f9c5f7f45ac461dc8dc2643818e0c9a890ea8188504c9d979",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-10/symbol=mu.parquet",
+          "sha256": "79548f2f6c24857b825992ec3bfcee739c183c39799e281fd5007d9d940013c4",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-11/symbol=mu.parquet",
+          "sha256": "44a56314c307dc7d86b0d749f34dc19aa2ef2e64a6bd7db9f4d31dd3e0196a18",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-14/symbol=mu.parquet",
+          "sha256": "257691cb13867c2e9b7a660fcfeb5e3da3c013ba8d060bbc5d99ae463f194c9f",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-15/symbol=mu.parquet",
+          "sha256": "bfd5424ef5b63c58f87420aa4b0e3af2dafa0ea4fec3796a0cd1c75ac5678cbb",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-16/symbol=mu.parquet",
+          "sha256": "3ae305ef198180731173c27ffd4b6438fca49d556b1e98ad18f10b94b8cbe89d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-17/symbol=mu.parquet",
+          "sha256": "a946aefa334f201791c4a50219f006d1b35fc196af7b2eadcb12fd8cfd3759af",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-18/symbol=mu.parquet",
+          "sha256": "b3a8c5de0010a74be6fa7988c33f01a4fa5f0956746c6841f11353d9e662bb51",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-21/symbol=mu.parquet",
+          "sha256": "680db06115a17f9d22b0ed74d74527bcdf23002ecdf3bcecac0aaa7c03d47367",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-22/symbol=mu.parquet",
+          "sha256": "5230e8d2dcbacb3669cc2fff202841dbca6ef56129deddf2b3837a9d3d54a682",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-23/symbol=mu.parquet",
+          "sha256": "3a8b5477453dc890cd800a55a56440753099cc1a8c9ebec75ddf996cdc67c2ef",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-24/symbol=mu.parquet",
+          "sha256": "ed7549b954ac9668dcf67e097df74a4b6a34c352b2fb6d41e3fa584fa21b55e8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-25/symbol=mu.parquet",
+          "sha256": "b5017465bec76c880e06535afcd8259eaaf5e2363fe2c6189ca78226b9289b60",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-28/symbol=mu.parquet",
+          "sha256": "878d55b4c3f96df0740c88a14de15a5a4ec49ddd2bd358f1c26a89ff864b79cc",
+          "rows": 61
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-29/symbol=mu.parquet",
+          "sha256": "7fe982a7f4bb3e2ac9e446e4a3a19f50478d00d75d9f1504b76ff83ac4242348",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-30/symbol=mu.parquet",
+          "sha256": "f08281843e72c9b2bc977d55f9a339c9467e6252c5b9aa87e1da16481229761d",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-07-31/symbol=mu.parquet",
+          "sha256": "de5822dc4704bc7884b0906e4fd9bb1f3681f3e4b034802bc0624b9f3bd6c7d2",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-01/symbol=mu.parquet",
+          "sha256": "1a7d72adaee9e9dda7fd52663212e61e11e84a9d90d351db9db9704f305ba79d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-04/symbol=mu.parquet",
+          "sha256": "b1915b21ca579c8c032b520322aa01b7e6d93aa75d5466e0ed18cd43c8611eab",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-05/symbol=mu.parquet",
+          "sha256": "9952beaa248d9f25db6bc69f89c0514710fe251e0bdd696ed6daf23cfa530154",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-06/symbol=mu.parquet",
+          "sha256": "873d66b96a6a8b7d44b6dc307e1878c34049ad929cb4942bc292bbb19cdd907f",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-07/symbol=mu.parquet",
+          "sha256": "8802b4e279f7f070efbaf7e77728799ccd637d110a7583004d956a72b594d196",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-08/symbol=mu.parquet",
+          "sha256": "76c905fe518fd43ee6632cb253fc9ce5372c7c087edacad6c517fa2c6bd0ccae",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-11/symbol=mu.parquet",
+          "sha256": "9329648b790a53f097f330cffcf2beefd0a66e1e47ac2ac6efefb5db062ded33",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-12/symbol=mu.parquet",
+          "sha256": "8a59fb6812c386ae72893878592a5163006c2194a7c1ff3b02ee17045b3461c1",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-13/symbol=mu.parquet",
+          "sha256": "4b528485930e92bb343b254d3adbcf1899fd72151fb683c58ddca3f4fbd80aed",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-14/symbol=mu.parquet",
+          "sha256": "e35e15f177fda359359e421b0f0e91667dc8e6c1f40cb9c1f589c793da2d27dd",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-15/symbol=mu.parquet",
+          "sha256": "fd66217d22be9e148b5b4b03fc7eda9d065b259d376ad0cff30de7da6380ec84",
+          "rows": 61
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-18/symbol=mu.parquet",
+          "sha256": "28e3411f4b2380989779bfe36a2ef79fc49e52646960055f0d7a55370e5f4594",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-19/symbol=mu.parquet",
+          "sha256": "737f61e2a76073934f9bb50a27cea3af835d74e4b7772783b9fb264711d62575",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-20/symbol=mu.parquet",
+          "sha256": "ef4a68944c667b6204be723ce3e985d8657f191678353301d0d19c75037dd981",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-21/symbol=mu.parquet",
+          "sha256": "d871ae58b41e44be2bebc662696bc74ecbf41500488644181d4ef03aa1d44523",
+          "rows": 62
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-22/symbol=mu.parquet",
+          "sha256": "f2cadfbc9f0fbed24ccb2a9337e0ee32f6cc3ecd9614b6d046acee31ea5e1823",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-25/symbol=mu.parquet",
+          "sha256": "70c55357cf7a3a79dfba10fb978beb319ea155cbbc1f196d90ea71aaebee1416",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-26/symbol=mu.parquet",
+          "sha256": "ae2d0c06966d9a308ee7ab9977e6e6aa4718181da6e76410c7ae01366bb6b996",
+          "rows": 61
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-27/symbol=mu.parquet",
+          "sha256": "b1797f86f0ecb01791dec20a00e109141fcd33b93e8740e7dc63918aa7103033",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-28/symbol=mu.parquet",
+          "sha256": "1b0067d0fb5053f81c96d98920d3fd64f3ea62d7e3783cabaaa1221679bc289d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-08-29/symbol=mu.parquet",
+          "sha256": "ed00d1832d896362125f8af89350799f47912b1ab9e1fc8eab29a7160b33a709",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-02/symbol=mu.parquet",
+          "sha256": "2e503c0cea79d59b1513576c2d183900dcc45efe99e180665c1b7d146381b972",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-03/symbol=mu.parquet",
+          "sha256": "2b5d27b4af9cc866ef53b924bf21d4f3de1afd0e1cd2f42f330e19b475b72429",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-04/symbol=mu.parquet",
+          "sha256": "338eaacbc3c155ca55194305c16336585af1a5ea7fa790eb8ec130edd3cc2ce0",
+          "rows": 62
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-05/symbol=mu.parquet",
+          "sha256": "ecffbe00cd5ba0ee0afab9c3f589c8085b72cb6215613417afd4823b321f501c",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-08/symbol=mu.parquet",
+          "sha256": "e2718f5f5930b0491d86aad6615f743745a9528be8472cf645ca64b39b3ac627",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-09/symbol=mu.parquet",
+          "sha256": "a71bcd144ccf815105e0a3c188c54c20df4d37768db6ccb56b92d49c662dbf5e",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-10/symbol=mu.parquet",
+          "sha256": "8c2e0f0f4f53945d5be7797e9e379bcdd1084eeca123bd17b7e15e075e38cc54",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-11/symbol=mu.parquet",
+          "sha256": "5db7b391020335b07d6f5cc96e2154cda7f04af279ccc13f207557a3ad9ae3fe",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-12/symbol=mu.parquet",
+          "sha256": "734ab71c32ef2cd5ee120f752fc87f623c199b0d57a3f127f30a17529a9e4ed2",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-15/symbol=mu.parquet",
+          "sha256": "be83ffbb00c4194838faaae1f6ef7b88ee423dc0033b648c35e578246ce577cc",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-16/symbol=mu.parquet",
+          "sha256": "9a7e4003c28839876de38e1ff510450bdb4d22346083cb6f59862e8b9c01a572",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-17/symbol=mu.parquet",
+          "sha256": "3f66d5b731224a82e7525825a6bf3904f28dba70ff8d0e00471efee0cd2d6bdb",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-18/symbol=mu.parquet",
+          "sha256": "6775e577450998a140c99a6259cb6831f66c9c39002acf3eb0c0cd21ed320816",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-19/symbol=mu.parquet",
+          "sha256": "817428cdaedfd7a1ce9443189eac149c7e2c5af4d41092780c721bf7a21626c4",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-22/symbol=mu.parquet",
+          "sha256": "6df7fda975da61f44a87447544630edec9b490836380ad161f1f26146e727cdc",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-23/symbol=mu.parquet",
+          "sha256": "f634bf95d6814ddffa312577b7afc509c119c777b8c8e859c505f328fff2a699",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-24/symbol=mu.parquet",
+          "sha256": "5b0ff28146d136db1b8e324036ba359e3a816d8cdb009be43a3fd676fb2179a7",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-25/symbol=mu.parquet",
+          "sha256": "168990b8a8fe22eeccf1207c93cff7df45e05ba8f968d8329078834dee47ab55",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-26/symbol=mu.parquet",
+          "sha256": "9cab5e34fc2b565cc85810647fcd67a5443678864a4c93dff943230b6b44e588",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-29/symbol=mu.parquet",
+          "sha256": "c67892025731e040bdeac744f2689cc37c84249e8f9a18b5f36f346ef369b56b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-09-30/symbol=mu.parquet",
+          "sha256": "cee89cb79c250256bb904294b7b8e97139d1b8f28c5c8de2f5a29555e81ebfd0",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-01/symbol=mu.parquet",
+          "sha256": "78a29448d36d001bf326d249e5df7aa61d509fffed98487a9a3f37406acf1479",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-02/symbol=mu.parquet",
+          "sha256": "69df5ff0d1086ead23942c1b0a17fb2a52921ee40c9da91986f1e8d799a8cfa5",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-03/symbol=mu.parquet",
+          "sha256": "be84c213e94ff6988087e14e1bfa310a1b329af0a7b76218cf799945aaafd3be",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-06/symbol=mu.parquet",
+          "sha256": "b0fd1537fba21467f6916a442ef18738409fb52677bafc2edc5ba6e95cf8c8e9",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-07/symbol=mu.parquet",
+          "sha256": "f8a710a22eab316293c9837395f455d85d0f33b50850342aa74d78bdd18048c7",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-08/symbol=mu.parquet",
+          "sha256": "7f50f79526d03f156b8f5b795dd69f0c0ca828515bba6405b626dde44718b612",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-09/symbol=mu.parquet",
+          "sha256": "54ddc5d7a5ebc9c57209fb406907f8187361bda259694edd54753adf175fa056",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-10/symbol=mu.parquet",
+          "sha256": "9692fb00f4bc0063a9a3f9ce5898c6909af807c53d2efbc849578161123779d8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-13/symbol=mu.parquet",
+          "sha256": "6eddfb977e41d8d0324627da965a8cc06ad134743df747b5261cfb612eefde7e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-14/symbol=mu.parquet",
+          "sha256": "7969674b28cb5734953f2f8b729961e241f59a52e742bdbc6a407ab394dcddda",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-15/symbol=mu.parquet",
+          "sha256": "145191136bb205b460f7268c598716adb0d0299a0116e7cf533ea6a61416cb55",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-16/symbol=mu.parquet",
+          "sha256": "a22d0ba8ed43b024d76a4ac1589b14963a0a475de4da465fbd11754da3aab52a",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-17/symbol=mu.parquet",
+          "sha256": "562ecc30097cad3c8abcb5a0d58f6f4da4305152080fee5f989858dc65df0091",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-20/symbol=mu.parquet",
+          "sha256": "6136e04770ad989a46221a554165c1a2f57d180a7ec8eab0a835c1c8d7ebca8b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-21/symbol=mu.parquet",
+          "sha256": "1b576e1c3de635e7e298796da2489ec0f0b9e935066743796b53af2866892a3a",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-22/symbol=mu.parquet",
+          "sha256": "412332d29e0031821450116b21cfad3bb18d24ed73890a4155e09e369730fc0d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-23/symbol=mu.parquet",
+          "sha256": "b6aa123c7c6d3afbdff6e6c25acc1efb3e74525a130e8946812bb5104fb01aa8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-24/symbol=mu.parquet",
+          "sha256": "e896146443f2472942644d5616c1181d691f45fe9afd9b9ab16a84dd62f7023c",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-27/symbol=mu.parquet",
+          "sha256": "9342acc3a313f3ac6db53219bd3ab0d2f72e582de5db2bfca28c7a3f26b2ebfd",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-28/symbol=mu.parquet",
+          "sha256": "3a87ee1b6fe67a1eb88510c6e944226b556757cc282e912d9a9a6a97e9d36e9b",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-29/symbol=mu.parquet",
+          "sha256": "0a9df41760dee2dfdbcdfdb96c093685978849aa353ddd41f19d6704da8cd631",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-30/symbol=mu.parquet",
+          "sha256": "148e165cf8e5dc47fbd14edbcc7ef797bccb6c707028e7ff06ecda08e550555e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-10-31/symbol=mu.parquet",
+          "sha256": "0bebd2bbf6efe7982e252c852b050560abf78b89f55235141c275c08367346ff",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-03/symbol=mu.parquet",
+          "sha256": "097e79f54f6471b7f4b3950d2d43888041c4519345277476ccb564be35fd9646",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-04/symbol=mu.parquet",
+          "sha256": "88171afba95cd88e7debb082aa73011e5dc1c1fbc18d14f01041b7d6b9bb14ab",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-05/symbol=mu.parquet",
+          "sha256": "dee1e1fd8ad0b08455f5e10e4a32cda14908cccdd8863c8dc4bb5bdae90dac32",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-06/symbol=mu.parquet",
+          "sha256": "865b380f29c0ca14097c88d69fad5945458d37286b148539172e9eec00e6d56b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-07/symbol=mu.parquet",
+          "sha256": "7500a23ef36df88b24cb085307145ef79bc9491c49c2128c3354e3ffa783c863",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-08/symbol=mu.parquet",
+          "sha256": "4013c2baf63b25e424855ae80177fedeb0134c63f0e541463521536f157eed47",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-10/symbol=mu.parquet",
+          "sha256": "eb4e0e7e1b34d9558b2bf0f292b5eefb26bbc201b7a69dab600c41f7765b216f",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-11/symbol=mu.parquet",
+          "sha256": "329051d87f6b5acf8223f6d7bf0a06aab788f307eabbe2e338822fa311a22743",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-12/symbol=mu.parquet",
+          "sha256": "4a9c1c6cfc96b31299c5d96be5541309c0ab8e03ebf83a963b0b0f38b75e46ec",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-13/symbol=mu.parquet",
+          "sha256": "f73fffd511fb4bd9cdbd34d10229645236842b54a9b25a6ed919806f2caa4010",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-14/symbol=mu.parquet",
+          "sha256": "d39afda274038e157a96fa17cf5f5303898c8db52836fe5f5377f1abc513845d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-15/symbol=mu.parquet",
+          "sha256": "64ebb67604522fdb8998d131bf2b62d6f8a7a3f43927cb25d28740dbee23e76a",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-17/symbol=mu.parquet",
+          "sha256": "f1add6cee153c6d82ef476f2296f0c05c724804eed570eaa3f843a2a3b7d161b",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-18/symbol=mu.parquet",
+          "sha256": "db2d68f640a95cc9eaf68842f5586bc6d690c025986f3a9d76575bd5a08a55f5",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-19/symbol=mu.parquet",
+          "sha256": "33c52342fcd8ecb1332affe846a930fcf76d164cba83d6d5c8c4a6a3bef64ad2",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-20/symbol=mu.parquet",
+          "sha256": "d76c5006d2b286a63db7eaae5dbc3136de690a6afb0606ea64fb96ba9ede181f",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-21/symbol=mu.parquet",
+          "sha256": "1ce28cd8c0bec8f6aa37cc52a75d7ce7fe7fed24e3ba332989d5ad947d528ae6",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-22/symbol=mu.parquet",
+          "sha256": "bdb2c0704b86b336df121f46204bb998660b178d254f4550c7ef482af1be834c",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-24/symbol=mu.parquet",
+          "sha256": "30851ddcb679183246a272b09b665e9db81ed0556398025d03392e62e7c4758a",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-25/symbol=mu.parquet",
+          "sha256": "78474245bb8736d606cd50b63eff68d0d48d845fa7f53e5a4f825138f9a4cb80",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-26/symbol=mu.parquet",
+          "sha256": "e8d0add5e62bb26ab06f7ef4eeb0315e7c6cd31fa4a91e0a7a9acb28e9d500ef",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-27/symbol=mu.parquet",
+          "sha256": "43501cc439e44a674616eda7d297ceccfcb7f1c8c4317df6801cab7ce1f573cc",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-11-28/symbol=mu.parquet",
+          "sha256": "76db2cbb26aa6bf2d4b1e2dbd49eea71a1c2eb74fb3d2f4d6f1e7648bccb0e96",
+          "rows": 40
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-01/symbol=mu.parquet",
+          "sha256": "68a6d99186d3c8c9d7b45193264fe1648ae099a082f928d4a0c6f1145b5e765c",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-02/symbol=mu.parquet",
+          "sha256": "6d3900686b31054ad7fd68f70d451b4ea8c9e09639d66f5bfcdef039c6adcb80",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-03/symbol=mu.parquet",
+          "sha256": "ec89385077c8633465f625e142f3a12ec36fde483f92973f689346334aaac292",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-04/symbol=mu.parquet",
+          "sha256": "fe78545b41ec510ca97c38566d2e156930ab7f10006b8654414dee4ea6509311",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-05/symbol=mu.parquet",
+          "sha256": "41446b86fa5f70a53ec23eb914d48d34c957f6559154f0e07a903e69e6a22f7a",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-06/symbol=mu.parquet",
+          "sha256": "8b20a4523483ad5e5ff6ca12a02e1c78e51e9e856f1aa7164d8a26259d969771",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-08/symbol=mu.parquet",
+          "sha256": "91ef280776daff370b40c001381be971e792c3c5c4c0676c07130832f503159a",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-09/symbol=mu.parquet",
+          "sha256": "28525291df8f2c953542e353bccd333b5bb5c2016a41600a0cce83ee218e6436",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-10/symbol=mu.parquet",
+          "sha256": "50fa59988318494f788434ca256bcdb545d6570f761c40d97c231a0a2b7551bb",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-11/symbol=mu.parquet",
+          "sha256": "52b2ef9007be625dae93275c8423a0b04ca9621117f74fc41882e284a3e330bf",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-12/symbol=mu.parquet",
+          "sha256": "7168e75eda36b9b196df09a076b98077a15b7e0c4d6303a8fd267cc0a4541b74",
+          "rows": 63
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-13/symbol=mu.parquet",
+          "sha256": "8ecddce1516f6cdf03d1015a3c9c010e39c5773230da241c2aa8ed0647644e60",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-15/symbol=mu.parquet",
+          "sha256": "7ccff72af1f5079d81dab31270a07a925658bf36f9adf8d84eabf2aa263a3587",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-16/symbol=mu.parquet",
+          "sha256": "38150a60a3f9d49a1e674169596972d426b39fd10144add63e4dd98ff9f6d6e1",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-17/symbol=mu.parquet",
+          "sha256": "5b133f386a8a41275e98a8258940cfe097bfed152d953ede4e617e394c12d073",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-18/symbol=mu.parquet",
+          "sha256": "a524e8b98eb1fc563f1cbc1edbca53acb2374e6777044d5d168018de145e9646",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-19/symbol=mu.parquet",
+          "sha256": "afad9eb32e69a043e404fa5ff95c4e19074691c4444650c2682c330414cfc85d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-20/symbol=mu.parquet",
+          "sha256": "6b75559d722c680926ad1540ae3afd3ad384f51e8bc7d4adf4e4c8d2b6cd1895",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-22/symbol=mu.parquet",
+          "sha256": "c33853925607d53771957294531499d573e3573729b1d377e285974e8f5f1fcf",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-23/symbol=mu.parquet",
+          "sha256": "355708638fafa9233d38cd94690e07cefb027e404c9ed457568f021d545d114d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-24/symbol=mu.parquet",
+          "sha256": "e11eac820b7b1f2cd6896c8e62c4e151de40eba98c8a2def8a4ffe5682c8f60a",
+          "rows": 45
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-26/symbol=mu.parquet",
+          "sha256": "e47cee057af4383c4302c1029f8a9e139ae25d1013e2cfa505581417418732e5",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-27/symbol=mu.parquet",
+          "sha256": "f0cb1d488cffffe7aa7709f15ac373b4ff1f16459538aa34cd0fb6215e9e86dc",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-29/symbol=mu.parquet",
+          "sha256": "12a2ce5e392570f2850106b4166bb46b0b44969c2fd0b1cc95b942cc66ba3723",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-30/symbol=mu.parquet",
+          "sha256": "53da991f8a4cc81258702746d59d2299216959229566f4013cc5f0ce2244a179",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2025-12-31/symbol=mu.parquet",
+          "sha256": "d4439e0eb3b0da6ba085a23f6f09f9320e6c8552b31b865cb9143f64d6598994",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-01/symbol=mu.parquet",
+          "sha256": "9cab0e4620cb6d0a809dac0798e63d009533dd487783fa4fbb313d91d8049d9b",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-02/symbol=mu.parquet",
+          "sha256": "78f67ff441677e73b2f4c61318654d33c9b24ee2afe2057237e19a7bbc2a985a",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-03/symbol=mu.parquet",
+          "sha256": "13edfaf80d73d07ca55a9c63f28aa6602ce4d6dfb661da8a040db599569cb338",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-05/symbol=mu.parquet",
+          "sha256": "d7a13679fbdb91fc7c4fd44d1d84645cb8d8c3b5a348897f5975c7c865b0bd7c",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-06/symbol=mu.parquet",
+          "sha256": "6e050f6f745622800c2d13635c9ef186ee23197dec427efa6c03f5163a683b03",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-07/symbol=mu.parquet",
+          "sha256": "5cd1ee724ef85351f19b68c1965ddaaa94aade0d0e87651a9a21a5427a13484e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-08/symbol=mu.parquet",
+          "sha256": "41750a52d67246f95f29bef08089bcf30ee0609a2750a5f850b2cfd5e3ff7be4",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-09/symbol=mu.parquet",
+          "sha256": "c948e378d632139141896aa0110e580e508f6295fa792a4c6162d2486abf1e35",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-10/symbol=mu.parquet",
+          "sha256": "a1a63c065ea56e21e9ae7badd648389cac23b451c3cefcb709cb670e484e3628",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-12/symbol=mu.parquet",
+          "sha256": "12d7b256d9843ecc97eda6ca26dcb9c0a798c8d1ac0a686567a0e4e13968d758",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-13/symbol=mu.parquet",
+          "sha256": "0683da5efd6f2616e561b7539ec901c535ba9c6a98f8cd375e377a04499ff9a7",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-14/symbol=mu.parquet",
+          "sha256": "99cc25b84b56555e0deb903e3be78a79d80b60513c985e3d7a12fc9d996e8abc",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-15/symbol=mu.parquet",
+          "sha256": "5e98a8fb78531532a68f596c716dc915e9fceb8ee3cb47bcd98c1354fe2833bf",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-16/symbol=mu.parquet",
+          "sha256": "04be7e2b296e54885ca5bd408d41fee4e4c6deaa589762fb323459d5a8b6ead6",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-17/symbol=mu.parquet",
+          "sha256": "18466d62ef8834e59404ba332e3272a2b1adff52e2d6d3e0ede405451bca388d",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-20/symbol=mu.parquet",
+          "sha256": "f529c848a907b5e246733a58bd5d5eb30759d5886688670a1d0ee371476b0563",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-21/symbol=mu.parquet",
+          "sha256": "6acece8906da2dbdcf3d3516899778ea068abc6948d3c9c0c8c63e7316520a89",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-22/symbol=mu.parquet",
+          "sha256": "61ee2db8e3c4777d653dea228cbfe1d93de3995533550c96eff12529b1e2a9b1",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-23/symbol=mu.parquet",
+          "sha256": "97be33d336356f7a3836756308c760bff69209176920350139acdb2e09530c84",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-24/symbol=mu.parquet",
+          "sha256": "808e601a02bfab67fe4c22eca9c4f1e4a9b735e7b7a6dc81b32c69deedc4cb95",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-26/symbol=mu.parquet",
+          "sha256": "bd95860e2810da649a2ece5029815650953e1aa40238b41b771bc550c8740ba1",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-27/symbol=mu.parquet",
+          "sha256": "ba85e1916185c12dd4fd52c96bc249d1d1f414ae41c0cef5aae790d001d8a04a",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-28/symbol=mu.parquet",
+          "sha256": "5c09c750b57870473b459bf0b048ef724afef58e647c924f529fa4535ae060f5",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-29/symbol=mu.parquet",
+          "sha256": "a3d5541fe1d5ff5ce57152aa524b96cf0ad6f81d2313fe3528d1671fe5de28aa",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-30/symbol=mu.parquet",
+          "sha256": "e6454de11a68f179f52bf8e63d20cbd54e3794efaff647d09d961f90df632c04",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-01-31/symbol=mu.parquet",
+          "sha256": "8e3ea5d780be1d9b5f5deed3a5af119f6c2d368a05166d2dec209f263220e0e2",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-02/symbol=mu.parquet",
+          "sha256": "f738eb9f0f14f2443aef56fd4700045e720e0cf505aa64e61dc4d0adfb152c16",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-03/symbol=mu.parquet",
+          "sha256": "3ff90453f413e4468f2a5a04775f4b941a48868a8e67d54d4100ae460c9fc9a6",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-04/symbol=mu.parquet",
+          "sha256": "df8347cad129a10aacbd0b39244aa352c6c68daebcf015df2eededcfc8307398",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-05/symbol=mu.parquet",
+          "sha256": "cbb3a143755f89a2b51135ba5099996e19675baa8ab63afb5bfdbb903af39fbc",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-06/symbol=mu.parquet",
+          "sha256": "32fbb69b3a2b314406005b3cfb0e893bf7e416abf0a32909aca5eb3038a31d55",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-07/symbol=mu.parquet",
+          "sha256": "8f9f8ec7befc581ab675a1a0554339323eadc04d0847b0999f01747a7b0740a5",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-09/symbol=mu.parquet",
+          "sha256": "ba1b0c00eb33d355ab871c15768c207199898d9f033463a48a149a2d83e7166a",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-10/symbol=mu.parquet",
+          "sha256": "f734c08878d716c867077bb44d40ebf1c7d7afa035bca81930a229df589b9bbe",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-11/symbol=mu.parquet",
+          "sha256": "6d5ca5ffcb1322868f1c510593c1402dd7010e35c37f73def9d7191d976e1dde",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-12/symbol=mu.parquet",
+          "sha256": "33d406279bae410ee8aad42b5119233535031f72f10cfdb6b8dc7ab8944287ac",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-13/symbol=mu.parquet",
+          "sha256": "5b635e319fc3904168ad03b4982cf6cb9e1fb295814b0eb48aa09a07997057f0",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-14/symbol=mu.parquet",
+          "sha256": "b41d2d6a0cf5fb44a3f6b1616f9bb5bb37f925763f415c93f9ea73c4016208ce",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-17/symbol=mu.parquet",
+          "sha256": "4232d58e742b12e8c10a10da7a459dcad681758d11f9c8e0a39ca502171bd6ce",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-18/symbol=mu.parquet",
+          "sha256": "e8b8b776c1f0230c6ad5183d43aab56c80356b70aba006c7235c49fb1f2056ce",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-19/symbol=mu.parquet",
+          "sha256": "87223cd95e4810f745d7ea9cc92202e921a9dcda0904cda04c89c1ca8c7bcd61",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-20/symbol=mu.parquet",
+          "sha256": "1389deaf24daa8757292c0f36ad5383968e6af14eb6e0d8fa919098c667b279f",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-21/symbol=mu.parquet",
+          "sha256": "07f0cd61f18852e0619c534e3628156330b09baddc335ea4bc90eb40c298f8ee",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-23/symbol=mu.parquet",
+          "sha256": "ad14090aca4ad5c7ec60892909fcdb3252986eb615fc4e992921a243333fd808",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-24/symbol=mu.parquet",
+          "sha256": "59127ffbb3bcccaca7824b9c056288baa9819934bd8886ad6f1d7faaa0d5a73b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-25/symbol=mu.parquet",
+          "sha256": "eb288d9c30d77d7e3f9df57da682db5c5168b9e4b92d8b0fad301b70c3bdab9e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-26/symbol=mu.parquet",
+          "sha256": "031617d6447e98660a4fa0a246941495208262d8c8921cdac3e4f1717988aca8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-27/symbol=mu.parquet",
+          "sha256": "a6202de495ebdbada48c5d360dc19e75ff6c0fe0f194fb4086d6276d24aaf9ed",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-02-28/symbol=mu.parquet",
+          "sha256": "ed65e78add8ae029ef0235c53542b269a1873d875b7a21b64bdd7fea81839ccb",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-02/symbol=mu.parquet",
+          "sha256": "bca7a9285c5fb5de29de961d8bcd7b15709dbfe9f17f2e7a671a65fbcaeee155",
+          "rows": 60
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-03/symbol=mu.parquet",
+          "sha256": "7c3e65cf060738ac1cd0fae3d1c93dfefd18f4bda352df92fefea81bd2a79e96",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-04/symbol=mu.parquet",
+          "sha256": "d8379bd75e7fe97afdadc19612e028016fff60068147d0389765dbb3d62429d8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-05/symbol=mu.parquet",
+          "sha256": "e4c91d00c72ce10198778b05d14ea604eb8378b2c5c13335710a130ec9574e57",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-06/symbol=mu.parquet",
+          "sha256": "575b90e6100b2c657dcd848d681bb2d3f6d24d7bfc46aa2182c576552a68f8f9",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-07/symbol=mu.parquet",
+          "sha256": "bec15081047d167693c10ea1f8da71946dcc00bde61103288c0ae7e4972514b1",
+          "rows": 4
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-09/symbol=mu.parquet",
+          "sha256": "aac23488fb0db2b554e05209d84daab2513141dd3f5c3318ed9b44d4eb1bee3b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-10/symbol=mu.parquet",
+          "sha256": "f4e68c047336328604569936f583f8a86e2a7144449df1a8ec21ea1f1e24b3b8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-11/symbol=mu.parquet",
+          "sha256": "68ea77507985186e9fe43bf4259befc442192d6bd90e7c34fc2ebde117a59062",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-12/symbol=mu.parquet",
+          "sha256": "8ead4ec778000c8f501acfc0fa328d6046bad3d9bef4000056c56577afac3f82",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-13/symbol=mu.parquet",
+          "sha256": "7918b262ea5a63c78960533a9cca24fd902b2e786c5a8fd844eb7d96366c98a8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-16/symbol=mu.parquet",
+          "sha256": "e22e2ee334a904e410b9f3460de65326939310de44e882dfbf3dffec593913d2",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-17/symbol=mu.parquet",
+          "sha256": "9bf53cec9a081d02c3f61dd4eaf3575e9b2ff85a24587ac05c410156c027a758",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-18/symbol=mu.parquet",
+          "sha256": "1e9de69660b7ec5514ceb0c6014ba8e580a9a9ad4cd1e44993027ba31f07c207",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-19/symbol=mu.parquet",
+          "sha256": "f83d1bb1975834fb756a3d379be0d6be3c030ecd04d650a5de5af8fc84ef3d4e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-20/symbol=mu.parquet",
+          "sha256": "fb8da9f920b048ad812dbd26a29c3266bf39589d9ca528f8a2c29a648e2d95bb",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-23/symbol=mu.parquet",
+          "sha256": "f8542f41b59bc1a5c7b6e4100364d4cecd75abb97b956df32ba3ddd4c258232e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-24/symbol=mu.parquet",
+          "sha256": "3b42aa135f96f12acc0c79df22eae2ad68af316962b802659a5b68a0f1998bd4",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-25/symbol=mu.parquet",
+          "sha256": "f3b4ef796d51e457796baab4f3ca1cb32075ed2fa351e0a614a774c2aa631685",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-26/symbol=mu.parquet",
+          "sha256": "c6388ea1623cf3ea83501e80ec630c0d232b521ac1c0b5d6790d0bcbb6b93ef7",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-27/symbol=mu.parquet",
+          "sha256": "40141ef032316bf7929818258adf77a1f6816c9ee933bed330e3d7e04b7bade9",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-30/symbol=mu.parquet",
+          "sha256": "aaa49a7cc7c79aad53e2f1b8111784a4051b526aba98448ef6246f10a3a730a1",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-03-31/symbol=mu.parquet",
+          "sha256": "3f0ea6567bd3b0a73b34859c3838314b864e83bfd656fd65d253653bc114903e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-01/symbol=mu.parquet",
+          "sha256": "2d4feed5d7c1bfa332dfa321ac4da618d257984fb0e779f06e27773b05a06661",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-02/symbol=mu.parquet",
+          "sha256": "0d98f69437405f80661af6a039eded785710d5d30dac9d19a95ce8f75ec5a195",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-06/symbol=mu.parquet",
+          "sha256": "451bd7a580b680e189545dd918268c85679dc239b4891efbd28a9f044be6e0d2",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-07/symbol=mu.parquet",
+          "sha256": "4ed4d202cf5e173f6bae828c029b9a89906a621b7368a19cb9d32f197eb66a4c",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-08/symbol=mu.parquet",
+          "sha256": "04d2159930f656ab23c5e095fe14848ad1fef3fe23e1d4a5278a7d76f3272f8c",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-09/symbol=mu.parquet",
+          "sha256": "80526777e0ddb068e3f5be599e053307a2dd304da14cadfdb3406e97c878abb4",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-10/symbol=mu.parquet",
+          "sha256": "cbdcddf8ba132a5e77539c0fe34d2fa71e0e9cf43cad4effa28d388c7dbda9f6",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-13/symbol=mu.parquet",
+          "sha256": "b0e4bdd8b659be1a8d841aab4f870538075ad17c629b58e2913f5ae3b0266f9b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-14/symbol=mu.parquet",
+          "sha256": "3adc00e46b7aae9693c638a2aa012c83439877a8f4239a8beafb5f12c93a6887",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-15/symbol=mu.parquet",
+          "sha256": "1e707808dc3ae243662290da3a4a257a7cb83255a2f741fc94b4dc266df5daea",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-16/symbol=mu.parquet",
+          "sha256": "234f49b096db36b20dc532548445d01f8d2a31e262a52b1bcef6b14a1b529af9",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-17/symbol=mu.parquet",
+          "sha256": "1fba36681b1954e904f1550102a922cc79829badf55bb20161b5eea7123cb115",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-20/symbol=mu.parquet",
+          "sha256": "cefeff0831ac1e9013ba7d2663c9ae8e4643f06bd5bfb01b9f91e1cdb382d257",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-21/symbol=mu.parquet",
+          "sha256": "cc6f8bb51008114ae2279530c04675376e2fafeb30caddae622cbcc37ce22147",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-22/symbol=mu.parquet",
+          "sha256": "b7b4d34117ccf28fe15d451349b7d2aebeb400090bd9a1a5e4e78e6bc9be2b3f",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-23/symbol=mu.parquet",
+          "sha256": "78b1b0cd5650a774d5200378ef565de2e164ce5ef9c723c6474fbaacfa736713",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-24/symbol=mu.parquet",
+          "sha256": "ee0cc0f4ee1702601d243e6075ba98d560b197c0f7fd5c23ada7f862366f3a1f",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-27/symbol=mu.parquet",
+          "sha256": "83722c61c39dba4a4c696544ba1209ba231dc6fcf5f3cf1036058437f209c9ef",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-28/symbol=mu.parquet",
+          "sha256": "f53efdc081091fc32108960719f977a1bb21d4c4dcb2ce4a364f246e3db6caab",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-29/symbol=mu.parquet",
+          "sha256": "6801665879fed229e2a66f7a0f00f8085478a068f7b2cea808efc756e38f9a6c",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-04-30/symbol=mu.parquet",
+          "sha256": "74a4c12311287f19733604fd3c5d031146ad7e18774c90feab41144e0a4a5045",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-01/symbol=mu.parquet",
+          "sha256": "4605caf7b11d494c35fed99944f977bf2066bcccb5315c19c57a479a59e96dbd",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-04/symbol=mu.parquet",
+          "sha256": "0d1b5d3df578e7c20950c143b06d0e12259ecc6623af6be125fb1613d726d942",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-05/symbol=mu.parquet",
+          "sha256": "1926ffee3bd86497c186c2cf3b2e7ef45e67410a8c147a01c4800a8a269adf38",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-06/symbol=mu.parquet",
+          "sha256": "7f703d785acf4c7482588b09e15825cc0c37525a4df55f568d000b47b3065f5d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-07/symbol=mu.parquet",
+          "sha256": "e982172d6fcae1ad63e811a3f038b6d87fcdd44b368e9e86baeedf8dfef021c5",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-08/symbol=mu.parquet",
+          "sha256": "02e6fd9d20a01b3abb1419a782d87f166ae6dd0e56957df1bcd61f93f290e1fa",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-11/symbol=mu.parquet",
+          "sha256": "06534097f5a195f3edf704e6f953c72d21f9bc1ed59d1e62fff7ca05d7fe8a8b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-12/symbol=mu.parquet",
+          "sha256": "e617507d181796a8399d939d7ad46e68b293a90d139ef0852d1faf1ed62b1538",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-13/symbol=mu.parquet",
+          "sha256": "2e4a211f1feb6ffb57cb3eb60c0c84cac0e14bc3df1ef1a6a97a0f4a1b00fa02",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-14/symbol=mu.parquet",
+          "sha256": "35c27dcefe661f16d51052752d85c3d1b2dc27ab08bc7a91b1cf728472143a0d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-15/symbol=mu.parquet",
+          "sha256": "67d65d6b18a839c031dd428ee0d837d76162cc190925a311656f8cd68bc24dbf",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-18/symbol=mu.parquet",
+          "sha256": "afe52c4925e60c0160a4410a75a642f53724c3d2db74d7c8613f87da1cd62974",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-19/symbol=mu.parquet",
+          "sha256": "1f8925b702222983ea969ea525d19437c5fb64364159cf8d150d74e1403cf663",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-20/symbol=mu.parquet",
+          "sha256": "5e70029270af94269ff92152545b18611f82fe980cf95f6915e39a03f04a9c35",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-21/symbol=mu.parquet",
+          "sha256": "1bdd1a6b9b89cb9bea3055b2f6b7c8764023869bce0d86de05e91145020487b7",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-22/symbol=mu.parquet",
+          "sha256": "8677bdc7de3661e6d78ba214112da0005d01e29f5338d03e896c7a374df46165",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-26/symbol=mu.parquet",
+          "sha256": "27443cb463fa1ae19794802e653fa0443ff31af93e2eece03fe9afb76dddfaad",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-27/symbol=mu.parquet",
+          "sha256": "af1530703a2419a4d46a8bd5950ed27d17cd7dc1092fe972787e8f28a4c57d95",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-28/symbol=mu.parquet",
+          "sha256": "aaa90cf21a2d0c62c10d089a4bf065f8c4fbf28d604484779791cabc2706b710",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-05-29/symbol=mu.parquet",
+          "sha256": "4a70dc8d61ad78fef79585d79795c68e045948ec45ffee698f26914313d29edb",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-01/symbol=mu.parquet",
+          "sha256": "0e3cf1e04c398891ceaf5f7d63fce3b7d76e9b901857ff4f300382cdd55dc13d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-02/symbol=mu.parquet",
+          "sha256": "fc32609df81696d24b443ccadac8c9b262986a66a42f89c76d7216dc63aec3de",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-03/symbol=mu.parquet",
+          "sha256": "64ec21080155c93ed52e9765247c9f87fece6b5efc123145f867f0eaec3598b9",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-04/symbol=mu.parquet",
+          "sha256": "ea977fa60c44a6818ae09272e80bd6d41169f47b89861d523daf7acec147c9a8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-05/symbol=mu.parquet",
+          "sha256": "0c292105e6e9b7d2c907c44312b77fb5448141756e1befc782f4ed221bb25343",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-08/symbol=mu.parquet",
+          "sha256": "5eeaa03c729033f9993b116aea9cb04a1bcb30cb6b59b0a76916ee79caf5864d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-09/symbol=mu.parquet",
+          "sha256": "a634a4ac0cae894c6647d9d4619a51e64cc9a00491d7c5452bfa6b80857e70c9",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-10/symbol=mu.parquet",
+          "sha256": "e680d796cbdba6e08a8b4aaec77136b4b1d1b47c07f6bb7b040ed0821ca55f22",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-11/symbol=mu.parquet",
+          "sha256": "5193ed419f3f3430ed0eab0ce4c11190877f8a82bd351ce6d65fe76dda4a8e44",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-12/symbol=mu.parquet",
+          "sha256": "d045317cb105b6561c0ce4c114dac72f24b9fb8a58da22c3746bfbb2a30b4916",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-15/symbol=mu.parquet",
+          "sha256": "8056b083fa68ed44a8d92a7e2e25db31bdb4bc4bedb79d8b98811f350607f1a6",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api/date=2026-06-16/symbol=mu.parquet",
+          "sha256": "65fa6007e67d1f70f27089e04ced733b770a2ec1c7ce79ee30dcfa9b344d66ef",
+          "rows": 64
+        }
+      ],
+      "destination_rows": 15951,
+      "round_trip_verified": true,
+      "companion_csv": "data/external/us_equities/polygon/symbol=mu/timeframe=15m/mu_15m_2025-06-17_2026-06-17_adjusted.csv",
+      "companion_csv_sha256": "390eb0876ee0822d476581d2d50b16ca1249ee88425511b358305fb03b801c2f",
+      "companion_csv_equivalent": true
+    },
+    {
+      "source_file": "data/external/us_equities/yahoo/symbol=mu/timeframe=15m/mu_15m_60d_include_prepost.parquet",
+      "source_sha256": "5522af4cf9ab52ac19f1a00501d94af8ae82df88c1693b06666baf4588a06b42",
+      "source": "yahoo_finance",
+      "source_dataset_id": "yahoo-mu-15m-60d-include-prepost",
+      "timeframe": "15m",
+      "rows": 3772,
+      "start": "2026-03-24T08:00:00+00:00",
+      "end": "2026-06-17T08:14:05+00:00",
+      "duplicate_rows": 0,
+      "core_nulls": {},
+      "invalid_ohlc_rows": 0,
+      "off_grid_rows": 1,
+      "missing_standard_columns": [
+        "exchange",
+        "is_closed",
+        "market_type",
+        "quote_volume",
+        "source",
+        "symbol",
+        "timeframe",
+        "trade_count",
+        "vwap"
+      ],
+      "quality_status": "raw_unaccepted",
+      "accepted_for_strategy_evidence": false,
+      "destination_root": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance",
+      "destination_files": [
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-03-24/symbol=mu.parquet",
+          "sha256": "3ee59722d193af60430a1ebe199158a823c67c1b71463151412c962bfdef23a0",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-03-25/symbol=mu.parquet",
+          "sha256": "14d43808dbbfa67971a37762e75700d1f6093ec03f834ff04fdc4d94d1d80b13",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-03-26/symbol=mu.parquet",
+          "sha256": "76a386cd0e827dfdb49de7546e74c3d13a38d43e91d1cfb854c807cb073fc953",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-03-27/symbol=mu.parquet",
+          "sha256": "223c51156c69748632616ca08aa367b9398878e9d35338698121ece3330bd747",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-03-30/symbol=mu.parquet",
+          "sha256": "1c9104bcf6a44d08508f692cc03dc8c707a40d883d358542ef182ae6d2971eec",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-03-31/symbol=mu.parquet",
+          "sha256": "6a9742611fee1dcdf2d5fc65027e394af3c9ac25203dcf5189a14b1cef4eb736",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-01/symbol=mu.parquet",
+          "sha256": "616dbd0e0606cd3383a332da917b9f19df8d43d6405c5e4b5ed9ca303709699b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-02/symbol=mu.parquet",
+          "sha256": "6cb2187c18535e39c9f7bbcc37f70597be874c34b3f961a6e3cfb78b7aee449e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-06/symbol=mu.parquet",
+          "sha256": "9336fa139c3b6e8f5c66cf9aea556cb3ed83afce59e131ec9c10d35b0d0cdc1f",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-07/symbol=mu.parquet",
+          "sha256": "d9bdff875bc1d2494c848a24eddd16c319bb113baa44477fd54d5b19193bfd59",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-08/symbol=mu.parquet",
+          "sha256": "d50d6ca703db128e79ae52f6d664a3ca34091c91d6da5409a8c9b77b6f439645",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-09/symbol=mu.parquet",
+          "sha256": "9e121c0a36cc69887dafa6497813640a851e61228271b25b57a642b502cbf219",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-10/symbol=mu.parquet",
+          "sha256": "bb08460b81b553956021fddcdc5f79acc1d45aef8e1dcb2171652c7c3c22220a",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-13/symbol=mu.parquet",
+          "sha256": "8f64b4309f6d8a7e86d6f7eaee202b639bf86121130353fe7dc3f73050688e41",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-14/symbol=mu.parquet",
+          "sha256": "c049918724788c0f27ddc465a936ad48cf4a8f5b137c5bfea8915e1751e165c5",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-15/symbol=mu.parquet",
+          "sha256": "5a10d3db780ea48d60a75d538f929b765c3eb2675d164d3d2b3a3ac444bc7162",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-16/symbol=mu.parquet",
+          "sha256": "24ca300740d0c6f8671592f8d98e1d6655cda147f87b317ef1204239cf9961b9",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-17/symbol=mu.parquet",
+          "sha256": "2c7a7ba1a8675991b47a86e2282fae410f8476a667661ce1bf8f2c1ac7dd3c9e",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-20/symbol=mu.parquet",
+          "sha256": "b4b3bbdd3540688ed2176b53d1356216a21501e8d5f350c2cf5b7ca93e23502f",
+          "rows": 58
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-21/symbol=mu.parquet",
+          "sha256": "9283922dcfc2a66c08552b777235ebcf1b7cec574c8ab29e2b652197ebacfa5d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-22/symbol=mu.parquet",
+          "sha256": "8aba701c9abd6410d51d13816524ec93d8942ac2850798b406b592e7bbb96f0b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-23/symbol=mu.parquet",
+          "sha256": "852b00f42dfec9a07b25971c877c4dc6c8362d1117bf7463203ef622f09aaaeb",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-24/symbol=mu.parquet",
+          "sha256": "df5232f6ab1b669871fa473962f1f6a141519a5418b71273c50802ef75d0d3ee",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-27/symbol=mu.parquet",
+          "sha256": "bb68da1d152187d7a7d386aaee48bd46644e55c94b2ebf5dc3f1a38bf083a0a5",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-28/symbol=mu.parquet",
+          "sha256": "5d08a16e7ea11310dd464db7bd48e4ae39a3c3dae278ba762af895a1aa352370",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-29/symbol=mu.parquet",
+          "sha256": "dda47a050493918d8b39c3aba202c7541dad13634f0ff1fa78e30512c19e4999",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-04-30/symbol=mu.parquet",
+          "sha256": "b604c8ea6b86949f10f173d4d27d8afd87a3fd4e2bdc6b76742914bfbfc9ec15",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-01/symbol=mu.parquet",
+          "sha256": "22446bfef7b0ec24fba64105b5011bd6766814dc0c054958e502d4b3cb15a238",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-04/symbol=mu.parquet",
+          "sha256": "4b54c3d0e3d87aa0cffaab62129e8d7882399c0c9b22fdbfe9a1f4e45f7fa738",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-05/symbol=mu.parquet",
+          "sha256": "978802260d9649a8af24061cfb6e5713148f1013725fb2f5d346031f35b68ebc",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-06/symbol=mu.parquet",
+          "sha256": "ba7e25db4105f83295a49b0c4630116581d15b9a1520623df1326afb7bae50f1",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-07/symbol=mu.parquet",
+          "sha256": "8a8e1df88dbd9b14daf943f48bb48558b4ef65edf6b9fbda263997ff3f04f276",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-08/symbol=mu.parquet",
+          "sha256": "94ee28c1ceefaaa2e26fa37ab2db8de9144e60e33a518d44df688519545361fd",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-11/symbol=mu.parquet",
+          "sha256": "1316ddabd170f6d9c871a702f4d8a03d37022f3f497892a2785a917747cad7e3",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-12/symbol=mu.parquet",
+          "sha256": "317ebd3ca62121c950fa92a9e788657ef65c7bbbb0c24b4b20927380ec5c522a",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-13/symbol=mu.parquet",
+          "sha256": "4209e40cf284f1c21b2e4d9d13fc9ab9c1ac9572e79acb8d5cdb39667a91fee0",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-14/symbol=mu.parquet",
+          "sha256": "d828a6e76a9d5f6ed7af4294bfabeecb2ac3f194483301d86e5c5200d82c96c8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-15/symbol=mu.parquet",
+          "sha256": "b34c58fd387634aa56e3d366d1b85064c721585df82e1284aa95fa6dcbf588ed",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-18/symbol=mu.parquet",
+          "sha256": "a94944d4c87cc3f5f3489f829ddde71e7bee1546f0a5c92672ebdf8ef3efba99",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-19/symbol=mu.parquet",
+          "sha256": "7acc8b2f75e420ead169b021530636830f4d816c153e01b13d56bb10a4bb2d52",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-20/symbol=mu.parquet",
+          "sha256": "4a034342b566461b46afccf78dbd8a9746b799a72eca97ddd3294f2281142d57",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-21/symbol=mu.parquet",
+          "sha256": "342ec6f36cfd7dbe0e22b2247f5c38f0d7e7da6758881d9150b80fae92f284a2",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-22/symbol=mu.parquet",
+          "sha256": "74dc9312168f5f5827c96bcef1fd8bac0ecfe028b42722644bda90ca161799ae",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-26/symbol=mu.parquet",
+          "sha256": "9d9d7a2007e7e794d42723abf6060fe042d1b97e4ab55d63f5207dfd05da183f",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-27/symbol=mu.parquet",
+          "sha256": "2da92ba5f045753da00a9574e137d26e7aaaa87271b016ec53a5a0e61e02f6d3",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-28/symbol=mu.parquet",
+          "sha256": "3971bd0f13d1f72bb91053d4fc65c9dc1b108adccbfda13dbf9867892f1c8f53",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-05-29/symbol=mu.parquet",
+          "sha256": "10525116d7b7b0e5b0aed719bdae72caba994ed611a6f1324127a481567068e8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-01/symbol=mu.parquet",
+          "sha256": "8c4b72cdee6b47b94c0d4388900577b696719b27fc0c1ce51bb61e8b3e761e36",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-02/symbol=mu.parquet",
+          "sha256": "58014f147228d13ee462ae9e89dd92db95614bc0927e7a79043d3ddd5c090552",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-03/symbol=mu.parquet",
+          "sha256": "8019c328a867080c1d248a00910f20750b8dc06d92ad9313848416a6982d59a8",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-04/symbol=mu.parquet",
+          "sha256": "54babd5de4a1b07ebc70c45264f552a0b0c79261f144effd9cdf2b5d68a7faed",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-05/symbol=mu.parquet",
+          "sha256": "be81cf8bb74a326e80371d5d326e724d33b9b4b18cebde997b61db8b0601951b",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-08/symbol=mu.parquet",
+          "sha256": "e4c26167af11d8b2de442c20ee0010b985f486d85d167179b07f7f7e127ae5bb",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-09/symbol=mu.parquet",
+          "sha256": "6d883c2ea33b0c68c24f51859b866297e5de3f031da2e4be5660a9f41e1b8b4c",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-10/symbol=mu.parquet",
+          "sha256": "a188b5460d3ac52442bdc76aa80d7d190f2a3eb7208c18a4520a962e945f4c09",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-11/symbol=mu.parquet",
+          "sha256": "39c4dccf6fe20a36f0b7a4e921dbbfd4cc6d6123f2b60bacb4a604ee997b2de0",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-12/symbol=mu.parquet",
+          "sha256": "c5d17c3e02c93e97f40b42be5191992ef85b6d69716013878725d1c1d39c62e7",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-15/symbol=mu.parquet",
+          "sha256": "095d9ef91953ed695c1d783d611702064685d1f2279ffcf865bc88b63d60228d",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-16/symbol=mu.parquet",
+          "sha256": "937ada8890cce57b25b92b8786089c5a2a75bf35648b130ba316062a593ef9c7",
+          "rows": 64
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=yahoo_finance/date=2026-06-17/symbol=mu.parquet",
+          "sha256": "b2caf5b22012a624c37380849e0bc759470048a6a6b2f81c2adf1025f2afcc34",
+          "rows": 2
+        }
+      ],
+      "destination_rows": 3772,
+      "round_trip_verified": true,
+      "companion_csv": "data/external/us_equities/yahoo/symbol=mu/timeframe=15m/mu_15m_60d_include_prepost.csv",
+      "companion_csv_sha256": "96736ea68d8de23c3fd5bae3cea6b6b7166ccf5d4f2bc494888a28cf999445c5",
+      "companion_csv_equivalent": true
+    },
+    {
+      "source_file": "data/external/us_equities/yahoo/symbol=mu/timeframe=1d/mu_1d_1y.parquet",
+      "source_sha256": "ffdec02fe73a33b814b2bfcad99bf51edd5ae5c0a1f62ebf646f6c91058899ca",
+      "source": "yahoo_finance",
+      "source_dataset_id": "yahoo-mu-1d-1y",
+      "timeframe": "1d",
+      "rows": 252,
+      "start": "2025-06-16T13:30:00+00:00",
+      "end": "2026-06-16T13:30:00+00:00",
+      "duplicate_rows": 0,
+      "core_nulls": {},
+      "invalid_ohlc_rows": 0,
+      "off_grid_rows": 0,
+      "missing_standard_columns": [
+        "exchange",
+        "is_closed",
+        "market_type",
+        "quote_volume",
+        "source",
+        "symbol",
+        "timeframe",
+        "trade_count",
+        "vwap"
+      ],
+      "quality_status": "raw_unaccepted",
+      "accepted_for_strategy_evidence": false,
+      "destination_root": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance",
+      "destination_files": [
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-16/symbol=mu.parquet",
+          "sha256": "c875b3e6fa3cf8b541816502a898af6caafe77eb75806be474a5b55bc111312c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-17/symbol=mu.parquet",
+          "sha256": "90b9dd6a6614fb00dc04e276f6e01c1e64a0c2d39a1124d4b1a91888eb814a08",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-18/symbol=mu.parquet",
+          "sha256": "7b5bb309f91e0f7098f56f006e4f51305ec315347f1bdf56341bbb70df4f76d4",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-20/symbol=mu.parquet",
+          "sha256": "8923095de9e6aa2ea969d88d9106e73e43644b3d187dfb45dbdb1f46eb332630",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-23/symbol=mu.parquet",
+          "sha256": "6f5273726d0b2ab5f5c8e58060e22ae0ea80fde45151d781f01d3d45e1630486",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-24/symbol=mu.parquet",
+          "sha256": "2078188772d47e22ecc5703411418068b30eab8daf6ed2e8e8d2e9baff833bf4",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-25/symbol=mu.parquet",
+          "sha256": "bd2ff97f9db1643d0be190257f58f20ade4c558ff973716faadcc421378aea94",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-26/symbol=mu.parquet",
+          "sha256": "fd5b03b05b8cded84966f99b680119994dee601b901b503f1c0e951dec3d76ee",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-27/symbol=mu.parquet",
+          "sha256": "811303e505ec40bf6de456d62e97867c96e4d91df66e7553834114e532c956b2",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-06-30/symbol=mu.parquet",
+          "sha256": "558377c8880c4597e350c663ac982d53e9974ff6c9c1e90d8f47ebee4085ae4f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-01/symbol=mu.parquet",
+          "sha256": "4599bbfa7e195a7e1b89b8faaad246a829515ea165fa2ab353015b84eba083bc",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-02/symbol=mu.parquet",
+          "sha256": "949abc82803971ac7c1cdaca3ccc9a34ede5f6821ea61c9379cdf768bb9e77ba",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-03/symbol=mu.parquet",
+          "sha256": "e3fba222efffee1be53baaa67b92cb3b8662855c225043b7766e04db2ffa7183",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-07/symbol=mu.parquet",
+          "sha256": "f32a5a6434582efab7df3a7e97575d61968c4e9a0812aa0779f8c246620db486",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-08/symbol=mu.parquet",
+          "sha256": "c77138c34642134c0a0dcf1316101a3ea3e3b0a14cdd0cafa9d1f7e72dab1331",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-09/symbol=mu.parquet",
+          "sha256": "2dbd50feb49b4a57734eb00d373aab5f8dd5dc327cd082102b52a6182e793fb0",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-10/symbol=mu.parquet",
+          "sha256": "955d7bb4bf318ebdf49a217b70548718fc54df1be9387775b735878a5298eafe",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-11/symbol=mu.parquet",
+          "sha256": "9181061e3a9f23d47a576a086d337369740c64e41d2716f2bf3dc244f30ce9a4",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-14/symbol=mu.parquet",
+          "sha256": "f225e533f5458696ba1fd0b9ca2d308081f77de215a6fb16efa826ce806766b9",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-15/symbol=mu.parquet",
+          "sha256": "9d141d7fd394b9ae51194defab5455a50d156aab752f261f65f13cc43c9dc2ca",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-16/symbol=mu.parquet",
+          "sha256": "d7c6e88624259888299343ddbc3f7cffcc882ee5b055ec56d352f7ac7ddd2e74",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-17/symbol=mu.parquet",
+          "sha256": "4086483b98224d01e548b6baabe368972c6b32cc6cfa65416bb4372af262142a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-18/symbol=mu.parquet",
+          "sha256": "e657c11f0dba7a6dfe05b89d06e2d8f06d29d01db010bb94e6b730e4ae55c282",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-21/symbol=mu.parquet",
+          "sha256": "196288117b485067faeb2946b27a0a0cc00551c44445ee05aa8be664d44c39d2",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-22/symbol=mu.parquet",
+          "sha256": "925db638548685b13f80cfa1ae502ec79dbf224a762722e2da15d147be205ff0",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-23/symbol=mu.parquet",
+          "sha256": "a749c05a13ae2a8be628ad37c927acbbab80dcfb738dcae28cf0bd1bec1e6012",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-24/symbol=mu.parquet",
+          "sha256": "3a3769fabea45f201cbc92d77547dbd356d15d3a09c3cf8c862cde3f20e20e33",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-25/symbol=mu.parquet",
+          "sha256": "da31c4214a4db2c70821c35856f3eb6972e14b53d13ec46cd321447513165afb",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-28/symbol=mu.parquet",
+          "sha256": "c3eeea06447245cdde8edb24afe125b9af8f06fbf4366d8a5d8bf378e8c2fee3",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-29/symbol=mu.parquet",
+          "sha256": "b51495416955696241dada72bce9db7523931f37d779ca1902982efa25e99e47",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-30/symbol=mu.parquet",
+          "sha256": "4a69338139ea12758d862feaa96612ffca68a5b5e2e2c65f8fd5ade5ef90c12d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-07-31/symbol=mu.parquet",
+          "sha256": "07d4b01dd5d6c0998caad5546f8c21eec894b0755f7cbcc8e04e2ffe215747d6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-01/symbol=mu.parquet",
+          "sha256": "5f1980ba19b2e207552323ca900a40873b077050b475ba79eedaf55a738ecfe0",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-04/symbol=mu.parquet",
+          "sha256": "6e897f27ff52740781891af78a73580cc5a6e6736ad819b94eab88ba20a5d0ea",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-05/symbol=mu.parquet",
+          "sha256": "67c8c04b53d8d2077cd6241fc11f369bdc7f86aec7b0ad0320ad37e651642887",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-06/symbol=mu.parquet",
+          "sha256": "8584ebc4cefa3edee86b699a99273e6a8be59769565a471a5174c27ff0ba7546",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-07/symbol=mu.parquet",
+          "sha256": "f87b4ba312ad1268fd41ab967952573f61d9ca04f5d8611401dd484e92925d82",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-08/symbol=mu.parquet",
+          "sha256": "39e858fa2cbf864850aa563a19aae827ca1e89e9a0b4e6fc98ac478e390ea89c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-11/symbol=mu.parquet",
+          "sha256": "a2b7a1dfa7868f7829b0ba3d2d6ff4789ee10bf79d2c42a7192eb882f205f543",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-12/symbol=mu.parquet",
+          "sha256": "269495df716648ff2306e038c224d6dc6630daf5bee751f48738c653b88509b4",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-13/symbol=mu.parquet",
+          "sha256": "5f16d57517de53c7ed6385f51d94247bce8807d8cd9abd2a41c12db6125b6a31",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-14/symbol=mu.parquet",
+          "sha256": "d9d92526c46527b26f3375a12251a2d3bc3f4980ed5cb213376c3d1c8fe0a31b",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-15/symbol=mu.parquet",
+          "sha256": "3a9a7394b1a2726f3de2bdb50d0be5db44ba9f6bb9e3e5bf5c0d8089d3611ae5",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-18/symbol=mu.parquet",
+          "sha256": "a8e0ce9b696d25e8fc938caeb1f852b39aa3aafa6298b573b83ab76496c2f36a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-19/symbol=mu.parquet",
+          "sha256": "06f5d1bde203ce225b21e93964c543e0f802b342aa372a4a595dd866056c2730",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-20/symbol=mu.parquet",
+          "sha256": "03fbde4adcaafab4c73263a947f91555cfe182e37841869f257b069ee5324419",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-21/symbol=mu.parquet",
+          "sha256": "5ad551d17ffd811d77653609d1b1a954722bfd6999ecd0b8c78168659bd70d9d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-22/symbol=mu.parquet",
+          "sha256": "bbbc40f628ba522948fda9bf4e7d500940c613ed96e77dbc0b4b647fcf8c05ae",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-25/symbol=mu.parquet",
+          "sha256": "2e78870c6bbba4ca68f3b6fc0a555af60beda8f03aabbc777e8019cac7dfbe33",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-26/symbol=mu.parquet",
+          "sha256": "6f2f6930d005dbc3e51aa9b6c348efa76a9bf289f3e2f297e4ccf328e9817bca",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-27/symbol=mu.parquet",
+          "sha256": "d3dd153bca386d7cc88aea4139679e8c7eb4d1465e703b6518fb30eabd8b7a9b",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-28/symbol=mu.parquet",
+          "sha256": "e3083196fb6e9df6c693c856f194e279ae864df9830598baf3c290fad01d6f79",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-08-29/symbol=mu.parquet",
+          "sha256": "146855b0417d7948cb3bafc69eb6570f7dfcd12535626fc86bf8beb9d131d2c7",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-02/symbol=mu.parquet",
+          "sha256": "5e98aac3456f79aadb2777f324a315d8c9086405c108396f549927485f6d47e8",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-03/symbol=mu.parquet",
+          "sha256": "1df04f190b8389aa669a299857ad36ebf397b7667de3cdbdfceee36e71ce4f4a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-04/symbol=mu.parquet",
+          "sha256": "84d0262a95869b1e3c89e56c8f0decbab9ceff03eca9a420aa6efb264de82795",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-05/symbol=mu.parquet",
+          "sha256": "810c36e766fd129a58c00b7e48eff668e65b01298c70d91cb1dbe54213a176c9",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-08/symbol=mu.parquet",
+          "sha256": "5a2d4b1920e371bf5ec707924fdced46d580eda4d39639a9716ba6a843b674b9",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-09/symbol=mu.parquet",
+          "sha256": "4c34e5666cad9c0df739ed7823f37afe0d8e1c1afb4aa03f25350ca4e6d087a4",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-10/symbol=mu.parquet",
+          "sha256": "6dd7f21e7570794192b726321cf24c6abb0bd8d6423db05142d8c8543b455946",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-11/symbol=mu.parquet",
+          "sha256": "d098683493d021c49472da247cd9a0d3020832a273caf7fa6c84ea3d53a38851",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-12/symbol=mu.parquet",
+          "sha256": "eab69daee5cc93db3ed790f5bb0bdb883bc205eda22371bea243200583d72934",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-15/symbol=mu.parquet",
+          "sha256": "df9baef1c2e433c770888359f495b8b270bb80794a2c58fd49e5f1360b869827",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-16/symbol=mu.parquet",
+          "sha256": "b50d6c2023a8fc07a5b09b421a8973115e7edc1fecde6a64e610d8788e56074e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-17/symbol=mu.parquet",
+          "sha256": "f7c74e3992fe2f3d0e764ef133cb38f56fdae0a4f4b4fadaf895d07724f35510",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-18/symbol=mu.parquet",
+          "sha256": "44fd65320d65c11d7b583db8c72d2c1fe21518563de2641414c58cc1c18d3919",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-19/symbol=mu.parquet",
+          "sha256": "cf212a3d460fe34643afffdc61a3158b6757bed351f9d09d4e5f5399ee2fd338",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-22/symbol=mu.parquet",
+          "sha256": "41344dc612f239bb51aba69c9fec92c0a2a44cf14124cb0fb8607c38598f403e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-23/symbol=mu.parquet",
+          "sha256": "d82fea923855698be54674040657d7ef69636f6c93d1c984295cb8bb1f111fa0",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-24/symbol=mu.parquet",
+          "sha256": "39cec61a681fbea4e24c67d61bfa5f021a3615b6d3c5978cf17b1a2c0e07da57",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-25/symbol=mu.parquet",
+          "sha256": "3c8393d33690620ac83509a3f246d55069dcbafc8a07ae90ce247ed9c497e81c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-26/symbol=mu.parquet",
+          "sha256": "7bbaffaaab3c417bfbb8abebe33a63e59aa5d3b2e1c94959f0efbabf2099e3b9",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-29/symbol=mu.parquet",
+          "sha256": "8394d55841d78770464f3bde842cb46b78a019ea645a99a564fd3964a5d985cd",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-09-30/symbol=mu.parquet",
+          "sha256": "c2524d6b324d5a9c9abdc552d0723ed7a7ecf5cdab0efd0cbbb0d88581a148d2",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-01/symbol=mu.parquet",
+          "sha256": "37eaafec370901c1d1be2718f06caf4fc4b3126223d83e9a84761798aaa03dfe",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-02/symbol=mu.parquet",
+          "sha256": "6c347d79e44a5e9d738aaee3f109f2667025fbda79f967b4ff5102a0cd71488a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-03/symbol=mu.parquet",
+          "sha256": "71ec7ad1676e563414ebe2910f7e451dc5b6b959a03f7d734903a09098cc9d99",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-06/symbol=mu.parquet",
+          "sha256": "5b3ec6b1d9b7cc520ce255db3bd6fb51aa9e4db127378728c614b20950f5ebe9",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-07/symbol=mu.parquet",
+          "sha256": "fb31908ee55964d805afd7af1e97899fd8b50f0ea36c6e0d045bf3bc1101e945",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-08/symbol=mu.parquet",
+          "sha256": "fc9588b968401fca0d9848fd069bfa1b080257f9262d666b1ef2f897409a88f5",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-09/symbol=mu.parquet",
+          "sha256": "8639d4c6f1cd9ab390e0bfe776767f34d9ba52ea827811e372ebc0e7d1a07446",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-10/symbol=mu.parquet",
+          "sha256": "1ed1394bfa217ef1c7a7d2c43a374ac56eb465933134cf709bd6b93d285eb376",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-13/symbol=mu.parquet",
+          "sha256": "c877d2d2af175d7ef0d412e8b3d1763bf5239c05bff75d69a72e368aad2b9f25",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-14/symbol=mu.parquet",
+          "sha256": "7b461d089d8c0146734f150c0f16e567837c92d5e5a573a98884d9c02718ef8f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-15/symbol=mu.parquet",
+          "sha256": "1f9e0bb850a5d99570f668fcea53cbef737a38ff35ff090fb9693f6e76d85537",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-16/symbol=mu.parquet",
+          "sha256": "c2baff12576cbd05c2102f117fabee0ecc81b27474ccf3f89ffefadc74705546",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-17/symbol=mu.parquet",
+          "sha256": "b7ddd41157bb393766362d16217b4a0ccd3e9f1fe497d28a0a6c8c6124bc3949",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-20/symbol=mu.parquet",
+          "sha256": "0814653fd0658c333070277b05939b8996775b5cebb993b6e0ac059a3b7da189",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-21/symbol=mu.parquet",
+          "sha256": "ce1d8ede2b16542e4e91b0a14ea399dc2940a73a238dd1bf0bd1268f5ab29fa3",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-22/symbol=mu.parquet",
+          "sha256": "83a0edcf4d67129a375c892c8e360a9f9ccd075495a2aabb28d334697b42b9ac",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-23/symbol=mu.parquet",
+          "sha256": "a4cba8790883136a08666cac045044a61ee0859f9dba4dfbdcc361deb08f934b",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-24/symbol=mu.parquet",
+          "sha256": "bc8027f753e0de6a50adddfff823c34acd3cff0874c76440b88ddda073dfc186",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-27/symbol=mu.parquet",
+          "sha256": "f6807cad0c62f8b95e08b2661b008d35b4527a3a8d4d679e0ee832944b22c1c9",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-28/symbol=mu.parquet",
+          "sha256": "dcf93dd6e9458f97f42868d264910abadd7a09a4b7bc8a50dbd634496adaebda",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-29/symbol=mu.parquet",
+          "sha256": "9df9d91cf8aa0e35c91b2735c183b3b42222a0eb8c8dab75ef6d45f71ee33a5d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-30/symbol=mu.parquet",
+          "sha256": "a6ef44cba67ea83360ee68557e6fbdb6ec655aaf21bb44c11234f0df75f4fdd8",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-10-31/symbol=mu.parquet",
+          "sha256": "22aa556c318a9feaf455b8de51ac2f75584f4d69f00c3d51f1a1a68912c7a0eb",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-03/symbol=mu.parquet",
+          "sha256": "7c0aaef0f93529f168a87b408a5bc3c6b72a4a4fd0ea039c60665c88c41f2e70",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-04/symbol=mu.parquet",
+          "sha256": "fecebe2c61874f23a81a6854149e104f704f532bad7ec55f750ad5dadcf4a225",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-05/symbol=mu.parquet",
+          "sha256": "f112982cd9eca9092c75ffa76212b5e6afa942a740c8d8248ee9fdf8f65f08a9",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-06/symbol=mu.parquet",
+          "sha256": "099f1045dcf379aa084d3ee7f60e1fe50653e6a45036b8a2a3ea235cebd039f1",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-07/symbol=mu.parquet",
+          "sha256": "f39f613e9766ebce2da4658da90e2c4570bcc1d27e2d8706e18eaa2a4c3b8ba9",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-10/symbol=mu.parquet",
+          "sha256": "9d6cce2eb5849913499f54c98b2dcfb315b736dc1aadd91d34ca874308add08a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-11/symbol=mu.parquet",
+          "sha256": "24dc593535f026efa312838982984fc8efd9d293e41fe35e14edbfa00bb8a1b7",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-12/symbol=mu.parquet",
+          "sha256": "297c14867959f0926453da9692fd3aab9ed9690d9c8eb41080fd4d67996b2c21",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-13/symbol=mu.parquet",
+          "sha256": "f828fb0de7a33dca882db1b95898f530564bc429de8d7576a016ea8ba1937fae",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-14/symbol=mu.parquet",
+          "sha256": "77772ef0ddb63e28a0f0b447e629033fbabf0e41df02c3425e58268994ac2f8b",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-17/symbol=mu.parquet",
+          "sha256": "4c22d6a771a6a710a45b462c9d85106d527eeadd10ba564493532b971eee60ad",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-18/symbol=mu.parquet",
+          "sha256": "695c006c78ed7f2286a63e81269395f5b2776d339f348360d50b1cc757c599b1",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-19/symbol=mu.parquet",
+          "sha256": "129bb2420b0992f333bd479e5d62c79994164a696138299c8e9144bb5e060d1e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-20/symbol=mu.parquet",
+          "sha256": "6d6bdc4f18c90393991cbb1e2430ff9c85dc2400f85ff38b8b73cb3b595461d6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-21/symbol=mu.parquet",
+          "sha256": "1a05190ed5f5bfb2655f21e2940147373b7e8648cd3b448dd6a00454ee2c2f7f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-24/symbol=mu.parquet",
+          "sha256": "19e62f35488f984068fe2820b668cd02a776072e74e3b3a543c6b7bf8381f30f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-25/symbol=mu.parquet",
+          "sha256": "da007e003ffc982a9202a913035dc10e741b592fe4445709dcd154fbad5f56d0",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-26/symbol=mu.parquet",
+          "sha256": "4846332ebad3c4596d579622a2bc8074889607482d5e95e16d937038f41c3e7a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-11-28/symbol=mu.parquet",
+          "sha256": "e807882d4dad36db4d42eeb15213bb742cd14f92b81cc8d9ae19be5d093042ec",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-01/symbol=mu.parquet",
+          "sha256": "f21d8f00a492504c9472417b309e203d3f395794e150bdf3562b4b47cdd159dd",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-02/symbol=mu.parquet",
+          "sha256": "8072a8303c70a377705b870eddbfdd11fa774333b84fbaa51f67fab8d77d3dbc",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-03/symbol=mu.parquet",
+          "sha256": "8d16eb8aa7ee383f358e2a3497b8df666c8b6570c5880b4582b20350273425ab",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-04/symbol=mu.parquet",
+          "sha256": "1222fd5c31b029634acea049033c07f9a8fc47e2f230f214242a786118a2f2b2",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-05/symbol=mu.parquet",
+          "sha256": "07205003ce77798732947065236aa6e2a8a7ac7a5a6eab455af8691350a3962d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-08/symbol=mu.parquet",
+          "sha256": "db99cd86c04be98b3baa939e5bfdc90f5ab0a51011b998de3b93af0bb5bbfc4a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-09/symbol=mu.parquet",
+          "sha256": "d4eb202859b23b3fffd80aa5fd868166b39ec117dd08c48d51b2c5a3a7e2daf4",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-10/symbol=mu.parquet",
+          "sha256": "5645becd330c16bce4e287ae624b750b7ea5e7b71c2b640de671cebdca276d3d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-11/symbol=mu.parquet",
+          "sha256": "7cba1b45ca78b25a2c3f8dc2453908d36ccc748e8ea63f86c46a9b075eecdfdd",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-12/symbol=mu.parquet",
+          "sha256": "1d58f7e706cb9404b67c1ea7ff4fda12016064cce10320afff3cd17d0a26e3da",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-15/symbol=mu.parquet",
+          "sha256": "7ef41b58aa42cce87d9aaabb35eeebc3b19a288f944e45ec98adb058eddf44b2",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-16/symbol=mu.parquet",
+          "sha256": "b8f6ef3a90e7fc1a76f592139ed66c5f0afb602d2811c99e3567480c908aa923",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-17/symbol=mu.parquet",
+          "sha256": "fc2440820e2d88ff5b244fe76216b0d71918a4a7ae267b6bcc902d184ee43eaa",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-18/symbol=mu.parquet",
+          "sha256": "c75a8eb2e598854c8a08435cdd697e22e49d46e08fd562185e7df6201cc0d2fa",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-19/symbol=mu.parquet",
+          "sha256": "08903c34d94df80078d62936daf6666c59b5cfdda735eb3c98e5937ab4eb7c90",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-22/symbol=mu.parquet",
+          "sha256": "29ace3fde122825b8efe56218b3919307a11896fece601354c9d17887364dda6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-23/symbol=mu.parquet",
+          "sha256": "c40306da4aa3e4db557651c19d8da11e2dea701665eaf7ec0e3d85083859181a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-24/symbol=mu.parquet",
+          "sha256": "c457e218cc0c4773d4ef18de976aedc7465f22900e2c5d35300e90e6b455381d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-26/symbol=mu.parquet",
+          "sha256": "fa636e2118a63a69c9b9a3114efda487e1db5293a0eb2195ac43117ad639d162",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-29/symbol=mu.parquet",
+          "sha256": "e06bdb861e9b5fc18ec66a2c070882956db76964b3c76b7f7a14717e17dbb0ba",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-30/symbol=mu.parquet",
+          "sha256": "20d3722949aafafa94d833a1bdf46d4152781dd313d8a25f2ad095f803b4931c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2025-12-31/symbol=mu.parquet",
+          "sha256": "8b6e68ecdd86089ac411eb0a62be9f22597f0a3a7adcbd1e820c592de9f29409",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-02/symbol=mu.parquet",
+          "sha256": "c5d5727c80b8036f175fa9ed0e2ae292b15908d6cc2bb4a0a2db7885d9ccf00b",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-05/symbol=mu.parquet",
+          "sha256": "3afdb1e0d2feb76a1b09a84f30c405f6ca5c94e470caecb7eb3696b6cf4387bb",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-06/symbol=mu.parquet",
+          "sha256": "ab3f876a1ef1923b54f8240f0a726e8aa10b7b6d4208edb1d82a1fe3dcec7e6e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-07/symbol=mu.parquet",
+          "sha256": "c28bc3891dd06c9907fc2cb9a8b941441a751289604a9e7aeed673b096db7139",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-08/symbol=mu.parquet",
+          "sha256": "90144372e76021703fb76cd09903ae194e647e6f60dc18386e9b3a3f6ba5a9d7",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-09/symbol=mu.parquet",
+          "sha256": "417fb716a301039c54b2c842fdf8fca2d586022908bdb4f847688841ec016157",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-12/symbol=mu.parquet",
+          "sha256": "d50dcd982582458ccf3d6dc7ce9d4ff9f19b569bf444512b6773ae0908b0ce92",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-13/symbol=mu.parquet",
+          "sha256": "4f9419c7f45f9952b425b14a2c7b610823305c0bacf2254f3e0dc84c588ae11f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-14/symbol=mu.parquet",
+          "sha256": "7f76f9baabb148e065f680d892a64d87102f38c867bed5ef8eeb8d46ef6cd9e3",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-15/symbol=mu.parquet",
+          "sha256": "1a8b421873eee0292c6d77830c3d3286f955c17162a8c6ba315a20e0f3137833",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-16/symbol=mu.parquet",
+          "sha256": "7bd00fadc509be6e970f6fa7ae828871937419cad7144855c64332f90a323eb1",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-20/symbol=mu.parquet",
+          "sha256": "e81c0c5851bf5f4252b34613158892edd967e5e46fa1200d0e525152e5bfee0f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-21/symbol=mu.parquet",
+          "sha256": "ab8e0e9bce3a588f6fc50cfafd6857250dc72d6ef1267471c1b6c3592d18ac5c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-22/symbol=mu.parquet",
+          "sha256": "ad1796bb50849877f293e3db9f26cf7eb3202440c92325cf7f46899199ae2d60",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-23/symbol=mu.parquet",
+          "sha256": "f74080fe983a9c102543570d85487f2abe9d12c068f3be1e486c4e96cac26ada",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-26/symbol=mu.parquet",
+          "sha256": "2a7261be75aecae70044dfca3506cc887bebea4061551e30fad8ad4254087f93",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-27/symbol=mu.parquet",
+          "sha256": "ed992a79d5959c76173eac8f047ba3ac48d4d965568ef8ad84fcff75e2e60e51",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-28/symbol=mu.parquet",
+          "sha256": "4df5248c410a2377134b68f878768ff366b29d937b1610e7fd11356e0ea85371",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-29/symbol=mu.parquet",
+          "sha256": "4b97f4dd4460a17dbdbfe33cf6cfbacdd683be847892b6695d74993f47e47cb6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-01-30/symbol=mu.parquet",
+          "sha256": "99dddd031c8e22709345eac23ad6841839668d87c09da475edc066d17a16d7d7",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-02/symbol=mu.parquet",
+          "sha256": "b0bfbfb6ff84a3d4dd06217eddf87ab3e5508e17d996009e984f74d3b60c46fe",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-03/symbol=mu.parquet",
+          "sha256": "61d5238906a50416c16457a63bffa98767b028f56e37a9e93429fb60294a5910",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-04/symbol=mu.parquet",
+          "sha256": "ada1f494204c525fd3b9508aace0d3e875f49303b53dcd70adb88bcc123c60cf",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-05/symbol=mu.parquet",
+          "sha256": "38af6b36f8e8cfc7451771fccb072c40082b5b3d4775b0eeb76f8e8507315fd3",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-06/symbol=mu.parquet",
+          "sha256": "81128912388d3447ffe1231d0e05de462d0672c5027887a7673c6b26ba17216c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-09/symbol=mu.parquet",
+          "sha256": "1daa1d356c155eef29edfea046c91c7840acd285fad0763c6c740cabed868775",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-10/symbol=mu.parquet",
+          "sha256": "f65a1bf84e5f51fff2ff3c9fad8ff195b1483628b46f5ff56f2126793409f4b4",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-11/symbol=mu.parquet",
+          "sha256": "7a8f11ce98350dbffc111ce4c61ee2c596f8e86fbe0c7ab7370e1a49f43b3200",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-12/symbol=mu.parquet",
+          "sha256": "a2403d466da1f33ddca2258b32296646f0be84a580a88e0e146575df06c5211e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-13/symbol=mu.parquet",
+          "sha256": "3bb41cbc9b5d04b6b1c83e48355030fe12649f538d8eb89127145a2468c14d55",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-17/symbol=mu.parquet",
+          "sha256": "e2197c47c9b580263af68121fcf4a53f0b0d67b430f88b26a76ac2d5d3c6712e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-18/symbol=mu.parquet",
+          "sha256": "35f58655f5b614043728ba19316189fc1b47a2a61fc13c0717f41cd229669c8b",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-19/symbol=mu.parquet",
+          "sha256": "25fa1da16502a74c2251545e290b703e766616a6e0bf3aba6ef13892477e1cc6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-20/symbol=mu.parquet",
+          "sha256": "a7951331b78f76ae92989762ef61a5f5290e87e74ba9c0e2af89c3da91536805",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-23/symbol=mu.parquet",
+          "sha256": "8ff94085335f74dd30f57bdcc983fffcf34730348544230cac9bca51ade4960f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-24/symbol=mu.parquet",
+          "sha256": "c41d4f3ee5957e08d2445812b8d21cd40bb878986b9a6fd91968e06e12de98a5",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-25/symbol=mu.parquet",
+          "sha256": "32b43e29d44f723829d84a4cdff1149f0966f893929ac5fc2cae75f2f2590484",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-26/symbol=mu.parquet",
+          "sha256": "3bdef604a0fef34550296ac0cc3189e2082eb45a855c82b709c84f8230e0ad27",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-02-27/symbol=mu.parquet",
+          "sha256": "cd60b4c6f4f488a2d82a6eb71a248acff554a66032cc118b2c543d65644b1648",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-02/symbol=mu.parquet",
+          "sha256": "4bc70b181bf0f7ceed7c386c5fd7414393b44d1790016dc26975bd2ecbda6bac",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-03/symbol=mu.parquet",
+          "sha256": "2f3f5ab385b2140f46b062c3d33f5fec5aaf6f890d47c9aecfc883d51be2da95",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-04/symbol=mu.parquet",
+          "sha256": "01635be8ae77e80e12e2c2355b84823db5ff2ada11916a2b4c801eb76220aa03",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-05/symbol=mu.parquet",
+          "sha256": "c5d27fed9701b3d32a9b189cdefaaeb615afb023b32e61dbbccc6b18b6f08cb3",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-06/symbol=mu.parquet",
+          "sha256": "25adaea554cc574ca638d76b3ab68fa94fc8ff71beda906d88f11b1da07be407",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-09/symbol=mu.parquet",
+          "sha256": "435ac89c39416fc32bd3eb00a6030807138ef8a072f806efb0ce56e660dd672e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-10/symbol=mu.parquet",
+          "sha256": "196ea1734090f2fa576a187a440872aa8012d22c090c196b3490a7712e717fdd",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-11/symbol=mu.parquet",
+          "sha256": "1d4758d4d805ffcfa9d6199f23e28ca7eb1c5b204ebc547ef04bf29502af7211",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-12/symbol=mu.parquet",
+          "sha256": "e7eaf4f183ca52fb29aa80d47bb34d5a2193a974f78010805bf20737d2d80e4f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-13/symbol=mu.parquet",
+          "sha256": "3da2e0af1069d4faa025a449858f8603265eda42e1b1b939db8c4002eb717b25",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-16/symbol=mu.parquet",
+          "sha256": "287b141ec7b298bc3dfa0c929be22b5fc3dd0646fcce9f028099090d856420f6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-17/symbol=mu.parquet",
+          "sha256": "775d6ebbfc46264bc8a4f22f6f40e496ceb5fcb4122a03c0b57d624cb59bf2b2",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-18/symbol=mu.parquet",
+          "sha256": "4752fb86559f54a7574e386915b959d32c147ce0fb0a42c1069dfee0f556a7a1",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-19/symbol=mu.parquet",
+          "sha256": "a3763ac9320d1746f0e38215dc3e477d6c1d49a97cc587eadc0b32d4dd37245f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-20/symbol=mu.parquet",
+          "sha256": "b8d5c1294b250720440e80341ab6d980b20d44cf0269e64ab1a8f658821d320d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-23/symbol=mu.parquet",
+          "sha256": "4fab127d6821db1ff53ed7a70b703867ff5f04c6341734a1c31209b9175e9287",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-24/symbol=mu.parquet",
+          "sha256": "5aa0c19f464158d10538f8b83b3907f4f0a69af405943a9c2e317313d8cab509",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-25/symbol=mu.parquet",
+          "sha256": "0450936fd151815e1aaa10fba75cb29982da92644671bfd83eea29796cd6723d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-26/symbol=mu.parquet",
+          "sha256": "9c5d400ffc83ad90039d4ec066faf2a811964edb8ffce8987b02d5741f75bd28",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-27/symbol=mu.parquet",
+          "sha256": "297341a5f701bafd6c1d85f66ec9d4533695874a4bbe379f6816e3cae1904e9b",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-30/symbol=mu.parquet",
+          "sha256": "9aa53eb0a2b622b60c1a468aced32999adaaf6d3fc110ad0e7699e49969efa01",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-03-31/symbol=mu.parquet",
+          "sha256": "797d3babb4088210608848e2dbee6cb6b7162e278e75e927bde2a32c4f901b55",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-01/symbol=mu.parquet",
+          "sha256": "d238105b3e803d64fa59d1d9ce378aec2d58fa58ae73df1ad7a399b226e4bb4c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-02/symbol=mu.parquet",
+          "sha256": "2b2cbd424459bf768e429651751abb80320e4c7140deca23010dff0b71e83d33",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-06/symbol=mu.parquet",
+          "sha256": "340fcfc2dc10ac58e2d72c7194df0d41a4fd9df7c37d3062e8aa998f036d11b2",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-07/symbol=mu.parquet",
+          "sha256": "2e54ccce88cb4db009446d15760da2d50836290630d4b4310db640a1f48dfe9a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-08/symbol=mu.parquet",
+          "sha256": "3e273d172de9aef9461358711aa6947e23d25479f217855d3cbb0a3f5af4e091",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-09/symbol=mu.parquet",
+          "sha256": "a4d69cc737c1bfd5f0d1c078befa39627dd81bdbe3fd87d07a48e873321b2aed",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-10/symbol=mu.parquet",
+          "sha256": "99dfb2de8b22cf2c118a26b95bdcbc4564a68083bc5a9fd0545bf4d9e768cd43",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-13/symbol=mu.parquet",
+          "sha256": "6b0c1e28f4ffe8450345629f477f23bd7533a9423644922915a158df7c810cec",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-14/symbol=mu.parquet",
+          "sha256": "c3de824142e9509e5d0b970067bf165bd5e06d876b46a673fa56dc651bbde13f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-15/symbol=mu.parquet",
+          "sha256": "765e45f55bd34ab0df7f36198feb1217117ff06a1f0b97a9225139804fc32ca5",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-16/symbol=mu.parquet",
+          "sha256": "cf54e36050d7558021f3b0d7a43dd20e38ad0fda560ed1c81565a901cf6f96bf",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-17/symbol=mu.parquet",
+          "sha256": "0bfa728124b698c022755399a5442a5a621b6c5c443d897c7c5fcf4635f92f53",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-20/symbol=mu.parquet",
+          "sha256": "1eab459ad551e49b689f6def09489ae53230547b7e8fc23572ab971aa7a6caab",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-21/symbol=mu.parquet",
+          "sha256": "1202daa1028708ca906b05ae72ca82cacfd2b519adeadee9dc74993b94af3ca6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-22/symbol=mu.parquet",
+          "sha256": "327e7b1f9e97c46ced3d5931a976dc2496bf3459abfc623c500fdacc29e54c76",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-23/symbol=mu.parquet",
+          "sha256": "041a0554b7d1d2aaf68517066af2d31a41f94677bc47b6874e04e7204dda7113",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-24/symbol=mu.parquet",
+          "sha256": "91560980e87284546f30ca880abdf237ed1acfa0b14d58ad6d150459f85da6ac",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-27/symbol=mu.parquet",
+          "sha256": "2fc615d64a2cc769215af61740100d7c4bcda98259ec44525709b10940416f68",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-28/symbol=mu.parquet",
+          "sha256": "740c2881af5f59cb9829f9148f0866b4b17368aa82318cf3f8a97f8e082209a6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-29/symbol=mu.parquet",
+          "sha256": "55cece897523c6e2b60c729079ef280ef1d686fc9ca2fc21e77db3fac3973274",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-04-30/symbol=mu.parquet",
+          "sha256": "c8de82e1556a967ec0f14e8c215c38609356382d0490b5667a00144749ecf937",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-01/symbol=mu.parquet",
+          "sha256": "241da59dfaf99447ebf717daadc3c7f816abbda483a828c333a02474a2953e54",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-04/symbol=mu.parquet",
+          "sha256": "95f27f246f676064f7006f26226bb318471a2193f826da37b0ab364174ef7bf6",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-05/symbol=mu.parquet",
+          "sha256": "01e72d73e6cab2a6b7ceee4fa5a3a888efacfc7a6cbad8a4f34d90857d1c7677",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-06/symbol=mu.parquet",
+          "sha256": "3a01c9035c25bf0364eed5fef838edf949b3dc5430a90c0a383a7a4880c4639e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-07/symbol=mu.parquet",
+          "sha256": "4e6fbe81fbd1d5ac4b860a78d8a88d956d3e1c3ed57c73af7187dc3a2cf2cdf3",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-08/symbol=mu.parquet",
+          "sha256": "40bf459732c7afeb4302edc607b61a1ee998e126f9e2d4ebc39b5ec5cd00c274",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-11/symbol=mu.parquet",
+          "sha256": "fea6c6ecfc14b7d4ae02371d59e9e438b2184b06f157c344497130ca92b87a3a",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-12/symbol=mu.parquet",
+          "sha256": "841f0236915768fb93277dcd93a64fac858d9365611679ffb1a8b19eac005e3e",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-13/symbol=mu.parquet",
+          "sha256": "4cad9b5fc1506ce9ce8f3f8df582d72b28fc5f8a58654bab8ad35d92b28b7349",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-14/symbol=mu.parquet",
+          "sha256": "d074544fa95f28078ce311519cc67f40e146c65b45dff78691bb62250132ce95",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-15/symbol=mu.parquet",
+          "sha256": "9a74923305eebd79ad9e19b29f66d6155c9ffb7fd922e0012884205fd14dde3b",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-18/symbol=mu.parquet",
+          "sha256": "4440f2e73896e9f210b51dc8a8997f2e4bb223698269bb4e744bfe5a4b533f63",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-19/symbol=mu.parquet",
+          "sha256": "fb045c17c50b3bc376317d0e8f2e69fcb4b2ac68b2f536ddafa62fe52c3e2351",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-20/symbol=mu.parquet",
+          "sha256": "9f92a68a9024fa2a7f556e0768d1101ccb135b520f8d86d703d11d2914ed9cb3",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-21/symbol=mu.parquet",
+          "sha256": "09d7b012333ece3397f4433e7d9226c76c97b68cf52e3fa8ffa6c3fc957261bf",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-22/symbol=mu.parquet",
+          "sha256": "fac05bb06bea571192b29a3d47515f72c9668cae10544df4269992f27daea70c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-26/symbol=mu.parquet",
+          "sha256": "ca4763ba2b25473aeac7cabf7800ecd1064935cd6e98b55f652f862cd2bec4fb",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-27/symbol=mu.parquet",
+          "sha256": "9a354a44e3ebe6674999e873fe9ccafb23014e16c997612d04e9532c49fd7b2f",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-28/symbol=mu.parquet",
+          "sha256": "83ac1553a88c3bc9a35f67ab1196147fc3f01742b2519f2cfe4534418c8d7b86",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-05-29/symbol=mu.parquet",
+          "sha256": "2f4e7fdbccec788b3f6720fd34d3f0961d33da9d32d9582de2a54c1ddd1731be",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-01/symbol=mu.parquet",
+          "sha256": "840abc65ad8fa3aa625a72880056b81ef5e2ffff7049d3f02929f0f511d551f4",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-02/symbol=mu.parquet",
+          "sha256": "656a0dc6361b8c2110e13d910c4c36b0cf0140324316e6df3ac08aa969de8dfd",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-03/symbol=mu.parquet",
+          "sha256": "192f0639da0c6d198ec3069e61fb2e1bf4fcea9bb1505f47a5479f77c9dfb443",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-04/symbol=mu.parquet",
+          "sha256": "1866ef2ede9f416c1bc06916f04112fec39374a64044d81ddbc81215da055ffb",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-05/symbol=mu.parquet",
+          "sha256": "2ebc839a7bc299c376dd8e3d024ee8b22a15df78931e1a7f05d427083989dd5c",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-08/symbol=mu.parquet",
+          "sha256": "d8677a725c426b466b5b98c60dcb9e75905f52b7ddb7718048d9de463e2aca5d",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-09/symbol=mu.parquet",
+          "sha256": "ea1c54934c2c475642aacf27063d70933ecb14cc6993bb80b7c8d614adaf2712",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-10/symbol=mu.parquet",
+          "sha256": "7623131f47b2ad0a0a7a52dbe6d5d2582d66bdbc6d44f8c77823ff477c8574c5",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-11/symbol=mu.parquet",
+          "sha256": "ed48934b2c5a3fa03730c7f1a602a59920394ebc77278b97e79813e082dc3dbd",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-12/symbol=mu.parquet",
+          "sha256": "e5cd667761a242acee1094ee76de5e66fc5c8b81717a2e5c2259e4e6f10936bc",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-15/symbol=mu.parquet",
+          "sha256": "d87dbc142631b76327ea711361e846ee6abf92c980b1e84e8030c92a7f458514",
+          "rows": 1
+        },
+        {
+          "path": "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=1d/source=yahoo_finance/date=2026-06-16/symbol=mu.parquet",
+          "sha256": "89078e7ff962508d66c0a7302e9c1f0b3d9c6cf04003113e7a1090e0b51a62a8",
+          "rows": 1
+        }
+      ],
+      "destination_rows": 252,
+      "round_trip_verified": true,
+      "companion_csv": "data/external/us_equities/yahoo/symbol=mu/timeframe=1d/mu_1d_1y.csv",
+      "companion_csv_sha256": "4f5fc78af25cef31edea4d9f9daf08a884bad20461da5de3ace98f2eb959bf95",
+      "companion_csv_equivalent": true
+    }
+  ],
+  "legacy_source_removed": true
+}

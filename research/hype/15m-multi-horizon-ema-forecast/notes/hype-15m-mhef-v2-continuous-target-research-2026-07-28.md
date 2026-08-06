@@ -3,7 +3,7 @@
 - Family：`HYPE-15M-Multi-Horizon-EMA-Forecast`（`HYPE-15M-MHEF`）
 - 研究身份：`MHEF-V2 continuous risk-target prototype`，未登记版本
 - 市场：Binance USD-M `HYPEUSDT` perpetual，`15m`
-- 终局状态：`NO-GO / explore / not promoted / not live-ready`
+- 终局结论：验证失败；状态为 `explore / not promoted / not live-ready`
 - 一句话结论：找到了用户描述的经典连续趋势架构，并完整实现了“小仓试探—共振加仓—转弱减仓—成本带内不交易”，但冻结候选在未参与选择的三个月验证段毛收益 `-9.20%`、净收益 `-11.47%`，即使零成本也亏损，不能用于实盘。
 
 ## 这套策略实际做什么

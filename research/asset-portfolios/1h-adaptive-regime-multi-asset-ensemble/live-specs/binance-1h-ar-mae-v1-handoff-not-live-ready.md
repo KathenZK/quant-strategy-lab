@@ -7,14 +7,12 @@ main_status: dry-run
 runner_kind: six_asset_ensemble
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/six_asset_ensemble/BIN-1H-AR-MAE-V1-SPEC.md
-manifest_instance_ids:
-  - six-asset-ensemble-dry-run
 approval_level_max: dry_run
 ---
 
 # BIN-1H-AR-MAE-V1 Runner Handoff
 
-状态：`dry-run / not live-ready`；manifest 已启用，live disabled。
+状态：`dry-run / not live-ready`；实际启用与 live/dry-run 配置以 quant-runner 为准。
 
 - Exchange / market：Binance USD-M Futures。
 - Assets / timeframe：六资产组合 / `1h`。
@@ -32,7 +30,7 @@ approval_level_max: dry_run
   [`BIN-1H-AR-MAE-V1-SPEC.md`](file:///Users/ZK/OpenCode/quant-runner/crates/quant-runner/src/runner/strategies/six_asset_ensemble/BIN-1H-AR-MAE-V1-SPEC.md)
   为准。
 - 现有逐笔 parity 只支持保持 dry-run；任何 live 提案都必须新开决策并修改
-  manifest approval，当前 Runner 仍有代码级 live 拒绝。
+  研究门禁，当前 Runner 仍有代码级 live 拒绝。
 
 ## 统一 execution / venue 契约（2026-07-12 代码迁移）
 
@@ -44,7 +42,7 @@ approval_level_max: dry_run
   client ID、submit 前持久化、`pending/tracked`、按 fill 建仓、保护单、撤单、
   reconcile、fail-closed 与 platform ledger。
 - 平台 live venue 是 Binance REST + User Data Stream，但 V1 继续 `DryRunOnly`，
-  Runner 的 live 拒绝和 manifest approval 边界不变。
+  Runner 的 live 拒绝和研究 promotion 边界不变。
 - `platform.execution.enabled` 与 live V1 fallback 已删除；不得通过旧开关或旧 executor
   绕开 `DryRunOnly`。
 - strict replay/parity 与 simulated venue 隔离，不读取或改写 venue state；既有

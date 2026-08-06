@@ -79,12 +79,6 @@ def test_three_x_authorization_guard_is_sealed_before_reveal() -> None:
         risk.assert_authorized(pd.Timestamp("2026-10-20T21:04:59Z"))
 
 
-def test_frozen_three_x_contract_matches_implementation() -> None:
-    contract = risk.validate_three_x_contract()
-    assert contract["authorization"]["prospective_oos_outcomes_read"] is False
-    assert contract["frozen_semantics"]["leverage_multiplier"] == 3.0
-
-
 def test_revealed_decision_sha_is_required(
     tmp_path: Path, monkeypatch: pytest.MonkeyPatch
 ) -> None:

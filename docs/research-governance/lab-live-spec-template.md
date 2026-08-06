@@ -7,7 +7,6 @@ spec_status: draft
 strategy_id: FAMILY-ID-V1
 runner_kind: runner_kind
 peer_spec: crates/quant-runner/src/runner/strategies/runner_kind/FAMILY-ID-V1-SPEC.md
-manifest_instance_ids: []
 approval_level_max: none
 overlays:
   - handoff
@@ -15,7 +14,7 @@ overlays:
 
 # <Family Full Name> <Version> Lab Live Spec
 
-> 状态：`live spec`。本规格描述 runner 实现合同；它不单独授权实例启用。
+> 状态：`live spec`。本规格描述 runner 实现合同；实例启用与实际模式只由 `quant-runner` 决定。
 
 ## 身份与边界
 

@@ -14,6 +14,7 @@
 
 ## 复现入口
 
-- 脚本：`scripts/research_binance_1d_turtle_breakout.py`
-- 诊断报告：`diagnostics/`
-- 结果与证据：`artifacts/`
+- 主账：[binance-1d-turtle-core-ledger.md](binance-1d-turtle-core-ledger.md)
+- 脚本：[research_binance_1d_turtle_breakout.py](scripts/research_binance_1d_turtle_breakout.py)
+- 诊断报告：[diagnostics/](diagnostics/)
+- 结果与证据：[artifacts/](artifacts/)

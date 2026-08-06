@@ -39,6 +39,8 @@ web/.next/
 !research/mu/15m-donchian-trend-breakout/artifacts/mu_15m_dtb_final_audit_2026-07-20.json
 !research/mu/15m-donchian-trend-breakout/artifacts/mu_15m_dtb_final_trades_2026-07-20.csv
 !research/mu/15m-donchian-trend-breakout/artifacts/mu_15m_dtb_final_equity_2026-07-20.csv
+!research/mu/artifacts/mu-equity-ohlcv-migration-2026-08-05.json
+!research/mu/artifacts/mu-polygon-15m-acceptance-2026-08-06.json
 !research/hype/15m-keltner-trend-breakout/artifacts/hype_15m_keltner_only_initial_2026-07-20.json
 !research/hype/15m-keltner-trend-breakout/artifacts/hype_15m_keltner_only_initial_2026-07-20_trades.csv
 !research/hype/15m-keltner-trend-breakout/artifacts/hype_15m_keltner_only_initial_2026-07-20_equity.csv

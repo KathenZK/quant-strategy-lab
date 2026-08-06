@@ -10,6 +10,14 @@ from typing import Any, Literal
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import (
+    DataLakeLayout,
+    DatasetKind,
+    DuckDBWarehouse,
+    MarketType,
+)
+from strategy_lab.data.settings import load_settings
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
@@ -37,8 +45,6 @@ TRADES_PATH = ARTIFACT_ROOT / f"hype_5m_pbtr_v33_retry_arm_trades_{RUN_DATE}.csv
 DIAG_PATH = ARTIFACT_ROOT / f"hype_5m_pbtr_v33_retry_arm_diagnostics_{RUN_DATE}.csv"
 MARKDOWN_PATH = DIAGNOSTIC_ROOT / f"hype-5m-pbtr-v33-retry-arm-{RUN_DATE}.md"
 
-DATA_1M_ROOT = Path("data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1m")
-SYMBOL_1M_FILE = "symbol=hype_usdt_usdt.parquet"
 Mode = Literal["5m_conservative", "5m_optimistic", "1m_conservative", "1m_optimistic"]
 
 
@@ -65,16 +71,25 @@ def fmt_optional_pct(value: Any) -> str:
 
 
 def load_hype_1m() -> pd.DataFrame | None:
-    files = sorted(DATA_1M_ROOT.glob(f"date=*/{SYMBOL_1M_FILE}"))
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    files = warehouse._filtered_dataset_files(
+        layer="normalized",
+        kind=DatasetKind.OHLCV,
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="1m",
+    )
     if not files:
         return None
-    frame = pd.concat([pd.read_parquet(path) for path in files], ignore_index=True)
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    frame = frame.drop_duplicates("ts", keep="last").sort_values("ts").reset_index(drop=True)
-    missing = pd.date_range(frame["ts"].iloc[0], frame["ts"].iloc[-1], freq="1min").difference(frame["ts"])
-    if len(missing):
-        raise RuntimeError(f"HYPE 1m data has {len(missing)} missing bars, first={missing[0]}")
-    return frame
+    return warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="1m",
+    ).reset_index(drop=True)
 
 
 def armable(direction: int, stop: float, price: float) -> bool:

@@ -12,7 +12,11 @@
 
 ## 当前状态
 
-`BIN-15M-AS6S-V1` 保持 `registered / not promoted / not live-ready`；`BIN-15M-AS6S-V6-NP` 与 `BIN-15M-AS6S-V6-SBP` 均为 `dry-run / not live-ready`。V1 是九腿 nonpreemptive 历史基线；V6 固定 15 条资产专属腿、真实 15m mark 保护退出和双路线。V6 两个实例独立记账并同时运行持续 dry-run；`[2026-07-14T09:00Z, 2026-10-14T09:00Z)` 仍为锁定未来 OOS，live disabled。
+本家族已于 2026-08-05 封存为 `archived`，只保留 V1/V5/V6 的 Markdown
+研究记录、历史脚本和 runner 叙事，不再重建已删除的数据或冻结产物，也不再执行
+`[2026-07-14T09:00Z, 2026-10-14T09:00Z)` 最终 OOS。历史 dry-run
+记录不代表当前实例仍在运行；实际授权、模式与服务状态只以 quant-runner 为准，
+本次研究封存不修改其配置。
 
 ## 入口
 

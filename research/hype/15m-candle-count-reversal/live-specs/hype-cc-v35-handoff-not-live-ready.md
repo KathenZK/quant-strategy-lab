@@ -7,8 +7,6 @@ main_status: dry-run
 runner_kind: hype_candle_count
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_candle_count/HYPE-CANDLE-COUNT-V35-SPEC.md
-manifest_instance_ids:
-  - hype-candle-count-v35-dry-run
 approval_level_max: dry_run
 ---
 

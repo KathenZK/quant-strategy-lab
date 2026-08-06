@@ -1,0 +1,138 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-06T09:53:14.261497+00:00",
+  "decision": "accepted",
+  "accepted_for_strategy_evidence": true,
+  "market_identity": {
+    "exchange": "nasdaq",
+    "market_type": "equity",
+    "symbol": "MU",
+    "timeframe": "15m",
+    "source": "polygon_api"
+  },
+  "source_dataset_id": "polygon-mu-15m-adjusted-2025-06-17-2026-06-17",
+  "data_root": "/Users/ZK/OpenCode/quant-strategy-lab/data",
+  "raw": {
+    "quality_status": "raw_unaccepted",
+    "files": 270,
+    "tree_sha256": "cfb0470a3131b045eef4ba991a4d7b5e82529295f16ff00f22bb8151e6bd394c",
+    "rows": 15951
+  },
+  "session_policy": {
+    "policy": "xnas_regular",
+    "calendar": "XNAS",
+    "calendar_timezone": "America/New_York",
+    "calendar_package": "exchange-calendars",
+    "calendar_package_version": "4.13.2",
+    "session_type": "regular"
+  },
+  "transformation": {
+    "filter": "XNAS regular session only",
+    "vwap": "native Polygon vwap retained",
+    "trade_count": "lossless mapping from native transactions",
+    "quote_volume": "explicit OHLCVDerivationPolicy close * volume proxy",
+    "is_closed": "calendar-attested against bar_close_ts and audit_as_of",
+    "code_sha256": "sha256:ba0048ff533c46a9c21029eedb3986d0fbb5538791f2c31b43253ffa4a0f4f22"
+  },
+  "preparation_audit": {
+    "raw_rows": 15951,
+    "regular_session_rows": 6490,
+    "filtered_non_regular_rows": 9461,
+    "session_count": 251,
+    "full_session_count": 248,
+    "early_close_session_count": 3,
+    "regular_start": "2025-06-17T13:30:00+00:00",
+    "regular_end": "2026-06-16T19:45:00+00:00",
+    "native_vwap_preserved": true,
+    "transactions_mapped_to_trade_count": true,
+    "continuity": {
+      "rows": 6490,
+      "groups": 1,
+      "start": "2025-06-17T13:30:00+00:00",
+      "end": "2026-06-16T19:45:00+00:00",
+      "duplicate_rows": 0,
+      "missing_bars": 0,
+      "unexpected_intervals": 0,
+      "open_rows": 0,
+      "timeframe_mismatches": 0,
+      "schema_errors": [],
+      "session_policy": "xnas_regular",
+      "calendar_name": "XNAS",
+      "expected_bars": 6490,
+      "session_count": 251,
+      "out_of_session_rows": 0,
+      "closure_mismatches": 0,
+      "closure_as_of": "2026-08-06T09:53:14.261497+00:00",
+      "trusted": true
+    },
+    "raw_normalized_alignment": {
+      "raw_rows": 6490,
+      "normalized_rows": 6490,
+      "missing_in_raw": 0,
+      "missing_in_normalized": 0,
+      "field_mismatches": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0,
+        "vwap": 0,
+        "is_closed": 0
+      },
+      "trusted": true
+    }
+  },
+  "normalized_write": {
+    "action": "atomic_directory_commit",
+    "target": "normalized/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m",
+    "files": 251,
+    "rows": 6490,
+    "tree_sha256": "d1a07ff7612f9a4a3bb308f1816058a5aa6e165baed7d56b54b35dce1cf1e953",
+    "round_trip_continuity": {
+      "rows": 6490,
+      "groups": 1,
+      "start": "2025-06-17T13:30:00+00:00",
+      "end": "2026-06-16T19:45:00+00:00",
+      "duplicate_rows": 0,
+      "missing_bars": 0,
+      "unexpected_intervals": 0,
+      "open_rows": 0,
+      "timeframe_mismatches": 0,
+      "schema_errors": [],
+      "session_policy": "xnas_regular",
+      "calendar_name": "XNAS",
+      "expected_bars": 6490,
+      "session_count": 251,
+      "out_of_session_rows": 0,
+      "closure_mismatches": 0,
+      "closure_as_of": "2026-08-06T09:53:14.261497+00:00",
+      "trusted": true
+    },
+    "round_trip_alignment": {
+      "raw_rows": 6490,
+      "normalized_rows": 6490,
+      "missing_in_raw": 0,
+      "missing_in_normalized": 0,
+      "field_mismatches": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0,
+        "vwap": 0,
+        "is_closed": 0
+      },
+      "trusted": true
+    }
+  },
+  "yahoo_isolation": {
+    "quality_status": "raw_unaccepted",
+    "normalized": false,
+    "trade_count": "missing; not filled with zero or any proxy",
+    "schema_policy_relaxed": false
+  }
+}

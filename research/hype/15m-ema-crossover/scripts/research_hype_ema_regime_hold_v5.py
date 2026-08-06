@@ -7,6 +7,9 @@ import pandas as pd
 
 import numpy as np
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
+
 from compare_hype_ema_v2_v4 import Variant, entry_signal, run_variant
 from research_hype_ema_cross_strategy import (
     PERIODS_PER_YEAR,
@@ -34,25 +37,18 @@ def dynamic_allocation(direction: int, atr_pct: float) -> float:
 
 
 def load_hype_data_lake() -> pd.DataFrame:
-    files = sorted(DATA_LAKE_ROOT.rglob("symbol=hype_usdt_usdt.parquet"))
-    if not files:
-        raise FileNotFoundError(f"no HYPE parquet files under {DATA_LAKE_ROOT}")
-
-    frame = pd.concat(
-        [
-            pd.read_parquet(
-                path,
-                columns=["ts", "open", "high", "low", "close", "volume"],
-            )
-            for path in files
-        ],
-        ignore_index=True,
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
     )
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    frame = frame.drop_duplicates("ts").sort_values("ts").reset_index(drop=True)
+    frame = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="15m",
+    )[["ts", "open", "high", "low", "close", "volume"]].copy()
     for column in ["open", "high", "low", "close", "volume"]:
         frame[column] = frame[column].astype("float64")
-    return frame
+    return frame.reset_index(drop=True)
 
 
 def build_variants() -> list[Variant]:

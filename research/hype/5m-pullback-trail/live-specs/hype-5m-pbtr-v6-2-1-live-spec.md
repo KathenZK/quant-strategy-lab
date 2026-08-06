@@ -7,9 +7,6 @@ main_status: live
 runner_kind: hype_pullback
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_pullback/HYPE-5M-PBTR-V6.2.1-SPEC.md
-manifest_instance_ids:
-  - hype-pullback-dry-run
-  - hype-pullback-live
 approval_level_max: tiny_live_pilot
 ---
 

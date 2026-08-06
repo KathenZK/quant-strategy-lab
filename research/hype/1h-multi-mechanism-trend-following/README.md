@@ -3,7 +3,7 @@
 - Full family name：`HYPE-1H-Multi-Mechanism-Trend-Following`（alias：`HYPE-1H-MMTF`）
 - 市场/周期：Binance USD-M Futures `HYPEUSDT` perpetual `1h`
 - 机制：独立纯趋势研究线；在闭合 `1h` K 上比较 breakout、momentum、EMA 与 volatility-expansion 趋势机制，下一根 open 执行，单净仓、最高 `3x`。
-- 当前状态：V1-V3 `registered`；V3 locked OOS、压力与相位 `HARD-GATE-FAILED / NO-GO / not promoted / not live-ready`。
+- 当前状态：V1-V3 `registered`；V3 locked OOS、压力与相位 `HARD-GATE-FAILED / not promoted / not live-ready`。
 
 ## 边界
 

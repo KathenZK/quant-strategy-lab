@@ -15,14 +15,13 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: "3.11"
-          cache: pip
-      - name: Install governance test dependencies
-        run: python -m pip install -e ".[dev]"
-      - name: Validate active strategy manifest
-        run: python3 scripts/governance/validate_manifest.py
-      - name: Validate standardized parity reports
-        run: python3 scripts/governance/check_parity_report.py
-      - name: Validate Lab live specs
-        run: python3 scripts/governance/validate_live_specs.py
-      - name: Run research document consistency tests
-        run: pytest -q tests/test_research_docs_consistency.py
+      - uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: true
+          cache-dependency-glob: uv.lock
+      - name: Install locked test dependencies
+        run: uv sync --locked --extra dev --extra ml
+      - name: Run governance and data-contract preflight
+        run: uv run --locked --extra dev --extra ml python scripts/governance/preflight.py
+      - name: Run full test suite
+        run: uv run --locked --extra dev --extra ml pytest -q

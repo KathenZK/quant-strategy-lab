@@ -7,8 +7,6 @@ spec_status: draft
 strategy_id: HYPE-EMA-TB-V35.1
 runner_kind: hype_ema_tb
 peer_spec: crates/quant-runner/src/runner/strategies/hype_ema_tb/HYPE-EMA-TB-V35.1-SPEC.md
-manifest_instance_ids:
-  - hype-ema-tb-v35-1-dry-run
 approval_level_max: none
 ---
 

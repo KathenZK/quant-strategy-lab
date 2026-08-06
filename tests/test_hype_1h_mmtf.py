@@ -29,6 +29,15 @@ sys.modules["mmtf_engine"] = ENGINE
 V2_SPEC.loader.exec_module(V2)
 
 
+def _require_local_evidence(*paths: Path) -> None:
+    missing = [path for path in paths if not path.is_file()]
+    if missing:
+        pytest.skip(
+            "local MMTF evidence is unavailable: "
+            + ", ".join(path.name for path in missing)
+        )
+
+
 def _config(**changes: object) -> object:
     payload = {
         "mechanism": 0,
@@ -116,6 +125,7 @@ def test_primary_entry_ablation_produces_no_trades() -> None:
 
 
 def test_selection_book_excludes_locked_oos() -> None:
+    _require_local_evidence(ENGINE.MANIFEST_PATH)
     book = ENGINE.build_book(include_locked_oos=False)
     manifest = ENGINE.load_manifest()
     assert book.rows == manifest["rows"]["prefit"]
@@ -126,6 +136,12 @@ def test_selection_book_excludes_locked_oos() -> None:
 
 
 def test_v2_clean_baseline_is_path_equal_to_registered_v1() -> None:
+    _require_local_evidence(
+        ENGINE.MANIFEST_PATH,
+        ROOT
+        / "research/hype/1h-multi-mechanism-trend-following/artifacts"
+        / "hype_1h_mmtf_v1_search_2026-07-22.json",
+    )
     book = ENGINE.build_book(include_locked_oos=False)
     v1 = _config_from_registered_v1()
     v2 = V2.to_engine_config(V2.v2_baseline())

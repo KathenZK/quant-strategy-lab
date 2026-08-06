@@ -10,14 +10,13 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 ROOT = Path(__file__).resolve().parents[4]
 FAMILY_DIR = ROOT / "research/hype/15m-sma-crossover-slope"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
 FREEZE_PATH = ARTIFACT_DIR / "hype_15m_sma_xs_dataset_freeze.json"
-NORMALIZED_ROOT = (
-    ROOT / "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
-)
 FUNDING_ROOT = (
     ROOT / "data/normalized/funding_rates/exchange=binance/market_type=perp"
 )
@@ -131,7 +130,15 @@ def _load_partitions(root: Path, timestamp_column: str) -> pd.DataFrame:
 
 
 def load_market() -> pd.DataFrame:
-    return _load_partitions(NORMALIZED_ROOT, "ts")
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    return warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="15m",
+    ).reset_index(drop=True)
 
 
 def load_funding() -> pd.DataFrame:

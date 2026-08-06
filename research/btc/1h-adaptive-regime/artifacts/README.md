@@ -1,3 +1,10 @@
+# Artifacts（已清理）
+
+本目录的中间产物与大体积数据已于 2026-08-04 磁盘清理时删除。
+研究结论与版本身份以家族 README、core ledger、diagnostics、specs 与 decision-log 为准；需要复现时用 scripts/ 从数据湖重建。
+
+---
+
 # Artifacts
 
 此目录保存 BTC 1h 数据质量、搜索排名、交易明细、切片和审计输出。大体积生成物默认由 `.gitignore` 忽略，但均可由 `scripts/` 复现。

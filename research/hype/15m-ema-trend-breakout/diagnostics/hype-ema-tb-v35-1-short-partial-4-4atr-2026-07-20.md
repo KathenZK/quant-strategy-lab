@@ -60,7 +60,7 @@ V35.1 的其余参数保持不变：`short_target_atr_pct=0.018`、cooldown0、�
 - `4.4ATR` 已知接近一笔关键交易的 `4.467ATR` MFE，阈值存在峰值敏感性；
 - 尚未完成时间前推 OOS、CPCV、参数邻域、真实 reduce-only 部分成交、保护单缩量及重启恢复审计。
 
-因此本次结果现登记为 `HYPE-EMA-TB-V35.2`，但登记只冻结版本身份，不表示 promotion。quant-runner、manifest 与线上 V35 均不修改；V35.2 继续等待独立 OOS、参数邻域和可执行分批订单审计。
+因此本次结果现登记为 `HYPE-EMA-TB-V35.2`，但登记只冻结版本身份，不表示 promotion。quant-runner 与线上 V35 均不修改；V35.2 继续等待独立 OOS、参数邻域和可执行分批订单审计。
 
 ## 证据
 

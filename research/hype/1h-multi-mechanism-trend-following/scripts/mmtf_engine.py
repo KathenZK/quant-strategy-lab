@@ -10,18 +10,18 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 ROOT = Path(__file__).resolve().parents[4]
 FAMILY_DIR = ROOT / "research/hype/1h-multi-mechanism-trend-following"
 ARTIFACT_DIR = FAMILY_DIR / "artifacts"
 MANIFEST_PATH = ARTIFACT_DIR / "hype_1h_mmtf_dataset_freeze_2026-07-22.json"
-NORMALIZED_ROOT = ROOT / "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1h"
 FUNDING_PATH = (
     ROOT
     / "data/normalized/funding/exchange=binance/market_type=perp"
     / "symbol=hype_usdt_usdt/funding.parquet"
 )
-FILE_NAME = "symbol=hype_usdt_usdt.parquet"
 
 BASE_FEE = 0.001
 BASE_SLIPPAGE = 0.0004
@@ -143,12 +143,15 @@ def load_manifest() -> dict[str, Any]:
 
 
 def _load_market() -> pd.DataFrame:
-    paths = sorted(NORMALIZED_ROOT.glob(f"date=*/{FILE_NAME}"))
-    if not paths:
-        raise RuntimeError("normalized HYPEUSDT 1h data is missing")
-    frame = pd.concat([pd.read_parquet(path) for path in paths], ignore_index=True)
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    return frame.sort_values("ts").drop_duplicates("ts", keep="last").reset_index(drop=True)
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    return warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="1h",
+    ).reset_index(drop=True)
 
 
 def _ema(values: np.ndarray, span: int) -> np.ndarray:

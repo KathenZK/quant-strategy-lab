@@ -1,5 +1,6 @@
 # BIN-1H-CSLGBM 决策日志
 
+- 2026-08-05：用户决定本家族只保留研究事故与纠错记录，不再重建已删除的数据、模型或撤销 artifact；状态迁移为 `archived / formula-invalidated / HARD-GATE-FAILED`，重开视同新研究线。删除边界见 [artifacts/README.md](artifacts/README.md)。
 - 2026-07-17：建立独立家族 `Binance-1H-Cross-Sectional-LightGBM-Selector`。本地现有 Binance perpetual `1h` 数据仅覆盖 BTC/ETH/SOL/BNB/TRX/HYPE 六币，不能代表全市场；决定先枚举 Binance Vision 历史 USDT perpetual 合约并补齐数据，再做因子和模型。锁定 `2026-04-01 00:00 <= ts < 2026-07-01 00:00 UTC` 为最近三个完整月 OOS；该窗口不得参与因子、模型、阈值或组合选择。研究状态保持 `explore / not promoted / not live-ready`。
 - 2026-07-17：官方历史清单确认 793 个合约历史并集、139 个历史退市/移出当前清单合约，三类月归档共 58,719 个 ZIP。全量 checksum 同步开始后，重叠对拍发现旧 CCXT 文件的 `quote_volume`、`trade_count` 和 taker 字段不可信；规定 OHLC 必须与 Vision 一致，成交量结构字段以官方 Vision 修复并保留旧 source。详见[数据清单诊断](diagnostics/binance-usdm-history-inventory-2026-07-17.md)。
 - 2026-07-17：完成 2020-01 至 2026-06 官方数据补齐与严格审计。最终 crypto-only 历史目录 `673` 个合格合约、面板实际 `654` 个 point-in-time 可交易币；OHLCV `14,106,623` 行、mark `14,272,692` 行、funding `2,428,690` 行，关键空键/重复/非法 OHLC/缺月份 blocker 均为 `0`。因子面板 `6,885,519` 行、`171` 个审计特征，状态 `PASS`；封存 OOS 只检查行数和键，没有读取收益或标签统计。
@@ -8,3 +9,4 @@
 - 2026-07-17：按冻结 SHA 一次性揭示 `2026Q2` OOS。V1 通过收益、DD、组合胜率、Sharpe、PF、交易数、正收益月、1.5x 成本、单币集中度、prefit WF 和基线对照，但单月正利润贡献 `42.36% > 35%`，故研究结论为 `HARD-GATE-FAILED`，正式状态保持 `registered / not promoted / not live-ready`；不得复用该 OOS 调参。详见[V1 OOS 审计](diagnostics/binance-1h-cslgbm-v1-oos-2026-07-17.md)。
 - 2026-07-18：发现 V1 将线性 USD-M 空头收益错误写为 `entry/exit-1`；原 prefit/OOS 组合绩效及“仅月集中度失败”结论全部作废。固定原分数与选币、按 `1-exit/entry` 重算后 OOS 为 `-37.04%`、DD `37.04%`、Sharpe `-3.26`、PF `0.60`，状态保持 `registered / not promoted / not live-ready`；`2026Q2` 此后只作 reused holdout。详见[公式纠错审计](diagnostics/binance-1h-cslgbm-v1-oos-2026-07-17.md)。
 - 2026-07-19：为避免原始 artifact 被脱离主账误读，在 [V1 OOS artifact 目录](artifacts/v1_oos_2026q2/README.md) 增加机器可读 [REVOCATION.json](artifacts/v1_oos_2026q2/REVOCATION.json)，按 SHA 绑定旧 gate/result/压力/近期分片、纠错脚本和正确收益实现。原始文件保持字节不变作事故证据，但模型、预测、逐腿、组合、基线、压力和近期分片全部明确禁止作为有效绩效、选参、复现或 promotion 证据。
+- 2026-08-04：磁盘清理：删除本家族 `artifacts/` 下全部中间产物与因子/模型数据（含因子面板、walk-forward、OOS 二进制与已撤销事故文件），仅保留 Markdown 研究历史（README、core ledger、diagnostics、specs、decision-log、scripts）及 `artifacts/` 内说明性 `.md`。结论与状态不变；需要复现时从数据湖用 scripts 重建。

@@ -1,6 +1,6 @@
 # BIN-15M-TSM 锁定 OOS 一次性揭示（2026-07-28）
 
-> 状态：`archived / HARD-GATE-FAILED / not promoted / not live-ready`
+> 状态：`archived / HARD-GATE-FAILED`
 >
 > 裁决：五项硬门槛四过一败——段级 PF `1.162 < 1.2`，按[契约](../specs/bin-15m-tsm-research-contract-2026-07-28.md)第 9 节判 **HARD-GATE-FAILED**，家族归档。不得用已揭示窗口调参重试；本窗口（`2026-01-01`–`2026-06-30`，三次 reused holdout after 本次）对任何后继线永久失效。
 

@@ -12,7 +12,7 @@ Created：2026-07-07
 
 ## 当前状态
 
-- 当前状态：`HYPE-15M-TB-MII-ENS-V2 dry-run / not live-ready`；runner replay parity PASS，live disabled；共享 15m 行情组曾于 2026-07-21→07-30 [group halt](../15m-ema-crossover/runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)，`d514e65` 部署后已恢复；停摆区间观察作废。
+- 当前状态：`HYPE-15M-TB-MII-ENS-V2 dry-run / not live-ready`；叙事 replay parity 曾通过但规范 JSON 已缺失，2026-08-04 起证据健康度为 `MISSING_EVIDENCE`，既有 dry-run 用户授权保留，live 仍未授权。共享 15m 行情组曾于 2026-07-21→07-30 [group halt](../15m-ema-crossover/runner-tracking/hype-ema-x-runner-2026-07-30-group-halt.md)，`d514e65` 部署后已恢复；停摆区间观察作废。
 - 当前登记版本：`V2 = HYPE-EMA-TB-V39 + HYPE-15M-MII-V1.4`，单账户 `single_v39_priority_k1` 主口径（V39 优先 + V1.4 强平让位）。
 - `V2` 是用户于 2026-07-09 指定登记的组合版本号；此前 V35+V1.3 与 V39+V1.3 仍为 diagnostic evidence，不反推登记为 V1。
 - 2026-07-09 已导出 V2 validation spec，并完成 live-executable 审计；早间失败结论保留为 historical pre-dry-run finding。同日 `quant-runner` 已新增 `hype_tb_mii_ensemble` replay validation kind、全样本 replay parity、continuous dry-run runtime，以及 disabled live pilot 执行链。
@@ -33,7 +33,7 @@ Created：2026-07-07
 
 - 本家族版本号只登记组合层定义，不改写任一母家族版本。
 - 可登记版本必须写明：趋势腿版本、MII 腿版本、账户结构、冲突仲裁、入场延迟口径、成本口径、门禁结果、证据链接与 live-readiness 结论。
-- `registered` 只代表研究主账留名；V2 已由 manifest 授权 dry-run。若申请 live，必须完成 walk-forward、资金费统一、重启/kill-switch 与 online open/close reconciliation。
+- `registered` 只代表研究主账留名；V2 既有 dry-run 授权不因 parity JSON 缺失自动改变，但新 promotion 前须补 Git-tracked 规范证据。若申请 live，必须完成 walk-forward、资金费统一、重启/kill-switch 与 online open/close reconciliation。
 - `V2` 的主口径固定为 `single_v39_priority_k1`；双子账户 50/50 与 no-preempt 只作为对照，不属于 V2 实盘/单账户定义。
 
 ## 版本表

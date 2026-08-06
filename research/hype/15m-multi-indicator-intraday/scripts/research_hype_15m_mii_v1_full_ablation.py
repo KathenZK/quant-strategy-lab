@@ -9,6 +9,14 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import (
+    DataLakeLayout,
+    DatasetKind,
+    DuckDBWarehouse,
+    MarketType,
+)
+from strategy_lab.data.settings import load_settings
+
 SCRIPT_DIR = Path(__file__).resolve().parent
 if str(SCRIPT_DIR) not in sys.path:
     sys.path.insert(0, str(SCRIPT_DIR))
@@ -191,7 +199,26 @@ def data_quality_report(
 
 
 def load_data_lake() -> tuple[pd.DataFrame, dict[str, Any], dict[str, Any]]:
-    normalized, normalized_files = load_partitioned(NORMALIZED_ROOT)
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    normalized = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="HYPE/USDT:USDT",
+        timeframe="15m",
+    ).reset_index(drop=True)
+    normalized_files = [
+        Path(path)
+        for path in warehouse._filtered_dataset_files(
+            layer="normalized",
+            kind=DatasetKind.OHLCV,
+            exchange="binance",
+            market_type=MarketType.PERP,
+            symbol="HYPE/USDT:USDT",
+            timeframe="15m",
+        )
+    ]
     raw, raw_files = load_partitioned(RAW_ROOT)
     quality = data_quality_report(normalized, raw, normalized_files, raw_files)
     if not quality["quality_gate_pass"]:

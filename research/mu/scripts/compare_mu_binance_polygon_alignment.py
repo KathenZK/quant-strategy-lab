@@ -11,13 +11,14 @@ import pandas as pd
 BINANCE_ROOT = Path(
     "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m"
 )
-POLYGON_PATH = Path(
-    "data/external/us_equities/polygon/symbol=mu/timeframe=15m/"
-    "mu_15m_2025-06-17_2026-06-17_adjusted.parquet"
+POLYGON_ROOT = Path(
+    "data/raw/ohlcv/exchange=nasdaq/market_type=equity/timeframe=15m/source=polygon_api"
 )
 SUMMARY_PATH = Path("research/mu/artifacts/mu_binance_polygon_15m_alignment.json")
 ALIGNED_PATH = Path("research/mu/artifacts/mu_binance_polygon_15m_aligned.csv")
-BUCKET_PATH = Path("research/mu/artifacts/mu_binance_polygon_15m_alignment_by_session.csv")
+BUCKET_PATH = Path(
+    "research/mu/artifacts/mu_binance_polygon_15m_alignment_by_session.csv"
+)
 
 
 def pct(value: float) -> float:
@@ -50,9 +51,10 @@ def load_binance() -> pd.DataFrame:
 
 
 def load_polygon() -> pd.DataFrame:
-    if not POLYGON_PATH.exists():
-        raise FileNotFoundError(f"missing Polygon 15m parquet: {POLYGON_PATH}")
-    frame = pd.read_parquet(POLYGON_PATH)
+    files = sorted(POLYGON_ROOT.rglob("symbol=mu.parquet"))
+    if not files:
+        raise FileNotFoundError(f"no Polygon MU 15m parquet under {POLYGON_ROOT}")
+    frame = pd.concat([pd.read_parquet(path) for path in files], ignore_index=True)
     frame["ts"] = pd.to_datetime(frame["ts"], utc=True).dt.floor("15min")
     frame = frame.drop_duplicates("ts").sort_values("ts").reset_index(drop=True)
     for column in ["open", "high", "low", "close", "volume"]:
@@ -92,8 +94,10 @@ def summarize_returns(frame: pd.DataFrame) -> dict[str, Any]:
     corr = np.corrcoef(binance_ret, polygon_ret)[0, 1]
     nonzero = (binance_ret != 0.0) | (polygon_ret != 0.0)
     direction_agreement = (
-        np.sign(binance_ret[nonzero]) == np.sign(polygon_ret[nonzero])
-    ).mean() if nonzero.any() else 0.0
+        (np.sign(binance_ret[nonzero]) == np.sign(polygon_ret[nonzero])).mean()
+        if nonzero.any()
+        else 0.0
+    )
     abs_diff = np.abs(binance_ret - polygon_ret)
     return {
         "bars": int(len(working)),
@@ -106,9 +110,9 @@ def summarize_returns(frame: pd.DataFrame) -> dict[str, Any]:
 
 def summarize_prices(frame: pd.DataFrame) -> dict[str, Any]:
     ratio = frame.binance_close / frame.polygon_close.replace(0.0, np.nan)
-    normalized_spread = (
-        frame.binance_close / float(frame.binance_close.iloc[0])
-    ) / (frame.polygon_close / float(frame.polygon_close.iloc[0])) - 1.0
+    normalized_spread = (frame.binance_close / float(frame.binance_close.iloc[0])) / (
+        frame.polygon_close / float(frame.polygon_close.iloc[0])
+    ) - 1.0
     close_diff_pct = (
         frame.binance_close / frame.polygon_close.replace(0.0, np.nan) - 1.0
     )
@@ -221,7 +225,7 @@ def main() -> None:
         "symbol": "MU",
         "sources": {
             "binance": str(BINANCE_ROOT / "date=*/symbol=mu_usdt_usdt.parquet"),
-            "polygon": str(POLYGON_PATH),
+            "polygon": str(POLYGON_ROOT),
         },
         "coverage": {
             "binance_rows_total": int(len(binance)),
@@ -233,7 +237,9 @@ def main() -> None:
             "polygon_span_start": str(polygon_start),
             "polygon_span_end": str(polygon_end),
             "aligned_vs_polygon_rows_pct": pct(len(aligned) / len(polygon)),
-            "aligned_vs_binance_span_pct": pct(len(aligned) / len(binance_in_polygon_span)),
+            "aligned_vs_binance_span_pct": pct(
+                len(aligned) / len(binance_in_polygon_span)
+            ),
         },
         "price_alignment": summarize_prices(aligned),
         "return_alignment": summarize_returns(aligned),

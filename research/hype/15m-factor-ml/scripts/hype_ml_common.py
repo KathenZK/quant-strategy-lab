@@ -220,12 +220,19 @@ def load_hype_market_frame() -> tuple[pd.DataFrame, dict[str, object]]:
     upstream_quality = json.loads(DATA_QUALITY_REPORT.read_text(encoding="utf-8"))
     if int(upstream_quality.get("total_blocker_count", -1)) != 0:
         raise RuntimeError("Round 2 upstream data-quality report contains blockers")
-    ohlcv_root = DATA_DIR / "normalized" / "ohlcv" / "exchange=binance" / "market_type=perp" / "timeframe=15m"
     raw_ohlcv_root = DATA_DIR / "raw" / "ohlcv" / "exchange=binance" / "market_type=perp" / "timeframe=15m"
     mark_root = DATA_DIR / "normalized" / "mark_price_klines" / "exchange=binance" / "market_type=perp" / "timeframe=15m"
     funding_path = DATA_DIR / "normalized" / "funding" / "exchange=binance" / "market_type=perp" / "symbol=hype_usdt_usdt" / "funding.parquet"
 
-    ohlcv = _deduplicate(_read_many(sorted(ohlcv_root.glob("**/symbol=hype_usdt_usdt.parquet"))))
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(default_settings())
+    )
+    ohlcv = warehouse.load_trusted_ohlcv(
+        exchange=IDENTITY.exchange,
+        market_type=MarketType(IDENTITY.market_type),
+        symbol=IDENTITY.symbol,
+        timeframe=IDENTITY.timeframe,
+    )
     raw_ohlcv = _read_many(sorted(raw_ohlcv_root.glob("**/symbol=hype_usdt_usdt.parquet")))
     if "open_time" in raw_ohlcv.columns:
         raw_ohlcv = raw_ohlcv.rename(columns={"open_time": "ts"})
@@ -233,7 +240,7 @@ def load_hype_market_frame() -> tuple[pd.DataFrame, dict[str, object]]:
     mark = _deduplicate(_read_many(sorted(mark_root.glob("**/symbol=hype_usdt_usdt.parquet"))))
     funding = _deduplicate(_read_many([funding_path] if funding_path.exists() else []))
     if ohlcv.empty:
-        raise RuntimeError(f"HYPE normalized OHLCV is missing under {ohlcv_root}")
+        raise RuntimeError("HYPE normalized OHLCV is missing from the trusted warehouse")
 
     if "is_closed" not in ohlcv.columns or not bool(ohlcv["is_closed"].all()):
         raise RuntimeError("HYPE 15m OHLCV contains missing or unclosed bars")

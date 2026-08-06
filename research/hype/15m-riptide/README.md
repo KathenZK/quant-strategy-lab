@@ -6,9 +6,10 @@
 
 ## 当前证据
 
-- 规格来源：`/Users/ZK/Downloads/SPEC-v13-RIPTIDE.md`。
-- 缓存口径复现审计：`diagnostics/hype-15m-riptide-v13-cache-audit-2026-06-30.md`。
-- 复现脚本：`scripts/research_hype_15m_riptide_v13_cache_audit.py`。
+- 主账：[hype-15m-riptide-core-ledger.md](hype-15m-riptide-core-ledger.md)。
+- 外部规格来源：本地下载文件（非仓库复现依赖）。
+- 缓存口径复现审计：[hype-15m-riptide-v13-cache-audit-2026-06-30.md](diagnostics/hype-15m-riptide-v13-cache-audit-2026-06-30.md)。
+- 复现脚本：[research_hype_15m_riptide_v13_cache_audit.py](scripts/research_hype_15m_riptide_v13_cache_audit.py)。
 
 ## 关键结论
 

@@ -60,28 +60,11 @@ def entry_time_h4_rsi6(frame: pd.DataFrame) -> pd.Series:
 def load_data(
     warehouse: base.DuckDBWarehouse,
 ) -> tuple[pd.DataFrame, pd.Series, dict[str, Any]]:
-    columns = [
-        "ts",
-        "open",
-        "high",
-        "low",
-        "close",
-        "volume",
-        "quote_volume",
-        "trade_count",
-        "vwap",
-        "is_closed",
-        "source",
-        "timeframe",
-    ]
-    normalized_before_dedup = warehouse.load_dataset(
-        layer="normalized",
-        kind=base.DatasetKind.OHLCV,
+    normalized_before_dedup = warehouse.load_trusted_ohlcv(
         exchange=base.EXCHANGE,
         market_type=base.MarketType.PERP,
         symbol=base.SYMBOL,
         timeframe=base.TIMEFRAME,
-        columns=columns,
     )
     if normalized_before_dedup.empty:
         raise RuntimeError("Missing normalized Binance HYPEUSDT 15m OHLCV data.")

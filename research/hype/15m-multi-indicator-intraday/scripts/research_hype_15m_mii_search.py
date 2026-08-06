@@ -14,6 +14,8 @@ from urllib.request import Request, urlopen
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 SYMBOL = "HYPEUSDT"
 DISPLAY_SYMBOL = "HYPE/USDT:USDT"
@@ -251,8 +253,13 @@ def parse_args() -> argparse.Namespace:
         "--cache",
         type=Path,
         default=Path("data/cache/hypeusdt_15m_fapi.csv"),
+        help="Legacy compatibility path; trusted research loads ignore it.",
     )
-    parser.add_argument("--refresh-data", action="store_true")
+    parser.add_argument(
+        "--refresh-data",
+        action="store_true",
+        help="Legacy compatibility option; trusted research loads ignore it.",
+    )
     parser.add_argument(
         "--output-dir",
         type=Path,
@@ -326,29 +333,33 @@ def fetch_fapi_klines(cache_path: Path) -> pd.DataFrame:
 
 
 def load_data(cache_path: Path, *, refresh: bool) -> tuple[pd.DataFrame, dict[str, object]]:
-    if refresh or not cache_path.exists():
-        frame = fetch_fapi_klines(cache_path)
-        source = "binance_fapi_refresh"
-    else:
-        frame = pd.read_csv(cache_path)
-        frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-        for column in ["open", "high", "low", "close", "volume"]:
-            frame[column] = pd.to_numeric(frame[column], errors="coerce")
-        frame = frame.dropna().drop_duplicates("ts").sort_values("ts").reset_index(drop=True)
-        source = "local_cache"
-
-    gaps = frame["ts"].diff().dropna()
-    expected = pd.Timedelta(minutes=15)
-    gap_count = int((gaps != expected).sum())
+    # Parameters remain for CLI compatibility. Refreshing/ingesting data is a
+    # separate producer concern; research always consumes the trusted lake.
+    del refresh
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    trusted = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol=DISPLAY_SYMBOL,
+        timeframe=INTERVAL,
+    )
+    frame = trusted[
+        ["ts", "open", "high", "low", "close", "volume"]
+    ].reset_index(drop=True)
+    frame.attrs.update(trusted.attrs)
     metadata = {
         "symbol": DISPLAY_SYMBOL,
         "timeframe": INTERVAL,
-        "source": source,
-        "cache": str(cache_path),
+        "source": "trusted_normalized_data_lake",
+        "legacy_cache_argument": str(cache_path),
         "rows": int(len(frame)),
         "first_ts": str(frame["ts"].min()),
         "last_ts": str(frame["ts"].max()),
-        "gap_count": gap_count,
+        "gap_count": 0,
+        "ohlcv_audit": trusted.attrs.get("ohlcv_audit", {}),
+        "source_counts": trusted.attrs.get("source_counts", {}),
         "commission_per_side": COMMISSION_PER_SIDE,
         "slippage_per_side": SLIPPAGE_PER_SIDE,
         "round_trip_cost": ROUND_TRIP_COST,

@@ -14,7 +14,8 @@
 
 ## 研究批次记录
 
-- `2026-07-20`：按用户决定，将 `HYPE-5M-PBTR-V6.2.1` 的 `tiny-live-pilot` 到期时间延至 `2026-09-24T00:00:00Z`；资金边界与策略参数不变，dry-run 并行保留，真实成交生命周期未完成前不得扩大资金。机器授权见 [`active-strategy-manifest.json`](../../../docs/research-governance/machine/active-strategy-manifest.json)，当前 runner 证据见 [`hype-5m-pbtr-runner-2026-07-11.md`](runner-tracking/hype-5m-pbtr-runner-2026-07-11.md)。
+- `2026-08-04`：规范 parity JSON 已不在干净 checkout 中，将 `HYPE-5M-PBTR-V6.2.1` 的证据健康度标为 `MISSING_EVIDENCE`；是否停止或调整实例必须由用户另行决定，实际授权与运行配置只以 quant-runner 为准。既有叙事证据见 [`hype-5m-pbtr-runner-2026-07-09.md`](runner-tracking/hype-5m-pbtr-runner-2026-07-09.md)。
+- `2026-07-20`：按用户决定，将 `HYPE-5M-PBTR-V6.2.1` 的 `tiny-live-pilot` 到期时间延至 `2026-09-24T00:00:00Z`；资金边界与策略参数不变，dry-run 并行保留，真实成交生命周期未完成前不得扩大资金。当前 runner 证据见 [`hype-5m-pbtr-runner-2026-07-11.md`](runner-tracking/hype-5m-pbtr-runner-2026-07-11.md)，实际授权以 quant-runner 为准。
 - `notes/hype-5m-indicator-ensemble-search.md`：在 `2025-06-01` 到 `2026-06-01` 的 Binance HYPE 永续 `5m` 数据上进行指标组合搜索。单条原始或精炼策略均未达到 `20x 年化 / >=80% 胜率 / >-20% 回撤`；一个由高胜率 EMA/Bollinger 回归腿组成的单仓 ensemble 达到全样本目标。该批次只作为研究前身，存在明显过拟合风险，不是已提升的 live 版本。
 - `live-specs/ensemble-specs/README.md`：记录最初 `7` 个 `target_pass=True` 的 HYPE Binance `5m` 单仓 ensemble 组合作为 live-code 交接规格。它们共享相同精炼腿，只是腿数和杠杆不同；当前仅保留为历史支撑材料，不是现行提升路线。
 - `notes/hype-5m-ensemble-forward-oos-2026-06-23.md`：加入 `2026-06-01` 到 `2026-06-23 04:00 UTC` 的 Binance HYPE `5m` 数据后，早期 7 个 ensemble 配置无法保持 `>=80%` 胜率和 `<20%` 回撤。这否定了高胜率小利润路径作为 live-ready 方向。
@@ -216,3 +217,23 @@
 - freshness 隔离改为单 market-data group / Driver bundle 的本地故障域，兄弟
   策略和 systemd control-plane watchdog 不再被单策略 stale 连带重启。
 - 当前仅完成本地配置/代码变更，尚未部署；线上事实仍以 2026-07-13 artifact 为准。
+
+## 2026-08-03 runner 执行安全加固（未部署）
+
+- 全仓库风险审计（2026-08-02）的 P1 执行安全项全部修复并本地验证：
+  CLI live 授权强制、protection deadline 先平仓再暂停、REST 对账识别保护单
+  部分成交（幂等）、入场等待终态成交、marginType 严格校验与回读确认、
+  `engine_state.json` fsync 耐久性与 schema version、密钥隔离（dry-run 不再
+  加载 live.env、密钥 0600、disabled 实例不读凭据进内存）。同步落地低风险
+  P2 运维硬化：validate-config 完整校验、disabled 实例 ledger 写回
+  enabled=0、release workflow 限 main、Actions 固定 SHA、cargo audit 门禁。
+- 两个架构性 P2（V6/V5 Driver 耦合、多市场统一限流）按稳定性优先原则继续
+  冻结，后续单独立项。
+- 全部为平台执行语义加固，策略信号/出场/参数口径不变，V6.2.1 live spec 无需
+  修订；不改变 promotion、parity、资金边界或 2026-09-24 授权复核门禁。
+- 部署前置：`.secrets/dryrun.env` 由部署脚本从 live.env 自动派生（仅通知
+  变量），服务器只维护 live.env；live 首次以新二进制启动时保证金模式校验
+  属预期 fail-fast。
+- 详细改动与测试证据见
+  [`hype-5m-pbtr-runner-2026-08-03.md`](runner-tracking/hype-5m-pbtr-runner-2026-08-03.md)；
+  当前仅完成本地变更（234 测试全绿），尚未提交与部署。

@@ -2,6 +2,10 @@
 
 这是 HYPE EMA trend-breakout 研究的家族级阅读路径。
 
+## 2026-08-04 — V35.1 对拍证据缺失
+
+- `HYPE-EMA-TB-V35.1` 原 parity JSON 已不在干净 checkout 中，证据健康度记为 `MISSING_EVIDENCE`；版本继续为 `registered / not promoted / not live-ready`，新的 promotion 尝试必须重新提交规范证据。实际启用状态只以 quant-runner 为准，promotion review 见 [`hype-ema-tb-v35-1-dry-run-promotion-review-2026-07-20.md`](diagnostics/hype-ema-tb-v35-1-dry-run-promotion-review-2026-07-20.md)。
+
 ## 当前边界
 
 - 本家族属于研究与规格材料。

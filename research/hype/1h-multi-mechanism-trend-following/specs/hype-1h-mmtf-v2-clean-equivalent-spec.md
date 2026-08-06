@@ -1,6 +1,6 @@
 # HYPE-1H-Multi-Mechanism-Trend-Following-V2 Clean-Equivalent 规格
 
-- 状态：`registered clean-equivalent / NO-GO / not promoted / not live-ready`。
+- 状态：`registered clean-equivalent / not promoted / not live-ready`。
 - 身份：V1 全消融后删除 8 个机制选择、fixed-disabled 或 path-equal 槽；成交、资金费、成本和权益路径与 V1 完全一致。
 - 逐笔 SHA256：V1/V2 均为 `f70a8ea2...224b`；clean config SHA256 为 `00fc75b6...042e4`。
 

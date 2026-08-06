@@ -8,9 +8,9 @@
 
 1. 本术语表定义主状态、合法组合与状态迁移。
 2. 家族 core ledger 是家族/版本身份与当前状态的叙事真源；asset/顶层索引是路由投影。
-3. [`machine/active-strategy-manifest.json`](machine/active-strategy-manifest.json) 只授权具体 quant-runner 实例是否允许启用；它不能创造状态、替代主账或授权外部 runner。
+3. `quant-runner` 是实例运行与授权的唯一真源；实际运行/停止事实只以其代码、配置、生成锁、服务状态和运行账本为准。Lab 不保存实例授权 manifest。
 
-active SPEC 是实现合同，不是状态或实例授权源。manifest、术语表、core ledger、索引或 active SPEC 任一冲突时必须 fail closed：实例不得启用，先修复权威源及其投影，不得选择对上线最有利的一份解释。
+active SPEC 是研究侧实现合同，不是状态或实例授权源。术语表、core ledger、索引或 active SPEC 冲突时，阻止新的 promotion 或交接并修复研究权威源；不得据此自动停止、禁用或降级 runner 实例。任何运行状态变化必须由用户明确决定并在 `quant-runner` 执行。
 
 “登记 / 记录 / 冻结 / 命名为 Vx”只固定版本身份并更新 core ledger，默认进入 `registered`，不包含任何 promotion。只有明确提出目标状态的 “promote / 晋升 / 进入 dry-run / 上线”才是状态迁移请求，并须满足对应门禁。
 
@@ -63,15 +63,16 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 
 | 叙事概念 | 机器字段 | 合法值 / 约束 |
 | --- | --- | --- |
-| 主状态 | manifest `main_status`、Lab live SPEC `main_status` | `explore`、`registered`、`live spec`、`dry-run`、`live`、`NO-GO`、`archived` |
-| runner 模式 | manifest `mode` | `dry_run` 或 `live`；它描述实例模式，不是主状态 |
-| 实例授权 | manifest `enabled_allowed` + `approval_level` | 只有 schema 与跨文档一致性检查全部通过时才可为 `true` |
-| handoff overlay | Lab live SPEC `overlays` | 可包含 `handoff`；manifest 不使用 `handoff` 作为 `main_status` |
+| 主状态 | core ledger、Lab live SPEC `main_status` | `explore`、`registered`、`live spec`、`dry-run`、`live`、`NO-GO`、`archived` |
+| runner 模式与授权 | quant-runner config / generated lock | `dry_run`、`live`、enabled 等实际字段只在 runner 仓库维护 |
+| 实际运行状态 | runner config / generated lock / service / runtime ledger | 判断实例正在运行、停止或使用哪个策略的唯一事实来源 |
+| 对拍证据状态 | 标准 parity artifact `conclusion` 或报告备注 | `PASS`、`FAIL`、`PENDING`、`MISSING_EVIDENCE`；后两者阻止新 promotion，但不自动改变 runner |
+| handoff overlay | Lab live SPEC `overlays` | 可包含 `handoff`；不是 `main_status` |
 | 非晋升后缀 | 叙事 `not promoted` | 只可修饰 `explore` 或 `registered`，不写入 `main_status` |
 | 未达 live 后缀 | 叙事 `not live-ready` | 可修饰 `explore`、`registered`、`live spec`、`dry-run`，不写入 `main_status` |
-| 终态 | manifest / ledger `main_status` | `NO-GO` 或 `archived`；不得与历史 runner 状态并列为第二主状态 |
+| 终态 | ledger `main_status` | `NO-GO` 或 `archived`；不得与历史 runner 状态并列为第二主状态 |
 
-`dry-run / not promoted` 是自相矛盾组合：`dry-run` 已是 promotion 状态。`dry-run / NO-GO` 也非法，因为同一时刻出现两个主状态；否决后只写 `NO-GO`，历史 dry-run 事实放在 runner tracking 或历史备注。相同规则适用于 `live / NO-GO`。schema 中使用下划线的 `dry_run` 只属于 `mode`/`approval_level`，叙事主状态始终写 `dry-run`。
+`dry-run / not promoted` 是自相矛盾组合：`dry-run` 已是 promotion 状态。`dry-run / NO-GO` 也非法，因为同一时刻出现两个主状态；否决后只写 `NO-GO`，历史 dry-run 事实放在 runner tracking 或历史备注。相同规则适用于 `live / NO-GO`。runner 配置中的 `dry_run` 使用下划线，叙事主状态始终写 `dry-run`。
 
 ## 修饰词（不是主状态）
 
@@ -80,8 +81,8 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 - `baseline` / `candidate` / `observation` / `clean-equivalent`：`registered` 或 `explore` 的来源/角色修饰——基线锚点、参数候选、微调观察值、与 parent 逐笔等价的参数精简版（clean-equivalent 需 trade signature 一致证据，且不提供新增收益证据）。
 - `forward-test required`：gate 备注，表示状态推进依赖 `runner-tracking/` 下尚不存在的报告；口头描述不算证据。只能用于已进入 `dry-run` / `live` 的版本；未进入任何 runner 的版本没有可满足该备注的证据路径，应写 `not promoted / not live-ready`。
 - `tiny-live-pilot`：`live` 主状态的限时修饰，表示真实下单只用于执行审计，
-  资金必须在专用子账户内隔离，并在 manifest 中记录
-  `approval_level=tiny_live_pilot`、资金边界、decision-log 引用和到期时间。
+  资金必须在专用子账户内隔离，并在 quant-runner 配置或上线 decision log 中记录
+  pilot 授权、资金边界和到期时间。
   它不是 production sizing，也不能由散文单独授权。
 - `not promoted`：只可修饰 `explore` 或 `registered`，表示尚未进入 promotion 状态。
 - `not live-ready`：表示尚不满足 `live` 准入；可修饰 `explore`、`registered`、`live spec` 或 `dry-run`，但不得修饰 `live` 或 `NO-GO`。它不是最终否决，后续可以因新机制、新数据或新审计重开。

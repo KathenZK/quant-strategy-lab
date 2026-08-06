@@ -3,7 +3,7 @@
 - Alias：`HYPE-15M-MHEF`
 - 市场/周期：Binance USD-M `HYPEUSDT` perpetual，`15m`
 - 机制：多速度 EMA 波动率归一化 forecast 融合为连续目标仓位；V2 observation 另加入跨周期 coherence、dead zone、波动率目标、成本感知目标带、最小调仓量与单 K 仓位限速。
-- 当前状态：`explore / NO-GO / not promoted / not live-ready`
+- 当前状态：`explore / not promoted / not live-ready`（研究验证失败）
 
 ## 边界
 

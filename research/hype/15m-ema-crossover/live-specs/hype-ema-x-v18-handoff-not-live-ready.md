@@ -7,9 +7,6 @@ main_status: dry-run
 runner_kind: hype_ema_x
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_ema_x/HYPE-EMA-X-V18-SPEC.md
-manifest_instance_ids:
-  - hype-ema-x-dry-run
-  - hype-ema-x-live
 approval_level_max: dry_run
 ---
 

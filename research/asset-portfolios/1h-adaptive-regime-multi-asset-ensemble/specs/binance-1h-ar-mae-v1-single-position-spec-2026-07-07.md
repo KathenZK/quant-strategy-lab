@@ -7,7 +7,7 @@
 - Family：`Binance-1H-Adaptive-Regime-Multi-Asset-Ensemble`
 - Market：Binance USD-M Futures perpetual，`TRXUSDT / SOLUSDT / HYPEUSDT / ETHUSDT / BTCUSDT / BNBUSDT`
 - Timeframe：`1h`
-- Status：`dry-run / not live-ready`（当前 manifest 已启用 dry-run，live disabled）
+- Status：`dry-run / not live-ready`（实际启用与 live/dry-run 模式以 quant-runner 为准）
 
 `V1` 是按用户指令登记的全账户单仓、先到先得组合版本。登记只冻结研究身份和复现口径，不代表 candidate、paper-live、dry-run、handoff 或 live。
 

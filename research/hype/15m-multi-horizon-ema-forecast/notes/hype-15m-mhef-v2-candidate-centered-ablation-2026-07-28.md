@@ -2,7 +2,7 @@
 
 - Family：`HYPE-15M-Multi-Horizon-EMA-Forecast`
 - 对象：已冻结且已判验证失败的 V2 candidate
-- 状态：`diagnostic only / NO-GO / no post-validation candidate selection`
+- 状态：`explore / diagnostic only / not promoted / not live-ready`；不允许 validation 后重新选候选
 - 数据边界：只读取 Train 与 Tune，截止 `2026-01-28 08:00 UTC`；没有读取 prefit validation 或 `2026-04-28` 后复用 OOS。
 
 ## 结论

@@ -11,4 +11,9 @@
 - `hype_15m_mdtp_v1_signed_score_quintiles_2026-07-31.csv`：signed score 与未来 24h 收益。
 - `hype_15m_mdtp_v1_absolute_score_quintiles_2026-07-31.csv`：score 强度与方向收益/MFE/MAE。
 - `hype_15m_mdtp_v1_cross_asset_2026-07-31.csv`：固定参数跨币种诊断；raw parity 未通过的行不可用于 promotion。
-
+- `hype_15m_mdtp_v1_failure_audit_2026-08-02.json`：失败复审机器结果；包含修复 raw parity 后的六币同窗口对照、HYPE 成本阶梯、动作换手、禁止增仓与 V35 matched-window 诊断。
+- `hype_15m_mdtp_v1_failure_audit_assets_2026-08-02.csv`：六币同窗口主指标。
+- `hype_15m_mdtp_v1_failure_audit_costs_2026-08-02.csv`：HYPE `0–14 bps/fill` 成本容忍度。
+- `hype_15m_mdtp_campaign_research_2026-08-02.json`：campaign successor 数据合同、冻结窗口、long/short 选择、Validation、压力、消融、bootstrap 与未揭示 prospective OOS 记录。
+- `hype_15m_mdtp_campaign_train_search_2026-08-02.csv`：long/short 各 54 行完整 Train 搜索与三 fold 指标。
+- `hype_15m_mdtp_campaign_{long,short}_2026-08-02_validation_{trades,equity,actions}.csv`：两个冻结方向候选的一次性 Validation 账本。

@@ -3,13 +3,15 @@
 - 别名：`BIN-1H-MHCSML`
 - 市场：Binance USD-M USDT 永续合约，point-in-time 动态全市场币池，`1h` 输入。
 - 机制：分别预测 long 净收益、short 净收益和尾部风险，在 `4/8/12/24/48h` 多期限上由允许空仓的风险效用 allocator 分配组合。
-- 当前状态：`registered / not promoted / not live-ready`；`BIN-1H-MHCSML-V1` freeze R4 的 prospective OOS 已启动并按 SHA 盲记，未授权 dry-run 或 live。
+- 当前状态：`archived`；`BIN-1H-MHCSML-V1` freeze R4 的本地产物、模型和盲链
+  数据已删除，prospective OOS 已终止且不再揭盲。这里只保留 Markdown 研究记录与
+  历史脚本，未授权 dry-run 或 live。
 
 ## 边界
 
 - 本家族不是固定 Top7/Bottom7 的 `BIN-1H-CSLGBM` 修订版，不继承其版本号、错误绩效、单模型标签或强制持仓规则。
 - 已揭示的 `2026Q2` 只能作 reused holdout / 诊断；`2026-07-19 00:00 <= ts < 2026-10-19 00:00 UTC` 为锁定 prospective OOS 信号窗口，最后 48h 腿成熟后最早于 `2026-10-20 21:05 UTC` 一次性揭盲。
-- 当前只做研究和数据准备，不创建 live spec，不修改 `quant-runner`。
+- 本家族已封存，不创建 live spec，不修改 `quant-runner`。
 
 ## 入口
 

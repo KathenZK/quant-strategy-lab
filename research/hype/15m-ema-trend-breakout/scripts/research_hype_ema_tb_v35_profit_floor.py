@@ -209,27 +209,11 @@ def artifact_paths(run_label: str) -> tuple[Path, Path, Path]:
 
 
 def load_data(warehouse: DuckDBWarehouse) -> tuple[pd.DataFrame, pd.Series, dict[str, Any]]:
-    normalized = warehouse.load_dataset(
-        layer="normalized",
-        kind=DatasetKind.OHLCV,
+    normalized = warehouse.load_trusted_ohlcv(
         exchange=EXCHANGE,
         market_type=MarketType.PERP,
         symbol=SYMBOL,
         timeframe=TIMEFRAME,
-        columns=[
-            "ts",
-            "open",
-            "high",
-            "low",
-            "close",
-            "volume",
-            "quote_volume",
-            "trade_count",
-            "vwap",
-            "is_closed",
-            "source",
-            "timeframe",
-        ],
     )
     if normalized.empty:
         raise RuntimeError("Missing normalized Binance HYPEUSDT 15m OHLCV data.")

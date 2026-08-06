@@ -14,6 +14,8 @@ from typing import Any
 import numpy as np
 import pandas as pd
 
+from strategy_lab.data import DataLakeLayout, DuckDBWarehouse, MarketType
+from strategy_lab.data.settings import load_settings
 
 ROOT = Path(__file__).resolve().parents[4]
 FAMILY_DIR = ROOT / "research/trx/1h-adaptive-regime"
@@ -21,8 +23,8 @@ ARTIFACT_DIR = FAMILY_DIR / "artifacts"
 DIAGNOSTIC_DIR = FAMILY_DIR / "diagnostics"
 ENGINE_PATH = ROOT / "research/_shared-kernels/1h-adaptive-regime-search/v1/engine.py"
 ENGINE_SHA256 = "0420ea44854201e17d4bf5b9142fb8335d143e78772656473a1dcf4594a5f04c"
-DATA_PATH = ARTIFACT_DIR / "trx_binance_1h_closed_klines_2y.parquet"
-QUALITY_PATH = ARTIFACT_DIR / "trx_binance_1h_data_quality_2y.json"
+FRAME_START = pd.Timestamp("2024-07-03T06:00:00Z")
+FRAME_END = pd.Timestamp("2026-07-03T06:00:00Z")
 FUNDING_PATH = (
     ROOT
     / "data/normalized/funding/exchange=binance/market_type=perp"
@@ -131,18 +133,37 @@ def json_safe(value: Any) -> Any:
     return value
 
 
-def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
-    if not DATA_PATH.exists() or not QUALITY_PATH.exists() or not FUNDING_PATH.exists():
+def _load_funding() -> pd.DataFrame:
+    if not FUNDING_PATH.exists():
         raise FileNotFoundError(
-            "Run scripts/fetch_trx_binance_1h.py before the search."
+            "TRX funding history is missing from the normalized data lake."
         )
-    frame = pd.read_parquet(DATA_PATH)
-    frame["ts"] = pd.to_datetime(frame["ts"], utc=True)
-    frame = (
-        frame.drop_duplicates("ts", keep="last")
+    funding = pd.read_parquet(FUNDING_PATH)
+    funding["ts"] = pd.to_datetime(funding["ts"], utc=True)
+    funding = (
+        funding.drop_duplicates("ts", keep="last")
         .sort_values("ts")
         .reset_index(drop=True)
     )
+    if funding.empty or funding["funding_rate"].isna().any():
+        raise RuntimeError("TRX funding history is empty or contains null rates")
+    return funding
+
+
+def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
+    warehouse = DuckDBWarehouse(
+        DataLakeLayout.from_settings(load_settings(None))
+    )
+    frame = warehouse.load_trusted_ohlcv(
+        exchange="binance",
+        market_type=MarketType.PERP,
+        symbol="TRX/USDT:USDT",
+        timeframe="1h",
+        start=FRAME_START,
+        end=FRAME_END,
+    )
+    trusted_audit = frame.attrs.get("ohlcv_audit", {})
+    frame = frame.reset_index(drop=True)
     expected = pd.date_range(frame["ts"].iloc[0], frame["ts"].iloc[-1], freq="1h")
     missing = expected.difference(pd.DatetimeIndex(frame["ts"]))
     required = [
@@ -182,16 +203,11 @@ def load_data() -> tuple[pd.DataFrame, pd.DataFrame, dict[str, Any]]:
             f"TRXUSDT 1h exact research frame has data-quality blockers: "
             f"missing={len(missing)} nulls={nulls} violations={violations}"
         )
-    funding = pd.read_parquet(FUNDING_PATH)
-    funding["ts"] = pd.to_datetime(funding["ts"], utc=True)
-    funding = (
-        funding.drop_duplicates("ts", keep="last")
-        .sort_values("ts")
-        .reset_index(drop=True)
-    )
-    if funding.empty or funding["funding_rate"].isna().any():
-        raise RuntimeError("TRX funding history is empty or contains null rates")
-    metadata = json.loads(QUALITY_PATH.read_text(encoding="utf-8"))
+    funding = _load_funding()
+    metadata = {
+        "source": "trusted_normalized_data_lake",
+        "ohlcv_audit": trusted_audit,
+    }
     quality = {
         "rows": int(len(frame)),
         "first_ts": frame["ts"].iloc[0].isoformat(),

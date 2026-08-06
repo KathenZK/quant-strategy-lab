@@ -2,7 +2,7 @@
 
 ## 2026-07-20 状态口径同步
 
-- 决策：按 active manifest 将 `BIN-1H-AR-MAE-V1` 当前状态统一为 `dry-run / not live-ready`，live disabled；早期 `NO-GO / not promoted` 文字仅作为 historical pre-dry-run finding，不再覆盖当前 dry-run 授权。
+- 决策：基于当时 runner 运行事实，将 `BIN-1H-AR-MAE-V1` 研究状态统一为 `dry-run / not live-ready`；早期 `NO-GO / not promoted` 文字仅作为 historical pre-dry-run finding。当前实例授权与模式只以 quant-runner 为准。
 - 证据：[主账](binance-1h-ar-mae-core-ledger.md)、[handoff](live-specs/binance-1h-ar-mae-v1-handoff-not-live-ready.md)、[runner tracking](runner-tracking/binance-1h-ar-mae-v1-runner-status.md)。
 
 ## 2026-07-07 创建家族并完成首次组合回测

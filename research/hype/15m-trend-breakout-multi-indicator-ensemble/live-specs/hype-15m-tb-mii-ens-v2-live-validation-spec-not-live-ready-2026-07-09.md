@@ -7,9 +7,6 @@ main_status: dry-run
 runner_kind: hype_tb_mii_ensemble
 spec_status: active
 peer_spec: crates/quant-runner/src/runner/strategies/hype_tb_mii_ensemble/HYPE-15M-TB-MII-ENS-V2-SPEC.md
-manifest_instance_ids:
-  - hype-tb-mii-ens-dry-run
-  - hype-tb-mii-ens-live
 approval_level_max: dry_run
 ---
 
@@ -375,7 +372,7 @@ V2 live pilot 前必须实现：
 ## Runner 配置
 
 V2 runner 已实现，生产 dry-run 实例为 `hype-tb-mii-ens-dry-run`。
-以下配置仍只用于说明身份；live 必须继续由 manifest/lock 门禁控制。
+以下配置仍只用于说明身份；live 必须由 quant-runner 配置、锁和运行门禁控制。
 
 ```toml
 [[strategies]]

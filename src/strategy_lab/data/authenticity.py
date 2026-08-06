@@ -22,17 +22,31 @@ DEFAULT_BLOCKED_SOURCE_PATTERNS = (
 DEFAULT_REAL_SOURCE_ALLOWLIST = (
     "binance_api",
     "binance_ccxt",
+    "binance_fapi_funding_freeze_gap",
+    "binance_fapi_klines",
+    "binance_fapi_refresh",
     "binance_funding_daily",
+    "binance_futures_funding_rate_api",
+    "binance_futures_kline_api",
+    "binance_futures_kline_api_direct",
     "binance_kline_api",
     "binance_mark_index",
+    "binance_mark_price",
     "binance_premium_index",
     "binance_rest",
     "binance_vision",
+    "binance_vision_kline_daily_gap_repair",
+    "binance_vision_kline_monthly",
+    "binance_vision_monthly",
+    "binance_vision_usdm_daily_metrics",
     "ccxt",
+    "fapi_rest",
     "gateio_contract_stats",
     "okx_ccxt",
     "okx_ccxt_daily",
     "okx_mark_index",
+    "polygon_api",
+    "yahoo_finance",
 )
 
 
@@ -66,7 +80,11 @@ class DataAuthenticitySummary:
 
     @property
     def quarantined_files(self) -> int:
-        return sum(1 for issue in self.issues if issue.action in {"quarantine_file", "rewrite_rows"})
+        return sum(
+            1
+            for issue in self.issues
+            if issue.action in {"quarantine_file", "rewrite_rows"}
+        )
 
     def to_dict(self) -> dict[str, object]:
         return {
@@ -86,15 +104,43 @@ def _matches_blocked_source(value: object, patterns: tuple[str, ...]) -> bool:
     return any(pattern in source for pattern in patterns)
 
 
-def _is_unverified_source(value: object, *, allowed_sources: tuple[str, ...], blocked_patterns: tuple[str, ...]) -> bool:
+def _is_unverified_source(
+    value: object,
+    *,
+    allowed_sources: tuple[str, ...],
+    blocked_patterns: tuple[str, ...],
+) -> bool:
     source = str(value).strip().lower()
-    return source not in allowed_sources or _matches_blocked_source(source, blocked_patterns)
+    return source not in allowed_sources or _matches_blocked_source(
+        source, blocked_patterns
+    )
+
+
+def unverified_source_mask(
+    frame: pd.DataFrame,
+    *,
+    allowed_sources: tuple[str, ...] = DEFAULT_REAL_SOURCE_ALLOWLIST,
+    blocked_patterns: tuple[str, ...] = DEFAULT_BLOCKED_SOURCE_PATTERNS,
+) -> pd.Series:
+    if "source" not in frame.columns:
+        return pd.Series(True, index=frame.index, dtype=bool)
+    normalized_allowlist = tuple(source.strip().lower() for source in allowed_sources)
+    return frame["source"].map(
+        lambda value: _is_unverified_source(
+            value,
+            allowed_sources=normalized_allowlist,
+            blocked_patterns=blocked_patterns,
+        )
+    )
 
 
 def _source_counts(frame: pd.DataFrame) -> dict[str, int]:
     if "source" not in frame.columns:
         return {}
-    return {str(key): int(value) for key, value in frame["source"].astype(str).value_counts(dropna=False).items()}
+    return {
+        str(key): int(value)
+        for key, value in frame["source"].astype(str).value_counts(dropna=False).items()
+    }
 
 
 class DataAuthenticityAuditor:
@@ -125,10 +171,15 @@ class DataAuthenticityAuditor:
         self,
         *,
         dry_run: bool = True,
+        confirm_destructive: bool = False,
         quarantine_unverified_features: bool = True,
         quarantine_duckdb: bool = True,
         report_path: Path | None = None,
     ) -> DataAuthenticitySummary:
+        if not dry_run and not confirm_destructive:
+            raise ValueError(
+                "destructive authenticity cleanup requires confirm_destructive=True"
+            )
         issues = self._scan_source_issues(dry_run=dry_run)
         if quarantine_unverified_features:
             issues.extend(self._quarantine_features(dry_run=dry_run))
@@ -151,10 +202,16 @@ class DataAuthenticityAuditor:
             if not layer_root.exists():
                 continue
             for path in sorted(layer_root.rglob("*.parquet")):
-                issues.extend(self._inspect_source_file(layer_root=layer_root, layer=layer, path=path, dry_run=dry_run))
+                issues.extend(
+                    self._inspect_source_file(
+                        layer_root=layer_root, layer=layer, path=path, dry_run=dry_run
+                    )
+                )
         return issues
 
-    def _inspect_source_file(self, *, layer_root: Path, layer: str, path: Path, dry_run: bool) -> list[DataAuthenticityIssue]:
+    def _inspect_source_file(
+        self, *, layer_root: Path, layer: str, path: Path, dry_run: bool
+    ) -> list[DataAuthenticityIssue]:
         dataset = path.relative_to(layer_root).parts[0]
         try:
             frame = pd.read_parquet(path)
@@ -174,7 +231,9 @@ class DataAuthenticityAuditor:
         if frame.empty:
             return []
         if "source" not in frame.columns:
-            quarantine_path = self._quarantine_path("non_real_sources", layer, path.relative_to(layer_root))
+            quarantine_path = self._quarantine_path(
+                "non_real_sources", layer, path.relative_to(layer_root)
+            )
             if not dry_run:
                 quarantine_path.parent.mkdir(parents=True, exist_ok=True)
                 shutil.move(str(path), str(quarantine_path))
@@ -201,7 +260,9 @@ class DataAuthenticityAuditor:
         if blocked_rows <= 0:
             return []
 
-        quarantine_path = self._quarantine_path("non_real_sources", layer, path.relative_to(layer_root))
+        quarantine_path = self._quarantine_path(
+            "non_real_sources", layer, path.relative_to(layer_root)
+        )
         action = "quarantine_file" if blocked_rows == len(frame) else "rewrite_rows"
         if not dry_run:
             if blocked_rows == len(frame):
@@ -210,8 +271,13 @@ class DataAuthenticityAuditor:
             else:
                 blocked = frame.loc[blocked_mask].reset_index(drop=True)
                 kept = frame.loc[~blocked_mask].reset_index(drop=True)
-                atomic_write_path(quarantine_path, lambda temp_path: blocked.to_parquet(temp_path, index=False))
-                atomic_write_path(path, lambda temp_path: kept.to_parquet(temp_path, index=False))
+                atomic_write_path(
+                    quarantine_path,
+                    lambda temp_path: blocked.to_parquet(temp_path, index=False),
+                )
+                atomic_write_path(
+                    path, lambda temp_path: kept.to_parquet(temp_path, index=False)
+                )
 
         return [
             DataAuthenticityIssue(
@@ -227,14 +293,21 @@ class DataAuthenticityAuditor:
 
     def _quarantine_features(self, *, dry_run: bool) -> list[DataAuthenticityIssue]:
         features_dir = self.layout.features_dir
-        parquet_count = sum(1 for _ in features_dir.rglob("*.parquet")) if features_dir.exists() else 0
+        parquet_count = (
+            sum(1 for _ in features_dir.rglob("*.parquet"))
+            if features_dir.exists()
+            else 0
+        )
         if parquet_count == 0:
             return []
         target = self._quarantine_root("unverified_features") / "features"
         if not dry_run:
             target.parent.mkdir(parents=True, exist_ok=True)
             if target.exists():
-                target = target.parent / f"features-{pd.Timestamp.now(tz='UTC').strftime('%Y%m%dT%H%M%SZ')}"
+                target = (
+                    target.parent
+                    / f"features-{pd.Timestamp.now(tz='UTC').strftime('%Y%m%dT%H%M%SZ')}"
+                )
             shutil.move(str(features_dir), str(target))
             features_dir.mkdir(parents=True, exist_ok=True)
         return [
@@ -282,8 +355,13 @@ class DataAuthenticityAuditor:
         return self._quarantine_root(name) / layer / relative_path
 
     @staticmethod
-    def _write_report(summary: DataAuthenticitySummary, report_path: Path | None) -> None:
+    def _write_report(
+        summary: DataAuthenticitySummary, report_path: Path | None
+    ) -> None:
         if report_path is None:
             return
         report_path.parent.mkdir(parents=True, exist_ok=True)
-        report_path.write_text(json.dumps(summary.to_dict(), indent=2, sort_keys=True, default=str), encoding="utf-8")
+        report_path.write_text(
+            json.dumps(summary.to_dict(), indent=2, sort_keys=True, default=str),
+            encoding="utf-8",
+        )

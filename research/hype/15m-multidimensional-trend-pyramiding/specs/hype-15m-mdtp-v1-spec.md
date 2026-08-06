@@ -4,7 +4,7 @@
 
 - Strategy：`HYPE-15M-Multidimensional-Trend-Pyramiding-V1`
 - Alias：`HYPE-15M-MDTP-V1`
-- 状态：`explore / NO-GO / not promoted / not live-ready`
+- 状态：`explore / not promoted / not live-ready`
 - 目的：检验多维趋势丈量与顺势加减仓能否在公平成本、滚动时间顺序和相邻参数下真实改善 V35。
 
 ## 数据与时间层级
@@ -70,4 +70,3 @@
 - 滚动历史伪 OOS：180 天初始上下文，60 天不重叠 test fold，参数固定。
 - 稳定性：regime、confirm、ATR trail 邻近网格 + 全窗口 `0.8x/1.0x/1.2x`。
 - 标签诊断：未来 24h return/MFE/MAE 仅在回测完成后生成，不进入策略。
-

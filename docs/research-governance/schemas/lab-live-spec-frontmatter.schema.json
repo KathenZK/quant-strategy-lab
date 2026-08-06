@@ -9,7 +9,6 @@
     "family_id",
     "main_status",
     "spec_status",
-    "manifest_instance_ids",
     "approval_level_max"
   ],
   "properties": {
@@ -22,11 +21,6 @@
     "spec_status": {"enum": ["draft", "active", "superseded"]},
     "approval_level_max": {
       "enum": ["none", "dry_run", "tiny_live_pilot", "live"]
-    },
-    "manifest_instance_ids": {
-      "type": "array",
-      "items": {"type": "string", "minLength": 1},
-      "uniqueItems": true
     },
     "overlays": {
       "type": "array",
@@ -68,10 +62,6 @@
     }
   ],
   "allOf": [
-    {
-      "if": {"properties": {"spec_status": {"const": "active"}}},
-      "then": {"properties": {"manifest_instance_ids": {"minItems": 1}}}
-    },
     {
       "if": {
         "required": ["main_status"],

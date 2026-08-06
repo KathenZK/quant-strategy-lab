@@ -12,8 +12,9 @@
 
 ## 入口
 
-- 决策记录（兼任 interim ledger，本家族无登记版本）：`decision-log.md`
-- bracket 可执行搜索（含候选机制定义与切片弱点）：`diagnostics/hype-15m-pullback-trail-bracket-search-2026-06-30.md`
-- V3.3 迁移诊断（not-promoted 证据）：`diagnostics/hype-15m-pullback-trail-v3-3-migration-2026-06-30.md`
+- 主账：[hype-15m-pbtr-core-ledger.md](hype-15m-pbtr-core-ledger.md)
+- 决策记录：[decision-log.md](decision-log.md)
+- bracket 可执行搜索（含候选机制定义与切片弱点）：[hype-15m-pullback-trail-bracket-search-2026-06-30.md](diagnostics/hype-15m-pullback-trail-bracket-search-2026-06-30.md)
+- V3.3 迁移诊断（not-promoted 证据）：[hype-15m-pullback-trail-v3-3-migration-2026-06-30.md](diagnostics/hype-15m-pullback-trail-v3-3-migration-2026-06-30.md)
 
 脚本在 `scripts/`，被报告引用的 JSON/CSV 在 `artifacts/`。候选参数、执行口径与指标以上述报告和 decision-log 为准。

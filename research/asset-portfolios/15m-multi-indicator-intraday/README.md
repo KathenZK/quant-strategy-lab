@@ -17,8 +17,9 @@
 
 ## 阅读顺序
 
-1. `diagnostics/binance-15m-mii-btc-eth-constrained-search-2026-06-30.md`
-2. `decision-log.md`
+1. 主账：[binance-15m-mii-xfer-core-ledger.md](binance-15m-mii-xfer-core-ledger.md)
+2. 诊断：[binance-15m-mii-btc-eth-constrained-search-2026-06-30.md](diagnostics/binance-15m-mii-btc-eth-constrained-search-2026-06-30.md)
+3. 决策：[decision-log.md](decision-log.md)
 
 ## 证据规则
 

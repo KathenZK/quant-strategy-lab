@@ -10,11 +10,14 @@
 ## 当前状态
 
 - 状态：`explore / not promoted / not live-ready`
-- 尚未注册版本；本 README 兼任临时主账。P0 演示基线结论：因子毛收益 2021–2025 逐年为正、多空腿轮动互补、波动率目标精确工作（实现 20.8% vs 目标 20%），但每日全量再平衡的 taker 成本 + 资金费吃掉 2021 以外全部净利，预注册评价 4 条过 2 条。改进方向（再平衡缓冲带、降频、maker 口径、跨资产扩展）需新契约。
+- 尚未注册版本；身份与观察结论见 [binance-1d-tsmom-vt-core-ledger.md](binance-1d-tsmom-vt-core-ledger.md)。P0 演示基线结论：因子毛收益 2021–2025 逐年为正、多空腿轮动互补、波动率目标精确工作（实现 20.8% vs 目标 20%），但每日全量再平衡的 taker 成本 + 资金费吃掉 2021 以外全部净利，预注册评价 4 条过 2 条。
+- 下一决策门：P1 执行层改造契约已于 2026-08-05 冻结（信号/仓位层不动，只测再平衡缓冲带与降频，含 kill gate），待跑数出诊断。
 
 ## 入口
 
+- 主账：[binance-1d-tsmom-vt-core-ledger.md](binance-1d-tsmom-vt-core-ledger.md)
 - 决策日志：[decision-log.md](decision-log.md)
 - P0 演示契约：[bin-1d-tsmom-vt-demo-contract-2026-07-27.md](specs/bin-1d-tsmom-vt-demo-contract-2026-07-27.md)
 - P0 演示诊断：[bin-1d-tsmom-vt-p0-demo-2026-07-27.md](diagnostics/bin-1d-tsmom-vt-p0-demo-2026-07-27.md)
+- P1 执行层改造契约：[bin-1d-tsmom-vt-p1-rebalance-execution-contract-2026-08-05.md](specs/bin-1d-tsmom-vt-p1-rebalance-execution-contract-2026-08-05.md)
 - 脚本：[scripts/README.md](scripts/README.md)；产物：[artifacts/README.md](artifacts/README.md)
