@@ -33,12 +33,15 @@
 - V6 两个实例的 driver 构造、frozen config 常量、路由行为均来自同一份迁移
   代码，V6 `config.rs` 的 profile 覆盖逻辑未改。
 
-## 跟进项
+## 跟进项（2026-08-06 关闭）
 
-- V6 parity fixture 重新落盘：Lab 新 artifact 政策下 family `artifacts/` 缺
-  `as6s_v6_np_parity.json` / `as6s_v6_preempt_parity.json`，需用 Lab 脚本
-  `export_binance_as6s_v6_runner_parity_fixtures.py` 重新导出后执行
-  `cargo test -p quant-runner --lib -- --ignored` 全量对拍，并回写结论。
+- ~~V6 parity fixture 重新落盘~~ **已取消**：2026-08-04 artifacts 磁盘清理
+  删除了导出脚本输入（冻结候选 JSON 与 trades CSV），2026-08-05 本家族在
+  研究分支正式封存为 `archived`（不再从数据湖重建、取消原定最终 OOS）。
+  fixture 重导出与全量对拍随家族归档一并终止；runner 侧遗留的 ignored
+  parity 测试与 SHA 常量将作为死代码另行清理。封存记录见研究分支
+  `cursor/pkc-campaign-and-mtf-research` 的家族 README 与
+  `artifacts/README.md`（合并入 main 前以研究分支为准）。
 - V5 历史证据（45 信号 / 15 退出 / 553 路由 PASS）保留于
   [V5 Runner 对拍](binance-as6s-v5-joint-runner-2026-07-15.md)，仅作历史记录。
 
