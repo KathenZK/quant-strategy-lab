@@ -2,7 +2,7 @@
 
 ## 目标与边界
 
-本规范用于控制仓库内所有名为 `artifacts/` 的目录。治理先建立可审计清单，再由人决定保留、外置或迁移；清单与检查本身不得删除、移动、改写产物，也不得把“未被 Markdown 引用”解释为可以删除。
+本规范用于控制仓库内所有名为 `artifacts/` 的目录。治理检查基于当前工作树实时建立内存清单，再由人决定保留、外置或迁移；清单与检查本身不得删除、移动、改写产物，也不得把“未被 Markdown 引用”解释为可以删除。
 
 清单只允许读取：
 
@@ -30,7 +30,7 @@
 | `B-review` | `> 100 MiB` 且 `<= 500 MiB` | 建立保留说明，阻止无界增长。 |
 | `C-externalize` | `> 500 MiB` | 制定可逆外置计划；新增大产物默认不得进入普通 Git。 |
 
-阈值是治理告警，不追溯判定现有证据违规。默认检查只输出告警并返回成功，不破坏 CI；只有调用方显式使用 `--strict` 时，告警才返回非零状态。
+默认门禁按当前工作树实时判定：`B-review` 输出 warning 但不阻断，`C-externalize` 与 `D-prohibited-new-git` 输出 error 并返回非零状态。门禁只约束产物准入和预算，不授权自动删除、迁移或改写历史；确需保留 C/D 级证据时，应先完成人工 externalize/LFS 评估和书面例外。
 
 ## 保留类别
 
@@ -44,15 +44,18 @@
 
 ## 清单和检查
 
-- 实时检查：[`check_artifact_inventory.py`](../../scripts/governance/check_artifact_inventory.py)。默认直接扫描当前文件系统的文件数和总大小，不读取或持久化历史快照。
-- 可选快照生成器：[`inventory_artifacts.py`](../../scripts/governance/inventory_artifacts.py)。默认输出到系统临时目录，仅用于一次性人工复核，不进入 `research/` 或 Git。
+- 实时检查：[`check_artifact_inventory.py`](../../scripts/governance/check_artifact_inventory.py)。它复用清单生成逻辑，在内存中计算文件/家族预算、引用与保留类别，不读取 artifacts 内容，也不读取或写入持久 snapshot。
+- 人工清单导出器：[`inventory_artifacts.py`](../../scripts/governance/inventory_artifacts.py)。默认将 JSON 和 Markdown 输出到系统临时目录；也可显式指定输出路径，仅用于一次性人工复核，不得把输出提交到 `research/` 或 Git。
 
 ```bash
 uv run python scripts/governance/check_artifact_inventory.py
 uv run python scripts/governance/inventory_artifacts.py
+uv run python scripts/governance/inventory_artifacts.py \
+  --json-output /tmp/artifact-inventory.json \
+  --markdown-output /tmp/artifact-inventory.md
 ```
 
-可选快照按 artifacts 根目录的父路径汇总为“家族/主题路径”，包含文件数、总大小、最大文件和 Markdown 精确引用覆盖率；逐文件路径、大小、引用来源、预算级别和保留提示写入临时 JSON。快照不得作为当前磁盘状态的长期事实来源，使用后可直接删除。
+人工清单按 artifacts 根目录的父路径汇总为“家族/主题路径”，包含文件数、总大小、最大文件和 Markdown 精确引用覆盖率；逐文件路径、大小、引用来源、预算级别和保留提示写入 JSON。导出结果不得作为当前磁盘状态的长期事实来源，使用后可直接删除。
 
 ## 新产物准入
 

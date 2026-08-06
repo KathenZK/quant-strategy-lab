@@ -30,6 +30,15 @@ sys.modules["mmtf_engine"] = ENGINE
 V2_SPEC.loader.exec_module(V2)
 
 
+def _require_local_evidence(*paths: Path) -> None:
+    missing = [path for path in paths if not path.is_file()]
+    if missing:
+        pytest.skip(
+            "local MMTF evidence is unavailable: "
+            + ", ".join(path.name for path in missing)
+        )
+
+
 def _config(**changes: object) -> object:
     payload = {
         "mechanism": 0,
@@ -131,6 +140,7 @@ def test_primary_entry_ablation_produces_no_trades() -> None:
 
 
 def test_selection_book_excludes_locked_oos() -> None:
+    _require_local_evidence(ENGINE.MANIFEST_PATH)
     book = ENGINE.build_book(include_locked_oos=False)
     manifest = ENGINE.load_manifest()
     assert book.rows == manifest["rows"]["prefit"]
@@ -141,6 +151,12 @@ def test_selection_book_excludes_locked_oos() -> None:
 
 
 def test_v2_clean_baseline_is_path_equal_to_registered_v1() -> None:
+    _require_local_evidence(
+        ENGINE.MANIFEST_PATH,
+        ROOT
+        / "research/hype/15m-multi-mechanism-trend-following/artifacts"
+        / "hype_15m_mmtf_v1_search_2026-07-22.json",
+    )
     book = ENGINE.build_book(include_locked_oos=False)
     v1 = _config_from_registered_v1()
     v2 = V2.to_engine_config(V2.v2_baseline())
@@ -164,6 +180,7 @@ def test_locked_oos_reveal_is_frozen_and_no_post_reveal_tuning_is_authorized() -
         / "research/hype/15m-multi-mechanism-trend-following/artifacts"
         / "hype_15m_mmtf_v3_locked_oos_reveal_2026-07-22.json"
     )
+    _require_local_evidence(artifact)
     payload = json.loads(artifact.read_text(encoding="utf-8"))
     assert payload["one_time_reveal"] is True
     assert payload["no_post_reveal_tuning_authorized"] is True
@@ -176,6 +193,7 @@ def test_full_trade_artifact_is_nonoverlapping_and_at_most_three_x() -> None:
         / "research/hype/15m-multi-mechanism-trend-following/artifacts"
         / "hype_15m_mmtf_v3_full_trades_2026-07-22.csv"
     )
+    _require_local_evidence(artifact)
     trades = pd.read_csv(artifact)
     entries = pd.to_datetime(trades["entry_ts"], utc=True)
     exits = pd.to_datetime(trades["exit_ts"], utc=True)

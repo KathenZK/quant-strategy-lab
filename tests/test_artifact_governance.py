@@ -1,7 +1,6 @@
 from __future__ import annotations
 
 import importlib.util
-import json
 import sys
 from pathlib import Path
 from types import ModuleType
@@ -16,12 +15,13 @@ def _load_script_module(name: str) -> ModuleType:
     )
     assert spec is not None and spec.loader is not None
     module = importlib.util.module_from_spec(spec)
+    sys.modules[name] = module
     spec.loader.exec_module(module)
     return module
 
 
-check_artifact_inventory = _load_script_module("check_artifact_inventory")
 inventory_artifacts = _load_script_module("inventory_artifacts")
+check_artifact_inventory = _load_script_module("check_artifact_inventory")
 
 
 def _write_sparse(path: Path, size_bytes: int) -> None:
@@ -109,74 +109,65 @@ def test_markdown_summary_omits_full_file_listing(tmp_path: Path) -> None:
     assert "## 逐文件" not in markdown
 
 
-def test_current_artifact_totals_reads_live_filesystem(tmp_path: Path) -> None:
-    first = tmp_path / "research" / "demo" / "artifacts" / "first.json"
-    second = tmp_path / "archive" / "demo" / "artifacts" / "second.csv"
-    first.parent.mkdir(parents=True)
-    second.parent.mkdir(parents=True)
-    first.write_bytes(b"123")
-    second.write_bytes(b"4567")
-
-    assert check_artifact_inventory.current_artifact_totals(tmp_path) == (2, 7)
-
-
-def test_checker_uses_live_scan_when_snapshot_is_absent(
+def test_checker_builds_live_inventory_without_writing_snapshot(
     tmp_path: Path, monkeypatch, capsys
 ) -> None:
     artifact = tmp_path / "research" / "demo" / "artifacts" / "result.json"
     artifact.parent.mkdir(parents=True)
     artifact.write_bytes(b"123")
-    missing = tmp_path / "missing-inventory.json"
-    monkeypatch.setattr(check_artifact_inventory, "ROOT", tmp_path)
-    monkeypatch.setattr(check_artifact_inventory, "DEFAULT_INVENTORY", missing)
-    monkeypatch.setattr(sys, "argv", ["check_artifact_inventory.py"])
+    monkeypatch.setattr(
+        sys,
+        "argv",
+        ["check_artifact_inventory.py", "--root", str(tmp_path)],
+    )
 
     assert check_artifact_inventory.main() == 0
-    assert "Live artifact scan: 1 files/3 bytes" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert "Live artifact inventory: 1 files/3 bytes" in output
+    assert "no snapshot written" in output
+    assert not (tmp_path / "research" / "_artifact-inventory").exists()
 
 
-def test_checker_is_advisory_unless_strict(
+def test_checker_warns_for_b_review_and_passes(
     tmp_path: Path, monkeypatch, capsys
 ) -> None:
-    inventory_path = tmp_path / "inventory.json"
-    inventory_path.write_text(
-        json.dumps(
-            {
-                "families": [
-                    {
-                        "family_path": "research/demo",
-                        "total_bytes": 600 * 1024 * 1024,
-                        "budget_tier": "C-externalize",
-                    }
-                ],
-                "files": [
-                    {
-                        "path": "research/demo/artifacts/matrix.csv",
-                        "size_bytes": 60 * 1024 * 1024,
-                        "budget_tier": "C-externalize",
-                        "retention_class": "regenerable-large",
-                    }
-                ],
-            }
-        ),
-        encoding="utf-8",
-    )
-
+    artifact = tmp_path / "research" / "demo" / "artifacts" / "matrix.csv"
+    _write_sparse(artifact, inventory_artifacts.FILE_REVIEW_BYTES + 1)
     monkeypatch.setattr(
-        sys, "argv", ["check_artifact_inventory.py", "--inventory", str(inventory_path)]
+        sys,
+        "argv",
+        ["check_artifact_inventory.py", "--root", str(tmp_path)],
     )
-    assert check_artifact_inventory.main() == 0
-    assert "advisory only" in capsys.readouterr().out
 
+    assert check_artifact_inventory.main() == 0
+    output = capsys.readouterr().out
+    assert "WARNING: 文件预算 B-review" in output
+    assert "passed with" in output
+
+
+def test_checker_fails_for_c_and_d_files(
+    tmp_path: Path, monkeypatch, capsys
+) -> None:
+    artifact_dir = tmp_path / "research" / "demo" / "artifacts"
+    _write_sparse(
+        artifact_dir / "externalize.csv",
+        inventory_artifacts.FILE_EXTERNALIZE_BYTES + 1,
+    )
+    _write_sparse(
+        artifact_dir / "prohibited.csv",
+        inventory_artifacts.FILE_GIT_PROHIBITED_BYTES + 1,
+    )
     monkeypatch.setattr(
         sys,
         "argv",
         [
             "check_artifact_inventory.py",
-            "--inventory",
-            str(inventory_path),
-            "--strict",
+            "--root",
+            str(tmp_path),
         ],
     )
+
     assert check_artifact_inventory.main() == 1
-    assert "strict mode enabled" in capsys.readouterr().out
+    output = capsys.readouterr().out
+    assert "ERROR: 文件预算 C-externalize" in output
+    assert "ERROR: 文件预算 D-prohibited-new-git" in output

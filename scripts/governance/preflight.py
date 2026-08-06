@@ -43,8 +43,12 @@ def main() -> int:
             [python, "scripts/governance/validate_live_specs.py"],
         ),
         (
-            "artifact inventory advisory",
+            "live artifact budget",
             [python, "scripts/governance/check_artifact_inventory.py"],
+        ),
+        (
+            "trusted research consumers",
+            [python, "scripts/governance/check_trusted_consumers.py"],
         ),
         (
             "research document consistency",

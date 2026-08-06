@@ -397,7 +397,7 @@ def test_local_hype_v40_parity_when_data_lake_is_available() -> None:
     )
     try:
         market, funding, _quality = data.load_data(warehouse)
-    except (FileNotFoundError, RuntimeError):
+    except (FileNotFoundError, RuntimeError, ValueError):
         pytest.skip("local HYPE data lake is unavailable")
 
     legacy_config = replace(v39.v39_config(), long_vol_min=0.25)

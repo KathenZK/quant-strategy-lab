@@ -53,13 +53,12 @@ archive/   # 历史代码、配置、文档、研究和报告快照
 ## 快速开始
 
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-pip install -e ".[dev]"
+# 严格按 uv.lock 安装项目和开发依赖
+uv sync --locked --extra dev --extra ml
 
 # 与 CI 相同的治理、数据契约和 lint 门禁
-python scripts/governance/preflight.py
+uv run --locked --extra dev --extra ml python scripts/governance/preflight.py
 
 # 需要时运行全量测试
-pytest -q
+uv run --locked --extra dev --extra ml pytest -q
 ```

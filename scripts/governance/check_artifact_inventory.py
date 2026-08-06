@@ -1,81 +1,81 @@
 #!/usr/bin/env python3
-"""Report artifact budget and retention warnings without failing by default."""
+"""Evaluate the live artifact inventory in memory against repository budgets."""
 
 from __future__ import annotations
 
 import argparse
-import json
-import os
+import importlib.util
 from pathlib import Path
+from typing import Protocol, cast
+
+
+class _InventoryBuilder(Protocol):
+    def __call__(
+        self, root: Path, generated_at: str | None = None
+    ) -> dict[str, object]: ...
+
+
+def _load_inventory_builder() -> _InventoryBuilder:
+    module_path = Path(__file__).with_name("inventory_artifacts.py")
+    spec = importlib.util.spec_from_file_location("artifact_inventory_runtime", module_path)
+    if spec is None or spec.loader is None:
+        raise RuntimeError(f"Cannot load artifact inventory module: {module_path}")
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return cast(_InventoryBuilder, module.build_inventory)
+
+
+build_inventory = _load_inventory_builder()
 
 
 ROOT = Path(__file__).resolve().parents[2]
-DEFAULT_INVENTORY = (
-    ROOT / "research" / "_artifact-inventory" / "artifact-inventory.json"
+MAX_FILE_DETAILS = 20
+WARNING_TIER = "B-review"
+FAILURE_TIERS = {"C-externalize", "D-prohibited-new-git"}
+RETENTION_WARNING_CLASSES = (
+    "regenerable-large",
+    "scratch",
+    "local-dataset",
 )
-MAX_FILE_DETAIL_WARNINGS = 20
-SKIP_DIR_NAMES = {
-    ".git",
-    ".mypy_cache",
-    ".pytest_cache",
-    ".ruff_cache",
-    ".tox",
-    ".venv",
-    "__pycache__",
-    "node_modules",
-}
-
-
-def current_artifact_totals(root: Path) -> tuple[int, int]:
-    file_count = 0
-    total_bytes = 0
-    for current, directory_names, file_names in os.walk(root, followlinks=False):
-        directory_names[:] = [
-            name
-            for name in directory_names
-            if name not in SKIP_DIR_NAMES
-            and not (Path(current) / name).is_symlink()
-        ]
-        if "artifacts" not in Path(current).relative_to(root).parts:
-            continue
-        for name in file_names:
-            path = Path(current) / name
-            if path.is_symlink():
-                continue
-            file_count += 1
-            total_bytes += path.stat().st_size
-    return file_count, total_bytes
 
 
 def evaluate_inventory(
     inventory: dict[str, object],
-    max_file_details: int = MAX_FILE_DETAIL_WARNINGS,
-) -> list[str]:
+    max_file_details: int = MAX_FILE_DETAILS,
+) -> tuple[list[str], list[str]]:
     warnings: list[str] = []
+    failures: list[str] = []
     files = inventory.get("files", [])
     families = inventory.get("families", [])
     if not isinstance(files, list) or not isinstance(families, list):
-        return ["清单格式错误：files 和 families 必须是数组"]
+        return [], ["清单格式错误：files 和 families 必须是数组"]
 
     for family in families:
         if not isinstance(family, dict):
-            warnings.append("清单格式错误：families 含非对象条目")
+            failures.append("清单格式错误：families 含非对象条目")
             continue
-        if family.get("budget_tier") != "A-normal":
-            warnings.append(
-                f"家族预算 {family.get('budget_tier')}: "
-                f"{family.get('family_path')} ({family.get('total_bytes')} bytes)"
-            )
+        budget_tier = str(family.get("budget_tier", "A-normal"))
+        message = (
+            f"家族预算 {budget_tier}: {family.get('family_path')} "
+            f"({family.get('total_bytes')} bytes)"
+        )
+        if budget_tier == WARNING_TIER:
+            warnings.append(message)
+        elif budget_tier in FAILURE_TIERS:
+            failures.append(message)
+        elif budget_tier != "A-normal":
+            failures.append(f"未知预算级别：{message}")
 
     class_counts: dict[str, int] = {}
     class_bytes: dict[str, int] = {}
-    over_budget_files: list[dict[str, object]] = []
+    review_files: list[dict[str, object]] = []
+    rejected_files: list[dict[str, object]] = []
     for row in files:
         if not isinstance(row, dict):
-            warnings.append("清单格式错误：files 含非对象条目")
+            failures.append("清单格式错误：files 含非对象条目")
             continue
         size_bytes = int(row.get("size_bytes", 0))
-        budget_tier = row.get("budget_tier", "A-normal")
+        budget_tier = str(row.get("budget_tier", "A-normal"))
         retention_class = str(
             row.get("retention_class", "retained-unclassified")
         )
@@ -83,78 +83,82 @@ def evaluate_inventory(
         class_bytes[retention_class] = (
             class_bytes.get(retention_class, 0) + size_bytes
         )
-        if budget_tier != "A-normal":
-            over_budget_files.append(row)
+        if budget_tier == WARNING_TIER:
+            review_files.append(row)
+        elif budget_tier in FAILURE_TIERS:
+            rejected_files.append(row)
+        elif budget_tier != "A-normal":
+            failures.append(
+                f"未知文件预算级别 {budget_tier}: {row.get('path')}"
+            )
 
-    over_budget_files.sort(
-        key=lambda row: int(row.get("size_bytes", 0)), reverse=True
-    )
-    for row in over_budget_files[:max_file_details]:
-        warnings.append(
-            f"文件预算 {row.get('budget_tier')}: {row.get('path')} "
-            f"({row.get('size_bytes')} bytes)"
-        )
-    omitted_count = len(over_budget_files) - max_file_details
-    if omitted_count > 0:
-        warnings.append(
-            f"文件预算明细已截断：另有 {omitted_count} 个 B/C/D 级文件，见 JSON 清单"
-        )
+    for rows, findings in (
+        (review_files, warnings),
+        (rejected_files, failures),
+    ):
+        rows.sort(key=lambda row: int(row.get("size_bytes", 0)), reverse=True)
+        for row in rows[:max_file_details]:
+            findings.append(
+                f"文件预算 {row.get('budget_tier')}: {row.get('path')} "
+                f"({row.get('size_bytes')} bytes)"
+            )
+        omitted_count = len(rows) - max_file_details
+        if omitted_count > 0:
+            findings.append(
+                f"文件预算明细已截断：另有 {omitted_count} 个同级发现；"
+                "运行 inventory_artifacts.py 导出完整人工清单"
+            )
 
-    for retention_class in ("regenerable-large", "scratch", "local-dataset"):
+    for retention_class in RETENTION_WARNING_CLASSES:
         count = class_counts.get(retention_class, 0)
         if count:
             warnings.append(
                 f"保留复核 {retention_class}: {count} files, "
                 f"{class_bytes[retention_class]} bytes"
             )
-    return warnings
+    return warnings, failures
 
 
 def main() -> int:
     parser = argparse.ArgumentParser(
-        description="Warn about artifact budget and retention-policy findings."
+        description="Evaluate the current artifact tree without a persisted snapshot."
     )
-    parser.add_argument("--inventory", type=Path, default=DEFAULT_INVENTORY)
+    parser.add_argument("--root", type=Path, default=ROOT)
     parser.add_argument(
-        "--strict",
-        action="store_true",
-        help="Return exit code 1 when warnings exist; default always exits 0.",
+        "--max-file-details",
+        type=int,
+        default=MAX_FILE_DETAILS,
+        help="Maximum B-tier and C/D-tier file details printed per severity.",
     )
     args = parser.parse_args()
-    if not args.inventory.is_file():
-        if args.inventory.resolve() != DEFAULT_INVENTORY.resolve():
-            print(f"ERROR: artifact inventory does not exist: {args.inventory}")
-            return 1
-        current_files, current_bytes = current_artifact_totals(ROOT)
-        print(
-            "Live artifact scan: "
-            f"{current_files} files/{current_bytes} bytes. "
-            "No persistent inventory snapshot is configured."
-        )
-        return 0
-    inventory = json.loads(args.inventory.read_text(encoding="utf-8"))
-    if args.inventory.resolve() == DEFAULT_INVENTORY.resolve():
-        current_files, current_bytes = current_artifact_totals(ROOT)
-        summary = inventory.get("summary", {})
-        recorded_files = int(summary.get("file_count", 0))
-        recorded_bytes = int(summary.get("total_bytes", 0))
-        if (current_files, current_bytes) != (recorded_files, recorded_bytes):
-            print(
-                "WARNING: artifact inventory is stale; "
-                f"recorded={recorded_files} files/{recorded_bytes} bytes, "
-                f"current={current_files} files/{current_bytes} bytes. "
-                "Regenerate the inventory before using its budget findings."
-            )
-            return 1 if args.strict else 0
-    warnings = evaluate_inventory(inventory)
+    if args.max_file_details < 0:
+        parser.error("--max-file-details must be non-negative")
+
+    inventory = build_inventory(args.root)
+    summary = inventory["summary"]
+    assert isinstance(summary, dict)
+    print(
+        "Live artifact inventory: "
+        f"{summary['file_count']} files/{summary['total_bytes']} bytes across "
+        f"{summary['family_count']} families; no snapshot written."
+    )
+    warnings, failures = evaluate_inventory(
+        inventory, max_file_details=args.max_file_details
+    )
     if warnings:
         print("\n".join(f"WARNING: {warning}" for warning in warnings))
+    if failures:
+        print("\n".join(f"ERROR: {failure}" for failure in failures))
         print(
-            f"{len(warnings)} warning(s); advisory only"
-            + (" (strict mode enabled)" if args.strict else "")
+            f"Artifact budget check failed with {len(failures)} blocking "
+            "finding(s). Run inventory_artifacts.py for manual JSON/Markdown "
+            "inventory output."
         )
-        return 1 if args.strict else 0
-    print("artifact inventory check passed without warnings")
+        return 1
+    if warnings:
+        print(f"Artifact budget check passed with {len(warnings)} warning(s).")
+    else:
+        print("Artifact budget check passed without findings.")
     return 0
 
 
