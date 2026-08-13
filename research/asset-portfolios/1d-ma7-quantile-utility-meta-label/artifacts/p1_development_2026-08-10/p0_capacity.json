@@ -1,0 +1,38 @@
+{
+  "schema_version": "binance-1d-ma7-quml-p0-v1",
+  "created_at_utc": "2026-08-10T13:47:17.448473+00:00",
+  "events_all": 5880,
+  "events_fresh": 2197,
+  "fresh_per_asset": {
+    "BCH": 304,
+    "ETC": 290,
+    "XLM": 290,
+    "ATOM": 285,
+    "VET": 286,
+    "NEAR": 249,
+    "AAVE": 250,
+    "FIL": 243
+  },
+  "fresh_side_counts": {
+    "long": 1142,
+    "short": 1055
+  },
+  "event_identity_sha256": "90dbc962a0ed88f69375687a8ac7c937b1c16760bcdf7b280e5f2c70be92aa7a",
+  "source_audit": {
+    "event_manifest_sha256": "1744cce1f3063c9bda47ec43a7e482975647bf44f2efe6507a436306fdea1f8a",
+    "price_quality_sha256": "9fbd10f6e219492f40a2933dc0f5bd2d28c2308eb0a6a38a0f5c6c6ce370b48c"
+  },
+  "checks": {
+    "event_builder_capacity": true,
+    "fresh_total": true,
+    "fresh_per_asset": true,
+    "fresh_directions": true,
+    "feature_contract": true,
+    "source_identity": true,
+    "hype_lock": true
+  },
+  "p0_capacity_pass": true,
+  "hype_rows": 0,
+  "hype_files": 0,
+  "hype_requests": 0
+}

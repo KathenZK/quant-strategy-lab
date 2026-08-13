@@ -11,3 +11,23 @@
 ## 2026-08-05 — 共享参数应用于美股指数
 
 决定：BTC/ETH 共享参数零调参应用到 S&P 500 / Nasdaq Composite 后，full combined 为 `+18.77%/+91.43%`，但 `10 bps/fill` 后为 `-48.26%/-12.38%`，且 short-only 均长期亏损、远逊 buy-and-hold；不根据指数结果调参，不改变共享参数的 `explore / not promoted / not live-ready` 判定。证据：[美股指数诊断](../../us-indexes/1d-ma7-shared-parameter-transfer/diagnostics/us-indexes-1d-ma7-shared-parameter-transfer-2026-08-05.md)。
+
+## 2026-08-06 — 平多即反手空诊断
+
+决定：预先冻结并检验“多头 `ma7_hysteresis_exit` 时同 open 平多反手 `1x` 空单”；HYPE/BTC/ETH 相对原策略收益变化为 `-0.56/0.00/-22.73pp`。HYPE/ETH 各新增 1 笔反手且均亏损，BTC 两次相关事件本来就会自然同开盘开空；该机制不采纳，不改写 HYPE V1 或 BTC/ETH 共享参数。证据：[冻结合同](specs/binance-ma7-long-exit-short-reversal-contract-2026-08-06.md) · [诊断](diagnostics/binance-ma7-long-exit-short-reversal-2026-08-06.md)。
+
+## 2026-08-12 — 共享参数对齐HYPE fresh窗口复算
+
+决定：按用户要求用当前 HYPE fresh API 窗口复算 BTC/ETH shared MA7 参数；剔除首个不完整小时路径日后，`2025-05-31` 至 `2026-08-12` terminal open 的完整日 `438d` combined 仍为 `-65.15%`、MDD `-73.47%`，long-only / short-only `-24.12% / -59.45%`，同期 buy-and-hold `+52.01%`。该复算不改变旧裁决：共享参数不是 HYPE 通用替代版本，不登记、不 promotion、不推进 runner。证据：[fresh aligned诊断](diagnostics/binance-ma7-shared-params-on-hype-fresh-aligned-2026-08-12.md) · [机器证据](artifacts/binance_ma7_shared_params_on_hype_fresh_aligned_2026-08-12.json)。
+
+## 2026-08-12 — 共享参数在BTC/ETH的HYPE对齐窗口复算
+
+决定：为澄清“全周期赚钱是否只是窗口效应”，同一 BTC/ETH shared MA7 参数截取 `2025-05-31` 至 `2026-08-12` terminal open 后，`BTCUSDT` combined `+48.86%`、MDD `-14.78%`，`ETHUSDT` combined `+55.29%`、MDD `-27.02%`；同期两者 buy-and-hold 分别为 `-43.28% / -30.73%`。因此问题不是 HYPE 对齐窗口失效，而是 shared 参数迁移到 HYPE 资产失败。证据：[BTC/ETH aligned诊断](diagnostics/binance-ma7-shared-params-btc-eth-hype-aligned-2026-08-12.md)。
+
+## 2026-08-12 — 登记 V1 并生成 BTC/ETH 交易路径
+
+决定：按用户要求，将 BTC/ETH shared MA7 参数登记为 `Binance-1D-MA7-Asset-Specific-Search-V1`，状态为 `registered / not promoted / not live-ready`；同时基于 HYPE 对齐窗口机器证据生成 BTC 与 ETH 的自包含交易路径 HTML。登记只固定版本身份和证据链接，不代表 HYPE 可迁移、live spec、dry-run 或 runner 授权。证据：[V1规格](specs/binance-1d-ma7-as-search-v1-spec.md) · [BTC路径](artifacts/binance_ma7_shared_params_v1_btc_trade_path_2026-08-12.html) · [ETH路径](artifacts/binance_ma7_shared_params_v1_eth_trade_path_2026-08-12.html)。
+
+## 2026-08-13 — BTC/ETH候选最近1至4年横向排名
+
+决定：固定既有 growth 路径并统一按 `2025-08-07` 终点切分；近期综合前三为 `COST / CPPR-25% / DASE`。三者只保留为核心收益、风险模块与组合架构的后继研究材料；`CILL/CBCT` 仅保留模块或对照，其余当前机制停止。该诊断不重选参数、不揭示 audit/prospective、不改变任何家族状态。证据：[横向排名](diagnostics/binance-btceth-recent-horizon-ranking-2026-08-13.md) · [机器摘要](artifacts/binance_btceth_recent_horizon_ranking_2026-08-13.json)。

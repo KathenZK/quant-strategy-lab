@@ -1,0 +1,642 @@
+{
+  "logistic_aligned_coefficient_stability": [
+    {
+      "feature": "aligned_rsi6",
+      "mean_coefficient": 0.4615015129858292,
+      "mean_abs_coefficient": 0.4615015129858292,
+      "min_coefficient": 0.3857153832799599,
+      "max_coefficient": 0.5689075225153114,
+      "positive_fold_count": 4,
+      "negative_fold_count": 0,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "directional_rsi_extreme_5",
+      "mean_coefficient": -0.4033519259649623,
+      "mean_abs_coefficient": 0.4033519259649623,
+      "min_coefficient": -0.5531871439762017,
+      "max_coefficient": -0.30751662209925257,
+      "positive_fold_count": 0,
+      "negative_fold_count": 4,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "aligned_ma7_slope_3_atr",
+      "mean_coefficient": 0.150114441075338,
+      "mean_abs_coefficient": 0.150114441075338,
+      "min_coefficient": 0.11553214407847413,
+      "max_coefficient": 0.17737020574190332,
+      "positive_fold_count": 4,
+      "negative_fold_count": 0,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "counter_rsi20_last5",
+      "mean_coefficient": -0.142321378672245,
+      "mean_abs_coefficient": 0.142321378672245,
+      "min_coefficient": -0.193165179170881,
+      "max_coefficient": -0.10196967431686407,
+      "positive_fold_count": 0,
+      "negative_fold_count": 4,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "aligned_return_3_atr",
+      "mean_coefficient": -0.07294301521502763,
+      "mean_abs_coefficient": 0.07294301521502763,
+      "min_coefficient": -0.16897890956779502,
+      "max_coefficient": -0.031340312569813795,
+      "positive_fold_count": 0,
+      "negative_fold_count": 4,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "aligned_body_atr",
+      "mean_coefficient": 0.06875359698550387,
+      "mean_abs_coefficient": 0.06875359698550387,
+      "min_coefficient": 0.011967445631873455,
+      "max_coefficient": 0.10434191385702596,
+      "positive_fold_count": 4,
+      "negative_fold_count": 0,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "aligned_cross_span_atr",
+      "mean_coefficient": 0.06610648654519811,
+      "mean_abs_coefficient": 0.06610648654519811,
+      "min_coefficient": 0.028841030886101255,
+      "max_coefficient": 0.11414434584184646,
+      "positive_fold_count": 4,
+      "negative_fold_count": 0,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "aligned_return_5_atr",
+      "mean_coefficient": -0.05769671413056946,
+      "mean_abs_coefficient": 0.05769671413056946,
+      "min_coefficient": -0.06975363194938207,
+      "max_coefficient": -0.042351265702304984,
+      "positive_fold_count": 0,
+      "negative_fold_count": 4,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "aligned_ma7_slope_1_atr",
+      "mean_coefficient": -0.056582271972672335,
+      "mean_abs_coefficient": 0.056582271972672335,
+      "min_coefficient": -0.0881662358281244,
+      "max_coefficient": -0.02550626452431398,
+      "positive_fold_count": 0,
+      "negative_fold_count": 4,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "prior_side_duration",
+      "mean_coefficient": -0.05042190008244916,
+      "mean_abs_coefficient": 0.05042190008244916,
+      "min_coefficient": -0.0608228616656891,
+      "max_coefficient": -0.04289271228988505,
+      "positive_fold_count": 0,
+      "negative_fold_count": 4,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "aligned_close_gap_atr",
+      "mean_coefficient": 0.049197820068383136,
+      "mean_abs_coefficient": 0.049197820068383136,
+      "min_coefficient": 0.016128803221058648,
+      "max_coefficient": 0.1068238508105271,
+      "positive_fold_count": 4,
+      "negative_fold_count": 0,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "aligned_prev_gap_atr",
+      "mean_coefficient": -0.035859436735695215,
+      "mean_abs_coefficient": 0.035859436735695215,
+      "min_coefficient": -0.051093334814174184,
+      "max_coefficient": -0.022562225899296375,
+      "positive_fold_count": 0,
+      "negative_fold_count": 4,
+      "sign_consistency": 1.0
+    },
+    {
+      "feature": "counter_rsi_extreme_5",
+      "mean_coefficient": -0.1734093192388514,
+      "mean_abs_coefficient": 0.2046621594064425,
+      "min_coefficient": -0.32315889672355064,
+      "max_coefficient": 0.06250568033518226,
+      "positive_fold_count": 1,
+      "negative_fold_count": 3,
+      "sign_consistency": 0.75
+    },
+    {
+      "feature": "rejection_wick_atr",
+      "mean_coefficient": 0.07008267479208952,
+      "mean_abs_coefficient": 0.08271218176185796,
+      "min_coefficient": -0.025259013939536896,
+      "max_coefficient": 0.20030963401710664,
+      "positive_fold_count": 3,
+      "negative_fold_count": 1,
+      "sign_consistency": 0.75
+    },
+    {
+      "feature": "aligned_rsi6_delta_1",
+      "mean_coefficient": 0.0027082378295957,
+      "mean_abs_coefficient": 0.0809274358245028,
+      "min_coefficient": -0.1155811091245986,
+      "max_coefficient": 0.167271347308197,
+      "positive_fold_count": 1,
+      "negative_fold_count": 3,
+      "sign_consistency": 0.75
+    },
+    {
+      "feature": "range_atr",
+      "mean_coefficient": -0.02347541227561568,
+      "mean_abs_coefficient": 0.07888183431511499,
+      "min_coefficient": -0.20471449318146134,
+      "max_coefficient": 0.06303509034436491,
+      "positive_fold_count": 3,
+      "negative_fold_count": 1,
+      "sign_consistency": 0.75
+    },
+    {
+      "feature": "directional_rsi80_last5",
+      "mean_coefficient": -0.016160116972735703,
+      "mean_abs_coefficient": 0.020031397537657678,
+      "min_coefficient": -0.04162318662576308,
+      "max_coefficient": 0.007742561129843955,
+      "positive_fold_count": 1,
+      "negative_fold_count": 3,
+      "sign_consistency": 0.75
+    },
+    {
+      "feature": "aligned_close_location",
+      "mean_coefficient": -0.004145553404731939,
+      "mean_abs_coefficient": 0.0563521241221686,
+      "min_coefficient": -0.09481612874471793,
+      "max_coefficient": 0.10417885479598266,
+      "positive_fold_count": 2,
+      "negative_fold_count": 2,
+      "sign_consistency": 0.5
+    },
+    {
+      "feature": "opposition_wick_atr",
+      "mean_coefficient": 0.021737233130613487,
+      "mean_abs_coefficient": 0.04787705568921879,
+      "min_coefficient": -0.036407505301738426,
+      "max_coefficient": 0.09035107818375084,
+      "positive_fold_count": 2,
+      "negative_fold_count": 2,
+      "sign_consistency": 0.5
+    }
+  ],
+  "lgbm_aligned_mean_feature_gain": [
+    {
+      "feature": "counter_rsi_extreme_5",
+      "mean_gain": 356.56286891177297
+    },
+    {
+      "feature": "aligned_close_gap_atr",
+      "mean_gain": 308.5376544520259
+    },
+    {
+      "feature": "aligned_cross_span_atr",
+      "mean_gain": 287.9285780377686
+    },
+    {
+      "feature": "aligned_rsi6_delta_1",
+      "mean_gain": 259.6192940697074
+    },
+    {
+      "feature": "range_atr",
+      "mean_gain": 252.19366636592895
+    },
+    {
+      "feature": "aligned_return_5_atr",
+      "mean_gain": 227.18965797126293
+    },
+    {
+      "feature": "aligned_rsi6",
+      "mean_gain": 224.90239802002907
+    },
+    {
+      "feature": "directional_rsi_extreme_5",
+      "mean_gain": 210.37967202067375
+    },
+    {
+      "feature": "aligned_return_3_atr",
+      "mean_gain": 209.72589628398418
+    },
+    {
+      "feature": "aligned_ma7_slope_1_atr",
+      "mean_gain": 204.58845588983968
+    },
+    {
+      "feature": "aligned_ma7_slope_3_atr",
+      "mean_gain": 197.0218202471733
+    },
+    {
+      "feature": "opposition_wick_atr",
+      "mean_gain": 184.6004443652928
+    },
+    {
+      "feature": "aligned_close_location",
+      "mean_gain": 166.40108602680266
+    },
+    {
+      "feature": "aligned_prev_gap_atr",
+      "mean_gain": 159.98975862935185
+    },
+    {
+      "feature": "rejection_wick_atr",
+      "mean_gain": 131.21751257777214
+    },
+    {
+      "feature": "aligned_body_atr",
+      "mean_gain": 84.24270239472389
+    },
+    {
+      "feature": "prior_side_duration",
+      "mean_gain": 61.53257974982262
+    },
+    {
+      "feature": "counter_rsi20_last5",
+      "mean_gain": 3.5671000480651855
+    },
+    {
+      "feature": "directional_rsi80_last5",
+      "mean_gain": 0.0
+    }
+  ],
+  "typical_events": {
+    "highest_ev_winners": [
+      {
+        "event_id": 220,
+        "asset": "BTC",
+        "signal_ts": "2022-09-13T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.03601881444563361,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.03609644885899578,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 57.21935330736503,
+        "directional_rsi_extreme_5": 57.21935330736503,
+        "aligned_close_gap_atr": 0.5361465889368524,
+        "aligned_ma7_slope_3_atr": -0.6463553023897471,
+        "rejection_wick_atr": 0.36135463486271185,
+        "opposition_wick_atr": 0.2511570468603978,
+        "aligned_close_location": 0.8928571428571428
+      },
+      {
+        "event_id": 891,
+        "asset": "ETH",
+        "signal_ts": "2025-05-08T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.03351197396909479,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.17750793711547572,
+        "exit_reason": "rsi6_reversal",
+        "aligned_rsi6": 92.62169544899608,
+        "directional_rsi_extreme_5": 92.62169544899608,
+        "aligned_close_gap_atr": 3.067403505513022,
+        "aligned_ma7_slope_3_atr": 0.5392678493239779,
+        "rejection_wick_atr": 0.022383801929227082,
+        "opposition_wick_atr": 0.1900301192829757,
+        "aligned_close_location": 0.9512020606754436
+      },
+      {
+        "event_id": 254,
+        "asset": "BTC",
+        "signal_ts": "2023-03-03T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.030361633217640373,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.08289221966522138,
+        "exit_reason": "rsi6_reversal",
+        "aligned_rsi6": 71.04372294464332,
+        "directional_rsi_extreme_5": 71.04372294464332,
+        "aligned_close_gap_atr": 1.1040625982464107,
+        "aligned_ma7_slope_3_atr": 0.32416949034129267,
+        "rejection_wick_atr": 0.013937890802391138,
+        "opposition_wick_atr": 0.5619170712963271,
+        "aligned_close_location": 0.7100864189743274
+      },
+      {
+        "event_id": 679,
+        "asset": "ETH",
+        "signal_ts": "2022-11-29T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.02851441715682116,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.016396387286048194,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 55.82439533950291,
+        "directional_rsi_extreme_5": 55.82439533950291,
+        "aligned_close_gap_atr": 0.42459040590406527,
+        "aligned_ma7_slope_3_atr": 0.5566937269372655,
+        "rejection_wick_atr": 0.23019926199262183,
+        "opposition_wick_atr": 0.2688413284132838,
+        "aligned_close_location": 0.8210207731462377
+      },
+      {
+        "event_id": 1460,
+        "asset": "SOL",
+        "signal_ts": "2022-12-16T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.02837609850377708,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.16108254824599327,
+        "exit_reason": "rsi6_reversal",
+        "aligned_rsi6": 74.55192526398037,
+        "directional_rsi_extreme_5": 74.55192526398037,
+        "aligned_close_gap_atr": 1.3186063750926595,
+        "aligned_ma7_slope_3_atr": 0.04936990363232209,
+        "rejection_wick_atr": 0.13076352853966022,
+        "opposition_wick_atr": 0.2843587842846561,
+        "aligned_close_location": 0.8756805807622501
+      }
+    ],
+    "highest_ev_losers": [
+      {
+        "event_id": 1180,
+        "asset": "BNB",
+        "signal_ts": "2023-11-21T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.04928519171472122,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.014720611941886941,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 71.00342829338645,
+        "directional_rsi_extreme_5": 71.00342829338645,
+        "aligned_close_gap_atr": 1.0018892163530568,
+        "aligned_ma7_slope_3_atr": 0.043527544774427725,
+        "rejection_wick_atr": 1.0135267890878878,
+        "opposition_wick_atr": 0.08781077609007767,
+        "aligned_close_location": 0.9657166460140438
+      },
+      {
+        "event_id": 297,
+        "asset": "BTC",
+        "signal_ts": "2023-08-29T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.044002412319405215,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.06692853029036229,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 74.91189317311571,
+        "directional_rsi_extreme_5": 74.91189317311571,
+        "aligned_close_gap_atr": 1.7605398191831334,
+        "aligned_ma7_slope_3_atr": 0.2929534048831805,
+        "rejection_wick_atr": 0.26485348570569256,
+        "opposition_wick_atr": 0.6156231791440356,
+        "aligned_close_location": 0.7932207884037469
+      },
+      {
+        "event_id": 216,
+        "asset": "BTC",
+        "signal_ts": "2022-08-26T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.041781009259637035,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.005670773009989976,
+        "exit_reason": "rsi6_reversal",
+        "aligned_rsi6": 79.24549053898997,
+        "directional_rsi_extreme_5": 79.24549053898997,
+        "aligned_close_gap_atr": 1.190990414259001,
+        "aligned_ma7_slope_3_atr": 0.7094459138462513,
+        "rejection_wick_atr": 0.3765393621860197,
+        "opposition_wick_atr": 0.15177142472076768,
+        "aligned_close_location": 0.927189409368635
+      },
+      {
+        "event_id": 660,
+        "asset": "ETH",
+        "signal_ts": "2022-08-26T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.03922801902209201,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.035038339327715114,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 74.07251750401481,
+        "directional_rsi_extreme_5": 74.07251750401481,
+        "aligned_close_gap_atr": 0.9557590923446942,
+        "aligned_ma7_slope_3_atr": 0.5230679526736457,
+        "rejection_wick_atr": 0.10076285804523624,
+        "opposition_wick_atr": 0.18902601977600175,
+        "aligned_close_location": 0.8994117647058822
+      },
+      {
+        "event_id": 291,
+        "asset": "BTC",
+        "signal_ts": "2023-08-01T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.037855652401451084,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.02084295644865427,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 60.57041690784931,
+        "directional_rsi_extreme_5": 60.57041690784931,
+        "aligned_close_gap_atr": 0.6819186203179725,
+        "aligned_ma7_slope_3_atr": -0.06946914578280564,
+        "rejection_wick_atr": 1.26531932093775,
+        "opposition_wick_atr": 0.06375639989221091,
+        "aligned_close_location": 0.9714767932489458
+      }
+    ],
+    "selected_best": [
+      {
+        "event_id": 903,
+        "asset": "ETH",
+        "signal_ts": "2025-07-02T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.011238869249096624,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.4022873352736624,
+        "exit_reason": "rsi_and_ma7",
+        "aligned_rsi6": 65.65063963633418,
+        "directional_rsi_extreme_5": 65.65063963633418,
+        "aligned_close_gap_atr": 0.9090821824115938,
+        "aligned_ma7_slope_3_atr": 0.21846914409819937,
+        "rejection_wick_atr": 0.3034713639472487,
+        "opposition_wick_atr": 0.4101441102005058,
+        "aligned_close_location": 0.8052020584832649
+      },
+      {
+        "event_id": 1452,
+        "asset": "SOL",
+        "signal_ts": "2022-11-06T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.0027827023004399487,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.35596554511636014,
+        "exit_reason": "rsi6_reversal",
+        "aligned_rsi6": 49.76895240108092,
+        "directional_rsi_extreme_5": 57.13574112576501,
+        "aligned_close_gap_atr": 0.06317267197005152,
+        "aligned_ma7_slope_3_atr": -0.25175479644361426,
+        "rejection_wick_atr": 0.05896116050538127,
+        "opposition_wick_atr": 0.11137108095461036,
+        "aligned_close_location": 0.9293139293139286
+      },
+      {
+        "event_id": 200,
+        "asset": "BTC",
+        "signal_ts": "2022-06-08T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.022988720867287184,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.31721541199157316,
+        "exit_reason": "rsi6_reversal",
+        "aligned_rsi6": 52.39292732590534,
+        "directional_rsi_extreme_5": 52.82506622168419,
+        "aligned_close_gap_atr": 0.12361352398770507,
+        "aligned_ma7_slope_3_atr": 0.0667564428088306,
+        "rejection_wick_atr": 0.14895301144131823,
+        "opposition_wick_atr": 0.26444556379074613,
+        "aligned_close_location": 0.755
+      },
+      {
+        "event_id": 653,
+        "asset": "ETH",
+        "signal_ts": "2022-07-14T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.009615490350735376,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.2879138754827256,
+        "exit_reason": "rsi6_reversal",
+        "aligned_rsi6": 59.02768839482071,
+        "directional_rsi_extreme_5": 59.02768839482071,
+        "aligned_close_gap_atr": 0.5271849250303929,
+        "aligned_ma7_slope_3_atr": -0.3546028637039056,
+        "rejection_wick_atr": 0.515449817641498,
+        "opposition_wick_atr": 0.28236863433743187,
+        "aligned_close_location": 0.8367388778787667
+      },
+      {
+        "event_id": 1601,
+        "asset": "SOL",
+        "signal_ts": "2024-11-05T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.0044391048403751646,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": 0.2635023375297414,
+        "exit_reason": "rsi6_reversal",
+        "aligned_rsi6": 50.22620571865378,
+        "directional_rsi_extreme_5": 50.22620571865378,
+        "aligned_close_gap_atr": 0.05109695052210981,
+        "aligned_ma7_slope_3_atr": -0.7028801449727426,
+        "rejection_wick_atr": 0.10917517044695099,
+        "opposition_wick_atr": 0.2755373349375376,
+        "aligned_close_location": 0.7861178369652962
+      }
+    ],
+    "selected_worst": [
+      {
+        "event_id": 1623,
+        "asset": "SOL",
+        "signal_ts": "2025-03-02T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.007997582803935088,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.20720111321646972,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 67.33711165737462,
+        "directional_rsi_extreme_5": 67.33711165737462,
+        "aligned_close_gap_atr": 1.5120584819293568,
+        "aligned_ma7_slope_3_atr": -0.2618706018992972,
+        "rejection_wick_atr": 0.17264466762314612,
+        "opposition_wick_atr": 0.06504065040650471,
+        "aligned_close_location": 0.9660339660339657
+      },
+      {
+        "event_id": 654,
+        "asset": "ETH",
+        "signal_ts": "2022-07-25T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.0071917311743372805,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.13810861701104304,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 52.771235437454244,
+        "directional_rsi_extreme_5": 52.771235437454244,
+        "aligned_close_gap_atr": 0.6938052915700232,
+        "aligned_ma7_slope_3_atr": -0.3206346599889163,
+        "rejection_wick_atr": 0.082544797717523,
+        "opposition_wick_atr": 0.05172519961411391,
+        "aligned_close_location": 0.9591048506191069
+      },
+      {
+        "event_id": 1552,
+        "asset": "SOL",
+        "signal_ts": "2024-03-19T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.0050008507239284565,
+        "edge_threshold": 0.005,
+        "selected": true,
+        "net_return": -0.1321550277162848,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 51.17853510383413,
+        "directional_rsi_extreme_5": 51.17853510383413,
+        "aligned_close_gap_atr": 0.5404275677989581,
+        "aligned_ma7_slope_3_atr": -0.7759549769596861,
+        "rejection_wick_atr": 0.1203887895651298,
+        "opposition_wick_atr": 0.164675295243371,
+        "aligned_close_location": 0.8857011775500843
+      },
+      {
+        "event_id": 1459,
+        "asset": "SOL",
+        "signal_ts": "2022-12-13T00:00:00+00:00",
+        "side_name": "long",
+        "predicted_ev": 0.01776535052623919,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.12247446484537979,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 57.47526361040022,
+        "directional_rsi_extreme_5": 57.47526361040022,
+        "aligned_close_gap_atr": 0.49915325994919363,
+        "aligned_ma7_slope_3_atr": -0.2512701100762039,
+        "rejection_wick_atr": 0.8223962743437764,
+        "opposition_wick_atr": 0.3778577476714635,
+        "aligned_close_location": 0.8173352435530091
+      },
+      {
+        "event_id": 898,
+        "asset": "ETH",
+        "signal_ts": "2025-06-05T00:00:00+00:00",
+        "side_name": "short",
+        "predicted_ev": 0.0130993356060379,
+        "edge_threshold": 0.0,
+        "selected": true,
+        "net_return": -0.11268985932913024,
+        "exit_reason": "opposite_ma7_cross",
+        "aligned_rsi6": 71.69749863807364,
+        "directional_rsi_extreme_5": 71.69749863807364,
+        "aligned_close_gap_atr": 1.0438374145656972,
+        "aligned_ma7_slope_3_atr": 0.40607884850405057,
+        "rejection_wick_atr": 0.2644050151631746,
+        "opposition_wick_atr": 0.1813922962024177,
+        "aligned_close_location": 0.9083999999999997
+      }
+    ]
+  }
+}

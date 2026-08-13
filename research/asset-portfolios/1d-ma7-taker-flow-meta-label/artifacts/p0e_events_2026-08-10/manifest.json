@@ -1,0 +1,16 @@
+{
+  "schema_version": "binance-1d-ma7-tfml-p0e-event-manifest-v1",
+  "created_at_utc": "2026-08-10T13:17:24.118091+00:00",
+  "files": {
+    "events": {
+      "path": "p0e_events.parquet",
+      "bytes": 1731926,
+      "sha256": "6459ecf5750d67fa367dee9c2d8c5d7a4060aa954c9b8d68c25c501d3813026a"
+    },
+    "capacity": {
+      "path": "p0e_event_capacity.json",
+      "bytes": 14910,
+      "sha256": "bc51fdcacf8c3d4be06b5c91ad401ffcf794d475cbbd1a72765e4bfc148903e4"
+    }
+  }
+}

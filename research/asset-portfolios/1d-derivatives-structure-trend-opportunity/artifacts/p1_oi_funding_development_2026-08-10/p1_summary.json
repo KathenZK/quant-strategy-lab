@@ -1,0 +1,769 @@
+{
+  "decision": "DEVELOPMENT_HARD_GATE_FAILED",
+  "capacity": {
+    "usable_anchors": 6118,
+    "label_counts": {
+      "long": 2552,
+      "flat": 1301,
+      "short": 2265
+    },
+    "p0_capacity_pass": true
+  },
+  "full": {
+    "main": {
+      "events": 186,
+      "mean": -0.0022739457013562507,
+      "median": -0.00043426765505946203,
+      "profit_factor": 0.6756921687501791,
+      "win_rate": 0.46236559139784944,
+      "compound": -0.36214933108045144,
+      "event_sequence_mdd": -0.43470721873685003
+    },
+    "variants": {
+      "selected_z_8bps": {
+        "events": 186,
+        "mean": -0.0024768983604262704,
+        "median": -0.0006344852003984758,
+        "profit_factor": 0.6522124537611131,
+        "win_rate": 0.45161290322580644,
+        "compound": -0.3858456387928827,
+        "event_sequence_mdd": -0.45104585069406045
+      },
+      "selected_z_12bps": {
+        "events": 186,
+        "mean": -0.002679900788563561,
+        "median": -0.000834863112213555,
+        "profit_factor": 0.6295689312099227,
+        "win_rate": 0.44086021505376344,
+        "compound": -0.40867176586297127,
+        "event_sequence_mdd": -0.46691946116212746
+      },
+      "selected_z_funding_off": {
+        "events": 186,
+        "mean": -0.002404734406140666,
+        "median": -0.0006840978021743491,
+        "profit_factor": 0.6613887727748483,
+        "win_rate": 0.46236559139784944,
+        "compound": -0.3776630499451472,
+        "event_sequence_mdd": -0.4445684350457625
+      },
+      "selected_z_lag1h": {
+        "events": 186,
+        "mean": -0.0020914563775234316,
+        "median": -0.0004394674736619746,
+        "profit_factor": 0.7047698273450597,
+        "win_rate": 0.46774193548387094,
+        "compound": -0.3399825464262455,
+        "event_sequence_mdd": -0.4097181479439874
+      }
+    },
+    "per_asset": {
+      "BTC": {
+        "events": 58,
+        "mean": -0.0012525441339753716,
+        "median": -0.0001543445529218909,
+        "profit_factor": 0.7520875453291128,
+        "win_rate": 0.46551724137931033,
+        "compound": -0.074433413563463,
+        "event_sequence_mdd": -0.13920334737896178
+      },
+      "ETH": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BNB": {
+        "events": 61,
+        "mean": -0.004714456607368221,
+        "median": -0.002590825597617876,
+        "profit_factor": 0.4722133348322416,
+        "win_rate": 0.4262295081967213,
+        "compound": -0.2584675499172383,
+        "event_sequence_mdd": -0.2745792349923485
+      },
+      "SOL": {
+        "events": 35,
+        "mean": -0.001878237626142789,
+        "median": -0.0014471397860554337,
+        "profit_factor": 0.7925237964065676,
+        "win_rate": 0.4857142857142857,
+        "compound": -0.07102886498579108,
+        "event_sequence_mdd": -0.1546382751259382
+      },
+      "TRX": {
+        "events": 32,
+        "mean": 9.418216508649704e-05,
+        "median": 0.0003771747209290035,
+        "profit_factor": 1.0201719726484986,
+        "win_rate": 0.5,
+        "compound": 0.0004121710270008627,
+        "event_sequence_mdd": -0.06456550017457474
+      }
+    },
+    "per_fold": {
+      "BNB-1": {
+        "events": 4,
+        "mean": 0.0047597309492883625,
+        "median": 0.005955885500494901,
+        "profit_factor": 5.613660914054847,
+        "win_rate": 0.75,
+        "compound": 0.01911142862716453,
+        "event_sequence_mdd": -0.004126641327097613
+      },
+      "BNB-2": {
+        "events": 26,
+        "mean": -0.007811170231227605,
+        "median": -0.005866533890843408,
+        "profit_factor": 0.3283026795673828,
+        "win_rate": 0.4230769230769231,
+        "compound": -0.18990405394515752,
+        "event_sequence_mdd": -0.21798420313117928
+      },
+      "BNB-3": {
+        "events": 31,
+        "mean": -0.0033396887366031343,
+        "median": -0.0017762527918112965,
+        "profit_factor": 0.5657320999407067,
+        "win_rate": 0.3870967741935484,
+        "compound": -0.10180211084700297,
+        "event_sequence_mdd": -0.1394567059952012
+      },
+      "BNB-4": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BTC-1": {
+        "events": 28,
+        "mean": 0.001537660089717615,
+        "median": 0.0006344692315773704,
+        "profit_factor": 1.5280672808512068,
+        "win_rate": 0.5357142857142857,
+        "compound": 0.042678876169416124,
+        "event_sequence_mdd": -0.030286421832881993
+      },
+      "BTC-2": {
+        "events": 30,
+        "mean": -0.0038567347427554918,
+        "median": -0.00046702459456016956,
+        "profit_factor": 0.4529582587139621,
+        "win_rate": 0.4,
+        "compound": -0.11231865573332156,
+        "event_sequence_mdd": -0.11231865573332156
+      },
+      "BTC-3": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BTC-4": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "ETH-1": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "ETH-2": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "ETH-3": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "ETH-4": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "SOL-1": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "SOL-2": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "SOL-3": {
+        "events": 35,
+        "mean": -0.001878237626142789,
+        "median": -0.0014471397860554337,
+        "profit_factor": 0.7925237964065676,
+        "win_rate": 0.4857142857142857,
+        "compound": -0.07102886498579108,
+        "event_sequence_mdd": -0.1546382751259382
+      },
+      "SOL-4": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "TRX-1": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "TRX-2": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "TRX-3": {
+        "events": 32,
+        "mean": 9.418216508649704e-05,
+        "median": 0.0003771747209290035,
+        "profit_factor": 1.0201719726484986,
+        "win_rate": 0.5,
+        "compound": 0.0004121710270008627,
+        "event_sequence_mdd": -0.06456550017457474
+      },
+      "TRX-4": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      }
+    },
+    "positive_asset_count": 1,
+    "positive_outer_fold_count": 3,
+    "side_counts": {
+      "long": 65,
+      "short": 121
+    },
+    "ranking": {
+      "spearman": 0.019222430987136867,
+      "positive_asset_count": 2,
+      "per_asset": {
+        "BTC": -0.11501430373127443,
+        "ETH": 0.0,
+        "BNB": 0.09598096245372817,
+        "SOL": -0.05238095238095238,
+        "TRX": 0.1345307917888563
+      }
+    },
+    "bootstrap": {
+      "samples": 10000,
+      "seed": 20260810,
+      "clusters": 18,
+      "positive_probability": 0.0186,
+      "quantiles": {
+        "2.5%": -0.005102897557274498,
+        "50%": -0.002200192245701114,
+        "97.5%": -0.00011626474041058348
+      }
+    },
+    "outer_selection_count": 7,
+    "recent_slices": {
+      "1d": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "7d": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "1m": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "3m": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "6m": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "1y": {
+        "events": 95,
+        "mean": -0.0015367144441241192,
+        "median": -0.0006178665908989167,
+        "profit_factor": 0.785783448479329,
+        "win_rate": 0.4631578947368421,
+        "compound": -0.14796003900492183,
+        "event_sequence_mdd": -0.21756573863842654
+      }
+    },
+    "threshold_sensitivity": {
+      "minus_0.05": {
+        "events": 214,
+        "mean": -0.0003520684343189757,
+        "median": -0.0004335530324027116,
+        "profit_factor": 0.9446587382687202,
+        "win_rate": 0.48130841121495327,
+        "compound": -0.10299226537365236,
+        "event_sequence_mdd": -0.3953557452644145
+      },
+      "plus_0.05": {
+        "events": 149,
+        "mean": -0.0012998627880909572,
+        "median": -0.0002553244373789327,
+        "profit_factor": 0.8087758731220146,
+        "win_rate": 0.47651006711409394,
+        "compound": -0.19438097571370372,
+        "event_sequence_mdd": -0.31865647704265987
+      }
+    }
+  },
+  "control": {
+    "main": {
+      "events": 94,
+      "mean": 0.0016655910189212176,
+      "median": 0.0007425626055966246,
+      "profit_factor": 1.2641010129984216,
+      "win_rate": 0.5212765957446809,
+      "compound": 0.14963267278600045,
+      "event_sequence_mdd": -0.12287253075165516
+    },
+    "variants": {
+      "selected_z_8bps": {
+        "events": 94,
+        "mean": 0.001465096955630092,
+        "median": 0.0005425419395414352,
+        "profit_factor": 1.228946873942575,
+        "win_rate": 0.5212765957446809,
+        "compound": 0.12821547461340255,
+        "event_sequence_mdd": -0.12896570353341086
+      },
+      "selected_z_12bps": {
+        "events": 94,
+        "mean": 0.001264685560737342,
+        "median": 0.000342521661075819,
+        "profit_factor": 1.1948099678102964,
+        "win_rate": 0.5212765957446809,
+        "compound": 0.10720166577624202,
+        "event_sequence_mdd": -0.13501547071296294
+      },
+      "selected_z_funding_off": {
+        "events": 94,
+        "mean": 0.0016554846064237383,
+        "median": 0.000702695051918435,
+        "profit_factor": 1.2610525757240714,
+        "win_rate": 0.5319148936170213,
+        "compound": 0.14843270638483919,
+        "event_sequence_mdd": -0.12270528707403994
+      },
+      "selected_z_lag1h": {
+        "events": 94,
+        "mean": 0.0016681249974326974,
+        "median": 0.0006092388111718884,
+        "profit_factor": 1.2662127997292116,
+        "win_rate": 0.5212765957446809,
+        "compound": 0.15002268370713168,
+        "event_sequence_mdd": -0.10785501215274373
+      }
+    },
+    "per_asset": {
+      "BTC": {
+        "events": 12,
+        "mean": 0.0008601809856103396,
+        "median": 0.000633165688745439,
+        "profit_factor": 1.217174818531806,
+        "win_rate": 0.5833333333333334,
+        "compound": 0.00944518331627986,
+        "event_sequence_mdd": -0.04068053543548433
+      },
+      "ETH": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BNB": {
+        "events": 28,
+        "mean": -0.0008640322926422416,
+        "median": -0.0026103167929285047,
+        "profit_factor": 0.8700226771914948,
+        "win_rate": 0.39285714285714285,
+        "compound": -0.027891089090789523,
+        "event_sequence_mdd": -0.10947617244306052
+      },
+      "SOL": {
+        "events": 54,
+        "mean": 0.0031562275582454283,
+        "median": 0.002079574668755726,
+        "profit_factor": 1.4745368194594157,
+        "win_rate": 0.5740740740740741,
+        "compound": 0.1715516332249305,
+        "event_sequence_mdd": -0.09795123539738049
+      },
+      "TRX": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      }
+    },
+    "per_fold": {
+      "BNB-1": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BNB-2": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BNB-3": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BNB-4": {
+        "events": 28,
+        "mean": -0.0008640322926422416,
+        "median": -0.0026103167929285047,
+        "profit_factor": 0.8700226771914948,
+        "win_rate": 0.39285714285714285,
+        "compound": -0.027891089090789523,
+        "event_sequence_mdd": -0.10947617244306052
+      },
+      "BTC-1": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BTC-2": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BTC-3": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "BTC-4": {
+        "events": 12,
+        "mean": 0.0008601809856103396,
+        "median": 0.000633165688745439,
+        "profit_factor": 1.217174818531806,
+        "win_rate": 0.5833333333333334,
+        "compound": 0.00944518331627986,
+        "event_sequence_mdd": -0.04068053543548433
+      },
+      "ETH-1": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "ETH-2": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "ETH-3": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "ETH-4": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "SOL-1": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "SOL-2": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "SOL-3": {
+        "events": 26,
+        "mean": 0.0015004505590142175,
+        "median": -0.0006235742961316634,
+        "profit_factor": 1.2379082419777585,
+        "win_rate": 0.5,
+        "compound": 0.03458943047858787,
+        "event_sequence_mdd": -0.04585075481715983
+      },
+      "SOL-4": {
+        "events": 28,
+        "mean": 0.004693734771817267,
+        "median": 0.006292967158220898,
+        "profit_factor": 1.6733317203170417,
+        "win_rate": 0.6428571428571429,
+        "compound": 0.13238314515061878,
+        "event_sequence_mdd": -0.0979512353973806
+      },
+      "TRX-1": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "TRX-2": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "TRX-3": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      },
+      "TRX-4": {
+        "events": 0,
+        "mean": 0.0,
+        "median": 0.0,
+        "profit_factor": 0.0,
+        "win_rate": 0.0,
+        "compound": 0.0,
+        "event_sequence_mdd": 0.0
+      }
+    },
+    "positive_asset_count": 2,
+    "positive_outer_fold_count": 3,
+    "side_counts": {
+      "long": 71,
+      "short": 23
+    },
+    "ranking": {
+      "spearman": 0.16191164252429288,
+      "positive_asset_count": 3,
+      "per_asset": {
+        "BTC": 0.06993006993006995,
+        "ETH": 0.0,
+        "BNB": 0.12753147235905857,
+        "SOL": 0.14335810939584523,
+        "TRX": 0.0
+      }
+    },
+    "bootstrap": {
+      "samples": 10000,
+      "seed": 20260810,
+      "clusters": 11,
+      "positive_probability": 0.9002,
+      "quantiles": {
+        "2.5%": -0.0010910615661483892,
+        "50%": 0.0016741599459475709,
+        "97.5%": 0.003816292088921195
+      }
+    },
+    "outer_selection_count": 4
+  },
+  "control_delta": {
+    "anchors": 3668,
+    "full_mean_utility": -0.00011530913316582955,
+    "control_mean_utility": 4.26841755121577e-05,
+    "mean_delta": -0.00015799330867798724,
+    "bootstrap": {
+      "samples": 10000,
+      "seed": 20260811,
+      "clusters": 45,
+      "positive_probability": 0.0024,
+      "quantiles": {
+        "2.5%": -0.0003031536506772956,
+        "50%": -0.00015339102750359669,
+        "97.5%": -3.926104545312284e-05
+      }
+    }
+  },
+  "importance": {
+    "per_feature_median": {
+      "return_24h": -0.0017124467828280032,
+      "return_72h": -0.0004100190223208511,
+      "return_168h": 0.006542841092124219,
+      "realized_vol_24h": 0.001966380795060063,
+      "realized_vol_168h": -0.004301897868504101,
+      "efficiency_24h": 0.0035937010289674998,
+      "efficiency_72h": -0.001831891261625529,
+      "close_location_168h": -0.004743850462205934,
+      "oi_log_change_6h": 0.00122715551429331,
+      "oi_log_change_24h": -0.0004749691586107829,
+      "oi_log_change_72h": -0.0010550276294902794,
+      "oi_log_change_168h": 0.008061978515006896,
+      "oi_value_log_change_24h": -0.00019315352046378464,
+      "oi_acceleration_24h_72h": -0.0004375362701007912,
+      "price_oi_confirmation_24h": 0.0006370259899390884,
+      "price_oi_confirmation_72h": -4.043738766834615e-05,
+      "funding_sum_24h": 0.0006862034307300036,
+      "funding_sum_72h": -0.0017973364599108699,
+      "funding_sum_168h": 1.8723783015595075e-05,
+      "funding_acceleration_24h_72h": -5.6738540753942246e-05,
+      "funding_positive_share_168h": 0.001017592517809085,
+      "oi_funding_crowding_24h": -2.2157183421356308e-05,
+      "market_median_oi_change_24h": 0.007843152849254187,
+      "market_median_oi_change_72h": 0.0007802927278075522,
+      "market_median_oi_change_168h": 0.008884339257153595,
+      "market_positive_oi_breadth_24h": -0.0005007319017578116,
+      "market_median_funding_sum_24h": -0.002106872280525529,
+      "market_positive_funding_breadth_24h": -0.0004363081667213553,
+      "local_minus_market_oi_change_24h": -0.0006623815695729895,
+      "local_minus_market_funding_sum_24h": 0.0002714701735138103
+    },
+    "positive_derivative_count": 10
+  },
+  "gate_checks": {
+    "p0_capacity": true,
+    "oof_coverage": false,
+    "main_economics": false,
+    "positive_assets": false,
+    "positive_outer_folds": false,
+    "ranking": false,
+    "cluster_bootstrap": false,
+    "beats_price_control": false,
+    "derivative_importance": true,
+    "stress_8bps": false,
+    "stress_funding_off": false,
+    "stress_lag1h": false
+  },
+  "development_gate_pass": false
+}

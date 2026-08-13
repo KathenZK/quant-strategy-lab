@@ -1,0 +1,454 @@
+{
+  "selected_events": 132,
+  "side_counts": {
+    "long": 81,
+    "short": 51
+  },
+  "time_block_count_90d": 13,
+  "main": {
+    "events": 132,
+    "mean": 0.00044571527090179694,
+    "median": -0.0038616402696387865,
+    "profit_factor": 1.0693155109625543,
+    "win_rate": 0.3939393939393939,
+    "compound": 0.0393996998615358,
+    "event_sequence_mdd": -0.21574312766487036
+  },
+  "variants": {
+    "z_4bps": {
+      "events": 132,
+      "mean": 0.0006487691719051649,
+      "median": -0.0036616540577561973,
+      "profit_factor": 1.1028214305212318,
+      "win_rate": 0.3939393939393939,
+      "compound": 0.06761088428423045,
+      "event_sequence_mdd": -0.20199777274022923
+    },
+    "z_8bps": {
+      "events": 132,
+      "mean": 0.00044571527090179694,
+      "median": -0.0038616402696387865,
+      "profit_factor": 1.0693155109625543,
+      "win_rate": 0.3939393939393939,
+      "compound": 0.0393996998615358,
+      "event_sequence_mdd": -0.21574312766487036
+    },
+    "z_funding_off": {
+      "events": 132,
+      "mean": 0.00048091483113918735,
+      "median": -0.0038360067348177725,
+      "profit_factor": 1.07475870068394,
+      "win_rate": 0.38636363636363635,
+      "compound": 0.044010030530845734,
+      "event_sequence_mdd": -0.22032706009166947
+    },
+    "z_lag1": {
+      "events": 121,
+      "mean": 0.0015258030007783412,
+      "median": -0.00370438835498249,
+      "profit_factor": 1.2624444273147444,
+      "win_rate": 0.3884297520661157,
+      "compound": 0.1808859025980436,
+      "event_sequence_mdd": -0.09748104444445771
+    }
+  },
+  "per_asset": {
+    "BTC": {
+      "selected": {
+        "events": 27,
+        "mean": -0.00040600456890418045,
+        "median": -0.005194340010703463,
+        "profit_factor": 0.9338634197034857,
+        "win_rate": 0.3333333333333333,
+        "compound": -0.013915665957474621,
+        "event_sequence_mdd": -0.054141230918361205
+      },
+      "all_matured_baseline": {
+        "events": 174,
+        "mean": -0.0010044746877644931,
+        "median": -0.0037509440146576986,
+        "profit_factor": 0.7977125709404043,
+        "win_rate": 0.2988505747126437,
+        "compound": -0.17107618282281722,
+        "event_sequence_mdd": -0.22641043342595135
+      },
+      "positive_mean": false,
+      "dual_improved": true
+    },
+    "ETH": {
+      "selected": {
+        "events": 39,
+        "mean": -0.0021609362985878407,
+        "median": -0.005450287768108299,
+        "profit_factor": 0.7281107382395098,
+        "win_rate": 0.3333333333333333,
+        "compound": -0.0870566495198456,
+        "event_sequence_mdd": -0.15892778769667004
+      },
+      "all_matured_baseline": {
+        "events": 183,
+        "mean": -0.0006867907797423546,
+        "median": -0.004385105119603647,
+        "profit_factor": 0.891661556020185,
+        "win_rate": 0.3005464480874317,
+        "compound": -0.1414498638831907,
+        "event_sequence_mdd": -0.25962816963090707
+      },
+      "positive_mean": false,
+      "dual_improved": true
+    },
+    "BNB": {
+      "selected": {
+        "events": 19,
+        "mean": 0.0013087107977028346,
+        "median": 0.0031677173350945207,
+        "profit_factor": 1.3453678049544047,
+        "win_rate": 0.5789473684210527,
+        "compound": 0.023857320091184464,
+        "event_sequence_mdd": -0.037262559472312606
+      },
+      "all_matured_baseline": {
+        "events": 151,
+        "mean": -0.0006282574983802831,
+        "median": -0.0026824558475197777,
+        "profit_factor": 0.8641509200975129,
+        "win_rate": 0.3576158940397351,
+        "compound": -0.09986818514014595,
+        "event_sequence_mdd": -0.17534150794804126
+      },
+      "positive_mean": true,
+      "dual_improved": true
+    },
+    "SOL": {
+      "selected": {
+        "events": 19,
+        "mean": 0.008483944860425271,
+        "median": 0.010755761087545722,
+        "profit_factor": 2.2698201649736056,
+        "win_rate": 0.5263157894736842,
+        "compound": 0.1675642489525453,
+        "event_sequence_mdd": -0.07606032057581913
+      },
+      "all_matured_baseline": {
+        "events": 163,
+        "mean": 0.0017922854476836087,
+        "median": -0.0045550742986807564,
+        "profit_factor": 1.235569130696328,
+        "win_rate": 0.4171779141104294,
+        "compound": 0.2852118970591295,
+        "event_sequence_mdd": -0.1117512308599855
+      },
+      "positive_mean": true,
+      "dual_improved": false
+    },
+    "TRX": {
+      "selected": {
+        "events": 28,
+        "mean": -0.0011424072407163611,
+        "median": -0.006431471696507515,
+        "profit_factor": 0.8163069572677522,
+        "win_rate": 0.32142857142857145,
+        "compound": -0.0341615955745016,
+        "event_sequence_mdd": -0.10331356108979728
+      },
+      "all_matured_baseline": {
+        "events": 176,
+        "mean": -0.00039320436711475155,
+        "median": -0.00411268240937936,
+        "profit_factor": 0.9203649569621716,
+        "win_rate": 0.3125,
+        "compound": -0.10584491187924838,
+        "event_sequence_mdd": -0.28548055182158827
+      },
+      "positive_mean": false,
+      "dual_improved": true
+    }
+  },
+  "positive_asset_count": 2,
+  "dual_improved_asset_count": 4,
+  "folds": {
+    "BNB-1": {
+      "events": 10,
+      "mean": 0.0025299783032881667,
+      "median": 0.0033129395104144355,
+      "profit_factor": 1.784600919612083,
+      "win_rate": 0.6,
+      "compound": 0.02500470895180973,
+      "event_sequence_mdd": -0.015689588770302243,
+      "positive_mean": true
+    },
+    "BNB-2": {
+      "events": 4,
+      "mean": -0.004613848023042148,
+      "median": -0.004678886743792766,
+      "profit_factor": 0.5084370831069792,
+      "win_rate": 0.25,
+      "compound": -0.01888494045614908,
+      "event_sequence_mdd": -0.03726255947231272,
+      "positive_mean": false
+    },
+    "BNB-3": {
+      "events": 2,
+      "mean": 0.003610095966683573,
+      "median": 0.003610095966683573,
+      "profit_factor": null,
+      "win_rate": 1.0,
+      "compound": 0.007224051224485439,
+      "event_sequence_mdd": 0.0,
+      "positive_mean": true
+    },
+    "BNB-4": {
+      "events": 3,
+      "mean": 0.0036003074274245455,
+      "median": 0.003496350469732832,
+      "profit_factor": 5.892957336808402,
+      "win_rate": 0.6666666666666666,
+      "compound": 0.010805390986314833,
+      "event_sequence_mdd": -0.002207442562603412,
+      "positive_mean": true
+    },
+    "BTC-1": {
+      "events": 11,
+      "mean": -0.0020581484756809435,
+      "median": -0.0025669831098297713,
+      "profit_factor": 0.6066717768252069,
+      "win_rate": 0.45454545454545453,
+      "compound": -0.022959084950315733,
+      "event_sequence_mdd": -0.043704766748073776,
+      "positive_mean": false
+    },
+    "BTC-2": {
+      "events": 7,
+      "mean": -0.003990623793092024,
+      "median": -0.008288366173179339,
+      "profit_factor": 0.49524014457525306,
+      "win_rate": 0.14285714285714285,
+      "compound": -0.028217580485256355,
+      "event_sequence_mdd": -0.05414123091836143,
+      "positive_mean": false
+    },
+    "BTC-3": {
+      "events": 3,
+      "mean": 0.013498195878609018,
+      "median": 0.01891780144393046,
+      "profit_factor": 5.062747619849821,
+      "win_rate": 0.6666666666666666,
+      "compound": 0.04058241607070334,
+      "event_sequence_mdd": -0.009967290962888842,
+      "positive_mean": true
+    },
+    "BTC-4": {
+      "events": 6,
+      "mean": -0.00014711853535089576,
+      "median": -0.008775409839426472,
+      "profit_factor": 0.9794150816907385,
+      "win_rate": 0.16666666666666666,
+      "compound": -0.0019419829337640193,
+      "event_sequence_mdd": -0.02351425062470769,
+      "positive_mean": false
+    },
+    "ETH-1": {
+      "events": 19,
+      "mean": -0.003952703472445639,
+      "median": -0.005932044119305377,
+      "profit_factor": 0.5053561649364865,
+      "win_rate": 0.3684210526315789,
+      "compound": -0.07425190212532151,
+      "event_sequence_mdd": -0.08179379967682765,
+      "positive_mean": false
+    },
+    "ETH-2": {
+      "events": 8,
+      "mean": -0.002218630356495087,
+      "median": -0.004879447470572002,
+      "profit_factor": 0.6604300733901383,
+      "win_rate": 0.25,
+      "compound": -0.018214969456159524,
+      "event_sequence_mdd": -0.0382447917065154,
+      "positive_mean": false
+    },
+    "ETH-3": {
+      "events": 2,
+      "mean": -0.022063566864041505,
+      "median": -0.022063566864041505,
+      "profit_factor": 0.0,
+      "win_rate": 0.0,
+      "compound": -0.04374309603411575,
+      "event_sequence_mdd": -0.04374309603411575,
+      "positive_mean": false
+    },
+    "ETH-4": {
+      "events": 10,
+      "mean": 0.005270102691158505,
+      "median": -0.0025866240636067067,
+      "profit_factor": 1.8535846457264593,
+      "win_rate": 0.4,
+      "compound": 0.05041281532547792,
+      "event_sequence_mdd": -0.032406084268253976,
+      "positive_mean": true
+    },
+    "SOL-1": {
+      "events": 8,
+      "mean": 0.002042125975593242,
+      "median": 0.003237255380774207,
+      "profit_factor": 1.1935893884430386,
+      "win_rate": 0.5,
+      "compound": 0.014029363247968885,
+      "event_sequence_mdd": -0.053187438789990216,
+      "positive_mean": true
+    },
+    "SOL-2": {
+      "events": 6,
+      "mean": 0.004656334990957775,
+      "median": -0.0020385083961960105,
+      "profit_factor": 1.7322746238175455,
+      "win_rate": 0.3333333333333333,
+      "compound": 0.026392270183438482,
+      "event_sequence_mdd": -0.03777427435136349,
+      "positive_mean": true
+    },
+    "SOL-3": {
+      "events": 2,
+      "mean": 0.023528560839823007,
+      "median": 0.023528560839823007,
+      "profit_factor": null,
+      "win_rate": 1.0,
+      "compound": 0.047605940540649705,
+      "event_sequence_mdd": 0.0,
+      "positive_mean": true
+    },
+    "SOL-4": {
+      "events": 3,
+      "mean": 0.02328760430598052,
+      "median": 0.02802121704022958,
+      "profit_factor": 16.875127889527956,
+      "win_rate": 0.6666666666666666,
+      "compound": 0.07082606088025223,
+      "event_sequence_mdd": -0.004400771660178271,
+      "positive_mean": true
+    },
+    "TRX-1": {
+      "events": 14,
+      "mean": -0.002404536084733432,
+      "median": -0.008637651893928,
+      "profit_factor": 0.6889984980621062,
+      "win_rate": 0.14285714285714285,
+      "compound": -0.03509930906403824,
+      "event_sequence_mdd": -0.08066062498141124,
+      "positive_mean": false
+    },
+    "TRX-2": {
+      "events": 10,
+      "mean": -0.001811587465060755,
+      "median": -0.005640421385013306,
+      "profit_factor": 0.6395569808929302,
+      "win_rate": 0.4,
+      "compound": -0.018317292611460978,
+      "event_sequence_mdd": -0.025798975045335903,
+      "positive_mean": false
+    },
+    "TRX-3": {
+      "events": 3,
+      "mean": 0.011808258181232037,
+      "median": 0.011963676680530489,
+      "profit_factor": null,
+      "win_rate": 1.0,
+      "compound": 0.035842143966637874,
+      "event_sequence_mdd": 0.0,
+      "positive_mean": true
+    },
+    "TRX-4": {
+      "events": 1,
+      "mean": -0.015632797446878597,
+      "median": -0.015632797446878597,
+      "profit_factor": 0.0,
+      "win_rate": 0.0,
+      "compound": -0.01563279744687862,
+      "event_sequence_mdd": -0.01563279744687862,
+      "positive_mean": false
+    }
+  },
+  "positive_outer_fold_count": 10,
+  "spearman_probability_vs_z8": -0.0030349912972809944,
+  "bootstrap": {
+    "samples": 5000,
+    "seed": 20260810,
+    "clusters": 52,
+    "positive_probability": 0.6178,
+    "quantiles": {
+      "2.5%": -0.0021520429992896045,
+      "50%": 0.0004005328337389707,
+      "97.5%": 0.0036109713633378305
+    }
+  },
+  "final_choice": {
+    "C": 1.0,
+    "threshold": 0.5,
+    "route": "combined",
+    "outer_choice_count": 6,
+    "outer_folds": 20,
+    "choice_distribution": [
+      {
+        "C": 1.0,
+        "threshold": 0.5,
+        "route": "combined",
+        "count": 6
+      },
+      {
+        "C": 0.1,
+        "threshold": 0.5,
+        "route": "combined",
+        "count": 4
+      },
+      {
+        "C": 0.3,
+        "threshold": 0.5,
+        "route": "combined",
+        "count": 3
+      },
+      {
+        "C": 0.3,
+        "threshold": 0.5,
+        "route": "long_only",
+        "count": 3
+      },
+      {
+        "C": 0.03,
+        "threshold": 0.5,
+        "route": "combined",
+        "count": 1
+      },
+      {
+        "C": 0.1,
+        "threshold": 0.5,
+        "route": "long_only",
+        "count": 1
+      },
+      {
+        "C": 1.0,
+        "threshold": 0.5,
+        "route": "long_only",
+        "count": 1
+      },
+      {
+        "C": 1.0,
+        "threshold": 0.5,
+        "route": "short_only",
+        "count": 1
+      }
+    ]
+  },
+  "gate_checks": {
+    "accepted_total_and_per_asset": true,
+    "direction_coverage": true,
+    "time_block_coverage": false,
+    "main_economics": false,
+    "positive_assets": false,
+    "positive_outer_folds": false,
+    "ranking": false,
+    "cluster_bootstrap": false,
+    "stress_variants": true,
+    "per_asset_dual_improvement": true
+  },
+  "development_gate_pass": false
+}

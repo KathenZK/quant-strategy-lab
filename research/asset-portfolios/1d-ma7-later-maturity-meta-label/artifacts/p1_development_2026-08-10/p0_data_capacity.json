@@ -1,0 +1,170 @@
+{
+  "schema_version": "binance-1d-ma7-lmml-p0-v1",
+  "generated_at_utc": "2026-08-10T11:04:21.618666+00:00",
+  "development_end_exclusive": "2025-05-31T00:00:00+00:00",
+  "assets": [
+    "BTC",
+    "ETH",
+    "BNB",
+    "SOL",
+    "TRX"
+  ],
+  "hype_rows_consumed": 0,
+  "event_rows": 1448,
+  "long_events": 771,
+  "short_events": 677,
+  "later_maturity_events": 753,
+  "positive_rate_8bps": 0.34599447513812154,
+  "event_identity_sha256": "f224974f99f65a0ee53545e4fca8870a65555c4dafc4a42c12bfb623ebc1a777",
+  "per_asset_root_summary": {
+    "BTC": {
+      "eligible_events": 309,
+      "incomplete_features": 19,
+      "incomplete_outcome": 2,
+      "later_maturity": 168,
+      "matured": 330,
+      "no_maturity_recross": 126,
+      "positive_labels": 96,
+      "raw_crosses": 456,
+      "same_day_maturity": 162
+    },
+    "ETH": {
+      "eligible_events": 314,
+      "incomplete_features": 7,
+      "incomplete_outcome": 2,
+      "later_maturity": 161,
+      "matured": 323,
+      "no_maturity_recross": 125,
+      "positive_labels": 98,
+      "raw_crosses": 448,
+      "same_day_maturity": 162
+    },
+    "BNB": {
+      "eligible_events": 282,
+      "incomplete_outcome": 1,
+      "later_maturity": 157,
+      "matured": 283,
+      "no_maturity_recross": 95,
+      "positive_labels": 104,
+      "raw_crosses": 378,
+      "same_day_maturity": 126
+    },
+    "SOL": {
+      "eligible_events": 245,
+      "incomplete_outcome": 1,
+      "later_maturity": 126,
+      "matured": 246,
+      "no_maturity_recross": 102,
+      "positive_labels": 103,
+      "raw_crosses": 348,
+      "same_day_maturity": 120
+    },
+    "TRX": {
+      "eligible_events": 298,
+      "incomplete_outcome": 2,
+      "later_maturity": 158,
+      "matured": 300,
+      "no_maturity_recross": 123,
+      "positive_labels": 100,
+      "raw_crosses": 423,
+      "same_day_maturity": 142
+    }
+  },
+  "input_quality": {
+    "BTC": {
+      "daily_rows": 2091,
+      "daily_start": "2019-09-09T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 50190,
+      "hourly_start": "2019-09-08T18:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5956,
+      "funding_start": "2019-12-23T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "53c0c244bea0c1828d224ad8e5732263fe7c1ebf96d6eb38913c8be858ea5086",
+        "hourly": "43c2bbe5d938bb9c968f137f4485d5d41e3390e2f2e041c0aa5b3a9a4afb76c2",
+        "funding": "ddd980d59d4c3ab1fa59f36a27930ba4493f2c4603ca05ed5d40478b55e1bfa1"
+      }
+    },
+    "ETH": {
+      "daily_rows": 2011,
+      "daily_start": "2019-11-28T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 48280,
+      "hourly_start": "2019-11-27T08:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5956,
+      "funding_start": "2019-12-23T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "75c8b5bfd066d528908c4793951b84b086b8c558e03b73a37595b442dedd6651",
+        "hourly": "4668d98fe0291e57037214aa718efa17401b664c896623bfbb1d804b51cafc2e",
+        "funding": "3a1b0a7c0ee1276212049bc6df6da43227b606316c51daab7a3712ae3013bbec"
+      }
+    },
+    "BNB": {
+      "daily_rows": 1936,
+      "daily_start": "2020-02-11T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 46480,
+      "hourly_start": "2020-02-10T08:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5810,
+      "funding_start": "2020-02-10T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "00dbc6f04d8669fcf3d7e8cb929f75c380319fec81e6d34a130127d006a57119",
+        "hourly": "c3cc8efbbef45304f6981b75bad50917179834f89bcf0e0e964a30b57e850c19",
+        "funding": "965ed2f3ac690e5ab8395aea1383c5656a7f5d2fe4b3b71527d2feeb9110cb5c"
+      }
+    },
+    "SOL": {
+      "daily_rows": 1719,
+      "daily_start": "2020-09-15T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 41273,
+      "hourly_start": "2020-09-14T07:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5234,
+      "funding_start": "2020-09-14T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "5a7a3339b25600a408ddc9d72e580d6792a73620e2834e0d2a286a8e672e77c0",
+        "hourly": "dc8acece6ecbbc5d69abe818bc0bb599f0a788652e9432004c47b113ce44b92e",
+        "funding": "8272a9ce84318fd015d55527c3f762cddc468ac4d8160f94456fbe7af1008b95"
+      }
+    },
+    "TRX": {
+      "daily_rows": 1962,
+      "daily_start": "2020-01-16T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 47103,
+      "hourly_start": "2020-01-15T09:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5887,
+      "funding_start": "2020-01-15T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "e64a33b0b01c0a714889243b6074c70193ed7f4382ead3f351d2fab937d84628",
+        "hourly": "26d9390dd82f8b986b238b5b257cec9f8352dd4e42da2621a32560cb6d53276b",
+        "funding": "dcb7ad61b68570f41035f86d5bfee21a32fa021b70b1d203988e139bede2339b"
+      }
+    }
+  }
+}

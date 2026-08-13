@@ -1,0 +1,227 @@
+{
+  "decision": "DEVELOPMENT_HARD_GATE_FAILED_HOLDOUT_UNREVEALED",
+  "development_eligible_config_count": 0,
+  "selected_config": null,
+  "holdout_revealed": false,
+  "holdout_gate_pass": false,
+  "development_candidates": [
+    {
+      "config": {
+        "breakout_lookback": 24,
+        "impulse_atr": 1.0,
+        "pullback_atr": 0.5,
+        "config_id": "N24_I1p0_P0p5"
+      },
+      "main": {
+        "events": 3618,
+        "mean": -0.0009397403598940921,
+        "median": -0.002708126457234796,
+        "profit_factor": 0.6516356642229552,
+        "win_rate": 0.3170259812050857,
+        "compound": -0.9683601326750167,
+        "event_sequence_mdd": -0.9683601326750167
+      },
+      "positive_asset_count": 0,
+      "positive_block_rate": 0.0,
+      "bootstrap_positive_probability": 0.0,
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      }
+    },
+    {
+      "config": {
+        "breakout_lookback": 24,
+        "impulse_atr": 1.0,
+        "pullback_atr": 1.0,
+        "config_id": "N24_I1p0_P1p0"
+      },
+      "main": {
+        "events": 3275,
+        "mean": -0.0008526990464767734,
+        "median": -0.0026654899298603992,
+        "profit_factor": 0.6769543835982675,
+        "win_rate": 0.32,
+        "compound": -0.9416163381444651,
+        "event_sequence_mdd": -0.9418116220241093
+      },
+      "positive_asset_count": 0,
+      "positive_block_rate": 0.0,
+      "bootstrap_positive_probability": 0.0,
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      }
+    },
+    {
+      "config": {
+        "breakout_lookback": 24,
+        "impulse_atr": 1.5,
+        "pullback_atr": 0.5,
+        "config_id": "N24_I1p5_P0p5"
+      },
+      "main": {
+        "events": 3278,
+        "mean": -0.0009102049272672733,
+        "median": -0.002701189408483465,
+        "profit_factor": 0.6605589724021952,
+        "win_rate": 0.31970713849908483,
+        "compound": -0.951797744735921,
+        "event_sequence_mdd": -0.9518324090291541
+      },
+      "positive_asset_count": 0,
+      "positive_block_rate": 0.0,
+      "bootstrap_positive_probability": 0.0,
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      }
+    },
+    {
+      "config": {
+        "breakout_lookback": 24,
+        "impulse_atr": 1.5,
+        "pullback_atr": 1.0,
+        "config_id": "N24_I1p5_P1p0"
+      },
+      "main": {
+        "events": 3007,
+        "mean": -0.00083456626041546,
+        "median": -0.0026551061967774858,
+        "profit_factor": 0.6831172409689817,
+        "win_rate": 0.31892251413368805,
+        "compound": -0.9222567802885611,
+        "event_sequence_mdd": -0.9226113932151769
+      },
+      "positive_asset_count": 0,
+      "positive_block_rate": 0.0,
+      "bootstrap_positive_probability": 0.0,
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      }
+    },
+    {
+      "config": {
+        "breakout_lookback": 72,
+        "impulse_atr": 1.0,
+        "pullback_atr": 0.5,
+        "config_id": "N72_I1p0_P0p5"
+      },
+      "main": {
+        "events": 1813,
+        "mean": -0.0009953597571260716,
+        "median": -0.0027956211918601656,
+        "profit_factor": 0.6449766904558127,
+        "win_rate": 0.3099834528405957,
+        "compound": -0.840294392273784,
+        "event_sequence_mdd": -0.8408762793158915
+      },
+      "positive_asset_count": 0,
+      "positive_block_rate": 0.0,
+      "bootstrap_positive_probability": 0.0,
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      }
+    },
+    {
+      "config": {
+        "breakout_lookback": 72,
+        "impulse_atr": 1.0,
+        "pullback_atr": 1.0,
+        "config_id": "N72_I1p0_P1p0"
+      },
+      "main": {
+        "events": 1663,
+        "mean": -0.0008278888168226573,
+        "median": -0.002715468421718962,
+        "profit_factor": 0.6934033626003442,
+        "win_rate": 0.32291040288635,
+        "compound": -0.7543588757799462,
+        "event_sequence_mdd": -0.7552560376832669
+      },
+      "positive_asset_count": 0,
+      "positive_block_rate": 0.0,
+      "bootstrap_positive_probability": 0.0,
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      }
+    },
+    {
+      "config": {
+        "breakout_lookback": 72,
+        "impulse_atr": 1.5,
+        "pullback_atr": 0.5,
+        "config_id": "N72_I1p5_P0p5"
+      },
+      "main": {
+        "events": 1692,
+        "mean": -0.0009157058175602134,
+        "median": -0.00277533113764672,
+        "profit_factor": 0.6693415817810093,
+        "win_rate": 0.31619385342789597,
+        "compound": -0.7935264654390859,
+        "event_sequence_mdd": -0.794562182546928
+      },
+      "positive_asset_count": 0,
+      "positive_block_rate": 0.0,
+      "bootstrap_positive_probability": 0.0,
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      }
+    },
+    {
+      "config": {
+        "breakout_lookback": 72,
+        "impulse_atr": 1.5,
+        "pullback_atr": 1.0,
+        "config_id": "N72_I1p5_P1p0"
+      },
+      "main": {
+        "events": 1561,
+        "mean": -0.0007484826968913304,
+        "median": -0.002696223926353228,
+        "profit_factor": 0.720086829434801,
+        "win_rate": 0.32863549007046766,
+        "compound": -0.6971067266105822,
+        "event_sequence_mdd": -0.6982236091620485
+      },
+      "positive_asset_count": 0,
+      "positive_block_rate": 0.0,
+      "bootstrap_positive_probability": 0.0,
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      }
+    }
+  ],
+  "holdout_summary": null,
+  "holdout_gate_checks": null
+}

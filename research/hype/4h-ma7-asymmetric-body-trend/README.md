@@ -2,8 +2,8 @@
 
 - Alias：`HYPE-4H-MA7-ABT`
 - 市场/周期：Binance USD-M `HYPEUSDT` perpetual，UTC `4h`
-- 机制：把日线 V1 的固定 `SMA7/ATR7` 非对称 reclaim、迟滞退出和保护状态机零调参迁移到 4 小时。
-- 当前状态：`explore / not promoted / not live-ready`；bar-transfer 与 clock-equivalent 均失败。
+- 机制：固定 `SMA7/ATR7` 的斜率趋势、reclaim / pullback / breakout 入场、迟滞退出与保护状态机；覆盖日线 V1 直迁和原生 4H 参数搜索。
+- 当前状态：`explore / not promoted / not live-ready`；直迁失败；原生搜索 locked 绝对收益为正，但超额、延迟与相位门槛失败。
 
 ## 边界
 
@@ -17,5 +17,7 @@
 - [决策记录](decision-log.md)
 - [迁移合同](specs/hype-4h-ma7-source-v1-transfer-contract-2026-08-05.md)
 - [迁移诊断](diagnostics/hype-4h-ma7-source-v1-transfer-2026-08-05.md)
-- [复现脚本](scripts/research_hype_4h_ma7_v1_transfer.py)
+- [原生搜索合同](specs/hype-4h-ma7-native-trend-search-contract-2026-08-06.md)
+- [原生搜索诊断](diagnostics/hype-4h-ma7-native-trend-search-2026-08-06.md)
+- [直迁脚本](scripts/research_hype_4h_ma7_v1_transfer.py) · [原生搜索脚本](scripts/search_hype_4h_ma7_native_trend.py)
 - [机器证据](artifacts/README.md)

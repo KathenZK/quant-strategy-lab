@@ -1,0 +1,69 @@
+{
+  "schema_version": "binance-1d-ma7-tfml-p0e-v1",
+  "generated_at_utc": "2026-08-10T13:17:56.792201+00:00",
+  "input_events_all": 3683,
+  "input_events_fresh": 2228,
+  "accepted_events_all": 3443,
+  "accepted_events_fresh": 2109,
+  "fresh_usable_rate": 0.946588868940754,
+  "fresh_per_asset": {
+    "XRP": 271,
+    "DOGE": 259,
+    "ADA": 275,
+    "LINK": 268,
+    "LTC": 270,
+    "DOT": 254,
+    "AVAX": 246,
+    "UNI": 266
+  },
+  "fresh_side_counts": {
+    "long": 1083,
+    "short": 1026
+  },
+  "rejection_counts": {
+    "market_peers": 2,
+    "local_window": 32,
+    "market_peers_lt8": 206
+  },
+  "event_identity_sha256": "f0dade495d7a1bb49d974598892fc660430613aafeab4a3c44d277ed013963df",
+  "accepted_panel_identity_sha256": "828282cd7232c99138212263a1a041c75b9278951fb4783e08d6ef9b51cd86ba",
+  "source_audit": {
+    "events": {
+      "manifest_path": "research/asset-portfolios/1d-ma7-taker-flow-meta-label/artifacts/p0e_events_2026-08-10/manifest.json",
+      "manifest_sha256": "08756bcaf1a632349c0dcbb1660daafdf6201269f4f4edc882aafa7e0832fac4",
+      "schema_version": "binance-1d-ma7-tfml-p0e-event-manifest-v1",
+      "file_count": 2
+    },
+    "legacy_flow": {
+      "manifest_path": "research/asset-portfolios/1d-ma7-taker-flow-meta-label/artifacts/p0_data_2026-08-10/manifest.json",
+      "manifest_sha256": "b0e24f41c7de7d306474e11262caf37816ba5dab34aafa082d04f1510fb75260",
+      "schema_version": "binance-1d-ma7-tfml-p0-manifest-v1",
+      "file_count": 7
+    },
+    "fresh_flow": {
+      "manifest_path": "research/asset-portfolios/1d-ma7-taker-flow-meta-label/artifacts/p0e_data_2026-08-10/manifest.json",
+      "manifest_sha256": "efe13abfd31c4d4f3206dcec24de2d014ad774ccf08f08266c7ef4a072f3fa75",
+      "schema_version": "binance-1d-ma7-tfml-p0-manifest-v1",
+      "file_count": 10
+    },
+    "fresh_price_funding": {
+      "path": "research/asset-portfolios/1d-ma7-taker-flow-meta-label/artifacts/p0e_price_data_2026-08-10/p0_data_quality_manifest.json",
+      "sha256": "3d576c53129c710d35f742807681d06eb25a972218739817602653e7082e71ac",
+      "blocker_count": 0
+    }
+  },
+  "checks": {
+    "fresh_raw_event_capacity": true,
+    "fresh_accepted_total": true,
+    "fresh_accepted_per_asset": true,
+    "fresh_usable_rate": true,
+    "fresh_direction_capacity": true,
+    "exact_windows_and_market_peers": true,
+    "source_manifests_verified": true,
+    "hype_lock": true
+  },
+  "p0e_capacity_pass": true,
+  "hype_rows": 0,
+  "hype_files": 0,
+  "hype_requests": 0
+}

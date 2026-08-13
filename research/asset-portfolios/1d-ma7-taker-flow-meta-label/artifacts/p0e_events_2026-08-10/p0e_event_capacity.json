@@ -1,0 +1,444 @@
+{
+  "schema_version": "binance-1d-ma7-tfml-p0e-events-v1",
+  "generated_at_utc": "2026-08-10T13:17:24.105320+00:00",
+  "contract": "specs/binance-1d-ma7-tfml-p0e-p1e-universe-expansion-contract-2026-08-10.md",
+  "development_end_exclusive": "2025-05-31T00:00:00+00:00",
+  "legacy_assets": [
+    "BTC",
+    "ETH",
+    "BNB",
+    "SOL",
+    "TRX"
+  ],
+  "fresh_assets": [
+    "XRP",
+    "DOGE",
+    "ADA",
+    "LINK",
+    "LTC",
+    "DOT",
+    "AVAX",
+    "UNI"
+  ],
+  "all_assets": [
+    "BTC",
+    "ETH",
+    "BNB",
+    "SOL",
+    "TRX",
+    "XRP",
+    "DOGE",
+    "ADA",
+    "LINK",
+    "LTC",
+    "DOT",
+    "AVAX",
+    "UNI"
+  ],
+  "event_rows": 3683,
+  "fresh_event_rows": 2228,
+  "fresh_per_asset": {
+    "XRP": 302,
+    "DOGE": 259,
+    "ADA": 296,
+    "LINK": 294,
+    "LTC": 307,
+    "DOT": 258,
+    "AVAX": 246,
+    "UNI": 266
+  },
+  "fresh_long_events": 1147,
+  "fresh_short_events": 1081,
+  "event_identity_sha256": "f0dade495d7a1bb49d974598892fc660430613aafeab4a3c44d277ed013963df",
+  "per_asset_root_summary": {
+    "BTC": {
+      "eligible_events": 313,
+      "incomplete_features": 15,
+      "incomplete_outcome": 2,
+      "later_maturity": 168,
+      "matured": 330,
+      "no_maturity_recross": 126,
+      "positive_labels": 99,
+      "raw_crosses": 456,
+      "same_day_maturity": 162
+    },
+    "ETH": {
+      "eligible_events": 317,
+      "incomplete_features": 4,
+      "incomplete_outcome": 2,
+      "later_maturity": 161,
+      "matured": 323,
+      "no_maturity_recross": 125,
+      "positive_labels": 99,
+      "raw_crosses": 448,
+      "same_day_maturity": 162
+    },
+    "BNB": {
+      "eligible_events": 282,
+      "incomplete_outcome": 1,
+      "later_maturity": 157,
+      "matured": 283,
+      "no_maturity_recross": 95,
+      "positive_labels": 104,
+      "raw_crosses": 378,
+      "same_day_maturity": 126
+    },
+    "SOL": {
+      "eligible_events": 245,
+      "incomplete_outcome": 1,
+      "later_maturity": 126,
+      "matured": 246,
+      "no_maturity_recross": 102,
+      "positive_labels": 103,
+      "raw_crosses": 348,
+      "same_day_maturity": 120
+    },
+    "TRX": {
+      "eligible_events": 298,
+      "incomplete_outcome": 2,
+      "later_maturity": 158,
+      "matured": 300,
+      "no_maturity_recross": 123,
+      "positive_labels": 100,
+      "raw_crosses": 423,
+      "same_day_maturity": 142
+    },
+    "XRP": {
+      "eligible_events": 302,
+      "later_maturity": 155,
+      "matured": 302,
+      "no_maturity_recross": 125,
+      "positive_labels": 118,
+      "raw_crosses": 427,
+      "same_day_maturity": 147
+    },
+    "DOGE": {
+      "eligible_events": 259,
+      "incomplete_outcome": 1,
+      "later_maturity": 143,
+      "matured": 260,
+      "no_maturity_recross": 105,
+      "positive_labels": 95,
+      "raw_crosses": 365,
+      "same_day_maturity": 117
+    },
+    "ADA": {
+      "eligible_events": 296,
+      "later_maturity": 163,
+      "matured": 296,
+      "no_maturity_recross": 126,
+      "positive_labels": 103,
+      "raw_crosses": 422,
+      "same_day_maturity": 133
+    },
+    "LINK": {
+      "eligible_events": 294,
+      "incomplete_outcome": 2,
+      "later_maturity": 154,
+      "matured": 296,
+      "no_maturity_recross": 129,
+      "positive_labels": 108,
+      "raw_crosses": 425,
+      "same_day_maturity": 142
+    },
+    "LTC": {
+      "eligible_events": 307,
+      "later_maturity": 157,
+      "matured": 307,
+      "no_maturity_recross": 128,
+      "positive_labels": 104,
+      "raw_crosses": 435,
+      "same_day_maturity": 150
+    },
+    "DOT": {
+      "eligible_events": 258,
+      "later_maturity": 147,
+      "matured": 258,
+      "no_maturity_recross": 87,
+      "positive_labels": 101,
+      "raw_crosses": 345,
+      "same_day_maturity": 111
+    },
+    "AVAX": {
+      "eligible_events": 246,
+      "incomplete_outcome": 3,
+      "later_maturity": 127,
+      "matured": 249,
+      "no_maturity_recross": 98,
+      "positive_labels": 99,
+      "raw_crosses": 347,
+      "same_day_maturity": 122
+    },
+    "UNI": {
+      "eligible_events": 266,
+      "incomplete_outcome": 1,
+      "later_maturity": 138,
+      "matured": 267,
+      "no_maturity_max_age": 1,
+      "no_maturity_recross": 97,
+      "positive_labels": 93,
+      "raw_crosses": 365,
+      "same_day_maturity": 129
+    }
+  },
+  "input_quality": {
+    "BTC": {
+      "daily_rows": 2091,
+      "daily_start": "2019-09-09T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 50190,
+      "hourly_start": "2019-09-08T18:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5956,
+      "funding_start": "2019-12-23T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "53c0c244bea0c1828d224ad8e5732263fe7c1ebf96d6eb38913c8be858ea5086",
+        "hourly": "43c2bbe5d938bb9c968f137f4485d5d41e3390e2f2e041c0aa5b3a9a4afb76c2",
+        "funding": "ddd980d59d4c3ab1fa59f36a27930ba4493f2c4603ca05ed5d40478b55e1bfa1"
+      }
+    },
+    "ETH": {
+      "daily_rows": 2011,
+      "daily_start": "2019-11-28T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 48280,
+      "hourly_start": "2019-11-27T08:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5956,
+      "funding_start": "2019-12-23T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "75c8b5bfd066d528908c4793951b84b086b8c558e03b73a37595b442dedd6651",
+        "hourly": "4668d98fe0291e57037214aa718efa17401b664c896623bfbb1d804b51cafc2e",
+        "funding": "3a1b0a7c0ee1276212049bc6df6da43227b606316c51daab7a3712ae3013bbec"
+      }
+    },
+    "BNB": {
+      "daily_rows": 1936,
+      "daily_start": "2020-02-11T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 46480,
+      "hourly_start": "2020-02-10T08:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5810,
+      "funding_start": "2020-02-10T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "00dbc6f04d8669fcf3d7e8cb929f75c380319fec81e6d34a130127d006a57119",
+        "hourly": "c3cc8efbbef45304f6981b75bad50917179834f89bcf0e0e964a30b57e850c19",
+        "funding": "965ed2f3ac690e5ab8395aea1383c5656a7f5d2fe4b3b71527d2feeb9110cb5c"
+      }
+    },
+    "SOL": {
+      "daily_rows": 1719,
+      "daily_start": "2020-09-15T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 41273,
+      "hourly_start": "2020-09-14T07:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5234,
+      "funding_start": "2020-09-14T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "5a7a3339b25600a408ddc9d72e580d6792a73620e2834e0d2a286a8e672e77c0",
+        "hourly": "dc8acece6ecbbc5d69abe818bc0bb599f0a788652e9432004c47b113ce44b92e",
+        "funding": "8272a9ce84318fd015d55527c3f762cddc468ac4d8160f94456fbe7af1008b95"
+      }
+    },
+    "TRX": {
+      "daily_rows": 1962,
+      "daily_start": "2020-01-16T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 47103,
+      "hourly_start": "2020-01-15T09:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5887,
+      "funding_start": "2020-01-15T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "e64a33b0b01c0a714889243b6074c70193ed7f4382ead3f351d2fab937d84628",
+        "hourly": "26d9390dd82f8b986b238b5b257cec9f8352dd4e42da2621a32560cb6d53276b",
+        "funding": "dcb7ad61b68570f41035f86d5bfee21a32fa021b70b1d203988e139bede2339b"
+      }
+    },
+    "XRP": {
+      "daily_rows": 1971,
+      "daily_start": "2020-01-07T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 47319,
+      "hourly_start": "2020-01-06T09:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5914,
+      "funding_start": "2020-01-06T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "36fd68f9f930d4d79c9462f89d839481042a3b69ed7227157c2183fc4826cf63",
+        "hourly": "e79ece2755bec6d4882b4f2f91cb268bfb8b0e626f9f9f06b0314e38a981843a",
+        "funding": "3fbe77ec8053aabf76431498d3ca5e290e36a3f8c951f82c79cfe8a2f47fbaf9"
+      }
+    },
+    "DOGE": {
+      "daily_rows": 1785,
+      "daily_start": "2020-07-11T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 42855,
+      "hourly_start": "2020-07-10T09:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5356,
+      "funding_start": "2020-07-10T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "d56663392f7dd077ac34ae0dc3327d498f49a38d8f17fca9bf2b3dcf5bcdbee8",
+        "hourly": "834ad4ccf8cd71de8edec3d9169b509236c0b1032b392e706d28aa9865322ab2",
+        "funding": "3977ab476e1bb2537ef5ca95f6a62af1a4e651e2474077de2d04a7a4838bed3e"
+      }
+    },
+    "ADA": {
+      "daily_rows": 1946,
+      "daily_start": "2020-02-01T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 46720,
+      "hourly_start": "2020-01-31T08:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5840,
+      "funding_start": "2020-01-31T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "57e01306da903e6f0e0c4ffa68528fe64180b5d2854ba6adf6db3fe1999699c1",
+        "hourly": "22e6bfe02c26b42ed4a53ed0685c030e3df0eee10c070b8eda320682609ad993",
+        "funding": "73edf56eab3e3a2f755a2aafe189fed71d9e84d29e36733920d3522795884bf6"
+      }
+    },
+    "LINK": {
+      "daily_rows": 1960,
+      "daily_start": "2020-01-18T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 47056,
+      "hourly_start": "2020-01-17T08:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5882,
+      "funding_start": "2020-01-17T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "0cd32d5ca6a78b37998db0d05ec8c6ed737015e674532ea8627ab82c59e7a311",
+        "hourly": "d83942b7732bf399fe19cb805db98162508e80cbd6242cbe1a307609c3952eb7",
+        "funding": "91b03784dedd6d88d43b961404bb32542da90c18886cdf3b75d1fd2d1ab70bcc"
+      }
+    },
+    "LTC": {
+      "daily_rows": 1968,
+      "daily_start": "2020-01-10T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 47247,
+      "hourly_start": "2020-01-09T09:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5905,
+      "funding_start": "2020-01-09T16:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "fa995733b830a75874c1c9fddef3b886b4501558de579695d539a59a1592de5d",
+        "hourly": "c7a2d74990a110b422785bdf5e2d368b6a0e03dac7b62dd5cfd9e70a8bc84251",
+        "funding": "9342ca29144abcd83a9f60c1a7dbe48029ce2cb6ae25ed720cf1129fcd53232f"
+      }
+    },
+    "DOT": {
+      "daily_rows": 1742,
+      "daily_start": "2020-08-23T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 41825,
+      "hourly_start": "2020-08-22T07:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5228,
+      "funding_start": "2020-08-22T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "2e262c96576b5f3b86ad8504695eefad7ed362fd70fa3d73f517df613894b46c",
+        "hourly": "c80523fa1fea85fb396c807b8822e18d292f91037df24dfe82971ac9c99d551d",
+        "funding": "98019dc5c0ed4fe3eebb3af111f00c8a3870a7cbd479cc92f58a780dd3a76eeb"
+      }
+    },
+    "AVAX": {
+      "daily_rows": 1710,
+      "daily_start": "2020-09-24T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 41057,
+      "hourly_start": "2020-09-23T07:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5132,
+      "funding_start": "2020-09-23T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "058f719d6e7c62bc91b359362700ffc931586de704c27304ca742e6f26e211f6",
+        "hourly": "1cb052be633e956d4e3ca7c4f798c1103f3da1f345b1d6c6375a617ea9c39299",
+        "funding": "8f5c5a5574e85f04acc204479a92489be21c1b06b37a3cb000a73403abf9457b"
+      }
+    },
+    "UNI": {
+      "daily_rows": 1715,
+      "daily_start": "2020-09-19T00:00:00+00:00",
+      "daily_end": "2025-05-30T00:00:00+00:00",
+      "hourly_rows": 41177,
+      "hourly_start": "2020-09-18T07:00:00+00:00",
+      "hourly_end": "2025-05-30T23:00:00+00:00",
+      "funding_rows": 5147,
+      "funding_start": "2020-09-18T08:00:00+00:00",
+      "funding_end": "2025-05-30T16:00:00+00:00",
+      "missing_hourly": 0,
+      "missing_daily": 0,
+      "daily_rebuild_max_relative_mismatch": 0.0,
+      "input_sha256": {
+        "daily": "e30f9b2094fb99dcc0e319b4cf0db5386d8c37c2c6cf8c15fff138b5e74ef8e3",
+        "hourly": "35d39002cacca88f768c83abdfb7d679c5d96f4fd6a958c5305cfa14e842eb4a",
+        "funding": "ebe3db4d002a124d3a143d5d2789b4661522919dc0b72d25e8673458b6a6cec2"
+      }
+    }
+  },
+  "checks": {
+    "fresh_event_total": true,
+    "fresh_per_asset": true,
+    "fresh_direction_capacity": true,
+    "all_feature_inputs_validated": true,
+    "hype_lock": true
+  },
+  "p0e_event_capacity_pass": true,
+  "hype_rows": 0,
+  "hype_files": 0,
+  "hype_requests": 0
+}

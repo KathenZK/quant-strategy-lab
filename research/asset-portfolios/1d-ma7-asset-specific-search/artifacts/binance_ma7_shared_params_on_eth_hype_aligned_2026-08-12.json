@@ -1,0 +1,423 @@
+{
+  "generated_at_utc": "2026-08-12T11:55:35.833069+00:00",
+  "family": "Binance-1D-MA7-Asset-Specific-Search",
+  "observation": "BTC_ETH_shared_params_zero_tuning_on_HYPE_fresh_aligned_window",
+  "status": "explore / diagnostic-only / not promoted / not live-ready",
+  "selection_role": "shared params selected only on BTC/ETH development; HYPE not used in selection",
+  "symbol": "ETHUSDT",
+  "data_source": {
+    "source": "binance_fapi_public_api",
+    "history_days_requested": 520,
+    "requested_start_date": "2025-05-31",
+    "requested_end_date": "2026-08-11",
+    "raw_daily_bars_retained": 438,
+    "complete_daily_bars_used": 438,
+    "available_daily_bars": 524,
+    "short_history": false,
+    "fetcher": {
+      "path": "research/hype/1d-ma7-asymmetric-body-trend/scripts/audit_hype_1d_ma7_abt_v7_1_top15_binance_perp_transfer.py",
+      "sha256": "9f0ed20a5ef02d5bac89c2be9cf591e17d580fbf60b291932ee3665c629ed157"
+    }
+  },
+  "shared_summary": {
+    "path": "research/asset-portfolios/1d-ma7-asset-specific-search/artifacts/binance_btc_eth_1d_ma7_asset_specific_search_summary_2026-08-05.json",
+    "sha256": "ecaf0d65ddc7ed114acd078656e7da948a6ed5399c1b6292d716fb91199031be"
+  },
+  "engine": {
+    "path": "research/hype/1d-ma7-asymmetric-body-trend/scripts/search_hype_1d_ma7_separated_trend.py",
+    "sha256": "c376f8bd1bae814b0ba53687380ee1060cf3cc3095ae815ebb0311ed1aef59e1"
+  },
+  "long_config": {
+    "side": 1,
+    "entry_mode": "reclaim",
+    "slope_lookback": 5,
+    "slope_min_atr": 0.0,
+    "confirm_days": 1,
+    "entry_buffer_atr": 0.25,
+    "pullback_lookback": 10,
+    "pullback_touch_atr": 0.1,
+    "breakout_lookback": 7,
+    "exit_confirm_days": 2,
+    "exit_buffer_atr": 1.0,
+    "slope_exit_lookback": 5,
+    "hard_stop_atr": 0.0,
+    "trail_atr": 0.0,
+    "max_hold_days": 0,
+    "cooldown_days": 0
+  },
+  "short_config": {
+    "side": -1,
+    "entry_mode": "pullback_reclaim",
+    "slope_lookback": 5,
+    "slope_min_atr": 0.0,
+    "confirm_days": 1,
+    "entry_buffer_atr": 0.1,
+    "pullback_lookback": 5,
+    "pullback_touch_atr": -0.5,
+    "breakout_lookback": 10,
+    "exit_confirm_days": 2,
+    "exit_buffer_atr": 0.75,
+    "slope_exit_lookback": 0,
+    "hard_stop_atr": 1.5,
+    "trail_atr": 5.0,
+    "max_hold_days": 10,
+    "cooldown_days": 2
+  },
+  "data_quality": {
+    "daily": {
+      "status": "PASS",
+      "bars": 438,
+      "start_ts": "2025-05-31T00:00:00+00:00",
+      "end_ts": "2026-08-11T00:00:00+00:00",
+      "duplicate_count": 0,
+      "bad_ohlc_count": 0,
+      "gap_count": 0
+    },
+    "hourly": {
+      "status": "PASS",
+      "bars": 12481,
+      "start_ts": "2025-03-10T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "duplicate_count": 0,
+      "bad_ohlc_count": 0,
+      "gap_count": 0
+    },
+    "funding_events": 1560,
+    "terminal_open_ts": "2026-08-12T00:00:00+00:00",
+    "terminal_open": 1881.79
+  },
+  "results": {
+    "combined": {
+      "base": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 1.5528670313257065,
+        "net_return_pct": 55.28670313257065,
+        "max_drawdown_pct": -27.021615475210126,
+        "sharpe": 1.3165352744256638,
+        "closed_trades": 10,
+        "long_trades": 4,
+        "short_trades": 6,
+        "win_rate": 0.6,
+        "profit_factor": 2.3629944147097337,
+        "turnover_multiple": 27.10331869515322,
+        "cost_pct_initial": 3.794464617321458,
+        "funding_pct_initial": 0.665865950133074,
+        "max_intraday_leverage": 1.24267597535057,
+        "bankrupt_intraday": false
+      },
+      "stress_8bps": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 1.5405752695292463,
+        "net_return_pct": 54.057526952924626,
+        "max_drawdown_pct": -27.147691357471626,
+        "sharpe": 1.2947091512842277,
+        "closed_trades": 10,
+        "long_trades": 4,
+        "short_trades": 6,
+        "win_rate": 0.6,
+        "profit_factor": 2.3210791835710762,
+        "turnover_multiple": 26.98998598946192,
+        "cost_pct_initial": 4.858197478103143,
+        "funding_pct_initial": 0.6662372192957189,
+        "max_intraday_leverage": 1.2426759753505618,
+        "bankrupt_intraday": false
+      },
+      "one_day_extra_delay": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 2.027027306729427,
+        "net_return_pct": 102.7027306729427,
+        "max_drawdown_pct": -15.055657350190653,
+        "sharpe": 2.0442287364009886,
+        "closed_trades": 10,
+        "long_trades": 4,
+        "short_trades": 6,
+        "win_rate": 0.7,
+        "profit_factor": 4.234306161204443,
+        "turnover_multiple": 34.269406016728865,
+        "cost_pct_initial": 4.797716842342037,
+        "funding_pct_initial": 0.4166424041643895,
+        "max_intraday_leverage": 1.080249541620771,
+        "bankrupt_intraday": false
+      }
+    },
+    "long_only": {
+      "base": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 1.425442776058195,
+        "net_return_pct": 42.54427760581949,
+        "max_drawdown_pct": -19.329222711403204,
+        "sharpe": 1.3357119406594882,
+        "closed_trades": 5,
+        "long_trades": 5,
+        "short_trades": 0,
+        "win_rate": 0.8,
+        "profit_factor": 7.746735911527187,
+        "turnover_multiple": 13.345033978028976,
+        "cost_pct_initial": 1.8683047569240885,
+        "funding_pct_initial": 1.0854979947757628,
+        "max_intraday_leverage": 1.0065959871386352,
+        "bankrupt_intraday": false
+      },
+      "stress_8bps": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 1.4197477317711742,
+        "net_return_pct": 41.97477317711742,
+        "max_drawdown_pct": -19.39395783632967,
+        "sharpe": 1.321606126038034,
+        "closed_trades": 5,
+        "long_trades": 5,
+        "short_trades": 0,
+        "win_rate": 0.8,
+        "profit_factor": 7.5575250068961735,
+        "turnover_multiple": 13.317412896175977,
+        "cost_pct_initial": 2.3971343213117002,
+        "funding_pct_initial": 1.0842765992877539,
+        "max_intraday_leverage": 1.0065959871386312,
+        "bankrupt_intraday": false
+      },
+      "one_day_extra_delay": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 1.5143829751315028,
+        "net_return_pct": 51.438297513150275,
+        "max_drawdown_pct": -15.055657350190653,
+        "sharpe": 1.5443880107332224,
+        "closed_trades": 5,
+        "long_trades": 5,
+        "short_trades": 0,
+        "win_rate": 0.8,
+        "profit_factor": 9.949766260477723,
+        "turnover_multiple": 13.99934118082445,
+        "cost_pct_initial": 1.9599077653154384,
+        "funding_pct_initial": 1.0521961293371602,
+        "max_intraday_leverage": 1.0067427361574903,
+        "bankrupt_intraday": false
+      }
+    },
+    "short_only": {
+      "base": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 1.0998678953563903,
+        "net_return_pct": 9.98678953563903,
+        "max_drawdown_pct": -18.021688612411758,
+        "sharpe": 0.4670649799397199,
+        "closed_trades": 6,
+        "long_trades": 0,
+        "short_trades": 6,
+        "win_rate": 0.5,
+        "profit_factor": 1.3826226427965995,
+        "turnover_multiple": 12.02553913855153,
+        "cost_pct_initial": 1.6835754793971924,
+        "funding_pct_initial": -0.3715293168661818,
+        "max_intraday_leverage": 1.2426759753505698,
+        "bankrupt_intraday": false
+      },
+      "stress_8bps": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 1.09466296318664,
+        "net_return_pct": 9.466296318664003,
+        "max_drawdown_pct": -18.149948638194935,
+        "sharpe": 0.4490190815790679,
+        "closed_trades": 6,
+        "long_trades": 0,
+        "short_trades": 6,
+        "win_rate": 0.5,
+        "profit_factor": 1.3595394993433694,
+        "turnover_multiple": 11.995963938670425,
+        "cost_pct_initial": 2.1592735089606796,
+        "funding_pct_initial": -0.3704227214722536,
+        "max_intraday_leverage": 1.2426759753505623,
+        "bankrupt_intraday": false
+      },
+      "one_day_extra_delay": {
+        "start_ts": "2025-05-31T00:00:00+00:00",
+        "end_ts": "2026-08-12T00:00:00+00:00",
+        "days": 438.0,
+        "equity_multiple": 1.3965296370369904,
+        "net_return_pct": 39.652963703699044,
+        "max_drawdown_pct": -14.820089191546748,
+        "sharpe": 1.3963397470736996,
+        "closed_trades": 6,
+        "long_trades": 0,
+        "short_trades": 6,
+        "win_rate": 0.6666666666666666,
+        "profit_factor": 3.2105707189139534,
+        "turnover_multiple": 14.698474141394703,
+        "cost_pct_initial": 2.0577863797952456,
+        "funding_pct_initial": -0.5642504875422392,
+        "max_intraday_leverage": 1.0802495416207776,
+        "bankrupt_intraday": false
+      }
+    }
+  },
+  "buy_and_hold": {
+    "start_ts": "2025-05-31T00:00:00+00:00",
+    "end_ts": "2026-08-12T00:00:00+00:00",
+    "equity_multiple": 0.6926948475862796,
+    "net_return_pct": -30.730515241372036,
+    "annualized_factor": 0.7362533482968161,
+    "funding_pct_initial": 4.912738433154664,
+    "cost_pct_initial": 0.24380498748372845
+  },
+  "recent": [
+    {
+      "variant": "combined",
+      "window": "1d",
+      "start_ts": "2026-08-11T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": -0.14145034539168044,
+      "path_mdd_pct": -0.14145034539168044
+    },
+    {
+      "variant": "combined",
+      "window": "7d",
+      "start_ts": "2026-08-05T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": -0.27031369595409416,
+      "path_mdd_pct": -4.721283974372192
+    },
+    {
+      "variant": "combined",
+      "window": "1m",
+      "start_ts": "2026-07-13T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 2.006497960153064,
+      "path_mdd_pct": -10.392997103136848
+    },
+    {
+      "variant": "combined",
+      "window": "3m",
+      "start_ts": "2026-05-14T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 11.002827086774158,
+      "path_mdd_pct": -10.392997103136848
+    },
+    {
+      "variant": "combined",
+      "window": "6m",
+      "start_ts": "2026-02-11T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 5.048558428922978,
+      "path_mdd_pct": -16.36071049905945
+    },
+    {
+      "variant": "combined",
+      "window": "1y",
+      "start_ts": "2025-08-12T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 18.760121758924676,
+      "path_mdd_pct": -18.262933020619855
+    },
+    {
+      "variant": "long_only",
+      "window": "1d",
+      "start_ts": "2026-08-11T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 0.0,
+      "path_mdd_pct": 0.0
+    },
+    {
+      "variant": "long_only",
+      "window": "7d",
+      "start_ts": "2026-08-05T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 0.0,
+      "path_mdd_pct": 0.0
+    },
+    {
+      "variant": "long_only",
+      "window": "1m",
+      "start_ts": "2026-07-13T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 2.76748853776021,
+      "path_mdd_pct": -7.442484060352806
+    },
+    {
+      "variant": "long_only",
+      "window": "3m",
+      "start_ts": "2026-05-14T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 3.1701422949881097,
+      "path_mdd_pct": -7.442484060352806
+    },
+    {
+      "variant": "long_only",
+      "window": "6m",
+      "start_ts": "2026-02-11T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 9.014973098198231,
+      "path_mdd_pct": -13.276680039810962
+    },
+    {
+      "variant": "long_only",
+      "window": "1y",
+      "start_ts": "2025-08-12T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 9.014973098198231,
+      "path_mdd_pct": -13.276680039810962
+    },
+    {
+      "variant": "short_only",
+      "window": "1d",
+      "start_ts": "2026-08-11T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": -0.14145034539166934,
+      "path_mdd_pct": -0.14145034539166934
+    },
+    {
+      "variant": "short_only",
+      "window": "7d",
+      "start_ts": "2026-08-05T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": -0.27031369595409416,
+      "path_mdd_pct": -4.721283974372237
+    },
+    {
+      "variant": "short_only",
+      "window": "1m",
+      "start_ts": "2026-07-13T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": -0.740497397022144,
+      "path_mdd_pct": -6.373802223892289
+    },
+    {
+      "variant": "short_only",
+      "window": "3m",
+      "start_ts": "2026-05-14T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 7.592007355568486,
+      "path_mdd_pct": -6.373802223892289
+    },
+    {
+      "variant": "short_only",
+      "window": "6m",
+      "start_ts": "2026-02-11T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": -2.711840339823801,
+      "path_mdd_pct": -16.11385174030695
+    },
+    {
+      "variant": "short_only",
+      "window": "1y",
+      "start_ts": "2025-08-12T00:00:00+00:00",
+      "end_ts": "2026-08-12T00:00:00+00:00",
+      "return_pct": 9.98678953563903,
+      "path_mdd_pct": -18.021688612411758
+    }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "schema_version": "binance-1d-ma7-quml-p0-event-manifest-v1",
+  "created_at_utc": "2026-08-10T13:45:33.095366+00:00",
+  "files": {
+    "events": {
+      "path": "p0_events.parquet",
+      "bytes": 2726474,
+      "sha256": "9cbb9f9ab1bcb06fb20d326bf5db861b65f8dfea4cd500c6ef093d590ad6ef48"
+    },
+    "capacity": {
+      "path": "p0_capacity.json",
+      "bytes": 23479,
+      "sha256": "d263ef99cf05ab054926682f8e020424ed7db5630e6ff5c79484de48e8718d49"
+    }
+  }
+}

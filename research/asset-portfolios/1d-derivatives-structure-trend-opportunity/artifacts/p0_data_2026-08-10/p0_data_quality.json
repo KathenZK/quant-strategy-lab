@@ -1,0 +1,132 @@
+{
+  "schema_version": "binance-1d-dsto-p0-quality-v1",
+  "generated_at_utc": "2026-08-10T12:10:57.761148+00:00",
+  "assets": {
+    "BTC": {
+      "asset": "BTC",
+      "rows": 367639,
+      "start": "2021-12-01T00:00:00+00:00",
+      "end": "2025-05-30T23:55:00+00:00",
+      "missing_5m": 282,
+      "source_days_with_gaps": 34,
+      "source_days_with_invalid_values": 348,
+      "source_days_with_invalid_timestamps": 36,
+      "invalid_timestamp_rows": 165,
+      "maximum_missing_rows_in_day": 125,
+      "invalid_values_by_column": {
+        "sum_open_interest": 453,
+        "sum_open_interest_value": 465,
+        "count_toptrader_long_short_ratio": 92173,
+        "sum_toptrader_long_short_ratio": 92168,
+        "count_long_short_ratio": 5775,
+        "sum_taker_long_short_vol_ratio": 37250
+      },
+      "duplicate_ts": 2,
+      "source_days": 1277,
+      "feature_path": "data/cache/binance_1d_dsto_p0_unaccepted/btcusdt_metrics_5m.parquet",
+      "feature_sha256": "a4d0b51641662c7ed2525d47c3244e2124cc30087d6bf394066b77aee2a4442e"
+    },
+    "ETH": {
+      "asset": "ETH",
+      "rows": 367639,
+      "start": "2021-12-01T00:00:00+00:00",
+      "end": "2025-05-30T23:55:00+00:00",
+      "missing_5m": 254,
+      "source_days_with_gaps": 34,
+      "source_days_with_invalid_values": 347,
+      "source_days_with_invalid_timestamps": 39,
+      "invalid_timestamp_rows": 139,
+      "maximum_missing_rows_in_day": 125,
+      "invalid_values_by_column": {
+        "sum_open_interest": 198,
+        "sum_open_interest_value": 208,
+        "count_toptrader_long_short_ratio": 92176,
+        "sum_toptrader_long_short_ratio": 92168,
+        "count_long_short_ratio": 5776,
+        "sum_taker_long_short_vol_ratio": 37250
+      },
+      "duplicate_ts": 2,
+      "source_days": 1277,
+      "feature_path": "data/cache/binance_1d_dsto_p0_unaccepted/ethusdt_metrics_5m.parquet",
+      "feature_sha256": "377be98dbebc3acf76a90273f608754cd12f1bc436caa729ed5f44d17130fe16"
+    },
+    "BNB": {
+      "asset": "BNB",
+      "rows": 367639,
+      "start": "2021-12-01T00:00:00+00:00",
+      "end": "2025-05-30T23:55:00+00:00",
+      "missing_5m": 285,
+      "source_days_with_gaps": 34,
+      "source_days_with_invalid_values": 349,
+      "source_days_with_invalid_timestamps": 37,
+      "invalid_timestamp_rows": 163,
+      "maximum_missing_rows_in_day": 125,
+      "invalid_values_by_column": {
+        "sum_open_interest": 178,
+        "sum_open_interest_value": 188,
+        "count_toptrader_long_short_ratio": 92175,
+        "sum_toptrader_long_short_ratio": 92168,
+        "count_long_short_ratio": 5777,
+        "sum_taker_long_short_vol_ratio": 37257
+      },
+      "duplicate_ts": 2,
+      "source_days": 1277,
+      "feature_path": "data/cache/binance_1d_dsto_p0_unaccepted/bnbusdt_metrics_5m.parquet",
+      "feature_sha256": "76240a5036e21cba56592a1c73779fabdf200f5cb6d61f46d1da75b51f417993"
+    },
+    "SOL": {
+      "asset": "SOL",
+      "rows": 367622,
+      "start": "2021-12-01T00:00:00+00:00",
+      "end": "2025-05-30T23:55:00+00:00",
+      "missing_5m": 275,
+      "source_days_with_gaps": 36,
+      "source_days_with_invalid_values": 348,
+      "source_days_with_invalid_timestamps": 36,
+      "invalid_timestamp_rows": 142,
+      "maximum_missing_rows_in_day": 125,
+      "invalid_values_by_column": {
+        "sum_open_interest": 187,
+        "sum_open_interest_value": 197,
+        "count_toptrader_long_short_ratio": 92174,
+        "sum_toptrader_long_short_ratio": 92168,
+        "count_long_short_ratio": 5777,
+        "sum_taker_long_short_vol_ratio": 37254
+      },
+      "duplicate_ts": 3,
+      "source_days": 1277,
+      "feature_path": "data/cache/binance_1d_dsto_p0_unaccepted/solusdt_metrics_5m.parquet",
+      "feature_sha256": "221a9d984ee2884149ae0a9e070e710c31f5ac3c1db0acb5986aaa2044a0dd5b"
+    },
+    "TRX": {
+      "asset": "TRX",
+      "rows": 367631,
+      "start": "2021-12-01T00:00:00+00:00",
+      "end": "2025-05-30T23:55:00+00:00",
+      "missing_5m": 145,
+      "source_days_with_gaps": 9,
+      "source_days_with_invalid_values": 350,
+      "source_days_with_invalid_timestamps": 11,
+      "invalid_timestamp_rows": 0,
+      "maximum_missing_rows_in_day": 125,
+      "invalid_values_by_column": {
+        "sum_open_interest": 164,
+        "sum_open_interest_value": 174,
+        "count_toptrader_long_short_ratio": 92177,
+        "sum_toptrader_long_short_ratio": 92167,
+        "count_long_short_ratio": 5776,
+        "sum_taker_long_short_vol_ratio": 37273
+      },
+      "duplicate_ts": 0,
+      "source_days": 1277,
+      "feature_path": "data/cache/binance_1d_dsto_p0_unaccepted/trxusdt_metrics_5m.parquet",
+      "feature_sha256": "fc30f1b46bb88c0b18655b276f9ebd19fbe3a5399978196e8ee1dc381107d927"
+    }
+  },
+  "archive_count": 6385,
+  "expected_archive_count": 6385,
+  "hype_rows_consumed": 0,
+  "hype_files_opened": 0,
+  "hype_requests_sent": 0,
+  "quality_pass": false
+}

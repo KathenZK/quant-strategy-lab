@@ -5,7 +5,7 @@
 - Full family name：`HYPE-4H-MA7-Asymmetric-Body-Trend`
 - Alias：`HYPE-4H-MA7-ABT`
 - Market / exchange / symbol / timeframe：Binance USD-M Futures，`HYPEUSDT` perpetual，UTC `4h`
-- Mechanism：固定 `SMA7/ATR7` 的多空独立 reclaim、斜率确认、迟滞退出与 ATR 保护状态机。
+- Mechanism：固定 `SMA7/ATR7` 的多空独立斜率趋势、reclaim / pullback / breakout 入场、迟滞退出与 ATR 保护状态机。
 - Boundary：来自日线 V1 的 direct transfer，但属于独立 4H 家族；不是源 V1 的升级，也不是 4H-BKSB 或 6H-RS4。
 
 ## Current State
@@ -15,10 +15,11 @@
 - Bar-transfer：combined `-67.72%`、MDD `-77.47%`、105 笔。
 - Clock-equivalent：combined `-2.61%`、MDD `-34.21%`、63 笔；long-only / short-only `+17.07% / -23.54%`。
 - Robustness：clock-equivalent `8 bps=-7.41%`、额外延迟一根 `4h=-28.18%`、`2h` 相位 `-25.09%`；12 个滚动 90 日窗口仅 `5` 个为正。
+- Native 4H search：冻结候选在 selection prefit 为 `+284.22%`；未参与选择的 `120d` locked base / `8 bps` 为 `+10.23% / +7.55%`，但同期持有 `+45.60%`、额外延迟为 `-4.28%`；四个整点相位均正但收益比例/CV 未过门槛。
 - Baseline：同期计成本和 funding 的 `1x` buy-and-hold `+50.58%`。
 - Runner：无 live spec、无 quant-runner implementation、无 dry-run/live instance。
-- Blockers：全期绝对与超额收益失败；short-only 在两种时间合同和全部 12 个 clock rolling windows 均失败；long-only 相位翻负；多头首持仓 bar 无 hard stop；无 OOS/CPCV 或 runner parity。
-- Next gate：停止迁移日线参数；若继续，须建立独立 4H 机制和预先冻结的 OOS 合同。当前不登记、不推进 runner。
+- Blockers：直迁全期绝对与超额收益失败；原生搜索 locked 超额、延迟与相位门槛失败，long-only locked 为负，且 `30m` 相位因缺数据未完成；全部历史已揭示，无 clean prospective OOS / CPCV 或 runner parity。
+- Next gate：停止在当前已打开 locked 历史上继续挑参数；同机制只接受新增 prospective 4H 数据，materially new 机制须另立预先冻结合同。当前不登记、不推进 runner。
 
 ## Version Rules
 
@@ -32,6 +33,7 @@
 | --- | --- | --- | --- | --- | --- |
 | Bar-transfer | `explore / not promoted / not live-ready` | 日线数字直接解释为 4H bar | `-67.72%`，MDD `-77.47%` | [迁移诊断](diagnostics/hype-4h-ma7-source-v1-transfer-2026-08-05.md) | 失败，不登记 |
 | Clock-equivalent | `explore / not promoted / not live-ready` | 仅将 max-hold/cooldown 乘 `6` | `-2.61%`，MDD `-34.21%`；`2h=-25.09%` | [迁移诊断](diagnostics/hype-4h-ma7-source-v1-transfer-2026-08-05.md) | 无绝对/超额与相位稳定性，不登记 |
+| Native 4H search observation | `explore / not promoted / not live-ready` | 固定 MA7 的原生 4H 多空趋势参数搜索 | Prefit `+284.22%`；locked `+10.23%`；延迟 `-4.28%` | [原生搜索诊断](diagnostics/hype-4h-ma7-native-trend-search-2026-08-06.md) | 超额、延迟与相位门槛失败，不登记 |
 
 ## Shared Assumptions
 
@@ -45,8 +47,11 @@
 
 - [迁移合同](specs/hype-4h-ma7-source-v1-transfer-contract-2026-08-05.md)
 - [迁移诊断](diagnostics/hype-4h-ma7-source-v1-transfer-2026-08-05.md)
+- [原生搜索合同](specs/hype-4h-ma7-native-trend-search-contract-2026-08-06.md)
+- [原生搜索诊断](diagnostics/hype-4h-ma7-native-trend-search-2026-08-06.md)
+- [原生搜索机器摘要](artifacts/hype_4h_ma7_native_trend_summary_2026-08-06.json)
 - [机器摘要](artifacts/hype_4h_ma7_v1_transfer_summary_2026-08-05.json)
-- [复现脚本](scripts/research_hype_4h_ma7_v1_transfer.py)
+- [直迁脚本](scripts/research_hype_4h_ma7_v1_transfer.py) · [原生搜索脚本](scripts/search_hype_4h_ma7_native_trend.py)
 - [产物说明](artifacts/README.md)
 - [决策记录](decision-log.md)
 - [源日线 V1 主账](../1d-ma7-asymmetric-body-trend/hype-1d-ma7-abt-core-ledger.md)
