@@ -1,0 +1,88 @@
+{
+  "strategy_id": "BIN-1D-GMA7T-V0",
+  "full_name": "Binance-1D-Generic-MA7-Trend-v0",
+  "status": "explore / frozen research contract / not promoted / not live-ready",
+  "frozen_on": "2026-08-18",
+  "indicator": {
+    "ma_kind": "SMA",
+    "ma_length": 7,
+    "atr_kind": "simple_true_range_mean",
+    "atr_length": 7
+  },
+  "entry": {
+    "mode": "close_reclaim",
+    "confirm_days": 1,
+    "slope_lookback_days": 1,
+    "slope_min_atr": 0.02,
+    "entry_buffer_atr": 0.0,
+    "long_short_symmetric": true,
+    "execution": "next_utc_open"
+  },
+  "exit": {
+    "mode": "ma_atr_hysteresis",
+    "exit_confirm_days": 1,
+    "exit_buffer_atr": 0.75,
+    "slope_exit": false,
+    "max_hold_days": null,
+    "execution": "next_utc_open"
+  },
+  "risk": {
+    "hard_stop_atr": 1.5,
+    "trailing_stop_atr": 1.5,
+    "trailing_anchor": "most_favorable_completed_daily_close",
+    "intrabar_replay": "real_binance_1h",
+    "gap_fill": "hour_open_if_stop_crossed_else_stop_price",
+    "target_leverage": 1.0,
+    "single_position_per_asset": true,
+    "pyramiding": false
+  },
+  "removed_hype_modules": {
+    "oapp": false,
+    "short_rsi_exit": false,
+    "pehc": false,
+    "forced_reversal": false,
+    "cooldown_days": 0
+  },
+  "cost": {
+    "fee_per_fill": 0.001,
+    "base_slippage_per_fill": 0.0004,
+    "stress_slippage_per_fill": 0.0008,
+    "funding": "actual_binance_funding_rate_events"
+  },
+  "data": {
+    "exchange": "binance",
+    "market_type": "usd_m_perpetual",
+    "quote_asset": "USDT",
+    "signal_timeframe": "1d_utc",
+    "risk_timeframe": "1h_utc",
+    "history_days_requested": 730,
+    "minimum_closed_daily_bars": 365,
+    "closed_bars_only": true
+  },
+  "universe": {
+    "market_cap_source": "CoinGecko /coins/markets market_cap_desc snapshot",
+    "selection": "first 30 non-stable non-pegged non-wrapped unique economic exposures, then intersect Binance TRADING USDT PERPETUAL and minimum-history gate",
+    "dynamic_historical_membership": false,
+    "interpretation": "current-top30 retrospective backtest",
+    "symbol_overrides": {
+      "shiba-inu": "1000SHIBUSDT"
+    }
+  },
+  "portfolio": {
+    "kind": "equal_risk_inverse_volatility",
+    "asset_vol_ewm_halflife_days": 20,
+    "portfolio_vol_ewm_halflife_days": 20,
+    "target_annual_vol": 0.2,
+    "gross_leverage_cap": 3.0,
+    "minimum_active_assets": 2,
+    "information_lag_days": 1
+  },
+  "perturbation_policy": {
+    "selection_allowed": false,
+    "ma_length": [6, 7, 8],
+    "atr_length": [6, 7, 8],
+    "slope_min_atr": [0.016, 0.02, 0.024],
+    "exit_buffer_atr": [0.6, 0.75, 0.9],
+    "protective_stop_atr": [1.2, 1.5, 1.8]
+  }
+}

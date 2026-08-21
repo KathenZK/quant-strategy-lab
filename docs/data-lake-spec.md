@@ -20,7 +20,7 @@ data/
   raw/
     ohlcv/
       exchange=<真实交易场所>/
-        market_type=<spot|perp|equity>/
+        market_type=<spot|perp|futures|equity>/
           timeframe=<周期>/
             source=<数据提供方>/
               date=<UTC 日期>/
@@ -58,7 +58,10 @@ exchange + market_type + timeframe + symbol + ts
 
 - `exchange`：真实交易场所，例如 `binance`、`nasdaq`；不得填写 Polygon、
   Yahoo 等数据提供方。
-- `market_type`：当前合法值为 `spot`、`perp`、`equity`。
+- `market_type`：当前合法值为 `spot`、`perp`、`futures`、`equity`。
+- `futures` 数据必须额外记录具体合约或连续合约身份、换月/调整口径、结算价或成交价
+  口径及 session 语义。缺少这些 provenance 的连续合约只能停留在
+  `raw_unaccepted`，不得进入 trusted normalized 或支持 promotion 结论。
 - `symbol`：标准化证券或合约代码；同名资产依靠 exchange 与 market_type 隔离。
 - `timeframe`：行内必填身份，也是分区身份；两者不一致必须拒绝写入。
 - `source`：数据提供方或抓取渠道，例如 `binance_vision`、`polygon_api`、
@@ -123,6 +126,8 @@ source
 - 股票必须使用交易所日历、时区、节假日、常规/盘前/盘后 session 检查连续性；
   不得把休市时段误报为缺 K，也不得把非预期 session 当成正常连续数据。
 - 日 K 必须明确 session 与 timestamp 语义，不能仅凭相邻自然日推断缺失。
+- 期货连续合约必须按其交易所日历检查；不得把通用工作日当成交易所日历，也不得
+  在缺少逐合约映射时声称已核验 roll return、换月成本或价格调整方法。
 - 缺口或可疑行应优先通过交易所 API、官方数据、Binance Vision 或保留的 raw
   证据核验；无法核验时记录 blocker，不得继续参数搜索。
 

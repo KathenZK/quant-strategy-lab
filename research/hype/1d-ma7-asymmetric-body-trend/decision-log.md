@@ -335,3 +335,55 @@
 ## 2026-08-12 — MA20替换Top20产生混合正向但不改V7.1
 
 决定：按用户要求在USDT-only Top20上把V7.1的核心均线从`SMA7`替换为`SMA20`，其它ATR7、RSI6、OAPP、PEHC、冷却、成本与funding处理保持不变。MA20 Top20为11/20正收益、中位收益`+1.25%`，优于同Top20 MA7的6/20正收益与中位`-20.17%`；但`HYPEUSDT`从MA7的`+257.97%`降至MA20的`-2.65%`，说明这是新的机制线索而非V7.1等价优化。裁决`TRANSFER_MIXED_POSITIVE / diagnostic-only`，不修改V7.1、不登记新版本、不推进runner。证据：[MA20 Top20诊断](diagnostics/hype-1d-ma7-abt-v7-1-ma20-top20-binance-usdt-u-margin-transfer-2026-08-12.md) · [机器证据](artifacts/hype_1d_ma7_abt_v7_1_ma20_top20_binance_usdt_u_margin_transfer_2026-08-12.json)。
+
+## 2026-08-20 — V7.1 OAPP反弹确认诊断只推进RR shadow
+
+决定：精确复现`2026-08-09 55.113`开多、`2026-08-16 56.894`因OAPP平仓后，确认根因是第二个确认日即使收盘反弹、只要仍在10%回吐区就继续计数。预冻结的RR、0.5ATR回吐下限与MA7距离门均能阻止该次退出；但canonical全路径分别仅`+553.37%/-19.22%`、`+522.51%/-18.40%`、`+552.81%/-18.40%`，均弱于V7.1 `+711.04%/-18.40%`。裁决为生产`KEEP V7.1`、研究`SHADOW RR`；8月反事实截至`2026-08-20`仍为terminal-censored，不登记V7.2、不修改runner。证据：[冻结合同](specs/hype-1d-ma7-abt-v7-1-oapp-rebound-reset-diagnostic-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-abt-v7-1-oapp-rebound-reset-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_abt_v7_1_oapp_rebound_reset_2026-08-20.json)。
+
+## 2026-08-20 — V7.1 OAPP回吐到0候选失败
+
+决定：按用户提出的“只要没回吐到0就一直持有”，冻结唯一ZPF候选：long OAPP激活后，收盘仍高于开仓价时不锁盈，收回开仓价或以下才于下一UTC open退出，其余MA7、1h保护、PEHC、成本与funding不变。ZPF虽阻止08-16目标退出，但canonical仅`+469.37%/-25.07%`、胜率`66.67%`、PEHC handoff `0`，弱于V7.1 `+711.04%/-18.40%`，也弱于long OAPP off `+547.65%/-25.08%`。历史唯一零利润信号在触发时已为`-2.14%`毛亏，证明日线next-open不能保证保本。裁决`NO-GO ZPF / KEEP V7.1`，不登记V7.2、不修改runner。证据：[冻结合同](specs/hype-1d-ma7-abt-v7-1-oapp-zero-profit-floor-diagnostic-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-abt-v7-1-oapp-zero-profit-floor-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_abt_v7_1_oapp_zero_profit_floor_2026-08-20.json)。
+
+## 2026-08-20 — 对称裸MA7 Cross + Slope能抓趋势但风险失败
+
+决定：为回答用户所说的初始裸策略，独立冻结`SNC02`：昨日收盘位于SMA7反侧、今日fresh cross、1日SMA7 slope同向且至少`0.02×ATR7`，次日open入场；多空镜像，仅在镜像合格信号时翻仓，不使用buffer、armed、stop、OAPP、RSI、PEHC、max-hold或cooldown。Canonical为`+2.16%/-50.79%`，扩展至08-20为`+32.56%/-50.79%`、25笔、胜率40%；08-08信号确实于08-09以`55.113`翻多并持有至terminal `69.787`，该笔毛收益`+26.63%`。但8bps仍为`+29.90%/-51.15%`，额外1日lag为`-49.59%/-76.42%`，short总贡献为负。裁决`NO-GO / independent signal-core diagnostic`，不替换V7.1、不登记版本、不推进runner。证据：[冻结合同](specs/hype-1d-ma7-symmetric-naked-cross-slope-diagnostic-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-symmetric-naked-cross-slope-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_symmetric_naked_cross_slope_2026-08-20.json)。
+
+## 2026-08-20 — SNC02风险覆盖OAT仅MA05值得继续但MDD门失败
+
+决定：首次运行前冻结FF3、MA05、HS25、BE20与PT25_A3五个单变量风险臂；0/5通过MDD20与RISK_OVERLAY门。MA05把control `+32.56%/-50.79%`改善到`+148.79%/-33.61%`，8bps为`+143.68%/-33.93%`、lag仍正`+20.56%/-46.94%`，并保留08-09 long、把short贡献转正，因此仅标记`continuation-worthy / post-reveal diagnostic`；FF3误杀目标long且全窗转负，HS25尾部恶化，BE20 lag失败，PT25未触及主风险。Stage A不组合、不登记版本、不修改V7.1或runner。证据：[冻结合同](specs/hype-1d-ma7-snc02-risk-overlay-oat-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-snc02-risk-overlay-oat-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_snc02_risk_overlay_oat_2026-08-20.json)。
+
+## 2026-08-20 — SNC02 MA05试仓与确认扩仓Stage B失败
+
+决定：首次运行前冻结固定`0.75x/0.5x`参照，以及`0.5x-C1/0.5x-C2/0.25x-C2`三种确认后次日扩到1x的动态臂。固定0.5x是唯一MDD20通过者，为`+64.69%/-19.50%`、PF`2.707`、8bps`+62.98%`、lag`+15.40%`，但只保留MA05基准`43.48%`总收益，最新08-09 long也只有`+13.05%`，未过预冻结保留门。三个动态臂MDD为`-33.17%/-39.58%/-45.99%`且lag收益全负，短暂确认后的高位扩仓反而放大反转损失。裁决`CONTINUATION_CANDIDATE=0/5`；不再搜索确认天数或试仓比例，不登记版本、不修改V7.1或runner。证据：[冻结合同](specs/hype-1d-ma7-snc02-ma05-probe-sizing-stage-b-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-snc02-ma05-probe-sizing-stage-b-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_snc02_ma05_probe_sizing_stage_b_2026-08-20.json)。
+
+## 2026-08-20 — SNC02 MA05固定ATR灾难止损Stage C失败
+
+决定：首次运行前冻结`1.0/1.5/2.0×entry_ATR7`三档小时硬止损，跳空按更差open参考成交，stop后必须等待fresh SNC02信号。三档均未通过MDD20：HS10为`+114.32%/-32.39%`、7次stop，只改善1.22pp MDD却损失34.47pp收益；HS15为`+85.50%/-36.41%`且双劣；HS20主路径0次触发、与MA05 control完全同路径。三者均保留08-09 long且压力收益为正，但无法切断跨多笔交易的连续亏损链。裁决`CONTINUATION_CANDIDATE=0/3`，按合同关闭固定ATR路线，不补搜中间倍数、不登记版本、不修改V7.1或runner。证据：[冻结合同](specs/hype-1d-ma7-snc02-ma05-hard-stop-stage-c-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-snc02-ma05-hard-stop-stage-c-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_snc02_ma05_hard_stop_stage_c_2026-08-20.json)。
+
+## 2026-08-20 — SNC02 MA05权益回撤节流Stage D失败
+
+决定：首次运行前冻结两组权益回撤触发/恢复阈值与`0.5x/0.25x`低风险仓位。0.5x两臂为`+72.36%/-22.40%`与`+44.55%/-23.70%`，仍未过MDD20；0.25x两臂虽降到`-18.61%/-18.93%`，但低风险状态超过92%、收益仅`+10.48%/+11.38%`，lag为负，08-09 long仅约`+6.53%`。裁决`CONTINUATION_CANDIDATE=0/4`；权益高水位节流无法在趋势恢复时及时回到1x，风险路线停止。证据：[冻结合同](specs/hype-1d-ma7-snc02-ma05-equity-drawdown-governor-stage-d-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-snc02-ma05-equity-drawdown-governor-stage-d-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_snc02_ma05_equity_drawdown_governor_stage_d_2026-08-20.json)。
+
+## 2026-08-20 — Stage E在运行前取消，研究切换为趋势优先
+
+决定：ATR风险预算Stage E合同虽已冻结，但用户随后明确“第一目标是完整吃到趋势”，故在创建脚本、运行回测或生成artifact前取消。该合同状态固定为`CANCELLED_BEFORE_RUN / no artifact / no result`，不得把未运行分支当作失败结果或继续沿风险压缩路线。证据：[取消合同](specs/hype-1d-ma7-snc02-ma05-atr-risk-budget-stage-e-contract-2026-08-20.md)。
+
+## 2026-08-20 — SNC02趋势优先全量审计保留裸核、否决CSM02
+
+决定：按趋势捕获重新定义主问题，审计103个strict raw MA7 cross与全部campaign，不用MDD或额外1日lag淘汰趋势机制。exact SNC02有9个`MFE>=20%` major campaign，major MFE加权capture为`47.19%`；08-09 long从`55.113`连续持有到terminal `69.787`，经历2次raw recross仍未退出，capture为`83.53%`。预冻结CSM02允许被拒cross在同侧斜率后来成熟，虽补到13个事后major raw-cross机会，却新增38笔delayed trade、仅11笔gross为正，总体`-66.03%/-81.68%`，并于08-12误翻空打断目标趋势。裁决`KEEP SNC02 AS TREND-FIRST CONTROL / CSM02 TREND_FIRST_GATE_FAILED`；不搜索等待天数或阈值。证据：[冻结合同](specs/hype-1d-ma7-snc02-trend-first-discovery-audit-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-snc02-trend-first-discovery-audit-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_snc02_trend_first_discovery_audit_2026-08-20.json)。
+
+## 2026-08-20 — EMA50分层补票仍破坏趋势连续性
+
+决定：在CSM02失败后、首次运行前冻结唯一结构候选HCSM50：exact SNC02不受EMA过滤，仅delayed maturation要求价格位于目标EMA50侧且EMA50单日斜率同向。该机制把delayed trade从38笔降到16笔，但结果仍为`-10.93%/-57.50%`，major MFE加权capture仅`36.01%`，且在08-12以delayed short打断08-09 exact long。裁决`TREND_FIRST_GATE_FAILED / STOP`；问题来自慢EMA与新趋势切换的机制冲突，不搜索EMA span。rejected cross只可保留shadow机会标签；若继续研究趋势发现，必须引入与MA7不同源的独立信息。证据：[冻结合同](specs/hype-1d-ma7-snc02-ema50-hierarchical-discovery-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-snc02-ema50-hierarchical-discovery-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_snc02_ema50_hierarchical_discovery_2026-08-20.json)。
+
+## 2026-08-20 — OAPP改为7日振幅半距市价平失败
+
+决定：把 V7.1 多头 OAPP 换成“持仓最高价回吐过去已收盘7日高低差的一半即1h市价平”。canonical 从 `+711.04%/-18.40%` 降到 `+185.20%/-33.04%`，且弱于关闭 OAPP；08-09 多头在 `08-11 16:00 / 53.790` 亏损离场。裁决`NO-GO R7H / KEEP V7.1`，不登记版本、不改 runner。证据：[冻结合同](specs/hype-1d-ma7-abt-v7-1-oapp-range7-half-trail-diagnostic-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-abt-v7-1-oapp-range7-half-trail-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_abt_v7_1_oapp_range7_half_trail_2026-08-20.json)。
+
+## 2026-08-20 — 持仓ER7分不开8月OAPP误锁
+
+决定：先测 V7.1 多头持仓日的 Kaufman `ER7`，只有 `08-15` 效率严格高于 canonical 成熟 OAPP 日中位数才允许给 OAPP 加效率闸。结果 `08-15 ER7=0.239` 低于中位 `0.312`，8 个好锁当天效率从 `0.14` 到 `0.77` 重叠过大。裁决`LAYER0_NOT_SEPARABLE / KEEP V7.1`；第 1 层未跑，不把 ER 改回入场过滤，不搜窗口。证据：[冻结合同](specs/hype-1d-ma7-abt-v7-1-er-hold-overlay-diagnostic-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-abt-v7-1-er-hold-overlay-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_abt_v7_1_er_hold_overlay_2026-08-20.json)。
+
+## 2026-08-20 — SNC02趋势健康出场未过风险门且切掉8月
+
+决定：在 exact SNC02 入场上冻结唯一健康出场包（ER 非正、斜率非正/两日衰减、确认摆动破坏、7 日未创新极值、1h `3ATR` 回撤）。canonical 为`+62.86%/-28.91%`，优于裸核`+2.16%/-50.79%`，但 MDD 未过 20%，且 08-09 多头在 `08-12 / 54.492` 因 `signed_ER7<=0` 亏损离场，顺带切掉 11 月空头主趋势腿。裁决`NO-GO THX / KEEP V7.1`，不搜四项阈值。证据：[冻结合同](specs/hype-1d-ma7-snc02-trend-health-exit-diagnostic-contract-2026-08-20.md) · [诊断](diagnostics/hype-1d-ma7-snc02-trend-health-exit-2026-08-20.md) · [机器证据](artifacts/hype_1d_ma7_snc02_trend_health_exit_2026-08-20.json)。

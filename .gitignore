@@ -21,6 +21,11 @@ web/.next/
 **/artifacts/**
 !**/artifacts/**/
 !**/artifacts/**/*.md
+!research/gold/1d-multi-speed-tsmom/artifacts/gold-1d-ms-tsmom-baseline-2026-08-18*
+!research/gold/1d-multi-speed-tsmom/artifacts/gold-1d-ms-tsmom-recent-extension-2026-08-18*
+!research/asset-portfolios/1d-tradfi-futures-tsmom/artifacts/tf-1d-fut-tsmom-p0-2026-08-18*
+!research/asset-portfolios/1d-tradfi-futures-tsmom/artifacts/tf-1d-fut-tsmom-proxy-validation-2026-08-18*
+!research/asset-portfolios/1d-generic-ma7-trend/artifacts/binance_1d_gma7t_v0_2026-08-18*
 !research/hype/15m-multi-indicator-intraday/artifacts/HYPE-15M-MII-V1.4A_parity_pending_2026-07-11.json
 !research/hype/15m-ema-crossover/artifacts/HYPE-EMA-X-V18_parity_pending_2026-07-11.json
 !research/hype/15m-candle-count-reversal/artifacts/HYPE-CANDLE-COUNT-V35_parity_pending_2026-07-11.json
@@ -138,5 +143,7 @@ web/.next/
 !research/hype/15m-ema-trend-breakout/artifacts/hype_ema_tb_v35_3_short_volume_adx_bypass_2026-07-22_trades.csv
 !research/hype/15m-ema-trend-breakout/artifacts/hype_ema_tb_v35_3_early_short_satellite_2026-07-22.json
 !research/hype/15m-ema-trend-breakout/artifacts/hype_ema_tb_v35_3_early_short_satellite_2026-07-22_trades.csv
+!research/asset-portfolios/1d-monthly-cs-momentum-ls3/artifacts/binance-1d-mcsm-ls3-diagnostic-2026-08-18*
+!research/asset-portfolios/1d-tradfi-futures-tsmom/artifacts/tf-1d-fut-tsmom-paper-exact-p1-2026-08-19*
 .coverage
 htmlcov/

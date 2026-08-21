@@ -2,6 +2,12 @@
 
 这是 HYPE EMA trend-breakout 研究的家族级阅读路径。
 
+## 2026-08-18 — HYPE 15m dry-run 组再次 halt
+
+- `hype-ema-tb-v35-1-dry-run` 在 `2026-08-17 18:45–19:15Z` 连续 3 根 `NextOpen` 取价得到 `missing Binance kline`，触发共享组 `group_freshness_stale`，随后 `19:19Z` `group_halted`。同组 MII / EMA-X / CC / TB-MII-ENS 一并停；PBTR / live 不受影响。
+- 判定：不是整机或 systemd 故障。研究身份不变；**自 `19:15Z` 起 dry-run 观察窗口断裂**，恢复前不作 live-readiness 依据。
+- 证据：[hype-15m-group-halt-2026-08-17.md](runner-tracking/hype-15m-group-halt-2026-08-17.md)。
+
 ## 2026-08-04 — V35.1 对拍证据缺失
 
 - `HYPE-EMA-TB-V35.1` 原 parity JSON 已不在干净 checkout 中，证据健康度记为 `MISSING_EVIDENCE`；版本继续为 `registered / not promoted / not live-ready`，新的 promotion 尝试必须重新提交规范证据。实际启用状态只以 quant-runner 为准，promotion review 见 [`hype-ema-tb-v35-1-dry-run-promotion-review-2026-07-20.md`](diagnostics/hype-ema-tb-v35-1-dry-run-promotion-review-2026-07-20.md)。

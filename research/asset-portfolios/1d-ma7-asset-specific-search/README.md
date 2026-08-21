@@ -3,9 +3,9 @@
 - Alias：`BIN-1D-MA7-AS-SEARCH`
 - 市场/周期：Binance USD-M `BTCUSDT`、`ETHUSDT` perpetual，UTC `1d`；`HYPEUSDT` 与美股价格指数仅作共享参数零调参 control
 - 机制：固定 `SMA7/ATR7`，分别搜索 BTC、ETH 多空状态机，并选择一组 BTC/ETH 共享参数
-- 当前状态：`V1 registered / not promoted / not live-ready`
+- 当前状态：`V1 / V2 registered / not promoted / not live-ready`；`V2` 另标 `HARD-GATE-FAILED`
 
-本家族承接零调参迁移失败后的用户指定 target-asset search；它不是原迁移家族的版本升级，所有历史均已揭示，不产生 clean OOS。`V1` 只登记 BTC/ETH shared 参数身份，不代表 HYPE 可迁移或 runner 授权。
+本家族承接零调参迁移失败后的用户指定 target-asset search；它不是原迁移家族的版本升级。`V1` 登记 BTC/ETH shared 参数（long `reclaim`）。`V2` 登记 P2-C parent（仅 long 改为 `pullback_reclaim`），不代表硬门禁通过或 runner 授权。
 
 ## 入口
 
@@ -13,6 +13,7 @@
 - [决策记录](decision-log.md)
 - [冻结搜索合同](specs/binance-btc-eth-1d-ma7-search-contract-2026-08-05.md)
 - [V1规格](specs/binance-1d-ma7-as-search-v1-spec.md)
+- [V2规格](specs/binance-1d-ma7-as-search-v2-spec.md)
 - [搜索与诊断报告](diagnostics/binance-btc-eth-1d-ma7-asset-specific-search-2026-08-05.md)
 - [平多即反手空合同](specs/binance-ma7-long-exit-short-reversal-contract-2026-08-06.md)与[诊断](diagnostics/binance-ma7-long-exit-short-reversal-2026-08-06.md)
 - [共享参数应用于 HYPE](diagnostics/binance-ma7-shared-params-on-hype-2026-08-05.md)
@@ -24,3 +25,5 @@
 - [机器证据](artifacts/README.md)
 - [BTC V1交易路径](artifacts/binance_ma7_shared_params_v1_btc_trade_path_2026-08-12.html)
 - [ETH V1交易路径](artifacts/binance_ma7_shared_params_v1_eth_trade_path_2026-08-12.html)
+- [BTC V2交易路径](artifacts/binance_1d_ma7_as_search_v2_btc_trade_path_2026-08-17.html)
+- [ETH V2交易路径](artifacts/binance_1d_ma7_as_search_v2_eth_trade_path_2026-08-17.html)

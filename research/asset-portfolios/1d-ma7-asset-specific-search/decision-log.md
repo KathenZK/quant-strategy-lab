@@ -31,3 +31,7 @@
 ## 2026-08-13 — BTC/ETH候选最近1至4年横向排名
 
 决定：固定既有 growth 路径并统一按 `2025-08-07` 终点切分；近期综合前三为 `COST / CPPR-25% / DASE`。三者只保留为核心收益、风险模块与组合架构的后继研究材料；`CILL/CBCT` 仅保留模块或对照，其余当前机制停止。该诊断不重选参数、不揭示 audit/prospective、不改变任何家族状态。证据：[横向排名](diagnostics/binance-btceth-recent-horizon-ranking-2026-08-13.md) · [机器摘要](artifacts/binance_btceth_recent_horizon_ranking_2026-08-13.json)。
+
+## 2026-08-17 — 登记 V2 并生成 BTC/ETH 交易路径
+
+决定：按用户要求，将 P2-C parent（V1 shared 参数、仅 long `entry_mode` 改为 `pullback_reclaim`）登记为 `Binance-1D-MA7-Asset-Specific-Search-V2`，状态为 `registered / HARD-GATE-FAILED / not promoted / not live-ready`。P2-I 的研究线关闭与不 promotion 结论不变；本次只固定版本身份并绘制全样本路径，不授权 live spec 或 runner。证据：[V2规格](specs/binance-1d-ma7-as-search-v2-spec.md) · [BTC路径](artifacts/binance_1d_ma7_as_search_v2_btc_trade_path_2026-08-17.html) · [ETH路径](artifacts/binance_1d_ma7_as_search_v2_eth_trade_path_2026-08-17.html)。

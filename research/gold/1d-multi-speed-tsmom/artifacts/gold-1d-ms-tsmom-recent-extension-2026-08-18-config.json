@@ -1,0 +1,25 @@
+{
+  "family_name": "GOLD-1D-Multi-Speed-TSMOM",
+  "experiment": "post_2021_recent_extension",
+  "status": "explore / diagnostic-only / not promoted / not live-ready",
+  "evaluation_start": "2021-12-01T00:00:00+00:00",
+  "signal_lookbacks_months": [
+    1,
+    3,
+    12
+  ],
+  "composite_weights": [
+    0.3333333333333333,
+    0.3333333333333333,
+    0.3333333333333333
+  ],
+  "target_volatility": 0.1,
+  "volatility_center_of_mass_days": 60.0,
+  "execution_lag_sessions": 1,
+  "cost_bps_one_way": [
+    0.0,
+    2.0
+  ],
+  "data_quality_status": "raw_unaccepted",
+  "provider_splice": false
+}

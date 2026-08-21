@@ -1,0 +1,50 @@
+{
+  "generated_at": "2026-08-19T07:21:48.236667+00:00",
+  "quality_status": "official_published_factor_returns",
+  "audits": [
+    {
+      "key": "original",
+      "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Original-Paper-Data.xlsx",
+      "workbook": "tf-1d-fut-tsmom-paper-exact-p1-2026-08-19-aqr-original-paper-data.xlsx",
+      "workbook_sha256": "91bdbae6366ccb0693581b690236dc14862562a98ee83052c4f440f8b6ae0db8",
+      "csv": "tf-1d-fut-tsmom-paper-exact-p1-2026-08-19-aqr-original-returns.csv",
+      "csv_sha256": "8e272b1ce4ac4312e8dd7f27e9e3b06327516f54b9cf1d584df7cd5955299e97",
+      "sheet": "TSMOM factors",
+      "header_row_zero_based": 10,
+      "rows": 300,
+      "first_month": "1985-01",
+      "last_month": "2009-12",
+      "missing_months": [],
+      "columns": [
+        "DATE",
+        "TSMOM",
+        "TSMOM^EQ",
+        "TSMOM^FX",
+        "TSMOM^FI",
+        "TSMOM^CM"
+      ]
+    },
+    {
+      "key": "updated",
+      "url": "https://www.aqr.com/-/media/AQR/Documents/Insights/Data-Sets/Time-Series-Momentum-Factors-Monthly.xlsx",
+      "workbook": "tf-1d-fut-tsmom-paper-exact-p1-2026-08-19-aqr-updated-factors-monthly.xlsx",
+      "workbook_sha256": "33470930e2269c0d97be4732ec2d9c27ddbc69ac8133b059a263e27400263eeb",
+      "csv": "tf-1d-fut-tsmom-paper-exact-p1-2026-08-19-aqr-updated-returns.csv",
+      "csv_sha256": "0c6cd03366b56cc0eacc75485aac92136afd0fe3de112aec5af75d45b4deaa93",
+      "sheet": "TSMOM Factors",
+      "header_row_zero_based": 17,
+      "rows": 497,
+      "first_month": "1985-01",
+      "last_month": "2026-05",
+      "missing_months": [],
+      "columns": [
+        "DATE",
+        "TSMOM",
+        "TSMOM^EQ",
+        "TSMOM^FX",
+        "TSMOM^FI",
+        "TSMOM^CM"
+      ]
+    }
+  ]
+}

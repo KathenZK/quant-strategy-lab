@@ -36,6 +36,16 @@
 - [ETH V1交易路径](binance_ma7_shared_params_v1_eth_trade_path_2026-08-12.html)
 - [V1交易路径 SHA256](binance_ma7_shared_params_v1_trade_paths_2026-08-12.sha256)
 
+## V2（P2-C parent）
+
+- [机器摘要](binance_1d_ma7_as_search_v2_2026-08-17.json)
+- [窗口/压力/近期切片指标](binance_1d_ma7_as_search_v2_2026-08-17_metrics.csv)
+- [逐笔交易](binance_1d_ma7_as_search_v2_2026-08-17_trades.csv)
+- [组合路径](binance_1d_ma7_as_search_v2_2026-08-17_path.csv)
+- [BTC V2交易路径](binance_1d_ma7_as_search_v2_btc_trade_path_2026-08-17.html)
+- [ETH V2交易路径](binance_1d_ma7_as_search_v2_eth_trade_path_2026-08-17.html)
+- [V2交易路径 SHA256](binance_1d_ma7_as_search_v2_trade_paths_2026-08-17.sha256)
+
 ## 平多即反手空诊断
 
 - [机器摘要](binance_ma7_long_exit_short_reversal_2026-08-06_summary.json)

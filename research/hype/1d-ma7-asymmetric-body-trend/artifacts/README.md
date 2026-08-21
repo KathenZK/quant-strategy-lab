@@ -286,6 +286,25 @@
 - [V7.1 Binance U本位Top15迁移机器证据](hype_1d_ma7_abt_v7_1_top15_binance_perp_transfer_2026-08-11.json)及其[SHA256](hype_1d_ma7_abt_v7_1_top15_binance_perp_transfer_2026-08-11.json.sha256)：按最近30个已闭合UTC日K `quote_volume` 在 Binance U本位 futures 全部合约中选Top15，包含`PERPETUAL`、`TRADIFI_PERPETUAL`、`USDT`和`USDC`；最终15个标的仅2个正收益，中位收益`-27.49%`，裁决`TRANSFER_FAIL`。
 - [V7.1 Binance USDT本位Top30迁移机器证据](hype_1d_ma7_abt_v7_1_top30_binance_usdt_u_margin_transfer_2026-08-12.json)及其[SHA256](hype_1d_ma7_abt_v7_1_top30_binance_usdt_u_margin_transfer_2026-08-12.json.sha256)：过滤`USDC`、保留`USDT`普通永续与`TRADIFI_PERPETUAL`，按最近30个已闭合UTC日K `quote_volume` 取Top30；正收益`9/30`、有交易`29/30`、中位收益`-20.81%`，裁决`TRANSFER_FAIL`。
 - [V7.1 MA20替换USDT本位Top20机器证据](hype_1d_ma7_abt_v7_1_ma20_top20_binance_usdt_u_margin_transfer_2026-08-12.json)及其[SHA256](hype_1d_ma7_abt_v7_1_ma20_top20_binance_usdt_u_margin_transfer_2026-08-12.json.sha256)：同USDT-only口径取Top20，仅将`SMA7`替换为`SMA20`；正收益`11/20`、中位收益`+1.25%`，但`HYPEUSDT`降至`-2.65%`，裁决`TRANSFER_MIXED_POSITIVE / diagnostic-only`。
+- [V7.1 OAPP反弹重置机器证据](hype_1d_ma7_abt_v7_1_oapp_rebound_reset_2026-08-20.json)及其[SHA256](hype_1d_ma7_abt_v7_1_oapp_rebound_reset_2026-08-20.json.sha256)：扩展数据精确复现`08-09 55.113`开多、`08-16 56.894` OAPP平仓；RR、AF05、MAG05均阻止该次退出，但canonical全路径全部低于V7.1，裁决生产`KEEP V7.1`、研究`SHADOW RR`，不改runner。
+- [2026-08-20前瞻数据同步审计](hype_1h_prospective_sync_2026-08-20.json)：1h K线与funding补齐至`2026-08-20 04:00 UTC`，连续性与重复时间戳审计零阻断。
+- [V7.1 OAPP零利润回吐机器证据](hype_1d_ma7_abt_v7_1_oapp_zero_profit_floor_2026-08-20.json)及其[SHA256](hype_1d_ma7_abt_v7_1_oapp_zero_profit_floor_2026-08-20.json.sha256)：ZPF只在收盘回到entry或以下时退出；canonical为`+469.37%/-25.07%`，弱于V7.1及OAPP off，PEHC handoff归零，裁决`NO-GO ZPF / KEEP V7.1`。
+- [V7.1 OAPP七日振幅半距市价机器证据](hype_1d_ma7_abt_v7_1_oapp_range7_half_trail_2026-08-20.json)及其[SHA256](hype_1d_ma7_abt_v7_1_oapp_range7_half_trail_2026-08-20.json.sha256)：关闭 long OAPP 后，持仓最高价回吐过去7日高低差一半即1h市价平；canonical为`+185.20%/-33.04%/23笔`，弱于V7.1与OAPP off，08-09多头在`08-11 16:00`亏损离场，裁决`NO-GO R7H / KEEP V7.1`。
+- [V7.1 持仓ER7机器证据](hype_1d_ma7_abt_v7_1_er_hold_overlay_2026-08-20.json)及其[SHA256](hype_1d_ma7_abt_v7_1_er_hold_overlay_2026-08-20.json.sha256)：`08-15 ER7=0.239`低于8个canonical OAPP锁中位`0.312`，第0层分不开，第1层未跑，裁决`LAYER0_NOT_SEPARABLE / KEEP V7.1`。
+- [SNC02趋势健康出场机器证据](hype_1d_ma7_snc02_trend_health_exit_2026-08-20.json)及其[SHA256](hype_1d_ma7_snc02_trend_health_exit_2026-08-20.json.sha256)：exact SNC02入场加冻结健康出场；canonical`+62.86%/-28.91%/37笔`优于裸核但未过MDD20，08-09多头在`08-12`因ER非正亏损离场，裁决`NO-GO THX / KEEP V7.1`。
+- [对称裸MA7 Cross + Slope机器证据](hype_1d_ma7_symmetric_naked_cross_slope_2026-08-20.json)及其[SHA256](hype_1d_ma7_symmetric_naked_cross_slope_2026-08-20.json.sha256)：`SNC02`多空镜像fresh cross + `0.02ATR7` slope、只按反向合格信号翻仓；扩展`+32.56%/-50.79%`，能抓住08-09 long但lag/MDD失败，只作独立signal-core control。
+- [对称裸MA7 Cross + Slope交互交易路径](hype_1d_ma7_symmetric_naked_cross_slope_trade_path_2026-08-20.html)、[SHA256](hype_1d_ma7_symmetric_naked_cross_slope_trade_path_2026-08-20.html.sha256)与[审计manifest](hype_1d_ma7_symmetric_naked_cross_slope_trade_path_2026-08-20_manifest.json)：446根完整UTC日K、SMA7、归一化1日斜率、真实1h权益、25笔入出场连线、合格信号及terminal-censored标识，无外部依赖。
+- [SNC02风险覆盖OAT机器证据](hype_1d_ma7_snc02_risk_overlay_oat_2026-08-20.json)及其[SHA256](hype_1d_ma7_snc02_risk_overlay_oat_2026-08-20.json.sha256)：首次运行前冻结FF3、MA05、HS25、BE20、PT25_A3五个单变量臂；MA05为`+148.79%/-33.61%`且保留08-09 long，但0/5通过MDD20/RISK_OVERLAY门，Stage A不组合、不登记版本。
+
+- [SNC02 MA05试仓与确认扩仓Stage B机器证据](hype_1d_ma7_snc02_ma05_probe_sizing_stage_b_2026-08-20.json)及其[SHA256](hype_1d_ma7_snc02_ma05_probe_sizing_stage_b_2026-08-20.json.sha256)：固定0.5x为`+64.69%/-19.50%`但未过收益/最新趋势保留门；三种确认扩仓MDD为`-33.17%~-45.99%`且lag全负，`CONTINUATION_CANDIDATE=0/5`。
+
+- [SNC02 MA05固定ATR灾难止损Stage C机器证据](hype_1d_ma7_snc02_ma05_hard_stop_stage_c_2026-08-20.json)及其[SHA256](hype_1d_ma7_snc02_ma05_hard_stop_stage_c_2026-08-20.json.sha256)：`1.0/1.5/2.0ATR7`三档均未过MDD20；HS10最好为`+114.32%/-32.39%`，HS15双劣，HS20主路径0触发同control，固定ATR路线关闭。
+
+- [SNC02 MA05权益回撤节流Stage D机器证据](hype_1d_ma7_snc02_ma05_equity_drawdown_governor_stage_d_2026-08-20.json)及其[SHA256](hype_1d_ma7_snc02_ma05_equity_drawdown_governor_stage_d_2026-08-20.json.sha256)：0.25x两臂把MDD压至`-18.61%/-18.93%`，但低风险状态超过92%、收益仅`+10.48%/+11.38%`且最新趋势只保留约四分之一；0.5x两臂仍未过MDD20，0/4候选。
+
+- [SNC02趋势优先全量审计机器证据](hype_1d_ma7_snc02_trend_first_discovery_audit_2026-08-20.json)及其[SHA256](hype_1d_ma7_snc02_trend_first_discovery_audit_2026-08-20.json.sha256)：审计103个raw fresh cross和全部campaign；control major加权capture为`47.19%`、最新long为`83.53%`，CSM02虽补到13个事后major cross却为`-66.03%/-81.68%`并打断最新趋势，裁决`TREND_FIRST_GATE_FAILED`。
+
+- [SNC02 EMA50分层发现机器证据](hype_1d_ma7_snc02_ema50_hierarchical_discovery_2026-08-20.json)及其[SHA256](hype_1d_ma7_snc02_ema50_hierarchical_discovery_2026-08-20.json.sha256)：HCSM50将delayed trade降至16笔，但仍在08-12误翻空，major加权capture仅`36.01%`，扩展窗`-10.93%/-57.50%`；不搜索EMA span。
 
 ## V6结构性入场与仓位管理（全历史post-reveal FAIL）
 
