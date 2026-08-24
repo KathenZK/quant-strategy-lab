@@ -1,3 +1,7 @@
+---
+research_classification: diagnostic_topic
+---
+
 # Multi-Asset-1D-Classic-EWMAC-Replication
 
 - 完整家族名：`Multi-Asset-1D-Classic-EWMAC-Replication`
