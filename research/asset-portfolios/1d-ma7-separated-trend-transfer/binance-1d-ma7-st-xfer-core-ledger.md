@@ -5,7 +5,7 @@
 - Full family name：`Binance-1D-MA7-Separated-Trend-Transfer`
 - Alias：`BIN-1D-MA7-ST-XFER`
 - Market / symbols / timeframe：Binance USD-M `BTCUSDT`、`ETHUSDT` perpetual，UTC `1d`
-- Mechanism：HYPE 第 `041` 组固定 `SMA7` 多空独立 reclaim、迟滞退出与 ATR 保护参数的零调参跨资产迁移。
+- Mechanism：HYPE 第 `041` 组固定 `SMA7` 多空独立 reclaim、迟滞退出与 ATR 保护参数，以及 `HYPE-1D-MA7-ABT-V6` / `PEHC_294` 的零调参跨资产迁移。
 - Boundary：不是无订单的 `BIN-1D-MA7DC`，也不是 MA7/MA30 加仓迁移；目标资产历史不用于再搜索。
 
 ## Current State
@@ -14,6 +14,7 @@
 - Current status：`explore / not promoted / not live-ready`。
 - Combined transfer：BTC 完整/共同窗口 `-0.68% / -12.09%`；ETH `+40.73% / -15.34%`，ETH MDD `-49.13%` 且额外延迟一天转为 `-15.10%`。
 - Component observation：short-only 的 BTC/ETH 完整窗口为 `+14.70% / +32.93%`，共同窗口为 `+24.16% / +21.91%`；但 `12h` 相位分别转为 `-6.51% / -16.28%`。
+- V6 transfer diagnostic：exact `HYPE-1D-MA7-ABT-V6` 在 BTC full 为 `-3.28%/-42.33%`，ETH full 为 `+67.39%/-36.73%`；但 HYPE 共同窗口 BTC/ETH 分别 `-8.46%/-3.81%`，ETH 额外延迟一天转为 `-35.01%`，recent `1y` 为 `-28.23%`，故不登记、不晋升。
 - Runner：无 live spec、无 quant-runner implementation、无 dry-run/live instance。
 - Blockers：组合共同窗口亏损；long-only 失败；short-only 相位符号翻转且仅 `17/15` 笔；长仓首日无 hard stop；无 clean prospective OOS、runner parity 或线上对账。
 - Next gate：本零调参家族不在已揭示 BTC/ETH 历史上改参；用户后续明确要求的分资产搜索已隔离到 [`BIN-1D-MA7-AS-SEARCH`](../1d-ma7-asset-specific-search/README.md)，不能回写本迁移结论。
@@ -28,6 +29,10 @@
 
 当前无 registered version。
 
+| Observation | Status | Role / Core Idea | Key Metrics | Evidence | Decision |
+| --- | --- | --- | --- | --- | --- |
+| HYPE V6 BTC/ETH direct transfer | `diagnostic-only / not promoted / not live-ready` | exact `HYPE-1D-MA7-ABT-V6` / `PEHC_294` 零调参迁移 | BTC full `-3.28%/-42.33%`；ETH full `+67.39%/-36.73%`；共同窗口均为负 | [V6迁移诊断](diagnostics/binance-1d-ma7-abt-v6-transfer-btc-eth-2026-08-10.md) · [机器摘要](artifacts/binance_1d_ma7_abt_v6_transfer_btc_eth_2026-08-10.json) | ETH full 正收益被共同窗口、近期切片、延迟和相位否定；不登记版本 |
+
 ## Shared Assumptions
 
 - Data：标准数据湖 `1h` closed candles 聚合完整日 K；`2024-07-31` 至 `2026-07-30 UTC`，数据质量 blocker 为 `0`。
@@ -39,6 +44,8 @@
 
 - [冻结迁移合同](specs/binance-1d-ma7-separated-trend-transfer-contract-2026-08-05.md)
 - [BTC/ETH 迁移诊断](diagnostics/binance-1d-ma7-separated-trend-transfer-2026-08-05.md)
+- [HYPE V6 迁移诊断](diagnostics/binance-1d-ma7-abt-v6-transfer-btc-eth-2026-08-10.md)
+- [HYPE V6 机器摘要](artifacts/binance_1d_ma7_abt_v6_transfer_btc_eth_2026-08-10.json)
 - [后续分资产搜索诊断（独立家族）](../1d-ma7-asset-specific-search/diagnostics/binance-btc-eth-1d-ma7-asset-specific-search-2026-08-05.md)
 - [机器摘要](artifacts/binance_1d_ma7_separated_trend_transfer_summary_2026-08-05.json)
 - [研究脚本](scripts/research_binance_1d_ma7_separated_trend_transfer.py)

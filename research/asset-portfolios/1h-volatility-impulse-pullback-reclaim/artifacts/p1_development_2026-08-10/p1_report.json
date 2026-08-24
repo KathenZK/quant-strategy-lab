@@ -1,0 +1,1843 @@
+{
+  "schema_version": "binance-1h-vipr-p1-v1",
+  "generated_at_utc": "2026-08-10T11:45:19.470526+00:00",
+  "capacity": {
+    "schema_version": "binance-1h-vipr-p0-v1",
+    "input_end_exclusive": "2025-05-31T00:00:00+00:00",
+    "development_root_end": "2024-05-25T00:00:00+00:00",
+    "development_data_end": "2024-06-01T00:00:00+00:00",
+    "holdout_root_start": "2024-06-01T00:00:00+00:00",
+    "holdout_root_end": "2025-05-20T00:00:00+00:00",
+    "assets": [
+      "BTC",
+      "ETH",
+      "BNB",
+      "SOL",
+      "TRX"
+    ],
+    "config_count": 8,
+    "hype_rows_consumed": 0,
+    "hype_files_opened": 0,
+    "input_quality": {
+      "BTC": {
+        "daily_rows": 2091,
+        "daily_start": "2019-09-09T00:00:00+00:00",
+        "daily_end": "2025-05-30T00:00:00+00:00",
+        "hourly_rows": 50190,
+        "hourly_start": "2019-09-08T18:00:00+00:00",
+        "hourly_end": "2025-05-30T23:00:00+00:00",
+        "funding_rows": 5956,
+        "funding_start": "2019-12-23T16:00:00+00:00",
+        "funding_end": "2025-05-30T16:00:00+00:00",
+        "missing_hourly": 0,
+        "missing_daily": 0,
+        "daily_rebuild_max_relative_mismatch": 0.0,
+        "input_sha256": {
+          "daily": "53c0c244bea0c1828d224ad8e5732263fe7c1ebf96d6eb38913c8be858ea5086",
+          "hourly": "43c2bbe5d938bb9c968f137f4485d5d41e3390e2f2e041c0aa5b3a9a4afb76c2",
+          "funding": "ddd980d59d4c3ab1fa59f36a27930ba4493f2c4603ca05ed5d40478b55e1bfa1"
+        }
+      },
+      "ETH": {
+        "daily_rows": 2011,
+        "daily_start": "2019-11-28T00:00:00+00:00",
+        "daily_end": "2025-05-30T00:00:00+00:00",
+        "hourly_rows": 48280,
+        "hourly_start": "2019-11-27T08:00:00+00:00",
+        "hourly_end": "2025-05-30T23:00:00+00:00",
+        "funding_rows": 5956,
+        "funding_start": "2019-12-23T16:00:00+00:00",
+        "funding_end": "2025-05-30T16:00:00+00:00",
+        "missing_hourly": 0,
+        "missing_daily": 0,
+        "daily_rebuild_max_relative_mismatch": 0.0,
+        "input_sha256": {
+          "daily": "75c8b5bfd066d528908c4793951b84b086b8c558e03b73a37595b442dedd6651",
+          "hourly": "4668d98fe0291e57037214aa718efa17401b664c896623bfbb1d804b51cafc2e",
+          "funding": "3a1b0a7c0ee1276212049bc6df6da43227b606316c51daab7a3712ae3013bbec"
+        }
+      },
+      "BNB": {
+        "daily_rows": 1936,
+        "daily_start": "2020-02-11T00:00:00+00:00",
+        "daily_end": "2025-05-30T00:00:00+00:00",
+        "hourly_rows": 46480,
+        "hourly_start": "2020-02-10T08:00:00+00:00",
+        "hourly_end": "2025-05-30T23:00:00+00:00",
+        "funding_rows": 5810,
+        "funding_start": "2020-02-10T08:00:00+00:00",
+        "funding_end": "2025-05-30T16:00:00+00:00",
+        "missing_hourly": 0,
+        "missing_daily": 0,
+        "daily_rebuild_max_relative_mismatch": 0.0,
+        "input_sha256": {
+          "daily": "00dbc6f04d8669fcf3d7e8cb929f75c380319fec81e6d34a130127d006a57119",
+          "hourly": "c3cc8efbbef45304f6981b75bad50917179834f89bcf0e0e964a30b57e850c19",
+          "funding": "965ed2f3ac690e5ab8395aea1383c5656a7f5d2fe4b3b71527d2feeb9110cb5c"
+        }
+      },
+      "SOL": {
+        "daily_rows": 1719,
+        "daily_start": "2020-09-15T00:00:00+00:00",
+        "daily_end": "2025-05-30T00:00:00+00:00",
+        "hourly_rows": 41273,
+        "hourly_start": "2020-09-14T07:00:00+00:00",
+        "hourly_end": "2025-05-30T23:00:00+00:00",
+        "funding_rows": 5234,
+        "funding_start": "2020-09-14T08:00:00+00:00",
+        "funding_end": "2025-05-30T16:00:00+00:00",
+        "missing_hourly": 0,
+        "missing_daily": 0,
+        "daily_rebuild_max_relative_mismatch": 0.0,
+        "input_sha256": {
+          "daily": "5a7a3339b25600a408ddc9d72e580d6792a73620e2834e0d2a286a8e672e77c0",
+          "hourly": "dc8acece6ecbbc5d69abe818bc0bb599f0a788652e9432004c47b113ce44b92e",
+          "funding": "8272a9ce84318fd015d55527c3f762cddc468ac4d8160f94456fbe7af1008b95"
+        }
+      },
+      "TRX": {
+        "daily_rows": 1962,
+        "daily_start": "2020-01-16T00:00:00+00:00",
+        "daily_end": "2025-05-30T00:00:00+00:00",
+        "hourly_rows": 47103,
+        "hourly_start": "2020-01-15T09:00:00+00:00",
+        "hourly_end": "2025-05-30T23:00:00+00:00",
+        "funding_rows": 5887,
+        "funding_start": "2020-01-15T16:00:00+00:00",
+        "funding_end": "2025-05-30T16:00:00+00:00",
+        "missing_hourly": 0,
+        "missing_daily": 0,
+        "daily_rebuild_max_relative_mismatch": 0.0,
+        "input_sha256": {
+          "daily": "e64a33b0b01c0a714889243b6074c70193ed7f4382ead3f351d2fab937d84628",
+          "hourly": "26d9390dd82f8b986b238b5b257cec9f8352dd4e42da2621a32560cb6d53276b",
+          "funding": "dcb7ad61b68570f41035f86d5bfee21a32fa021b70b1d203988e139bede2339b"
+        }
+      }
+    },
+    "shared_kernel": {
+      "path": "research/_shared-kernels/binance-ma7-root-data/v1/engine.py",
+      "sha256": "3d7c6d295568b96627a4b6aa4efad0fc7fdc8a53503f9f4fa55922c7069bfa3d"
+    }
+  },
+  "development_candidates": [
+    {
+      "config": {
+        "breakout_lookback": 24,
+        "impulse_atr": 1.0,
+        "pullback_atr": 0.5,
+        "config_id": "N24_I1p0_P0p5"
+      },
+      "root_inventory": {
+        "all_qualifying": 7684,
+        "accepted": 5307
+      },
+      "summary": {
+        "main": {
+          "events": 3618,
+          "mean": -0.0009397403598940921,
+          "median": -0.002708126457234796,
+          "profit_factor": 0.6516356642229552,
+          "win_rate": 0.3170259812050857,
+          "compound": -0.9683601326750167,
+          "event_sequence_mdd": -0.9683601326750167
+        },
+        "per_asset": {
+          "BTC": {
+            "events": 657,
+            "mean": -0.0009766150270224554,
+            "median": -0.0024238266975705153,
+            "profit_factor": 0.5491995015063046,
+            "win_rate": 0.3120243531202435,
+            "compound": -0.4759424433355245,
+            "event_sequence_mdd": -0.4804342042353995
+          },
+          "ETH": {
+            "events": 728,
+            "mean": -0.0008043853441796144,
+            "median": -0.002857817004358658,
+            "profit_factor": 0.6876257375205801,
+            "win_rate": 0.33653846153846156,
+            "compound": -0.44804204032077743,
+            "event_sequence_mdd": -0.4501612118799968
+          },
+          "BNB": {
+            "events": 756,
+            "mean": -0.0010914622787794577,
+            "median": -0.002745705647337511,
+            "profit_factor": 0.5868820049424402,
+            "win_rate": 0.28703703703703703,
+            "compound": -0.5661426443156315,
+            "event_sequence_mdd": -0.5673989420509171
+          },
+          "SOL": {
+            "events": 725,
+            "mean": -0.0011821064978331536,
+            "median": -0.004112710560207782,
+            "profit_factor": 0.6948835846862225,
+            "win_rate": 0.30482758620689654,
+            "compound": -0.5849805712384382,
+            "event_sequence_mdd": -0.5849805712384382
+          },
+          "TRX": {
+            "events": 752,
+            "mean": -0.0006523661237952211,
+            "median": -0.0019968601434630414,
+            "profit_factor": 0.7036940738479833,
+            "win_rate": 0.34441489361702127,
+            "compound": -0.39251679972821363,
+            "event_sequence_mdd": -0.39785173266484397
+          }
+        },
+        "per_side": {
+          "long": {
+            "events": 2220,
+            "mean": -0.0008549279894680662,
+            "median": -0.0026225710203518168,
+            "profit_factor": 0.665267237769153,
+            "win_rate": 0.3256756756756757,
+            "compound": -0.8542405560856178,
+            "event_sequence_mdd": -0.854289493829552
+          },
+          "short": {
+            "events": 1398,
+            "mean": -0.0010744209481242618,
+            "median": -0.00285813340707489,
+            "profit_factor": 0.6327372426968632,
+            "win_rate": 0.3032904148783977,
+            "compound": -0.7829309273190695,
+            "event_sequence_mdd": -0.7870569195053465
+          }
+        },
+        "positive_asset_count": 0,
+        "blocks": {
+          "100": {
+            "events": 6,
+            "mean": -0.0018355935605525017,
+            "median": -0.0027026345899300998,
+            "profit_factor": 0.24926558018694273,
+            "win_rate": 0.16666666666666666,
+            "compound": -0.01098285714259395,
+            "event_sequence_mdd": -0.01098285714259395
+          },
+          "101": {
+            "events": 181,
+            "mean": -0.00039871610605847415,
+            "median": -0.0025501132245361593,
+            "profit_factor": 0.8402378409295825,
+            "win_rate": 0.3701657458563536,
+            "compound": -0.07224638127478866,
+            "event_sequence_mdd": -0.13886500559839154
+          },
+          "102": {
+            "events": 299,
+            "mean": -0.001341086219562642,
+            "median": -0.002781177726000417,
+            "profit_factor": 0.4713492014629945,
+            "win_rate": 0.2809364548494983,
+            "compound": -0.33204782207626515,
+            "event_sequence_mdd": -0.33802168140417366
+          },
+          "103": {
+            "events": 493,
+            "mean": -0.0008101247528952477,
+            "median": -0.0033923626298203195,
+            "profit_factor": 0.7567528325403168,
+            "win_rate": 0.34279918864097364,
+            "compound": -0.33661657762141006,
+            "event_sequence_mdd": -0.3515252688764211
+          },
+          "104": {
+            "events": 545,
+            "mean": -0.0005788576374993099,
+            "median": -0.003582190519802413,
+            "profit_factor": 0.8290602158941668,
+            "win_rate": 0.3211009174311927,
+            "compound": -0.28120453381309063,
+            "event_sequence_mdd": -0.394651219579207
+          },
+          "105": {
+            "events": 519,
+            "mean": -0.0008865060036537045,
+            "median": -0.003016715438652766,
+            "profit_factor": 0.6611102117777179,
+            "win_rate": 0.3159922928709056,
+            "compound": -0.37244867067979437,
+            "event_sequence_mdd": -0.37395976892428695
+          },
+          "106": {
+            "events": 426,
+            "mean": -0.0015753304511287839,
+            "median": -0.003107331517143067,
+            "profit_factor": 0.49236059292764534,
+            "win_rate": 0.2746478873239437,
+            "compound": -0.49177678609548026,
+            "event_sequence_mdd": -0.49177678609548026
+          },
+          "107": {
+            "events": 293,
+            "mean": -0.0008898088777439104,
+            "median": -0.0022162105366764473,
+            "profit_factor": 0.6175668227784462,
+            "win_rate": 0.3310580204778157,
+            "compound": -0.23364746794134317,
+            "event_sequence_mdd": -0.23467760096819001
+          },
+          "108": {
+            "events": 257,
+            "mean": -0.0011048946058983269,
+            "median": -0.0018479903632628268,
+            "profit_factor": 0.3727844815280977,
+            "win_rate": 0.2723735408560311,
+            "compound": -0.24788378095645458,
+            "event_sequence_mdd": -0.24788378095645458
+          },
+          "109": {
+            "events": 404,
+            "mean": -0.0007492045182477006,
+            "median": -0.0018460663680989415,
+            "profit_factor": 0.6182079599088024,
+            "win_rate": 0.349009900990099,
+            "compound": -0.2633101035513272,
+            "event_sequence_mdd": -0.26565746823946024
+          },
+          "110": {
+            "events": 195,
+            "mean": -0.0011405529329701226,
+            "median": -0.002344448768030135,
+            "profit_factor": 0.4952212282662734,
+            "win_rate": 0.31794871794871793,
+            "compound": -0.2005692545351443,
+            "event_sequence_mdd": -0.22307413225032835
+          }
+        },
+        "positive_block_count": 0,
+        "block_count": 11,
+        "positive_block_rate": 0.0,
+        "bootstrap": {
+          "samples": 10000,
+          "seed": 20260810,
+          "clusters": 50,
+          "positive_probability": 0.0,
+          "quantiles": {
+            "2.5%": -0.001106503464897344,
+            "50%": -0.0009403033251320658,
+            "97.5%": -0.000777376644301629
+          }
+        }
+      },
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      },
+      "development_gate_pass": false
+    },
+    {
+      "config": {
+        "breakout_lookback": 24,
+        "impulse_atr": 1.0,
+        "pullback_atr": 1.0,
+        "config_id": "N24_I1p0_P1p0"
+      },
+      "root_inventory": {
+        "all_qualifying": 7684,
+        "accepted": 5176
+      },
+      "summary": {
+        "main": {
+          "events": 3275,
+          "mean": -0.0008526990464767734,
+          "median": -0.0026654899298603992,
+          "profit_factor": 0.6769543835982675,
+          "win_rate": 0.32,
+          "compound": -0.9416163381444651,
+          "event_sequence_mdd": -0.9418116220241093
+        },
+        "per_asset": {
+          "BTC": {
+            "events": 607,
+            "mean": -0.001011239786032656,
+            "median": -0.0024168524154551067,
+            "profit_factor": 0.5338099034412007,
+            "win_rate": 0.30807248764415157,
+            "compound": -0.460919122541688,
+            "event_sequence_mdd": -0.4688814626470472
+          },
+          "ETH": {
+            "events": 656,
+            "mean": -0.0008834641476982843,
+            "median": -0.0028626658819190885,
+            "profit_factor": 0.658617061211217,
+            "win_rate": 0.32164634146341464,
+            "compound": -0.44409547013096984,
+            "event_sequence_mdd": -0.4558226029106811
+          },
+          "BNB": {
+            "events": 677,
+            "mean": -0.0008338504739010828,
+            "median": -0.0026051128308151312,
+            "profit_factor": 0.6665358362008937,
+            "win_rate": 0.310192023633678,
+            "compound": -0.4363559903336366,
+            "event_sequence_mdd": -0.4378919532392973
+          },
+          "SOL": {
+            "events": 657,
+            "mean": -0.0010414876398675958,
+            "median": -0.004111917786377081,
+            "profit_factor": 0.7250498964377958,
+            "win_rate": 0.3074581430745814,
+            "compound": -0.5058474763780948,
+            "event_sequence_mdd": -0.5058474763780948
+          },
+          "TRX": {
+            "events": 678,
+            "mean": -0.000516873445391582,
+            "median": -0.0019675092066775614,
+            "profit_factor": 0.7580970632877045,
+            "win_rate": 0.35103244837758113,
+            "compound": -0.3005264804352358,
+            "event_sequence_mdd": -0.3076215991777348
+          }
+        },
+        "per_side": {
+          "long": {
+            "events": 1989,
+            "mean": -0.0008380072270706861,
+            "median": -0.002580711006052962,
+            "profit_factor": 0.6669436707786291,
+            "win_rate": 0.3262946204122675,
+            "compound": -0.815622903380092,
+            "event_sequence_mdd": -0.816740372665594
+          },
+          "short": {
+            "events": 1286,
+            "mean": -0.0008754222414990968,
+            "median": -0.0028061461227689866,
+            "profit_factor": 0.6907177997113839,
+            "win_rate": 0.31026438569206843,
+            "compound": -0.6833464517781598,
+            "event_sequence_mdd": -0.6855921388121308
+          }
+        },
+        "positive_asset_count": 0,
+        "blocks": {
+          "100": {
+            "events": 6,
+            "mean": -0.0018341111125194183,
+            "median": -0.0027026345899300998,
+            "profit_factor": 0.24987188257759005,
+            "win_rate": 0.16666666666666666,
+            "compound": -0.010974092195332852,
+            "event_sequence_mdd": -0.010974092195332852
+          },
+          "101": {
+            "events": 162,
+            "mean": -0.00047584284177590335,
+            "median": -0.0025793808887824973,
+            "profit_factor": 0.8091557663134654,
+            "win_rate": 0.3765432098765432,
+            "compound": -0.07647952452490958,
+            "event_sequence_mdd": -0.13355505297338965
+          },
+          "102": {
+            "events": 274,
+            "mean": -0.0012442821708487338,
+            "median": -0.002707290815168876,
+            "profit_factor": 0.4980233884727147,
+            "win_rate": 0.291970802919708,
+            "compound": -0.2905404782227341,
+            "event_sequence_mdd": -0.2968927341575165
+          },
+          "103": {
+            "events": 447,
+            "mean": -0.0007288674181424997,
+            "median": -0.0033884801895927544,
+            "profit_factor": 0.7744969376523477,
+            "win_rate": 0.3400447427293065,
+            "compound": -0.2849944929484428,
+            "event_sequence_mdd": -0.307187472837001
+          },
+          "104": {
+            "events": 481,
+            "mean": -0.00022857486618006644,
+            "median": -0.003475024893586621,
+            "profit_factor": 0.9299429951628552,
+            "win_rate": 0.34511434511434513,
+            "compound": -0.11614250110025115,
+            "event_sequence_mdd": -0.2967262947706837
+          },
+          "105": {
+            "events": 467,
+            "mean": -0.0011222583669637058,
+            "median": -0.003061255680164213,
+            "profit_factor": 0.5827342951065311,
+            "win_rate": 0.2955032119914347,
+            "compound": -0.41083953726869304,
+            "event_sequence_mdd": -0.4306495823084311
+          },
+          "106": {
+            "events": 392,
+            "mean": -0.0013276865759022935,
+            "median": -0.003009599906655963,
+            "profit_factor": 0.5545316506912961,
+            "win_rate": 0.2857142857142857,
+            "compound": -0.4088932433603538,
+            "event_sequence_mdd": -0.41477376382305464
+          },
+          "107": {
+            "events": 271,
+            "mean": -0.000714465967355956,
+            "median": -0.002169103853164442,
+            "profit_factor": 0.6788232928922387,
+            "win_rate": 0.34317343173431736,
+            "compound": -0.18024850543951176,
+            "event_sequence_mdd": -0.18135041748785508
+          },
+          "108": {
+            "events": 242,
+            "mean": -0.0011864035317897426,
+            "median": -0.001915171408623096,
+            "profit_factor": 0.34392705031359894,
+            "win_rate": 0.2603305785123967,
+            "compound": -0.2502125310631439,
+            "event_sequence_mdd": -0.2502125310631439
+          },
+          "109": {
+            "events": 362,
+            "mean": -0.0006574570343096167,
+            "median": -0.0018332297054661202,
+            "profit_factor": 0.6581802719956452,
+            "win_rate": 0.35359116022099446,
+            "compound": -0.21383592360700543,
+            "event_sequence_mdd": -0.21548036613949395
+          },
+          "110": {
+            "events": 171,
+            "mean": -0.0009622189205926605,
+            "median": -0.0022523794459809346,
+            "profit_factor": 0.5571663145311349,
+            "win_rate": 0.3157894736842105,
+            "compound": -0.15280230378284054,
+            "event_sequence_mdd": -0.1779206086911721
+          }
+        },
+        "positive_block_count": 0,
+        "block_count": 11,
+        "positive_block_rate": 0.0,
+        "bootstrap": {
+          "samples": 10000,
+          "seed": 20260810,
+          "clusters": 50,
+          "positive_probability": 0.0,
+          "quantiles": {
+            "2.5%": -0.0010400912438283786,
+            "50%": -0.0008522922134760017,
+            "97.5%": -0.0006761808879333155
+          }
+        }
+      },
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      },
+      "development_gate_pass": false
+    },
+    {
+      "config": {
+        "breakout_lookback": 24,
+        "impulse_atr": 1.5,
+        "pullback_atr": 0.5,
+        "config_id": "N24_I1p5_P0p5"
+      },
+      "root_inventory": {
+        "all_qualifying": 6653,
+        "accepted": 4709
+      },
+      "summary": {
+        "main": {
+          "events": 3278,
+          "mean": -0.0009102049272672733,
+          "median": -0.002701189408483465,
+          "profit_factor": 0.6605589724021952,
+          "win_rate": 0.31970713849908483,
+          "compound": -0.951797744735921,
+          "event_sequence_mdd": -0.9518324090291541
+        },
+        "per_asset": {
+          "BTC": {
+            "events": 606,
+            "mean": -0.0010266463587654498,
+            "median": -0.002451787309647458,
+            "profit_factor": 0.5308200435829427,
+            "win_rate": 0.3085808580858086,
+            "compound": -0.4654418986353689,
+            "event_sequence_mdd": -0.46742287875043564
+          },
+          "ETH": {
+            "events": 657,
+            "mean": -0.000763328544166107,
+            "median": -0.0028384726598312073,
+            "profit_factor": 0.6994983633155177,
+            "win_rate": 0.3363774733637747,
+            "compound": -0.3989884623821378,
+            "event_sequence_mdd": -0.40003502095889976
+          },
+          "BNB": {
+            "events": 684,
+            "mean": -0.0010449685334089718,
+            "median": -0.002745705647337511,
+            "profit_factor": 0.6024222509740066,
+            "win_rate": 0.29239766081871343,
+            "compound": -0.5150963450314283,
+            "event_sequence_mdd": -0.5202856572893874
+          },
+          "SOL": {
+            "events": 658,
+            "mean": -0.0011018313719362446,
+            "median": -0.004093384360037538,
+            "profit_factor": 0.714851718487375,
+            "win_rate": 0.3100303951367781,
+            "compound": -0.5257475112409169,
+            "event_sequence_mdd": -0.5283973478116588
+          },
+          "TRX": {
+            "events": 673,
+            "mean": -0.0006244185513630622,
+            "median": -0.0019641364564782623,
+            "profit_factor": 0.711105900275038,
+            "win_rate": 0.35066864784546803,
+            "compound": -0.3475840694555563,
+            "event_sequence_mdd": -0.349418362958839
+          }
+        },
+        "per_side": {
+          "long": {
+            "events": 2004,
+            "mean": -0.0008258880854298647,
+            "median": -0.0026087817743191914,
+            "profit_factor": 0.6736591188205421,
+            "win_rate": 0.3283433133732535,
+            "compound": -0.813646139148563,
+            "event_sequence_mdd": -0.8142260592585087
+          },
+          "short": {
+            "events": 1274,
+            "mean": -0.0010428351871119882,
+            "median": -0.002857817004358658,
+            "profit_factor": 0.6426906897473782,
+            "win_rate": 0.30612244897959184,
+            "compound": -0.7413401845078673,
+            "event_sequence_mdd": -0.7466573632982685
+          }
+        },
+        "positive_asset_count": 0,
+        "blocks": {
+          "100": {
+            "events": 6,
+            "mean": -0.0018355935605525017,
+            "median": -0.0027026345899300998,
+            "profit_factor": 0.24926558018694273,
+            "win_rate": 0.16666666666666666,
+            "compound": -0.01098285714259395,
+            "event_sequence_mdd": -0.01098285714259395
+          },
+          "101": {
+            "events": 163,
+            "mean": -0.0005380290430801549,
+            "median": -0.0026791133115550464,
+            "profit_factor": 0.7912363086070614,
+            "win_rate": 0.3496932515337423,
+            "compound": -0.08637748368887088,
+            "event_sequence_mdd": -0.13942113828187563
+          },
+          "102": {
+            "events": 257,
+            "mean": -0.0013924361741153046,
+            "median": -0.0027938098624185875,
+            "profit_factor": 0.449951629725376,
+            "win_rate": 0.2801556420233463,
+            "compound": -0.30229719018275925,
+            "event_sequence_mdd": -0.31123207273670117
+          },
+          "103": {
+            "events": 456,
+            "mean": -0.0007549746144156914,
+            "median": -0.0034120693967394818,
+            "profit_factor": 0.7708063516382305,
+            "win_rate": 0.3442982456140351,
+            "compound": -0.2984352409121096,
+            "event_sequence_mdd": -0.31129833201884116
+          },
+          "104": {
+            "events": 504,
+            "mean": -0.0005501818294948865,
+            "median": -0.0035975990850005413,
+            "profit_factor": 0.8377289429354167,
+            "win_rate": 0.3273809523809524,
+            "compound": -0.2524825882998589,
+            "event_sequence_mdd": -0.36645735201657204
+          },
+          "105": {
+            "events": 474,
+            "mean": -0.0008567682142323234,
+            "median": -0.003004288426934977,
+            "profit_factor": 0.667613440676347,
+            "win_rate": 0.31645569620253167,
+            "compound": -0.33720085738081373,
+            "event_sequence_mdd": -0.3387968298121813
+          },
+          "106": {
+            "events": 380,
+            "mean": -0.0014312849450729035,
+            "median": -0.0030747799334750105,
+            "profit_factor": 0.5279489443159435,
+            "win_rate": 0.29210526315789476,
+            "compound": -0.4224708949197922,
+            "event_sequence_mdd": -0.4224708949197922
+          },
+          "107": {
+            "events": 261,
+            "mean": -0.0009126632828964854,
+            "median": -0.0022113156954571187,
+            "profit_factor": 0.6137407521835329,
+            "win_rate": 0.32950191570881227,
+            "compound": -0.21601148998666975,
+            "event_sequence_mdd": -0.2196380563247221
+          },
+          "108": {
+            "events": 237,
+            "mean": -0.001090779103154291,
+            "median": -0.0018472436513456807,
+            "profit_factor": 0.3769920013566789,
+            "win_rate": 0.2742616033755274,
+            "compound": -0.22844507729322128,
+            "event_sequence_mdd": -0.22844507729322128
+          },
+          "109": {
+            "events": 368,
+            "mean": -0.0007912491118694574,
+            "median": -0.0018900194479330758,
+            "profit_factor": 0.5964491012574681,
+            "win_rate": 0.3423913043478261,
+            "compound": -0.2545272645548138,
+            "event_sequence_mdd": -0.2569026145950215
+          },
+          "110": {
+            "events": 172,
+            "mean": -0.000974578157469742,
+            "median": -0.0022753694667245884,
+            "profit_factor": 0.5426069249701897,
+            "win_rate": 0.3372093023255814,
+            "compound": -0.15535722455600787,
+            "event_sequence_mdd": -0.17557840935420388
+          }
+        },
+        "positive_block_count": 0,
+        "block_count": 11,
+        "positive_block_rate": 0.0,
+        "bootstrap": {
+          "samples": 10000,
+          "seed": 20260810,
+          "clusters": 50,
+          "positive_probability": 0.0,
+          "quantiles": {
+            "2.5%": -0.00108162160622168,
+            "50%": -0.000911356365160566,
+            "97.5%": -0.0007408749188926451
+          }
+        }
+      },
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      },
+      "development_gate_pass": false
+    },
+    {
+      "config": {
+        "breakout_lookback": 24,
+        "impulse_atr": 1.5,
+        "pullback_atr": 1.0,
+        "config_id": "N24_I1p5_P1p0"
+      },
+      "root_inventory": {
+        "all_qualifying": 6653,
+        "accepted": 4605
+      },
+      "summary": {
+        "main": {
+          "events": 3007,
+          "mean": -0.00083456626041546,
+          "median": -0.0026551061967774858,
+          "profit_factor": 0.6831172409689817,
+          "win_rate": 0.31892251413368805,
+          "compound": -0.9222567802885611,
+          "event_sequence_mdd": -0.9226113932151769
+        },
+        "per_asset": {
+          "BTC": {
+            "events": 567,
+            "mean": -0.0010768658083557083,
+            "median": -0.0024253519306845295,
+            "profit_factor": 0.5103431092098947,
+            "win_rate": 0.30158730158730157,
+            "compound": -0.4590333782630609,
+            "event_sequence_mdd": -0.46440720046849904
+          },
+          "ETH": {
+            "events": 603,
+            "mean": -0.0008504471707372167,
+            "median": -0.0028546140806002458,
+            "profit_factor": 0.667917773077458,
+            "win_rate": 0.31840796019900497,
+            "compound": -0.4053279960867757,
+            "event_sequence_mdd": -0.41018808300386234
+          },
+          "BNB": {
+            "events": 620,
+            "mean": -0.0007756041326250184,
+            "median": -0.0025827966140883115,
+            "profit_factor": 0.6894640670488618,
+            "win_rate": 0.31290322580645163,
+            "compound": -0.3869266848739462,
+            "event_sequence_mdd": -0.38859734552913794
+          },
+          "SOL": {
+            "events": 603,
+            "mean": -0.0009470442452297316,
+            "median": -0.004117123993065387,
+            "profit_factor": 0.7486019819593093,
+            "win_rate": 0.3117744610281924,
+            "compound": -0.44601577855610763,
+            "event_sequence_mdd": -0.4487418056912389
+          },
+          "TRX": {
+            "events": 614,
+            "mean": -0.0005442930711335842,
+            "median": -0.0019284309071607093,
+            "profit_factor": 0.744527119294717,
+            "win_rate": 0.3485342019543974,
+            "compound": -0.2884511000265618,
+            "event_sequence_mdd": -0.28873452268632316
+          }
+        },
+        "per_side": {
+          "long": {
+            "events": 1820,
+            "mean": -0.0008172798618043173,
+            "median": -0.002568553814437214,
+            "profit_factor": 0.6734792917284631,
+            "win_rate": 0.3252747252747253,
+            "compound": -0.7789888640034095,
+            "event_sequence_mdd": -0.780809124905946
+          },
+          "short": {
+            "events": 1187,
+            "mean": -0.0008610711007459404,
+            "median": -0.002808058542580391,
+            "profit_factor": 0.6961686943920679,
+            "win_rate": 0.3091828138163437,
+            "compound": -0.648238450244252,
+            "event_sequence_mdd": -0.6512897244587554
+          }
+        },
+        "positive_asset_count": 0,
+        "blocks": {
+          "100": {
+            "events": 6,
+            "mean": -0.0018341111125194183,
+            "median": -0.0027026345899300998,
+            "profit_factor": 0.24987188257759005,
+            "win_rate": 0.16666666666666666,
+            "compound": -0.010974092195332852,
+            "event_sequence_mdd": -0.010974092195332852
+          },
+          "101": {
+            "events": 150,
+            "mean": -0.0006676085718570902,
+            "median": -0.0027645778256954532,
+            "profit_factor": 0.7439512917748031,
+            "win_rate": 0.35333333333333333,
+            "compound": -0.0974436230710034,
+            "event_sequence_mdd": -0.14852592721760172
+          },
+          "102": {
+            "events": 240,
+            "mean": -0.0011653531009563082,
+            "median": -0.0026614756914883847,
+            "profit_factor": 0.5168739383449035,
+            "win_rate": 0.30416666666666664,
+            "compound": -0.24547505246596013,
+            "event_sequence_mdd": -0.2551452073175978
+          },
+          "103": {
+            "events": 420,
+            "mean": -0.000714284229193607,
+            "median": -0.003382287422006418,
+            "profit_factor": 0.7792034937438589,
+            "win_rate": 0.3380952380952381,
+            "compound": -0.2659917732732403,
+            "event_sequence_mdd": -0.286803756175815
+          },
+          "104": {
+            "events": 445,
+            "mean": -0.0001994746445405196,
+            "median": -0.0034811024669167247,
+            "profit_factor": 0.9386111564726737,
+            "win_rate": 0.3438202247191011,
+            "compound": -0.0963538787468029,
+            "event_sequence_mdd": -0.277857879524826
+          },
+          "105": {
+            "events": 435,
+            "mean": -0.0010761253094723402,
+            "median": -0.0030451612564755615,
+            "profit_factor": 0.596242403432935,
+            "win_rate": 0.30114942528735633,
+            "compound": -0.37670930044967155,
+            "event_sequence_mdd": -0.4002729894304978
+          },
+          "106": {
+            "events": 352,
+            "mean": -0.0012419220212535247,
+            "median": -0.003009599906655963,
+            "profit_factor": 0.5768239919775077,
+            "win_rate": 0.29261363636363635,
+            "compound": -0.3571779281936108,
+            "event_sequence_mdd": -0.36333164732953893
+          },
+          "107": {
+            "events": 244,
+            "mean": -0.0008634422930885364,
+            "median": -0.0022199052757947884,
+            "profit_factor": 0.6287489324124198,
+            "win_rate": 0.3237704918032787,
+            "compound": -0.19396891129651017,
+            "event_sequence_mdd": -0.19505238034033034
+          },
+          "108": {
+            "events": 224,
+            "mean": -0.001196145708703378,
+            "median": -0.001894499279523175,
+            "profit_factor": 0.33765116504289716,
+            "win_rate": 0.2544642857142857,
+            "compound": -0.23564373934911198,
+            "event_sequence_mdd": -0.23564373934911198
+          },
+          "109": {
+            "events": 338,
+            "mean": -0.0005771822604105296,
+            "median": -0.001809413694044505,
+            "profit_factor": 0.6915414483629531,
+            "win_rate": 0.35502958579881655,
+            "compound": -0.17919760903164328,
+            "event_sequence_mdd": -0.17951903063078523
+          },
+          "110": {
+            "events": 153,
+            "mean": -0.0009867270060171318,
+            "median": -0.0022685898679154926,
+            "profit_factor": 0.5469083705642782,
+            "win_rate": 0.30718954248366015,
+            "compound": -0.14110527435047415,
+            "event_sequence_mdd": -0.16336967674382707
+          }
+        },
+        "positive_block_count": 0,
+        "block_count": 11,
+        "positive_block_rate": 0.0,
+        "bootstrap": {
+          "samples": 10000,
+          "seed": 20260810,
+          "clusters": 50,
+          "positive_probability": 0.0,
+          "quantiles": {
+            "2.5%": -0.001018084259343785,
+            "50%": -0.0008340130406980339,
+            "97.5%": -0.0006630068789911977
+          }
+        }
+      },
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      },
+      "development_gate_pass": false
+    },
+    {
+      "config": {
+        "breakout_lookback": 72,
+        "impulse_atr": 1.0,
+        "pullback_atr": 0.5,
+        "config_id": "N72_I1p0_P0p5"
+      },
+      "root_inventory": {
+        "all_qualifying": 3877,
+        "accepted": 2680
+      },
+      "summary": {
+        "main": {
+          "events": 1813,
+          "mean": -0.0009953597571260716,
+          "median": -0.0027956211918601656,
+          "profit_factor": 0.6449766904558127,
+          "win_rate": 0.3099834528405957,
+          "compound": -0.840294392273784,
+          "event_sequence_mdd": -0.8408762793158915
+        },
+        "per_asset": {
+          "BTC": {
+            "events": 320,
+            "mean": -0.0010063748986341291,
+            "median": -0.002515325638775108,
+            "profit_factor": 0.5469578004077731,
+            "win_rate": 0.309375,
+            "compound": -0.27694329457584654,
+            "event_sequence_mdd": -0.28443288691657964
+          },
+          "ETH": {
+            "events": 387,
+            "mean": -0.0010453968068763044,
+            "median": -0.003045455255850009,
+            "profit_factor": 0.6176532058737453,
+            "win_rate": 0.3178294573643411,
+            "compound": -0.335837612202211,
+            "event_sequence_mdd": -0.3520683980024094
+          },
+          "BNB": {
+            "events": 411,
+            "mean": -0.0012135537887508379,
+            "median": -0.002929059613863096,
+            "profit_factor": 0.5678215164565841,
+            "win_rate": 0.2725060827250608,
+            "compound": -0.39641335103127984,
+            "event_sequence_mdd": -0.4027934258864787
+          },
+          "SOL": {
+            "events": 345,
+            "mean": -0.0011664769404593062,
+            "median": -0.0042498521155599,
+            "profit_factor": 0.716074010558915,
+            "win_rate": 0.3072463768115942,
+            "compound": -0.34007468827376475,
+            "event_sequence_mdd": -0.3666983270862131
+          },
+          "TRX": {
+            "events": 350,
+            "mean": -0.0005050673034584628,
+            "median": -0.0019679589606036315,
+            "profit_factor": 0.7619452451186435,
+            "win_rate": 0.3485714285714286,
+            "compound": -0.16509104488483206,
+            "event_sequence_mdd": -0.1938927914333275
+          }
+        },
+        "per_side": {
+          "long": {
+            "events": 1219,
+            "mean": -0.0008721523186750416,
+            "median": -0.002713058119345617,
+            "profit_factor": 0.6653798555016974,
+            "win_rate": 0.3158326497128794,
+            "compound": -0.6600535820576919,
+            "event_sequence_mdd": -0.6609799559371565
+          },
+          "short": {
+            "events": 594,
+            "mean": -0.0012482046518597517,
+            "median": -0.00294058114955532,
+            "profit_factor": 0.6109624493242222,
+            "win_rate": 0.29797979797979796,
+            "compound": -0.5302035871037785,
+            "event_sequence_mdd": -0.5340170597239882
+          }
+        },
+        "positive_asset_count": 0,
+        "blocks": {
+          "100": {
+            "events": 2,
+            "mean": -8.693918992715328e-05,
+            "median": -8.693918992715328e-05,
+            "profit_factor": 0.9546092396819549,
+            "win_rate": 0.5,
+            "compound": -0.00018788656549484362,
+            "event_sequence_mdd": -0.003830699874511234
+          },
+          "101": {
+            "events": 112,
+            "mean": -0.00023003507861513384,
+            "median": -0.0026077029442036492,
+            "profit_factor": 0.9055106396328446,
+            "win_rate": 0.36607142857142855,
+            "compound": -0.027223875989996094,
+            "event_sequence_mdd": -0.1107185093660018
+          },
+          "102": {
+            "events": 153,
+            "mean": -0.0011544174987882774,
+            "median": -0.0027190602702050785,
+            "profit_factor": 0.5350007630105085,
+            "win_rate": 0.3137254901960784,
+            "compound": -0.16305841388212738,
+            "event_sequence_mdd": -0.17877568427033208
+          },
+          "103": {
+            "events": 263,
+            "mean": -0.0008885668661232047,
+            "median": -0.0035044028230983982,
+            "profit_factor": 0.7417248272962779,
+            "win_rate": 0.33840304182509506,
+            "compound": -0.2133529954061988,
+            "event_sequence_mdd": -0.2263854527153769
+          },
+          "104": {
+            "events": 277,
+            "mean": -0.000714773793962234,
+            "median": -0.0034489022165128426,
+            "profit_factor": 0.7893548784841918,
+            "win_rate": 0.30685920577617326,
+            "compound": -0.18553275493738675,
+            "event_sequence_mdd": -0.2678378449897725
+          },
+          "105": {
+            "events": 244,
+            "mean": -0.0013362491500133501,
+            "median": -0.003073056762891779,
+            "profit_factor": 0.5203308773452887,
+            "win_rate": 0.26639344262295084,
+            "compound": -0.280105194427994,
+            "event_sequence_mdd": -0.2863125670241983
+          },
+          "106": {
+            "events": 233,
+            "mean": -0.0014756271363560096,
+            "median": -0.003096510462820061,
+            "profit_factor": 0.5261826531933104,
+            "win_rate": 0.2875536480686695,
+            "compound": -0.2933105220852096,
+            "event_sequence_mdd": -0.2933105220852096
+          },
+          "107": {
+            "events": 113,
+            "mean": -0.0008809397071123301,
+            "median": -0.002264403030142909,
+            "profit_factor": 0.6900291880570064,
+            "win_rate": 0.35398230088495575,
+            "compound": -0.09869142652817164,
+            "event_sequence_mdd": -0.10205719311964712
+          },
+          "108": {
+            "events": 105,
+            "mean": -0.0013041091163604097,
+            "median": -0.0019720061288362716,
+            "profit_factor": 0.3420613244102948,
+            "win_rate": 0.21904761904761905,
+            "compound": -0.12836250181104847,
+            "event_sequence_mdd": -0.12836250181104847
+          },
+          "109": {
+            "events": 216,
+            "mean": -0.000728888199970375,
+            "median": -0.0019888206828145355,
+            "profit_factor": 0.6446993380540472,
+            "win_rate": 0.3472222222222222,
+            "compound": -0.14715267940587173,
+            "event_sequence_mdd": -0.14715267940587173
+          },
+          "110": {
+            "events": 95,
+            "mean": -0.0011216286080307967,
+            "median": -0.0023226031571626383,
+            "profit_factor": 0.47809045254931254,
+            "win_rate": 0.29473684210526313,
+            "compound": -0.10161634345652504,
+            "event_sequence_mdd": -0.11636912518713427
+          }
+        },
+        "positive_block_count": 0,
+        "block_count": 11,
+        "positive_block_rate": 0.0,
+        "bootstrap": {
+          "samples": 10000,
+          "seed": 20260810,
+          "clusters": 50,
+          "positive_probability": 0.0,
+          "quantiles": {
+            "2.5%": -0.0012172869163369299,
+            "50%": -0.0009968986291145527,
+            "97.5%": -0.0007564489118487922
+          }
+        }
+      },
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      },
+      "development_gate_pass": false
+    },
+    {
+      "config": {
+        "breakout_lookback": 72,
+        "impulse_atr": 1.0,
+        "pullback_atr": 1.0,
+        "config_id": "N72_I1p0_P1p0"
+      },
+      "root_inventory": {
+        "all_qualifying": 3877,
+        "accepted": 2617
+      },
+      "summary": {
+        "main": {
+          "events": 1663,
+          "mean": -0.0008278888168226573,
+          "median": -0.002715468421718962,
+          "profit_factor": 0.6934033626003442,
+          "win_rate": 0.32291040288635,
+          "compound": -0.7543588757799462,
+          "event_sequence_mdd": -0.7552560376832669
+        },
+        "per_asset": {
+          "BTC": {
+            "events": 304,
+            "mean": -0.0011468268788486233,
+            "median": -0.002515325638775108,
+            "profit_factor": 0.49163543462588943,
+            "win_rate": 0.2993421052631579,
+            "compound": -0.2957576415823009,
+            "event_sequence_mdd": -0.30302976113361557
+          },
+          "ETH": {
+            "events": 356,
+            "mean": -0.0008264993516323287,
+            "median": -0.0029630759635406348,
+            "profit_factor": 0.6882348002239415,
+            "win_rate": 0.32865168539325845,
+            "compound": -0.2582076027412016,
+            "event_sequence_mdd": -0.29560846766967885
+          },
+          "BNB": {
+            "events": 372,
+            "mean": -0.0010098257368979313,
+            "median": -0.00275495085066,
+            "profit_factor": 0.6224341998688833,
+            "win_rate": 0.28763440860215056,
+            "compound": -0.3168449858897907,
+            "event_sequence_mdd": -0.3269401042608998
+          },
+          "SOL": {
+            "events": 311,
+            "mean": -0.0008019050100235914,
+            "median": -0.00420331826013117,
+            "profit_factor": 0.7944450786614847,
+            "win_rate": 0.3215434083601286,
+            "compound": -0.23008271317346307,
+            "event_sequence_mdd": -0.2975917585742808
+          },
+          "TRX": {
+            "events": 320,
+            "mean": -0.00034019478056756673,
+            "median": -0.0018566515791200592,
+            "profit_factor": 0.8332259483219862,
+            "win_rate": 0.38125,
+            "compound": -0.10600884063864568,
+            "event_sequence_mdd": -0.12649260660202344
+          }
+        },
+        "per_side": {
+          "long": {
+            "events": 1104,
+            "mean": -0.0007651625917638324,
+            "median": -0.0026434212312826336,
+            "profit_factor": 0.6966372733963325,
+            "win_rate": 0.33061594202898553,
+            "compound": -0.5761700007599784,
+            "event_sequence_mdd": -0.5773249623065834
+          },
+          "short": {
+            "events": 559,
+            "mean": -0.0009517703060264909,
+            "median": -0.0028544477945791555,
+            "profit_factor": 0.6881246785141556,
+            "win_rate": 0.3076923076923077,
+            "compound": -0.420425348228018,
+            "event_sequence_mdd": -0.44093807312287814
+          }
+        },
+        "positive_asset_count": 0,
+        "blocks": {
+          "100": {
+            "events": 2,
+            "mean": -8.249184582790345e-05,
+            "median": -8.249184582790345e-05,
+            "profit_factor": 0.9569311882787852,
+            "win_rate": 0.5,
+            "compound": -0.00017902595017738054,
+            "event_sequence_mdd": -0.003830699874511234
+          },
+          "101": {
+            "events": 105,
+            "mean": -0.00017998173208810708,
+            "median": -0.0025128651755849923,
+            "profit_factor": 0.9246977436355481,
+            "win_rate": 0.4095238095238095,
+            "compound": -0.020380200276319593,
+            "event_sequence_mdd": -0.08261191131868051
+          },
+          "102": {
+            "events": 143,
+            "mean": -0.0011273601898918384,
+            "median": -0.0026705721310096757,
+            "profit_factor": 0.5394682784966112,
+            "win_rate": 0.3076923076923077,
+            "compound": -0.14995628718918041,
+            "event_sequence_mdd": -0.16591960780515402
+          },
+          "103": {
+            "events": 240,
+            "mean": -0.0008493880461265059,
+            "median": -0.003406769044121762,
+            "profit_factor": 0.743559925134956,
+            "win_rate": 0.32916666666666666,
+            "compound": -0.18876168305931962,
+            "event_sequence_mdd": -0.21170354230911093
+          },
+          "104": {
+            "events": 248,
+            "mean": -0.0002618915464109821,
+            "median": -0.00338968255049642,
+            "profit_factor": 0.9177625975391204,
+            "win_rate": 0.3346774193548387,
+            "compound": -0.06895458924633824,
+            "event_sequence_mdd": -0.18604369576507263
+          },
+          "105": {
+            "events": 225,
+            "mean": -0.0013791974776910562,
+            "median": -0.003069035486271457,
+            "profit_factor": 0.5083373874322049,
+            "win_rate": 0.26222222222222225,
+            "compound": -0.26854856822227424,
+            "event_sequence_mdd": -0.2949989492476507
+          },
+          "106": {
+            "events": 216,
+            "mean": -0.0011242381360259703,
+            "median": -0.003009599906655963,
+            "profit_factor": 0.6205468357557453,
+            "win_rate": 0.3148148148148148,
+            "compound": -0.2180833441231551,
+            "event_sequence_mdd": -0.24376043413032156
+          },
+          "107": {
+            "events": 103,
+            "mean": -0.0004069925702413602,
+            "median": -0.002078410198887981,
+            "profit_factor": 0.8407124992088301,
+            "win_rate": 0.3883495145631068,
+            "compound": -0.04502202618816298,
+            "event_sequence_mdd": -0.06698230009652262
+          },
+          "108": {
+            "events": 101,
+            "mean": -0.0013160329048294596,
+            "median": -0.002028758157199885,
+            "profit_factor": 0.3398369835945681,
+            "win_rate": 0.22772277227722773,
+            "compound": -0.12484873492530957,
+            "event_sequence_mdd": -0.12484873492530957
+          },
+          "109": {
+            "events": 198,
+            "mean": -0.0006534224671712736,
+            "median": -0.0019734338616794293,
+            "profit_factor": 0.6798283735108979,
+            "win_rate": 0.35353535353535354,
+            "compound": -0.12280889944447748,
+            "event_sequence_mdd": -0.1245506604638078
+          },
+          "110": {
+            "events": 82,
+            "mean": -0.0008576733975086524,
+            "median": -0.002127069568203397,
+            "profit_factor": 0.563798473362848,
+            "win_rate": 0.32926829268292684,
+            "compound": -0.06836875612444615,
+            "event_sequence_mdd": -0.08355943823903988
+          }
+        },
+        "positive_block_count": 0,
+        "block_count": 11,
+        "positive_block_rate": 0.0,
+        "bootstrap": {
+          "samples": 10000,
+          "seed": 20260810,
+          "clusters": 50,
+          "positive_probability": 0.0,
+          "quantiles": {
+            "2.5%": -0.0010724067439280107,
+            "50%": -0.0008290553677668323,
+            "97.5%": -0.0005751845188594519
+          }
+        }
+      },
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      },
+      "development_gate_pass": false
+    },
+    {
+      "config": {
+        "breakout_lookback": 72,
+        "impulse_atr": 1.5,
+        "pullback_atr": 0.5,
+        "config_id": "N72_I1p5_P0p5"
+      },
+      "root_inventory": {
+        "all_qualifying": 3462,
+        "accepted": 2441
+      },
+      "summary": {
+        "main": {
+          "events": 1692,
+          "mean": -0.0009157058175602134,
+          "median": -0.00277533113764672,
+          "profit_factor": 0.6693415817810093,
+          "win_rate": 0.31619385342789597,
+          "compound": -0.7935264654390859,
+          "event_sequence_mdd": -0.794562182546928
+        },
+        "per_asset": {
+          "BTC": {
+            "events": 306,
+            "mean": -0.0010218695162232663,
+            "median": -0.0025265318359076958,
+            "profit_factor": 0.5420304532159304,
+            "win_rate": 0.30718954248366015,
+            "compound": -0.2700893371946492,
+            "event_sequence_mdd": -0.27764992444673686
+          },
+          "ETH": {
+            "events": 361,
+            "mean": -0.0009269109715491107,
+            "median": -0.0030041663759188906,
+            "profit_factor": 0.6516728250735591,
+            "win_rate": 0.32409972299168976,
+            "compound": -0.2874412302483428,
+            "event_sequence_mdd": -0.29498796535370775
+          },
+          "BNB": {
+            "events": 378,
+            "mean": -0.0010600092552397447,
+            "median": -0.002876770324056906,
+            "profit_factor": 0.6110628340975448,
+            "win_rate": 0.28835978835978837,
+            "compound": -0.33385677386088075,
+            "event_sequence_mdd": -0.3467277851596463
+          },
+          "SOL": {
+            "events": 323,
+            "mean": -0.0010073623983502173,
+            "median": -0.004178840358227252,
+            "profit_factor": 0.7524401114874469,
+            "win_rate": 0.3157894736842105,
+            "compound": -0.28692355937310265,
+            "event_sequence_mdd": -0.3260467479250626
+          },
+          "TRX": {
+            "events": 324,
+            "mean": -0.0005432276465141622,
+            "median": -0.0019679589606036315,
+            "profit_factor": 0.7477594966875627,
+            "win_rate": 0.3487654320987654,
+            "compound": -0.16426172788057514,
+            "event_sequence_mdd": -0.18554689470059316
+          }
+        },
+        "per_side": {
+          "long": {
+            "events": 1137,
+            "mean": -0.0008259355241366418,
+            "median": -0.002697629871531178,
+            "profit_factor": 0.6802003150489518,
+            "win_rate": 0.31926121372031663,
+            "compound": -0.6147465956090714,
+            "event_sequence_mdd": -0.6166535722151125
+          },
+          "short": {
+            "events": 555,
+            "mean": -0.0010996136078712053,
+            "median": -0.0029317103472496437,
+            "profit_factor": 0.6511127093941879,
+            "win_rate": 0.3099099099099099,
+            "compound": -0.4640578585221301,
+            "event_sequence_mdd": -0.468235624240401
+          }
+        },
+        "positive_asset_count": 0,
+        "blocks": {
+          "100": {
+            "events": 2,
+            "mean": -8.693918992715328e-05,
+            "median": -8.693918992715328e-05,
+            "profit_factor": 0.9546092396819549,
+            "win_rate": 0.5,
+            "compound": -0.00018788656549484362,
+            "event_sequence_mdd": -0.003830699874511234
+          },
+          "101": {
+            "events": 106,
+            "mean": -0.000499302795674605,
+            "median": -0.0027396639825409286,
+            "profit_factor": 0.8048816688259722,
+            "win_rate": 0.33962264150943394,
+            "compound": -0.053207839722526074,
+            "event_sequence_mdd": -0.11610894589807863
+          },
+          "102": {
+            "events": 136,
+            "mean": -0.0011388349606671186,
+            "median": -0.0027000638509848147,
+            "profit_factor": 0.5343359542667093,
+            "win_rate": 0.3235294117647059,
+            "compound": -0.14448071306673116,
+            "event_sequence_mdd": -0.15374025137891512
+          },
+          "103": {
+            "events": 253,
+            "mean": -0.0007721964937832997,
+            "median": -0.003431776163658644,
+            "profit_factor": 0.7705141242005138,
+            "win_rate": 0.3438735177865613,
+            "compound": -0.18236289816665974,
+            "event_sequence_mdd": -0.1959087714259694
+          },
+          "104": {
+            "events": 263,
+            "mean": -0.0006253461069364692,
+            "median": -0.003475024893586621,
+            "profit_factor": 0.8155391912938756,
+            "win_rate": 0.3155893536121673,
+            "compound": -0.157613829591444,
+            "event_sequence_mdd": -0.2549982739435944
+          },
+          "105": {
+            "events": 230,
+            "mean": -0.0011598320520982816,
+            "median": -0.003059790324992132,
+            "profit_factor": 0.570191572765468,
+            "win_rate": 0.2826086956521739,
+            "compound": -0.23603425736278028,
+            "event_sequence_mdd": -0.2460871495661343
+          },
+          "106": {
+            "events": 213,
+            "mean": -0.0012551225905368369,
+            "median": -0.0030256727358051643,
+            "profit_factor": 0.5809916925016695,
+            "win_rate": 0.30985915492957744,
+            "compound": -0.23688857805895325,
+            "event_sequence_mdd": -0.23688857805895325
+          },
+          "107": {
+            "events": 104,
+            "mean": -0.0008835834949823228,
+            "median": -0.002272875209173812,
+            "profit_factor": 0.6925417130734077,
+            "win_rate": 0.34615384615384615,
+            "compound": -0.09166690533670496,
+            "event_sequence_mdd": -0.10591963125367543
+          },
+          "108": {
+            "events": 98,
+            "mean": -0.0013550734518938447,
+            "median": -0.0019709849853973165,
+            "profit_factor": 0.32250440779622525,
+            "win_rate": 0.21428571428571427,
+            "compound": -0.12472265488745515,
+            "event_sequence_mdd": -0.12472265488745515
+          },
+          "109": {
+            "events": 199,
+            "mean": -0.0006990340817368902,
+            "median": -0.0019951071088092484,
+            "profit_factor": 0.653838275619865,
+            "win_rate": 0.34673366834170855,
+            "compound": -0.13123392051894323,
+            "event_sequence_mdd": -0.13123392051894323
+          },
+          "110": {
+            "events": 88,
+            "mean": -0.0009506912169542462,
+            "median": -0.0023023761113481612,
+            "profit_factor": 0.5343966168377021,
+            "win_rate": 0.3068181818181818,
+            "compound": -0.08074880765383496,
+            "event_sequence_mdd": -0.09708996020457616
+          }
+        },
+        "positive_block_count": 0,
+        "block_count": 11,
+        "positive_block_rate": 0.0,
+        "bootstrap": {
+          "samples": 10000,
+          "seed": 20260810,
+          "clusters": 50,
+          "positive_probability": 0.0,
+          "quantiles": {
+            "2.5%": -0.0011256782568003377,
+            "50%": -0.0009195125938187617,
+            "97.5%": -0.0006918751264548106
+          }
+        }
+      },
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      },
+      "development_gate_pass": false
+    },
+    {
+      "config": {
+        "breakout_lookback": 72,
+        "impulse_atr": 1.5,
+        "pullback_atr": 1.0,
+        "config_id": "N72_I1p5_P1p0"
+      },
+      "root_inventory": {
+        "all_qualifying": 3462,
+        "accepted": 2392
+      },
+      "summary": {
+        "main": {
+          "events": 1561,
+          "mean": -0.0007484826968913304,
+          "median": -0.002696223926353228,
+          "profit_factor": 0.720086829434801,
+          "win_rate": 0.32863549007046766,
+          "compound": -0.6971067266105822,
+          "event_sequence_mdd": -0.6982236091620485
+        },
+        "per_asset": {
+          "BTC": {
+            "events": 290,
+            "mean": -0.0011517924408658666,
+            "median": -0.0025265318359076958,
+            "profit_factor": 0.49020328641274635,
+            "win_rate": 0.3,
+            "compound": -0.28532762688161617,
+            "event_sequence_mdd": -0.29270744843767205
+          },
+          "ETH": {
+            "events": 334,
+            "mean": -0.0007027910758212013,
+            "median": -0.0029286706963710944,
+            "profit_factor": 0.7270873470648122,
+            "win_rate": 0.33532934131736525,
+            "compound": -0.21247573864259583,
+            "event_sequence_mdd": -0.23895498385949976
+          },
+          "BNB": {
+            "events": 347,
+            "mean": -0.0008183523896408071,
+            "median": -0.002652762586945979,
+            "profit_factor": 0.6847990274621224,
+            "win_rate": 0.30547550432276654,
+            "compound": -0.2510986711196802,
+            "event_sequence_mdd": -0.26215747410365753
+          },
+          "SOL": {
+            "events": 294,
+            "mean": -0.0007097615012150978,
+            "median": -0.004212935903253426,
+            "profit_factor": 0.8173980785406647,
+            "win_rate": 0.32653061224489793,
+            "compound": -0.19781312942959584,
+            "event_sequence_mdd": -0.27498726405455953
+          },
+          "TRX": {
+            "events": 296,
+            "mean": -0.0003614571017208967,
+            "median": -0.0018763919308712458,
+            "profit_factor": 0.8260623863664244,
+            "win_rate": 0.3783783783783784,
+            "compound": -0.104184563535616,
+            "event_sequence_mdd": -0.11307129736020238
+          }
+        },
+        "per_side": {
+          "long": {
+            "events": 1040,
+            "mean": -0.000692096495909412,
+            "median": -0.002614644755094397,
+            "profit_factor": 0.7223619226689754,
+            "win_rate": 0.33557692307692305,
+            "compound": -0.5194648336265075,
+            "event_sequence_mdd": -0.521823125839114
+          },
+          "short": {
+            "events": 521,
+            "mean": -0.0008610386451085958,
+            "median": -0.0028544477945791555,
+            "profit_factor": 0.716357496964957,
+            "win_rate": 0.31477927063339733,
+            "compound": -0.36967511519438767,
+            "event_sequence_mdd": -0.38347584964607206
+          }
+        },
+        "positive_asset_count": 0,
+        "blocks": {
+          "100": {
+            "events": 2,
+            "mean": -8.249184582790345e-05,
+            "median": -8.249184582790345e-05,
+            "profit_factor": 0.9569311882787852,
+            "win_rate": 0.5,
+            "compound": -0.00017902595017738054,
+            "event_sequence_mdd": -0.003830699874511234
+          },
+          "101": {
+            "events": 101,
+            "mean": -0.0004920464090711615,
+            "median": -0.00270089712904771,
+            "profit_factor": 0.806000065229531,
+            "win_rate": 0.37623762376237624,
+            "compound": -0.050038242769104624,
+            "event_sequence_mdd": -0.09498841962719651
+          },
+          "102": {
+            "events": 127,
+            "mean": -0.0009548102715008797,
+            "median": -0.002585775097177706,
+            "profit_factor": 0.5941848271536817,
+            "win_rate": 0.33858267716535434,
+            "compound": -0.11516984799506891,
+            "event_sequence_mdd": -0.13100166496899956
+          },
+          "103": {
+            "events": 233,
+            "mean": -0.0006404910262658646,
+            "median": -0.0032709088604865734,
+            "profit_factor": 0.8018178080456311,
+            "win_rate": 0.33905579399141633,
+            "compound": -0.14321013995877463,
+            "event_sequence_mdd": -0.16744019907363694
+          },
+          "104": {
+            "events": 236,
+            "mean": -0.0002443496999597113,
+            "median": -0.0033998216176041006,
+            "profit_factor": 0.923587362247184,
+            "win_rate": 0.3347457627118644,
+            "compound": -0.06195874008179936,
+            "event_sequence_mdd": -0.16986680861622905
+          },
+          "105": {
+            "events": 212,
+            "mean": -0.0012776675845727226,
+            "median": -0.003059790324992132,
+            "profit_factor": 0.535971861087001,
+            "win_rate": 0.27358490566037735,
+            "compound": -0.23901166675572338,
+            "event_sequence_mdd": -0.27166373785581577
+          },
+          "106": {
+            "events": 197,
+            "mean": -0.000908185999797483,
+            "median": -0.0029855629259641697,
+            "profit_factor": 0.681081668108984,
+            "win_rate": 0.3350253807106599,
+            "compound": -0.16620159240542742,
+            "event_sequence_mdd": -0.19589764402765886
+          },
+          "107": {
+            "events": 96,
+            "mean": -0.0005056755616493986,
+            "median": -0.0021217321989478745,
+            "profit_factor": 0.8096595422850315,
+            "win_rate": 0.375,
+            "compound": -0.051280474794095476,
+            "event_sequence_mdd": -0.07353590904932572
+          },
+          "108": {
+            "events": 94,
+            "mean": -0.001313493991883497,
+            "median": -0.0019830784556684232,
+            "profit_factor": 0.3387085914300625,
+            "win_rate": 0.23404255319148937,
+            "compound": -0.11651013948053546,
+            "event_sequence_mdd": -0.11651013948053546
+          },
+          "109": {
+            "events": 186,
+            "mean": -0.0005125602891447483,
+            "median": -0.0019112781875889405,
+            "profit_factor": 0.7376495907023594,
+            "win_rate": 0.3655913978494624,
+            "compound": -0.09231125485440217,
+            "event_sequence_mdd": -0.09507762830892386
+          },
+          "110": {
+            "events": 77,
+            "mean": -0.0009510428989952987,
+            "median": -0.002282149065533684,
+            "profit_factor": 0.5356980345961683,
+            "win_rate": 0.2987012987012987,
+            "compound": -0.07105570525297922,
+            "event_sequence_mdd": -0.0862347233043903
+          }
+        },
+        "positive_block_count": 0,
+        "block_count": 11,
+        "positive_block_rate": 0.0,
+        "bootstrap": {
+          "samples": 10000,
+          "seed": 20260810,
+          "clusters": 50,
+          "positive_probability": 0.0,
+          "quantiles": {
+            "2.5%": -0.000971895695013975,
+            "50%": -0.0007493681644506621,
+            "97.5%": -0.0005193301321830651
+          }
+        }
+      },
+      "gate_checks": {
+        "trade_capacity": true,
+        "main_economics": false,
+        "positive_assets": false,
+        "positive_blocks": false,
+        "cluster_bootstrap": false
+      },
+      "development_gate_pass": false
+    }
+  ],
+  "selected_development": null,
+  "holdout_revealed": false,
+  "holdout_summary": null,
+  "holdout_gate_checks": null,
+  "holdout_gate_pass": false,
+  "decision": "DEVELOPMENT_HARD_GATE_FAILED_HOLDOUT_UNREVEALED"
+}

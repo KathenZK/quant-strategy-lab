@@ -1,0 +1,96 @@
+{
+  "schema_version": "1.0",
+  "recorded_at": "2026-08-12T20:38:00+08:00",
+  "family_id": "HYPE-1D-MA7-ABT",
+  "strategy_id": "HYPE-1D-MA7-ABT-V7.1",
+  "runner_kind": "hype_1d_ma7_abt",
+  "status": "PASS",
+  "source_repo": "/Users/ZK/OpenCode/quant-runner",
+  "runner_fixture": "crates/quant-runner/src/runner/strategies/hype_1d_ma7_abt/replay.rs::EXPECTED_TRADES",
+  "canonical_source": "/Users/ZK/OpenCode/quant-strategy-lab/research/hype/1d-ma7-asymmetric-body-trend/artifacts/hype_1d_ma7_abt_v7_short_cooldown3_2026-08-11.json",
+  "canonical_source_sha256": "d7fbcdcb911c0fb7bda9cfdb08f6717b6d0b016be8b8ede380702f5eed28e324",
+  "command": "DINGTALK_WEBHOOK_URL=https://example.com cargo run -q -p quant-runner -- replay-dry-run --config configs/dryrun.toml --name hype-1d-ma7-abt-v7-1-dry-run --limit 500 --start-ts 2025-05-31T00:00:00Z --end-ts 2026-08-06T00:00:00Z",
+  "window": {
+    "start_inclusive": "2025-05-31T00:00:00Z",
+    "end_exclusive": "2026-08-06T00:00:00Z",
+    "daily_bars": 432,
+    "hourly_bars": 10368,
+    "funding_events": 2591
+  },
+  "trade_parity": {
+    "expected_trade_count": 20,
+    "actual_trade_count": 20,
+    "full_trade_matches": 20,
+    "entry_timestamp_matches": 20,
+    "exit_timestamp_matches": 20,
+    "price_matches": 20,
+    "bars_held_matches": 20,
+    "pnl_matches": 20,
+    "first_trade_match": true,
+    "last_trade_match": true,
+    "comparison_fields": [
+      "side",
+      "entry_ts",
+      "entry_price",
+      "exit_ts",
+      "exit_price",
+      "bars_held",
+      "exit_reason",
+      "net_pnl",
+      "net_return_pct"
+    ],
+    "numeric_tolerance": 1e-12,
+    "mismatches": []
+  },
+  "headline_metrics": {
+    "equity_multiple": 8.11035936775286,
+    "net_return_pct": 711.035936775286,
+    "chronological_1h_mdd_pct": -18.395542229660567,
+    "daily_mdd_pct": -15.426995737690197,
+    "cost_pct_initial": 16.72696722738397,
+    "funding_pct_initial": -1.3232555109724276,
+    "profit_factor": 17.509233233044547,
+    "closed_trades": 20,
+    "long_trades": 10,
+    "short_trades": 10,
+    "win_rate": 0.85,
+    "pehc_shadow_start": 8,
+    "pehc_handoff_accept": 5
+  },
+  "headline_deltas": {
+    "net_return_pct_points": 0.0,
+    "chronological_1h_mdd_pct_points": 0.0,
+    "cost_pct_initial": 0.0,
+    "funding_pct_initial": 0.0,
+    "profit_factor": 0.0,
+    "equity_multiple": 0.0
+  },
+  "stress_8bps": {
+    "net_return_pct": 698.7499654030659,
+    "chronological_1h_mdd_pct": -18.52798408021893,
+    "cost_pct_initial": 21.287655530835092,
+    "funding_pct_initial": -1.2954981348974077,
+    "profit_factor": 17.071772458782323,
+    "closed_trades": 20
+  },
+  "runtime_contract_reconciliation": {
+    "global_cooldown": "aligned",
+    "ordinary_opposite_reclaim_reversal": "disabled",
+    "long_initial_hard_stop": "none; strategy-managed until first canonical daily trail",
+    "short_initial_hard_stop": "1.5 * entry ATR7",
+    "dry_run_protection_clock": "closed 1h mark candle",
+    "forced_short_after_long_protective_stop": "previous-complete-day SMA7 eligibility",
+    "pehc": "1h shadow stop, single consume, opportunity check, next-UTC-open recheck",
+    "exit_priority": "profit, MA boundary, short slope, max hold",
+    "pehc_arm": "pure long OAPP exit only; simultaneous native exit blocks shadow"
+  },
+  "governance": {
+    "parity_status": "PASS",
+    "dry_run_enabled": false,
+    "live_enabled": false,
+    "enabled_allowed": false,
+    "approval_level": "none",
+    "published": false,
+    "live_ready": false
+  }
+}

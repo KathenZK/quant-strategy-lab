@@ -1,0 +1,87 @@
+{
+  "schema_version": "binance-1d-ma7-dsml-p0-capacity-v1",
+  "generated_at_utc": "2026-08-10T11:53:33.328182+00:00",
+  "source": "Binance Vision public S3 object listing",
+  "event_path": "research/asset-portfolios/1d-ma7-later-maturity-meta-label/artifacts/p1_development_2026-08-10/p0_p1_events.parquet",
+  "event_sha256": "8419cb905c0ccdd29e71d53d204c6699f24d9577943d401c6ba9afd9c177a30e",
+  "event_rows": 1448,
+  "context_days": 30,
+  "archives": {
+    "BTC": {
+      "symbol": "BTCUSDT",
+      "listing_url": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision?list-type=2&prefix=data%2Ffutures%2Fum%2Fdaily%2Fmetrics%2FBTCUSDT%2F&max-keys=2",
+      "first_archive_date": "2020-09-01T00:00:00+00:00",
+      "key": "data/futures/um/daily/metrics/BTCUSDT/BTCUSDT-metrics-2020-09-01.zip",
+      "last_modified": "2026-03-18T12:30:27.000Z",
+      "etag": "0cf8731977069acdc940e87ee1d20db7",
+      "size": 12191
+    },
+    "ETH": {
+      "symbol": "ETHUSDT",
+      "listing_url": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision?list-type=2&prefix=data%2Ffutures%2Fum%2Fdaily%2Fmetrics%2FETHUSDT%2F&max-keys=2",
+      "first_archive_date": "2021-12-01T00:00:00+00:00",
+      "key": "data/futures/um/daily/metrics/ETHUSDT/ETHUSDT-metrics-2021-12-01.zip",
+      "last_modified": "2023-06-16T11:35:54.000Z",
+      "etag": "cdacf4d74d92ed2eefbc738ecc2e752c",
+      "size": 14930
+    },
+    "BNB": {
+      "symbol": "BNBUSDT",
+      "listing_url": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision?list-type=2&prefix=data%2Ffutures%2Fum%2Fdaily%2Fmetrics%2FBNBUSDT%2F&max-keys=2",
+      "first_archive_date": "2021-12-01T00:00:00+00:00",
+      "key": "data/futures/um/daily/metrics/BNBUSDT/BNBUSDT-metrics-2021-12-01.zip",
+      "last_modified": "2023-06-16T11:35:54.000Z",
+      "etag": "a7ef2e0cc6cc0b11f3e12d9003a1c861",
+      "size": 14472
+    },
+    "SOL": {
+      "symbol": "SOLUSDT",
+      "listing_url": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision?list-type=2&prefix=data%2Ffutures%2Fum%2Fdaily%2Fmetrics%2FSOLUSDT%2F&max-keys=2",
+      "first_archive_date": "2021-12-01T00:00:00+00:00",
+      "key": "data/futures/um/daily/metrics/SOLUSDT/SOLUSDT-metrics-2021-12-01.zip",
+      "last_modified": "2023-06-16T11:35:55.000Z",
+      "etag": "3971f591370be445c0cc128c7c1864c9",
+      "size": 14146
+    },
+    "TRX": {
+      "symbol": "TRXUSDT",
+      "listing_url": "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision?list-type=2&prefix=data%2Ffutures%2Fum%2Fdaily%2Fmetrics%2FTRXUSDT%2F&max-keys=2",
+      "first_archive_date": "2021-12-01T00:00:00+00:00",
+      "key": "data/futures/um/daily/metrics/TRXUSDT/TRXUSDT-metrics-2021-12-01.zip",
+      "last_modified": "2023-06-16T11:35:55.000Z",
+      "etag": "47413e4d910d8f735e878aac41fa491d",
+      "size": 14318
+    }
+  },
+  "event_ready_dates": {
+    "BTC": "2021-12-31T00:00:00+00:00",
+    "ETH": "2021-12-31T00:00:00+00:00",
+    "BNB": "2021-12-31T00:00:00+00:00",
+    "SOL": "2021-12-31T00:00:00+00:00",
+    "TRX": "2021-12-31T00:00:00+00:00"
+  },
+  "maximum_usable_events": 967,
+  "maximum_usable_rate": 0.6678176795580111,
+  "per_asset": {
+    "BTC": 202,
+    "ETH": 207,
+    "BNB": 178,
+    "SOL": 181,
+    "TRX": 199
+  },
+  "per_side": {
+    "long": 502,
+    "short": 465
+  },
+  "p0_gate_checks": {
+    "usable_events_gte_1300": false,
+    "each_asset_gte_200": false,
+    "each_side_gte_550": false,
+    "usable_rate_gte_90pct": false
+  },
+  "p0_capacity_pass": false,
+  "hype_rows_consumed": 0,
+  "hype_files_opened": 0,
+  "hype_requests_sent": 0,
+  "decision": "P0_CAPACITY_FAILED_NO_DOWNLOAD_NO_MODEL"
+}

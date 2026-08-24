@@ -1,0 +1,178 @@
+{
+  "family": "TradFi-1D-Multi-Asset-Futures-TSMOM",
+  "observation": "long-history ETF/FX proxy validation",
+  "status": "secondary diagnostic / not futures evidence / not promoted / not live-ready",
+  "source_family": "XA-1D-CLASSIC-EWMAC",
+  "source_snapshot_date": "2026-08-10",
+  "universe": {
+    "SPY": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "US S&P 500"
+    },
+    "IWM": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "US Russell 2000"
+    },
+    "QQQ": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "US Nasdaq-100"
+    },
+    "EFA": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "MSCI EAFE developed ex-US"
+    },
+    "EEM": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "MSCI Emerging Markets"
+    },
+    "EWJ": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "Japan equity"
+    },
+    "EWU": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "UK equity"
+    },
+    "EWG": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "Germany equity"
+    },
+    "EWC": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "Canada equity"
+    },
+    "EWA": {
+      "class": "equity_index",
+      "exchange": "proxy",
+      "name": "Australia equity"
+    },
+    "SHY": {
+      "class": "bond",
+      "exchange": "proxy",
+      "name": "US 1-3Y Treasury"
+    },
+    "IEF": {
+      "class": "bond",
+      "exchange": "proxy",
+      "name": "US 7-10Y Treasury"
+    },
+    "TLT": {
+      "class": "bond",
+      "exchange": "proxy",
+      "name": "US 20+Y Treasury"
+    },
+    "TIP": {
+      "class": "bond",
+      "exchange": "proxy",
+      "name": "US TIPS"
+    },
+    "GLD": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "Gold"
+    },
+    "SLV": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "Silver"
+    },
+    "USO": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "WTI crude oil"
+    },
+    "UNG": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "Natural gas"
+    },
+    "DBC": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "Broad commodities"
+    },
+    "DBA": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "Agriculture basket"
+    },
+    "CORN": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "Corn"
+    },
+    "WEAT": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "Wheat"
+    },
+    "SOYB": {
+      "class": "commodity",
+      "exchange": "proxy",
+      "name": "Soybeans"
+    },
+    "UUP": {
+      "class": "currency",
+      "exchange": "proxy",
+      "name": "US dollar index"
+    },
+    "FXE": {
+      "class": "currency",
+      "exchange": "proxy",
+      "name": "Euro"
+    },
+    "FXY": {
+      "class": "currency",
+      "exchange": "proxy",
+      "name": "Japanese yen"
+    },
+    "FXB": {
+      "class": "currency",
+      "exchange": "proxy",
+      "name": "British pound"
+    },
+    "FXA": {
+      "class": "currency",
+      "exchange": "proxy",
+      "name": "Australian dollar"
+    },
+    "FXC": {
+      "class": "currency",
+      "exchange": "proxy",
+      "name": "Canadian dollar"
+    },
+    "FXF": {
+      "class": "currency",
+      "exchange": "proxy",
+      "name": "Swiss franc"
+    }
+  },
+  "class_weight": 0.25,
+  "signal_lookbacks_months": [
+    1,
+    3,
+    12
+  ],
+  "target_volatility_asset": 0.1,
+  "target_volatility_portfolio": 0.1,
+  "volatility_center_of_mass_days": 60.0,
+  "portfolio_scalar_cap": 3.0,
+  "gross_cap": 3.0,
+  "cost_bps_one_way": [
+    0.0,
+    2.0,
+    10.0
+  ],
+  "evaluation_start": "2013-01-01T00:00:00+00:00",
+  "evaluation_end": "2026-07-31T00:00:00+00:00",
+  "quality_status": "proxy_only_not_futures_evidence"
+}

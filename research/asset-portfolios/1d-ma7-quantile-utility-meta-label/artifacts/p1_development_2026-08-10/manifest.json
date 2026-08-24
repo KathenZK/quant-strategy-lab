@@ -1,0 +1,36 @@
+{
+  "schema_version": "binance-1d-ma7-quml-p1-manifest-v1",
+  "created_at_utc": "2026-08-10T13:47:42.623059+00:00",
+  "files": {
+    "events": {
+      "path": "p0_events.parquet",
+      "bytes": 2726474,
+      "sha256": "9cbb9f9ab1bcb06fb20d326bf5db861b65f8dfea4cd500c6ef093d590ad6ef48"
+    },
+    "capacity": {
+      "path": "p0_capacity.json",
+      "bytes": 996,
+      "sha256": "673988000c153c2f2423b9549f4eb10656bef44d16252ca90f832936d738ba91"
+    },
+    "quantile_oof": {
+      "path": "p1_quantile_oof.parquet",
+      "bytes": 706647,
+      "sha256": "6bf28665b09be90153d8e4b052061451fcb59091256226dca7bb58eb292bd7f6"
+    },
+    "absolute_control_oof": {
+      "path": "p1_absolute_control_oof.parquet",
+      "bytes": 705188,
+      "sha256": "4237779c0c8b3a3db6a36382a325e48a28071973f478045d2964b342792ffec3"
+    },
+    "summary": {
+      "path": "p1_summary.json",
+      "bytes": 45061,
+      "sha256": "c26fcb1ba0c6d0447faeb23f6e2767a42667b781def556f574431fe96279f1e0"
+    },
+    "report": {
+      "path": "p1_report.json",
+      "bytes": 6526537,
+      "sha256": "b0f387050c7dc24e92ec7d391a5ae08f5a4ebd1a9dadc898c5594b2c701fe318"
+    }
+  }
+}

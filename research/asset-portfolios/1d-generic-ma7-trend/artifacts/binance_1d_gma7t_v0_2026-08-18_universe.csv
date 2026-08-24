@@ -1,0 +1,31 @@
+market_cap_rank,id,symbol,name,market_cap_usd,last_updated,classification,reason,binance_symbol,binance_trading_usdt_perpetual,daily_bars,hourly_bars,daily_start,daily_end,data_quality,final_status,final_reason
+1,bitcoin,BTC,Bitcoin,1286571110928,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,BTCUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+2,ethereum,ETH,Ethereum,228543529196,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,ETHUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+4,binancecoin,BNB,BNB,79837807665,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,BNBUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+6,ripple,XRP,XRP,62425352150,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,XRPUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+7,solana,SOL,Solana,44301746947,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,SOLUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+8,tron,TRX,TRON,31526861079,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,TRXUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+10,hyperliquid,HYPE,Hyperliquid,13179303130,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,HYPEUSDT,True,445.0,10671.0,2025-05-30T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+11,dogecoin,DOGE,Dogecoin,10842572629,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,DOGEUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+13,rain,RAIN,Rain,9379997843,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,RAINUSDT,False,,,,,,EXCLUDED,no_trading_binance_usdt_perpetual
+14,leo-token,LEO,LEO Token,8723091200,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,LEOUSDT,False,,,,,,EXCLUDED,no_trading_binance_usdt_perpetual
+15,zcash,ZEC,Zcash,8474448942,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,ZECUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+16,monero,XMR,Monero,7799405745,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,XMRUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+17,chainlink,LINK,Chainlink,7035082173,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,LINKUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+18,cardano,ADA,Cardano,6525603906,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,ADAUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+19,whitebit,WBT,WhiteBIT Coin,6526194810,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,WBTUSDT,False,,,,,,EXCLUDED,no_trading_binance_usdt_perpetual
+20,stellar,XLM,Stellar,5303060269,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,XLMUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+22,bitcoin-cash,BCH,Bitcoin Cash,4078736396,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,BCHUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+25,the-open-network,GRAM,Gram (prev. Toncoin),3604274651,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,GRAMUSDT,True,47.0,1121.0,2026-07-02T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,EXCLUDED,history_below_365_closed_daily_bars
+26,canton-network,CC,Canton,3594351677,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,CCUSDT,True,291.0,6973.0,2025-10-31T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,EXCLUDED,history_below_365_closed_daily_bars
+28,litecoin,LTC,Litecoin,3446288937,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,LTCUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+30,hedera-hashgraph,HBAR,Hedera,2882756982,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,HBARUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+33,avalanche-2,AVAX,Avalanche,2724391502,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,AVAXUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+35,sui,SUI,Sui,2652276359,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,SUIUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+36,shiba-inu,SHIB,Shiba Inu,2600816868,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,1000SHIBUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+37,crypto-com-chain,CRO,Cronos,2239356932,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,CROUSDT,False,,,,,,EXCLUDED,no_trading_binance_usdt_perpetual
+39,near,NEAR,NEAR Protocol,2102630247,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,NEARUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+40,okb,OKB,OKB,2048259320,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,OKBUSDT,False,,,,,,EXCLUDED,no_trading_binance_usdt_perpetual
+41,uniswap,UNI,Uniswap,2039954963,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,UNIUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules
+42,world-liberty-financial,WLFI,World Liberty Financial,1920871276,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,WLFIUSDT,True,360.0,8633.0,2025-08-23T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,EXCLUDED,history_below_365_closed_daily_bars
+44,bittensor,TAO,Bittensor,1837382477,2026-08-18T13:54:30.000Z,eligible_nonpegged_crypto,,TAOUSDT,True,730.0,17521.0,2024-08-18T00:00:00+00:00,2026-08-17T00:00:00+00:00,PASS,INCLUDED,passes_frozen_rules

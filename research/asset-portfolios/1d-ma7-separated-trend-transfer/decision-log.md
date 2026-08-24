@@ -7,3 +7,7 @@
 ## 2026-08-05 — 分资产搜索隔离
 
 决定：用户明确要求在 BTC/ETH 上重新搜索固定 MA7 参数；该工作建立为独立 `BIN-1D-MA7-AS-SEARCH` 家族，不修改本零调参迁移合同或失败结论。证据：[分资产搜索诊断](../1d-ma7-asset-specific-search/diagnostics/binance-btc-eth-1d-ma7-asset-specific-search-2026-08-05.md)。
+
+## 2026-08-10 — HYPE V6 BTC/ETH零调参迁移失败
+
+决定：按用户要求把 exact `HYPE-1D-MA7-ABT-V6` / `PEHC_294` 在 BTC/ETH 上回测；BTC full 小亏且共同窗口亏损，ETH full 虽正但共同窗口、最近一年、额外延迟和相位均否定稳定性。因此本轮只保留 `diagnostic-only`，不登记 BTC/ETH V6，不修改 HYPE V6，不推进 runner。证据：[V6迁移诊断](diagnostics/binance-1d-ma7-abt-v6-transfer-btc-eth-2026-08-10.md) · [机器摘要](artifacts/binance_1d_ma7_abt_v6_transfer_btc_eth_2026-08-10.json)。

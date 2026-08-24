@@ -1,0 +1,25 @@
+{
+  "observation": "MOP 2012 paper-exact construction audit",
+  "status": "explore / diagnostic-only / not promoted / not live-ready",
+  "signal": "sign(past 12-month return)",
+  "holding_period": "next month",
+  "instrument_target_volatility": 0.4,
+  "volatility_center_of_mass_days": 60.0,
+  "volatility_annualizer": 261,
+  "portfolio_weighting": "equal across all valid instruments",
+  "portfolio_volatility_target": null,
+  "gross_leverage_cap": null,
+  "futures_cost_bps_one_way": [
+    0.0,
+    2.0
+  ],
+  "proxy_cost_bps_one_way": [
+    0.0,
+    2.0,
+    10.0
+  ],
+  "futures_start": "2022-01-03T00:00:00+00:00",
+  "proxy_start": "2013-01-02T00:00:00+00:00",
+  "futures_markets": 24,
+  "proxy_markets": 30
+}

@@ -1,0 +1,33 @@
+{
+  "schema_version": "binance-1d-dsto-p0-manifest-v1",
+  "files": {
+    "source_manifest": {
+      "path": "p0_source_manifest.json",
+      "sha256": "68317a2c012c282048c0cb9c685f807930297a2e6d79c819684bfe883a5972d2"
+    },
+    "data_quality": {
+      "path": "p0_data_quality.json",
+      "sha256": "249411d1ba7ace15183d58da15f05152421784bac7ff600760f364e564dc84ec"
+    },
+    "btc_feature": {
+      "path": "data/cache/binance_1d_dsto_p0_unaccepted/btcusdt_metrics_5m.parquet",
+      "sha256": "a4d0b51641662c7ed2525d47c3244e2124cc30087d6bf394066b77aee2a4442e"
+    },
+    "eth_feature": {
+      "path": "data/cache/binance_1d_dsto_p0_unaccepted/ethusdt_metrics_5m.parquet",
+      "sha256": "377be98dbebc3acf76a90273f608754cd12f1bc436caa729ed5f44d17130fe16"
+    },
+    "bnb_feature": {
+      "path": "data/cache/binance_1d_dsto_p0_unaccepted/bnbusdt_metrics_5m.parquet",
+      "sha256": "76240a5036e21cba56592a1c73779fabdf200f5cb6d61f46d1da75b51f417993"
+    },
+    "sol_feature": {
+      "path": "data/cache/binance_1d_dsto_p0_unaccepted/solusdt_metrics_5m.parquet",
+      "sha256": "221a9d984ee2884149ae0a9e070e710c31f5ac3c1db0acb5986aaa2044a0dd5b"
+    },
+    "trx_feature": {
+      "path": "data/cache/binance_1d_dsto_p0_unaccepted/trxusdt_metrics_5m.parquet",
+      "sha256": "fc30f1b46bb88c0b18655b276f9ebd19fbe3a5399978196e8ee1dc381107d927"
+    }
+  }
+}

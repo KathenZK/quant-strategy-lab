@@ -9,13 +9,14 @@
 
 ## 当前状态
 
-- 状态：`explore / not promoted / not live-ready`
-- 尚未注册版本；身份与裁决见 [binance-1d-ewmac-ut-core-ledger.md](binance-1d-ewmac-ut-core-ledger.md)。2026-08-05 合同冻结后跑数结论：9 标的 8 个净收益为正、换手成本可养（3.5–11×/年）、单资产 Sharpe 0.25–0.49 与文献一致，但预注册门禁未过——BTC 0.493/ETH 0.432 卡 G2（≥0.5），TradFi 仅 QQQ/SPY 全过（2/6）。单资产通用主张按合同判死；合法下一步是组合级聚合契约（另立预注册）。
+- 状态：`explore / not promoted / not live-ready`（**研究线已关闭**，2026-08-06）
+- 尚未注册版本；本 README 兼任临时主账。四轮契约全部判死：P1 单资产通用门禁未过；P2 组合级分散被证实但 MDD −41.5%/换手 26.5× 未过；P3 扩池 18 资产修复 2022、MDD 改善到 −34.4% 但换手恶化到 34.9×；P4 降波动 12%+宽缓冲带使 MDD −24.0% 首次过关，但压力台账 Sharpe 0.48（0 成本 0.66）与换手 21.8× 未过，E2 按裁决规则禁跑。遗产：EWMAC 趋势因子毛 Sharpe 0.6–0.7 跨 18 资产稳定存在、与 SPY 相关性 0.01、50/50 组合优于全仓 SPY；死结为日频再平衡 × TradFi 10bps/边执行面不经济。后续只允许换执行面或换机制另立家族。
 
 ## 入口
 
-- 主账：[binance-1d-ewmac-ut-core-ledger.md](binance-1d-ewmac-ut-core-ledger.md)
 - 决策日志：[decision-log.md](decision-log.md)
-- 冻结合同：[xa-1d-ewmac-ut-universal-trend-contract-2026-08-05.md](specs/xa-1d-ewmac-ut-universal-trend-contract-2026-08-05.md)
-- 诊断：[xa-1d-ewmac-ut-universal-trend-2026-08-05.md](diagnostics/xa-1d-ewmac-ut-universal-trend-2026-08-05.md)
-- 脚本：[scripts/run_ewmac_universal_trend.py](scripts/run_ewmac_universal_trend.py)；产物：[artifacts/README.md](artifacts/README.md)
+- P1 合同/诊断：[xa-1d-ewmac-ut-universal-trend-contract-2026-08-05.md](specs/xa-1d-ewmac-ut-universal-trend-contract-2026-08-05.md) / [xa-1d-ewmac-ut-universal-trend-2026-08-05.md](diagnostics/xa-1d-ewmac-ut-universal-trend-2026-08-05.md)
+- P2 合同/诊断：[xa-1d-ewmac-ut-portfolio-contract-2026-08-06.md](specs/xa-1d-ewmac-ut-portfolio-contract-2026-08-06.md) / [xa-1d-ewmac-ut-portfolio-2026-08-06.md](diagnostics/xa-1d-ewmac-ut-portfolio-2026-08-06.md)
+- P3 合同/诊断：[xa-1d-ewmac-ut-p3-breadth-scale-contract-2026-08-06.md](specs/xa-1d-ewmac-ut-p3-breadth-scale-contract-2026-08-06.md) / [xa-1d-ewmac-ut-p3-breadth-scale-2026-08-06.md](diagnostics/xa-1d-ewmac-ut-p3-breadth-scale-2026-08-06.md)
+- P4 合同/诊断：[xa-1d-ewmac-ut-p4-gate-recalibration-contract-2026-08-06.md](specs/xa-1d-ewmac-ut-p4-gate-recalibration-contract-2026-08-06.md) / [xa-1d-ewmac-ut-p4-gate-recalibration-2026-08-06.md](diagnostics/xa-1d-ewmac-ut-p4-gate-recalibration-2026-08-06.md)
+- 脚本：[scripts/run_ewmac_universal_trend.py](scripts/run_ewmac_universal_trend.py)、[scripts/run_ewmac_portfolio.py](scripts/run_ewmac_portfolio.py)；产物：[artifacts/README.md](artifacts/README.md)

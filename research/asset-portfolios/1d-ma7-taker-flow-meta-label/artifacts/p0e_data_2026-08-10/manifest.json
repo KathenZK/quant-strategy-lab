@@ -1,0 +1,46 @@
+{
+  "schema_version": "binance-1d-ma7-tfml-p0-manifest-v1",
+  "generated_at_utc": "2026-08-10T13:14:27.289010+00:00",
+  "files": {
+    "source_manifest": {
+      "path": "p0_source_manifest.json",
+      "sha256": "478bd3053571c3be0faf0176be7dc4abe85873dbf17826b695dd8f43de447eaa"
+    },
+    "data_quality": {
+      "path": "p0_data_quality.json",
+      "sha256": "94a6515c54d9ab187e13afd88c7412d0bcecef319c149bcf2fb744e87e339165"
+    },
+    "xrp_flow_cache": {
+      "path": "data/cache/binance_1d_ma7_tfml_p0_unaccepted/xrpusdt_perp_5m_taker_flow.parquet",
+      "sha256": "abe7a5dae6e4539342ef413de06f53426960d32594eaa551d1bd0a1dc7065301"
+    },
+    "doge_flow_cache": {
+      "path": "data/cache/binance_1d_ma7_tfml_p0_unaccepted/dogeusdt_perp_5m_taker_flow.parquet",
+      "sha256": "7255136bbd078da105aefea4fffb547905cb6654a3a5ead962342f6cd2090379"
+    },
+    "ada_flow_cache": {
+      "path": "data/cache/binance_1d_ma7_tfml_p0_unaccepted/adausdt_perp_5m_taker_flow.parquet",
+      "sha256": "5291994ae59af2972c3cf290597fb3eff927a0b958c7de116b9e19c9cbe9bb1e"
+    },
+    "link_flow_cache": {
+      "path": "data/cache/binance_1d_ma7_tfml_p0_unaccepted/linkusdt_perp_5m_taker_flow.parquet",
+      "sha256": "12c12c7a395c191a2089369ce944913b757c45a9ebfa06d270d2b6b172b3af13"
+    },
+    "ltc_flow_cache": {
+      "path": "data/cache/binance_1d_ma7_tfml_p0_unaccepted/ltcusdt_perp_5m_taker_flow.parquet",
+      "sha256": "fc075c7a620531fb8999bc40f39843cd5910ed474d7b40d49b82b3f867f91cb8"
+    },
+    "dot_flow_cache": {
+      "path": "data/cache/binance_1d_ma7_tfml_p0_unaccepted/dotusdt_perp_5m_taker_flow.parquet",
+      "sha256": "c8f1a770d8e555d5675bcfdad3e87981c6b72de22361acf37e2368bb2136dd83"
+    },
+    "avax_flow_cache": {
+      "path": "data/cache/binance_1d_ma7_tfml_p0_unaccepted/avaxusdt_perp_5m_taker_flow.parquet",
+      "sha256": "7cd6d43ef93f7bee49d9279cb47b75ae356ce35945f5608f08c1e9fbba21f209"
+    },
+    "uni_flow_cache": {
+      "path": "data/cache/binance_1d_ma7_tfml_p0_unaccepted/uniusdt_perp_5m_taker_flow.parquet",
+      "sha256": "31bbb2ca1edc1fdf9f8ebcc65494c37180a1700dab91d8c74ab28474697bf805"
+    }
+  }
+}

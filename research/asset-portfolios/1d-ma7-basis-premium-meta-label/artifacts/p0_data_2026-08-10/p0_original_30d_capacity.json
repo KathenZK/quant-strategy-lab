@@ -1,0 +1,38 @@
+{
+  "schema_version": "binance-1d-ma7-bpml-p0-original-30d-v1",
+  "generated_at_utc": "2026-08-10T12:41:45.080308+00:00",
+  "input_events": 1448,
+  "usable_events": 1233,
+  "usable_rate": 0.8515193370165746,
+  "per_asset": {
+    "BTC": 259,
+    "ETH": 265,
+    "BNB": 243,
+    "SOL": 211,
+    "TRX": 255
+  },
+  "side_counts": {
+    "long": 666,
+    "short": 567
+  },
+  "rejection_counts": {
+    "market_peers": 39,
+    "local_window": 176
+  },
+  "event_identity_sha256": "f224974f99f65a0ee53545e4fca8870a65555c4dafc4a42c12bfb623ebc1a777",
+  "accepted_panel_identity_sha256": "4f056613143798272105d0dfcbae53dc9bc1aac95834800c0e2a096e65b57833",
+  "checks": {
+    "usable_events": false,
+    "per_asset": true,
+    "side_capacity": true,
+    "usable_rate": false,
+    "exact_windows_and_market_peers": true,
+    "event_identity": true,
+    "source_manifest_verified": true,
+    "hype_lock": true
+  },
+  "p0_capacity_pass": false,
+  "hype_rows": 0,
+  "hype_files": 0,
+  "hype_requests": 0
+}

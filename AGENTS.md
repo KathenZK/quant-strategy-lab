@@ -46,3 +46,4 @@
 - `strategy-validation-gates.mdc`：从 `registered` 推进 promotion 的证据门禁及线上开平仓对账要求。
 - `external-reproduction-spec.mdc`：对外（同事/外部 AI）复现规格必须自包含；仓库内部引用只能放在标记为"非复现依赖"的附录里，交付前做 no-repo 自检。
 - `clickable-file-references.mdc`：对话回复和研究文档中的文件引用必须可点击——文档内跨文件引用用相对路径 Markdown 链接，对话中给用户的文件指引用 Markdown 链接或代码引用格式，不要只给纯文本路径。
+- `strategy-trade-path-visualization.mdc`：策略初步成形、登记版本或逐笔行为发生重大变化时，默认生成并校验完整交易路径 HTML；每笔入场与对应出场必须连线。

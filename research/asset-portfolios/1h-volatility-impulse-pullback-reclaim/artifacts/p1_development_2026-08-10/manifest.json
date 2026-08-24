@@ -1,0 +1,26 @@
+{
+  "schema_version": "binance-1h-vipr-manifest-v1",
+  "generated_at_utc": "2026-08-10T11:45:19.510815+00:00",
+  "files": {
+    "capacity": {
+      "path": "p0_data_quality.json",
+      "sha256": "7fea8ac69eb2f10c8b616fe5ac27506add9bc0b8363ebcc094824a5d81becb28"
+    },
+    "development_roots": {
+      "path": "p1_development_roots.parquet",
+      "sha256": "ca5264bb81b0ba924a7d143d2e85d1529d60610cab41d1eb99bac90bef302b5c"
+    },
+    "development_trades": {
+      "path": "p1_development_trades.parquet",
+      "sha256": "36a63516396647ee9dd35134fa3d7caf159b3d028002df070bd90f42e2099c7a"
+    },
+    "report": {
+      "path": "p1_report.json",
+      "sha256": "372e940847c5fec67b7254e8176f2928239f8269caa279c302ba0f63db549984"
+    },
+    "summary": {
+      "path": "p1_summary.json",
+      "sha256": "0735ded674380c7d474db37096c07c6ef3d4fdfd98459c6055bf40b47fc6da52"
+    }
+  }
+}

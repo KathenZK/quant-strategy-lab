@@ -1,0 +1,42 @@
+{
+  "schema_version": "1.0",
+  "generated_at": "2026-08-18T08:57:45.803571+00:00",
+  "download_url": "https://query2.finance.yahoo.com/v8/finance/chart/GC%3DF?period1=1577836800&period2=1787097600&interval=1d&events=history",
+  "response_sha256": "0758cb511ac28df142066dca65045c91bad1efcb39b024719586bf8c2850a091",
+  "source_dataset_id": "yahoo-chart-api:GC=F:2020-01-01:2026-08-18",
+  "source_api": "Yahoo Finance Chart API v8",
+  "symbol": "GC=F",
+  "exchange_name_from_meta": "COMEX",
+  "exchange_timezone": "America/New_York",
+  "instrument_type": "FUTURE",
+  "provider_rows": 1670,
+  "null_price_rows_dropped": 3,
+  "null_price_sessions": [
+    "2023-11-23",
+    "2025-05-26",
+    "2025-06-19"
+  ],
+  "rows": 1667,
+  "first_session": "2020-01-02",
+  "last_session": "2026-08-18",
+  "duplicate_ts": 0,
+  "invalid_ohlc_rows": 0,
+  "max_abs_daily_return": 0.11366200569716556,
+  "daily_abs_return_over_10pct_rows": 1,
+  "mechanical_price_blockers": 0,
+  "quote_close_used": true,
+  "adjusted_close_used": false,
+  "quality_status": "raw_unaccepted",
+  "accepted_for_strategy_evidence": false,
+  "acceptance_blockers": [
+    "Yahoo continuous-contract roll mapping and adjustment method are unavailable",
+    "daily quote close versus official COMEX settlement is not provider-verifiable",
+    "COMEX exchange-calendar continuity audit is not implemented",
+    "the source is a dynamic snapshot rather than an immutable vendor release",
+    "open interest, is_closed, trade_count and vwap provenance are unavailable"
+  ],
+  "partitions_total": 1667,
+  "partitions_written": 1667,
+  "verified": 0,
+  "raw_root": "data/raw/ohlcv/exchange=comex/market_type=futures/timeframe=1d/source=yahoo_chart_snapshot"
+}

@@ -1,0 +1,407 @@
+{
+  "generated_at": "2026-08-18T12:24:29.228106+00:00",
+  "run_date": "2026-08-18",
+  "config": {
+    "family": "TradFi-1D-Multi-Asset-Futures-TSMOM",
+    "alias": "TF-1D-FUT-TSMOM",
+    "status": "explore / diagnostic-only / not promoted / not live-ready",
+    "universe": {
+      "ES=F": {
+        "class": "equity_index",
+        "exchange": "cme",
+        "name": "S&P 500"
+      },
+      "NQ=F": {
+        "class": "equity_index",
+        "exchange": "cme",
+        "name": "Nasdaq 100"
+      },
+      "YM=F": {
+        "class": "equity_index",
+        "exchange": "cbot",
+        "name": "Dow Jones"
+      },
+      "RTY=F": {
+        "class": "equity_index",
+        "exchange": "cme",
+        "name": "Russell 2000"
+      },
+      "NKD=F": {
+        "class": "equity_index",
+        "exchange": "cme",
+        "name": "Nikkei USD"
+      },
+      "ZT=F": {
+        "class": "bond",
+        "exchange": "cbot",
+        "name": "US Treasury 2Y"
+      },
+      "ZF=F": {
+        "class": "bond",
+        "exchange": "cbot",
+        "name": "US Treasury 5Y"
+      },
+      "ZN=F": {
+        "class": "bond",
+        "exchange": "cbot",
+        "name": "US Treasury 10Y"
+      },
+      "ZB=F": {
+        "class": "bond",
+        "exchange": "cbot",
+        "name": "US Treasury Bond"
+      },
+      "UB=F": {
+        "class": "bond",
+        "exchange": "cbot",
+        "name": "Ultra Treasury Bond"
+      },
+      "6A=F": {
+        "class": "fx",
+        "exchange": "cme",
+        "name": "Australian Dollar"
+      },
+      "6B=F": {
+        "class": "fx",
+        "exchange": "cme",
+        "name": "British Pound"
+      },
+      "6C=F": {
+        "class": "fx",
+        "exchange": "cme",
+        "name": "Canadian Dollar"
+      },
+      "6E=F": {
+        "class": "fx",
+        "exchange": "cme",
+        "name": "Euro FX"
+      },
+      "6J=F": {
+        "class": "fx",
+        "exchange": "cme",
+        "name": "Japanese Yen"
+      },
+      "6S=F": {
+        "class": "fx",
+        "exchange": "cme",
+        "name": "Swiss Franc"
+      },
+      "GC=F": {
+        "class": "commodity",
+        "exchange": "comex",
+        "name": "Gold"
+      },
+      "SI=F": {
+        "class": "commodity",
+        "exchange": "comex",
+        "name": "Silver"
+      },
+      "BZ=F": {
+        "class": "commodity",
+        "exchange": "nymex",
+        "name": "Brent Crude"
+      },
+      "NG=F": {
+        "class": "commodity",
+        "exchange": "nymex",
+        "name": "Natural Gas"
+      },
+      "HG=F": {
+        "class": "commodity",
+        "exchange": "comex",
+        "name": "Copper"
+      },
+      "ZC=F": {
+        "class": "commodity",
+        "exchange": "cbot",
+        "name": "Corn"
+      },
+      "ZW=F": {
+        "class": "commodity",
+        "exchange": "cbot",
+        "name": "Wheat"
+      },
+      "ZS=F": {
+        "class": "commodity",
+        "exchange": "cbot",
+        "name": "Soybeans"
+      }
+    },
+    "class_weight": 0.25,
+    "signal_lookbacks_months": [
+      1,
+      3,
+      12
+    ],
+    "target_volatility_asset": 0.1,
+    "target_volatility_portfolio": 0.1,
+    "volatility_center_of_mass_days": 60.0,
+    "portfolio_scalar_cap": 3.0,
+    "gross_cap": 3.0,
+    "cost_bps_one_way": [
+      0.0,
+      2.0
+    ],
+    "evaluation_start": "2022-01-03T00:00:00+00:00",
+    "evaluation_end": "2026-07-31T00:00:00+00:00",
+    "quality_status": "raw_unaccepted"
+  },
+  "metrics": [
+    {
+      "strategy": "tsmom_1m",
+      "label": "1M",
+      "cost_bps_one_way": 0.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": -0.0008950407852679199,
+      "annualized_arithmetic_return": 0.003939723097383265,
+      "annualized_volatility": 0.09841129288765262,
+      "sharpe": 0.04003324193576945,
+      "sortino": 0.05710876891362823,
+      "max_drawdown": -0.17095064095169032,
+      "calmar": -0.005235667911422767,
+      "daily_win_rate": 0.5030408340573415,
+      "positive_month_ratio": 0.4727272727272727,
+      "annualized_turnover": 31.797884870173885,
+      "total_turnover": 145.38663308197232,
+      "gross_total_return": -0.004085778049376598,
+      "net_total_return": -0.004085778049376598,
+      "average_gross_leverage": 2.5440122423500684,
+      "max_gross_leverage": 3.0000000000000013,
+      "average_portfolio_scalar": 2.4098652228461437
+    },
+    {
+      "strategy": "tsmom_1m",
+      "label": "1M",
+      "cost_bps_one_way": 2.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": -0.007226115539147759,
+      "annualized_arithmetic_return": -0.0024264683077700037,
+      "annualized_volatility": 0.09838002137921478,
+      "sharpe": -0.024664238467858833,
+      "sortino": -0.03502909553015818,
+      "max_drawdown": -0.1758344618958756,
+      "calmar": -0.041096127921879555,
+      "daily_win_rate": 0.5030408340573415,
+      "positive_month_ratio": 0.4727272727272727,
+      "annualized_turnover": 31.797884870173885,
+      "total_turnover": 145.38663308197232,
+      "gross_total_return": -0.004085778049376598,
+      "net_total_return": -0.03261553265289807,
+      "average_gross_leverage": 2.5440122423500684,
+      "max_gross_leverage": 3.0000000000000013,
+      "average_portfolio_scalar": 2.4098652228461437
+    },
+    {
+      "strategy": "tsmom_3m",
+      "label": "3M",
+      "cost_bps_one_way": 0.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": 0.0005912215712660096,
+      "annualized_arithmetic_return": 0.005271333502219333,
+      "annualized_volatility": 0.09672785083626058,
+      "sharpe": 0.05449654320494069,
+      "sortino": 0.07515946519964825,
+      "max_drawdown": -0.23680012827365504,
+      "calmar": 0.0024967113640359685,
+      "daily_win_rate": 0.5334491746307559,
+      "positive_month_ratio": 0.509090909090909,
+      "annualized_turnover": 18.908575177325737,
+      "total_turnover": 86.4539919127556,
+      "gross_total_return": 0.0027060456344079054,
+      "net_total_return": 0.0027060456344079054,
+      "average_gross_leverage": 2.5465796953573183,
+      "max_gross_leverage": 3.0000000000000013,
+      "average_portfolio_scalar": 2.449092690487187
+    },
+    {
+      "strategy": "tsmom_3m",
+      "label": "3M",
+      "cost_bps_one_way": 2.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": -0.0031853257252089096,
+      "annualized_arithmetic_return": 0.0014856852029987583,
+      "annualized_volatility": 0.09672370257128277,
+      "sharpe": 0.015360094408129675,
+      "sortino": 0.021139577697957265,
+      "max_drawdown": -0.24387447198956957,
+      "calmar": -0.013061333149068365,
+      "daily_win_rate": 0.5325803649000869,
+      "positive_month_ratio": 0.509090909090909,
+      "annualized_turnover": 18.908575177325737,
+      "total_turnover": 86.4539919127556,
+      "gross_total_return": 0.0027060456344079054,
+      "net_total_return": -0.014481347486947738,
+      "average_gross_leverage": 2.5465796953573183,
+      "max_gross_leverage": 3.0000000000000013,
+      "average_portfolio_scalar": 2.449092690487187
+    },
+    {
+      "strategy": "tsmom_12m",
+      "label": "12M",
+      "cost_bps_one_way": 0.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": 0.05387156022233319,
+      "annualized_arithmetic_return": 0.0563363112733286,
+      "annualized_volatility": 0.08726131610045229,
+      "sharpe": 0.6456046480948802,
+      "sortino": 0.9168692454848041,
+      "max_drawdown": -0.13739673847242917,
+      "calmar": 0.3920876202832382,
+      "daily_win_rate": 0.5334491746307559,
+      "positive_month_ratio": 0.6181818181818182,
+      "annualized_turnover": 11.960400673692046,
+      "total_turnover": 54.68547330613475,
+      "gross_total_return": 0.271130381166395,
+      "net_total_return": 0.271130381166395,
+      "average_gross_leverage": 2.594553322107338,
+      "max_gross_leverage": 3.0000000000000018,
+      "average_portfolio_scalar": 2.548112008257154
+    },
+    {
+      "strategy": "tsmom_12m",
+      "label": "12M",
+      "cost_bps_one_way": 2.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": 0.05135172538308175,
+      "annualized_arithmetic_return": 0.0539417431980643,
+      "annualized_volatility": 0.0872872563770327,
+      "sharpe": 0.6179795933219139,
+      "sortino": 0.8764497625295358,
+      "max_drawdown": -0.14301891216097984,
+      "calmar": 0.35905548858657976,
+      "daily_win_rate": 0.5325803649000869,
+      "positive_month_ratio": 0.6181818181818182,
+      "annualized_turnover": 11.960400673692046,
+      "total_turnover": 54.68547330613475,
+      "gross_total_return": 0.271130381166395,
+      "net_total_return": 0.25729325594816066,
+      "average_gross_leverage": 2.594553322107338,
+      "max_gross_leverage": 3.0000000000000018,
+      "average_portfolio_scalar": 2.548112008257154
+    },
+    {
+      "strategy": "composite",
+      "label": "Composite",
+      "cost_bps_one_way": 0.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": 0.02716950833479892,
+      "annualized_arithmetic_return": 0.03113053715898273,
+      "annualized_volatility": 0.09272128302054468,
+      "sharpe": 0.33574316645386576,
+      "sortino": 0.47607461217688846,
+      "max_drawdown": -0.18293356257214377,
+      "calmar": 0.14852117868794057,
+      "daily_win_rate": 0.5430060816681147,
+      "positive_month_ratio": 0.5454545454545454,
+      "annualized_turnover": 22.852726814547978,
+      "total_turnover": 104.48748468253285,
+      "gross_total_return": 0.13039498370763503,
+      "net_total_return": 0.13039498370763503,
+      "average_gross_leverage": 2.1943529673417648,
+      "max_gross_leverage": 3.000000000000001,
+      "average_portfolio_scalar": 2.8032954999298183
+    },
+    {
+      "strategy": "composite",
+      "label": "Composite",
+      "cost_bps_one_way": 2.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": 0.022484595861076206,
+      "annualized_arithmetic_return": 0.026555238090347044,
+      "annualized_volatility": 0.09273426757682428,
+      "sharpe": 0.28635841727382777,
+      "sortino": 0.40500580622641397,
+      "max_drawdown": -0.1917873784341776,
+      "calmar": 0.11723709894075764,
+      "daily_win_rate": 0.5403996524761078,
+      "positive_month_ratio": 0.5454545454545454,
+      "annualized_turnover": 22.852726814547978,
+      "total_turnover": 104.48748468253285,
+      "gross_total_return": 0.13039498370763503,
+      "net_total_return": 0.10701321700693822,
+      "average_gross_leverage": 2.1943529673417648,
+      "max_gross_leverage": 3.000000000000001,
+      "average_portfolio_scalar": 2.8032954999298183
+    },
+    {
+      "strategy": "long_only",
+      "label": "Long-only RP",
+      "cost_bps_one_way": 0.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": 0.010092191799382588,
+      "annualized_arithmetic_return": 0.015215245296859333,
+      "annualized_volatility": 0.10164311738841346,
+      "sharpe": 0.14969282414584575,
+      "sortino": 0.2111095980539505,
+      "max_drawdown": -0.22500395131192052,
+      "calmar": 0.044853398087182444,
+      "daily_win_rate": 0.5039096437880104,
+      "positive_month_ratio": 0.6,
+      "annualized_turnover": 2.4840060543159375,
+      "total_turnover": 11.357399344853157,
+      "gross_total_return": 0.04698262651247953,
+      "net_total_return": 0.04698262651247953,
+      "average_gross_leverage": 2.1641929616589453,
+      "max_gross_leverage": 3.0000000000000013,
+      "average_portfolio_scalar": 1.968253171306184
+    },
+    {
+      "strategy": "long_only",
+      "label": "Long-only RP",
+      "cost_bps_one_way": 2.0,
+      "start_ts": "2022-01-03T00:00:00+00:00",
+      "end_ts": "2026-07-31T00:00:00+00:00",
+      "observations": 1151,
+      "years": 4.572210814510609,
+      "cagr": 0.009590144487100272,
+      "annualized_arithmetic_return": 0.014717927375937868,
+      "annualized_volatility": 0.1016466396357245,
+      "sharpe": 0.14479502154407806,
+      "sortino": 0.20414213005229045,
+      "max_drawdown": -0.22567915920015147,
+      "calmar": 0.04249459507510357,
+      "daily_win_rate": 0.5039096437880104,
+      "positive_month_ratio": 0.6,
+      "annualized_turnover": 2.4840060543159375,
+      "total_turnover": 11.357399344853157,
+      "gross_total_return": 0.04698262651247953,
+      "net_total_return": 0.044605437017775085,
+      "average_gross_leverage": 2.1641929616589453,
+      "max_gross_leverage": 3.0000000000000013,
+      "average_portfolio_scalar": 1.968253171306184
+    }
+  ],
+  "limitations": [
+    "provider continuous-contract roll mapping and adjustment method are unavailable",
+    "quote close is not verified against official exchange settlement",
+    "explicit roll transaction costs and contract multipliers are unavailable",
+    "the usable clean common surface starts in 2020 and is short for trend research"
+  ]
+}

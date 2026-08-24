@@ -15,3 +15,5 @@
 - 2026-07-21 起共享 HYPE 15m 行情组 group halt（本实例 cycle_error 为根因，
   停摆含一个未维护模拟持仓），事件落档与待办见
   [`hype-ema-x-runner-2026-07-30-group-halt.md`](hype-ema-x-runner-2026-07-30-group-halt.md)。
+- 2026-08-17 同组再次 halt（触发在 EMA-TB NextOpen 缺 K，EMA-X 被拖停），见
+  [`hype-15m-group-halt-2026-08-17.md`](../../15m-ema-trend-breakout/runner-tracking/hype-15m-group-halt-2026-08-17.md)。

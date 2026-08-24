@@ -1,0 +1,34 @@
+{
+  "schema_version": "binance-1h-ma7-rht-manifest-v1",
+  "generated_at_utc": "2026-08-10T11:31:39.576042+00:00",
+  "files": {
+    "roots": {
+      "path": "p0_roots.parquet",
+      "sha256": "4a715402a96ae038299c9cbca90800ab92802d22863a55e837e012589da82a9f"
+    },
+    "panel": {
+      "path": "p0_person_period_panel.parquet",
+      "sha256": "c85ae874dc067cf172136496ba36697dfa735537373e1cd8733423a5b6850164"
+    },
+    "capacity": {
+      "path": "p0_data_capacity.json",
+      "sha256": "eee7ef677626e3d0145c42699e3d09a3f62388c1501ebc5ff84dfeeaa50d1781"
+    },
+    "oof_row_scores": {
+      "path": "p1_oof_row_scores.parquet",
+      "sha256": "43a9ec61af98689783b9dcf017d962308647217e380a1b52110f8da8c2bd5ff4"
+    },
+    "oof_root_decisions": {
+      "path": "p1_oof_root_decisions.parquet",
+      "sha256": "007bd19e330a4759ca3c456aaef4e91157bd9b3cbd8725918a98c218ada6cbcf"
+    },
+    "report": {
+      "path": "p1_report.json",
+      "sha256": "cc3d8337014813a0a3ea0a52d468345c9cb53db2efb85db8d7ad5bfa757c9d02"
+    },
+    "summary": {
+      "path": "p1_summary.json",
+      "sha256": "a7525ba5468261225f9ab02abf6f28b46f014a7dc3284b7095e5b19a07210c6c"
+    }
+  }
+}

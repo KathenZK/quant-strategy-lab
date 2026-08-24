@@ -1,0 +1,41 @@
+{
+  "schema_version": "binance-1d-ma7-tfml-p1e-manifest-v1",
+  "created_at_utc": "2026-08-10T13:18:38.452951+00:00",
+  "files": {
+    "accepted_events": {
+      "path": "p0e_accepted_events.parquet",
+      "bytes": 2262501,
+      "sha256": "8c2ffc25dbccb4ea91e511e8edf0336eae061d5a21b1bf859e9d4f5570f5a362"
+    },
+    "capacity": {
+      "path": "p0e_capacity.json",
+      "bytes": 2492,
+      "sha256": "6b67e7f27ffb48ee3b8051809e6304ee2c0f286e45ddc32f0848500653de39a1"
+    },
+    "full_oof": {
+      "path": "p1e_price_plus_flow_oof.parquet",
+      "bytes": 905363,
+      "sha256": "ae19c80ebb3428159e2cd8099670e9a5d285d138891b0cd62fe8ec9905c6bc0a"
+    },
+    "control_oof": {
+      "path": "p1e_price_utility_control_oof.parquet",
+      "bytes": 906508,
+      "sha256": "d153f1592353b813a5fdcf920649820112ec763e994ecd206b70bb9b1ddbfead"
+    },
+    "flow_oof": {
+      "path": "p1e_flow_only_oof.parquet",
+      "bytes": 909590,
+      "sha256": "27acb5fa01f3780b59e4c41d1b3bddcf8ab21e40eca738a8e6666e6d8f320d0d"
+    },
+    "summary": {
+      "path": "p1e_summary.json",
+      "bytes": 72688,
+      "sha256": "4c59e4c895be4199f183f05ac8a362873a461c3b600dc15c39a8e5879fc30280"
+    },
+    "report": {
+      "path": "p1e_report.json",
+      "bytes": 11483817,
+      "sha256": "01f7478b6e308f9759daea5a3546f167023cf51fc205ff37824f45032974529c"
+    }
+  }
+}

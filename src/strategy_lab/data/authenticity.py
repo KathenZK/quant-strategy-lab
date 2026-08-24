@@ -40,6 +40,7 @@ DEFAULT_REAL_SOURCE_ALLOWLIST = (
     "binance_vision_monthly",
     "binance_vision_usdm_daily_metrics",
     "ccxt",
+    "eastmoney_kline_api",
     "fapi_rest",
     "gateio_contract_stats",
     "okx_ccxt",
