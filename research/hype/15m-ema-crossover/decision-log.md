@@ -2,6 +2,10 @@
 
 这是 HYPE EMA golden/death cross 研究的家族级阅读路径。
 
+## 2026-08-18 — 同组 halt，观察窗口再断
+
+- `hype-ema-x-dry-run` 再次被共享 HYPE 15m 组 `group_halted` 拖停（本次触发在 EMA-TB，不是 EMA-X 状态机）。自 `2026-08-17 19:19Z` 起 dry-run 观察窗口断裂。证据：[hype-15m-group-halt-2026-08-17.md](../15m-ema-trend-breakout/runner-tracking/hype-15m-group-halt-2026-08-17.md)。
+
 ## 当前边界
 
 - 这是本仓库四个核心研究方向之一。

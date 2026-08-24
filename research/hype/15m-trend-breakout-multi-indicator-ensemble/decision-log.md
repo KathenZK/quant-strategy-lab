@@ -1,5 +1,9 @@
 # Decision Log
 
+## 2026-08-18 — 同组 halt，观察窗口再断
+
+- `hype-tb-mii-ens-dry-run` 在 `2026-08-17 19:00Z` / `19:15Z` 两次 `missing Binance kline`（NextOpen 取价），随后被共享 15m 组 halt。模拟多仓已在 `19:16Z` 重启 cycle 按 `indicator_exit` 平掉。自 `19:19Z` 起观察窗口断裂；研究身份不变。证据：[hype-15m-group-halt-2026-08-17.md](../15m-ema-trend-breakout/runner-tracking/hype-15m-group-halt-2026-08-17.md)。
+
 ## 2026-08-04 — 缺失 parity 证据但保留用户授权
 
 - 决定：规范 parity JSON 已不在干净 checkout 中，`HYPE-15M-TB-MII-ENS-V2` 证据健康度标记为 `MISSING_EVIDENCE`。文件缺失阻止新 promotion，不能自动决定实例启停；实际授权与模式只以 quant-runner 为准，历史叙事报告见 [`hype-15m-tb-mii-ens-v2-runner-replay-parity-2026-07-09.md`](runner-tracking/hype-15m-tb-mii-ens-v2-runner-replay-parity-2026-07-09.md)。

@@ -10,6 +10,7 @@
 
 ## 决策
 
+- `2026-08-18`：共享 HYPE 15m 行情组再次 `group_halted`（触发在 EMA-TB NextOpen 缺 K，MII 被同组停掉）。`hype-mii-dry-run` 自 `2026-08-17 19:19Z` 起观察窗口断裂；研究身份不变。证据：[hype-15m-group-halt-2026-08-17.md](../15m-ema-trend-breakout/runner-tracking/hype-15m-group-halt-2026-08-17.md)。
 - `2026-08-04`：原 pending parity JSON 已不在干净 checkout 中，将证据健康度标记为 `MISSING_EVIDENCE`；文件缺失不得被解释为自动停止实例。新 promotion 前必须补规范对拍证据，实际运行与授权状态只从 quant-runner 核对。
 - `2026-07-20`：按用户决定，将 `HYPE-15M-MII-V1.4A` 的 parity 补证期限延至 `2026-09-24T00:00:00Z`；当时仅维持 dry-run，不获得 live 授权。2026-08-04 只更新证据健康度，当前实际授权以 quant-runner 为准。
 - `2026-07-14`：复查当前 `HYPE-15M-MII-V1.4A` dry-run 近期不开仓。标准数据湖至 `2026-07-14T03:00Z`：最近 `7d` RSI raw cross `99` 次，但过 `ATR96%>=0.75%` 为 `0`，最终信号 `0`；ATR96% 中位约 `0.50%`、最新约 `0.56%`。最近 `90d` 仍有 `45` 笔最终信号，最后一笔研究开仓约在 6 月底。结论：不是 runner 漏单，而是低波动 regime 被 ATR 门槛挡住；`min_rvol96=0.85` 解决不了。保持 V1.4A 规则不变，不直接下调 ATR。证据：[notes/hype-15m-mii-v1-4a-recent-signal-drought-2026-07-14.md](notes/hype-15m-mii-v1-4a-recent-signal-drought-2026-07-14.md)。

@@ -1,0 +1,26 @@
+{
+  "schema_version": "binance-1d-ma7-lmml-manifest-v1",
+  "generated_at_utc": "2026-08-10T11:04:21.663567+00:00",
+  "files": {
+    "events": {
+      "path": "p0_p1_events.parquet",
+      "sha256": "8419cb905c0ccdd29e71d53d204c6699f24d9577943d401c6ba9afd9c177a30e"
+    },
+    "oof_predictions": {
+      "path": "p1_oof_predictions.parquet",
+      "sha256": "da70ff52f2cba653821d653e0ea2bae287c0d253821164ce99b06dff8e4d6c90"
+    },
+    "capacity": {
+      "path": "p0_data_capacity.json",
+      "sha256": "046c3a72f22f9d8ac0c51535884a660fd07f4380155bf775ebbd5df7a13207af"
+    },
+    "report": {
+      "path": "p1_report.json",
+      "sha256": "dfdb1b3fcdff959f217b41581af915f18804f9e7fb38a71ddd12af4d6071b9a6"
+    },
+    "summary": {
+      "path": "p1_summary.json",
+      "sha256": "bd9d7f51772edabcb9779fcf4ffec2f038f6d0023b1153985d12988b1e22eb41"
+    }
+  }
+}

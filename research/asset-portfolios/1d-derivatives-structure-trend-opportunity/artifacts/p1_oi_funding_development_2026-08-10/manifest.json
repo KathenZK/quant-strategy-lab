@@ -1,0 +1,30 @@
+{
+  "schema_version": "binance-1d-dsto-oi-funding-manifest-v1",
+  "generated_at_utc": "2026-08-10T12:19:50.472931+00:00",
+  "files": {
+    "capacity": {
+      "path": "p0_data_capacity.json",
+      "sha256": "9c7ad0789e5ff35430df33715c6a7808b88e10b1eba1702034705b8b45dd2af6"
+    },
+    "panel": {
+      "path": "p0_p1_anchor_panel.parquet",
+      "sha256": "0cde418b6517292996d4ffd689011ea4e16fdd080b30e66df889e54fdaf1e3b4"
+    },
+    "full_scores": {
+      "path": "p1_full_oof_scores.parquet",
+      "sha256": "3a3d10f8cebadbc7972ef7be794fa0e9b944c764b1211aa12303f4b91239c58b"
+    },
+    "control_scores": {
+      "path": "p1_control_oof_scores.parquet",
+      "sha256": "27034468e608f9a9343d5a57f4617e2f792844e5627d59bf3964d6a0779db078"
+    },
+    "report": {
+      "path": "p1_report.json",
+      "sha256": "a8d7a11135b5fcbdb5fa668ca3f6ece42100ae5ae0d58be4d692dbb03449922d"
+    },
+    "summary": {
+      "path": "p1_summary.json",
+      "sha256": "d348735a5df6695708356ea164dd5e671100600d329ee48ef9650187355c93cb"
+    }
+  }
+}

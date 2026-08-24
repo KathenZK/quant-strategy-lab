@@ -1,0 +1,546 @@
+source,scope,year,factor,label,return
+original,original_paper_1985_2009,1985,TSMOM,Diversified,0.3170224194968705
+original,original_paper_1985_2009,1985,TSMOM^EQ,Equity indices,1.0474402592781527
+original,original_paper_1985_2009,1985,TSMOM^FX,Currencies,-0.051908473535446475
+original,original_paper_1985_2009,1985,TSMOM^FI,Fixed income,0.3289256350049108
+original,original_paper_1985_2009,1985,TSMOM^CM,Commodities,0.20248510872414482
+original,original_paper_1985_2009,1986,TSMOM,Diversified,0.2968318402747001
+original,original_paper_1985_2009,1986,TSMOM^EQ,Equity indices,0.8545798298604153
+original,original_paper_1985_2009,1986,TSMOM^FX,Currencies,0.11739951099069046
+original,original_paper_1985_2009,1986,TSMOM^FI,Fixed income,0.21244459453445685
+original,original_paper_1985_2009,1986,TSMOM^CM,Commodities,0.09419073865941496
+original,original_paper_1985_2009,1987,TSMOM,Diversified,0.2945726722083908
+original,original_paper_1985_2009,1987,TSMOM^EQ,Equity indices,0.08726827143602311
+original,original_paper_1985_2009,1987,TSMOM^FX,Currencies,0.38077611100681996
+original,original_paper_1985_2009,1987,TSMOM^FI,Fixed income,0.05619518708891125
+original,original_paper_1985_2009,1987,TSMOM^CM,Commodities,0.36272513560618225
+original,original_paper_1985_2009,1988,TSMOM,Diversified,0.07587975928729396
+original,original_paper_1985_2009,1988,TSMOM^EQ,Equity indices,-0.1912691917849455
+original,original_paper_1985_2009,1988,TSMOM^FX,Currencies,0.3684825887436505
+original,original_paper_1985_2009,1988,TSMOM^FI,Fixed income,0.24155650426545594
+original,original_paper_1985_2009,1988,TSMOM^CM,Commodities,-0.0022188283163787625
+original,original_paper_1985_2009,1989,TSMOM,Diversified,0.22058329565956614
+original,original_paper_1985_2009,1989,TSMOM^EQ,Equity indices,0.18797037597849808
+original,original_paper_1985_2009,1989,TSMOM^FX,Currencies,0.1754828472360519
+original,original_paper_1985_2009,1989,TSMOM^FI,Fixed income,0.1502590737865377
+original,original_paper_1985_2009,1989,TSMOM^CM,Commodities,0.20406144896908107
+original,original_paper_1985_2009,1990,TSMOM,Diversified,0.12842158302943907
+original,original_paper_1985_2009,1990,TSMOM^EQ,Equity indices,0.051316302201697805
+original,original_paper_1985_2009,1990,TSMOM^FX,Currencies,-0.02845739907060163
+original,original_paper_1985_2009,1990,TSMOM^FI,Fixed income,0.4340762024149458
+original,original_paper_1985_2009,1990,TSMOM^CM,Commodities,0.1578872310994166
+original,original_paper_1985_2009,1991,TSMOM,Diversified,0.05688289149129355
+original,original_paper_1985_2009,1991,TSMOM^EQ,Equity indices,-0.17909049927626863
+original,original_paper_1985_2009,1991,TSMOM^FX,Currencies,-0.023016393688072845
+original,original_paper_1985_2009,1991,TSMOM^FI,Fixed income,0.4324620246009445
+original,original_paper_1985_2009,1991,TSMOM^CM,Commodities,0.10903970380369343
+original,original_paper_1985_2009,1992,TSMOM,Diversified,0.21783538764412835
+original,original_paper_1985_2009,1992,TSMOM^EQ,Equity indices,0.24323510149394778
+original,original_paper_1985_2009,1992,TSMOM^FX,Currencies,0.2785293240014308
+original,original_paper_1985_2009,1992,TSMOM^FI,Fixed income,0.3733853171558077
+original,original_paper_1985_2009,1992,TSMOM^CM,Commodities,0.09440763429922483
+original,original_paper_1985_2009,1993,TSMOM,Diversified,0.3128465500754314
+original,original_paper_1985_2009,1993,TSMOM^EQ,Equity indices,0.032806175533767856
+original,original_paper_1985_2009,1993,TSMOM^FX,Currencies,0.210632306362172
+original,original_paper_1985_2009,1993,TSMOM^FI,Fixed income,1.5218915276868255
+original,original_paper_1985_2009,1993,TSMOM^CM,Commodities,0.20170181290302658
+original,original_paper_1985_2009,1994,TSMOM,Diversified,-0.06279816309003383
+original,original_paper_1985_2009,1994,TSMOM^EQ,Equity indices,-0.242741204434064
+original,original_paper_1985_2009,1994,TSMOM^FX,Currencies,0.08391462647660619
+original,original_paper_1985_2009,1994,TSMOM^FI,Fixed income,-0.4534799623603366
+original,original_paper_1985_2009,1994,TSMOM^CM,Commodities,0.14343603282616235
+original,original_paper_1985_2009,1995,TSMOM,Diversified,0.1488341554108319
+original,original_paper_1985_2009,1995,TSMOM^EQ,Equity indices,0.05914309754435654
+original,original_paper_1985_2009,1995,TSMOM^FX,Currencies,0.19150734104953981
+original,original_paper_1985_2009,1995,TSMOM^FI,Fixed income,0.32622034545131817
+original,original_paper_1985_2009,1995,TSMOM^CM,Commodities,0.06347395462138805
+original,original_paper_1985_2009,1996,TSMOM,Diversified,0.2709982108675011
+original,original_paper_1985_2009,1996,TSMOM^EQ,Equity indices,0.4070286495115045
+original,original_paper_1985_2009,1996,TSMOM^FX,Currencies,0.3665192237912396
+original,original_paper_1985_2009,1996,TSMOM^FI,Fixed income,-0.048289553090303805
+original,original_paper_1985_2009,1996,TSMOM^CM,Commodities,0.2915908355808343
+original,original_paper_1985_2009,1997,TSMOM,Diversified,0.2832972307758219
+original,original_paper_1985_2009,1997,TSMOM^EQ,Equity indices,0.749154139301168
+original,original_paper_1985_2009,1997,TSMOM^FX,Currencies,0.10489423758444283
+original,original_paper_1985_2009,1997,TSMOM^FI,Fixed income,0.6956824215186719
+original,original_paper_1985_2009,1997,TSMOM^CM,Commodities,0.03631875272281038
+original,original_paper_1985_2009,1998,TSMOM,Diversified,0.3967965237970108
+original,original_paper_1985_2009,1998,TSMOM^EQ,Equity indices,0.21691350071227156
+original,original_paper_1985_2009,1998,TSMOM^FX,Currencies,0.06571515020124208
+original,original_paper_1985_2009,1998,TSMOM^FI,Fixed income,0.7397014429174333
+original,original_paper_1985_2009,1998,TSMOM^CM,Commodities,0.46361443772498157
+original,original_paper_1985_2009,1999,TSMOM,Diversified,0.061654097933462326
+original,original_paper_1985_2009,1999,TSMOM^EQ,Equity indices,0.33096994308373007
+original,original_paper_1985_2009,1999,TSMOM^FX,Currencies,-0.030167969386966864
+original,original_paper_1985_2009,1999,TSMOM^FI,Fixed income,-0.16203587149840093
+original,original_paper_1985_2009,1999,TSMOM^CM,Commodities,0.08786207243073418
+original,original_paper_1985_2009,2000,TSMOM,Diversified,0.12030275219681608
+original,original_paper_1985_2009,2000,TSMOM^EQ,Equity indices,-0.12712530577155357
+original,original_paper_1985_2009,2000,TSMOM^FX,Currencies,-0.022383210283952293
+original,original_paper_1985_2009,2000,TSMOM^FI,Fixed income,0.12151804433158353
+original,original_paper_1985_2009,2000,TSMOM^CM,Commodities,0.26036668141392183
+original,original_paper_1985_2009,2001,TSMOM,Diversified,0.19751356821489896
+original,original_paper_1985_2009,2001,TSMOM^EQ,Equity indices,0.30181740489422415
+original,original_paper_1985_2009,2001,TSMOM^FX,Currencies,0.2066425409605026
+original,original_paper_1985_2009,2001,TSMOM^FI,Fixed income,0.11287019172094404
+original,original_paper_1985_2009,2001,TSMOM^CM,Commodities,0.16177910402948337
+original,original_paper_1985_2009,2002,TSMOM,Diversified,0.3126331431815179
+original,original_paper_1985_2009,2002,TSMOM^EQ,Equity indices,0.6105935623233327
+original,original_paper_1985_2009,2002,TSMOM^FX,Currencies,0.24344312380256383
+original,original_paper_1985_2009,2002,TSMOM^FI,Fixed income,0.7228471628525581
+original,original_paper_1985_2009,2002,TSMOM^CM,Commodities,0.05759730787838424
+original,original_paper_1985_2009,2003,TSMOM,Diversified,0.22192479186135183
+original,original_paper_1985_2009,2003,TSMOM^EQ,Equity indices,-5.645627815242804e-06
+original,original_paper_1985_2009,2003,TSMOM^FX,Currencies,0.6765159055731711
+original,original_paper_1985_2009,2003,TSMOM^FI,Fixed income,-0.034229922758525766
+original,original_paper_1985_2009,2003,TSMOM^CM,Commodities,0.23436536597864643
+original,original_paper_1985_2009,2004,TSMOM,Diversified,0.12591007438902113
+original,original_paper_1985_2009,2004,TSMOM^EQ,Equity indices,0.40257276419793664
+original,original_paper_1985_2009,2004,TSMOM^FX,Currencies,-0.006839245886322343
+original,original_paper_1985_2009,2004,TSMOM^FI,Fixed income,0.13373907848419986
+original,original_paper_1985_2009,2004,TSMOM^CM,Commodities,0.082417903034395
+original,original_paper_1985_2009,2005,TSMOM,Diversified,0.1258073721712638
+original,original_paper_1985_2009,2005,TSMOM^EQ,Equity indices,0.8172103549505405
+original,original_paper_1985_2009,2005,TSMOM^FX,Currencies,-0.03480810672311441
+original,original_paper_1985_2009,2005,TSMOM^FI,Fixed income,0.017033026741193114
+original,original_paper_1985_2009,2005,TSMOM^CM,Commodities,0.030210044934316782
+original,original_paper_1985_2009,2006,TSMOM,Diversified,0.1495988053338393
+original,original_paper_1985_2009,2006,TSMOM^EQ,Equity indices,0.5091284102237768
+original,original_paper_1985_2009,2006,TSMOM^FX,Currencies,0.0934712664872539
+original,original_paper_1985_2009,2006,TSMOM^FI,Fixed income,-0.20864809140595109
+original,original_paper_1985_2009,2006,TSMOM^CM,Commodities,0.26341246468975754
+original,original_paper_1985_2009,2007,TSMOM,Diversified,0.12803906700333845
+original,original_paper_1985_2009,2007,TSMOM^EQ,Equity indices,0.07211751782786391
+original,original_paper_1985_2009,2007,TSMOM^FX,Currencies,0.13833003280860323
+original,original_paper_1985_2009,2007,TSMOM^FI,Fixed income,0.16646281986348632
+original,original_paper_1985_2009,2007,TSMOM^CM,Commodities,0.10689996972240112
+original,original_paper_1985_2009,2008,TSMOM,Diversified,0.24938101028734416
+original,original_paper_1985_2009,2008,TSMOM^EQ,Equity indices,0.4384364811728203
+original,original_paper_1985_2009,2008,TSMOM^FX,Currencies,0.23464231734399577
+original,original_paper_1985_2009,2008,TSMOM^FI,Fixed income,0.32908935027765307
+original,original_paper_1985_2009,2008,TSMOM^CM,Commodities,0.09668146452085802
+original,original_paper_1985_2009,2009,TSMOM,Diversified,-0.09586957402548335
+original,original_paper_1985_2009,2009,TSMOM^EQ,Equity indices,-0.1908539236723592
+original,original_paper_1985_2009,2009,TSMOM^FX,Currencies,-0.16069213476255628
+original,original_paper_1985_2009,2009,TSMOM^FI,Fixed income,-0.06348808980549658
+original,original_paper_1985_2009,2009,TSMOM^CM,Commodities,-0.05523214364146989
+updated,updated_reconstruction_1985_2009,1985,TSMOM,Diversified,0.2898775313913984
+updated,updated_reconstruction_1985_2009,1985,TSMOM^EQ,Equity indices,1.0535148694719116
+updated,updated_reconstruction_1985_2009,1985,TSMOM^FX,Currencies,-0.08527179907744575
+updated,updated_reconstruction_1985_2009,1985,TSMOM^FI,Fixed income,0.2906915374993997
+updated,updated_reconstruction_1985_2009,1985,TSMOM^CM,Commodities,0.21724327492028106
+updated,updated_reconstruction_1985_2009,1986,TSMOM,Diversified,0.19796893951422545
+updated,updated_reconstruction_1985_2009,1986,TSMOM^EQ,Equity indices,0.8747209993392455
+updated,updated_reconstruction_1985_2009,1986,TSMOM^FX,Currencies,0.24769547935360547
+updated,updated_reconstruction_1985_2009,1986,TSMOM^FI,Fixed income,0.2891456501227525
+updated,updated_reconstruction_1985_2009,1986,TSMOM^CM,Commodities,-0.12439272581252847
+updated,updated_reconstruction_1985_2009,1987,TSMOM,Diversified,0.20680073826944567
+updated,updated_reconstruction_1985_2009,1987,TSMOM^EQ,Equity indices,0.08661604278558599
+updated,updated_reconstruction_1985_2009,1987,TSMOM^FX,Currencies,0.25131127894496563
+updated,updated_reconstruction_1985_2009,1987,TSMOM^FI,Fixed income,-0.05511547920751447
+updated,updated_reconstruction_1985_2009,1987,TSMOM^CM,Commodities,0.2799899534974275
+updated,updated_reconstruction_1985_2009,1988,TSMOM,Diversified,0.09838075676721347
+updated,updated_reconstruction_1985_2009,1988,TSMOM^EQ,Equity indices,-0.1902930537162042
+updated,updated_reconstruction_1985_2009,1988,TSMOM^FX,Currencies,0.4515518675756367
+updated,updated_reconstruction_1985_2009,1988,TSMOM^FI,Fixed income,0.04451768198585104
+updated,updated_reconstruction_1985_2009,1988,TSMOM^CM,Commodities,0.05102549487539476
+updated,updated_reconstruction_1985_2009,1989,TSMOM,Diversified,0.2735384244358927
+updated,updated_reconstruction_1985_2009,1989,TSMOM^EQ,Equity indices,0.18876887923678565
+updated,updated_reconstruction_1985_2009,1989,TSMOM^FX,Currencies,0.2372159234959692
+updated,updated_reconstruction_1985_2009,1989,TSMOM^FI,Fixed income,0.20037181861284892
+updated,updated_reconstruction_1985_2009,1989,TSMOM^CM,Commodities,0.29649707223667665
+updated,updated_reconstruction_1985_2009,1990,TSMOM,Diversified,0.1683621368720809
+updated,updated_reconstruction_1985_2009,1990,TSMOM^EQ,Equity indices,0.05381440956563632
+updated,updated_reconstruction_1985_2009,1990,TSMOM^FX,Currencies,-0.012566134845895749
+updated,updated_reconstruction_1985_2009,1990,TSMOM^FI,Fixed income,0.37703659664481015
+updated,updated_reconstruction_1985_2009,1990,TSMOM^CM,Commodities,0.24373701653808033
+updated,updated_reconstruction_1985_2009,1991,TSMOM,Diversified,0.10403121073459554
+updated,updated_reconstruction_1985_2009,1991,TSMOM^EQ,Equity indices,-0.17852753523397247
+updated,updated_reconstruction_1985_2009,1991,TSMOM^FX,Currencies,-0.01353503022481406
+updated,updated_reconstruction_1985_2009,1991,TSMOM^FI,Fixed income,0.5172631086932442
+updated,updated_reconstruction_1985_2009,1991,TSMOM^CM,Commodities,0.14541360249627466
+updated,updated_reconstruction_1985_2009,1992,TSMOM,Diversified,0.1934467881193771
+updated,updated_reconstruction_1985_2009,1992,TSMOM^EQ,Equity indices,0.24141693279075116
+updated,updated_reconstruction_1985_2009,1992,TSMOM^FX,Currencies,0.2795669409612185
+updated,updated_reconstruction_1985_2009,1992,TSMOM^FI,Fixed income,0.35848088997405547
+updated,updated_reconstruction_1985_2009,1992,TSMOM^CM,Commodities,0.060788361717316386
+updated,updated_reconstruction_1985_2009,1993,TSMOM,Diversified,0.34403133458197965
+updated,updated_reconstruction_1985_2009,1993,TSMOM^EQ,Equity indices,0.03376747271384706
+updated,updated_reconstruction_1985_2009,1993,TSMOM^FX,Currencies,0.20075823951340865
+updated,updated_reconstruction_1985_2009,1993,TSMOM^FI,Fixed income,1.302357949794366
+updated,updated_reconstruction_1985_2009,1993,TSMOM^CM,Commodities,0.2429709066007244
+updated,updated_reconstruction_1985_2009,1994,TSMOM,Diversified,-0.033485553173578264
+updated,updated_reconstruction_1985_2009,1994,TSMOM^EQ,Equity indices,-0.2417896112007506
+updated,updated_reconstruction_1985_2009,1994,TSMOM^FX,Currencies,0.07865595992658103
+updated,updated_reconstruction_1985_2009,1994,TSMOM^FI,Fixed income,-0.4274899569244628
+updated,updated_reconstruction_1985_2009,1994,TSMOM^CM,Commodities,0.1822977130095993
+updated,updated_reconstruction_1985_2009,1995,TSMOM,Diversified,0.13841051314472863
+updated,updated_reconstruction_1985_2009,1995,TSMOM^EQ,Equity indices,0.05803539779748079
+updated,updated_reconstruction_1985_2009,1995,TSMOM^FX,Currencies,0.1960820279200184
+updated,updated_reconstruction_1985_2009,1995,TSMOM^FI,Fixed income,0.24101492393815493
+updated,updated_reconstruction_1985_2009,1995,TSMOM^CM,Commodities,0.07120464619677591
+updated,updated_reconstruction_1985_2009,1996,TSMOM,Diversified,0.272189030626087
+updated,updated_reconstruction_1985_2009,1996,TSMOM^EQ,Equity indices,0.40506861516024717
+updated,updated_reconstruction_1985_2009,1996,TSMOM^FX,Currencies,0.38037998870309075
+updated,updated_reconstruction_1985_2009,1996,TSMOM^FI,Fixed income,-0.002387660437430106
+updated,updated_reconstruction_1985_2009,1996,TSMOM^CM,Commodities,0.26428685978749455
+updated,updated_reconstruction_1985_2009,1997,TSMOM,Diversified,0.26594469305427326
+updated,updated_reconstruction_1985_2009,1997,TSMOM^EQ,Equity indices,0.745728548988182
+updated,updated_reconstruction_1985_2009,1997,TSMOM^FX,Currencies,0.10902448690445499
+updated,updated_reconstruction_1985_2009,1997,TSMOM^FI,Fixed income,0.6989722546002375
+updated,updated_reconstruction_1985_2009,1997,TSMOM^CM,Commodities,0.012062005830651756
+updated,updated_reconstruction_1985_2009,1998,TSMOM,Diversified,0.4092763789682723
+updated,updated_reconstruction_1985_2009,1998,TSMOM^EQ,Equity indices,0.2157408959611593
+updated,updated_reconstruction_1985_2009,1998,TSMOM^FX,Currencies,0.07133231069390522
+updated,updated_reconstruction_1985_2009,1998,TSMOM^FI,Fixed income,0.778714926605911
+updated,updated_reconstruction_1985_2009,1998,TSMOM^CM,Commodities,0.44643061417270835
+updated,updated_reconstruction_1985_2009,1999,TSMOM,Diversified,0.04309774851968129
+updated,updated_reconstruction_1985_2009,1999,TSMOM^EQ,Equity indices,0.32907000696527167
+updated,updated_reconstruction_1985_2009,1999,TSMOM^FX,Currencies,-0.030553140392792444
+updated,updated_reconstruction_1985_2009,1999,TSMOM^FI,Fixed income,-0.15648045553810463
+updated,updated_reconstruction_1985_2009,1999,TSMOM^CM,Commodities,0.05672127600592569
+updated,updated_reconstruction_1985_2009,2000,TSMOM,Diversified,0.11353701442419961
+updated,updated_reconstruction_1985_2009,2000,TSMOM^EQ,Equity indices,-0.12547324559326045
+updated,updated_reconstruction_1985_2009,2000,TSMOM^FX,Currencies,-0.014372855025218123
+updated,updated_reconstruction_1985_2009,2000,TSMOM^FI,Fixed income,0.12413461383830016
+updated,updated_reconstruction_1985_2009,2000,TSMOM^CM,Commodities,0.23748262048552293
+updated,updated_reconstruction_1985_2009,2001,TSMOM,Diversified,0.17892248225839258
+updated,updated_reconstruction_1985_2009,2001,TSMOM^EQ,Equity indices,0.3011987945942074
+updated,updated_reconstruction_1985_2009,2001,TSMOM^FX,Currencies,0.2157396854989646
+updated,updated_reconstruction_1985_2009,2001,TSMOM^FI,Fixed income,0.06819546781891184
+updated,updated_reconstruction_1985_2009,2001,TSMOM^CM,Commodities,0.1400403743418248
+updated,updated_reconstruction_1985_2009,2002,TSMOM,Diversified,0.29202844515929915
+updated,updated_reconstruction_1985_2009,2002,TSMOM^EQ,Equity indices,0.6083902344970991
+updated,updated_reconstruction_1985_2009,2002,TSMOM^FX,Currencies,0.24381159069714187
+updated,updated_reconstruction_1985_2009,2002,TSMOM^FI,Fixed income,0.6909587345322237
+updated,updated_reconstruction_1985_2009,2002,TSMOM^CM,Commodities,0.017281556357059635
+updated,updated_reconstruction_1985_2009,2003,TSMOM,Diversified,0.23828693349981744
+updated,updated_reconstruction_1985_2009,2003,TSMOM^EQ,Equity indices,-0.0001535584065611717
+updated,updated_reconstruction_1985_2009,2003,TSMOM^FX,Currencies,0.6729942411868701
+updated,updated_reconstruction_1985_2009,2003,TSMOM^FI,Fixed income,-0.033159390244350884
+updated,updated_reconstruction_1985_2009,2003,TSMOM^CM,Commodities,0.27425166705337767
+updated,updated_reconstruction_1985_2009,2004,TSMOM,Diversified,0.12937507862684083
+updated,updated_reconstruction_1985_2009,2004,TSMOM^EQ,Equity indices,0.40029514035003033
+updated,updated_reconstruction_1985_2009,2004,TSMOM^FX,Currencies,-0.0018330614204293827
+updated,updated_reconstruction_1985_2009,2004,TSMOM^FI,Fixed income,0.13321076774643137
+updated,updated_reconstruction_1985_2009,2004,TSMOM^CM,Commodities,0.08795335192300602
+updated,updated_reconstruction_1985_2009,2005,TSMOM,Diversified,0.15600660803519362
+updated,updated_reconstruction_1985_2009,2005,TSMOM^EQ,Equity indices,0.8129263654344352
+updated,updated_reconstruction_1985_2009,2005,TSMOM^FX,Currencies,-0.03378838499365433
+updated,updated_reconstruction_1985_2009,2005,TSMOM^FI,Fixed income,0.017484544719257533
+updated,updated_reconstruction_1985_2009,2005,TSMOM^CM,Commodities,0.09989552145601821
+updated,updated_reconstruction_1985_2009,2006,TSMOM,Diversified,0.118363342912434
+updated,updated_reconstruction_1985_2009,2006,TSMOM^EQ,Equity indices,0.5047436725338412
+updated,updated_reconstruction_1985_2009,2006,TSMOM^FX,Currencies,0.09130273545619927
+updated,updated_reconstruction_1985_2009,2006,TSMOM^FI,Fixed income,-0.2080930592561674
+updated,updated_reconstruction_1985_2009,2006,TSMOM^CM,Commodities,0.18708561067348084
+updated,updated_reconstruction_1985_2009,2007,TSMOM,Diversified,0.13669258780280646
+updated,updated_reconstruction_1985_2009,2007,TSMOM^EQ,Equity indices,0.0717323428299419
+updated,updated_reconstruction_1985_2009,2007,TSMOM^FX,Currencies,0.13448605981679318
+updated,updated_reconstruction_1985_2009,2007,TSMOM^FI,Fixed income,0.16587252619201553
+updated,updated_reconstruction_1985_2009,2007,TSMOM^CM,Commodities,0.13079510245721448
+updated,updated_reconstruction_1985_2009,2008,TSMOM,Diversified,0.24636582908415194
+updated,updated_reconstruction_1985_2009,2008,TSMOM^EQ,Equity indices,0.43610910746481
+updated,updated_reconstruction_1985_2009,2008,TSMOM^FX,Currencies,0.23426991633369365
+updated,updated_reconstruction_1985_2009,2008,TSMOM^FI,Fixed income,0.32578281575730905
+updated,updated_reconstruction_1985_2009,2008,TSMOM^CM,Commodities,0.09396091151131225
+updated,updated_reconstruction_1985_2009,2009,TSMOM,Diversified,-0.09911852998502013
+updated,updated_reconstruction_1985_2009,2009,TSMOM^EQ,Equity indices,-0.18952858795277838
+updated,updated_reconstruction_1985_2009,2009,TSMOM^FX,Currencies,-0.17079140338331744
+updated,updated_reconstruction_1985_2009,2009,TSMOM^FI,Fixed income,-0.06113270031659368
+updated,updated_reconstruction_1985_2009,2009,TSMOM^CM,Commodities,-0.059597458932107106
+updated,updated_post_paper_2010_latest,2010,TSMOM,Diversified,0.12583655101177338
+updated,updated_post_paper_2010_latest,2010,TSMOM^EQ,Equity indices,-0.0495312949409743
+updated,updated_post_paper_2010_latest,2010,TSMOM^FX,Currencies,0.13750319723593551
+updated,updated_post_paper_2010_latest,2010,TSMOM^FI,Fixed income,0.2453598455894459
+updated,updated_post_paper_2010_latest,2010,TSMOM^CM,Commodities,0.08899063386988737
+updated,updated_post_paper_2010_latest,2011,TSMOM,Diversified,-0.0009238971565479481
+updated,updated_post_paper_2010_latest,2011,TSMOM^EQ,Equity indices,-0.23811449447848088
+updated,updated_post_paper_2010_latest,2011,TSMOM^FX,Currencies,-0.15237581072584572
+updated,updated_post_paper_2010_latest,2011,TSMOM^FI,Fixed income,0.5729935193539999
+updated,updated_post_paper_2010_latest,2011,TSMOM^CM,Commodities,-0.10061688393642576
+updated,updated_post_paper_2010_latest,2012,TSMOM,Diversified,-0.0015790133451156763
+updated,updated_post_paper_2010_latest,2012,TSMOM^EQ,Equity indices,-6.488945146532199e-05
+updated,updated_post_paper_2010_latest,2012,TSMOM^FX,Currencies,0.061354404293123554
+updated,updated_post_paper_2010_latest,2012,TSMOM^FI,Fixed income,0.2222520226083886
+updated,updated_post_paper_2010_latest,2012,TSMOM^CM,Commodities,-0.14417582202887358
+updated,updated_post_paper_2010_latest,2013,TSMOM,Diversified,0.1823515002486349
+updated,updated_post_paper_2010_latest,2013,TSMOM^EQ,Equity indices,0.7558509526879638
+updated,updated_post_paper_2010_latest,2013,TSMOM^FX,Currencies,0.04032790053966906
+updated,updated_post_paper_2010_latest,2013,TSMOM^FI,Fixed income,-0.09598176703329542
+updated,updated_post_paper_2010_latest,2013,TSMOM^CM,Commodities,0.20636963453061186
+updated,updated_post_paper_2010_latest,2014,TSMOM,Diversified,0.19086119975136095
+updated,updated_post_paper_2010_latest,2014,TSMOM^EQ,Equity indices,0.07781582467263903
+updated,updated_post_paper_2010_latest,2014,TSMOM^FX,Currencies,0.24044389605438887
+updated,updated_post_paper_2010_latest,2014,TSMOM^FI,Fixed income,0.2632101412002785
+updated,updated_post_paper_2010_latest,2014,TSMOM^CM,Commodities,0.1392236039853234
+updated,updated_post_paper_2010_latest,2015,TSMOM,Diversified,0.18136783298011894
+updated,updated_post_paper_2010_latest,2015,TSMOM^EQ,Equity indices,-0.03630970923673704
+updated,updated_post_paper_2010_latest,2015,TSMOM^FX,Currencies,0.2734375042122512
+updated,updated_post_paper_2010_latest,2015,TSMOM^FI,Fixed income,0.13466493260062773
+updated,updated_post_paper_2010_latest,2015,TSMOM^CM,Commodities,0.21463702115464134
+updated,updated_post_paper_2010_latest,2016,TSMOM,Diversified,-0.11125247631196
+updated,updated_post_paper_2010_latest,2016,TSMOM^EQ,Equity indices,-0.209446212297145
+updated,updated_post_paper_2010_latest,2016,TSMOM^FX,Currencies,-0.003732588223024469
+updated,updated_post_paper_2010_latest,2016,TSMOM^FI,Fixed income,0.14547272734181482
+updated,updated_post_paper_2010_latest,2016,TSMOM^CM,Commodities,-0.25698659217413555
+updated,updated_post_paper_2010_latest,2017,TSMOM,Diversified,0.06625850976020309
+updated,updated_post_paper_2010_latest,2017,TSMOM^EQ,Equity indices,0.6076224421238414
+updated,updated_post_paper_2010_latest,2017,TSMOM^FX,Currencies,-0.0033835664458375936
+updated,updated_post_paper_2010_latest,2017,TSMOM^FI,Fixed income,-0.07771258238233991
+updated,updated_post_paper_2010_latest,2017,TSMOM^CM,Commodities,0.003955221765354455
+updated,updated_post_paper_2010_latest,2018,TSMOM,Diversified,-0.0900541390467039
+updated,updated_post_paper_2010_latest,2018,TSMOM^EQ,Equity indices,-0.0953100780912216
+updated,updated_post_paper_2010_latest,2018,TSMOM^FX,Currencies,-0.14446322041401383
+updated,updated_post_paper_2010_latest,2018,TSMOM^FI,Fixed income,-0.09313245424851613
+updated,updated_post_paper_2010_latest,2018,TSMOM^CM,Commodities,-0.08248352321698194
+updated,updated_post_paper_2010_latest,2019,TSMOM,Diversified,0.031765801263941684
+updated,updated_post_paper_2010_latest,2019,TSMOM^EQ,Equity indices,-0.07855250239165834
+updated,updated_post_paper_2010_latest,2019,TSMOM^FX,Currencies,0.043970665921878815
+updated,updated_post_paper_2010_latest,2019,TSMOM^FI,Fixed income,0.4296623859209845
+updated,updated_post_paper_2010_latest,2019,TSMOM^CM,Commodities,-0.13722251216663128
+updated,updated_post_paper_2010_latest,2020,TSMOM,Diversified,-0.06735549983509381
+updated,updated_post_paper_2010_latest,2020,TSMOM^EQ,Equity indices,-0.6183078818987744
+updated,updated_post_paper_2010_latest,2020,TSMOM^FX,Currencies,0.000584733350884159
+updated,updated_post_paper_2010_latest,2020,TSMOM^FI,Fixed income,0.3332788975189349
+updated,updated_post_paper_2010_latest,2020,TSMOM^CM,Commodities,-0.039476349996953486
+updated,updated_post_paper_2010_latest,2021,TSMOM,Diversified,-0.04562844522903153
+updated,updated_post_paper_2010_latest,2021,TSMOM^EQ,Equity indices,0.4727099397536303
+updated,updated_post_paper_2010_latest,2021,TSMOM^FX,Currencies,-0.10058574776737006
+updated,updated_post_paper_2010_latest,2021,TSMOM^FI,Fixed income,-0.49852130104700065
+updated,updated_post_paper_2010_latest,2021,TSMOM^CM,Commodities,0.1432783139964069
+updated,updated_post_paper_2010_latest,2022,TSMOM,Diversified,0.24740698630174984
+updated,updated_post_paper_2010_latest,2022,TSMOM^EQ,Equity indices,-0.3866316987897166
+updated,updated_post_paper_2010_latest,2022,TSMOM^FX,Currencies,0.08864450609097863
+updated,updated_post_paper_2010_latest,2022,TSMOM^FI,Fixed income,1.298045366671349
+updated,updated_post_paper_2010_latest,2022,TSMOM^CM,Commodities,0.1863757350478099
+updated,updated_post_paper_2010_latest,2023,TSMOM,Diversified,-0.08142517301775376
+updated,updated_post_paper_2010_latest,2023,TSMOM^EQ,Equity indices,-0.08329108863158996
+updated,updated_post_paper_2010_latest,2023,TSMOM^FX,Currencies,-0.04324596036326622
+updated,updated_post_paper_2010_latest,2023,TSMOM^FI,Fixed income,-0.1810677753955776
+updated,updated_post_paper_2010_latest,2023,TSMOM^CM,Commodities,-0.08569333625082154
+updated,updated_post_paper_2010_latest,2024,TSMOM,Diversified,0.03480191155358647
+updated,updated_post_paper_2010_latest,2024,TSMOM^EQ,Equity indices,0.2827799189543765
+updated,updated_post_paper_2010_latest,2024,TSMOM^FX,Currencies,-0.007496542418379493
+updated,updated_post_paper_2010_latest,2024,TSMOM^FI,Fixed income,-0.13596950680098818
+updated,updated_post_paper_2010_latest,2024,TSMOM^CM,Commodities,0.04094814245298539
+updated,updated_post_paper_2010_latest,2025,TSMOM,Diversified,0.01773177553653471
+updated,updated_post_paper_2010_latest,2025,TSMOM^EQ,Equity indices,0.34684073402706717
+updated,updated_post_paper_2010_latest,2025,TSMOM^FX,Currencies,-0.14445017148948713
+updated,updated_post_paper_2010_latest,2025,TSMOM^FI,Fixed income,-0.1062914669010604
+updated,updated_post_paper_2010_latest,2025,TSMOM^CM,Commodities,0.054743290409652756
+updated,updated_post_paper_2010_latest,2026,TSMOM,Diversified,0.15354585598155435
+updated,updated_post_paper_2010_latest,2026,TSMOM^EQ,Equity indices,0.06698843496158635
+updated,updated_post_paper_2010_latest,2026,TSMOM^FX,Currencies,0.13682963679525284
+updated,updated_post_paper_2010_latest,2026,TSMOM^FI,Fixed income,0.0674845935794468
+updated,updated_post_paper_2010_latest,2026,TSMOM^CM,Commodities,0.21021046124875342
+updated,updated_full_1985_latest,1985,TSMOM,Diversified,0.2898775313913984
+updated,updated_full_1985_latest,1985,TSMOM^EQ,Equity indices,1.0535148694719116
+updated,updated_full_1985_latest,1985,TSMOM^FX,Currencies,-0.08527179907744575
+updated,updated_full_1985_latest,1985,TSMOM^FI,Fixed income,0.2906915374993997
+updated,updated_full_1985_latest,1985,TSMOM^CM,Commodities,0.21724327492028106
+updated,updated_full_1985_latest,1986,TSMOM,Diversified,0.19796893951422545
+updated,updated_full_1985_latest,1986,TSMOM^EQ,Equity indices,0.8747209993392455
+updated,updated_full_1985_latest,1986,TSMOM^FX,Currencies,0.24769547935360547
+updated,updated_full_1985_latest,1986,TSMOM^FI,Fixed income,0.2891456501227525
+updated,updated_full_1985_latest,1986,TSMOM^CM,Commodities,-0.12439272581252847
+updated,updated_full_1985_latest,1987,TSMOM,Diversified,0.20680073826944567
+updated,updated_full_1985_latest,1987,TSMOM^EQ,Equity indices,0.08661604278558599
+updated,updated_full_1985_latest,1987,TSMOM^FX,Currencies,0.25131127894496563
+updated,updated_full_1985_latest,1987,TSMOM^FI,Fixed income,-0.05511547920751447
+updated,updated_full_1985_latest,1987,TSMOM^CM,Commodities,0.2799899534974275
+updated,updated_full_1985_latest,1988,TSMOM,Diversified,0.09838075676721347
+updated,updated_full_1985_latest,1988,TSMOM^EQ,Equity indices,-0.1902930537162042
+updated,updated_full_1985_latest,1988,TSMOM^FX,Currencies,0.4515518675756367
+updated,updated_full_1985_latest,1988,TSMOM^FI,Fixed income,0.04451768198585104
+updated,updated_full_1985_latest,1988,TSMOM^CM,Commodities,0.05102549487539476
+updated,updated_full_1985_latest,1989,TSMOM,Diversified,0.2735384244358927
+updated,updated_full_1985_latest,1989,TSMOM^EQ,Equity indices,0.18876887923678565
+updated,updated_full_1985_latest,1989,TSMOM^FX,Currencies,0.2372159234959692
+updated,updated_full_1985_latest,1989,TSMOM^FI,Fixed income,0.20037181861284892
+updated,updated_full_1985_latest,1989,TSMOM^CM,Commodities,0.29649707223667665
+updated,updated_full_1985_latest,1990,TSMOM,Diversified,0.1683621368720809
+updated,updated_full_1985_latest,1990,TSMOM^EQ,Equity indices,0.05381440956563632
+updated,updated_full_1985_latest,1990,TSMOM^FX,Currencies,-0.012566134845895749
+updated,updated_full_1985_latest,1990,TSMOM^FI,Fixed income,0.37703659664481015
+updated,updated_full_1985_latest,1990,TSMOM^CM,Commodities,0.24373701653808033
+updated,updated_full_1985_latest,1991,TSMOM,Diversified,0.10403121073459554
+updated,updated_full_1985_latest,1991,TSMOM^EQ,Equity indices,-0.17852753523397247
+updated,updated_full_1985_latest,1991,TSMOM^FX,Currencies,-0.01353503022481406
+updated,updated_full_1985_latest,1991,TSMOM^FI,Fixed income,0.5172631086932442
+updated,updated_full_1985_latest,1991,TSMOM^CM,Commodities,0.14541360249627466
+updated,updated_full_1985_latest,1992,TSMOM,Diversified,0.1934467881193771
+updated,updated_full_1985_latest,1992,TSMOM^EQ,Equity indices,0.24141693279075116
+updated,updated_full_1985_latest,1992,TSMOM^FX,Currencies,0.2795669409612185
+updated,updated_full_1985_latest,1992,TSMOM^FI,Fixed income,0.35848088997405547
+updated,updated_full_1985_latest,1992,TSMOM^CM,Commodities,0.060788361717316386
+updated,updated_full_1985_latest,1993,TSMOM,Diversified,0.34403133458197965
+updated,updated_full_1985_latest,1993,TSMOM^EQ,Equity indices,0.03376747271384706
+updated,updated_full_1985_latest,1993,TSMOM^FX,Currencies,0.20075823951340865
+updated,updated_full_1985_latest,1993,TSMOM^FI,Fixed income,1.302357949794366
+updated,updated_full_1985_latest,1993,TSMOM^CM,Commodities,0.2429709066007244
+updated,updated_full_1985_latest,1994,TSMOM,Diversified,-0.033485553173578264
+updated,updated_full_1985_latest,1994,TSMOM^EQ,Equity indices,-0.2417896112007506
+updated,updated_full_1985_latest,1994,TSMOM^FX,Currencies,0.07865595992658103
+updated,updated_full_1985_latest,1994,TSMOM^FI,Fixed income,-0.4274899569244628
+updated,updated_full_1985_latest,1994,TSMOM^CM,Commodities,0.1822977130095993
+updated,updated_full_1985_latest,1995,TSMOM,Diversified,0.13841051314472863
+updated,updated_full_1985_latest,1995,TSMOM^EQ,Equity indices,0.05803539779748079
+updated,updated_full_1985_latest,1995,TSMOM^FX,Currencies,0.1960820279200184
+updated,updated_full_1985_latest,1995,TSMOM^FI,Fixed income,0.24101492393815493
+updated,updated_full_1985_latest,1995,TSMOM^CM,Commodities,0.07120464619677591
+updated,updated_full_1985_latest,1996,TSMOM,Diversified,0.272189030626087
+updated,updated_full_1985_latest,1996,TSMOM^EQ,Equity indices,0.40506861516024717
+updated,updated_full_1985_latest,1996,TSMOM^FX,Currencies,0.38037998870309075
+updated,updated_full_1985_latest,1996,TSMOM^FI,Fixed income,-0.002387660437430106
+updated,updated_full_1985_latest,1996,TSMOM^CM,Commodities,0.26428685978749455
+updated,updated_full_1985_latest,1997,TSMOM,Diversified,0.26594469305427326
+updated,updated_full_1985_latest,1997,TSMOM^EQ,Equity indices,0.745728548988182
+updated,updated_full_1985_latest,1997,TSMOM^FX,Currencies,0.10902448690445499
+updated,updated_full_1985_latest,1997,TSMOM^FI,Fixed income,0.6989722546002375
+updated,updated_full_1985_latest,1997,TSMOM^CM,Commodities,0.012062005830651756
+updated,updated_full_1985_latest,1998,TSMOM,Diversified,0.4092763789682723
+updated,updated_full_1985_latest,1998,TSMOM^EQ,Equity indices,0.2157408959611593
+updated,updated_full_1985_latest,1998,TSMOM^FX,Currencies,0.07133231069390522
+updated,updated_full_1985_latest,1998,TSMOM^FI,Fixed income,0.778714926605911
+updated,updated_full_1985_latest,1998,TSMOM^CM,Commodities,0.44643061417270835
+updated,updated_full_1985_latest,1999,TSMOM,Diversified,0.04309774851968129
+updated,updated_full_1985_latest,1999,TSMOM^EQ,Equity indices,0.32907000696527167
+updated,updated_full_1985_latest,1999,TSMOM^FX,Currencies,-0.030553140392792444
+updated,updated_full_1985_latest,1999,TSMOM^FI,Fixed income,-0.15648045553810463
+updated,updated_full_1985_latest,1999,TSMOM^CM,Commodities,0.05672127600592569
+updated,updated_full_1985_latest,2000,TSMOM,Diversified,0.11353701442419961
+updated,updated_full_1985_latest,2000,TSMOM^EQ,Equity indices,-0.12547324559326045
+updated,updated_full_1985_latest,2000,TSMOM^FX,Currencies,-0.014372855025218123
+updated,updated_full_1985_latest,2000,TSMOM^FI,Fixed income,0.12413461383830016
+updated,updated_full_1985_latest,2000,TSMOM^CM,Commodities,0.23748262048552293
+updated,updated_full_1985_latest,2001,TSMOM,Diversified,0.17892248225839258
+updated,updated_full_1985_latest,2001,TSMOM^EQ,Equity indices,0.3011987945942074
+updated,updated_full_1985_latest,2001,TSMOM^FX,Currencies,0.2157396854989646
+updated,updated_full_1985_latest,2001,TSMOM^FI,Fixed income,0.06819546781891184
+updated,updated_full_1985_latest,2001,TSMOM^CM,Commodities,0.1400403743418248
+updated,updated_full_1985_latest,2002,TSMOM,Diversified,0.29202844515929915
+updated,updated_full_1985_latest,2002,TSMOM^EQ,Equity indices,0.6083902344970991
+updated,updated_full_1985_latest,2002,TSMOM^FX,Currencies,0.24381159069714187
+updated,updated_full_1985_latest,2002,TSMOM^FI,Fixed income,0.6909587345322237
+updated,updated_full_1985_latest,2002,TSMOM^CM,Commodities,0.017281556357059635
+updated,updated_full_1985_latest,2003,TSMOM,Diversified,0.23828693349981744
+updated,updated_full_1985_latest,2003,TSMOM^EQ,Equity indices,-0.0001535584065611717
+updated,updated_full_1985_latest,2003,TSMOM^FX,Currencies,0.6729942411868701
+updated,updated_full_1985_latest,2003,TSMOM^FI,Fixed income,-0.033159390244350884
+updated,updated_full_1985_latest,2003,TSMOM^CM,Commodities,0.27425166705337767
+updated,updated_full_1985_latest,2004,TSMOM,Diversified,0.12937507862684083
+updated,updated_full_1985_latest,2004,TSMOM^EQ,Equity indices,0.40029514035003033
+updated,updated_full_1985_latest,2004,TSMOM^FX,Currencies,-0.0018330614204293827
+updated,updated_full_1985_latest,2004,TSMOM^FI,Fixed income,0.13321076774643137
+updated,updated_full_1985_latest,2004,TSMOM^CM,Commodities,0.08795335192300602
+updated,updated_full_1985_latest,2005,TSMOM,Diversified,0.15600660803519362
+updated,updated_full_1985_latest,2005,TSMOM^EQ,Equity indices,0.8129263654344352
+updated,updated_full_1985_latest,2005,TSMOM^FX,Currencies,-0.03378838499365433
+updated,updated_full_1985_latest,2005,TSMOM^FI,Fixed income,0.017484544719257533
+updated,updated_full_1985_latest,2005,TSMOM^CM,Commodities,0.09989552145601821
+updated,updated_full_1985_latest,2006,TSMOM,Diversified,0.118363342912434
+updated,updated_full_1985_latest,2006,TSMOM^EQ,Equity indices,0.5047436725338412
+updated,updated_full_1985_latest,2006,TSMOM^FX,Currencies,0.09130273545619927
+updated,updated_full_1985_latest,2006,TSMOM^FI,Fixed income,-0.2080930592561674
+updated,updated_full_1985_latest,2006,TSMOM^CM,Commodities,0.18708561067348084
+updated,updated_full_1985_latest,2007,TSMOM,Diversified,0.13669258780280646
+updated,updated_full_1985_latest,2007,TSMOM^EQ,Equity indices,0.0717323428299419
+updated,updated_full_1985_latest,2007,TSMOM^FX,Currencies,0.13448605981679318
+updated,updated_full_1985_latest,2007,TSMOM^FI,Fixed income,0.16587252619201553
+updated,updated_full_1985_latest,2007,TSMOM^CM,Commodities,0.13079510245721448
+updated,updated_full_1985_latest,2008,TSMOM,Diversified,0.24636582908415194
+updated,updated_full_1985_latest,2008,TSMOM^EQ,Equity indices,0.43610910746481
+updated,updated_full_1985_latest,2008,TSMOM^FX,Currencies,0.23426991633369365
+updated,updated_full_1985_latest,2008,TSMOM^FI,Fixed income,0.32578281575730905
+updated,updated_full_1985_latest,2008,TSMOM^CM,Commodities,0.09396091151131225
+updated,updated_full_1985_latest,2009,TSMOM,Diversified,-0.09911852998502013
+updated,updated_full_1985_latest,2009,TSMOM^EQ,Equity indices,-0.18952858795277838
+updated,updated_full_1985_latest,2009,TSMOM^FX,Currencies,-0.17079140338331744
+updated,updated_full_1985_latest,2009,TSMOM^FI,Fixed income,-0.06113270031659368
+updated,updated_full_1985_latest,2009,TSMOM^CM,Commodities,-0.059597458932107106
+updated,updated_full_1985_latest,2010,TSMOM,Diversified,0.12583655101177338
+updated,updated_full_1985_latest,2010,TSMOM^EQ,Equity indices,-0.0495312949409743
+updated,updated_full_1985_latest,2010,TSMOM^FX,Currencies,0.13750319723593551
+updated,updated_full_1985_latest,2010,TSMOM^FI,Fixed income,0.2453598455894459
+updated,updated_full_1985_latest,2010,TSMOM^CM,Commodities,0.08899063386988737
+updated,updated_full_1985_latest,2011,TSMOM,Diversified,-0.0009238971565479481
+updated,updated_full_1985_latest,2011,TSMOM^EQ,Equity indices,-0.23811449447848088
+updated,updated_full_1985_latest,2011,TSMOM^FX,Currencies,-0.15237581072584572
+updated,updated_full_1985_latest,2011,TSMOM^FI,Fixed income,0.5729935193539999
+updated,updated_full_1985_latest,2011,TSMOM^CM,Commodities,-0.10061688393642576
+updated,updated_full_1985_latest,2012,TSMOM,Diversified,-0.0015790133451156763
+updated,updated_full_1985_latest,2012,TSMOM^EQ,Equity indices,-6.488945146532199e-05
+updated,updated_full_1985_latest,2012,TSMOM^FX,Currencies,0.061354404293123554
+updated,updated_full_1985_latest,2012,TSMOM^FI,Fixed income,0.2222520226083886
+updated,updated_full_1985_latest,2012,TSMOM^CM,Commodities,-0.14417582202887358
+updated,updated_full_1985_latest,2013,TSMOM,Diversified,0.1823515002486349
+updated,updated_full_1985_latest,2013,TSMOM^EQ,Equity indices,0.7558509526879638
+updated,updated_full_1985_latest,2013,TSMOM^FX,Currencies,0.04032790053966906
+updated,updated_full_1985_latest,2013,TSMOM^FI,Fixed income,-0.09598176703329542
+updated,updated_full_1985_latest,2013,TSMOM^CM,Commodities,0.20636963453061186
+updated,updated_full_1985_latest,2014,TSMOM,Diversified,0.19086119975136095
+updated,updated_full_1985_latest,2014,TSMOM^EQ,Equity indices,0.07781582467263903
+updated,updated_full_1985_latest,2014,TSMOM^FX,Currencies,0.24044389605438887
+updated,updated_full_1985_latest,2014,TSMOM^FI,Fixed income,0.2632101412002785
+updated,updated_full_1985_latest,2014,TSMOM^CM,Commodities,0.1392236039853234
+updated,updated_full_1985_latest,2015,TSMOM,Diversified,0.18136783298011894
+updated,updated_full_1985_latest,2015,TSMOM^EQ,Equity indices,-0.03630970923673704
+updated,updated_full_1985_latest,2015,TSMOM^FX,Currencies,0.2734375042122512
+updated,updated_full_1985_latest,2015,TSMOM^FI,Fixed income,0.13466493260062773
+updated,updated_full_1985_latest,2015,TSMOM^CM,Commodities,0.21463702115464134
+updated,updated_full_1985_latest,2016,TSMOM,Diversified,-0.11125247631196
+updated,updated_full_1985_latest,2016,TSMOM^EQ,Equity indices,-0.209446212297145
+updated,updated_full_1985_latest,2016,TSMOM^FX,Currencies,-0.003732588223024469
+updated,updated_full_1985_latest,2016,TSMOM^FI,Fixed income,0.14547272734181482
+updated,updated_full_1985_latest,2016,TSMOM^CM,Commodities,-0.25698659217413555
+updated,updated_full_1985_latest,2017,TSMOM,Diversified,0.06625850976020309
+updated,updated_full_1985_latest,2017,TSMOM^EQ,Equity indices,0.6076224421238414
+updated,updated_full_1985_latest,2017,TSMOM^FX,Currencies,-0.0033835664458375936
+updated,updated_full_1985_latest,2017,TSMOM^FI,Fixed income,-0.07771258238233991
+updated,updated_full_1985_latest,2017,TSMOM^CM,Commodities,0.003955221765354455
+updated,updated_full_1985_latest,2018,TSMOM,Diversified,-0.0900541390467039
+updated,updated_full_1985_latest,2018,TSMOM^EQ,Equity indices,-0.0953100780912216
+updated,updated_full_1985_latest,2018,TSMOM^FX,Currencies,-0.14446322041401383
+updated,updated_full_1985_latest,2018,TSMOM^FI,Fixed income,-0.09313245424851613
+updated,updated_full_1985_latest,2018,TSMOM^CM,Commodities,-0.08248352321698194
+updated,updated_full_1985_latest,2019,TSMOM,Diversified,0.031765801263941684
+updated,updated_full_1985_latest,2019,TSMOM^EQ,Equity indices,-0.07855250239165834
+updated,updated_full_1985_latest,2019,TSMOM^FX,Currencies,0.043970665921878815
+updated,updated_full_1985_latest,2019,TSMOM^FI,Fixed income,0.4296623859209845
+updated,updated_full_1985_latest,2019,TSMOM^CM,Commodities,-0.13722251216663128
+updated,updated_full_1985_latest,2020,TSMOM,Diversified,-0.06735549983509381
+updated,updated_full_1985_latest,2020,TSMOM^EQ,Equity indices,-0.6183078818987744
+updated,updated_full_1985_latest,2020,TSMOM^FX,Currencies,0.000584733350884159
+updated,updated_full_1985_latest,2020,TSMOM^FI,Fixed income,0.3332788975189349
+updated,updated_full_1985_latest,2020,TSMOM^CM,Commodities,-0.039476349996953486
+updated,updated_full_1985_latest,2021,TSMOM,Diversified,-0.04562844522903153
+updated,updated_full_1985_latest,2021,TSMOM^EQ,Equity indices,0.4727099397536303
+updated,updated_full_1985_latest,2021,TSMOM^FX,Currencies,-0.10058574776737006
+updated,updated_full_1985_latest,2021,TSMOM^FI,Fixed income,-0.49852130104700065
+updated,updated_full_1985_latest,2021,TSMOM^CM,Commodities,0.1432783139964069
+updated,updated_full_1985_latest,2022,TSMOM,Diversified,0.24740698630174984
+updated,updated_full_1985_latest,2022,TSMOM^EQ,Equity indices,-0.3866316987897166
+updated,updated_full_1985_latest,2022,TSMOM^FX,Currencies,0.08864450609097863
+updated,updated_full_1985_latest,2022,TSMOM^FI,Fixed income,1.298045366671349
+updated,updated_full_1985_latest,2022,TSMOM^CM,Commodities,0.1863757350478099
+updated,updated_full_1985_latest,2023,TSMOM,Diversified,-0.08142517301775376
+updated,updated_full_1985_latest,2023,TSMOM^EQ,Equity indices,-0.08329108863158996
+updated,updated_full_1985_latest,2023,TSMOM^FX,Currencies,-0.04324596036326622
+updated,updated_full_1985_latest,2023,TSMOM^FI,Fixed income,-0.1810677753955776
+updated,updated_full_1985_latest,2023,TSMOM^CM,Commodities,-0.08569333625082154
+updated,updated_full_1985_latest,2024,TSMOM,Diversified,0.03480191155358647
+updated,updated_full_1985_latest,2024,TSMOM^EQ,Equity indices,0.2827799189543765
+updated,updated_full_1985_latest,2024,TSMOM^FX,Currencies,-0.007496542418379493
+updated,updated_full_1985_latest,2024,TSMOM^FI,Fixed income,-0.13596950680098818
+updated,updated_full_1985_latest,2024,TSMOM^CM,Commodities,0.04094814245298539
+updated,updated_full_1985_latest,2025,TSMOM,Diversified,0.01773177553653471
+updated,updated_full_1985_latest,2025,TSMOM^EQ,Equity indices,0.34684073402706717
+updated,updated_full_1985_latest,2025,TSMOM^FX,Currencies,-0.14445017148948713
+updated,updated_full_1985_latest,2025,TSMOM^FI,Fixed income,-0.1062914669010604
+updated,updated_full_1985_latest,2025,TSMOM^CM,Commodities,0.054743290409652756
+updated,updated_full_1985_latest,2026,TSMOM,Diversified,0.15354585598155435
+updated,updated_full_1985_latest,2026,TSMOM^EQ,Equity indices,0.06698843496158635
+updated,updated_full_1985_latest,2026,TSMOM^FX,Currencies,0.13682963679525284
+updated,updated_full_1985_latest,2026,TSMOM^FI,Fixed income,0.0674845935794468
+updated,updated_full_1985_latest,2026,TSMOM^CM,Commodities,0.21021046124875342

@@ -1,0 +1,145 @@
+{
+  "family": "TradFi-1D-Multi-Asset-Futures-TSMOM",
+  "alias": "TF-1D-FUT-TSMOM",
+  "status": "explore / diagnostic-only / not promoted / not live-ready",
+  "universe": {
+    "ES=F": {
+      "class": "equity_index",
+      "exchange": "cme",
+      "name": "S&P 500"
+    },
+    "NQ=F": {
+      "class": "equity_index",
+      "exchange": "cme",
+      "name": "Nasdaq 100"
+    },
+    "YM=F": {
+      "class": "equity_index",
+      "exchange": "cbot",
+      "name": "Dow Jones"
+    },
+    "RTY=F": {
+      "class": "equity_index",
+      "exchange": "cme",
+      "name": "Russell 2000"
+    },
+    "NKD=F": {
+      "class": "equity_index",
+      "exchange": "cme",
+      "name": "Nikkei USD"
+    },
+    "ZT=F": {
+      "class": "bond",
+      "exchange": "cbot",
+      "name": "US Treasury 2Y"
+    },
+    "ZF=F": {
+      "class": "bond",
+      "exchange": "cbot",
+      "name": "US Treasury 5Y"
+    },
+    "ZN=F": {
+      "class": "bond",
+      "exchange": "cbot",
+      "name": "US Treasury 10Y"
+    },
+    "ZB=F": {
+      "class": "bond",
+      "exchange": "cbot",
+      "name": "US Treasury Bond"
+    },
+    "UB=F": {
+      "class": "bond",
+      "exchange": "cbot",
+      "name": "Ultra Treasury Bond"
+    },
+    "6A=F": {
+      "class": "fx",
+      "exchange": "cme",
+      "name": "Australian Dollar"
+    },
+    "6B=F": {
+      "class": "fx",
+      "exchange": "cme",
+      "name": "British Pound"
+    },
+    "6C=F": {
+      "class": "fx",
+      "exchange": "cme",
+      "name": "Canadian Dollar"
+    },
+    "6E=F": {
+      "class": "fx",
+      "exchange": "cme",
+      "name": "Euro FX"
+    },
+    "6J=F": {
+      "class": "fx",
+      "exchange": "cme",
+      "name": "Japanese Yen"
+    },
+    "6S=F": {
+      "class": "fx",
+      "exchange": "cme",
+      "name": "Swiss Franc"
+    },
+    "GC=F": {
+      "class": "commodity",
+      "exchange": "comex",
+      "name": "Gold"
+    },
+    "SI=F": {
+      "class": "commodity",
+      "exchange": "comex",
+      "name": "Silver"
+    },
+    "BZ=F": {
+      "class": "commodity",
+      "exchange": "nymex",
+      "name": "Brent Crude"
+    },
+    "NG=F": {
+      "class": "commodity",
+      "exchange": "nymex",
+      "name": "Natural Gas"
+    },
+    "HG=F": {
+      "class": "commodity",
+      "exchange": "comex",
+      "name": "Copper"
+    },
+    "ZC=F": {
+      "class": "commodity",
+      "exchange": "cbot",
+      "name": "Corn"
+    },
+    "ZW=F": {
+      "class": "commodity",
+      "exchange": "cbot",
+      "name": "Wheat"
+    },
+    "ZS=F": {
+      "class": "commodity",
+      "exchange": "cbot",
+      "name": "Soybeans"
+    }
+  },
+  "class_weight": 0.25,
+  "signal_lookbacks_months": [
+    1,
+    3,
+    12
+  ],
+  "target_volatility_asset": 0.1,
+  "target_volatility_portfolio": 0.1,
+  "volatility_center_of_mass_days": 60.0,
+  "portfolio_scalar_cap": 3.0,
+  "gross_cap": 3.0,
+  "cost_bps_one_way": [
+    0.0,
+    2.0
+  ],
+  "evaluation_start": "2022-01-03T00:00:00+00:00",
+  "evaluation_end": "2026-07-31T00:00:00+00:00",
+  "quality_status": "raw_unaccepted"
+}

@@ -1,0 +1,193 @@
+{
+  "schema_version": "binance-1d-dsto-p0r-oi-funding-v1",
+  "anchor_start": "2021-12-08T00:00:00+00:00",
+  "anchor_end_exclusive": "2025-05-25T00:00:00+00:00",
+  "usable_anchors": 6118,
+  "per_asset": {
+    "BTC": 1218,
+    "ETH": 1226,
+    "BNB": 1225,
+    "SOL": 1222,
+    "TRX": 1227
+  },
+  "label_counts": {
+    "long": 2552,
+    "flat": 1301,
+    "short": 2265
+  },
+  "feature_count_full": 30,
+  "feature_count_control": 8,
+  "quality": {
+    "source_audit": {
+      "source_manifest_sha256": "68317a2c012c282048c0cb9c685f807930297a2e6d79c819684bfe883a5972d2",
+      "data_quality_sha256": "249411d1ba7ace15183d58da15f05152421784bac7ff600760f364e564dc84ec",
+      "archive_count": 6385,
+      "original_full_field_quality_pass": false,
+      "feature_entries": {
+        "BTC": {
+          "path": "/Users/ZK/OpenCode/quant-strategy-lab/data/cache/binance_1d_dsto_p0_unaccepted/btcusdt_metrics_5m.parquet",
+          "sha256": "a4d0b51641662c7ed2525d47c3244e2124cc30087d6bf394066b77aee2a4442e"
+        },
+        "ETH": {
+          "path": "/Users/ZK/OpenCode/quant-strategy-lab/data/cache/binance_1d_dsto_p0_unaccepted/ethusdt_metrics_5m.parquet",
+          "sha256": "377be98dbebc3acf76a90273f608754cd12f1bc436caa729ed5f44d17130fe16"
+        },
+        "BNB": {
+          "path": "/Users/ZK/OpenCode/quant-strategy-lab/data/cache/binance_1d_dsto_p0_unaccepted/bnbusdt_metrics_5m.parquet",
+          "sha256": "76240a5036e21cba56592a1c73779fabdf200f5cb6d61f46d1da75b51f417993"
+        },
+        "SOL": {
+          "path": "/Users/ZK/OpenCode/quant-strategy-lab/data/cache/binance_1d_dsto_p0_unaccepted/solusdt_metrics_5m.parquet",
+          "sha256": "221a9d984ee2884149ae0a9e070e710c31f5ac3c1db0acb5986aaa2044a0dd5b"
+        },
+        "TRX": {
+          "path": "/Users/ZK/OpenCode/quant-strategy-lab/data/cache/binance_1d_dsto_p0_unaccepted/trxusdt_metrics_5m.parquet",
+          "sha256": "fc30f1b46bb88c0b18655b276f9ebd19fbe3a5399978196e8ee1dc381107d927"
+        }
+      },
+      "hype_rows_consumed": 0,
+      "hype_files_opened": 0,
+      "hype_requests_sent": 0
+    },
+    "assets": {
+      "BTC": {
+        "metrics_path": "data/cache/binance_1d_dsto_p0_unaccepted/btcusdt_metrics_5m.parquet",
+        "metrics_sha256": "a4d0b51641662c7ed2525d47c3244e2124cc30087d6bf394066b77aee2a4442e",
+        "metrics_rows": 367639,
+        "local_exact_endpoint_anchors": 1230,
+        "input_quality": {
+          "daily_rows": 2091,
+          "daily_start": "2019-09-09T00:00:00+00:00",
+          "daily_end": "2025-05-30T00:00:00+00:00",
+          "hourly_rows": 50190,
+          "hourly_start": "2019-09-08T18:00:00+00:00",
+          "hourly_end": "2025-05-30T23:00:00+00:00",
+          "funding_rows": 5956,
+          "funding_start": "2019-12-23T16:00:00+00:00",
+          "funding_end": "2025-05-30T16:00:00+00:00",
+          "missing_hourly": 0,
+          "missing_daily": 0,
+          "daily_rebuild_max_relative_mismatch": 0.0,
+          "input_sha256": {
+            "daily": "53c0c244bea0c1828d224ad8e5732263fe7c1ebf96d6eb38913c8be858ea5086",
+            "hourly": "43c2bbe5d938bb9c968f137f4485d5d41e3390e2f2e041c0aa5b3a9a4afb76c2",
+            "funding": "ddd980d59d4c3ab1fa59f36a27930ba4493f2c4603ca05ed5d40478b55e1bfa1"
+          }
+        }
+      },
+      "ETH": {
+        "metrics_path": "data/cache/binance_1d_dsto_p0_unaccepted/ethusdt_metrics_5m.parquet",
+        "metrics_sha256": "377be98dbebc3acf76a90273f608754cd12f1bc436caa729ed5f44d17130fe16",
+        "metrics_rows": 367639,
+        "local_exact_endpoint_anchors": 1239,
+        "input_quality": {
+          "daily_rows": 2011,
+          "daily_start": "2019-11-28T00:00:00+00:00",
+          "daily_end": "2025-05-30T00:00:00+00:00",
+          "hourly_rows": 48280,
+          "hourly_start": "2019-11-27T08:00:00+00:00",
+          "hourly_end": "2025-05-30T23:00:00+00:00",
+          "funding_rows": 5956,
+          "funding_start": "2019-12-23T16:00:00+00:00",
+          "funding_end": "2025-05-30T16:00:00+00:00",
+          "missing_hourly": 0,
+          "missing_daily": 0,
+          "daily_rebuild_max_relative_mismatch": 0.0,
+          "input_sha256": {
+            "daily": "75c8b5bfd066d528908c4793951b84b086b8c558e03b73a37595b442dedd6651",
+            "hourly": "4668d98fe0291e57037214aa718efa17401b664c896623bfbb1d804b51cafc2e",
+            "funding": "3a1b0a7c0ee1276212049bc6df6da43227b606316c51daab7a3712ae3013bbec"
+          }
+        }
+      },
+      "BNB": {
+        "metrics_path": "data/cache/binance_1d_dsto_p0_unaccepted/bnbusdt_metrics_5m.parquet",
+        "metrics_sha256": "76240a5036e21cba56592a1c73779fabdf200f5cb6d61f46d1da75b51f417993",
+        "metrics_rows": 367639,
+        "local_exact_endpoint_anchors": 1232,
+        "input_quality": {
+          "daily_rows": 1936,
+          "daily_start": "2020-02-11T00:00:00+00:00",
+          "daily_end": "2025-05-30T00:00:00+00:00",
+          "hourly_rows": 46480,
+          "hourly_start": "2020-02-10T08:00:00+00:00",
+          "hourly_end": "2025-05-30T23:00:00+00:00",
+          "funding_rows": 5810,
+          "funding_start": "2020-02-10T08:00:00+00:00",
+          "funding_end": "2025-05-30T16:00:00+00:00",
+          "missing_hourly": 0,
+          "missing_daily": 0,
+          "daily_rebuild_max_relative_mismatch": 0.0,
+          "input_sha256": {
+            "daily": "00dbc6f04d8669fcf3d7e8cb929f75c380319fec81e6d34a130127d006a57119",
+            "hourly": "c3cc8efbbef45304f6981b75bad50917179834f89bcf0e0e964a30b57e850c19",
+            "funding": "965ed2f3ac690e5ab8395aea1383c5656a7f5d2fe4b3b71527d2feeb9110cb5c"
+          }
+        }
+      },
+      "SOL": {
+        "metrics_path": "data/cache/binance_1d_dsto_p0_unaccepted/solusdt_metrics_5m.parquet",
+        "metrics_sha256": "221a9d984ee2884149ae0a9e070e710c31f5ac3c1db0acb5986aaa2044a0dd5b",
+        "metrics_rows": 367622,
+        "local_exact_endpoint_anchors": 1232,
+        "input_quality": {
+          "daily_rows": 1719,
+          "daily_start": "2020-09-15T00:00:00+00:00",
+          "daily_end": "2025-05-30T00:00:00+00:00",
+          "hourly_rows": 41273,
+          "hourly_start": "2020-09-14T07:00:00+00:00",
+          "hourly_end": "2025-05-30T23:00:00+00:00",
+          "funding_rows": 5234,
+          "funding_start": "2020-09-14T08:00:00+00:00",
+          "funding_end": "2025-05-30T16:00:00+00:00",
+          "missing_hourly": 0,
+          "missing_daily": 0,
+          "daily_rebuild_max_relative_mismatch": 0.0,
+          "input_sha256": {
+            "daily": "5a7a3339b25600a408ddc9d72e580d6792a73620e2834e0d2a286a8e672e77c0",
+            "hourly": "dc8acece6ecbbc5d69abe818bc0bb599f0a788652e9432004c47b113ce44b92e",
+            "funding": "8272a9ce84318fd015d55527c3f762cddc468ac4d8160f94456fbe7af1008b95"
+          }
+        }
+      },
+      "TRX": {
+        "metrics_path": "data/cache/binance_1d_dsto_p0_unaccepted/trxusdt_metrics_5m.parquet",
+        "metrics_sha256": "fc30f1b46bb88c0b18655b276f9ebd19fbe3a5399978196e8ee1dc381107d927",
+        "metrics_rows": 367631,
+        "local_exact_endpoint_anchors": 1256,
+        "input_quality": {
+          "daily_rows": 1962,
+          "daily_start": "2020-01-16T00:00:00+00:00",
+          "daily_end": "2025-05-30T00:00:00+00:00",
+          "hourly_rows": 47103,
+          "hourly_start": "2020-01-15T09:00:00+00:00",
+          "hourly_end": "2025-05-30T23:00:00+00:00",
+          "funding_rows": 5887,
+          "funding_start": "2020-01-15T16:00:00+00:00",
+          "funding_end": "2025-05-30T16:00:00+00:00",
+          "missing_hourly": 0,
+          "missing_daily": 0,
+          "daily_rebuild_max_relative_mismatch": 0.0,
+          "input_sha256": {
+            "daily": "e64a33b0b01c0a714889243b6074c70193ed7f4382ead3f351d2fab937d84628",
+            "hourly": "26d9390dd82f8b986b238b5b257cec9f8352dd4e42da2621a32560cb6d53276b",
+            "funding": "dcb7ad61b68570f41035f86d5bfee21a32fa021b70b1d203988e139bede2339b"
+          }
+        }
+      }
+    }
+  },
+  "hype_rows_consumed": 0,
+  "hype_files_opened": 0,
+  "hype_requests_sent": 0,
+  "gate_checks": {
+    "usable_anchors": true,
+    "per_asset": true,
+    "exact_endpoint_admission": true,
+    "label_capacity": true,
+    "source_manifest_verified": true,
+    "hype_lock": true
+  },
+  "p0_capacity_pass": true,
+  "panel_identity_sha256": "cecb0216a0a1b563fc7925be6412465040c3c0e1673bca353409a60cde7bd18c"
+}

@@ -1,0 +1,74 @@
+{
+  "schema_version": "binance-1d-ma7-bpml-p0-manifest-v1",
+  "generated_at_utc": "2026-08-10T12:41:22.313478+00:00",
+  "files": {
+    "source_manifest": {
+      "path": "p0_source_manifest.json",
+      "sha256": "2272006fe10716b5ac0c58847b27ed373d6a37622ec51c65daa03eb02e1c7dbb"
+    },
+    "data_quality": {
+      "path": "p0_data_quality.json",
+      "sha256": "3b24c741525d66bf4d1ba9c1661aa23537aef4aaa049931e4218d777cf8ecd54"
+    },
+    "btc_premium_index": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/btcusdt_premium_index_1h.parquet",
+      "sha256": "112ddaabf6fa439efd0f19b37f49331afb3b743027628f4dde5d65ccbc1f750b"
+    },
+    "btc_mark_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/btcusdt_mark_price_1h.parquet",
+      "sha256": "e191fe38bbda7a3591a195a603257ee6b6e847d001c69386e6c0e458a26d36fe"
+    },
+    "btc_index_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/btcusdt_index_price_1h.parquet",
+      "sha256": "cc027fd965fbe86ad58bc5a3123ca14e48ad41058289144b6ecc3f235d70c725"
+    },
+    "eth_premium_index": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/ethusdt_premium_index_1h.parquet",
+      "sha256": "4c7b68331e8889b401e35bc56dd1827c35905b7fce4223b7714f11b6366a7ba8"
+    },
+    "eth_mark_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/ethusdt_mark_price_1h.parquet",
+      "sha256": "dea28b09edd712c76a24388aebbe71937248be7017745c1d85970e5a6876b4c1"
+    },
+    "eth_index_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/ethusdt_index_price_1h.parquet",
+      "sha256": "4592ef011b467d36ef81a3d5492d0b6e066b87c6bf2a6dad464bfe4437343f66"
+    },
+    "bnb_premium_index": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/bnbusdt_premium_index_1h.parquet",
+      "sha256": "bcfdff003c786149f6a231ec6dc476815da7ee13015e9d4dc5b12203ccb17f6f"
+    },
+    "bnb_mark_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/bnbusdt_mark_price_1h.parquet",
+      "sha256": "bd8a95252121f94a3622e06be5d160a6624eea384837578fdd996e9711101686"
+    },
+    "bnb_index_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/bnbusdt_index_price_1h.parquet",
+      "sha256": "7e8f7487cd5991b3e667b56d414919282a5a98ed1a5c0a6e4d18c62a4fffc174"
+    },
+    "sol_premium_index": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/solusdt_premium_index_1h.parquet",
+      "sha256": "baedf4910e147d9f21ed70c2016ee51b90efc63cb13162ca2883de495cb99d07"
+    },
+    "sol_mark_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/solusdt_mark_price_1h.parquet",
+      "sha256": "7fa125d22fa22d09f72d688e4de52bdb0bbf2b789cc64158ce5fdb0ec6c8ff92"
+    },
+    "sol_index_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/solusdt_index_price_1h.parquet",
+      "sha256": "b7a8f2080d6032704fcbeabcdea6068d499a227e499424925478084d15b031b6"
+    },
+    "trx_premium_index": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/trxusdt_premium_index_1h.parquet",
+      "sha256": "ed50c0d98487cdbc3ed792292f39197f4e0ad9b58ce30279cd437bb6c41814d9"
+    },
+    "trx_mark_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/trxusdt_mark_price_1h.parquet",
+      "sha256": "b572d55eb2e6631580d5dedd5ee458d76205eafc50c1a9d38f4f1e00766e8a74"
+    },
+    "trx_index_price": {
+      "path": "data/cache/binance_1d_ma7_bpml_p0_unaccepted/trxusdt_index_price_1h.parquet",
+      "sha256": "02f0a3e2c940a2f0f140bc700ac1567a54509c63e7e212dc471028c8e8efeb71"
+    }
+  }
+}

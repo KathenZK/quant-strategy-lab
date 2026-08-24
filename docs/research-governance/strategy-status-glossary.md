@@ -49,7 +49,7 @@ promotion 状态只有 `live spec`、`dry-run`、`live` 三个；`handoff` 是�
 | --- | --- | --- |
 | `explore` | 搜索、诊断进行中，未登记版本 | 无；不可被引用为"策略" |
 | `registered` | 用户要求登记的冻结版本（基线或观察值），仅固定研究身份 | core ledger 已更新版本表、参数、证据链接；不代表策略可行 |
-| `live spec` | 已写出 runner 交接规格，等待/正在 quant-runner 实现；未启用 | 已完成 promotion review：核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的全部门禁（超额收益、消融、OOS/CPCV、MC、压力测试、相位）与 live-executable 审计；参数/状态机可被 runner 复现；满足 `lab-runner-handoff.mdc` 交接规格必备字段；core ledger 链接该规格 |
+| `live spec` | 已写出 runner 交接规格，等待/正在 quant-runner 实现；未启用 | 已完成 promotion review：核验 [strategy-validation-gates.md](strategy-validation-gates.md) 的全部硬门禁（超额收益、消融、OOS/CPCV、MC、压力测试）与 live-executable 审计，并在数据可得时记录非强制相位检查；参数/状态机可被 runner 复现；满足 `lab-runner-handoff.mdc` 交接规格必备字段；core ledger 链接该规格 |
 | `dry-run` | 在 quant-runner 以 dry-run 模式运行（模拟盘，不下真实订单） | quant-runner 实现完成；指标对拍/smoke test 通过；进入 dry-run 的同一变更中建立 `runner-tracking/` |
 | `live` | 真实资金运行 | dry-run 的 runner 观察证据达标；已完成线上开平仓对账且无未解决的重大偏差；资金费、盘口滑点、订单失败处理已审计；decision log 记录批准；资金边界由子账户资金、runner 配置或上线 decision log 管理，策略 spec 不强制写 live notional |
 | `NO-GO` | dry-run 或 live 后的最终否决状态 | 必须有 `runner-tracking/`、dry-run 对账或真实订单证据；记录否决原因，重开需新证据并写 decision log |

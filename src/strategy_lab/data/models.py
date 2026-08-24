@@ -8,6 +8,7 @@ from enum import StrEnum
 class MarketType(StrEnum):
     SPOT = "spot"
     PERP = "perp"
+    FUTURES = "futures"
     EQUITY = "equity"
 
 

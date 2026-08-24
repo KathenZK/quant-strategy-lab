@@ -1,0 +1,760 @@
+{
+  "generated_at_utc": "2026-08-10T09:38:24.941254+00:00",
+  "binance_server_time": "2026-08-10T09:38:25.386000+00:00",
+  "family": "BIN-1D-MA7-RSI6-DAPML",
+  "symbols": [
+    "BTCUSDT",
+    "ETHUSDT",
+    "BNBUSDT",
+    "SOLUSDT",
+    "TRXUSDT"
+  ],
+  "source_endpoints": {
+    "hourly": "/fapi/v1/klines interval=1h",
+    "funding": "/fapi/v1/fundingRate",
+    "mark": "/fapi/v1/markPriceKlines interval=1h"
+  },
+  "sealed_policy": {
+    "development_end_inclusive": "2025-08-06T23:59:59.999999999Z",
+    "sealed_start": "2025-08-07T00:00:00+00:00",
+    "sealed_end_exclusive": "2026-08-07T00:00:00+00:00",
+    "p0_model_consumed_sealed_rows": 0
+  },
+  "results": {
+    "BTCUSDT": {
+      "contract": {
+        "symbol": "BTCUSDT",
+        "status": "TRADING",
+        "contract_type": "PERPETUAL",
+        "quote_asset": "USDT",
+        "margin_asset": "USDT",
+        "onboard_date_ms": 1567965300000,
+        "onboard_date": "2019-09-08T17:55:00+00:00"
+      },
+      "hourly_quality": {
+        "audit": {
+          "rows": 60663,
+          "groups": 1,
+          "start": "2019-09-08T18:00:00+00:00",
+          "end": "2026-08-10T08:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        },
+        "raw_rows": 60663,
+        "normalized_rows": 60663,
+        "raw_normalized_join": {
+          "left_only": 0,
+          "right_only": 0,
+          "both": 60663
+        },
+        "field_mismatches": {
+          "open": 0,
+          "high": 0,
+          "low": 0,
+          "close": 0,
+          "volume": 0,
+          "quote_volume": 0,
+          "trade_count": 0
+        },
+        "sha256": "3e18066005c9747c040c2686e0b535769f293911e660ad8f923d81b0e2bee1cb",
+        "blocker_count": 0
+      },
+      "daily_quality": {
+        "rows": 2527,
+        "start": "2019-09-09T00:00:00+00:00",
+        "end": "2026-08-09T00:00:00+00:00",
+        "source_hourly_rows": 60663,
+        "rejected_incomplete_days": {
+          "2019-09-08": 6,
+          "2026-08-10": 9
+        },
+        "audit": {
+          "rows": 2527,
+          "groups": 1,
+          "start": "2019-09-09T00:00:00+00:00",
+          "end": "2026-08-09T00:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        }
+      },
+      "daily_sha256": "8fdb330a54d182d38dc280b96c5dad035890b9d87116c0de0432323e6e327045",
+      "funding_quality": {
+        "funding_rows": 7579,
+        "funding_start": "2019-09-10T08:00:00+00:00",
+        "funding_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_timestamp_lag_seconds": {
+          "median": 0.0,
+          "p95": 0.014,
+          "max": 0.047
+        },
+        "endpoint_mark_rows": 3043,
+        "fallback_mark_rows": 4223,
+        "unresolved_rows_excluded": 313,
+        "resolved_rows": 7266,
+        "resolved_start": "2019-12-23T16:00:00+00:00",
+        "resolved_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_interval_hours": {
+          "8.0": 7265
+        },
+        "invalid_funding_gap_count": 0,
+        "max_funding_gap_hours": 8.0,
+        "overlap_rows": 3043,
+        "overlap_mark_abs_diff_bps": {
+          "median": 0.0,
+          "p95": 0.142733125431338,
+          "max": 2.3979726482559194
+        },
+        "critical_nulls": {
+          "ts": 0,
+          "funding_nominal_ts": 0,
+          "funding_rate": 0,
+          "mark_price": 0,
+          "mark_price_source": 0
+        },
+        "duplicate_ts": 0,
+        "duplicate_nominal_ts": 0,
+        "sha256": "83e4043d905274dd11d3f7874605cbe05bfea927d80853dd96959d1effd45aca",
+        "blocker_count": 0
+      },
+      "mark_quality": {
+        "rows": 58126,
+        "start": "2019-12-23T11:00:00+00:00",
+        "end": "2026-08-10T08:00:00+00:00",
+        "expected_rows": 58126,
+        "missing_bars": 0,
+        "duplicate_rows": 0,
+        "invalid_ohlc": 0,
+        "not_closed": 0,
+        "blocker_count": 0
+      },
+      "research_boundaries": {
+        "development_daily_rows": 2159,
+        "development_start": "2019-09-09T00:00:00+00:00",
+        "development_end": "2025-08-06T00:00:00+00:00",
+        "sealed_daily_rows_available_not_consumed_by_p0_model": 365,
+        "sealed_start": "2025-08-07T00:00:00+00:00",
+        "sealed_end_exclusive": "2026-08-07T00:00:00+00:00"
+      },
+      "write_enabled": true,
+      "raw_hourly_write": {
+        "partitions_written": 2529,
+        "first_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2019-09-08/symbol=btc_usdt_usdt.parquet",
+        "last_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2026-08-10/symbol=btc_usdt_usdt.parquet"
+      },
+      "raw_funding_write": {
+        "partitions_written": 2527,
+        "first_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2019-09-10/symbol=btc_usdt_usdt.parquet",
+        "last_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2026-08-10/symbol=btc_usdt_usdt.parquet"
+      },
+      "raw_mark_write": {
+        "partitions_written": 2423,
+        "first_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2019-12-23/symbol=btc_usdt_usdt.parquet",
+        "last_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2026-08-10/symbol=btc_usdt_usdt.parquet"
+      },
+      "feature_paths": {
+        "hourly": "data/features/binance_1d_ma7_rsi6_dapml_p0/btcusdt_perp_1h.parquet",
+        "daily": "data/features/binance_1d_ma7_rsi6_dapml_p0/btcusdt_perp_1d.parquet",
+        "funding": "data/features/binance_1d_ma7_rsi6_dapml_p0/btcusdt_perp_funding_mark.parquet"
+      }
+    },
+    "ETHUSDT": {
+      "contract": {
+        "symbol": "ETHUSDT",
+        "status": "TRADING",
+        "contract_type": "PERPETUAL",
+        "quote_asset": "USDT",
+        "margin_asset": "USDT",
+        "onboard_date_ms": 1574840700000,
+        "onboard_date": "2019-11-27T07:45:00+00:00"
+      },
+      "hourly_quality": {
+        "audit": {
+          "rows": 58753,
+          "groups": 1,
+          "start": "2019-11-27T08:00:00+00:00",
+          "end": "2026-08-10T08:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        },
+        "raw_rows": 58753,
+        "normalized_rows": 58753,
+        "raw_normalized_join": {
+          "left_only": 0,
+          "right_only": 0,
+          "both": 58753
+        },
+        "field_mismatches": {
+          "open": 0,
+          "high": 0,
+          "low": 0,
+          "close": 0,
+          "volume": 0,
+          "quote_volume": 0,
+          "trade_count": 0
+        },
+        "sha256": "29a5c7ba22831240629d48899b34c7cbfe9f411c139f7dd5220979958a416561",
+        "blocker_count": 0
+      },
+      "daily_quality": {
+        "rows": 2447,
+        "start": "2019-11-28T00:00:00+00:00",
+        "end": "2026-08-09T00:00:00+00:00",
+        "source_hourly_rows": 58753,
+        "rejected_incomplete_days": {
+          "2019-11-27": 16,
+          "2026-08-10": 9
+        },
+        "audit": {
+          "rows": 2447,
+          "groups": 1,
+          "start": "2019-11-28T00:00:00+00:00",
+          "end": "2026-08-09T00:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        }
+      },
+      "daily_sha256": "f50198e049ca2f6adf14a0260427cb005d53271f8d9dcdff776411cc6b8a4a9e",
+      "funding_quality": {
+        "funding_rows": 7345,
+        "funding_start": "2019-11-27T08:00:00+00:00",
+        "funding_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_timestamp_lag_seconds": {
+          "median": 0.0,
+          "p95": 0.014,
+          "max": 0.047
+        },
+        "endpoint_mark_rows": 3043,
+        "fallback_mark_rows": 4223,
+        "unresolved_rows_excluded": 79,
+        "resolved_rows": 7266,
+        "resolved_start": "2019-12-23T16:00:00+00:00",
+        "resolved_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_interval_hours": {
+          "8.0": 7265
+        },
+        "invalid_funding_gap_count": 0,
+        "max_funding_gap_hours": 8.0,
+        "overlap_rows": 3043,
+        "overlap_mark_abs_diff_bps": {
+          "median": 0.0,
+          "p95": 0.21612877165155808,
+          "max": 3.6386401955768033
+        },
+        "critical_nulls": {
+          "ts": 0,
+          "funding_nominal_ts": 0,
+          "funding_rate": 0,
+          "mark_price": 0,
+          "mark_price_source": 0
+        },
+        "duplicate_ts": 0,
+        "duplicate_nominal_ts": 0,
+        "sha256": "f16a71928dad18e930db63bfe70d1d949ce79f7061b83717de9c2b50ea7cdb54",
+        "blocker_count": 0
+      },
+      "mark_quality": {
+        "rows": 58126,
+        "start": "2019-12-23T11:00:00+00:00",
+        "end": "2026-08-10T08:00:00+00:00",
+        "expected_rows": 58126,
+        "missing_bars": 0,
+        "duplicate_rows": 0,
+        "invalid_ohlc": 0,
+        "not_closed": 0,
+        "blocker_count": 0
+      },
+      "research_boundaries": {
+        "development_daily_rows": 2079,
+        "development_start": "2019-11-28T00:00:00+00:00",
+        "development_end": "2025-08-06T00:00:00+00:00",
+        "sealed_daily_rows_available_not_consumed_by_p0_model": 365,
+        "sealed_start": "2025-08-07T00:00:00+00:00",
+        "sealed_end_exclusive": "2026-08-07T00:00:00+00:00"
+      },
+      "write_enabled": true,
+      "raw_hourly_write": {
+        "partitions_written": 2449,
+        "first_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2019-11-27/symbol=eth_usdt_usdt.parquet",
+        "last_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2026-08-10/symbol=eth_usdt_usdt.parquet"
+      },
+      "raw_funding_write": {
+        "partitions_written": 2449,
+        "first_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2019-11-27/symbol=eth_usdt_usdt.parquet",
+        "last_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2026-08-10/symbol=eth_usdt_usdt.parquet"
+      },
+      "raw_mark_write": {
+        "partitions_written": 2423,
+        "first_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2019-12-23/symbol=eth_usdt_usdt.parquet",
+        "last_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2026-08-10/symbol=eth_usdt_usdt.parquet"
+      },
+      "feature_paths": {
+        "hourly": "data/features/binance_1d_ma7_rsi6_dapml_p0/ethusdt_perp_1h.parquet",
+        "daily": "data/features/binance_1d_ma7_rsi6_dapml_p0/ethusdt_perp_1d.parquet",
+        "funding": "data/features/binance_1d_ma7_rsi6_dapml_p0/ethusdt_perp_funding_mark.parquet"
+      }
+    },
+    "BNBUSDT": {
+      "contract": {
+        "symbol": "BNBUSDT",
+        "status": "TRADING",
+        "contract_type": "PERPETUAL",
+        "quote_asset": "USDT",
+        "margin_asset": "USDT",
+        "onboard_date_ms": 1581321600000,
+        "onboard_date": "2020-02-10T08:00:00+00:00"
+      },
+      "hourly_quality": {
+        "audit": {
+          "rows": 56953,
+          "groups": 1,
+          "start": "2020-02-10T08:00:00+00:00",
+          "end": "2026-08-10T08:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        },
+        "raw_rows": 56953,
+        "normalized_rows": 56953,
+        "raw_normalized_join": {
+          "left_only": 0,
+          "right_only": 0,
+          "both": 56953
+        },
+        "field_mismatches": {
+          "open": 0,
+          "high": 0,
+          "low": 0,
+          "close": 0,
+          "volume": 0,
+          "quote_volume": 0,
+          "trade_count": 0
+        },
+        "sha256": "824930b061e4e4a8db970e5fdb75c18a91efaab9c59bef3d90f803b1dab1f2b4",
+        "blocker_count": 0
+      },
+      "daily_quality": {
+        "rows": 2372,
+        "start": "2020-02-11T00:00:00+00:00",
+        "end": "2026-08-09T00:00:00+00:00",
+        "source_hourly_rows": 56953,
+        "rejected_incomplete_days": {
+          "2020-02-10": 16,
+          "2026-08-10": 9
+        },
+        "audit": {
+          "rows": 2372,
+          "groups": 1,
+          "start": "2020-02-11T00:00:00+00:00",
+          "end": "2026-08-09T00:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        }
+      },
+      "daily_sha256": "8a0ac256ef97d0d09323fa1753c20ec39abefba073013ca030e0e5fdc7be7991",
+      "funding_quality": {
+        "funding_rows": 7120,
+        "funding_start": "2020-02-10T08:00:00+00:00",
+        "funding_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_timestamp_lag_seconds": {
+          "median": 0.0,
+          "p95": 0.014,
+          "max": 0.047
+        },
+        "endpoint_mark_rows": 3043,
+        "fallback_mark_rows": 4077,
+        "unresolved_rows_excluded": 0,
+        "resolved_rows": 7120,
+        "resolved_start": "2020-02-10T08:00:00+00:00",
+        "resolved_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_interval_hours": {
+          "8.0": 7119
+        },
+        "invalid_funding_gap_count": 0,
+        "max_funding_gap_hours": 8.0,
+        "overlap_rows": 3043,
+        "overlap_mark_abs_diff_bps": {
+          "median": 0.0,
+          "p95": 0.43635879101600056,
+          "max": 4.491901003389476
+        },
+        "critical_nulls": {
+          "ts": 0,
+          "funding_nominal_ts": 0,
+          "funding_rate": 0,
+          "mark_price": 0,
+          "mark_price_source": 0
+        },
+        "duplicate_ts": 0,
+        "duplicate_nominal_ts": 0,
+        "sha256": "4d91e172980edb248648e000ce0a6bb76e5a09586da4552038f83add320051d6",
+        "blocker_count": 0
+      },
+      "mark_quality": {
+        "rows": 56953,
+        "start": "2020-02-10T08:00:00+00:00",
+        "end": "2026-08-10T08:00:00+00:00",
+        "expected_rows": 56953,
+        "missing_bars": 0,
+        "duplicate_rows": 0,
+        "invalid_ohlc": 0,
+        "not_closed": 0,
+        "blocker_count": 0
+      },
+      "research_boundaries": {
+        "development_daily_rows": 2004,
+        "development_start": "2020-02-11T00:00:00+00:00",
+        "development_end": "2025-08-06T00:00:00+00:00",
+        "sealed_daily_rows_available_not_consumed_by_p0_model": 365,
+        "sealed_start": "2025-08-07T00:00:00+00:00",
+        "sealed_end_exclusive": "2026-08-07T00:00:00+00:00"
+      },
+      "write_enabled": true,
+      "raw_hourly_write": {
+        "partitions_written": 2374,
+        "first_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2020-02-10/symbol=bnb_usdt_usdt.parquet",
+        "last_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2026-08-10/symbol=bnb_usdt_usdt.parquet"
+      },
+      "raw_funding_write": {
+        "partitions_written": 2374,
+        "first_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2020-02-10/symbol=bnb_usdt_usdt.parquet",
+        "last_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2026-08-10/symbol=bnb_usdt_usdt.parquet"
+      },
+      "raw_mark_write": {
+        "partitions_written": 2374,
+        "first_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2020-02-10/symbol=bnb_usdt_usdt.parquet",
+        "last_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2026-08-10/symbol=bnb_usdt_usdt.parquet"
+      },
+      "feature_paths": {
+        "hourly": "data/features/binance_1d_ma7_rsi6_dapml_p0/bnbusdt_perp_1h.parquet",
+        "daily": "data/features/binance_1d_ma7_rsi6_dapml_p0/bnbusdt_perp_1d.parquet",
+        "funding": "data/features/binance_1d_ma7_rsi6_dapml_p0/bnbusdt_perp_funding_mark.parquet"
+      }
+    },
+    "SOLUSDT": {
+      "contract": {
+        "symbol": "SOLUSDT",
+        "status": "TRADING",
+        "contract_type": "PERPETUAL",
+        "quote_asset": "USDT",
+        "margin_asset": "USDT",
+        "onboard_date_ms": 1600066800000,
+        "onboard_date": "2020-09-14T07:00:00+00:00"
+      },
+      "hourly_quality": {
+        "audit": {
+          "rows": 51746,
+          "groups": 1,
+          "start": "2020-09-14T07:00:00+00:00",
+          "end": "2026-08-10T08:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        },
+        "raw_rows": 51746,
+        "normalized_rows": 51746,
+        "raw_normalized_join": {
+          "left_only": 0,
+          "right_only": 0,
+          "both": 51746
+        },
+        "field_mismatches": {
+          "open": 0,
+          "high": 0,
+          "low": 0,
+          "close": 0,
+          "volume": 0,
+          "quote_volume": 0,
+          "trade_count": 0
+        },
+        "sha256": "cd00590653c92bcd5d4eac5f1317173f710f7432018409c28203dddbfac5aab9",
+        "blocker_count": 0
+      },
+      "daily_quality": {
+        "rows": 2155,
+        "start": "2020-09-15T00:00:00+00:00",
+        "end": "2026-08-09T00:00:00+00:00",
+        "source_hourly_rows": 51746,
+        "rejected_incomplete_days": {
+          "2020-09-14": 17,
+          "2026-08-10": 9
+        },
+        "audit": {
+          "rows": 2155,
+          "groups": 1,
+          "start": "2020-09-15T00:00:00+00:00",
+          "end": "2026-08-09T00:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        }
+      },
+      "daily_sha256": "4b23c3ddd4ed0e711e71950cfd11a6abd103aa5d9ef09f6eef1f3bc5194bca31",
+      "funding_quality": {
+        "funding_rows": 6544,
+        "funding_start": "2020-09-14T08:00:00.008000+00:00",
+        "funding_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_timestamp_lag_seconds": {
+          "median": 0.0,
+          "p95": 0.015,
+          "max": 0.047
+        },
+        "endpoint_mark_rows": 3043,
+        "fallback_mark_rows": 3501,
+        "unresolved_rows_excluded": 0,
+        "resolved_rows": 6544,
+        "resolved_start": "2020-09-14T08:00:00.008000+00:00",
+        "resolved_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_interval_hours": {
+          "2.0": 98,
+          "4.0": 3,
+          "8.0": 6442
+        },
+        "invalid_funding_gap_count": 0,
+        "max_funding_gap_hours": 8.0,
+        "overlap_rows": 3043,
+        "overlap_mark_abs_diff_bps": {
+          "median": 0.0,
+          "p95": 0.6164236386597689,
+          "max": 7.291172803622903
+        },
+        "critical_nulls": {
+          "ts": 0,
+          "funding_nominal_ts": 0,
+          "funding_rate": 0,
+          "mark_price": 0,
+          "mark_price_source": 0
+        },
+        "duplicate_ts": 0,
+        "duplicate_nominal_ts": 0,
+        "sha256": "12ff32fb99b375c31301c60d955b261d8bf7e03ba50d92c47ab3fd24b680dcbc",
+        "blocker_count": 0
+      },
+      "mark_quality": {
+        "rows": 51745,
+        "start": "2020-09-14T08:00:00+00:00",
+        "end": "2026-08-10T08:00:00+00:00",
+        "expected_rows": 51745,
+        "missing_bars": 0,
+        "duplicate_rows": 0,
+        "invalid_ohlc": 0,
+        "not_closed": 0,
+        "blocker_count": 0
+      },
+      "research_boundaries": {
+        "development_daily_rows": 1787,
+        "development_start": "2020-09-15T00:00:00+00:00",
+        "development_end": "2025-08-06T00:00:00+00:00",
+        "sealed_daily_rows_available_not_consumed_by_p0_model": 365,
+        "sealed_start": "2025-08-07T00:00:00+00:00",
+        "sealed_end_exclusive": "2026-08-07T00:00:00+00:00"
+      },
+      "write_enabled": true,
+      "raw_hourly_write": {
+        "partitions_written": 2157,
+        "first_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2020-09-14/symbol=sol_usdt_usdt.parquet",
+        "last_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2026-08-10/symbol=sol_usdt_usdt.parquet"
+      },
+      "raw_funding_write": {
+        "partitions_written": 2157,
+        "first_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2020-09-14/symbol=sol_usdt_usdt.parquet",
+        "last_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2026-08-10/symbol=sol_usdt_usdt.parquet"
+      },
+      "raw_mark_write": {
+        "partitions_written": 2157,
+        "first_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2020-09-14/symbol=sol_usdt_usdt.parquet",
+        "last_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2026-08-10/symbol=sol_usdt_usdt.parquet"
+      },
+      "feature_paths": {
+        "hourly": "data/features/binance_1d_ma7_rsi6_dapml_p0/solusdt_perp_1h.parquet",
+        "daily": "data/features/binance_1d_ma7_rsi6_dapml_p0/solusdt_perp_1d.parquet",
+        "funding": "data/features/binance_1d_ma7_rsi6_dapml_p0/solusdt_perp_funding_mark.parquet"
+      }
+    },
+    "TRXUSDT": {
+      "contract": {
+        "symbol": "TRXUSDT",
+        "status": "TRADING",
+        "contract_type": "PERPETUAL",
+        "quote_asset": "USDT",
+        "margin_asset": "USDT",
+        "onboard_date_ms": 1579075500000,
+        "onboard_date": "2020-01-15T08:05:00+00:00"
+      },
+      "hourly_quality": {
+        "audit": {
+          "rows": 57576,
+          "groups": 1,
+          "start": "2020-01-15T09:00:00+00:00",
+          "end": "2026-08-10T08:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        },
+        "raw_rows": 57576,
+        "normalized_rows": 57576,
+        "raw_normalized_join": {
+          "left_only": 0,
+          "right_only": 0,
+          "both": 57576
+        },
+        "field_mismatches": {
+          "open": 0,
+          "high": 0,
+          "low": 0,
+          "close": 0,
+          "volume": 0,
+          "quote_volume": 0,
+          "trade_count": 0
+        },
+        "sha256": "a5b736603608fa39adbed8e58db0b87286110a93e64e12f7094d3f15e09011f6",
+        "blocker_count": 0
+      },
+      "daily_quality": {
+        "rows": 2398,
+        "start": "2020-01-16T00:00:00+00:00",
+        "end": "2026-08-09T00:00:00+00:00",
+        "source_hourly_rows": 57576,
+        "rejected_incomplete_days": {
+          "2020-01-15": 15,
+          "2026-08-10": 9
+        },
+        "audit": {
+          "rows": 2398,
+          "groups": 1,
+          "start": "2020-01-16T00:00:00+00:00",
+          "end": "2026-08-09T00:00:00+00:00",
+          "duplicate_rows": 0,
+          "missing_bars": 0,
+          "unexpected_intervals": 0,
+          "open_rows": 0,
+          "timeframe_mismatches": 0,
+          "schema_errors": [],
+          "trusted": true
+        }
+      },
+      "daily_sha256": "66d898b56f5fd1dbbec1e7393cb66354a86ad26210e2148bd0cfa0770ebaf05f",
+      "funding_quality": {
+        "funding_rows": 7197,
+        "funding_start": "2020-01-15T16:00:00+00:00",
+        "funding_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_timestamp_lag_seconds": {
+          "median": 0.0,
+          "p95": 0.014,
+          "max": 0.047
+        },
+        "endpoint_mark_rows": 3043,
+        "fallback_mark_rows": 4154,
+        "unresolved_rows_excluded": 0,
+        "resolved_rows": 7197,
+        "resolved_start": "2020-01-15T16:00:00+00:00",
+        "resolved_end": "2026-08-10T08:00:00.005000+00:00",
+        "funding_interval_hours": {
+          "8.0": 7196
+        },
+        "invalid_funding_gap_count": 0,
+        "max_funding_gap_hours": 8.0,
+        "overlap_rows": 3043,
+        "overlap_mark_abs_diff_bps": {
+          "median": 0.0,
+          "p95": 0.4600000540961896,
+          "max": 16.762262202947298
+        },
+        "critical_nulls": {
+          "ts": 0,
+          "funding_nominal_ts": 0,
+          "funding_rate": 0,
+          "mark_price": 0,
+          "mark_price_source": 0
+        },
+        "duplicate_ts": 0,
+        "duplicate_nominal_ts": 0,
+        "sha256": "2d24184107e2d3770438e9d3b626f19ed80ce45d32b9a8f5d4e443d33837b0db",
+        "blocker_count": 0
+      },
+      "mark_quality": {
+        "rows": 57569,
+        "start": "2020-01-15T16:00:00+00:00",
+        "end": "2026-08-10T08:00:00+00:00",
+        "expected_rows": 57569,
+        "missing_bars": 0,
+        "duplicate_rows": 0,
+        "invalid_ohlc": 0,
+        "not_closed": 0,
+        "blocker_count": 0
+      },
+      "research_boundaries": {
+        "development_daily_rows": 2030,
+        "development_start": "2020-01-16T00:00:00+00:00",
+        "development_end": "2025-08-06T00:00:00+00:00",
+        "sealed_daily_rows_available_not_consumed_by_p0_model": 365,
+        "sealed_start": "2025-08-07T00:00:00+00:00",
+        "sealed_end_exclusive": "2026-08-07T00:00:00+00:00"
+      },
+      "write_enabled": true,
+      "raw_hourly_write": {
+        "partitions_written": 2400,
+        "first_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2020-01-15/symbol=trx_usdt_usdt.parquet",
+        "last_path": "data/raw/ohlcv/exchange=binance/market_type=perp/timeframe=1h/source=binance_futures_kline_api_direct/date=2026-08-10/symbol=trx_usdt_usdt.parquet"
+      },
+      "raw_funding_write": {
+        "partitions_written": 2400,
+        "first_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2020-01-15/symbol=trx_usdt_usdt.parquet",
+        "last_path": "data/raw/funding_rates/exchange=binance/market_type=perp/source=binance_futures_funding_rate_api_direct/date=2026-08-10/symbol=trx_usdt_usdt.parquet"
+      },
+      "raw_mark_write": {
+        "partitions_written": 2400,
+        "first_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2020-01-15/symbol=trx_usdt_usdt.parquet",
+        "last_path": "data/raw/basis_or_premium/exchange=binance/market_type=perp/timeframe=1h/source=binance_mark_price/date=2026-08-10/symbol=trx_usdt_usdt.parquet"
+      },
+      "feature_paths": {
+        "hourly": "data/features/binance_1d_ma7_rsi6_dapml_p0/trxusdt_perp_1h.parquet",
+        "daily": "data/features/binance_1d_ma7_rsi6_dapml_p0/trxusdt_perp_1d.parquet",
+        "funding": "data/features/binance_1d_ma7_rsi6_dapml_p0/trxusdt_perp_funding_mark.parquet"
+      }
+    }
+  },
+  "blocker_count": 0,
+  "write_enabled": true,
+  "artifact": "research/asset-portfolios/1d-ma7-rsi6-direction-aligned-pooled-ml/artifacts/p0_data_2026-08-10/p0_data_quality_manifest.json"
+}

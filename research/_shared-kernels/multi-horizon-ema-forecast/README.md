@@ -15,5 +15,6 @@
 - [HYPE-15M-Multi-Horizon-EMA-Forecast](../../hype/15m-multi-horizon-ema-forecast/README.md)
 - [HYPE-1H-Multi-Horizon-EMA-Forecast](../../hype/1h-multi-horizon-ema-forecast/README.md)
 - [HYPE-1D-Multi-Horizon-EMA-Forecast](../../hype/1d-multi-horizon-ema-forecast/README.md)（复用执行/成本/funding 模块；日线 EWMAC 特征在消费方适配）
+- [BTC-1D-Classic-CTA-Trend](../../btc/1d-classic-cta-trend/README.md)（复用 EMA / 执行 / 成本 / funding 模块；日线 EWMAC 与波动率缩放在消费方适配）
 
 产物与结论分别保存在消费方家族目录；本目录不保存跨家族实验输出。

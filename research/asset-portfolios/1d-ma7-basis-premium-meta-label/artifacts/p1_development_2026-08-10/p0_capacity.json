@@ -1,0 +1,46 @@
+{
+  "schema_version": "binance-1d-ma7-bpml-p0-v1",
+  "generated_at_utc": "2026-08-10T12:45:30.600351+00:00",
+  "input_events": 1448,
+  "usable_events": 1335,
+  "usable_rate": 0.9219613259668509,
+  "per_asset": {
+    "BTC": 283,
+    "ETH": 288,
+    "BNB": 264,
+    "SOL": 227,
+    "TRX": 273
+  },
+  "side_counts": {
+    "long": 718,
+    "short": 617
+  },
+  "rejection_counts": {
+    "market_peers": 24,
+    "local_window": 89
+  },
+  "event_identity_sha256": "f224974f99f65a0ee53545e4fca8870a65555c4dafc4a42c12bfb623ebc1a777",
+  "accepted_panel_identity_sha256": "bd1f2d313dbf839eac210256d2ab99da7fe475fdff4ad4876726a964ddb292ea",
+  "source_audit": {
+    "manifest_sha256": "c0f9d5f80747ed546983ce2734c62097a783c38f5f4b0848eb942f33236137b0",
+    "quality_sha256": "3b24c741525d66bf4d1ba9c1661aa23537aef4aaa049931e4218d777cf8ecd54",
+    "source_sha256": "2272006fe10716b5ac0c58847b27ed373d6a37622ec51c65daa03eb02e1c7dbb",
+    "archive_count": 948,
+    "source_continuity_pass": false,
+    "event_level_admission_required": true
+  },
+  "hype_rows": 0,
+  "hype_files": 0,
+  "hype_requests": 0,
+  "checks": {
+    "usable_events": true,
+    "per_asset": true,
+    "side_capacity": true,
+    "usable_rate": true,
+    "exact_windows_and_market_peers": true,
+    "event_identity": true,
+    "source_manifest_verified": true,
+    "hype_lock": true
+  },
+  "p0_capacity_pass": true
+}

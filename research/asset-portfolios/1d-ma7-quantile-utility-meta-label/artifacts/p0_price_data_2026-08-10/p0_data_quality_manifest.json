@@ -1,0 +1,455 @@
+{
+  "schema_version": "binance-1d-ma7-quml-p0-price-v1",
+  "generated_at_utc": "2026-08-10T13:47:09.772410+00:00",
+  "family": "BIN-1D-MA7-QUML",
+  "contract": "specs/binance-1d-ma7-quml-p0-p1-contract-2026-08-10.md",
+  "cutoff_exclusive": "2025-05-31T00:00:00+00:00",
+  "symbols": [
+    "BCHUSDT",
+    "ETCUSDT",
+    "XLMUSDT",
+    "ATOMUSDT",
+    "VETUSDT",
+    "NEARUSDT",
+    "AAVEUSDT",
+    "FILUSDT"
+  ],
+  "offline_feature_audit": {
+    "BCHUSDT": {
+      "rows": {
+        "hourly": 47448,
+        "daily": 1977,
+        "funding": 5931
+      },
+      "range": {
+        "hourly": [
+          "2020-01-01T00:00:00+00:00",
+          "2025-05-30T23:00:00+00:00"
+        ],
+        "daily": [
+          "2020-01-01T00:00:00+00:00",
+          "2025-05-30T00:00:00+00:00"
+        ],
+        "funding": [
+          "2020-01-01T00:00:00+00:00",
+          "2025-05-30T16:00:00+00:00"
+        ]
+      },
+      "source_values": {
+        "hourly": [
+          "binance_vision_monthly_klines"
+        ],
+        "daily": [
+          "binance_vision_monthly_klines"
+        ],
+        "funding": [
+          "binance_vision_monthly_funding_rate"
+        ]
+      },
+      "missing_hourly": 0,
+      "hourly_nulls": 0,
+      "invalid_hourly_ohlc": 0,
+      "daily_join_mismatch": 0,
+      "daily_field_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "invalid_funding_gaps": 0,
+      "max_funding_gap_hours": 8.0,
+      "funding_nulls": 0,
+      "feature_sha256": {
+        "hourly": "5a561d065ca87584bdae3358ec90f1e4757597f0981e1fe5580174115e5ddba7",
+        "daily": "6ecff79edc1d6f7b78d637e833d4fe863f11815ea07a687e438acf5f6eb0338a",
+        "funding": "be4293860dff2309c99435214b3dfd2c2dd8db06443cf370c55fdee1c2689c24"
+      },
+      "blocker_count": 0
+    },
+    "ETCUSDT": {
+      "rows": {
+        "hourly": 47080,
+        "daily": 1961,
+        "funding": 5885
+      },
+      "range": {
+        "hourly": [
+          "2020-01-16T08:00:00+00:00",
+          "2025-05-30T23:00:00+00:00"
+        ],
+        "daily": [
+          "2020-01-17T00:00:00+00:00",
+          "2025-05-30T00:00:00+00:00"
+        ],
+        "funding": [
+          "2020-01-16T08:00:00+00:00",
+          "2025-05-30T16:00:00+00:00"
+        ]
+      },
+      "source_values": {
+        "hourly": [
+          "binance_vision_monthly_klines"
+        ],
+        "daily": [
+          "binance_vision_monthly_klines"
+        ],
+        "funding": [
+          "binance_vision_monthly_funding_rate"
+        ]
+      },
+      "missing_hourly": 0,
+      "hourly_nulls": 0,
+      "invalid_hourly_ohlc": 0,
+      "daily_join_mismatch": 0,
+      "daily_field_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "invalid_funding_gaps": 0,
+      "max_funding_gap_hours": 8.0,
+      "funding_nulls": 0,
+      "feature_sha256": {
+        "hourly": "e132d7f28d34a08fb956a268ac3d7614df333a044e2528edf6f9cf1bd96d4240",
+        "daily": "7f454192f1b42b63c775af1d5b61c40fdc7501dc9b2b4761308c77451e93e18b",
+        "funding": "da103bd5a04646167b611291dd7f4c2f2eb6cb9f803fa96bb936147ee37cc754"
+      },
+      "blocker_count": 0
+    },
+    "XLMUSDT": {
+      "rows": {
+        "hourly": 46984,
+        "daily": 1957,
+        "funding": 5875
+      },
+      "range": {
+        "hourly": [
+          "2020-01-20T08:00:00+00:00",
+          "2025-05-30T23:00:00+00:00"
+        ],
+        "daily": [
+          "2020-01-21T00:00:00+00:00",
+          "2025-05-30T00:00:00+00:00"
+        ],
+        "funding": [
+          "2020-01-19T16:00:00+00:00",
+          "2025-05-30T16:00:00+00:00"
+        ]
+      },
+      "source_values": {
+        "hourly": [
+          "binance_vision_monthly_klines"
+        ],
+        "daily": [
+          "binance_vision_monthly_klines"
+        ],
+        "funding": [
+          "binance_vision_monthly_funding_rate"
+        ]
+      },
+      "missing_hourly": 0,
+      "hourly_nulls": 0,
+      "invalid_hourly_ohlc": 0,
+      "daily_join_mismatch": 0,
+      "daily_field_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "invalid_funding_gaps": 0,
+      "max_funding_gap_hours": 8.0,
+      "funding_nulls": 0,
+      "feature_sha256": {
+        "hourly": "691ac0a8d0bb9c929f347ea5e67939a161f5e0071f0d59c598f16b9d32403ce9",
+        "daily": "cc3387d871daac843887727e2e5d3a974ae37e9e060fdf0c8d5ebfcca365ace0",
+        "funding": "3f1a8cf8b400ddd0ed6d601b999bbfaae258ca2696a40d74f84dc8fa7f5fd30d"
+      },
+      "blocker_count": 0
+    },
+    "ATOMUSDT": {
+      "rows": {
+        "hourly": 46547,
+        "daily": 1939,
+        "funding": 5818
+      },
+      "range": {
+        "hourly": [
+          "2020-02-07T13:00:00+00:00",
+          "2025-05-30T23:00:00+00:00"
+        ],
+        "daily": [
+          "2020-02-08T00:00:00+00:00",
+          "2025-05-30T00:00:00+00:00"
+        ],
+        "funding": [
+          "2020-02-07T16:00:00.001000+00:00",
+          "2025-05-30T16:00:00+00:00"
+        ]
+      },
+      "source_values": {
+        "hourly": [
+          "binance_futures_kline_api_direct"
+        ],
+        "daily": [
+          "binance_futures_kline_api_direct"
+        ],
+        "funding": [
+          "binance_futures_funding_rate_api_direct"
+        ]
+      },
+      "missing_hourly": 0,
+      "hourly_nulls": 0,
+      "invalid_hourly_ohlc": 0,
+      "daily_join_mismatch": 0,
+      "daily_field_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "invalid_funding_gaps": 0,
+      "max_funding_gap_hours": 8.0,
+      "funding_nulls": 0,
+      "feature_sha256": {
+        "hourly": "87a52333348f2ae53fcc1972e5430b78e73ae3298b12503c5ef2a9a872331cdc",
+        "daily": "ca0885828c55f1eb894afe620a920259ccb6ea29d0d3e896629423d1b8edaad7",
+        "funding": "02c9a46cdaa66a24c36fc48e520e3ec63dffa913fd48375a6906549a16befcf1"
+      },
+      "blocker_count": 0
+    },
+    "VETUSDT": {
+      "rows": {
+        "hourly": 46384,
+        "daily": 1932,
+        "funding": 5798
+      },
+      "range": {
+        "hourly": [
+          "2020-02-14T08:00:00+00:00",
+          "2025-05-30T23:00:00+00:00"
+        ],
+        "daily": [
+          "2020-02-15T00:00:00+00:00",
+          "2025-05-30T00:00:00+00:00"
+        ],
+        "funding": [
+          "2020-02-14T08:00:00+00:00",
+          "2025-05-30T16:00:00+00:00"
+        ]
+      },
+      "source_values": {
+        "hourly": [
+          "binance_futures_kline_api_direct"
+        ],
+        "daily": [
+          "binance_futures_kline_api_direct"
+        ],
+        "funding": [
+          "binance_futures_funding_rate_api_direct"
+        ]
+      },
+      "missing_hourly": 0,
+      "hourly_nulls": 0,
+      "invalid_hourly_ohlc": 0,
+      "daily_join_mismatch": 0,
+      "daily_field_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "invalid_funding_gaps": 0,
+      "max_funding_gap_hours": 8.0,
+      "funding_nulls": 0,
+      "feature_sha256": {
+        "hourly": "2a32ace04ba1607a54b70b4465c92661cdad44b24afcaa6957ac41327b9ad555",
+        "daily": "0e611fbb9d125963e82a715a502514fd34354a58adcddf86bf92c343a605a8e3",
+        "funding": "7bd9927c131f138aa141bd11841f5c8d34723d474afe2f7c65fb636f36241f9e"
+      },
+      "blocker_count": 0
+    },
+    "NEARUSDT": {
+      "rows": {
+        "hourly": 40528,
+        "daily": 1688,
+        "funding": 5066
+      },
+      "range": {
+        "hourly": [
+          "2020-10-15T08:00:00+00:00",
+          "2025-05-30T23:00:00+00:00"
+        ],
+        "daily": [
+          "2020-10-16T00:00:00+00:00",
+          "2025-05-30T00:00:00+00:00"
+        ],
+        "funding": [
+          "2020-10-15T08:00:00+00:00",
+          "2025-05-30T16:00:00+00:00"
+        ]
+      },
+      "source_values": {
+        "hourly": [
+          "binance_futures_kline_api_direct"
+        ],
+        "daily": [
+          "binance_futures_kline_api_direct"
+        ],
+        "funding": [
+          "binance_futures_funding_rate_api_direct"
+        ]
+      },
+      "missing_hourly": 0,
+      "hourly_nulls": 0,
+      "invalid_hourly_ohlc": 0,
+      "daily_join_mismatch": 0,
+      "daily_field_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "invalid_funding_gaps": 0,
+      "max_funding_gap_hours": 8.0,
+      "funding_nulls": 0,
+      "feature_sha256": {
+        "hourly": "92cdefa7566719fb2984936f8d06b0687a205920a0be8255d3b0430355e28491",
+        "daily": "5f7c6c4fd4cfde1a99922387904a922eaf442d41fc3c93e25910fe6964f01260",
+        "funding": "507d310315522cb21b063cc84206f40729211049b9efeffd9f77a053a47ace0d"
+      },
+      "blocker_count": 0
+    },
+    "AAVEUSDT": {
+      "rows": {
+        "hourly": 40505,
+        "daily": 1687,
+        "funding": 5063
+      },
+      "range": {
+        "hourly": [
+          "2020-10-16T07:00:00+00:00",
+          "2025-05-30T23:00:00+00:00"
+        ],
+        "daily": [
+          "2020-10-17T00:00:00+00:00",
+          "2025-05-30T00:00:00+00:00"
+        ],
+        "funding": [
+          "2020-10-16T08:00:00.003000+00:00",
+          "2025-05-30T16:00:00+00:00"
+        ]
+      },
+      "source_values": {
+        "hourly": [
+          "binance_futures_kline_api_direct"
+        ],
+        "daily": [
+          "binance_futures_kline_api_direct"
+        ],
+        "funding": [
+          "binance_futures_funding_rate_api_direct"
+        ]
+      },
+      "missing_hourly": 0,
+      "hourly_nulls": 0,
+      "invalid_hourly_ohlc": 0,
+      "daily_join_mismatch": 0,
+      "daily_field_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "invalid_funding_gaps": 0,
+      "max_funding_gap_hours": 8.0,
+      "funding_nulls": 0,
+      "feature_sha256": {
+        "hourly": "1fd30bc44893437f20df422f82bf4b7366e80424ce1a9b5edb6913ee7c001f6e",
+        "daily": "67a651854aa2481ebab121b8f55eb294e096561fdddbd981524e135a57a559de",
+        "funding": "7428c8cc42d952c2294e3be1189e2672b78cda3dce23fbeb7b61ea8a5c5eb410"
+      },
+      "blocker_count": 0
+    },
+    "FILUSDT": {
+      "rows": {
+        "hourly": 40506,
+        "daily": 1687,
+        "funding": 5063
+      },
+      "range": {
+        "hourly": [
+          "2020-10-16T06:00:00+00:00",
+          "2025-05-30T23:00:00+00:00"
+        ],
+        "daily": [
+          "2020-10-17T00:00:00+00:00",
+          "2025-05-30T00:00:00+00:00"
+        ],
+        "funding": [
+          "2020-10-16T08:00:00.003000+00:00",
+          "2025-05-30T16:00:00+00:00"
+        ]
+      },
+      "source_values": {
+        "hourly": [
+          "binance_futures_kline_api_direct"
+        ],
+        "daily": [
+          "binance_futures_kline_api_direct"
+        ],
+        "funding": [
+          "binance_futures_funding_rate_api_direct"
+        ]
+      },
+      "missing_hourly": 0,
+      "hourly_nulls": 0,
+      "invalid_hourly_ohlc": 0,
+      "daily_join_mismatch": 0,
+      "daily_field_mismatch": {
+        "open": 0,
+        "high": 0,
+        "low": 0,
+        "close": 0,
+        "volume": 0,
+        "quote_volume": 0,
+        "trade_count": 0
+      },
+      "invalid_funding_gaps": 0,
+      "max_funding_gap_hours": 8.0,
+      "funding_nulls": 0,
+      "feature_sha256": {
+        "hourly": "cec95b41bff3ebcb0a05ea46032b6e6557ebc0d3a01501f1646c76ceb2865f2b",
+        "daily": "ca672c789f45168cfb8348a82967024c051b09889cc98998167d2859491fb146",
+        "funding": "4c2d3868b42dd8ad45bfccc6aa7ad042196579d816dbe74538a33fd4d5a15e09"
+      },
+      "blocker_count": 0
+    }
+  },
+  "blocker_count": 0,
+  "hype_rows_consumed": 0,
+  "hype_files_opened": 0,
+  "hype_requests_sent": 0
+}
