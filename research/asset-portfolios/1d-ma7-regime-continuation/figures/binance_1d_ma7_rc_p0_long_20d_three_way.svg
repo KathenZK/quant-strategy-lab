@@ -1,0 +1,311 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1480" height="400" viewBox="0 0 1480 400">
+<rect width="100%" height="100%" fill="#f7f5ef"/>
+<style>text{font-family:Arial,Helvetica,sans-serif;fill:#1f2a2a}.axis{stroke:#8b918d;stroke-width:1}.zero{stroke:#4b5552;stroke-width:1;stroke-dasharray:4 4}.grid{stroke:#d8d6cf;stroke-width:1}.panel{fill:#fffdf8;stroke:#cbc8be;stroke-width:1}</style>
+<text x="40" y="38" font-size="24" font-weight="700">LONG MA7 20D raw expectancy — Slope panels × ER rows × RV columns</text>
+<text x="150" y="76" font-size="16" font-weight="700" text-anchor="middle">Slope Q1</text>
+<text x="33" y="295" font-size="10" text-anchor="end">ER Q1</text>
+<rect x="40" y="268" width="42" height="42" fill="#b83b3b" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="61" y="293" font-size="10" text-anchor="middle">-9.3</text>
+<rect x="84" y="268" width="42" height="42" fill="#c76664" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="105" y="293" font-size="10" text-anchor="middle">-6.4</text>
+<rect x="128" y="268" width="42" height="42" fill="#bf5150" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="149" y="293" font-size="10" text-anchor="middle">-7.3</text>
+<rect x="172" y="268" width="42" height="42" fill="#b93f3f" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="193" y="293" font-size="10" text-anchor="middle">-8.1</text>
+<rect x="216" y="268" width="42" height="42" fill="#b83b3b" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="237" y="293" font-size="10" text-anchor="middle">-15.2</text>
+<text x="33" y="251" font-size="10" text-anchor="end">ER Q2</text>
+<rect x="40" y="224" width="42" height="42" fill="#b83b3b" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="61" y="249" font-size="10" text-anchor="middle">-9.2</text>
+<rect x="84" y="224" width="42" height="42" fill="#cf7f7c" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="105" y="249" font-size="10" text-anchor="middle">-5.3</text>
+<rect x="128" y="224" width="42" height="42" fill="#d69491" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="149" y="249" font-size="10" text-anchor="middle">-4.4</text>
+<rect x="172" y="224" width="42" height="42" fill="#e2b6b2" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="193" y="249" font-size="10" text-anchor="middle">-2.8</text>
+<rect x="216" y="224" width="42" height="42" fill="#b83b3b" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="237" y="249" font-size="10" text-anchor="middle">-14.6</text>
+<text x="33" y="207" font-size="10" text-anchor="end">ER Q3</text>
+<rect x="40" y="180" width="42" height="42" fill="#deaca8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="61" y="205" font-size="10" text-anchor="middle">-3.3</text>
+<rect x="84" y="180" width="42" height="42" fill="#f2f2ec" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="105" y="205" font-size="10" text-anchor="middle">0.2</text>
+<rect x="128" y="180" width="42" height="42" fill="#f4ede8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="149" y="205" font-size="10" text-anchor="middle">-0.3</text>
+<rect x="172" y="180" width="42" height="42" fill="#ca7170" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="193" y="205" font-size="10" text-anchor="middle">-5.9</text>
+<rect x="216" y="180" width="42" height="42" fill="#b83b3b" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="237" y="205" font-size="10" text-anchor="middle">-12.5</text>
+<text x="33" y="163" font-size="10" text-anchor="end">ER Q4</text>
+<rect x="40" y="136" width="42" height="42" fill="#d9e3db" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="61" y="161" font-size="10" text-anchor="middle">1.2</text>
+<rect x="84" y="136" width="42" height="42" fill="#f5eee8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="105" y="161" font-size="10" text-anchor="middle">-0.3</text>
+<rect x="128" y="136" width="42" height="42" fill="#d99d9a" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="149" y="161" font-size="10" text-anchor="middle">-4.0</text>
+<rect x="172" y="136" width="42" height="42" fill="#b83b3b" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="193" y="161" font-size="10" text-anchor="middle">-8.4</text>
+<rect x="216" y="136" width="42" height="42" fill="#b83b3b" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="237" y="161" font-size="10" text-anchor="middle">-10.4</text>
+<text x="33" y="119" font-size="10" text-anchor="end">ER Q5</text>
+<rect x="40" y="92" width="42" height="42" fill="#ebd3ce" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="61" y="117" font-size="10" text-anchor="middle">-1.5</text>
+<rect x="84" y="92" width="42" height="42" fill="#bed3c9" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="105" y="117" font-size="10" text-anchor="middle">2.3</text>
+<rect x="128" y="92" width="42" height="42" fill="#eef0e9" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="149" y="117" font-size="10" text-anchor="middle">0.4</text>
+<rect x="172" y="92" width="42" height="42" fill="#cf807e" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="193" y="117" font-size="10" text-anchor="middle">-5.2</text>
+<rect x="216" y="92" width="42" height="42" fill="#dfada9" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="237" y="117" font-size="10" text-anchor="middle">-3.2</text>
+<text x="61" y="332" font-size="10" text-anchor="middle">RV Q1</text>
+<text x="105" y="332" font-size="10" text-anchor="middle">RV Q2</text>
+<text x="149" y="332" font-size="10" text-anchor="middle">RV Q3</text>
+<text x="193" y="332" font-size="10" text-anchor="middle">RV Q4</text>
+<text x="237" y="332" font-size="10" text-anchor="middle">RV Q5</text>
+<text x="435" y="76" font-size="16" font-weight="700" text-anchor="middle">Slope Q2</text>
+<text x="318" y="295" font-size="10" text-anchor="end">ER Q1</text>
+<rect x="325" y="268" width="42" height="42" fill="#f5f0eb" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="346" y="293" font-size="10" text-anchor="middle">-0.2</text>
+<rect x="369" y="268" width="42" height="42" fill="#bed3c9" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="390" y="293" font-size="10" text-anchor="middle">2.3</text>
+<rect x="413" y="268" width="42" height="42" fill="#efdcd7" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="434" y="293" font-size="10" text-anchor="middle">-1.1</text>
+<rect x="457" y="268" width="42" height="42" fill="#f5f0eb" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="478" y="293" font-size="10" text-anchor="middle">-0.2</text>
+<rect x="501" y="268" width="42" height="42" fill="#bb4443" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="522" y="293" font-size="10" text-anchor="middle">-7.9</text>
+<text x="318" y="251" font-size="10" text-anchor="end">ER Q2</text>
+<rect x="325" y="224" width="42" height="42" fill="#e1e8e0" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="346" y="249" font-size="10" text-anchor="middle">0.9</text>
+<rect x="369" y="224" width="42" height="42" fill="#88b3a4" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="390" y="249" font-size="10" text-anchor="middle">4.5</text>
+<rect x="413" y="224" width="42" height="42" fill="#f4f3ed" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="434" y="249" font-size="10" text-anchor="middle">0.1</text>
+<rect x="457" y="224" width="42" height="42" fill="#e5c0bb" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="478" y="249" font-size="10" text-anchor="middle">-2.4</text>
+<rect x="501" y="224" width="42" height="42" fill="#b83c3c" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="522" y="249" font-size="10" text-anchor="middle">-8.3</text>
+<text x="318" y="207" font-size="10" text-anchor="end">ER Q3</text>
+<rect x="325" y="180" width="42" height="42" fill="#f7f4ee" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="346" y="205" font-size="10" text-anchor="middle">-0.0</text>
+<rect x="369" y="180" width="42" height="42" fill="#97bbae" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="390" y="205" font-size="10" text-anchor="middle">3.9</text>
+<rect x="413" y="180" width="42" height="42" fill="#aac7bb" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="434" y="205" font-size="10" text-anchor="middle">3.1</text>
+<rect x="457" y="180" width="42" height="42" fill="#efded8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="478" y="205" font-size="10" text-anchor="middle">-1.0</text>
+<rect x="501" y="180" width="42" height="42" fill="#ca7170" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="522" y="205" font-size="10" text-anchor="middle">-5.9</text>
+<text x="318" y="163" font-size="10" text-anchor="end">ER Q4</text>
+<rect x="325" y="136" width="42" height="42" fill="#e8cac5" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="346" y="161" font-size="10" text-anchor="middle">-1.9</text>
+<rect x="369" y="136" width="42" height="42" fill="#dca6a3" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="390" y="161" font-size="10" text-anchor="middle">-3.5</text>
+<rect x="413" y="136" width="42" height="42" fill="#d9e3db" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="434" y="161" font-size="10" text-anchor="middle">1.2</text>
+<rect x="457" y="136" width="42" height="42" fill="#e0b1ad" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="478" y="161" font-size="10" text-anchor="middle">-3.0</text>
+<rect x="501" y="136" width="42" height="42" fill="#cb7472" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="522" y="161" font-size="10" text-anchor="middle">-5.8</text>
+<text x="318" y="119" font-size="10" text-anchor="end">ER Q5</text>
+<rect x="325" y="92" width="42" height="42" fill="#cd7977" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="346" y="117" font-size="10" text-anchor="middle">-5.6</text>
+<rect x="369" y="92" width="42" height="42" fill="#edd7d2" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="390" y="117" font-size="10" text-anchor="middle">-1.3</text>
+<rect x="413" y="92" width="42" height="42" fill="#4a8e7b" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="434" y="117" font-size="10" text-anchor="middle">7.0</text>
+<rect x="457" y="92" width="42" height="42" fill="#e4bdb9" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="478" y="117" font-size="10" text-anchor="middle">-2.5</text>
+<rect x="501" y="92" width="42" height="42" fill="#f5f0ea" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="522" y="117" font-size="10" text-anchor="middle">-0.2</text>
+<text x="346" y="332" font-size="10" text-anchor="middle">RV Q1</text>
+<text x="390" y="332" font-size="10" text-anchor="middle">RV Q2</text>
+<text x="434" y="332" font-size="10" text-anchor="middle">RV Q3</text>
+<text x="478" y="332" font-size="10" text-anchor="middle">RV Q4</text>
+<text x="522" y="332" font-size="10" text-anchor="middle">RV Q5</text>
+<text x="720" y="76" font-size="16" font-weight="700" text-anchor="middle">Slope Q3</text>
+<text x="603" y="295" font-size="10" text-anchor="end">ER Q1</text>
+<rect x="610" y="268" width="42" height="42" fill="#f4f3ed" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="631" y="293" font-size="10" text-anchor="middle">0.1</text>
+<rect x="654" y="268" width="42" height="42" fill="#b9d0c6" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="675" y="293" font-size="10" text-anchor="middle">2.5</text>
+<rect x="698" y="268" width="42" height="42" fill="#aac7bc" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="719" y="293" font-size="10" text-anchor="middle">3.1</text>
+<rect x="742" y="268" width="42" height="42" fill="#629c8b" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="763" y="293" font-size="10" text-anchor="middle">6.0</text>
+<rect x="786" y="268" width="42" height="42" fill="#dba39f" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="807" y="293" font-size="10" text-anchor="middle">-3.7</text>
+<text x="603" y="251" font-size="10" text-anchor="end">ER Q2</text>
+<rect x="610" y="224" width="42" height="42" fill="#e6c4bf" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="631" y="249" font-size="10" text-anchor="middle">-2.2</text>
+<rect x="654" y="224" width="42" height="42" fill="#d8e2da" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="675" y="249" font-size="10" text-anchor="middle">1.3</text>
+<rect x="698" y="224" width="42" height="42" fill="#f0f1ea" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="719" y="249" font-size="10" text-anchor="middle">0.3</text>
+<rect x="742" y="224" width="42" height="42" fill="#d9e3db" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="763" y="249" font-size="10" text-anchor="middle">1.2</text>
+<rect x="786" y="224" width="42" height="42" fill="#ecd5d0" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="807" y="249" font-size="10" text-anchor="middle">-1.5</text>
+<text x="603" y="207" font-size="10" text-anchor="end">ER Q3</text>
+<rect x="610" y="180" width="42" height="42" fill="#d79693" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="631" y="205" font-size="10" text-anchor="middle">-4.3</text>
+<rect x="654" y="180" width="42" height="42" fill="#d99c99" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="675" y="205" font-size="10" text-anchor="middle">-4.0</text>
+<rect x="698" y="180" width="42" height="42" fill="#d7e2da" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="719" y="205" font-size="10" text-anchor="middle">1.3</text>
+<rect x="742" y="180" width="42" height="42" fill="#ecd4cf" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="763" y="205" font-size="10" text-anchor="middle">-1.5</text>
+<rect x="786" y="180" width="42" height="42" fill="#d79693" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="807" y="205" font-size="10" text-anchor="middle">-4.3</text>
+<text x="603" y="163" font-size="10" text-anchor="end">ER Q4</text>
+<rect x="610" y="136" width="42" height="42" fill="#d08280" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="631" y="161" font-size="10" text-anchor="middle">-5.1</text>
+<rect x="654" y="136" width="42" height="42" fill="#ebd2cd" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="675" y="161" font-size="10" text-anchor="middle">-1.6</text>
+<rect x="698" y="136" width="42" height="42" fill="#f6f3ed" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="719" y="161" font-size="10" text-anchor="middle">-0.1</text>
+<rect x="742" y="136" width="42" height="42" fill="#f6f3ed" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="763" y="161" font-size="10" text-anchor="middle">-0.1</text>
+<rect x="786" y="136" width="42" height="42" fill="#d69491" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="807" y="161" font-size="10" text-anchor="middle">-4.3</text>
+<text x="603" y="119" font-size="10" text-anchor="end">ER Q5</text>
+<rect x="610" y="92" width="42" height="42" fill="#cb7472" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="631" y="117" font-size="10" text-anchor="middle">-5.8</text>
+<rect x="654" y="92" width="42" height="42" fill="#d99e9b" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="675" y="117" font-size="10" text-anchor="middle">-3.9</text>
+<rect x="698" y="92" width="42" height="42" fill="#dfe7df" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="719" y="117" font-size="10" text-anchor="middle">1.0</text>
+<rect x="742" y="92" width="42" height="42" fill="#cb7371" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="763" y="117" font-size="10" text-anchor="middle">-5.8</text>
+<rect x="786" y="92" width="42" height="42" fill="#e0b0ac" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="807" y="117" font-size="10" text-anchor="middle">-3.1</text>
+<text x="631" y="332" font-size="10" text-anchor="middle">RV Q1</text>
+<text x="675" y="332" font-size="10" text-anchor="middle">RV Q2</text>
+<text x="719" y="332" font-size="10" text-anchor="middle">RV Q3</text>
+<text x="763" y="332" font-size="10" text-anchor="middle">RV Q4</text>
+<text x="807" y="332" font-size="10" text-anchor="middle">RV Q5</text>
+<text x="1005" y="76" font-size="16" font-weight="700" text-anchor="middle">Slope Q4</text>
+<text x="888" y="295" font-size="10" text-anchor="end">ER Q1</text>
+<rect x="895" y="268" width="42" height="42" fill="#ecd3cf" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="916" y="293" font-size="10" text-anchor="middle">-1.5</text>
+<rect x="939" y="268" width="42" height="42" fill="#f6f5ee" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="960" y="293" font-size="10" text-anchor="middle">0.0</text>
+<rect x="983" y="268" width="42" height="42" fill="#efddd8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1004" y="293" font-size="10" text-anchor="middle">-1.1</text>
+<rect x="1027" y="268" width="42" height="42" fill="#c6d8ce" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1048" y="293" font-size="10" text-anchor="middle">2.0</text>
+<rect x="1071" y="268" width="42" height="42" fill="#e4bdb8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1092" y="293" font-size="10" text-anchor="middle">-2.5</text>
+<text x="888" y="251" font-size="10" text-anchor="end">ER Q2</text>
+<rect x="895" y="224" width="42" height="42" fill="#e1b4b0" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="916" y="249" font-size="10" text-anchor="middle">-2.9</text>
+<rect x="939" y="224" width="42" height="42" fill="#e0b2ae" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="960" y="249" font-size="10" text-anchor="middle">-3.0</text>
+<rect x="983" y="224" width="42" height="42" fill="#edefe8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1004" y="249" font-size="10" text-anchor="middle">0.4</text>
+<rect x="1027" y="224" width="42" height="42" fill="#5c9987" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1048" y="249" font-size="10" text-anchor="middle">6.2</text>
+<rect x="1071" y="224" width="42" height="42" fill="#dee6de" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1092" y="249" font-size="10" text-anchor="middle">1.0</text>
+<text x="888" y="207" font-size="10" text-anchor="end">ER Q3</text>
+<rect x="895" y="180" width="42" height="42" fill="#daa09d" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="916" y="205" font-size="10" text-anchor="middle">-3.8</text>
+<rect x="939" y="180" width="42" height="42" fill="#e4bdb8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="960" y="205" font-size="10" text-anchor="middle">-2.5</text>
+<rect x="983" y="180" width="42" height="42" fill="#e3e9e1" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1004" y="205" font-size="10" text-anchor="middle">0.8</text>
+<rect x="1027" y="180" width="42" height="42" fill="#5e9a89" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1048" y="205" font-size="10" text-anchor="middle">6.2</text>
+<rect x="1071" y="180" width="42" height="42" fill="#d6e1d9" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1092" y="205" font-size="10" text-anchor="middle">1.3</text>
+<text x="888" y="163" font-size="10" text-anchor="end">ER Q4</text>
+<rect x="895" y="136" width="42" height="42" fill="#e4bcb8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="916" y="161" font-size="10" text-anchor="middle">-2.5</text>
+<rect x="939" y="136" width="42" height="42" fill="#d48e8b" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="960" y="161" font-size="10" text-anchor="middle">-4.6</text>
+<rect x="983" y="136" width="42" height="42" fill="#eed9d4" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1004" y="161" font-size="10" text-anchor="middle">-1.2</text>
+<rect x="1027" y="136" width="42" height="42" fill="#297a65" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1048" y="161" font-size="10" text-anchor="middle">9.3</text>
+<rect x="1071" y="136" width="42" height="42" fill="#e1e8e0" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1092" y="161" font-size="10" text-anchor="middle">0.9</text>
+<text x="888" y="119" font-size="10" text-anchor="end">ER Q5</text>
+<rect x="895" y="92" width="42" height="42" fill="#f2e8e2" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="916" y="117" font-size="10" text-anchor="middle">-0.6</text>
+<rect x="939" y="92" width="42" height="42" fill="#3c8672" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="960" y="117" font-size="10" text-anchor="middle">7.5</text>
+<rect x="983" y="92" width="42" height="42" fill="#a1c1b5" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="1004" y="117" font-size="10" text-anchor="middle">3.5</text>
+<rect x="1027" y="92" width="42" height="42" fill="#edd9d4" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="1048" y="117" font-size="10" text-anchor="middle">-1.3</text>
+<rect x="1071" y="92" width="42" height="42" fill="#da9e9b" fill-opacity="0.35" stroke="#ffffff"/>
+<text x="1092" y="117" font-size="10" text-anchor="middle">-3.9</text>
+<text x="916" y="332" font-size="10" text-anchor="middle">RV Q1</text>
+<text x="960" y="332" font-size="10" text-anchor="middle">RV Q2</text>
+<text x="1004" y="332" font-size="10" text-anchor="middle">RV Q3</text>
+<text x="1048" y="332" font-size="10" text-anchor="middle">RV Q4</text>
+<text x="1092" y="332" font-size="10" text-anchor="middle">RV Q5</text>
+<text x="1290" y="76" font-size="16" font-weight="700" text-anchor="middle">Slope Q5</text>
+<text x="1173" y="295" font-size="10" text-anchor="end">ER Q1</text>
+<rect x="1180" y="268" width="42" height="42" fill="#d18684" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1201" y="293" font-size="10" text-anchor="middle">-5.0</text>
+<rect x="1224" y="268" width="42" height="42" fill="#e7ece5" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1245" y="293" font-size="10" text-anchor="middle">0.6</text>
+<rect x="1268" y="268" width="42" height="42" fill="#f3e9e4" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1289" y="293" font-size="10" text-anchor="middle">-0.5</text>
+<rect x="1312" y="268" width="42" height="42" fill="#94baad" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1333" y="293" font-size="10" text-anchor="middle">4.0</text>
+<rect x="1356" y="268" width="42" height="42" fill="#f6f3ed" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1377" y="293" font-size="10" text-anchor="middle">-0.1</text>
+<text x="1173" y="251" font-size="10" text-anchor="end">ER Q2</text>
+<rect x="1180" y="224" width="42" height="42" fill="#e3bbb7" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1201" y="249" font-size="10" text-anchor="middle">-2.6</text>
+<rect x="1224" y="224" width="42" height="42" fill="#dca5a1" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1245" y="249" font-size="10" text-anchor="middle">-3.6</text>
+<rect x="1268" y="224" width="42" height="42" fill="#deaca8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1289" y="249" font-size="10" text-anchor="middle">-3.3</text>
+<rect x="1312" y="224" width="42" height="42" fill="#eaede6" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1333" y="249" font-size="10" text-anchor="middle">0.5</text>
+<rect x="1356" y="224" width="42" height="42" fill="#dfadaa" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1377" y="249" font-size="10" text-anchor="middle">-3.2</text>
+<text x="1173" y="207" font-size="10" text-anchor="end">ER Q3</text>
+<rect x="1180" y="180" width="42" height="42" fill="#e7c7c3" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1201" y="205" font-size="10" text-anchor="middle">-2.0</text>
+<rect x="1224" y="180" width="42" height="42" fill="#d99b98" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1245" y="205" font-size="10" text-anchor="middle">-4.0</text>
+<rect x="1268" y="180" width="42" height="42" fill="#e4bcb8" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1289" y="205" font-size="10" text-anchor="middle">-2.5</text>
+<rect x="1312" y="180" width="42" height="42" fill="#eaceca" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1333" y="205" font-size="10" text-anchor="middle">-1.7</text>
+<rect x="1356" y="180" width="42" height="42" fill="#acc8bd" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1377" y="205" font-size="10" text-anchor="middle">3.0</text>
+<text x="1173" y="163" font-size="10" text-anchor="end">ER Q4</text>
+<rect x="1180" y="136" width="42" height="42" fill="#e4eae2" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1201" y="161" font-size="10" text-anchor="middle">0.8</text>
+<rect x="1224" y="136" width="42" height="42" fill="#c8d9cf" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1245" y="161" font-size="10" text-anchor="middle">1.9</text>
+<rect x="1268" y="136" width="42" height="42" fill="#8cb5a7" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1289" y="161" font-size="10" text-anchor="middle">4.3</text>
+<rect x="1312" y="136" width="42" height="42" fill="#a9c7bb" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1333" y="161" font-size="10" text-anchor="middle">3.1</text>
+<rect x="1356" y="136" width="42" height="42" fill="#ccdcd3" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1377" y="161" font-size="10" text-anchor="middle">1.7</text>
+<text x="1173" y="119" font-size="10" text-anchor="end">ER Q5</text>
+<rect x="1180" y="92" width="42" height="42" fill="#93baac" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1201" y="117" font-size="10" text-anchor="middle">4.0</text>
+<rect x="1224" y="92" width="42" height="42" fill="#2d7d68" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1245" y="117" font-size="10" text-anchor="middle">8.2</text>
+<rect x="1268" y="92" width="42" height="42" fill="#4e907e" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1289" y="117" font-size="10" text-anchor="middle">6.8</text>
+<rect x="1312" y="92" width="42" height="42" fill="#c6d8ce" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1333" y="117" font-size="10" text-anchor="middle">2.0</text>
+<rect x="1356" y="92" width="42" height="42" fill="#91b8ab" fill-opacity="1.0" stroke="#ffffff"/>
+<text x="1377" y="117" font-size="10" text-anchor="middle">4.1</text>
+<text x="1201" y="332" font-size="10" text-anchor="middle">RV Q1</text>
+<text x="1245" y="332" font-size="10" text-anchor="middle">RV Q2</text>
+<text x="1289" y="332" font-size="10" text-anchor="middle">RV Q3</text>
+<text x="1333" y="332" font-size="10" text-anchor="middle">RV Q4</text>
+<text x="1377" y="332" font-size="10" text-anchor="middle">RV Q5</text>
+<text x="40" y="365" font-size="12">Cell label = mean return in percent. Pale cells fail n≥100, symbols≥10, dates≥30. Color scale clipped at ±8.33%.</text>
+</svg>

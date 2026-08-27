@@ -1,0 +1,202 @@
+{
+  "study_id": "BIN-1D-MA7-RC-P3",
+  "parent_observations": [
+    "BIN-1D-MA7-RC-P0R2",
+    "BIN-1D-MA7-RC-P1",
+    "BIN-1D-MA7-RC-P2"
+  ],
+  "status": "frozen_pre_confirmation_outcome",
+  "frozen_at_utc": "2026-08-25T08:45:00Z",
+  "purpose": "Confirm whether asset-local price direction and volatility path, optionally augmented by asset-neutral cross-sectional breadth, identify MA breakout events that continue across the complete Binance USDT perpetual universe. Compare fixed rules with two deliberately small pooled models without using symbol or asset class as a feature.",
+  "data": {
+    "market": "all Binance USDT-margined perpetual contracts present in the historical Vision archive or contemporaneous exchangeInfo; no crypto-only, US-stock-only, or hand-selected trading universe filter",
+    "timeframe": "complete UTC 1d bars aggregated from audited 15m bars",
+    "source_priority": [
+      "binance_vision_kline_monthly",
+      "binance_futures_kline_api"
+    ],
+    "development_cutoff_exclusive_utc": "2026-07-01T00:00:00Z",
+    "confirmation_cutoff_exclusive_utc": "2026-08-25T00:00:00Z",
+    "confirmation_period": "2026-07-01 through the last event having a complete horizon before 2026-08-25",
+    "minimum_listing_age_calendar_days": 120,
+    "daily_sequence": "per-symbol consecutive observed complete daily sessions; a gap greater than four calendar days starts a new block",
+    "gap_policy_reason": "supports both 24/7 contracts and contracts with regular weekend or holiday closures; gap diagnostics remain mandatory",
+    "primary_feature_history_observations": 60,
+    "no_252_day_eligibility_requirement": true
+  },
+  "events": {
+    "primary_ma": 7,
+    "fixed_rule_robustness_ma_periods": [5, 10],
+    "long": "close[t-1] <= SMAp[t-1] and close[t] > SMAp[t]",
+    "short": "close[t-1] >= SMAp[t-1] and close[t] < SMAp[t]",
+    "signal_information_time": "complete trigger-day close",
+    "entry": "next observed complete daily session open",
+    "exit": "open after 10 or 20 complete held sessions",
+    "primary_horizons_sessions": [10, 20],
+    "descriptive_horizons_sessions": [1, 3, 5, 40]
+  },
+  "local_features": {
+    "atr20": "simple mean true range over 20 observed complete sessions",
+    "atr_change_5d_pre": "ATR20[t-1] / ATR20[t-6] - 1",
+    "atr_change_10d_pre": "ATR20[t-1] / ATR20[t-11] - 1",
+    "atr_change_20d_pre": "ATR20[t-1] / ATR20[t-21] - 1",
+    "atr_path_percentile_60": "causal percentile of atr_change_10d_pre over the trailing 60 observations including the current pre-breakout measurement",
+    "atr_down_count_10_pre": "number of negative ATR20 changes in the ten observations ending t-1",
+    "atr_up_count_10_pre": "number of positive ATR20 changes in the ten observations ending t-1",
+    "breakout_range_ratio": "true range on t divided by ATR20[t-1]",
+    "ma7_slope_normalized": "(SMA7[t] - SMA7[t-1]) / ATR20[t-1]",
+    "ma30_slope_normalized": "(SMA30[t] - SMA30[t-1]) / ATR20[t-1]",
+    "er20": "absolute 20-session net close move divided by the 20-session absolute close path",
+    "rv20": "annualized standard deviation of 20 log returns using sqrt(365)",
+    "return_5_10_20": "close return over 5, 10, and 20 observed sessions",
+    "distance_ma7_atr": "(close[t] - SMA7[t]) / ATR20[t-1]",
+    "volume_ratio_5_20": "mean quote volume over five observations divided by mean quote volume over twenty observations"
+  },
+  "asset_neutral_breadth": {
+    "leave_one_symbol_out": true,
+    "up_state": "close > SMA30 and SMA30 slope > 0",
+    "down_state": "close < SMA30 and SMA30 slope < 0",
+    "trend_balance": "fraction up_state minus fraction down_state among eligible contemporaneous symbols",
+    "atr_expansion_share": "fraction of eligible contemporaneous symbols with atr_change_10d_pre > 0",
+    "median_return_10": "cross-sectional median 10-session return",
+    "return_10_dispersion": "cross-sectional standard deviation of 10-session returns",
+    "not_used": [
+      "BTC regime",
+      "asset class labels",
+      "symbol identity"
+    ]
+  },
+  "fixed_rules": {
+    "ALL_MA7": "all eligible MA7 crossing events",
+    "SLOPE_ALIGNED": "long ma7_slope_normalized > 0; short ma7_slope_normalized < 0",
+    "P2_LOCAL_FIXED": "SLOPE_ALIGNED and breakout_range_ratio > 1.20 and (long atr_path_percentile_60 > 0.80 or short atr_path_percentile_60 <= 0.20)",
+    "P2_LOCAL_BREADTH_FIXED": "P2_LOCAL_FIXED and direction-aligned leave-one-out trend_balance > 0"
+  },
+  "machine_learning": {
+    "candidate_pool": "SLOPE_ALIGNED MA7 events only",
+    "pooled_across_symbols_and_asset_classes": true,
+    "models": {
+      "LOGISTIC": {
+        "type": "LogisticRegression",
+        "C": 0.2,
+        "max_iter": 2000,
+        "solver": "lbfgs",
+        "preprocess": "training-median imputation then training-only StandardScaler"
+      },
+      "LIGHTGBM": {
+        "type": "LGBMClassifier",
+        "n_estimators": 160,
+        "learning_rate": 0.03,
+        "num_leaves": 15,
+        "max_depth": 4,
+        "min_child_samples": 200,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "reg_lambda": 5.0,
+        "random_state": 42,
+        "n_jobs": 4
+      }
+    },
+    "features": [
+      "direction_sign",
+      "aligned_ma7_slope",
+      "aligned_ma30_slope",
+      "aligned_return_5",
+      "aligned_return_10",
+      "aligned_return_20",
+      "er20",
+      "rv20",
+      "atr_change_5d_pre",
+      "atr_change_10d_pre",
+      "atr_change_20d_pre",
+      "atr_path_percentile_60",
+      "atr_down_share_10_pre",
+      "atr_up_share_10_pre",
+      "breakout_range_ratio",
+      "aligned_distance_ma7_atr",
+      "volume_ratio_5_20",
+      "aligned_breadth_trend_balance_loo",
+      "breadth_atr_expansion_share_loo",
+      "aligned_breadth_median_return_10_loo",
+      "breadth_return_10_dispersion_loo"
+    ],
+    "label": "one if direction-signed next-open-to-exit-open return exceeds the frozen round-trip fee and slippage cost, otherwise zero",
+    "selection": "score above the training-sample 80th percentile; threshold is never chosen from test profitability",
+    "no_calibration": true,
+    "no_hyperparameter_search": true
+  },
+  "validation": {
+    "historical_walk_forward_test_windows": [
+      "2022-01-01/2023-01-01",
+      "2023-01-01/2024-01-01",
+      "2024-01-01/2025-01-01",
+      "2025-01-01/2026-01-01",
+      "2026-01-01/2026-07-01"
+    ],
+    "locked_confirmation_window": "2026-07-01/2026-08-25",
+    "training": "expanding history; only rows whose exit date is strictly before the test window are eligible",
+    "embargo": "enforced by exit-date-before-test-start",
+    "primary_comparisons": [
+      "fixed rule versus SLOPE_ALIGNED",
+      "LOGISTIC top-20-percent versus SLOPE_ALIGNED",
+      "LIGHTGBM top-20-percent versus SLOPE_ALIGNED",
+      "confirmation versus historical walk-forward direction and magnitude"
+    ],
+    "diagnostic_slices_only": [
+      "direction",
+      "test fold",
+      "calendar year",
+      "known US-stock-like Binance contracts versus all other contracts",
+      "MA5 and MA10 fixed-rule neighborhood"
+    ]
+  },
+  "costs_and_account": {
+    "fee_bps_per_side": 10.0,
+    "slippage_bps_per_side": 4.0,
+    "round_trip_bps": 28.0,
+    "funding": "not available for this P3 price-only confirmation and therefore excluded; promotion is blocked until actual funding is added",
+    "account_starting_equity": 1.0,
+    "max_concurrent_positions": 5,
+    "allocation_per_position": 0.2,
+    "same_symbol_overlap": false,
+    "entry_ordering": "descending fixed-rule diagnostic score or model score with symbol as deterministic tie-break",
+    "no_leverage": true
+  },
+  "reporting": {
+    "event_statistics": [
+      "sample count",
+      "symbol count",
+      "date count",
+      "mean",
+      "median",
+      "win rate",
+      "two-way symbol and date clustered t-stat and 95 percent confidence interval"
+    ],
+    "model_statistics": [
+      "ROC AUC",
+      "Brier score",
+      "score-quintile realized net return",
+      "training-threshold selection coverage",
+      "feature importance or standardized coefficient"
+    ],
+    "account_statistics": [
+      "net total return",
+      "annualized return",
+      "maximum drawdown",
+      "trade count",
+      "win rate",
+      "profit factor",
+      "average concurrent positions",
+      "turnover and explicit cost"
+    ]
+  },
+  "decision_boundary": {
+    "diagnostic_only": true,
+    "not_promoted": true,
+    "not_live_ready": true,
+    "universal_claim_requires_non_crypto_evidence": true,
+    "confirmation_is_short_and_must_not_be_used_to_retune": true,
+    "fixed_or_ml_filter_pass_requires": "positive post-cost mean in the locked confirmation period, same sign in a majority of historical walk-forward folds, adequate sample count, and no single direction or asset slice accounting for the entire result",
+    "failure_action": "report NO-GO or INSUFFICIENT EVIDENCE; do not rescue with threshold, feature, holding-period, or leverage tuning"
+  }
+}

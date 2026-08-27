@@ -1,0 +1,110 @@
+{
+  "family": "Binance-1D-MA7-Regime-Continuation",
+  "alias": "BIN-1D-MA7-RC",
+  "study_id": "BIN-1D-MA7-RC-P0",
+  "contract_revision": "P0R2-pre-outcome-source-priority-union",
+  "frozen_at_utc": "2026-08-24T00:00:00Z",
+  "revised_before_outcome_at_utc": "2026-08-24T00:00:00Z",
+  "purpose": "Test whether pre-existing market regime separates continuation from failure after symmetric MA7 close crosses; this is not an MA parameter optimization.",
+  "data": {
+    "exchange": "binance",
+    "market_type": "perp",
+    "quote_asset": "USDT",
+    "sources": [
+      "binance_vision_kline_monthly",
+      "binance_futures_kline_api"
+    ],
+    "source_union_reason": "The repository preserves immutable legacy API partitions. Restricting to Vision alone omits BTC and other core contracts. ETH has controlled cross-source overlap, so the selected union prefers Binance Vision on identical symbol-timestamp keys and uses API rows only where Vision is absent.",
+    "controlled_overlap_policy": "partition by canonical symbol and timestamp; prefer binance_vision_kline_monthly, then binance_futures_kline_api; fail on duplicates within either source",
+    "input_timeframe": "15m",
+    "research_timeframe": "1d",
+    "input_glob": "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=15m/**/*.parquet",
+    "cutoff_exclusive_utc": "2026-07-01T00:00:00Z",
+    "daily_timezone": "UTC",
+    "required_bars_per_complete_day": 96,
+    "historical_universe": "all canonical USDT-style perpetual symbols present in the official Binance Vision monthly archive, including contracts absent from current exchangeInfo",
+    "listing_time_proxy": "first observed official archive bar per canonical contract",
+    "minimum_listing_age_calendar_days": 120,
+    "closed_bars_only": true,
+    "duplicate_policy": "fail within source; deterministic Vision-over-API priority for cross-source overlap; selected union must be unique",
+    "gap_policy": "a signal and its lookback/forward path are valid only when the required UTC daily grid is contiguous"
+  },
+  "event": {
+    "primary_ma_period": 7,
+    "neighbor_ma_periods": [5, 7, 10],
+    "long_trigger": "close[t-1] <= SMA[t-1] and close[t] > SMA[t]",
+    "short_trigger": "close[t-1] >= SMA[t-1] and close[t] < SMA[t]",
+    "trigger_price": "close[t]",
+    "forward_horizons_days": [1, 3, 5, 10, 20, 40],
+    "long_raw_return": "close[t+h] / close[t] - 1",
+    "short_raw_return": "1 - close[t+h] / close[t]",
+    "atr_return": "direction * (close[t+h] - close[t]) / ATR14[t]",
+    "exit_rules": "none",
+    "costs": "not applied because this is a close-to-close conditional event study, not an executable strategy backtest"
+  },
+  "regime": {
+    "normalized_slope": "(SMA30[t] - SMA30[t-1]) / ATR14[t]",
+    "atr14": "Wilder true range arithmetic mean over 14 complete UTC days",
+    "er20": "abs(close[t] - close[t-20]) / sum(abs(close[i] - close[i-1]), i=t-19..t)",
+    "rv20": "sample standard deviation of 20 daily log returns times sqrt(365)",
+    "rv_percentile": "within-contract percentile rank of RV20[t] among the 252 RV20 observations ending at t",
+    "rv_percentile_min_periods": 252,
+    "regime_uses_ma_trigger": false
+  },
+  "binning": {
+    "bins": 5,
+    "normalized_slope": "global pooled quintile cut points computed from all eligible daily regime observations, not from event outcomes",
+    "er20": "global pooled quintile cut points computed from all eligible daily regime observations, not from event outcomes",
+    "rv_percentile_edges": [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+    "edge_reuse": "MA7 edges are frozen and reused unchanged for MA5 and MA10 robustness",
+    "threshold_search": false
+  },
+  "statistics": {
+    "reported": [
+      "sample_count",
+      "symbol_count",
+      "event_date_count",
+      "mean",
+      "median",
+      "win_rate",
+      "two_way_cluster_standard_error",
+      "two_way_cluster_t_stat",
+      "95pct_confidence_interval",
+      "p_value",
+      "benjamini_hochberg_q_value"
+    ],
+    "cluster_dimensions": ["symbol", "event_date"],
+    "combination_cells": 125,
+    "reliable_cell_min_events": 100,
+    "reliable_cell_min_symbols": 10,
+    "reliable_cell_min_dates": 30,
+    "multiple_testing": "Benjamini-Hochberg within each direction, horizon, and return metric across the 125 three-way cells"
+  },
+  "robustness": {
+    "calendar_year": true,
+    "btc_market_phase": {
+      "bull": "BTC close > BTC SMA200 and BTC 30-day return > 0",
+      "bear": "BTC close < BTC SMA200 and BTC 30-day return < 0",
+      "transition": "otherwise"
+    },
+    "liquidity_segment": {
+      "measure": "trailing 30-day median quote volume",
+      "major": "top 20 eligible contracts by point-in-time measure on each event date",
+      "long_tail": "all other eligible contracts"
+    },
+    "temporal_surface_split_utc": "2024-01-01T00:00:00Z",
+    "surface_diagnostics": [
+      "adjacent_cell_roughness",
+      "pre_2024_vs_post_2024_rank_correlation",
+      "MA5_vs_MA7_rank_correlation",
+      "MA10_vs_MA7_rank_correlation"
+    ]
+  },
+  "decision_boundary": {
+    "diagnostic_only": true,
+    "no_parameter_selection": true,
+    "no_promotion": true,
+    "no_live_readiness_claim": true,
+    "interpretation": "A useful regime surface must be economically separated, reasonably monotone or smooth, and repeat across time, direction, liquidity segment, and MA5/7/10 without selecting a winner after seeing results."
+  }
+}

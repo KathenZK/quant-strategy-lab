@@ -1,0 +1,31 @@
+{
+  "study_id": "NDX100-1D-MA7-RC-Y0",
+  "frozen_at_utc": "2026-08-24T00:00:00Z",
+  "role": "survivorship-biased current-constituent Yahoo diagnostic",
+  "universe": {
+    "definition": "all securities in the frozen Nasdaq-100 terminal snapshot on 2026-08-21, applied retrospectively",
+    "source_artifact": "artifacts/ndx100_1d_ma7_rc_p0_membership_daily.parquet",
+    "historical_membership_used": false,
+    "survivorship_bias": true,
+    "benchmark": "QQQ"
+  },
+  "data": {
+    "provider": "Yahoo Finance chart endpoint",
+    "endpoint": "https://query2.finance.yahoo.com/v8/finance/chart/{ticker}",
+    "timeframe": "1d",
+    "fetch_start_inclusive": "2008-01-01",
+    "study_start_inclusive": "2010-01-01",
+    "study_end_inclusive": "2026-08-21",
+    "calendar": "XNAS regular sessions",
+    "price_adjustment": "split-only adjustment reconstructed from Yahoo split events; dividends excluded",
+    "raw_cache": "artifacts/yahoo-current-cache/chart",
+    "credential_required": false,
+    "missing_data_policy": "record and fail closed; never fill prices or returns with zero"
+  },
+  "research_contract": {
+    "inherit_event_and_regime_formulas_from": "NDX100-1D-MA7-RC-P0",
+    "parameter_search": false,
+    "may_replace_historical_point_in_time_p0": false,
+    "promotion_allowed": false
+  }
+}

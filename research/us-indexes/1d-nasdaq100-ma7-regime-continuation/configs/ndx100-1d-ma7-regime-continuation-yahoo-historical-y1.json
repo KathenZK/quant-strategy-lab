@@ -1,0 +1,36 @@
+{
+  "study_id": "NDX100-1D-MA7-RC-Y1",
+  "frozen_at_utc": "2026-08-25T00:00:00Z",
+  "role": "Yahoo historical point-in-time constituent diagnostic",
+  "universe": {
+    "definition": "point-in-time Nasdaq-100 membership reconstructed for every XNAS session",
+    "daily_membership": "artifacts/ndx100_1d_ma7_rc_p0_membership_daily.parquet",
+    "membership_intervals": "artifacts/ndx100_1d_ma7_rc_p0_membership_intervals.csv",
+    "historical_membership_used": true,
+    "survivorship_bias_from_current_constituent_backfill": false,
+    "ticker_union_expected": 252,
+    "entity_union_expected": 247,
+    "benchmark": "QQQ"
+  },
+  "data": {
+    "provider": "Yahoo Finance chart endpoint",
+    "endpoint": "https://query2.finance.yahoo.com/v8/finance/chart/{ticker}",
+    "timeframe": "1d",
+    "fetch_start_inclusive": "2008-01-01",
+    "study_start_inclusive": "2010-01-01",
+    "study_end_inclusive": "2026-08-21",
+    "calendar": "XNAS regular sessions",
+    "price_adjustment": "split-only adjustment reconstructed from Yahoo split events; dividends excluded",
+    "raw_cache": "artifacts/yahoo-historical-cache/chart",
+    "credential_required": false,
+    "missing_data_policy": "fail closed per continuity block; never fill prices or returns with zero",
+    "lineage_fallback": "when the membership ticker has no bar, another ticker in the same frozen entity lineage may supply that date only if the mapping is unique and is recorded"
+  },
+  "research_contract": {
+    "inherit_event_and_regime_formulas_from": "NDX100-1D-MA7-RC-P0",
+    "parameter_search": false,
+    "may_replace_massive_p0": false,
+    "promotion_allowed": false,
+    "minimum_member_stock_day_coverage_for_results": 0.995
+  }
+}
