@@ -1,0 +1,105 @@
+{
+  "study_id": "NDX100-1D-MA7-RC-Y2",
+  "parent_observations": [
+    "NDX100-1D-MA7-RC-Y0",
+    "BIN-1D-MA7-RC-P2"
+  ],
+  "status": "frozen_pre_outcome_external_hypothesis_transfer",
+  "frozen_at_utc": "2026-08-25T04:00:00Z",
+  "purpose": "Test whether the causal ATR-path and breakout-range structure found in Binance P2 transfers without retuning to Nasdaq-100 current-constituent Yahoo daily data.",
+  "universe": {
+    "definition": "2026-08-21 Nasdaq-100 terminal snapshot applied retrospectively",
+    "security_count_expected": 102,
+    "historical_membership_used": false,
+    "survivorship_bias": true,
+    "why_not_y1": "Yahoo historical point-in-time Y1 covers only 81.18% of frozen member stock-days and failed its 99.5% outcome gate"
+  },
+  "data": {
+    "provider": "Yahoo Finance chart endpoint",
+    "price_artifact": "artifacts/ndx100_1d_ma7_rc_y0_yahoo_prices.parquet",
+    "timeframe": "XNAS regular-session 1d",
+    "warmup_start_inclusive": "2008-01-01",
+    "study_start_inclusive": "2010-01-01",
+    "study_end_inclusive": "2026-08-21",
+    "price_adjustment": "split-only; dividends excluded",
+    "minimum_available_history_calendar_days": 120,
+    "missing_data_policy": "continuous blocks only; never fill prices or returns with zero"
+  },
+  "events": {
+    "primary_ma": 7,
+    "robustness_ma_periods": [5, 10],
+    "long": "close[t-1] <= SMAp[t-1] and close[t] > SMAp[t]",
+    "short": "close[t-1] >= SMAp[t-1] and close[t] < SMAp[t]",
+    "forward_horizons_sessions": [1, 3, 5, 10, 20, 40],
+    "return_origin": "trigger close",
+    "execution_simulation": false
+  },
+  "causal_features": {
+    "true_range": "max(high[t]-low[t], abs(high[t]-close[t-1]), abs(low[t]-close[t-1]))",
+    "atr20": "simple mean of true range over 20 complete security sessions",
+    "pre_breakout_atr_change_10d": "ATR20[t-1] / ATR20[t-11] - 1",
+    "atr_change_percentile_60": "causal percentile within the same security and continuous block over trailing 60 observations including the current pre-breakout measurement",
+    "breakout_range_ratio": "true_range[t] / ATR20[t-1]",
+    "ma_slope_normalized": "(SMAp[t]-SMAp[t-1]) / ATR20[t-1]"
+  },
+  "atr_path_styles": {
+    "Q1_FAST_CONTRACTION": "percentile <= 0.20",
+    "Q2_MILD_CONTRACTION": "0.20 < percentile <= 0.40",
+    "Q3_STABLE": "0.40 < percentile <= 0.60",
+    "Q4_MILD_EXPANSION": "0.60 < percentile <= 0.80",
+    "Q5_FAST_EXPANSION": "percentile > 0.80"
+  },
+  "breakout_day_styles": {
+    "WEAK": "breakout_range_ratio < 0.80",
+    "NORMAL": "0.80 <= breakout_range_ratio <= 1.20",
+    "BURST": "breakout_range_ratio > 1.20"
+  },
+  "direction_confirmation": {
+    "long_aligned": "MA slope > 0",
+    "short_aligned": "MA slope < 0",
+    "zero_slope_is_unaligned": true
+  },
+  "external_crypto_hypotheses": {
+    "long": "MA-slope-aligned Q5_FAST_EXPANSION plus BURST",
+    "short": "MA-slope-aligned Q1_FAST_CONTRACTION plus BURST",
+    "selection_source": "BIN-1D-MA7-RC-P2 outcomes, fixed before reading Y2 outcomes",
+    "stock_outcome_parameter_search": false
+  },
+  "historical_rv_comparison": {
+    "common_sample_only": true,
+    "rv_history_sessions": 252,
+    "compare_atr_path_and_rv_extreme_spreads": true
+  },
+  "market_phase": {
+    "benchmark": "QQQ",
+    "bull": "QQQ close > SMA200 and QQQ 30-session return > 0",
+    "bear": "QQQ close < SMA200 and QQQ 30-session return < 0",
+    "transition": "otherwise"
+  },
+  "robustness": {
+    "slices": [
+      "calendar year",
+      "QQQ bull bear transition phase",
+      "cross-sectional top20 versus other liquidity",
+      "MA5 MA7 MA10 neighborhood"
+    ],
+    "primary_horizons": [10, 20, 40]
+  },
+  "statistics": {
+    "return_metrics": ["raw_return", "atr_return"],
+    "inference": "security and event-date two-way clustered",
+    "confidence_interval": 0.95,
+    "reliable_cell_minimum_events": 100,
+    "reliable_cell_minimum_securities": 10,
+    "reliable_cell_minimum_event_dates": 30,
+    "no_threshold_search": true
+  },
+  "decision_boundary": {
+    "diagnostic_only": true,
+    "not_a_strategy_backtest": true,
+    "survivorship_biased_stock_arm": true,
+    "may_not_replace_historical_point_in_time_p0_or_y1": true,
+    "no_parameter_selection_from_stock_results": true,
+    "promotion_allowed": false
+  }
+}

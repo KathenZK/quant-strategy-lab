@@ -1,0 +1,69 @@
+{
+  "study_id": "BIN-1D-TPSA-P1",
+  "parent_study_id": "BIN-1D-TPSA-P0R",
+  "status": "frozen_exploratory_path_label_ml",
+  "frozen_at_utc": "2026-08-25T14:00:00Z",
+  "purpose": "Test whether pre-breakout price and volatility states can rank actual trend occurrence rather than terminal profit.",
+  "input": {
+    "events": "artifacts/binance_1d_tpsa_p0r_events.parquet",
+    "events_sha256": "1c7f9cced72f4cdee48d4f1f9b152f07885de3e7a4bfe5cd35d944046a8d902f",
+    "information_boundary": "the exact P0R prestate features ending at t-1; no trigger-day, symbol, asset-class, BTC, relative-strength, or future feature",
+    "primary_ma_periods": [7, 30],
+    "directions": ["long", "short"]
+  },
+  "label": {
+    "name": "barrier_success_20",
+    "success": "within the next 20 observed sessions, close first reaches +2 ATR20[t-1] in the crossing direction before reaching -1 ATR20[t-1] against the crossing direction",
+    "failure_or_neutral": "the -1 ATR adverse barrier is reached first, or +2 ATR is not reached within 20 sessions",
+    "reason": "this labels whether a directional trend movement actually emerges, not whether the terminal twentieth-session return happens to be positive"
+  },
+  "features": "exact ML_FEATURES tuple frozen in BIN-1D-TPSA-P0",
+  "models": {
+    "TREE": {
+      "type": "DecisionTreeClassifier",
+      "max_depth": 4,
+      "min_samples_leaf": 500,
+      "random_state": 42
+    },
+    "LIGHTGBM": {
+      "type": "LGBMClassifier",
+      "n_estimators": 160,
+      "learning_rate": 0.03,
+      "num_leaves": 15,
+      "max_depth": 4,
+      "min_child_samples": 300,
+      "subsample": 0.8,
+      "colsample_bytree": 0.8,
+      "reg_lambda": 5.0,
+      "random_state": 42,
+      "n_jobs": 4,
+      "verbosity": -1
+    }
+  },
+  "walk_forward_test_windows": [
+    "2022-01-01/2023-01-01",
+    "2023-01-01/2024-01-01",
+    "2024-01-01/2025-01-01",
+    "2025-01-01/2026-01-01",
+    "2026-01-01/2026-07-01"
+  ],
+  "training": "expanding history; an event enters training only when its actual twentieth future session is before test start",
+  "reporting": [
+    "ROC AUC",
+    "average precision",
+    "Brier score",
+    "prediction-decile actual trend occurrence rate",
+    "top-minus-bottom decile occurrence-rate spread",
+    "permutation importance",
+    "readable final tree rules"
+  ],
+  "decision_boundary": {
+    "exploratory_only": true,
+    "no_threshold_selection": true,
+    "no_trade_selection": true,
+    "no_account_backtest": true,
+    "not_promoted": true,
+    "not_live_ready": true,
+    "useful_state_learning_requires": "AUC and top-minus-bottom occurrence spread above random in a clear majority of walk-forward years for both MA7 and MA30 within a direction; a single good year or model is insufficient"
+  }
+}

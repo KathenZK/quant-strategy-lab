@@ -1,0 +1,192 @@
+{
+  "version": "NDX100-membership-overrides-2026-08-24",
+  "canonical_aliases": {
+    "FB": "META",
+    "PCLN": "BKNG",
+    "KFT": "MDLZ",
+    "HANS": "MNST",
+    "WLTW": "WTW",
+    "CTRP": "TCOM",
+    "WFMI": "WFM",
+    "NWSA": "FOXA",
+    "FI": "FISV"
+  },
+  "change_corrections": [
+    {
+      "effective_date": "2014-12-22",
+      "field": "added_ticker",
+      "from": "CMCSA",
+      "to": "CMCSK",
+      "source_url": "https://ir.nasdaq.com/node/84951",
+      "reason": "Nasdaq's official 2014 annual reconstitution added Comcast Class A Special CMCSK; CMCSA was already a constituent."
+    },
+    {
+      "effective_date": "2015-11-11",
+      "field": "removed_ticker",
+      "from": "AVGO",
+      "to": "BRCM",
+      "source_url": "https://ir.nasdaq.com/news-releases/news-release-details/paypal-holdings-inc-join-nasdaq-100-index-beginning-november-11",
+      "reason": "The removed Broadcom Corporation security still traded as BRCM; Avago retained AVGO and remained a separate constituent through the merger."
+    }
+  ],
+  "synthetic_changes": [
+    {
+      "effective_date": "2015-12-14",
+      "added_ticker": "",
+      "removed_ticker": "CMCSK",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1166691/000095010315009516/dp61838_8k.htm",
+      "reason": "CMCSK ceased trading after the 2015-12-11 close and converted one-for-one into already-existing CMCSA; the first regular session without CMCSK was 2015-12-14."
+    }
+  ],
+  "drop_change_rows": [
+    {
+      "effective_date": "2016-02-01",
+      "added_ticker": "AVGO",
+      "removed_ticker": "",
+      "source_url": "https://en.wikipedia.org/wiki/Historical_components_of_the_Nasdaq-100",
+      "reason": "Avago retained ticker AVGO after acquiring Broadcom; this was a corporate name change, not a second index addition."
+    }
+  ],
+  "source_augmentations": [
+    {
+      "effective_date": "2013-07-25",
+      "added_ticker": "CHTR",
+      "removed_ticker": "BMC",
+      "source_url": "https://ir.nasdaq.com/news-releases/news-release-details/charter-communications-inc-join-nasdaq-100-index-beginning-july",
+      "reason": "Nasdaq's official notice confirms CHTR replaced BMC before the 2013-07-25 market open."
+    },
+    {
+      "effective_date": "2015-07-02",
+      "added_ticker": "KHC",
+      "removed_ticker": "KRFT",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1637459/000119312515244356/d38420d8k.htm",
+      "reason": "The issuer's SEC 8-K confirms the merger completed on 2015-07-02 and KRFT converted to KHC."
+    },
+    {
+      "effective_date": "2015-07-31",
+      "added_ticker": "",
+      "removed_ticker": "SIAL",
+      "source_url": "https://ir.nasdaq.com/node/87251",
+      "reason": "Nasdaq's official replacement notice confirms SIAL left the index and SWKS replaced it before the 2015-08-03 open."
+    },
+    {
+      "effective_date": "2018-11-05",
+      "added_ticker": "NXPI",
+      "removed_ticker": "CA",
+      "source_url": "https://ir.nasdaq.com/news-releases/news-release-details/nxp-semiconductors-nv-join-nasdaq-100-index-beginning-november-5",
+      "reason": "Nasdaq's official notice confirms NXPI replaced CA before the 2018-11-05 market open."
+    },
+    {
+      "effective_date": "2025-07-17",
+      "added_ticker": "",
+      "removed_ticker": "ANSS",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1013462/000114036125026141/ef20052066_8k.htm",
+      "reason": "ANSYS's SEC 8-K confirms the acquisition and delisting event completed on 2025-07-17."
+    },
+    {
+      "effective_date": "2026-06-29",
+      "added_ticker": "HONA",
+      "removed_ticker": "",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/2089271/000162828026045874/hona-20260625.htm",
+      "reason": "Honeywell Aerospace's SEC filing confirms regular-way HONA trading began on 2026-06-29 after the spin-off."
+    },
+    {
+      "effective_date": "2026-08-04",
+      "added_ticker": "",
+      "removed_ticker": "EA",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/712515/000114036126031157/ef20079099_8k.htm",
+      "reason": "Electronic Arts' SEC 8-K confirms the merger completion and delisting notice on 2026-08-04."
+    }
+  ],
+  "ticker_renames": [
+    {
+      "old_ticker": "HANS",
+      "new_ticker": "MNST",
+      "effective_date": "2012-01-09",
+      "entity_key": "MNST",
+      "source_url": "https://www.globenewswire.com/news-release/2012/01/05/464838/0/en/Hansen-Natural-Announces-Corporate-Name-Ticker-Symbol-Change.html"
+    },
+    {
+      "old_ticker": "KFT",
+      "new_ticker": "MDLZ",
+      "effective_date": "2012-10-02",
+      "entity_key": "MDLZ",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1545158/000119312512357703/d317589dex991.htm"
+    },
+    {
+      "old_ticker": "NWSA",
+      "new_ticker": "FOXA",
+      "effective_date": "2013-07-01",
+      "entity_key": "FOXA_21CF_CLASS_A",
+      "source_url": "https://www.nasdaqtrader.com/TraderNews.aspx?id=dtn2013-26"
+    },
+    {
+      "old_ticker": "WFMI",
+      "new_ticker": "WFM",
+      "effective_date": "2011-05-06",
+      "entity_key": "WFM",
+      "source_url": "https://assets.wholefoodsmarket.com/www/company-info/investor-relations/financial-press-releases/2011/Q211-Financial.pdf"
+    },
+    {
+      "old_ticker": "PCLN",
+      "new_ticker": "BKNG",
+      "effective_date": "2018-02-27",
+      "entity_key": "BKNG",
+      "source_url": "https://www.bookingholdings.com/press-releases/the-priceline-group-inc-nasdaq-pcln-announces-name-change-to-booking-holdings-inc/"
+    },
+    {
+      "old_ticker": "CTRP",
+      "new_ticker": "TCOM",
+      "effective_date": "2019-11-05",
+      "entity_key": "TCOM",
+      "source_url": "https://investors.trip.com/news-releases/news-release-details/ctrip-announces-result-2019-annual-general-meeting/"
+    },
+    {
+      "old_ticker": "WLTW",
+      "new_ticker": "WTW",
+      "effective_date": "2022-01-10",
+      "entity_key": "WTW",
+      "source_url": "https://www.nasdaq.com/press-release/willis-towers-watson-announces-nasdaq-ticker-symbol-change-from-wltw-to-wtw-2022-01"
+    },
+    {
+      "old_ticker": "FB",
+      "new_ticker": "META",
+      "effective_date": "2022-06-09",
+      "entity_key": "META",
+      "source_url": "https://investor.atmeta.com/investor-news/press-release-details/2022/Meta-Platforms-Inc.-to-Change-Ticker-Symbol-to-META-on-June-9/default.aspx"
+    }
+  ],
+  "special_security_generations": [
+    {
+      "ticker": "GOOG",
+      "before_date": "2014-04-03",
+      "before_entity_key": "ALPHABET_CLASS_A",
+      "on_or_after_entity_key": "ALPHABET_CLASS_C",
+      "source_url": "https://www.sec.gov/Archives/edgar/data/1288776/000128877614000020/goog2014q1-10q.htm",
+      "reason": "Pre-split GOOG was Class A; on 2014-04-03 Class A became GOOGL and the new Class C began using GOOG."
+    },
+    {
+      "ticker": "FOXA",
+      "before_date": "2019-03-19",
+      "before_entity_key": "FOXA_21CF_CLASS_A",
+      "on_or_after_entity_key": "FOXA_FOX_CORP_CLASS_A",
+      "source_url": "https://research.ftserussell.com/products/index-notices/home/getnotice?id=2592308",
+      "reason": "Same-symbol entity replacement when Fox Corporation separated from 21st Century Fox."
+    },
+    {
+      "ticker": "FOX",
+      "before_date": "2019-03-19",
+      "before_entity_key": "FOX_21CF_CLASS_B",
+      "on_or_after_entity_key": "FOX_FOX_CORP_CLASS_B",
+      "source_url": "https://research.ftserussell.com/products/index-notices/home/getnotice?id=2592308",
+      "reason": "Same-symbol entity replacement when Fox Corporation separated from 21st Century Fox."
+    }
+  ],
+  "google_class_a_split": {
+    "effective_date": "2014-04-03",
+    "pre_split_display_ticker": "GOOG",
+    "post_split_display_ticker": "GOOGL",
+    "canonical_entity_key": "ALPHABET_CLASS_A",
+    "source_url": "https://www.nasdaq.com/articles/google-inc.-announces-distribution-of-class-c-capital-stock-2014-01-30"
+  }
+}

@@ -1,0 +1,194 @@
+{
+  "study_id": "BIN-1D-TPSA-P0",
+  "family": "Binance-1D-Trend-Prebreakout-State-Atlas",
+  "status": "frozen_exploratory_contract",
+  "frozen_at_utc": "2026-08-25T12:00:00Z",
+  "purpose": "Map which observable price-path and volatility-path states before a moving-average crossing are followed by directional continuation. The moving average is an event probe, not the definition of market state and not an optimization target.",
+  "data": {
+    "market": "all historical Binance USDT-margined perpetual contracts present in the accepted P0R2 panel; no crypto-only, stock-only, current-universe, market-cap, or hand-selected symbol filter",
+    "timeframe": "complete UTC 1d bars aggregated from 96 audited closed 15m bars",
+    "development_cutoff_exclusive_utc": "2026-07-01T00:00:00Z",
+    "minimum_listing_age_calendar_days": 120,
+    "minimum_prestate_observations": 60,
+    "gap_policy": "features are calculated within the accepted per-symbol continuity block only",
+    "outcome_status": "all dates in this study are exposed exploratory history; no result is clean OOS"
+  },
+  "events": {
+    "primary_ma_periods": [7, 30],
+    "robustness_ma_periods": [5, 10, 20],
+    "long": "close[t-1] <= SMAp[t-1] and close[t] > SMAp[t]",
+    "short": "close[t-1] >= SMAp[t-1] and close[t] < SMAp[t]",
+    "prestate_information_cutoff": "all market-state features end at t-1; trigger-day range, return, distance, and volume are stored separately and excluded from the primary prestate ML models",
+    "forward_horizons_sessions": [1, 3, 5, 10, 20, 40],
+    "event_return": "direction-signed trigger-close to future-close return; raw and pre-event ATR20 standardized",
+    "path_outcomes": [
+      "direction-signed terminal return",
+      "future maximum favorable excursion",
+      "future maximum adverse excursion",
+      "future direction-signed path efficiency",
+      "first +2 ATR favorable barrier before -1 ATR adverse barrier within 10 or 20 sessions"
+    ]
+  },
+  "prestate_axes": {
+    "prior_move": "direction-aligned return from t-61 through t-11, scaled by ATR20[t-1] as a percentage of price",
+    "recent_move": "direction-aligned return from t-11 through t-1 on the same scale",
+    "shock_and_repair": "largest adverse one-day shock, maximum adverse excursion, recovery from the adverse extreme, and distance from the favorable extreme over the prior 60 observations",
+    "trend_lifecycle": "5/10/20/60 observation aligned returns, short-versus-long acceleration, and whether recent movement continues, pauses, pulls back, or reverses the older move",
+    "path_shape": "ER10/20/60, return-sign flip count, and current aligned location inside the prior 20/60 observation range",
+    "consolidation": "prior 5/10/20 range width relative to the prior 60 range and ATR10 relative to ATR60",
+    "volatility": "ATR20 as percent of price, its causal trailing-60 percentile, ATR change over 5/10/20 observations, and RV10/RV60",
+    "excluded_from_primary_state": [
+      "symbol identity",
+      "asset class",
+      "BTC regime",
+      "cross-sectional relative strength",
+      "future information",
+      "trigger-day price or volume fields"
+    ]
+  },
+  "fixed_hypothesis_catalog": [
+    "OPPOSITE_SHOCK_THEN_REPAIR",
+    "OPPOSITE_MOVE_THEN_BASE",
+    "ORDERLY_TREND_PULLBACK_RESUME",
+    "ORDERLY_TREND_CONTINUATION",
+    "LARGE_MOVE_THEN_SIDEWAYS_BREAK",
+    "FAST_REVERSAL",
+    "EXTENDED_MOVE_CONTINUATION",
+    "EXTENDED_MOVE_EXHAUSTION",
+    "LOW_VOL_COMPRESSION",
+    "VOLATILITY_CONTRACTION",
+    "VOLATILITY_EXPANSION",
+    "HIGH_VOL_CHOP",
+    "LOW_EFFICIENCY_RECROSS"
+  ],
+  "fixed_hypothesis_definitions": {
+    "OPPOSITE_SHOCK_THEN_REPAIR": "aligned maximum adverse excursion over 60 observations >= 5 ATR, aligned repair from the adverse extreme >= 1 ATR, and aligned recent-10 move >= 1 ATR",
+    "OPPOSITE_MOVE_THEN_BASE": "aligned prior-50 move <= -3 ATR, absolute aligned recent-10 move <= 1 ATR, and prior 10/60 range ratio <= 0.35",
+    "ORDERLY_TREND_PULLBACK_RESUME": "aligned prior-50 move >= 1 ATR, aligned recent-10 move <= -1 ATR, and ER60 >= 0.35",
+    "ORDERLY_TREND_CONTINUATION": "aligned prior-50 and recent-10 moves >= 1 ATR, ER60 >= 0.35, and ER20 >= 0.35",
+    "LARGE_MOVE_THEN_SIDEWAYS_BREAK": "absolute aligned prior-50 move >= 3 ATR, absolute aligned recent-10 move <= 1 ATR, and prior 10/60 range ratio <= 0.35",
+    "FAST_REVERSAL": "aligned prior-50 move <= -1 ATR and aligned recent-10 move >= 3 ATR",
+    "EXTENDED_MOVE_CONTINUATION": "aligned prior-50 move >= 3 ATR and aligned recent-10 move >= 3 ATR",
+    "EXTENDED_MOVE_EXHAUSTION": "aligned prior-50 move >= 3 ATR and aligned recent-10 move <= -1 ATR",
+    "LOW_VOL_COMPRESSION": "ATR-level causal percentile <= 20% and prior 10/60 range ratio <= 0.35",
+    "VOLATILITY_CONTRACTION": "ATR 10-observation change causal percentile <= 20%",
+    "VOLATILITY_EXPANSION": "ATR 10-observation change causal percentile > 80%",
+    "HIGH_VOL_CHOP": "ATR-level causal percentile > 80%, ER20 < 0.25, and at least 8 return-sign flips in the prior 20 observations",
+    "LOW_EFFICIENCY_RECROSS": "ER20 < 0.25 and at least 8 return-sign flips in the prior 20 observations"
+  },
+  "state_bucketing": {
+    "movement_atr_units": {
+      "LARGE_ADVERSE": "x <= -3",
+      "ADVERSE": "-3 < x < -1",
+      "FLAT": "-1 <= x <= 1",
+      "FAVORABLE": "1 < x < 3",
+      "LARGE_FAVORABLE": "x >= 3"
+    },
+    "volatility_level": "causal own-history trailing-60 percentile: LOW <= 20%, NORMAL 20%-80%, HIGH > 80%",
+    "volatility_path": "causal own-history trailing-60 percentile of 10-observation ATR change: CONTRACTING <= 20%, STABLE 20%-80%, EXPANDING > 80%",
+    "efficiency": "LOW < 0.25, MEDIUM 0.25-0.55, HIGH > 0.55",
+    "no_outcome_threshold_search": true
+  },
+  "machine_learning": {
+    "role": "diagnostic discovery of pre-event states only; no account, no trade-selection threshold, no strategy annualization",
+    "candidate_pool": "all eligible MA crossing events, modeled separately by primary MA period and long/short direction",
+    "models": {
+      "TREE": {
+        "type": "DecisionTreeRegressor",
+        "max_depth": 4,
+        "min_samples_leaf": 500,
+        "random_state": 42
+      },
+      "LIGHTGBM": {
+        "type": "LGBMRegressor",
+        "n_estimators": 160,
+        "learning_rate": 0.03,
+        "num_leaves": 15,
+        "max_depth": 4,
+        "min_child_samples": 300,
+        "subsample": 0.8,
+        "colsample_bytree": 0.8,
+        "reg_lambda": 5.0,
+        "random_state": 42,
+        "n_jobs": 4,
+        "verbosity": -1
+      }
+    },
+    "target": "direction-signed 20-session trigger-close-to-future-close return divided by ATR20[t-1] as a percentage of trigger close",
+    "features": [
+      "aligned_return_5_pre_atr",
+      "aligned_return_10_pre_atr",
+      "aligned_return_20_pre_atr",
+      "aligned_return_60_pre_atr",
+      "aligned_prior_50_return_atr",
+      "aligned_recent_10_return_atr",
+      "aligned_acceleration_5_vs_20",
+      "aligned_location_20",
+      "aligned_location_60",
+      "aligned_repair_from_adverse_60_atr",
+      "aligned_pullback_from_favorable_60_atr",
+      "aligned_worst_day_20_atr",
+      "aligned_best_day_20_atr",
+      "er10_pre",
+      "er20_pre",
+      "er60_pre",
+      "return_sign_flips_20_pre",
+      "range_ratio_5_60_pre",
+      "range_ratio_10_60_pre",
+      "range_ratio_20_60_pre",
+      "atr10_atr60_pre",
+      "atr_pct_pre",
+      "atr_level_percentile_60_pre",
+      "atr_change_5_pre",
+      "atr_change_10_pre",
+      "atr_change_20_pre",
+      "atr_path_percentile_60_pre",
+      "rv10_rv60_pre"
+    ],
+    "walk_forward_test_windows": [
+      "2022-01-01/2023-01-01",
+      "2023-01-01/2024-01-01",
+      "2024-01-01/2025-01-01",
+      "2025-01-01/2026-01-01",
+      "2026-01-01/2026-07-01"
+    ],
+    "training": "expanding history; training events must have complete 20-session outcomes before test start",
+    "reporting": [
+      "Spearman rank correlation between prediction and realized continuation",
+      "prediction-decile realized continuation",
+      "top-minus-bottom decile spread",
+      "permutation feature importance",
+      "readable decision-tree leaf rules"
+    ]
+  },
+  "reporting": {
+    "event_statistics": [
+      "sample count",
+      "symbol count",
+      "event-date count",
+      "mean",
+      "median",
+      "win rate",
+      "symbol-and-date clustered t-stat and 95% confidence interval"
+    ],
+    "required_outputs": [
+      "event and signal frequency by MA, direction, year, month, and week",
+      "prior-move x recent-move transition matrix",
+      "volatility-level x volatility-path matrix",
+      "path-efficiency x consolidation matrix",
+      "fixed readable hypothesis catalog",
+      "MA7 versus MA30 consistency table",
+      "walk-forward ML diagnostics",
+      "plain-Chinese report"
+    ]
+  },
+  "decision_boundary": {
+    "exploratory_only": true,
+    "diagnostic_only": true,
+    "not_promoted": true,
+    "not_live_ready": true,
+    "no_account_backtest": true,
+    "no_parameter_selection": true,
+    "next_strategy_requires": "a small number of economically interpretable prestate relationships that keep the same ordering across MA7 and MA30, both directions or an explicitly justified asymmetry, multiple years, and broad symbol groups, followed by a newly frozen unseen confirmation period"
+  }
+}

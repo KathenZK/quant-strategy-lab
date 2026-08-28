@@ -1,0 +1,139 @@
+{
+  "family": "Nasdaq100-1D-MA7-Regime-Continuation",
+  "alias": "NDX100-1D-MA7-RC",
+  "study_id": "NDX100-1D-MA7-RC-P0",
+  "frozen_at_utc": "2026-08-24T00:00:00Z",
+  "purpose": "Cross-market validation of whether a pre-existing Slope/ER/RV regime separates continuation from failure after symmetric MA7 close crosses in the historical Nasdaq-100.",
+  "data": {
+    "universe": "point-in-time Nasdaq-100 securities, including historical removals, renamed securities, multiple share classes, and delisted constituents",
+    "study_start_session": "2010-01-01",
+    "study_end_session_inclusive": "2026-08-21",
+    "calendar": "XNAS regular sessions from exchange-calendars",
+    "timezone": "America/New_York",
+    "timeframe": "1d",
+    "provider": "Massive (formerly Polygon)",
+    "api_base_url": "https://api.massive.com",
+    "credential_environment_variables_in_priority_order": [
+      "MASSIVE_API_KEY",
+      "POLYGON_API_KEY"
+    ],
+    "aggregates_endpoint": "/v2/aggs/ticker/{ticker}/range/1/day/{from}/{to}",
+    "ticker_details_endpoint": "/v3/reference/tickers/{ticker}?date={date}",
+    "ticker_events_endpoint": "/vX/reference/tickers/{composite_figi}/events",
+    "adjusted_for_splits": true,
+    "dividends_and_delisting_returns": "not included; this is a split-adjusted price-return event study",
+    "missing_session_policy": "fail closed for feature and forward windows; never fill a held or forward return with zero",
+    "raw_cache": "artifacts/massive-cache",
+    "normalized_source_identity": "polygon_api",
+    "benchmark_symbol_for_market_phase": "QQQ"
+  },
+  "membership": {
+    "primary_source_policy": "Nasdaq official additions/deletions, reconstitution notices, and corporate-action releases are preferred; a revision-pinned Wikipedia change table is the complete event index and retains row-level citations.",
+    "history_source": "https://en.wikipedia.org/wiki/Historical_components_of_the_Nasdaq-100",
+    "current_source": "https://en.wikipedia.org/wiki/List_of_NASDAQ-100_companies",
+    "manual_overrides": "ndx100-membership-overrides.json",
+    "effective_date_semantics": "membership changes are effective before the regular-session open on the recorded date unless the source explicitly says the security ceased after the prior close",
+    "daily_membership_artifact": "artifacts/ndx100_1d_ma7_rc_p0_membership_daily.parquet",
+    "identifier_policy": "resolve point-in-time ticker details and composite/share-class FIGIs at each membership interval; retain explicit ticker lineage and same-symbol entity-generation breaks"
+  },
+  "event": {
+    "primary_ma_period": 7,
+    "neighbor_ma_periods": [5, 7, 10],
+    "long_trigger": "close[t-1] <= SMA[t-1] and close[t] > SMA[t]",
+    "short_trigger": "close[t-1] >= SMA[t-1] and close[t] < SMA[t]",
+    "trigger_price": "close[t]",
+    "forward_horizons_trading_sessions": [1, 3, 5, 10, 20, 40],
+    "long_raw_return": "close[t+h] / close[t] - 1",
+    "short_raw_return": "1 - close[t+h] / close[t]",
+    "atr_return": "direction * (close[t+h] - close[t]) / ATR14[t]",
+    "exit_rules": "none",
+    "costs": "not applied because this is a close-to-close conditional event study, not an executable strategy backtest"
+  },
+  "regime": {
+    "normalized_slope": "(SMA30[t] - SMA30[t-1]) / ATR14[t]",
+    "atr14": "arithmetic mean of true range over 14 complete regular sessions",
+    "er20": "abs(close[t] - close[t-20]) / sum(abs(close[i] - close[i-1]), i=t-19..t)",
+    "rv20": "sample standard deviation of 20 daily log returns times sqrt(252)",
+    "rv_percentile": "within-security percentile rank of RV20[t] among the 252 RV20 observations ending at t",
+    "rv_percentile_min_periods": 252,
+    "regime_uses_ma_trigger": false
+  },
+  "binning": {
+    "bins": 5,
+    "normalized_slope": "global pooled quintile edges from all eligible point-in-time member sessions, without reading event outcomes",
+    "er20": "global pooled quintile edges from all eligible point-in-time member sessions, without reading event outcomes",
+    "rv_percentile_edges": [0.0, 0.2, 0.4, 0.6, 0.8, 1.0],
+    "edge_reuse": "MA7 edges are reused unchanged for MA5 and MA10 robustness",
+    "threshold_search": false
+  },
+  "statistics": {
+    "reported": [
+      "sample_count",
+      "security_count",
+      "event_date_count",
+      "mean",
+      "median",
+      "win_rate",
+      "two_way_cluster_standard_error",
+      "two_way_cluster_t_stat",
+      "95pct_confidence_interval",
+      "p_value",
+      "benjamini_hochberg_q_value"
+    ],
+    "cluster_dimensions": ["security_id", "event_date"],
+    "combination_cells": 125,
+    "reliable_cell_min_events": 100,
+    "reliable_cell_min_securities": 10,
+    "reliable_cell_min_dates": 30,
+    "multiple_testing": "Benjamini-Hochberg within each direction, horizon, and return metric across the 125 three-way cells"
+  },
+  "robustness": {
+    "calendar_year": true,
+    "market_phase": {
+      "bull": "QQQ close > QQQ SMA200 and QQQ 30-session return > 0",
+      "bear": "QQQ close < QQQ SMA200 and QQQ 30-session return < 0",
+      "transition": "otherwise"
+    },
+    "liquidity_segment": {
+      "measure": "trailing 30-session median close times volume",
+      "major": "top 20 point-in-time member securities on each event session",
+      "other": "all other point-in-time member securities"
+    },
+    "membership_tenure_segment": {
+      "recent_member": "less than 252 XNAS sessions since the current membership interval began",
+      "seasoned_member": "at least 252 XNAS sessions since the current membership interval began"
+    },
+    "ma_neighborhood": [5, 7, 10],
+    "temporal_surface_split": "2020-01-01",
+    "gap_diagnostic_absolute_thresholds": [0.01, 0.02, 0.03],
+    "gap_diagnostic_role": "diagnostic only; thresholds cannot select or alter the primary result"
+  },
+  "cross_market": {
+    "binance_family": "Binance-1D-MA7-Regime-Continuation",
+    "binance_study_id": "BIN-1D-MA7-RC-P0",
+    "native_history_comparison": true,
+    "common_event_date_window_diagnostic": "intersect the stock event dates with the min/max event dates in the frozen Binance event artifact; reuse each market's already-frozen regime bins without refitting",
+    "comparison_keys": [
+      "direction",
+      "variable",
+      "quintile",
+      "horizon_days",
+      "return_metric"
+    ],
+    "combination_keys": [
+      "direction",
+      "slope_q",
+      "er_q",
+      "rv_q",
+      "horizon_days",
+      "return_metric"
+    ]
+  },
+  "decision_boundary": {
+    "diagnostic_only": true,
+    "no_parameter_selection": true,
+    "no_promotion": true,
+    "no_live_readiness_claim": true,
+    "interpretation": "A cross-market structure requires economically separated and reasonably monotone or smooth relationships that repeat across time, stock subgroups, MA5/7/10, and gap-excluded diagnostics, with the same directional pattern in the Binance and Nasdaq-100 studies."
+  }
+}
