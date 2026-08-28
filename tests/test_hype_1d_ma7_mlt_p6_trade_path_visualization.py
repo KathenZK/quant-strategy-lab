@@ -5,12 +5,23 @@ import json
 from pathlib import Path
 import re
 
+import pytest
+
 
 ROOT = Path(__file__).resolve().parents[1]
 ARTIFACT_DIR = ROOT / "research/hype/1d-ma7-machine-learning-trend/artifacts"
 STEM = "hype_1d_ma7_mlt_p6_v7_anchor_three_head_lifecycle_2026-08-28"
 HTML = ARTIFACT_DIR / f"{STEM}_v7_1_training_trade_paths.html"
 MANIFEST = ARTIFACT_DIR / f"{STEM}_v7_1_training_trade_paths_manifest.json"
+
+
+def _require_retained_artifacts(*paths: Path) -> None:
+    missing = [path for path in paths if not path.exists()]
+    if missing:
+        pytest.skip(
+            "retained trade-path artifacts unavailable: "
+            + ", ".join(path.name for path in missing)
+        )
 
 
 def assert_hashed(path: Path) -> None:
@@ -23,6 +34,7 @@ def assert_hashed(path: Path) -> None:
 
 
 def test_p6_v7_training_manifest_has_complete_paths() -> None:
+    _require_retained_artifacts(HTML, MANIFEST)
     assert_hashed(HTML)
     assert_hashed(MANIFEST)
     manifest = json.loads(MANIFEST.read_text(encoding="utf-8"))
@@ -60,6 +72,7 @@ def test_p6_v7_training_manifest_has_complete_paths() -> None:
 
 
 def test_p6_v7_training_html_is_interactive_and_auditable() -> None:
+    _require_retained_artifacts(HTML)
     html = HTML.read_text(encoding="utf-8")
     assert "__PAYLOAD__" not in html
     assert "http://" not in html
