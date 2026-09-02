@@ -1,22 +1,24 @@
----
-research_classification: diagnostic_topic
----
-
 # Binance-1D-MA7-Cross-Trend-Probability
 
 - Alias：`BIN-1D-MA7-CTP`
-- 市场/周期：Binance USD-M 永续完整 UTC 日K；先做 BTC/ETH/BNB/SOL，再用 `data/cache/binance_perp_1d_from_15m` 扩到全市场。
-- 机制：收盘穿越 `SMA7` 后，统计 20 日先到顺向 `+2 ATR`、未先到反向 `-1 ATR` 的条件概率；再叠加斜率、放量和 7/30/60/90 日上涨/回撤比。
-- 边界：不是 `BIN-1D-TPSA`、`BIN-1D-MA7-RC` 或 `HYPE-1D-MA7-ABT`；无订单、无成本、无策略版本。
-- 当前状态：`explore / diagnostic-only / not promoted / not live-ready`；本 README 兼任临时主账。
+- 市场/周期：Binance USD-M 永续完整 UTC 日K。
+- 机制：收盘严格穿越 SMA7 后，判断下一 UTC open 起 20 日是否先到顺向 `+2 ATR` 而非逆向 `-1 ATR`。
+- 边界：不是 `BIN-1D-CATL` 一般 asset-day 模型，不是 `BIN-1D-TPSA` / `BIN-1D-MA7-RC` / HYPE P0-P8；本轮封存 `HYPE/USDT:USDT`，保留 `HYPER/USDT:USDT`。
+- 当前状态：`explore / diagnostic-only / not promoted / not live-ready`；P3 在训练前因 `feature_known_at < entry_ts` 门禁失败，裁决 `DATA_BLOCK_NOT_READY`；P2 裁决 `SIGNAL_EXPLAINED_BY_MA7_CORE`，无新 OOS。
 
 ## 入口
 
+- [主账](binance-1d-ma7-ctp-core-ledger.md)
 - [决策记录](decision-log.md)
-- [冻结口径](specs/binance-1d-ma7-cross-trend-probability-contract-2026-08-31.md)
-- [四币 SCOUT](diagnostics/binance-1d-ma7-cross-trend-probability-2026-08-31.md)
+- [P0 冻结口径](specs/binance-1d-ma7-cross-trend-probability-contract-2026-08-31.md)
+- [P1 冻结合同](specs/binance-1d-ma7-ctp-p1-cross-conditioned-entry-model-contract-2026-09-01.md)
+- [P1 报告](diagnostics/binance-1d-ma7-ctp-p1-cross-conditioned-entry-model-2026-09-01.md)
+- [P1 审计](diagnostics/binance-1d-ma7-ctp-p1-modeling-audit-2026-09-01.md)
+- [P2 冻结合同](specs/binance-1d-ma7-ctp-p2-pooled-minimal-stability-contract-2026-09-01.md)
+- [P2 报告](diagnostics/binance-1d-ma7-ctp-p2-pooled-minimal-stability-2026-09-01.md)
+- [P2 审计](diagnostics/binance-1d-ma7-ctp-p2-modeling-audit-2026-09-01.md)
+- [P3 冻结合同](specs/binance-1d-ma7-ctp-p3-context-feature-block-audit-contract-2026-09-01.md)
+- [P3 数据门禁报告](diagnostics/binance-1d-ma7-ctp-p3-context-feature-block-audit-2026-09-01.md)
+- [P3 审计](diagnostics/binance-1d-ma7-ctp-p3-modeling-audit-2026-09-01.md)
 - [全市场 SCOUT](diagnostics/binance-1d-ma7-cross-trend-probability-all-market-2026-08-31.md)
-- [HYPE 对照](diagnostics/binance-1d-ma7-cross-trend-probability-hype-vs-universe-2026-08-31.md)
-- [四币脚本](scripts/research_binance_1d_ma7_cross_trend_probability.py)
-- [全市场脚本](scripts/research_binance_1d_ma7_cross_trend_probability_all_market.py)
 - [产物索引](artifacts/README.md)
