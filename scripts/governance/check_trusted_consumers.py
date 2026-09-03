@@ -174,6 +174,38 @@ ACTIVE_TRUSTED_CONSUMERS: tuple[ConsumerSpec, ...] = (
 )
 
 
+BINANCE_CATALOG_CONSUMERS: tuple[ConsumerSpec, ...] = (
+    ConsumerSpec(
+        "research/asset-portfolios/4h-ma7-regime-continuation/scripts/"
+        "research_binance_4h_ma7_regime_continuation_p0r_data.py",
+        ("catalog_trusted_load", "load_derived_ohlcv"),
+        ("load_trusted_dataset", "require_passing_trusted"),
+        "binance-catalog-consumer",
+    ),
+)
+
+FROZEN_LEGACY_OHLCV_GLOBS: tuple[str, ...] = (
+    "research/asset-portfolios/4h-ma7-regime-continuation/scripts/"
+    "research_binance_4h_ma7_regime_continuation_p0.py",
+    "research/asset-portfolios/1d-monthly-cs-momentum-ls3/scripts/"
+    "research_binance_1d_mcsm_ls3.py",
+    "research/asset-portfolios/1d-ma7-cross-trend-probability/scripts/"
+    "research_binance_1d_ma7_cross_trend_probability_all_market.py",
+)
+
+NEW_RESEARCH_FORBIDDEN_SUBSTRINGS: tuple[tuple[str, tuple[str, ...]], ...] = (
+    (
+        "research/asset-portfolios/4h-ma7-regime-continuation/scripts/"
+        "research_binance_4h_ma7_regime_continuation_p0r_data.py",
+        (
+            "data/normalized/ohlcv/exchange=binance/market_type=perp/timeframe=1h",
+            "timeframe=1h/date=",
+            "data/cache/binance_perp_1d_from_15m",
+        ),
+    ),
+)
+
+
 DELEGATING_CONSUMERS: tuple[ConsumerSpec, ...] = (
     ConsumerSpec(
         "research/hype/15m-ema-crossover/scripts/compare_hype_ema_v2_v4.py",
@@ -360,7 +392,7 @@ def classify_path(path: str | Path) -> str:
     normalized = Path(path).as_posix().lstrip("./")
     active = {
         spec.path: spec.classification
-        for spec in (*ACTIVE_TRUSTED_CONSUMERS, *DELEGATING_CONSUMERS)
+        for spec in (*ACTIVE_TRUSTED_CONSUMERS, *DELEGATING_CONSUMERS, *BINANCE_CATALOG_CONSUMERS)
     }
     if normalized in active:
         return active[normalized]
@@ -443,6 +475,26 @@ def scan_consumer(root: Path, spec: ConsumerSpec) -> list[str]:
     return errors
 
 
+def check_new_research_forbidden_globs(root: Path) -> list[str]:
+    errors: list[str] = []
+    for relpath, needles in NEW_RESEARCH_FORBIDDEN_SUBSTRINGS:
+        path = root / relpath
+        if not path.is_file():
+            errors.append(f"{relpath}: missing binance catalog consumer")
+            continue
+        text = path.read_text(encoding="utf-8")
+        for needle in needles:
+            if needle in text:
+                errors.append(
+                    f"{relpath}: new Binance research path contains forbidden "
+                    f"legacy glob/cache token {needle!r}"
+                )
+    for relpath in FROZEN_LEGACY_OHLCV_GLOBS:
+        if not (root / relpath).is_file():
+            errors.append(f"{relpath}: missing frozen-legacy consumer classification target")
+    return errors
+
+
 def validate_auxiliary_classifications(root: Path) -> list[str]:
     errors: list[str] = []
     for item in AUXILIARY_CLASSIFICATIONS:
@@ -462,6 +514,7 @@ def run_checks(root: Path) -> list[str]:
     specs: Iterable[ConsumerSpec] = (
         *ACTIVE_TRUSTED_CONSUMERS,
         *DELEGATING_CONSUMERS,
+        *BINANCE_CATALOG_CONSUMERS,
     )
     errors = [
         error
@@ -469,6 +522,7 @@ def run_checks(root: Path) -> list[str]:
         for error in scan_consumer(root.resolve(), spec)
     ]
     errors.extend(validate_auxiliary_classifications(root.resolve()))
+    errors.extend(check_new_research_forbidden_globs(root.resolve()))
     return errors
 
 
@@ -495,6 +549,7 @@ def main() -> int:
         "Trusted-consumer check passed: "
         f"{len(ACTIVE_TRUSTED_CONSUMERS)} direct consumers, "
         f"{len(DELEGATING_CONSUMERS)} delegated chains, "
+        f"{len(BINANCE_CATALOG_CONSUMERS)} binance catalog consumers, "
         f"{len(AUXILIARY_CLASSIFICATIONS)} classified auxiliary readers."
     )
     return 0

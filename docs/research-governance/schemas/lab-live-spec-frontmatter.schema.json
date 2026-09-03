@@ -24,7 +24,7 @@
     },
     "overlays": {
       "type": "array",
-      "items": {"enum": ["handoff"]},
+      "items": {"enum": ["handoff", "runner-observer"]},
       "uniqueItems": true
     },
     "strategy_id": {"type": "string", "minLength": 1},
