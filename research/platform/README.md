@@ -7,4 +7,11 @@
 - [Binance OHLCV Data Lake Governance](data-lake-governance/README.md)
 - [Cross-Sectional Alpha Research Pipeline Readiness Audit](cross-sectional-alpha-pipeline/README.md)
 
+## 状态
 
+本目录家族状态列写 `见顶层`，以 [research/README.md](../README.md) 为准。
+
+| Directory | 状态 |
+| --- | --- |
+| [data-lake-governance/](data-lake-governance/README.md) | 见顶层 |
+| [cross-sectional-alpha-pipeline/](cross-sectional-alpha-pipeline/README.md) | 见顶层 |

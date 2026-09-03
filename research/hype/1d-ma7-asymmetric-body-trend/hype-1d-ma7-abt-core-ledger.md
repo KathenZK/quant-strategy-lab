@@ -101,6 +101,8 @@
 - Evidence role：现有历史已被研究者查看，只是 diagnostic evidence，不是 clean prospective OOS。
 
 ## Evidence Map
+- 2026-09-03 README 压缩：完整原文与证据链接见 [decision-log.md](decision-log.md) 当日条目。
+
 
 - 版本级证据以 Version Table 的 Evidence 列为准；本图只保留复现入口。
 - [decision-log.md](decision-log.md) · [artifacts/README.md](artifacts/README.md)

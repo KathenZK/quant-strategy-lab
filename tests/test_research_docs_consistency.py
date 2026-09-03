@@ -248,66 +248,339 @@ def test_external_reproduction_specs_are_self_contained() -> None:
     assert not problems, "对外复现规格自包含检查失败:\n" + "\n".join(problems)
 
 
-# 状态词校验：路由表状态列必须使用 strategy-status-glossary.md 的主状态词表。
-_ALLOWED_MAIN_STATUS = (
-  "explore",
-  "registered",
-  "live spec",
-  "dry-run",
-  "live",
-  "NO-GO",
-  "archived",
+# 状态词校验：白名单从 glossary 解析，测试内不维护第二份词表。
+GLOSSARY_PATH = GOVERNANCE_DOCS / "strategy-status-glossary.md"
+_VERSION_TOKEN_RE = re.compile(
+  r"^V\d+(?:\.\d+)*[A-Za-z]?(?:[-–]V?\d+(?:\.\d+)*[A-Za-z]?)?$"
 )
-# 已废弃/禁止的状态词（见 glossary：paper-live 无此阶段，candidate 只能作研究角色词）。
-_FORBIDDEN_STATUS_TOKENS = ("paper-live", "sim-paper", "blocked")
-_FORBIDDEN_STATUS_PHRASES = (
-  "audit / not promoted",
-  "audit only",
-  "live candidate",
-  "dry-run candidate",
-  "promotion candidate",
+_FAMILY_NAME_TOKEN_RE = re.compile(
+  r"^[A-Z]{2,}(?:-[A-Z0-9]+){1,}$|^[A-Za-z][A-Za-z0-9]*-v\d+$"
 )
+_GLOSSARY_HEADINGS = {
+  "main_status": "主状态定义",
+  "modifiers": "修饰词（不是主状态）",
+  "overlays": "Overlay 标签（不是主状态）",
+  "result_labels": "结果标签（result labels）",
+  "index_forward": "索引转发",
+  "forbidden": "禁止的状态词",
+}
+
+
+def _glossary_section(text: str, heading: str) -> str:
+  marker = f"## {heading}"
+  start = text.find(marker)
+  assert start >= 0, f"glossary 缺少章节 {heading!r}"
+  rest = text[start + len(marker):]
+  nxt = re.search(r"\n## ", rest)
+  return rest if nxt is None else rest[: nxt.start()]
+
+
+def _first_column_backticks(section: str) -> tuple[str, ...]:
+  tokens: list[str] = []
+  for line in section.splitlines():
+    stripped = line.strip()
+    if not stripped.startswith("|") or set(stripped) <= {"|", "-", " ", ":"}:
+      continue
+    cell = stripped.strip("|").split("|", 1)[0].strip()
+    found = re.findall(r"`([^`]+)`", cell)
+    if len(found) == 1:
+      tokens.append(found[0])
+  return tuple(dict.fromkeys(tokens))
+
+
+def _forbidden_from_section(section: str) -> tuple[tuple[str, ...], tuple[str, ...]]:
+  tokens: list[str] = []
+  phrases: list[str] = []
+  for line in section.splitlines():
+    stripped = line.strip()
+    if not stripped.startswith("- "):
+      continue
+    found = re.findall(r"`([^`]+)`", stripped)
+    for item in found:
+      if " " in item or "/" in item:
+        phrases.append(item)
+      else:
+        tokens.append(item)
+  return tuple(dict.fromkeys(tokens)), tuple(dict.fromkeys(phrases))
+
+
+def load_glossary_token_sets() -> dict[str, frozenset[str]]:
+  text = GLOSSARY_PATH.read_text(encoding="utf-8")
+  main_status = _first_column_backticks(
+    _glossary_section(text, _GLOSSARY_HEADINGS["main_status"])
+  )
+  modifiers = _first_column_backticks(
+    _glossary_section(text, _GLOSSARY_HEADINGS["modifiers"])
+  )
+  overlays = _first_column_backticks(
+    _glossary_section(text, _GLOSSARY_HEADINGS["overlays"])
+  )
+  result_labels = _first_column_backticks(
+    _glossary_section(text, _GLOSSARY_HEADINGS["result_labels"])
+  )
+  index_forward = _first_column_backticks(
+    _glossary_section(text, _GLOSSARY_HEADINGS["index_forward"])
+  )
+  forbidden_tokens, forbidden_phrases = _forbidden_from_section(
+    _glossary_section(text, _GLOSSARY_HEADINGS["forbidden"])
+  )
+  assert main_status, "未能从 glossary 解析主状态"
+  assert modifiers, "未能从 glossary 解析修饰词"
+  assert result_labels, "未能从 glossary 解析结果标签"
+  return {
+    "main_status": frozenset(main_status),
+    "modifiers": frozenset(modifiers),
+    "overlays": frozenset(overlays),
+    "result_labels": frozenset(result_labels),
+    "index_forward": frozenset(index_forward),
+    "forbidden_tokens": frozenset(forbidden_tokens),
+    "forbidden_phrases": frozenset(forbidden_phrases),
+    "allowed": frozenset(main_status)
+    | frozenset(modifiers)
+    | frozenset(overlays)
+    | frozenset(result_labels)
+    | frozenset(index_forward),
+  }
+
+
+def _is_identity_token(token: str) -> bool:
+  return bool(_VERSION_TOKEN_RE.fullmatch(token) or _FAMILY_NAME_TOKEN_RE.fullmatch(token))
+
+
+def tokenize_status_cell(cell: str, allowed: frozenset[str]) -> list[str]:
+  """最长匹配 glossary 短语，其余按分隔符切开后校验。"""
+  text = cell.replace("`", "")
+  phrases = sorted(allowed, key=len, reverse=True)
+  tokens: list[str] = []
+  i = 0
+  n = len(text)
+  separators = set(" /|;；,，、()（）[]【】:：")
+  while i < n:
+    while i < n and (text[i] in separators or text[i].isspace()):
+      i += 1
+    if i >= n:
+      break
+    matched = None
+    for phrase in phrases:
+      if text.startswith(phrase, i):
+        end = i + len(phrase)
+        nxt = text[end] if end < n else ""
+        prev = text[i - 1] if i else ""
+        boundary_after = end == n or nxt in separators or nxt.isspace()
+        boundary_before = i == 0 or prev in separators or prev.isspace()
+        if boundary_after and boundary_before:
+          matched = phrase
+          break
+    if matched:
+      tokens.append(matched)
+      i += len(matched)
+      continue
+    j = i
+    while j < n and text[j] not in separators and not text[j].isspace():
+      j += 1
+    tokens.append(text[i:j])
+    i = j
+  return tokens
 
 
 def _iter_status_cells(md: Path):
   """遍历 Markdown 表格中"状态"列的单元格，返回 (行号, 内容)。"""
+  for lineno, cells, status_col, _dir_col in _iter_status_rows(md):
+    yield lineno, cells[status_col]
+
+
+def _iter_status_rows(md: Path):
+  """遍历带状态列的表格行，返回 (行号, cells, status_col, dir_col)。"""
   status_col = None
+  dir_col = None
   for lineno, line in enumerate(md.read_text(encoding="utf-8").splitlines(), 1):
     stripped = line.strip()
     if not stripped.startswith("|"):
       status_col = None
+      dir_col = None
       continue
     cells = [c.strip() for c in stripped.strip("|").split("|")]
     if "状态" in cells:
       status_col = cells.index("状态")
+      dir_col = next(
+        (
+          i
+          for i, col in enumerate(cells)
+          if col in {"Directory", "目录"} or "Directory" in col or "目录" in col
+        ),
+        None,
+      )
       continue
     if status_col is None or set(stripped) <= {"|", "-", " ", ":"}:
       continue
     if len(cells) > status_col:
-      yield lineno, cells[status_col]
+      yield lineno, cells, status_col, dir_col
+
+
+def _href_from_cell(cell: str) -> str | None:
+  match = re.search(r"\]\(([^)]+)\)", cell)
+  if not match:
+    return None
+  return match.group(1).split()[0]
+
+
+def _family_key_from_href(href: str, *, asset: str | None) -> tuple[str, str] | None:
+  cleaned = href.split("#", 1)[0]
+  if cleaned.startswith(("http://", "https://", "/")):
+    return None
+  parts = list(Path(cleaned).parts)
+  if parts and parts[-1].lower() == "readme.md":
+    parts = parts[:-1]
+  if not parts:
+    return None
+  if asset is None:
+    if len(parts) >= 2:
+      return parts[0], parts[1]
+    return None
+  name = parts[-1]
+  if name in {".", ".."}:
+    return None
+  return asset, name
+
+
+def _asset_index_paths() -> list[Path]:
+  paths = [RESEARCH / "README.md"]
+  for child in sorted(RESEARCH.iterdir()):
+    if not child.is_dir() or child.name.startswith((".", "_")):
+      continue
+    if child.name == "_shared-kernels":
+      continue
+    readme = child / "README.md"
+    if readme.is_file():
+      paths.append(readme)
+  return paths
 
 
 def test_routing_table_status_labels_use_glossary_vocabulary() -> None:
-  """research/README.md 与 hype/README.md 路由表状态列只能用 glossary 主状态词。"""
+  """索引状态列 tokenize 后每个 token 必须属于 glossary 词表或版本号/家族名。"""
+  token_sets = load_glossary_token_sets()
+  allowed = token_sets["allowed"]
   problems = []
-  for md in [RESEARCH / "README.md", RESEARCH / "hype" / "README.md"]:
+  for md in _asset_index_paths():
     for lineno, cell in _iter_status_cells(md):
       rel = md.relative_to(ROOT)
       lowered = cell.lower()
-      hit_forbidden = [t for t in _FORBIDDEN_STATUS_TOKENS if t in lowered]
+      hit_forbidden = [
+        t for t in token_sets["forbidden_tokens"] if t in lowered
+      ]
       if hit_forbidden:
         problems.append(f"{rel}:L{lineno}: 状态含已废弃词 {hit_forbidden}: {cell}")
-      hit_phrases = [p for p in _FORBIDDEN_STATUS_PHRASES if p in lowered]
+      hit_phrases = [
+        p for p in token_sets["forbidden_phrases"] if p in lowered
+      ]
       if hit_phrases:
         problems.append(f"{rel}:L{lineno}: 已废弃状态短语 {hit_phrases}: {cell}")
-      # "live-ready" 属于修饰词后缀，不算主状态 `live` 命中。
-      cleaned = re.sub(r"live-ready", "", lowered)
-      if not any(
-        re.search(rf"\b{re.escape(s.lower())}\b", cleaned)
-        for s in _ALLOWED_MAIN_STATUS
-      ):
-        problems.append(f"{rel}:L{lineno}: 状态未包含任何 glossary 主状态词: {cell}")
+      tokens = tokenize_status_cell(cell, allowed)
+      if cell.strip() and not tokens:
+        problems.append(f"{rel}:L{lineno}: 状态列无法分词: {cell}")
+        continue
+      unknown = [
+        tok for tok in tokens if tok not in allowed and not _is_identity_token(tok)
+      ]
+      if unknown:
+        problems.append(
+          f"{rel}:L{lineno}: 非法状态 token {unknown}: {cell}"
+        )
+      if "见顶层" not in tokens and not (token_sets["main_status"] & set(tokens)):
+        problems.append(
+          f"{rel}:L{lineno}: 状态未包含任何 glossary 主状态词: {cell}"
+        )
   assert not problems, "路由表状态词校验失败:\n" + "\n".join(problems)
+
+
+def test_asset_index_status_matches_top_level_or_defers() -> None:
+  """顶层 research/README.md 家族状态串必须与资产 README 相同，或资产写「见顶层」。"""
+  top = RESEARCH / "README.md"
+  top_status: dict[tuple[str, str], str] = {}
+  for lineno, cells, status_col, dir_col in _iter_status_rows(top):
+    href = _href_from_cell(cells[dir_col]) if dir_col is not None else None
+    if not href:
+      continue
+    key = _family_key_from_href(href, asset=None)
+    if key is None:
+      continue
+    top_status[key] = cells[status_col]
+  problems = []
+  for (asset, family), expected in sorted(top_status.items()):
+    asset_readme = RESEARCH / asset / "README.md"
+    if not asset_readme.is_file():
+      problems.append(f"{asset}/{family}: 缺少资产 README")
+      continue
+    found = None
+    for _, cells, status_col, dir_col in _iter_status_rows(asset_readme):
+      href = _href_from_cell(cells[dir_col]) if dir_col is not None else None
+      if not href:
+        continue
+      key = _family_key_from_href(href, asset=asset)
+      if key == (asset, family):
+        found = cells[status_col]
+        break
+    if found is None:
+      problems.append(f"{asset}/{family}: 资产 README 状态列缺少对应行")
+    elif found not in {expected, "见顶层"}:
+      problems.append(
+        f"{asset}/{family}: 顶层状态 {expected!r} 与资产 README {found!r} 不一致"
+      )
+  assert not problems, "顶层/资产状态列不一致:\n" + "\n".join(problems)
+
+
+_FAMILY_README_SKIP_ASSETS = {"_shared-kernels"}
+_FAMILY_README_SKIP_CHILDREN = {
+  "scripts",
+  "artifacts",
+  "notes",
+  "diagnostics",
+  "ablations",
+  "specs",
+  "live-specs",
+  "runner-tracking",
+  "legacy-canvas",
+}
+# shrink-only：只允许压缩，不允许新增超长家族 README。
+FAMILY_README_SHRINK_ONLY_ALLOWLIST = {
+  "research/asset-portfolios/15m-asset-specific-six-strategy-selector/README.md",
+  "research/hype/1d-ma7-machine-learning-trend/README.md",
+  "research/us-indexes/1d-nasdaq100-ma7-regime-continuation/README.md",
+  "research/asset-portfolios/1d-ma7-cross-trend-probability/README.md",
+  "research/bnb/15m-adaptive-regime/README.md",
+  "research/sol/1h-adaptive-regime/README.md",
+}
+
+
+def _iter_family_readmes() -> list[Path]:
+  found: list[Path] = []
+  for readme in sorted(RESEARCH.glob("*/*/README.md")):
+    asset = readme.parts[-3]
+    child = readme.parts[-2]
+    if asset in _FAMILY_README_SKIP_ASSETS or child in _FAMILY_README_SKIP_CHILDREN:
+      continue
+    found.append(readme)
+  return found
+
+
+def test_family_readmes_respect_length_budget() -> None:
+  """家族 README 作为路由页应 ≤30 行；超长文件只能留在 shrink-only allowlist。"""
+  problems = []
+  seen_allowlist: set[str] = set()
+  for readme in _iter_family_readmes():
+    rel = str(readme.relative_to(ROOT))
+    line_count = len(readme.read_text(encoding="utf-8").splitlines())
+    if rel in FAMILY_README_SHRINK_ONLY_ALLOWLIST:
+      seen_allowlist.add(rel)
+      if line_count <= 30:
+        problems.append(f"{rel}: 已压回 {line_count} 行，请从 shrink-only allowlist 移除")
+      continue
+    if line_count > 30:
+      problems.append(f"{rel}: {line_count} 行，超过家族 README 30 行阈值")
+  missing = FAMILY_README_SHRINK_ONLY_ALLOWLIST - seen_allowlist
+  if missing:
+    problems.append(f"allowlist 指向不存在的家族 README: {sorted(missing)}")
+  assert not problems, "家族 README 长度检查失败:\n" + "\n".join(problems)
 
 
 def test_shared_kernel_versions_are_frozen() -> None:

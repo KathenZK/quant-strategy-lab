@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from dataclasses import dataclass, field
+from dataclasses import asdict, dataclass, field
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, Iterable
@@ -17,9 +17,13 @@ from strategy_lab.data.authenticity import (
 from strategy_lab.data.lake import DataLakeLayout
 from strategy_lab.data.manifest import (
     DATASET_MANIFEST_FILENAME,
+    DATASET_REGISTRY_FILENAME,
     INPUT_SNAPSHOT_FILENAME,
+    INPUT_SNAPSHOTS_DIRNAME,
     LINEAGE_INCOMPLETE,
+    FingerprintMode,
     assert_published_derived_manifest,
+    assert_safe_derived_slug,
     parquet_inventory,
     resolve_parquet_inventory_fingerprint,
     sha256_canonical,
@@ -39,6 +43,16 @@ from strategy_lab.data.sql_audit import (
     audit_selected_sql,
     describe_parquet_columns,
     timeframe_seconds,
+)
+from strategy_lab.data.windows import (
+    GapPolicy,
+    LoadPurpose,
+    assert_request_window_covered,
+    contiguous_segments,
+    gap_intervals_from_timestamps,
+    holding_window_has_gap,
+    lookback_crosses_gap,
+    require_aware_utc,
 )
 
 
@@ -163,6 +177,22 @@ class DatasetRegistry:
         copied = dict(self._records)
         copied[record.dataset_id] = record
         return DatasetRegistry(copied.values())
+
+    @classmethod
+    def from_layout(cls, layout: DataLakeLayout) -> "DatasetRegistry":
+        records = list(default_dataset_records())
+        path = layout.derived_datasets_dir / DATASET_REGISTRY_FILENAME
+        if not path.exists():
+            return cls(records)
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        extras = payload.get("records") if isinstance(payload, dict) else None
+        if not isinstance(extras, list):
+            raise ValueError(f"dataset registry {path} must contain a records list")
+        by_id = {record.dataset_id: record for record in records}
+        for item in extras:
+            record = dataset_record_from_payload(item)
+            by_id[record.dataset_id] = record
+        return cls(by_id.values())
 
 
 def default_dataset_records() -> tuple[DatasetRecord, ...]:
@@ -344,13 +374,112 @@ def default_dataset_records() -> tuple[DatasetRecord, ...]:
     )
 
 
+def dataset_record_to_payload(record: DatasetRecord) -> dict[str, Any]:
+    union = record.source_union
+    spec = record.coverage_spec
+    return {
+        "dataset_id": record.dataset_id,
+        "layer": record.layer,
+        "kind": record.kind.value,
+        "status": record.status.value,
+        "declared_scope": record.declared_scope.value,
+        "exchange": record.exchange,
+        "market_type": record.market_type.value,
+        "timeframe": record.timeframe,
+        "relative_root": record.relative_root,
+        "source_adjudication": record.source_adjudication,
+        "priority_union_version": record.priority_union_version,
+        "rebuildable": record.rebuildable,
+        "is_standard_ohlcv": record.is_standard_ohlcv,
+        "cutoff_exclusive_utc": record.cutoff_exclusive_utc,
+        "input_dataset_id": record.input_dataset_id,
+        "builder": record.builder,
+        "coverage_spec": None if spec is None else asdict(spec),
+        "source_union": None
+        if union is None
+        else {
+            "version": union.version,
+            "priority": list(union.priority),
+            "reject_unlisted": union.reject_unlisted,
+            "passthrough": union.passthrough,
+        },
+    }
+
+
+def dataset_record_from_payload(payload: dict[str, Any]) -> DatasetRecord:
+    union_payload = payload.get("source_union")
+    union = None
+    if isinstance(union_payload, dict):
+        union = SourceUnionPolicy(
+            version=str(union_payload.get("version") or PRIORITY_UNION_VERSION),
+            priority=tuple(union_payload.get("priority") or ()),
+            reject_unlisted=bool(union_payload.get("reject_unlisted", True)),
+            passthrough=bool(union_payload.get("passthrough", False)),
+        )
+    spec_payload = payload.get("coverage_spec")
+    spec = FullMarketCoverageSpec(**spec_payload) if isinstance(spec_payload, dict) else None
+    return DatasetRecord(
+        dataset_id=str(payload["dataset_id"]),
+        layer=str(payload["layer"]),
+        kind=DatasetKind(payload.get("kind") or "ohlcv"),
+        status=DatasetStatus(payload["status"]),
+        declared_scope=DatasetScope(payload["declared_scope"]),
+        exchange=str(payload["exchange"]),
+        market_type=MarketType(payload["market_type"]),
+        timeframe=payload.get("timeframe"),
+        relative_root=str(payload["relative_root"]),
+        source_adjudication=str(payload.get("source_adjudication") or ""),
+        priority_union_version=str(payload.get("priority_union_version") or PRIORITY_UNION_VERSION),
+        rebuildable=bool(payload.get("rebuildable", True)),
+        is_standard_ohlcv=bool(payload.get("is_standard_ohlcv", True)),
+        cutoff_exclusive_utc=payload.get("cutoff_exclusive_utc"),
+        input_dataset_id=payload.get("input_dataset_id"),
+        builder=payload.get("builder"),
+        coverage_spec=spec,
+        source_union=union,
+    )
+
+
+def registry_path(layout: DataLakeLayout) -> Path:
+    return layout.derived_datasets_dir / DATASET_REGISTRY_FILENAME
+
+
+def register_derived_dataset(layout: DataLakeLayout, record: DatasetRecord) -> Path:
+    """Persist a published derived dataset into the layout registry file.
+
+    This does not glob the data root. Unpublished staging paths are refused.
+    """
+
+    assert_safe_derived_slug(Path(record.relative_root).name)
+    root = record.absolute_root(layout)
+    if "_staging" in root.as_posix().split("/"):
+        raise ValueError(f"refusing to register unpublished staging path: {root}")
+    if not (root / DATASET_MANIFEST_FILENAME).exists():
+        raise ValueError(f"cannot register {record.dataset_id}: published manifest missing at {root}")
+    path = registry_path(layout)
+    existing: list[dict[str, Any]] = []
+    if path.exists():
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        existing = list(payload.get("records") or [])
+    by_id = {str(item.get("dataset_id")): item for item in existing}
+    by_id[record.dataset_id] = dataset_record_to_payload(record)
+    write_canonical_json(
+        path,
+        {
+            "schema_version": "1.0",
+            "records": [by_id[key] for key in sorted(by_id)],
+        },
+    )
+    return path
+
+
 def resolve_dataset(
     dataset_id: str,
     *,
     layout: DataLakeLayout,
     registry: DatasetRegistry | None = None,
 ) -> DatasetRecord:
-    record = (registry or DatasetRegistry()).get(dataset_id)
+    record = (registry or DatasetRegistry.from_layout(layout)).get(dataset_id)
     root = record.absolute_root(layout)
     if layout.root_dir.resolve() not in root.parents and root != layout.root_dir.resolve():
         raise ValueError(f"dataset root escapes data lake: {root}")
@@ -410,13 +539,10 @@ def _connect() -> duckdb.DuckDBPyConnection:
     return connection
 
 
-def _as_utc(value: pd.Timestamp | str | None) -> pd.Timestamp | None:
+def _as_utc(value: pd.Timestamp | str | None, *, field: str = "timestamp") -> pd.Timestamp | None:
     if value is None:
         return None
-    timestamp = pd.Timestamp(value)
-    if timestamp.tzinfo is None:
-        return timestamp.tz_localize("UTC")
-    return timestamp.tz_convert("UTC")
+    return require_aware_utc(value, field=field)
 
 
 def coverage_from_frame(frame: pd.DataFrame) -> dict[str, Any]:
@@ -848,8 +974,9 @@ def verify_input_snapshot(
         )
     actual = resolve_parquet_inventory_fingerprint(
         root,
-        cache_dir=_audit_cache_dir(layout),
+        cache_dir=None,
         expected=str(payload.get("parquet_inventory_fingerprint") or ""),
+        mode=FingerprintMode.STRICT_CONTENT,
     )
     recorded = str(payload.get("parquet_inventory_fingerprint") or "")
     if actual != recorded:
@@ -885,6 +1012,7 @@ def inspect_dataset(
     parquet_fingerprint = resolve_parquet_inventory_fingerprint(
         record.absolute_root(layout),
         cache_dir=_audit_cache_dir(layout),
+        mode=FingerprintMode.FAST_METADATA,
     )
     coverage, union_stats = _cached_coverage_from_sql(
         record,
@@ -911,7 +1039,7 @@ def list_registered_datasets(
     layout: DataLakeLayout,
     registry: DatasetRegistry | None = None,
 ) -> list[dict[str, Any]]:
-    resolved = registry or DatasetRegistry()
+    resolved = registry or DatasetRegistry.from_layout(layout)
     rows: list[dict[str, Any]] = []
     for record in resolved.records():
         root = record.absolute_root(layout)
@@ -990,6 +1118,12 @@ def load_canonical_binance_perp_1d(
     require_closed: bool = True,
     allow_full_scan: bool = False,
     max_materialize_rows: int = 2_000_000,
+    expected_parquet_fingerprint: str | None = None,
+    expected_manifest_identity: dict[str, Any] | None = None,
+    purpose: LoadPurpose = "unspecified",
+    gap_policy: GapPolicy | None = None,
+    allow_incomplete_request_window: bool = False,
+    fingerprint_mode: FingerprintMode | str = FingerprintMode.STRICT_CONTENT,
 ) -> TrustedLoad:
     """Canonical 1d entry for new daily experiments. Not the family 1d cache."""
 
@@ -1004,6 +1138,12 @@ def load_canonical_binance_perp_1d(
         require_closed=require_closed,
         allow_full_scan=allow_full_scan,
         max_materialize_rows=max_materialize_rows,
+        expected_parquet_fingerprint=expected_parquet_fingerprint,
+        expected_manifest_identity=expected_manifest_identity,
+        purpose=purpose,
+        gap_policy=gap_policy,
+        allow_incomplete_request_window=allow_incomplete_request_window,
+        fingerprint_mode=fingerprint_mode,
     )
 
 
@@ -1032,6 +1172,7 @@ def _sql_audit_for_record(
     allowed_sources: tuple[str, ...],
     blocked_source_patterns: tuple[str, ...],
     parquet_fingerprint: str,
+    gap_policy: str,
 ) -> dict[str, Any]:
     where, filter_params = _filter_clause(
         symbol=symbol,
@@ -1046,11 +1187,17 @@ def _sql_audit_for_record(
         {
             "rule_version": SQL_AUDIT_RULE_VERSION,
             "dataset_id": record.dataset_id,
+            "exchange": record.exchange,
+            "market_type": record.market_type.value,
+            "timeframe": record.timeframe,
+            "source_adjudication": record.source_adjudication,
             "parquet_inventory_fingerprint": parquet_fingerprint,
             "symbol": symbol,
             "start": None if start is None else start.isoformat(),
             "end": None if end is None else end.isoformat(),
             "require_closed": require_closed,
+            "closed_bar_cutoff": True,
+            "gap_policy": gap_policy,
             "union_version": record.priority_union_version,
             "allowed_sources": list(allowed_sources),
             "blocked_source_patterns": list(blocked_source_patterns),
@@ -1060,13 +1207,24 @@ def _sql_audit_for_record(
     cache_dir.mkdir(parents=True, exist_ok=True)
     cache_path = cache_dir / f"{cache_key}.json"
     if cache_path.exists():
-        cached = json.loads(cache_path.read_text(encoding="utf-8"))
-        if (
-            cached.get("parquet_inventory_fingerprint") == parquet_fingerprint
-            and cached.get("rule_version") == SQL_AUDIT_RULE_VERSION
-            and cached.get("audit")
-        ):
-            return cached["audit"]
+        try:
+            cached = json.loads(cache_path.read_text(encoding="utf-8"))
+        except json.JSONDecodeError as exc:
+            cache_path.unlink(missing_ok=True)
+            cached = None
+            del exc
+        else:
+            identity_ok = (
+                cached.get("parquet_inventory_fingerprint") == parquet_fingerprint
+                and cached.get("rule_version") == SQL_AUDIT_RULE_VERSION
+                and cached.get("dataset_id") == record.dataset_id
+                and cached.get("gap_policy") == gap_policy
+                and isinstance(cached.get("audit"), dict)
+                and cached["audit"].get("quality_status") in {"PASS", "FAIL"}
+            )
+            if identity_ok:
+                return cached["audit"]
+            cache_path.unlink(missing_ok=True)
     with _connect() as connection:
         columns = describe_parquet_columns(connection, files)
         unclosed = 0
@@ -1088,6 +1246,9 @@ def _sql_audit_for_record(
             blocked_source_patterns=blocked_source_patterns,
             columns=columns,
             cutoff_unclosed_excluded_rows=unclosed,
+            expected_exchange=record.exchange,
+            expected_market_type=record.market_type.value,
+            files=files,
         )
     write_canonical_json(
         cache_path,
@@ -1095,6 +1256,7 @@ def _sql_audit_for_record(
             "parquet_inventory_fingerprint": parquet_fingerprint,
             "rule_version": SQL_AUDIT_RULE_VERSION,
             "dataset_id": record.dataset_id,
+            "gap_policy": gap_policy,
             "audit": audit,
         },
     )

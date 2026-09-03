@@ -12,7 +12,7 @@ from strategy_lab.data.authenticity import (
 )
 from strategy_lab.data.sessions import timeframe_delta
 
-SQL_AUDIT_RULE_VERSION = "binance_ohlcv_sql_audit_v1"
+SQL_AUDIT_RULE_VERSION = "binance_ohlcv_sql_audit_v2"
 REQUIRED_OHLCV_COLUMNS = (
     "ts",
     "exchange",
@@ -30,6 +30,9 @@ REQUIRED_OHLCV_COLUMNS = (
     "is_closed",
     "source",
 )
+VARCHAR_COLUMNS = {"exchange", "symbol", "market_type", "timeframe", "source"}
+FLOAT_COLUMNS = {"open", "high", "low", "close", "volume", "quote_volume", "vwap", "trade_count"}
+BOOLEAN_COLUMNS = {"is_closed"}
 
 
 def timeframe_seconds(timeframe: str) -> int:
@@ -37,9 +40,7 @@ def timeframe_seconds(timeframe: str) -> int:
 
 
 def unverified_source_sql(column: str = "source") -> str:
-    """SQL predicate: true when source is missing, blocked, unknown, or illegal composite."""
-
-    src = f"lower(trim(CAST({column} AS VARCHAR)))"
+    src = f"lower(trim({column}))"
     parts = (
         f"list_filter(string_split(replace({src}, 'composite:', ''), '+'), "
         "part -> length(trim(part)) > 0)"
@@ -70,15 +71,75 @@ def unverified_source_sql(column: str = "source") -> str:
     """
 
 
+def describe_one_parquet(
+    connection: duckdb.DuckDBPyConnection,
+    path: Path,
+) -> dict[str, str]:
+    described = connection.execute(
+        "DESCRIBE SELECT * FROM read_parquet(?, hive_partitioning = false, union_by_name = false) LIMIT 0",
+        [str(path)],
+    ).fetch_df()
+    return {str(row["column_name"]): str(row["column_type"]) for _, row in described.iterrows()}
+
+
 def describe_parquet_columns(
     connection: duckdb.DuckDBPyConnection,
     files: list[Path],
 ) -> list[str]:
-    described = connection.execute(
-        "DESCRIBE SELECT * FROM read_parquet(?, hive_partitioning = false, union_by_name = true) LIMIT 0",
-        [[str(path) for path in files]],
-    ).fetch_df()
-    return [str(name) for name in described["column_name"].tolist()]
+    if not files:
+        return []
+    return list(describe_one_parquet(connection, files[0]))
+
+
+def _type_allowed(column: str, declared: str) -> bool:
+    upper = declared.upper()
+    if column == "ts":
+        return "TIME ZONE" in upper and "TIMESTAMP" in upper
+    if column in BOOLEAN_COLUMNS:
+        return upper == "BOOLEAN"
+    if column in VARCHAR_COLUMNS:
+        return "VARCHAR" in upper or "TEXT" in upper
+    if column in FLOAT_COLUMNS:
+        return any(token in upper for token in ("DOUBLE", "FLOAT", "DECIMAL", "HUGEINT", "BIGINT", "INTEGER"))
+    return True
+
+
+def audit_parquet_file_schemas(
+    connection: duckdb.DuckDBPyConnection,
+    files: list[Path],
+    *,
+    expected_exchange: str | None = None,
+    expected_market_type: str | None = None,
+    expected_timeframe: str | None = None,
+) -> list[str]:
+    errors: list[str] = []
+    reference: dict[str, str] | None = None
+    for path in files:
+        try:
+            types = describe_one_parquet(connection, path)
+        except Exception as exc:  # noqa: BLE001 - schema probe must stay fail-closed
+            errors.append(f"{path.name}: unreadable parquet schema ({exc})")
+            continue
+        missing = [name for name in REQUIRED_OHLCV_COLUMNS if name not in types]
+        if missing:
+            errors.append(f"{path.name}: missing columns {missing}")
+            continue
+        for column in REQUIRED_OHLCV_COLUMNS:
+            if not _type_allowed(column, types[column]):
+                errors.append(
+                    f"{path.name}: column {column} has type {types[column]!r}, "
+                    "which is not allowed for trusted OHLCV"
+                )
+        required_types = {name: types[name] for name in REQUIRED_OHLCV_COLUMNS}
+        if reference is None:
+            reference = required_types
+        elif required_types != reference:
+            errors.append(f"{path.name}: required-column types differ from the first file")
+    if expected_exchange or expected_market_type or expected_timeframe:
+        # Identity is checked on rows after schema; keep a reminder in schema errors only
+        # when files themselves cannot be described.
+        pass
+    return errors
 
 
 def _quality_status(schema_errors: list[str], blockers: dict[str, Any]) -> str:
@@ -103,12 +164,26 @@ def audit_selected_sql(
     blocked_source_patterns: tuple[str, ...] = DEFAULT_BLOCKED_SOURCE_PATTERNS,
     columns: list[str] | None = None,
     cutoff_unclosed_excluded_rows: int = 0,
+    expected_exchange: str | None = None,
+    expected_market_type: str | None = None,
+    files: list[Path] | None = None,
 ) -> dict[str, Any]:
     schema_errors: list[str] = []
+    if files:
+        schema_errors.extend(
+            audit_parquet_file_schemas(
+                connection,
+                files,
+                expected_exchange=expected_exchange,
+                expected_market_type=expected_market_type,
+                expected_timeframe=timeframe,
+            )
+        )
     present = set(columns or [])
     missing = [name for name in REQUIRED_OHLCV_COLUMNS if name not in present]
     if missing:
         schema_errors.append(f"missing required columns: {missing}")
+    if schema_errors:
         return {
             "rule_version": SQL_AUDIT_RULE_VERSION,
             "quality_status": "FAIL",
@@ -126,15 +201,21 @@ def audit_selected_sql(
         }
 
     seconds = timeframe_seconds(timeframe)
+    micros = seconds * 1_000_000
     allowed = [source.strip().lower() for source in allowed_sources]
     blocked = [pattern.strip().lower() for pattern in blocked_source_patterns]
     source_pred = unverified_source_sql("source")
-    numeric_cols = [
-        name
-        for name in ("open", "high", "low", "close", "volume", "quote_volume", "vwap")
-        if not present or name in present
-    ]
-    finite_pred = " OR ".join(f"NOT isfinite(CAST({name} AS DOUBLE))" for name in numeric_cols) or "FALSE"
+    numeric_cols = [name for name in FLOAT_COLUMNS]
+    finite_pred = " OR ".join(f"NOT isfinite({name})" for name in numeric_cols)
+    exchange_pred = "FALSE"
+    market_pred = "FALSE"
+    identity_params: list[Any] = []
+    if expected_exchange:
+        exchange_pred = "lower(trim(exchange)) != lower(trim(?))"
+        identity_params.append(expected_exchange)
+    if expected_market_type:
+        market_pred = "lower(trim(market_type)) != lower(trim(?))"
+        identity_params.append(expected_market_type)
     config_and_selected = f"""
         config AS (
             SELECT ?::VARCHAR[] AS allowed_sources, ?::VARCHAR[] AS blocked_patterns
@@ -158,6 +239,9 @@ def audit_selected_sql(
                    OR open IS NULL OR high IS NULL OR low IS NULL OR close IS NULL
                    OR volume IS NULL OR quote_volume IS NULL OR trade_count IS NULL
                    OR vwap IS NULL OR is_closed IS NULL OR source IS NULL
+                   OR trim(exchange) = ''
+                   OR trim(market_type) = ''
+                   OR trim(timeframe) = ''
             ) AS critical_null_rows,
             count(*) FILTER (WHERE {finite_pred}) AS non_finite_rows,
             count(*) FILTER (
@@ -169,25 +253,28 @@ def audit_selected_sql(
             count(*) FILTER (
                 WHERE volume < 0 OR quote_volume < 0
                    OR trade_count < 0
-                   OR trade_count != floor(CAST(trade_count AS DOUBLE))
+                   OR NOT isfinite(trade_count)
+                   OR trade_count != floor(trade_count)
             ) AS negative_volume_or_count_rows,
             count(*) FILTER (WHERE {source_pred}) AS unverified_source_rows,
-            count(*) FILTER (WHERE NOT CAST(is_closed AS BOOLEAN)) AS open_rows,
+            count(*) FILTER (WHERE is_closed IS DISTINCT FROM TRUE) AS open_rows,
             count(*) FILTER (
-                WHERE lower(trim(CAST(timeframe AS VARCHAR))) != lower(trim(?))
+                WHERE lower(trim(timeframe)) != lower(trim(?))
             ) AS timeframe_mismatches,
+            count(*) FILTER (WHERE {exchange_pred}) AS exchange_mismatches,
+            count(*) FILTER (WHERE {market_pred}) AS market_type_mismatches,
             count(*) FILTER (
-                WHERE CAST(epoch(ts) AS BIGINT) % {seconds} != 0
+                WHERE epoch_us(ts) % {micros} != 0
             ) AS off_grid_rows
         FROM selected, config
         """,
-        [*query_params, timeframe],
+        [*query_params, timeframe, *identity_params],
     ).fetch_df().iloc[0]
 
     sources = connection.execute(
         f"""
         WITH {selected_cte}
-        SELECT CAST(source AS VARCHAR) AS source, count(*) AS rows
+        SELECT source, count(*) AS rows
         FROM selected
         GROUP BY 1
         ORDER BY rows DESC
@@ -207,23 +294,23 @@ def audit_selected_sql(
             FROM selected
         ),
         gap_rows AS (
-            SELECT datediff('second', prev_ts, ts) AS delta_sec
+            SELECT datediff('microsecond', prev_ts, ts) AS delta_us
             FROM ordered
             WHERE prev_ts IS NOT NULL
         )
         SELECT
-            count(*) FILTER (WHERE delta_sec > {seconds}) AS internal_gap_transitions,
+            count(*) FILTER (WHERE delta_us > {micros}) AS internal_gap_transitions,
             coalesce(
                 sum(
                     CASE
-                        WHEN delta_sec > {seconds} THEN (delta_sec / {seconds}) - 1
+                        WHEN delta_us > {micros} THEN (delta_us / {micros}) - 1
                         ELSE 0
                     END
                 ),
                 0
             ) AS internal_missing_bars,
             count(*) FILTER (
-                WHERE delta_sec > {seconds} AND (delta_sec % {seconds}) != 0
+                WHERE delta_us > {micros} AND (delta_us % {micros}) != 0
             ) AS unaligned_gap_transitions
         FROM gap_rows
         """,
@@ -239,6 +326,8 @@ def audit_selected_sql(
         "negative_volume_or_count_rows": int(row["negative_volume_or_count_rows"] or 0),
         "unverified_source_rows": int(row["unverified_source_rows"] or 0),
         "timeframe_mismatches": int(row["timeframe_mismatches"] or 0),
+        "exchange_mismatches": int(row["exchange_mismatches"] or 0),
+        "market_type_mismatches": int(row["market_type_mismatches"] or 0),
         "off_grid_rows": int(row["off_grid_rows"] or 0),
         "unaligned_gap_transitions": int(gaps["unaligned_gap_transitions"] or 0),
     }
@@ -269,6 +358,8 @@ def audit_selected_sql(
         "unverified_source_rows": int(row["unverified_source_rows"] or 0),
         "open_rows": int(row["open_rows"] or 0),
         "timeframe_mismatches": int(row["timeframe_mismatches"] or 0),
+        "exchange_mismatches": int(row["exchange_mismatches"] or 0),
+        "market_type_mismatches": int(row["market_type_mismatches"] or 0),
         "off_grid_rows": int(row["off_grid_rows"] or 0),
         "internal_gap_transitions": int(gaps["internal_gap_transitions"] or 0),
         "internal_missing_bars": int(gaps["internal_missing_bars"] or 0),
@@ -281,7 +372,7 @@ def audit_selected_sql(
         "blockers": visible_blockers,
         "gap_classification": {
             "listing_boundary": (
-                "symbol first/last bars are listing edges; they are not counted as internal gaps"
+                "symbol first/last bars are observed span edges, not confirmed listing/delisting"
             ),
             "internal_aligned_gaps": "missing multiples of the timeframe inside a symbol span",
             "unaligned_gaps": "internal jumps that are not a multiple of the timeframe",
@@ -291,4 +382,5 @@ def audit_selected_sql(
             ),
         },
         "trusted": quality_status == "PASS",
+        "row_quality": quality_status,
     }

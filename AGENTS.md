@@ -38,12 +38,12 @@
 
 细则由 `.cursor/rules/` 维护，不在本文件展开：
 
-- [docs/data-lake-spec.md](docs/data-lake-spec.md)：数据湖结构与质量约定的唯一规范；Binance OHLCV 的查询/选版本/验证/读取见该文件第 16 节。`data-quality-first.mdc` 只负责强制引用该规范。治理家族入口：[research/platform/data-lake-governance/README.md](research/platform/data-lake-governance/README.md)。
-- `live-executable-strategy-research.mdc`：订单时序、成交假设、stop/lockout 审计和 promotion 前置条件。
-- `backtest-standards.mdc`：回测默认包含最近 `1d/7d/1m/3m/6m/1y` 分片；Binance 默认手续费 `0.001`、滑点 `4 bps`，其他市场需明确成本口径。
-- `research-report-storage.mdc`：研究目录、core ledger、索引更新义务、共享内核、artifacts 存放和 Canvas 边界。
-- `lab-runner-handoff.mdc`：向 `quant-runner` 交接的规格契约、双向同步和 `runner-tracking/` 回流要求。
-- `strategy-validation-gates.mdc`：从 `registered` 推进 promotion 的证据门禁及线上开平仓对账要求。
-- `external-reproduction-spec.mdc`：对外（同事/外部 AI）复现规格必须自包含；仓库内部引用只能放在标记为"非复现依赖"的附录里，交付前做 no-repo 自检。
-- `clickable-file-references.mdc`：对话回复和研究文档中的文件引用必须可点击——文档内跨文件引用用相对路径 Markdown 链接，对话中给用户的文件指引用 Markdown 链接或代码引用格式，不要只给纯文本路径。
-- `strategy-trade-path-visualization.mdc`：策略初步成形、登记版本或逐笔行为发生重大变化时，默认生成并校验完整交易路径 HTML；每笔入场与对应出场必须连线。
+- [data-quality-first.mdc](.cursor/rules/data-quality-first.mdc)：数据质量前置约束，唯一规范为 [docs/data-lake-spec.md](docs/data-lake-spec.md)；见该文件。
+- [live-executable-strategy-research.mdc](.cursor/rules/live-executable-strategy-research.mdc)：晋升前须证明策略可按真实订单时序执行；见该文件。
+- [backtest-standards.mdc](.cursor/rules/backtest-standards.mdc)：策略回测的近期分片与执行成本默认口径；见该文件。
+- [research-report-storage.mdc](.cursor/rules/research-report-storage.mdc)：研究文档存放、主账、索引与共享内核约定；见该文件。
+- [lab-runner-handoff.mdc](.cursor/rules/lab-runner-handoff.mdc)：向 `quant-runner` 交接及 runner 观察回流的契约；见该文件。
+- [strategy-validation-gates.mdc](.cursor/rules/strategy-validation-gates.mdc)：把验证门禁映射进研究到线上的工作流；见该文件。
+- [external-reproduction-spec.mdc](.cursor/rules/external-reproduction-spec.mdc)：对外复现规格的自包含标准；见该文件。
+- [clickable-file-references.mdc](.cursor/rules/clickable-file-references.mdc)：对话回复与研究文档中的文件引用必须可点击；见该文件。
+- [strategy-trade-path-visualization.mdc](.cursor/rules/strategy-trade-path-visualization.mdc)：交易路径 HTML 的生成与校验；何时生成以该文件为准。

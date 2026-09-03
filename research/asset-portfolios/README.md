@@ -2,6 +2,67 @@
 
 本目录存放组合策略、跨资产策略、迁移研究和多 sleeve 资金结构研究。当前材料主要基于 Binance USD-M Futures 市场数据；若某个研究线后续变成单一资产策略家族，应迁入对应资产目录并保留这里的交叉引用。状态词定义见 [strategy-status-glossary.md](../../docs/research-governance/strategy-status-glossary.md)。
 
+
+## 状态
+
+本目录家族状态列写 `见顶层`，以 [research/README.md](../README.md) 为准。
+
+| Directory | 状态 |
+| --- | --- |
+| [multi-timeframe-dual-state-trend-campaign/](multi-timeframe-dual-state-trend-campaign/README.md) | 见顶层 |
+| [multi-timeframe-pullback-trend-campaign/](multi-timeframe-pullback-trend-campaign/README.md) | 见顶层 |
+| [1d-ma7-deviation-continuation/](1d-ma7-deviation-continuation/README.md) | 见顶层 |
+| [1h-price-impulse-campaign/](1h-price-impulse-campaign/README.md) | 见顶层 |
+| [1h-four-asset-trend-habitat-audit/](1h-four-asset-trend-habitat-audit/README.md) | 见顶层 |
+| [1h-cross-sectional-lightgbm-selector/](1h-cross-sectional-lightgbm-selector/README.md) | 见顶层 |
+| [1h-multi-horizon-cross-sectional-ml-allocator/](1h-multi-horizon-cross-sectional-ml-allocator/README.md) | 见顶层 |
+| [15m-ema-cross-lightgbm-event-selector/](15m-ema-cross-lightgbm-event-selector/README.md) | 见顶层 |
+| [1h-ema-cross-lightgbm-event-selector/](1h-ema-cross-lightgbm-event-selector/README.md) | 见顶层 |
+| [4h-ema-cross-lightgbm-event-selector/](4h-ema-cross-lightgbm-event-selector/README.md) | 见顶层 |
+| [4h-ma7-regime-continuation/](4h-ma7-regime-continuation/README.md) | 见顶层 |
+| [1d-ema-cross-lightgbm-event-selector/](1d-ema-cross-lightgbm-event-selector/README.md) | 见顶层 |
+| [1d-multi-asset-tsmom-vol-target/](1d-multi-asset-tsmom-vol-target/README.md) | 见顶层 |
+| [1d-monthly-cs-momentum-ls3/](1d-monthly-cs-momentum-ls3/README.md) | 见顶层 |
+| [1d-monthly-cs-momentum-long10/](1d-monthly-cs-momentum-long10/README.md) | 见顶层 |
+| [1d-ewmac-universal-trend/](1d-ewmac-universal-trend/README.md) | 见顶层 |
+| [1d-classic-ewmac-replication/](1d-classic-ewmac-replication/README.md) | 见顶层 |
+| [1d-tradfi-futures-tsmom/](1d-tradfi-futures-tsmom/README.md) | 见顶层 |
+| [15m-multi-asset-trend-state-machine/](15m-multi-asset-trend-state-machine/README.md) | 见顶层 |
+| [1d-turtle-breakout/](1d-turtle-breakout/README.md) | 见顶层 |
+| [1d-ma7-ma30-pyramiding-transfer/](1d-ma7-ma30-pyramiding-transfer/README.md) | 见顶层 |
+| [1d-ma7-separated-trend-transfer/](1d-ma7-separated-trend-transfer/README.md) | 见顶层 |
+| [1d-generic-ma7-trend/](1d-generic-ma7-trend/README.md) | 见顶层 |
+| [1d-ma7-regime-continuation/](1d-ma7-regime-continuation/README.md) | 见顶层 |
+| [1d-trend-prebreakout-state-atlas/](1d-trend-prebreakout-state-atlas/README.md) | 见顶层 |
+| [1d-cross-asset-trend-lifecycle/](1d-cross-asset-trend-lifecycle/README.md) | 见顶层 |
+| [1d-ma7-cross-trend-probability/](1d-ma7-cross-trend-probability/README.md) | 见顶层 |
+| [1d-ma7-asset-specific-search/](1d-ma7-asset-specific-search/README.md) | 见顶层 |
+| [1d-btceth-relative-cycle-rotation/](1d-btceth-relative-cycle-rotation/README.md) | 见顶层 |
+| [1d-btceth-log-ratio-mean-reversion/](1d-btceth-log-ratio-mean-reversion/README.md) | 见顶层 |
+| [1h-btceth-cross-impulse-lead-lag/](1h-btceth-cross-impulse-lead-lag/README.md) | 见顶层 |
+| [1d-btceth-cross-breadth-channel-trend/](1d-btceth-cross-breadth-channel-trend/README.md) | 见顶层 |
+| [1d-btceth-dual-horizon-campaign-trend/](1d-btceth-dual-horizon-campaign-trend/README.md) | 见顶层 |
+| [1d-btceth-dual-alpha-sleeve-ensemble/](1d-btceth-dual-alpha-sleeve-ensemble/README.md) | 见顶层 |
+| [1d-btceth-crisis-override-shadow-trend/](1d-btceth-crisis-override-shadow-trend/README.md) | 见顶层 |
+| [1d-btceth-crisis-partial-profit-runner/](1d-btceth-crisis-partial-profit-runner/README.md) | 见顶层 |
+| [1d-btceth-crisis-profit-exit-handoff-continuity/](1d-btceth-crisis-profit-exit-handoff-continuity/README.md) | 见顶层 |
+| [1d-ma7-rsi6-direction-aligned-pooled-ml/](1d-ma7-rsi6-direction-aligned-pooled-ml/README.md) | 见顶层 |
+| [1d-ma7-later-maturity-meta-label/](1d-ma7-later-maturity-meta-label/README.md) | 见顶层 |
+| [1h-ma7-root-hazard-timing/](1h-ma7-root-hazard-timing/README.md) | 见顶层 |
+| [1h-volatility-impulse-pullback-reclaim/](1h-volatility-impulse-pullback-reclaim/README.md) | 见顶层 |
+| [1d-ma7-derivatives-structure-meta-label/](1d-ma7-derivatives-structure-meta-label/README.md) | 见顶层 |
+| [1d-ma7-basis-premium-meta-label/](1d-ma7-basis-premium-meta-label/README.md) | 见顶层 |
+| [1d-ma7-taker-flow-meta-label/](1d-ma7-taker-flow-meta-label/README.md) | 见顶层 |
+| [1d-ma7-quantile-utility-meta-label/](1d-ma7-quantile-utility-meta-label/README.md) | 见顶层 |
+| [1d-ma7-asset-local-temporal-audit/](1d-ma7-asset-local-temporal-audit/README.md) | 见顶层 |
+| [1d-derivatives-structure-trend-opportunity/](1d-derivatives-structure-trend-opportunity/README.md) | 见顶层 |
+| [15m-multi-indicator-intraday/](15m-multi-indicator-intraday/README.md) | 见顶层 |
+| [15m-asset-specific-six-strategy-selector/](15m-asset-specific-six-strategy-selector/README.md) | 见顶层 |
+| [1h-adaptive-regime-multi-asset-ensemble/](1h-adaptive-regime-multi-asset-ensemble/README.md) | 见顶层 |
+| [1h-multi-leg-six-asset-selector/](1h-multi-leg-six-asset-selector/README.md) | 见顶层 |
+| [mk7-multi-strategy-account/](mk7-multi-strategy-account/README.md) | 见顶层 |
+| [hype-cross-strategy-account/](hype-cross-strategy-account/README.md) | 见顶层 |
+
 ## 当前研究线
 
 - `Binance-MTF-Dual-State-Trend-Campaign`（`BIN-MTF-DSTC`）：[multi-timeframe-dual-state-trend-campaign/](multi-timeframe-dual-state-trend-campaign/README.md)。`BIN-MTF-PTC` 关账后的 materially new successor；日线 Campaign invalidation 与 position/lot stop 分层，HYPE primary、BTC/ETH independent controls；432 个账户级回测后收益强度门失败，final audit 未揭示，状态 `HARD-GATE-FAILED / explore / not promoted / not live-ready`。主账：[binance-mtf-dstc-core-ledger.md](multi-timeframe-dual-state-trend-campaign/binance-mtf-dstc-core-ledger.md)，结论见[最终报告](multi-timeframe-dual-state-trend-campaign/final/binance-mtf-dstc-goal-final-2026-08-04.md)。

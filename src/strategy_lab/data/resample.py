@@ -21,6 +21,7 @@ from strategy_lab.data.manifest import (
     utc_now_iso,
     write_canonical_json,
 )
+from strategy_lab.data.windows import require_aware_utc
 
 FORMULA_VERSION = "ohlcv_resample_from_15m_v1"
 PRIORITY_UNION_VERSION = "binance_perp_15m_priority_union_v1"
@@ -345,6 +346,13 @@ def aggregation_impl_sha256() -> str:
     return sha256_file(Path(__file__))
 
 
+def _normalize_cutoff(value: str | None) -> str | None:
+    if value is None:
+        return None
+    text = str(value).strip()
+    return text or None
+
+
 def verify_existing_derived_publish(
     *,
     published_root: Path,
@@ -352,6 +360,9 @@ def verify_existing_derived_publish(
     input_fingerprint: str,
     formula_version: str,
     cache_dir: Path | None = None,
+    cutoff_exclusive_utc: str | None = None,
+    priority_union_version: str | None = None,
+    aggregation_impl_sha256: str | None = None,
 ) -> dict[str, Any]:
     if not published_root.exists():
         return {"status": "missing", "path": str(published_root)}
@@ -366,27 +377,44 @@ def verify_existing_derived_publish(
         raise FileExistsError(
             f"published {published_root} has dataset_id {recorded_id!r}, expected {dataset_id!r}"
         )
+    mismatches: list[str] = []
     recorded_input = str(payload.get("input_manifest_sha256") or "")
     if recorded_input != input_fingerprint:
-        raise FileExistsError(
-            f"published {dataset_id} was built from input {recorded_input}, "
-            f"current input is {input_fingerprint}; publish a new dataset version instead of overwriting"
-        )
+        mismatches.append(f"input {recorded_input} != {input_fingerprint}")
     recorded_formula = str(payload.get("aggregation_formula_version") or "")
     if recorded_formula != formula_version:
-        raise FileExistsError(
-            f"published {dataset_id} formula {recorded_formula} != {formula_version}; "
-            "publish a new dataset version"
-        )
+        mismatches.append(f"formula {recorded_formula} != {formula_version}")
+    recorded_cutoff = _normalize_cutoff(payload.get("cutoff_exclusive_utc"))
+    requested_cutoff = _normalize_cutoff(cutoff_exclusive_utc)
+    if recorded_cutoff != requested_cutoff:
+        mismatches.append(f"cutoff {recorded_cutoff!r} != {requested_cutoff!r}")
+    if priority_union_version is not None:
+        recorded_union = str(payload.get("priority_union_version") or "")
+        if recorded_union != priority_union_version:
+            mismatches.append(f"union {recorded_union} != {priority_union_version}")
     extra = payload.get("extra") if isinstance(payload.get("extra"), dict) else {}
+    if aggregation_impl_sha256 is not None:
+        recorded_impl = str(
+            payload.get("aggregation_impl_sha256")
+            or extra.get("aggregation_impl_sha256")
+            or ""
+        )
+        if recorded_impl and recorded_impl != aggregation_impl_sha256:
+            mismatches.append(f"aggregation impl {recorded_impl} != {aggregation_impl_sha256}")
+    if mismatches:
+        raise FileExistsError(
+            f"published {dataset_id} identity changed ({mismatches}); "
+            "publish a new dataset version instead of treating this as already_published"
+        )
     recorded_fp = (
         payload.get("parquet_inventory_fingerprint")
         or extra.get("parquet_inventory_fingerprint")
     )
     actual_fp = resolve_parquet_inventory_fingerprint(
         published_root,
-        cache_dir=cache_dir,
+        cache_dir=None,
         expected=str(recorded_fp) if recorded_fp else None,
+        mode="strict_content",
     )
     if recorded_fp and actual_fp != recorded_fp:
         raise ValueError(
@@ -400,6 +428,7 @@ def verify_existing_derived_publish(
         "builder_sha256": payload.get("builder_sha256"),
         "content_fingerprint": payload.get("content_fingerprint"),
         "cutoff_exclusive_utc": payload.get("cutoff_exclusive_utc"),
+        "priority_union_version": payload.get("priority_union_version"),
     }
 
 
@@ -433,17 +462,28 @@ def build_derived_ohlcv(
     ohlcv_root = staging_root / "ohlcv"
     ohlcv_root.mkdir(parents=True, exist_ok=True)
     Path("/tmp/duckdb-ohlcv-resample").mkdir(parents=True, exist_ok=True)
+    start_ts = None if start is None else require_aware_utc(start, field="start")
+    end_ts = None if end is None else require_aware_utc(end, field="end")
     filters = ["1=1"]
     params: list[Any] = [[str(path) for path in input_files]]
-    if start is not None:
+    if start_ts is not None:
         filters.append("ts >= ?")
-        params.append(start.to_pydatetime())
-    if end is not None:
+        params.append(start_ts.to_pydatetime())
+    if end_ts is not None:
         filters.append("ts < ?")
-        params.append(end.to_pydatetime())
+        params.append(end_ts.to_pydatetime())
     source_sql, source_params = source_priority_sql(resolved, alias="raw")
     params.extend(source_params)
     legal_sql = _legal_component_sql("selected")
+    bucket_seconds = RESAMPLE_SPECS[output_timeframe]["bucket_seconds"]
+    output_select = "SELECT * FROM complete_bars"
+    output_params: list[Any] = []
+    if end_ts is not None:
+        output_select = (
+            f"SELECT * FROM complete_bars "
+            f"WHERE (ts + INTERVAL '{bucket_seconds} seconds') <= ?"
+        )
+        output_params.append(end_ts.to_pydatetime())
     copy_sql = f"""
         COPY (
             WITH raw AS (
@@ -454,7 +494,7 @@ def build_derived_ohlcv(
             selected AS ({source_sql}),
             legal AS ({legal_sql}),
             {resample_cte_sql(output_timeframe, source_alias="legal")}
-            SELECT * FROM complete_bars
+            {output_select}
         ) TO '{ohlcv_root.as_posix()}'
         (FORMAT PARQUET, COMPRESSION ZSTD, PARTITION_BY (date), OVERWRITE_OR_IGNORE)
     """
@@ -470,7 +510,7 @@ def build_derived_ohlcv(
         ).fetchone()[0]
         if int(dup):
             raise ValueError(f"input has {dup} within-source duplicate keys; refusing derived build")
-        connection.execute(copy_sql, params)
+        connection.execute(copy_sql, [*params, *output_params])
         if skip_exclusion:
             excluded = {"candidate_buckets": None, "excluded_incomplete_buckets": None}
         else:
@@ -552,6 +592,9 @@ def build_derived_ohlcv(
         "bytes": int(sum(item["size"] for item in inventory)),
         "parquet_inventory_fingerprint": inventory_fingerprint(inventory),
         "staging_root": str(staging_root),
+        "cutoff_exclusive_utc": None if end_ts is None else end_ts.isoformat(),
+        "input_start_utc": None if start_ts is None else start_ts.isoformat(),
+        "input_end_utc": None if end_ts is None else end_ts.isoformat(),
     }
     if stats["output_rows"] != stats["distinct_keys"]:
         raise ValueError(
