@@ -1279,6 +1279,11 @@ def load_trusted_dataset(
     allowed_sources: tuple[str, ...] = DEFAULT_REAL_SOURCE_ALLOWLIST,
     blocked_source_patterns: tuple[str, ...] = DEFAULT_BLOCKED_SOURCE_PATTERNS,
     expected_parquet_fingerprint: str | None = None,
+    expected_manifest_identity: dict[str, Any] | None = None,
+    purpose: LoadPurpose = "unspecified",
+    gap_policy: GapPolicy | None = None,
+    allow_incomplete_request_window: bool = False,
+    fingerprint_mode: FingerprintMode | str = FingerprintMode.STRICT_CONTENT,
 ) -> TrustedLoad:
     record = resolve_dataset(dataset_id, layout=layout, registry=registry)
     assert_scope_allowed(record, requested_scope)
@@ -1288,9 +1293,20 @@ def load_trusted_dataset(
         raise ValueError(
             f"dataset {dataset_id} is not standard OHLCV and cannot use the trusted OHLCV loader"
         )
+    resolved_mode = FingerprintMode(fingerprint_mode)
+    if purpose == "research" and resolved_mode is not FingerprintMode.STRICT_CONTENT:
+        raise ValueError("research trusted load requires fingerprint_mode=strict_content")
+    if purpose == "research" and end is None:
+        raise ValueError("research trusted load requires an explicit closed-bar cutoff")
+    if requested_scope == DatasetScope.FULL_MARKET and end is None and purpose != "governance_audit":
+        raise ValueError(
+            "FULL_MARKET trusted load without a cutoff requires purpose='governance_audit'"
+        )
+    if purpose == "research" and requested_scope == DatasetScope.EXPLICIT_DIAGNOSTIC:
+        pass
     files = list_dataset_parquet_files(record, layout)
-    start_ts = _as_utc(start)
-    end_ts = _as_utc(end)
+    start_ts = _as_utc(start, field="start")
+    end_ts = _as_utc(end, field="end")
     if requested_scope == DatasetScope.FULL_MARKET and symbol is not None:
         raise ValueError("FULL_MARKET scope cannot be combined with a single-symbol filter")
 
@@ -1300,8 +1316,13 @@ def load_trusted_dataset(
         "declared_scope": record.declared_scope.value,
         "requested_scope": requested_scope.value,
         "layer": record.layer,
+        "exchange": record.exchange,
+        "market_type": record.market_type.value,
         "timeframe": record.timeframe,
         "closed_bar_cutoff": True,
+        "purpose": purpose,
+        "fingerprint_mode": resolved_mode.value,
+        "fingerprint_is_content_proof": resolved_mode is FingerprintMode.STRICT_CONTENT,
         "known_limits": list(dataset_known_limits(record)),
     }
     if _requires_derived_manifest(record):
@@ -1310,24 +1331,31 @@ def load_trusted_dataset(
                 dataset_id=record.dataset_id,
                 root=record.absolute_root(layout),
                 expected_fingerprint=expected_parquet_fingerprint,
-                cache_dir=_audit_cache_dir(layout),
+                cache_dir=_audit_cache_dir(layout) if resolved_mode is FingerprintMode.FAST_METADATA else None,
+                fingerprint_mode=resolved_mode,
+                expected_manifest_identity=expected_manifest_identity,
+                exchange=record.exchange,
+                market_type=record.market_type.value,
+                timeframe=record.timeframe or "",
+                declared_scope=record.declared_scope.value,
+                layer=record.layer,
+                status=record.status.value,
+                input_dataset_id=record.input_dataset_id,
             )
         )
         parquet_fingerprint = str(verified_identity["parquet_inventory_fingerprint"])
+        if verified_identity.get("historical_null_cutoff") and purpose == "research" and end_ts is None:
+            raise ValueError(
+                f"dataset {dataset_id} is a historical v1 with null cutoff; "
+                "research consumption requires an explicit closed-bar cutoff"
+            )
     else:
         parquet_fingerprint = resolve_parquet_inventory_fingerprint(
             record.absolute_root(layout),
-            cache_dir=_audit_cache_dir(layout),
+            cache_dir=_audit_cache_dir(layout) if resolved_mode is FingerprintMode.FAST_METADATA else None,
             expected=expected_parquet_fingerprint,
+            mode=resolved_mode,
         )
-        if (
-            expected_parquet_fingerprint is not None
-            and parquet_fingerprint != expected_parquet_fingerprint
-        ):
-            raise ValueError(
-                f"dataset {dataset_id} parquet fingerprint mismatch: "
-                f"expected={expected_parquet_fingerprint} actual={parquet_fingerprint}"
-            )
         snapshot = verify_input_snapshot(
             record,
             layout,
@@ -1355,6 +1383,27 @@ def load_trusted_dataset(
             end=end_ts,
         )
     verified_identity["dataset_coverage"] = dict(dataset_coverage)
+    available_start = (
+        None
+        if not dataset_coverage.get("start_utc")
+        else require_aware_utc(dataset_coverage["start_utc"], field="available_start")
+    )
+    available_end = (
+        None
+        if not dataset_coverage.get("end_utc")
+        else require_aware_utc(dataset_coverage["end_utc"], field="available_end")
+    )
+    window = assert_request_window_covered(
+        dataset_id=dataset_id,
+        timeframe=record.timeframe or "15m",
+        requested_start=start_ts,
+        requested_end=end_ts,
+        available_start=available_start,
+        available_end=available_end,
+        allow_incomplete_request_window=allow_incomplete_request_window
+        and requested_scope == DatasetScope.EXPLICIT_DIAGNOSTIC,
+    )
+    verified_identity["request_window"] = window
     if dataset_union_stats["within_source_duplicate_rows"]:
         raise ValueError(
             f"dataset {dataset_id} has {dataset_union_stats['within_source_duplicate_rows']} "
@@ -1370,19 +1419,20 @@ def load_trusted_dataset(
     if requested_scope == DatasetScope.FULL_MARKET:
         spec = record.coverage_spec or FullMarketCoverageSpec()
         assert_full_market_coverage(dataset_coverage, spec, dataset_id=dataset_id)
-        cutoff = _as_utc(record.cutoff_exclusive_utc) or end_ts
-        if cutoff is not None and dataset_coverage.get("end_utc"):
-            end_cov = pd.Timestamp(dataset_coverage["end_utc"])
-            if end_cov.tzinfo is None:
-                end_cov = end_cov.tz_localize("UTC")
-            bar_close = end_cov + timeframe_delta(record.timeframe or "15m")
-            if record.cutoff_exclusive_utc and bar_close > cutoff:
-                raise ValueError(
-                    f"dataset {dataset_id} last bar close {bar_close.isoformat()} "
-                    f"is after cutoff {cutoff.isoformat()}"
-                )
 
-    contiguous = False if require_contiguous is None else require_contiguous
+    if gap_policy is None:
+        if require_contiguous:
+            gap_policy = "reject"
+        elif purpose == "research":
+            raise ValueError("research trusted load requires gap_policy='reject' or 'contiguous_segments'")
+        else:
+            gap_policy = "report_only"
+    if purpose == "research" and gap_policy == "report_only":
+        raise ValueError(
+            "new research cannot default to gap_policy=report_only; "
+            "choose reject or contiguous_segments"
+        )
+    contiguous = gap_policy == "reject"
     audit = _sql_audit_for_record(
         record,
         files,
@@ -1394,6 +1444,7 @@ def load_trusted_dataset(
         allowed_sources=allowed_sources,
         blocked_source_patterns=blocked_source_patterns,
         parquet_fingerprint=parquet_fingerprint,
+        gap_policy=gap_policy,
     )
     if contiguous:
         audit = dict(audit)
