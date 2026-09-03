@@ -59,6 +59,11 @@ class DuckDBWarehouse:
         timeframe: str | None = None,
         source: str | None = None,
     ) -> list[str]:
+        if layer == "derived":
+            raise ValueError(
+                "derived OHLCV must be loaded by dataset_id via "
+                "strategy_lab.data.catalog.load_trusted_dataset"
+            )
         root = self.layout.dataset_root(layer, kind)
         path = root
         if exchange:

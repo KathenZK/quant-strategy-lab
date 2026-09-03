@@ -4,5 +4,7 @@
 
 ## 当前文档
 
+- [Binance OHLCV Data Lake Governance](data-lake-governance/README.md)
 - [Cross-Sectional Alpha Research Pipeline Readiness Audit](cross-sectional-alpha-pipeline/README.md)
+
 

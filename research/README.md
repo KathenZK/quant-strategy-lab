@@ -10,6 +10,7 @@
 2. 对应资产 README（如 [hype/README.md](hype/README.md)、[btc/README.md](btc/README.md)）。
 3. 目标家族 `README.md` → core ledger / 主账 → `decision-log.md`。
 4. 按需打开 `specs/`（研究侧版本规格）、diagnostics、ablations、`live-specs/`（runner 交接规格）、artifacts。
+5. 若工作依赖 Binance OHLCV：先读 [data-lake-spec.md](../docs/data-lake-spec.md) 第 16 节与 [platform/data-lake-governance/](platform/data-lake-governance/README.md)，通过 `dataset_id` 验证后再取数。
 
 状态词定义见 [strategy-status-glossary.md](../docs/research-governance/strategy-status-glossary.md)（唯一状态机来源）；策略推进门禁见 [strategy-validation-gates.md](../docs/research-governance/strategy-validation-gates.md)。工作约束见 [../AGENTS.md](../AGENTS.md) 与 `../.cursor/rules/`。
 
@@ -119,6 +120,7 @@
 | `Binance-15M-EMA-Cross-LightGBM-Event-Selector`（`BIN-15M-EMAX-LGBM`） | [asset-portfolios/15m-ema-cross-lightgbm-event-selector/](asset-portfolios/15m-ema-cross-lightgbm-event-selector/README.md)（README 兼任主账） | archived / HARD-GATE-FAILED（2026H1 锁定 OOS） |
 | `Binance-1H-EMA-Cross-LightGBM-Event-Selector`（`BIN-1H-EMAX-LGBM`） | [asset-portfolios/1h-ema-cross-lightgbm-event-selector/](asset-portfolios/1h-ema-cross-lightgbm-event-selector/README.md)（README 兼任临时主账） | archived |
 | `Binance-4H-EMA-Cross-LightGBM-Event-Selector`（`BIN-4H-EMAX-LGBM`） | [asset-portfolios/4h-ema-cross-lightgbm-event-selector/](asset-portfolios/4h-ema-cross-lightgbm-event-selector/README.md)（README 兼任临时主账） | explore / not promoted / not live-ready（V3 组合级 G2 未过，2026-07-30） |
+| `Binance-4H-MA7-Regime-Continuation`（`BIN-4H-MA7-RC`） | [asset-portfolios/4h-ma7-regime-continuation/](asset-portfolios/4h-ma7-regime-continuation/README.md) · [主账](asset-portfolios/4h-ma7-regime-continuation/binance-4h-ma7-rc-core-ledger.md) | `4h SMA7` strict cross；P0 仅六资产诊断 `DATA_SCOPE_INCOMPLETE`，现有 `NO-GO` 不能外推全市场；`explore / diagnostic-only / not promoted / not live-ready` |
 | `Binance-1D-EMA-Cross-LightGBM-Event-Selector`（`BIN-1D-EMAX-LGBM`） | [asset-portfolios/1d-ema-cross-lightgbm-event-selector/](asset-portfolios/1d-ema-cross-lightgbm-event-selector/README.md)（README 兼任临时主账） | archived |
 | `Binance-1D-Multi-Asset-TSMOM-Vol-Target`（`BIN-1D-TSMOM-VT`） | [asset-portfolios/1d-multi-asset-tsmom-vol-target/](asset-portfolios/1d-multi-asset-tsmom-vol-target/README.md)（README 兼任临时主账） | explore / not promoted / not live-ready（P1 契约冻结后经用户决定暂停执行） |
 | `Binance-1D-Monthly-Cross-Sectional-Momentum-LS3`（`BIN-1D-MCSM-LS3`） | [asset-portfolios/1d-monthly-cs-momentum-ls3/](asset-portfolios/1d-monthly-cs-momentum-ls3/README.md) · [主账](asset-portfolios/1d-monthly-cs-momentum-ls3/binance-1d-mcsm-ls3-core-ledger.md) | 每月 1 日做多上月最强 3 / 做空最弱 3；字面规则接近归零 / `explore / not promoted / not live-ready` |
@@ -134,7 +136,7 @@
 | `Binance-1D-MA7-Regime-Continuation`（`BIN-1D-MA7-RC`） | [asset-portfolios/1d-ma7-regime-continuation/](asset-portfolios/1d-ma7-regime-continuation/README.md) · [主账](asset-portfolios/1d-ma7-regime-continuation/binance-1d-ma7-rc-core-ledger.md) · [P3 报告](asset-portfolios/1d-ma7-regime-continuation/diagnostics/binance-1d-ma7-regime-continuation-p3-confirmatory-2026-08-25.md) | fixed ATR-path / breadth / Logistic / LightGBM 锁定确认均未形成稳定跨方向与跨资产规则 / P3 NO-GO |
 | `Binance-1D-Trend-Prebreakout-State-Atlas`（`BIN-1D-TPSA`） | [asset-portfolios/1d-trend-prebreakout-state-atlas/](asset-portfolios/1d-trend-prebreakout-state-atlas/README.md) · [主账](asset-portfolios/1d-trend-prebreakout-state-atlas/binance-1d-tpsa-core-ledger.md) · [P1 报告](asset-portfolios/1d-trend-prebreakout-state-atlas/diagnostics/binance-1d-trend-prebreakout-state-atlas-p1-barrier-ml-2026-08-25.md) | MA7/MA30 仅作事件探针；P0R 最终收益无稳定过滤器，P1 趋势 first-hit 标签发现“下跌/回撤后的低波稳定区向上脱离”long 跨 MA 排序信息 / `explore / diagnostic-only / not promoted / not live-ready` |
 | `Binance-1D-Cross-Asset-Trend-Lifecycle`（`BIN-1D-CATL`） | [asset-portfolios/1d-cross-asset-trend-lifecycle/](asset-portfolios/1d-cross-asset-trend-lifecycle/README.md) · [主账](asset-portfolios/1d-cross-asset-trend-lifecycle/binance-1d-catl-core-ledger.md) · [P0 报告](asset-portfolios/1d-cross-asset-trend-lifecycle/diagnostics/binance-1d-catl-p0-label-distribution-2026-08-31.md) | 全市场日频 causal feature panel + long/short directional first-hit entry/continuation 标签图谱；不训练模型、不生成策略 / `explore / diagnostic-only / not promoted / not live-ready` |
-| `Binance-1D-MA7-Cross-Trend-Probability`（`BIN-1D-MA7-CTP`） | [asset-portfolios/1d-ma7-cross-trend-probability/](asset-portfolios/1d-ma7-cross-trend-probability/README.md) · [主账](asset-portfolios/1d-ma7-cross-trend-probability/binance-1d-ma7-ctp-core-ledger.md) · [P3 报告](asset-portfolios/1d-ma7-cross-trend-probability/diagnostics/binance-1d-ma7-ctp-p3-context-feature-block-audit-2026-09-01.md) | MA7 穿越事件 pooled 极简入场打分；P3 `DATA_BLOCK_NOT_READY`，P2 `SIGNAL_EXPLAINED_BY_MA7_CORE` / 无新 OOS / `explore / diagnostic-only / not promoted / not live-ready` |
+| `Binance-1D-MA7-Cross-Trend-Probability`（`BIN-1D-MA7-CTP`） | [asset-portfolios/1d-ma7-cross-trend-probability/](asset-portfolios/1d-ma7-cross-trend-probability/README.md) · [主账](asset-portfolios/1d-ma7-cross-trend-probability/binance-1d-ma7-ctp-core-ledger.md) · [P5 报告](asset-portfolios/1d-ma7-cross-trend-probability/diagnostics/binance-1d-ma7-ctp-p5-oscillator-weekly-validation-2026-09-02.md) | MA7 穿越事件 pooled 入场打分；P5 `NO_NEW_INCREMENT_B0_REMAINS_REFERENCE`，RSI6/完整周线/G3 删除在 2025+ 复用验证集未确认增量；`explore / diagnostic-only / not promoted / not live-ready` |
 | `Binance-1D-MA7-Asset-Specific-Search`（`BIN-1D-MA7-AS-SEARCH`） | [asset-portfolios/1d-ma7-asset-specific-search/](asset-portfolios/1d-ma7-asset-specific-search/README.md) · [主账](asset-portfolios/1d-ma7-asset-specific-search/binance-1d-ma7-as-search-core-ledger.md) | V1/V2 registered；V2 为 P2-C parent 且 HARD-GATE-FAILED / not promoted / not live-ready |
 | `Binance-1D-BTCETH-Relative-Cycle-Rotation`（`BIN-1D-BE-RCR`） | [asset-portfolios/1d-btceth-relative-cycle-rotation/](asset-portfolios/1d-btceth-relative-cycle-rotation/README.md) · [主账](asset-portfolios/1d-btceth-relative-cycle-rotation/binance-1d-be-rcr-core-ledger.md) | P0–P6 完成；收益端过线但风险、保护、entry、日频/小时 hazard、funding 均未形成 hard-target / research line closed / HARD-GATE-FAILED / explore / not promoted / not live-ready |
 | `Binance-1D-BTCETH-Log-Ratio-Mean-Reversion`（`BIN-1D-BE-LRMR`） | [asset-portfolios/1d-btceth-log-ratio-mean-reversion/](asset-portfolios/1d-btceth-log-ratio-mean-reversion/README.md) · [主账](asset-portfolios/1d-btceth-log-ratio-mean-reversion/binance-1d-be-lrmr-core-ledger.md) | P0 `15,288` 配置最高 `1.5471x/-44.88% ordered MDD` / research line closed / HARD-GATE-FAILED / explore / not promoted / not live-ready |
@@ -164,6 +166,15 @@
 | `MU-HYPE-Transfer`（`MU-HYPE-XFER`） | [mu/](mu/README.md)（扁平结构，grandfathered） | explore |
 
 旧 HYPE cross-asset transfer 材料位于 `../archive/research/hype-transfer/`。
+
+## 研究平台
+
+入口：[platform/README.md](platform/README.md)。平台审计不承载策略绩效。
+
+| Family / Topic | Directory | 状态 |
+| --- | --- | --- |
+| `Binance-OHLCV-Data-Lake-Governance`（`BIN-OHLCV-DLG`） | [platform/data-lake-governance/](platform/data-lake-governance/README.md) · [主账](platform/data-lake-governance/binance-ohlcv-dlg-core-ledger.md) | 第二轮已收口：基础设施 READY，trusted 数据集 PASS，消费者 PARTIAL；不以策略 PASS 代替治理完成 |
+| `Cross-Sectional Alpha Research Pipeline` | [platform/cross-sectional-alpha-pipeline/](platform/cross-sectional-alpha-pipeline/README.md) | 平台就绪审计 |
 
 ## 共享研究内核
 

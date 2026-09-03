@@ -63,6 +63,19 @@ def main() -> int:
                     [python, "-m", "pytest", "-q", "tests/test_data_layer.py"],
                 ),
                 (
+                    "ohlcv governance contracts",
+                    [
+                        python,
+                        "-m",
+                        "pytest",
+                        "-q",
+                        "tests/test_ohlcv_dataset_governance.py",
+                        "tests/test_ohlcv_round2_governance.py",
+                        "tests/test_binance_4h_ma7_regime_continuation_p0r_data.py",
+                        "tests/test_trusted_consumers.py",
+                    ],
+                ),
+                (
                     "Python lint",
                     [
                         python,

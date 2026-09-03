@@ -53,3 +53,29 @@
 决策：P3 合同与 feature spec 已在读标签前冻结，并确认原始 pre-2025 MA7 事件为 `54,137`、HYPE 为 `0`；加载严格样本后发现 `52,563` 行全部为 `feature_known_at == entry_ts`，不满足合同要求的 `feature_known_at < entry_ts`，裁决 `DATA_BLOCK_NOT_READY` 并停止训练。未生成 OOF、增量比较、模型卡或 2025+ 预测，状态保持 `explore / diagnostic-only / not promoted / not live-ready`。
 
 证据：[合同](specs/binance-1d-ma7-ctp-p3-context-feature-block-audit-contract-2026-09-01.md) · [报告](diagnostics/binance-1d-ma7-ctp-p3-context-feature-block-audit-2026-09-01.md) · [审计](diagnostics/binance-1d-ma7-ctp-p3-modeling-audit-2026-09-01.md) · [汇总 JSON](artifacts/binance_1d_ma7_ctp_p3_summary.json)
+
+## 2026-09-02：P3R 修复时间边界后未确认独立上下文增量
+
+决策：P3R 只把 P3 的错误时点门禁修复为 `feature_known_at == entry_ts == ts+1d`，其余样本、标签、特征块、模型候选和裁决门槛不变。训练完成后 B1 流动性与 B3 市场/BTC 环境仅为 `SUGGESTIVE_INCREMENT_NOT_CONFIRMED`，B2 MA30 与 B4 funding 为 `NO_INCREMENT_BEYOND_P2`，全局裁决 `SUGGESTIVE_CONTEXT_INCREMENT_ONLY`；保持 `explore / diagnostic-only / not promoted / not live-ready`。
+
+证据：[合同](specs/binance-1d-ma7-ctp-p3r-time-boundary-repair-context-feature-block-audit-contract-2026-09-02.md) · [报告](diagnostics/binance-1d-ma7-ctp-p3r-context-feature-block-audit-2026-09-02.md) · [审计](diagnostics/binance-1d-ma7-ctp-p3r-modeling-audit-2026-09-02.md) · [汇总 JSON](artifacts/binance_1d_ma7_ctp_p3r_summary.json)
+
+## 2026-09-02：P4 六组消融后完整 B0 仍是参考模型
+
+决策：P4 在读标签前冻结六组划分、候选集合、fold-relative Top10 与非劣门槛；完整重跑后 `M_EVENT_25` 与 `M_EVENT_VOL_36` 均未通过全部压缩非劣门槛，`R_FULL_B0_69` 保持参考模型。删除 G4 成交活跃度达到开发期必要证据，其余组为 `INCONCLUSIVE_FACTOR_ROLE`；本轮仍是 2022-2024 已揭示开发历史，不是新盲测，不晋升、不 live-ready。
+
+证据：[合同](specs/binance-1d-ma7-ctp-p4-core-factor-ablation-compression-contract-2026-09-02.md) · [报告](diagnostics/binance-1d-ma7-ctp-p4-core-factor-ablation-compression-2026-09-02.md) · [审计](diagnostics/binance-1d-ma7-ctp-p4-modeling-audit-2026-09-02.md) · [汇总 JSON](artifacts/binance_1d_ma7_ctp_p4_summary.json)
+
+## 2026-09-02：P5 RSI6/完整周线与 G3 删除未通过 2025+ 复用验证确认
+
+决策：P5 在读取标签率、AUC、Top10 或 2025+ 验证前冻结合同、feature spec 与 lock；严格 pre-2025 样本复现 P4 的 52,563 行，2025+ 主加密验证 46,892 行。删除 G3、RSI6、完整闭合 UTC 周线及组合候选均未满足 `VALIDATION_CONFIRMED_INCREMENT` 或 `TAIL_SPECIALIST_VALIDATED`，全局裁决 `NO_NEW_INCREMENT_B0_REMAINS_REFERENCE`；HYPE 原始分区未读取，事件/预测/指标 0 行。
+
+独立验收发现 Cursor 原始 block-contribution bootstrap 不能给非线性 AUC/Top10 有效 CI，D2/D3 前向校准未排除在折起点尚未完成的标签，且 frozen threshold 混用了前向 OOF 与最终 Platt 概率空间。三处均在不改变问题、样本、标签、候选、特征或切分的前提下最小修复并完整重跑；修复后五个挑战者的 2025+ AUC、Top10 和净收益差 CI 仍全部跨 0，BH q 均为 0.898，因此原始 raw 点估计和最终无增量裁决保留，原始 CI/校准/阈值统计作废。
+
+证据：[合同](specs/binance-1d-ma7-ctp-p5-oscillator-weekly-validation-contract-2026-09-02.md) · [报告](diagnostics/binance-1d-ma7-ctp-p5-oscillator-weekly-validation-2026-09-02.md) · [建模审计](diagnostics/binance-1d-ma7-ctp-p5-modeling-audit-2026-09-02.md) · [周线因果审计](diagnostics/binance-1d-ma7-ctp-p5-weekly-causality-audit-2026-09-02.md) · [独立验收与修复审计](diagnostics/binance-1d-ma7-ctp-p5-independent-acceptance-audit-2026-09-02.md) · [汇总 JSON](artifacts/binance_1d_ma7_ctp_p5_summary.json)
+
+## 2026-09-02：公共日K缓存登记为 FAMILY_CACHE
+
+决策：`data/cache/binance_perp_1d_from_15m` 是可重建家族缓存（月档优先于 overlay），不是 canonical OHLCV。本轮只补 sidecar，不改写 parquet；新研究应改用 `binance.perp.ohlcv.1d.from_15m.v1`。不改变 P5 裁决。
+
+证据：[治理审计](../../platform/data-lake-governance/diagnostics/binance-ohlcv-dataset-inventory-2026-09-02.md)

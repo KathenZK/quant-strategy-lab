@@ -46,3 +46,46 @@
 - [binance_1d_ma7_ctp_p3_contract_lock.json](binance_1d_ma7_ctp_p3_contract_lock.json)：P3 合同、feature spec 与未读标签事件审计 SHA256。
 - [binance_1d_ma7_ctp_p3_summary.json](binance_1d_ma7_ctp_p3_summary.json)：训练前 `DATA_BLOCK_NOT_READY` 裁决与严格样本时点门禁失败摘要。
 - [binance_1d_ma7_ctp_p3_manifest.json](binance_1d_ma7_ctp_p3_manifest.json)：P3 失败审计产物 SHA256；因训练前停止，不包含 OOF 或增量比较 parquet。
+
+## P3R Time-Boundary Repair + Independent Context Feature Block Audit
+
+- [binance_1d_ma7_ctp_p3r_feature_spec.json](binance_1d_ma7_ctp_p3r_feature_spec.json)：P3R 冻结特征合同；B0-B4 feature arrays 与原 P3 逐字段一致，仅补时点修复元数据。
+- [binance_1d_ma7_ctp_p3r_contract_lock.json](binance_1d_ma7_ctp_p3r_contract_lock.json)：P3R 合同、feature spec、P0R/P2/P3 SHA 与未读标签事件审计。
+- [binance_1d_ma7_ctp_p3r_fold_metrics.parquet](binance_1d_ma7_ctp_p3r_fold_metrics.parquet)：B0-B4 D1-D3 训练/验证并列指标及分层指标。
+- [binance_1d_ma7_ctp_p3r_oof_predictions.parquet](binance_1d_ma7_ctp_p3r_oof_predictions.parquet)：D1-D3 OOF raw 与前向校准概率；只含 `<2025-01-01` 且 HYPE 0 行。
+- [binance_1d_ma7_ctp_p3r_incremental_comparisons.parquet](binance_1d_ma7_ctp_p3r_incremental_comparisons.parquet)：B1-B4 相对 B0 的 paired 增量、CI、p/q 值与裁决。
+- [binance_1d_ma7_ctp_p3r_decile_metrics.parquet](binance_1d_ma7_ctp_p3r_decile_metrics.parquet)：B0-B4 概率十分位与成本后事件收益。
+- [binance_1d_ma7_ctp_p3r_model_card.json](binance_1d_ma7_ctp_p3r_model_card.json)：P3R pooled Logistic 模型卡；无 2025+ 预测，not live-ready。
+- [binance_1d_ma7_ctp_p3r_summary.json](binance_1d_ma7_ctp_p3r_summary.json)：P3R 裁决、样本审计、隔离、校准、增量与重训摘要。
+- [binance_1d_ma7_ctp_p3r_manifest.json](binance_1d_ma7_ctp_p3r_manifest.json)：P3R 产物 SHA256 manifest。
+
+## P4 Core Factor Ablation + Compressed Tail-Ranking Audit
+
+- [binance_1d_ma7_ctp_p4_factor_group_spec.json](binance_1d_ma7_ctp_p4_factor_group_spec.json)：读标签前冻结的六组因子划分，69 个 P2 B0 字段完整且不重复。
+- [binance_1d_ma7_ctp_p4_contract_lock.json](binance_1d_ma7_ctp_p4_contract_lock.json)：P4 合同、factor spec、P2/P3R feature spec 与脚本 SHA256，状态为 `FROZEN_BEFORE_P4_LABEL_READ`。
+- [binance_1d_ma7_ctp_p4_fold_metrics.parquet](binance_1d_ma7_ctp_p4_fold_metrics.parquet)：15 个候选模型的 D1-D3 训练/验证指标、分层指标和 overfit 检查。
+- [binance_1d_ma7_ctp_p4_oof_predictions.parquet](binance_1d_ma7_ctp_p4_oof_predictions.parquet)：D1-D3 OOF raw probability、fold-relative percentile/decile 与前向校准概率；只含 `<2025-01-01`，HYPE 0 行。
+- [binance_1d_ma7_ctp_p4_ablation_comparisons.parquet](binance_1d_ma7_ctp_p4_ablation_comparisons.parquet)：六个删除式消融和两个压缩模型相对 B0 的 paired bootstrap 差值、CI、p/q 值与裁决。
+- [binance_1d_ma7_ctp_p4_only_group_metrics.parquet](binance_1d_ma7_ctp_p4_only_group_metrics.parquet)：六个单组模型的独立预测能力诊断。
+- [binance_1d_ma7_ctp_p4_asset_holdout_metrics.parquet](binance_1d_ma7_ctp_p4_asset_holdout_metrics.parquet)：`time walk-forward × leave-asset-group-out` 的 15 单元资产泛化审计。
+- [binance_1d_ma7_ctp_p4_decile_metrics.parquet](binance_1d_ma7_ctp_p4_decile_metrics.parquet)：fold-relative 与 legacy pooled-raw 十分位指标。
+- [binance_1d_ma7_ctp_p4_coefficient_stability.parquet](binance_1d_ma7_ctp_p4_coefficient_stability.parquet)：标准化 Logistic 系数稳定性与组内相关摘要。
+- [binance_1d_ma7_ctp_p4_model_card.json](binance_1d_ma7_ctp_p4_model_card.json)：P4 诊断模型卡；无策略、无 2025+ 预测、not live-ready。
+- [binance_1d_ma7_ctp_p4_summary.json](binance_1d_ma7_ctp_p4_summary.json)：P4 数据审计、候选表现、消融、压缩、holdout、隔离和全局裁决摘要。
+- [binance_1d_ma7_ctp_p4_manifest.json](binance_1d_ma7_ctp_p4_manifest.json)：P4 输入与输出产物 SHA256 manifest。
+
+## P5 Oscillator + Completed-Weekly-Regime Increment and 2025+ Validation Audit
+
+- [binance_1d_ma7_ctp_p5_feature_spec.json](binance_1d_ma7_ctp_p5_feature_spec.json)：读标签和 2025+ 验证前冻结的六候选字段顺序、RSI6 与完整周线特征块。
+- [binance_1d_ma7_ctp_p5_contract_lock.json](binance_1d_ma7_ctp_p5_contract_lock.json)：P5 合同、feature spec、脚本与 P4/P0R 输入 SHA256，状态为 `FROZEN_BEFORE_P5_LABEL_AND_2025_VALIDATION_READ`。
+- [binance_1d_ma7_ctp_p5_data_audit.json](binance_1d_ma7_ctp_p5_data_audit.json)：P4 严格样本复现、HYPE/HYPER、TradFi 排除、RSI/周线缺失和周线 causality 审计。
+- [binance_1d_ma7_ctp_p5_fold_metrics.parquet](binance_1d_ma7_ctp_p5_fold_metrics.parquet)：六个预注册候选的 D1-D3 训练/验证与前向校准指标。
+- [binance_1d_ma7_ctp_p5_pre2025_oof_predictions.parquet](binance_1d_ma7_ctp_p5_pre2025_oof_predictions.parquet)：pre-2025 D1-D3 OOF raw/calibrated predictions；HYPE 0 行。
+- [binance_1d_ma7_ctp_p5_validation_2025_plus_predictions.parquet](binance_1d_ma7_ctp_p5_validation_2025_plus_predictions.parquet)：`ITERATIVE_REUSED_VALIDATION_2025_PLUS` 一次性预测、frozen-threshold selection、seen/new 与 TradFi 标记；HYPE 0 行。
+- [binance_1d_ma7_ctp_p5_paired_comparisons.parquet](binance_1d_ma7_ctp_p5_paired_comparisons.parquet)：挑战者相对 `R_B0_69` 的 2,000 次共享 28 日块整集重采样 diff、CI、p/q 值；每次重新计算非线性指标。
+- [binance_1d_ma7_ctp_p5_strata.parquet](binance_1d_ma7_ctp_p5_strata.parquet)：开发期、2025+、分年、方向、seen/new、non-overlap、月度与 28 日块分层指标。
+- [binance_1d_ma7_ctp_p5_calibration.json](binance_1d_ma7_ctp_p5_calibration.json)：仅由折起点前已完成标签的 pre-2025 OOF 拟合的 Platt 校准、参数和同概率空间 frozen threshold。
+- [binance_1d_ma7_ctp_p5_model_card.json](binance_1d_ma7_ctp_p5_model_card.json)：P5 诊断模型卡；无策略、无权益、无 live/handoff。
+- [binance_1d_ma7_ctp_p5_summary.json](binance_1d_ma7_ctp_p5_summary.json)：P5 样本、候选、2025+ 复用验证、HYPE 隔离与全局裁决摘要。
+- [binance_1d_ma7_ctp_p5_manifest.json](binance_1d_ma7_ctp_p5_manifest.json)：P5 输入与输出产物 SHA256 manifest。
+- [P5 独立验收与修复审计](../diagnostics/binance-1d-ma7-ctp-p5-independent-acceptance-audit-2026-09-02.md)：区分 Cursor 原始输出与修复后有效输出，记录独立复算、缺陷、修复和最终裁决。

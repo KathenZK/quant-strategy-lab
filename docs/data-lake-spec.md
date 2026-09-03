@@ -7,8 +7,9 @@
 ## 1. 范围与所有权
 
 本仓库只维护一个本地数据湖。加密货币、股票及后续其他市场共用
-`data/raw`、`data/normalized`、`data/features` 三层，不得按资产、策略或提供方
-建立 `data/external`、`data/stocks` 或策略私有数据根目录。
+`data/raw`、`data/normalized`、`data/derived`、`data/features` 与 `data/cache`
+这些层，不得按资产、策略或提供方建立 `data/external`、`data/stocks` 或策略私有
+数据根目录。`derived` 是版本化标准 OHLCV 发布层，不是第三层的临时别名。
 
 `data/` 是本地数据资产，不因未提交 Git 而降低质量要求。被研究结论引用的审计
 报告、迁移清单和可复现脚本必须保存在对应 `research/` 目录。
@@ -36,15 +37,26 @@ data/
     <特征或因子数据集>/
   cache/
     <可删除缓存、注册表和临时状态>/
+  derived/
+    datasets/
+      <dataset_slug>/
+        _MANIFEST.json
+        ohlcv/
+          date=<UTC 日期>/
+            *.parquet
+    _staging/
+      <unpublished dataset_slug>/
 ```
 
 - `raw`：保留提供方原生字段、真实来源和抓取口径，不静默补造字段。
-- `normalized`：只保存通过身份、schema、时间、来源和质量审计的标准数据。
+- `normalized`：只保存通过身份、schema、时间、来源和质量审计的标准数据。当前 Binance 全市场可信底座是 accepted normalized `15m`，不是 normalized `1h`。
+- `derived`：由 accepted 输入按冻结公式生成的版本化标准 OHLCV。每个 `dataset_id` 使用独立 slug 目录，不得写入会被旧 `normalized/**/*.parquet` glob 自动混读的路径。先写 `_staging/`，审计通过后在 `datasets/` 内原子发布；已发布目录不得覆盖，修正必须新 `vN`。
 - `features`：只保存可追溯到已接受输入数据与冻结构建逻辑的特征或因子。
-- `cache`：可重建，不构成研究证据，不得替代 raw/normalized 数据。
+- `cache`：可重建，不构成研究证据，不得替代 raw/normalized/derived 数据，也不得成为其他家族的事实源。
 
 raw 层可按 `source` 保存同一市场数据的多个原始版本。normalized 层必须先明确
-选择或裁决来源，不能让相同业务键的多个提供方版本静默共存。
+选择或裁决来源，不能让相同业务键的多个提供方版本静默共存。`derived` 层必须记录
+输入 `dataset_id`、输入 manifest hash、来源裁决版本和聚合公式版本。
 
 ## 3. 市场身份与业务键
 
@@ -200,14 +212,30 @@ Polygon `transactions -> trade_count`，但必须保留原字段与映射 proven
 
 ## 10. 消费规则
 
-研究消费应优先使用 `DuckDBWarehouse.load_trusted_ohlcv()`。它在普通读取之上
+新的治理过研究必须通过 `dataset_id` 入口读取：`strategy_lab.data.catalog.load_trusted_dataset()`。
+它解析注册表中的物理根、执行来源裁决、检查声明 status/scope 与覆盖，并**始终**做全量
+SQL 质量审计。`TrustedLoad` 必须带非空 `audit`、`source_counts`、覆盖范围和验证身份；
+未物化 pandas 不能让 `audit={}`。只做覆盖统计时使用 `inspect_dataset()` / `list_registered_datasets()`，
+这两个接口明确 `trusted=False`，不得冒充 trusted。
+
+固定截止时间使用闭合 K 语义：纳入条件是 `ts + timeframe <= cutoff`，不是仅仅 `ts < cutoff`，
+也不得用运行时“现在”代替冻结截止。已发布 derived 必须验证 `_MANIFEST.json`（缺失、文件增删改、
+身份冲突、质量未接受一律拒绝）。历史 v1 的 `cutoff_exclusive_utc` 可以为 null；调用方仍须传入
+明确 cutoff，并阅读 `known_limits`。
+
+找不到规范路径时必须直接失败，不得回退扫描整个数据根并把结果当 trusted。
+普通读取、预览或 `load_dataset()` 不得静默升级为 trusted。
+
+`DuckDBWarehouse.load_trusted_ohlcv()` 仍保留给旧研究。它在普通读取之上
 检查 schema、UTC、闭合 K、连续性、timeframe 和真实来源，并把结构化结果写入
 `DataFrame.attrs["ohlcv_audit"]`。crypto 未传 policy 时继续使用
 `continuous_24_7`；equity 必须显式传入 session policy，NASDAQ regular 数据传
-`xnas_regular`，必要时同时固定 `closure_as_of` 以便复现。
+`xnas_regular`，必要时同时固定 `closure_as_of` 以便复现。该旧入口不得用于加载
+`derived` 层；`layer="derived"` 必须报错并指向 catalog。
 
 `load_dataset()` 只提供读取与过滤能力，不表示数据已获信任。读取 raw equity
-或其他未接受数据时，不得把普通加载成功解释为质量通过。
+或其他未接受数据时，不得把普通加载成功解释为质量通过。旧 API 在缺少精确分区
+时仍可能回退扫描 dataset root；这是兼容行为，不能当作 trusted 全市场覆盖。
 
 raw/normalized 对齐使用 `audit_raw_normalized_ohlcv()`。任何研究脚本若绕过可信
 加载器，必须在对应报告中给出等价的数据质量审计和明确理由。
@@ -229,12 +257,156 @@ raw/normalized 对齐使用 `audit_raw_normalized_ohlcv()`。任何研究脚本�
 本规范的主要代码实现位于：
 
 - [`models.py`](../src/strategy_lab/data/models.py)：市场类型与数据集 schema；
-- [`lake.py`](../src/strategy_lab/data/lake.py)：分层与分区路径；
+- [`lake.py`](../src/strategy_lab/data/lake.py)：分层与分区路径，含 `derived/`；
 - [`store.py`](../src/strategy_lab/data/store.py)：身份校验、按日和原子写入；
 - [`sessions.py`](../src/strategy_lab/data/sessions.py)：session policy 与 XNAS
   regular-session 权威 bar 网格；
 - [`quality.py`](../src/strategy_lab/data/quality.py)：schema、重复、连续性与对齐审计；
-- [`warehouse.py`](../src/strategy_lab/data/warehouse.py)：过滤读取与 trusted loader；
-- [`authenticity.py`](../src/strategy_lab/data/authenticity.py)：真实来源审计。
+- [`warehouse.py`](../src/strategy_lab/data/warehouse.py)：过滤读取与旧 trusted loader；
+- [`authenticity.py`](../src/strategy_lab/data/authenticity.py)：真实来源审计，含
+  `composite:` 混合来源；
+- [`catalog.py`](../src/strategy_lab/data/catalog.py)：dataset_id 注册表、scope gate、
+  trusted load；
+- [`manifest.py`](../src/strategy_lab/data/manifest.py)：dataset manifest 与
+  `.cache-meta.json`；
+- [`resample.py`](../src/strategy_lab/data/resample.py)：accepted 15m 完整桶聚合。
 
 实现与本规范冲突时，必须先修正规范或实现并补测试，不得在其他文档建立第二套约定。
+
+## 13. 数据集身份、scope 与 fail-closed
+
+每个可被研究结论引用的 OHLCV 或家族面板必须有稳定 `dataset_id`，并显式声明：
+
+- layer：`raw` / `normalized` / `derived` / `cache`；
+- status：`TRUSTED_BASE` / `TRUSTED_DERIVED` / `PARTIAL_SCOPE` /
+  `PARTIAL_SCOPE_LEGACY` / `FAMILY_CACHE` / `UNACCEPTED` / `DEPRECATED`；
+- declared scope：`FULL_MARKET` / `PARTIAL` / `SINGLE_SYMBOL` /
+  `FAMILY_PANEL` / `EXPLICIT_DIAGNOSTIC`；
+- 物理根路径、来源裁决规则、cutoff、是否可重建。
+
+请求 `FULL_MARKET` 时，数据集必须同时满足：
+
+1. status 为 `TRUSTED_BASE` 或 `TRUSTED_DERIVED`；
+2. 声明 scope 为 `FULL_MARKET`；
+3. 覆盖门禁同时检查日历跨度、symbol-day、长期历史 symbol 数和短快照占比，
+   不能只看 distinct symbol。覆盖门禁检查的是**已发布数据集的全量覆盖**，
+   不是本次 `start/end` 查询窗口。FULL_MARKET 可以带固定时间切片；切片上的
+   SQL 质量审计针对选中行，但短窗口不能绕过整库覆盖门槛。
+
+`PARTIAL_SCOPE_LEGACY`、`UNACCEPTED`、`DEPRECATED` 以及 coverage 不足的数据
+在 `FULL_MARKET` 请求下必须直接报错。单币或明确标记的 partial diagnostic 可以
+用 `SINGLE_SYMBOL` / `PARTIAL` / `EXPLICIT_DIAGNOSTIC` 显式读取。家族面板不是
+标准 OHLCV，不能走 trusted OHLCV loader。
+
+当前 Binance 登记：
+
+- `binance.perp.ohlcv.15m.normalized.v1`：`TRUSTED_BASE` / `FULL_MARKET`；
+- `binance.perp.ohlcv.1h.normalized.legacy`：`PARTIAL_SCOPE_LEGACY` / `PARTIAL`，
+  不得冒充全市场；
+- `binance.perp.ohlcv.{1h,4h,1d}.from_15m.v1`：`TRUSTED_DERIVED`；
+- `binance.perp.ohlcv.1d.cache.from_15m` 与 `binance.perp.panel.1d.ma7_rc.p0/p3`：
+  `FAMILY_CACHE`。
+
+## 14. 标准衍生 OHLCV
+
+Binance 1h/4h/1d 标准衍生数据只能由 accepted normalized 15m 生成，公式版本
+`ohlcv_resample_from_15m_v1`，来源裁决 `binance_perp_15m_priority_union_v1`
+（`binance_vision_kline_monthly` 优先于 `binance_futures_kline_api`；未列入来源
+被排除，不进入 trusted union）。
+
+聚合规则：
+
+- primary phase 统一为 UTC `00:00`；
+- 1h / 4h / 1d 分别需要 4 / 16 / 96 根连续、闭合、合法 15m，且首尾时间戳与桶对齐；
+- 不补 K、不插值、不向前填充；组件不足的输出 bar 直接排除并计入审计；
+- `open` 取第一根，`high`/`low` 取极值，`close` 取最后一根；
+- `volume` / `quote_volume` / `trade_count` 求和；
+- `vwap = sum(quote_volume) / sum(volume)`；零成交量时 `vwap` 等于输出 `close`；
+- `is_closed` 仅在全部组件闭合且组件数、间隔完全正确时为 true；
+- `ts` 为 UTC 输出 bar 开盘时间。
+
+来源语义：
+
+- 单一来源组成的 bar 继承该 source；
+- 混合来源必须写成 `composite:<src1>+<src2>`（小写、排序、`+` 连接），禁止伪装成
+  单一 Vision/API 来源；
+- 每个输出数据集必须记录 upstream source 集合、priority union 版本、输入 manifest
+  hash、聚合公式版本、要求组件数和 null policy。
+
+衍生数据已经在构建时完成来源裁决。catalog 读取 derived 数据集时必须 passthrough
+已写出的 `source`（含 `composite:`），不得再次按 15m 白名单过滤而丢掉混合来源 bar。
+
+## 15. Cache manifest
+
+`data/cache/` 下被研究引用的缓存必须带 sidecar `.cache-meta.json`，至少包含：
+cache identity/version、输入 `dataset_id`、输入 manifest SHA256、builder 文件和
+SHA256、config/parameter SHA256、generated_at、cutoff、rows、distinct keys、
+symbols、start/end、duplicate/overlap 裁决、completeness rules、null/fill policy、
+rebuild command、quality status。
+
+不能确认的 lineage 字段必须标记 `LINEAGE_INCOMPLETE`，不得猜测。sidecar 与 parquet 库存指纹不一致，或 quality 为 `STALE` / `MISMATCH` /
+`REJECTED`，或 `LINEAGE_INCOMPLETE` 出现在输入/builder 哈希或 quality_status 上时，
+新的 trusted 消费必须拒绝——即使调用方没有传入 expected hash。历史复现可显式
+`allow_incomplete_lineage=True`。补充 sidecar 不得改写原 parquet。
+
+家族面板（含指标、标签、未来路径字段）不是标准 OHLCV。长期目标是从 canonical
+derived 1d 重建这些面板，而不是让其他家族直接依赖它们。
+
+## 16. Binance OHLCV：查询 → 选版本 → 验证 → 读取 → 固定输入
+
+机器可读目录由 `strategy_lab.data.catalog.list_registered_datasets()` 提供。
+下面命令均已实现；输出以现场运行为准，不得把覆盖预览写成 trusted。
+
+查询可用数据：
+
+```bash
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py list
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py inspect \
+  --dataset-id binance.perp.ohlcv.4h.from_15m.v1 --scope FULL_MARKET
+```
+
+验证并读取（单币 4h；固定窗口全市场 4h 不物化 pandas；canonical 1d）：
+
+```bash
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py load \
+  --dataset-id binance.perp.ohlcv.4h.from_15m.v1 --scope SINGLE_SYMBOL \
+  --symbol BTC/USDT:USDT --end 2026-08-24T08:00:00Z
+
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py load \
+  --dataset-id binance.perp.ohlcv.4h.from_15m.v1 --scope FULL_MARKET \
+  --start 2026-08-01T00:00:00Z --end 2026-08-24T08:00:00Z \
+  --max-materialize-rows 0
+
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py load-1d \
+  --scope SINGLE_SYMBOL --symbol BTC/USDT:USDT --end 2026-08-25T00:00:00Z
+```
+
+一次性捕获上述查询/读取/拒绝示例：
+
+```bash
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py bundle
+```
+
+研究输入应记录：`dataset_id`、`parquet_inventory_fingerprint` 或 published
+`manifest_sha256`、显式 `cutoff_exclusive_utc`、以及 `quality_status=PASS`。
+当前已接受派生版本是 `binance.perp.ohlcv.{1h,4h,1d}.from_15m.v1`；底座是
+`binance.perp.ohlcv.15m.normalized.v1`（目录快照 `_INPUT_SNAPSHOT.json`）。
+v1 的 `cutoff_exclusive_utc` 为 null，数据实际结束于最后一根完整闭合 K，不是今天。
+
+幂等更新检查（不覆盖已发布 v1；输入变了必须新版本）：
+
+```bash
+python research/platform/data-lake-governance/scripts/build_binance_derived_ohlcv_from_15m.py \
+  --check --write-15m-snapshot --timeframe all
+```
+
+预期拒绝（必须失败）：
+
+```bash
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py reject --case legacy-1h-full-market
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py reject --case cache-as-ohlcv
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py reject --case missing-dataset
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py reject --case bad-fingerprint
+python research/platform/data-lake-governance/scripts/example_binance_ohlcv_usage.py reject --case missing-manifest
+```
+

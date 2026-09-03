@@ -38,7 +38,7 @@
 
 细则由 `.cursor/rules/` 维护，不在本文件展开：
 
-- [docs/data-lake-spec.md](docs/data-lake-spec.md)：数据湖结构与质量约定的唯一规范；`data-quality-first.mdc` 只负责强制引用该规范。
+- [docs/data-lake-spec.md](docs/data-lake-spec.md)：数据湖结构与质量约定的唯一规范；Binance OHLCV 的查询/选版本/验证/读取见该文件第 16 节。`data-quality-first.mdc` 只负责强制引用该规范。治理家族入口：[research/platform/data-lake-governance/README.md](research/platform/data-lake-governance/README.md)。
 - `live-executable-strategy-research.mdc`：订单时序、成交假设、stop/lockout 审计和 promotion 前置条件。
 - `backtest-standards.mdc`：回测默认包含最近 `1d/7d/1m/3m/6m/1y` 分片；Binance 默认手续费 `0.001`、滑点 `4 bps`，其他市场需明确成本口径。
 - `research-report-storage.mdc`：研究目录、core ledger、索引更新义务、共享内核、artifacts 存放和 Canvas 边界。
